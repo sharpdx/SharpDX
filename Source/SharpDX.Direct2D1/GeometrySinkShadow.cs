@@ -34,7 +34,7 @@ namespace SharpDX.Direct2D1
         /// Get a native callback pointer from a managed callback.
         /// </summary>
         /// <param name="geometrySink">The geometry sink.</param>
-        /// <returns>A pointer to the unmanaged geomerty sink counterpart</returns>
+        /// <returns>A pointer to the unmanaged geometry sink counterpart</returns>
         public static IntPtr ToIntPtr(GeometrySink geometrySink)
         {
             return ToCallbackPtr<GeometrySink>(geometrySink);

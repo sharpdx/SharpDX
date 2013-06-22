@@ -318,7 +318,7 @@ namespace SharpDX.Direct3D11
         /// <param name = "startSlot">Index into a zero-based array to begin setting unordered access views.</param>
         /// <param name = "unorderedAccessViews">A set of unordered access views to bind.</param>
         /// <param name = "renderTargetView">A view of the render target to bind.</param>
-        /// <param name = "initialLengths">An array of Append/Consume buffer offsets. A value of -1 indicates the current offset should be kept. Any other values set the hidden counter for that Appendable/Consumeable UAV.</param>
+        /// <param name = "initialLengths">An array of Append/Consume buffer offsets. A value of -1 indicates the current offset should be kept. Any other values set the hidden counter for that Appendable/Consumable UAV.</param>
         /// <msdn-id>ff476465</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
@@ -337,7 +337,7 @@ namespace SharpDX.Direct3D11
         /// <param name = "startSlot">Index into a zero-based array to begin setting unordered access views.</param>
         /// <param name = "unorderedAccessViews">A set of unordered access views to bind.</param>
         /// <param name = "renderTargetViews">A set of render target views to bind.</param>
-        /// <param name = "initialLengths">An array of Append/Consume buffer offsets. A value of -1 indicates the current offset should be kept. Any other values set the hidden counter for that Appendable/Consumeable UAV.</param>
+        /// <param name = "initialLengths">An array of Append/Consume buffer offsets. A value of -1 indicates the current offset should be kept. Any other values set the hidden counter for that Appendable/Consumable UAV.</param>
         /// <msdn-id>ff476465</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
@@ -357,7 +357,7 @@ namespace SharpDX.Direct3D11
         /// <param name = "startSlot">Index into a zero-based array to begin setting unordered access views.</param>
         /// <param name = "unorderedAccessViews">A set of unordered access views to bind.</param>
         /// <param name = "renderTargetView">A view of the render target to bind.</param>
-        /// <param name = "initialLengths">An array of Append/Consume buffer offsets. A value of -1 indicates the current offset should be kept. Any other values set the hidden counter for that Appendable/Consumeable UAV.</param>
+        /// <param name = "initialLengths">An array of Append/Consume buffer offsets. A value of -1 indicates the current offset should be kept. Any other values set the hidden counter for that Appendable/Consumable UAV.</param>
         /// <msdn-id>ff476465</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
@@ -378,7 +378,7 @@ namespace SharpDX.Direct3D11
         /// <param name = "startSlot">Index into a zero-based array to begin setting unordered access views.</param>
         /// <param name = "unorderedAccessViews">A set of unordered access views to bind.</param>
         /// <param name = "renderTargetViews">A set of render target views to bind.</param>
-        /// <param name = "initialLengths">An array of Append/Consume buffer offsets. A value of -1 indicates the current offset should be kept. Any other values set the hidden counter for that Appendable/Consumeable UAV.</param>
+        /// <param name = "initialLengths">An array of Append/Consume buffer offsets. A value of -1 indicates the current offset should be kept. Any other values set the hidden counter for that Appendable/Consumable UAV.</param>
         /// <msdn-id>ff476465</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
@@ -492,7 +492,7 @@ namespace SharpDX.Direct3D11
         /// </remarks>	
         /// <param name="startSlot">Index of the first element in the zero-based array to begin setting. </param>
         /// <param name="unorderedAccessView">A reference to an <see cref="SharpDX.Direct3D11.UnorderedAccessView"/> references to be set by the method. </param>
-        /// <param name="uavInitialCount">An Append/Consume buffer offsets. A value of -1 indicates the current offset should be kept.   Any other values set the hidden counter for that Appendable/Consumeable UAV. uAVInitialCount is only relevant for UAVs which have the <see cref="SharpDX.Direct3D11.UnorderedAccessViewBufferFlags"/> flag,  otherwise the argument is ignored. </param>
+        /// <param name="uavInitialCount">An Append/Consume buffer offsets. A value of -1 indicates the current offset should be kept.   Any other values set the hidden counter for that Appendable/Consumable UAV. uAVInitialCount is only relevant for UAVs which have the <see cref="SharpDX.Direct3D11.UnorderedAccessViewBufferFlags"/> flag,  otherwise the argument is ignored. </param>
         /// <msdn-id>ff476465</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
@@ -526,7 +526,7 @@ namespace SharpDX.Direct3D11
         /// </remarks>	
         /// <param name="startSlot">Index of the first element in the zero-based array to begin setting. </param>
         /// <param name="unorderedAccessViews">A reference to an array of <see cref="SharpDX.Direct3D11.UnorderedAccessView"/> references to be set by the method. </param>
-        /// <param name="uavInitialCounts">An array of Append/Consume buffer offsets. A value of -1 indicates the current offset should be kept.   Any other values set the hidden counter for that Appendable/Consumeable UAV.  pUAVInitialCounts is only relevant for UAVs which have the <see cref="SharpDX.Direct3D11.UnorderedAccessViewBufferFlags"/> flag,  otherwise the argument is ignored. </param>
+        /// <param name="uavInitialCounts">An array of Append/Consume buffer offsets. A value of -1 indicates the current offset should be kept.   Any other values set the hidden counter for that Appendable/Consumable UAV.  pUAVInitialCounts is only relevant for UAVs which have the <see cref="SharpDX.Direct3D11.UnorderedAccessViewBufferFlags"/> flag,  otherwise the argument is ignored. </param>
         /// <msdn-id>ff476465</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	

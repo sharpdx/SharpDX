@@ -20,7 +20,7 @@
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// The <see cref="SharpDX.Direct2D1.Effects"/> namespace provides a managed Direct2D1 builtin Effects API.
+    /// The <see cref="SharpDX.Direct2D1.Effects"/> namespace provides a managed Direct2D1 built in Effects API.
     /// </summary>
     /// <msdn-id>hh706327</msdn-id>
     /// <unmanaged>Direct2D1 Effects</unmanaged>	

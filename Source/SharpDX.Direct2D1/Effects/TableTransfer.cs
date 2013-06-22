@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin TableTransfer effect.
+    /// Built in TableTransfer effect.
     /// </summary>
     public class TableTransfer : Effect
     {
@@ -53,7 +53,7 @@ namespace SharpDX.Direct2D1.Effects
             {
                 var localValue = value;
                 if (value.Length != 256)
-                    throw new ArgumentException("Invalid table size. Excepting Legnth 256.");
+                    throw new ArgumentException("Invalid table size. Excepting Length 256.");
 
                 SetValue((int) TableTransferProperties.RedTable, PropertyType.Blob,
                          new IntPtr(Interop.Fixed(localValue)), sizeof (float)*256);
@@ -91,7 +91,7 @@ namespace SharpDX.Direct2D1.Effects
             {
                 var localValue = value;
                 if (value.Length != 256)
-                    throw new ArgumentException("Invalid table size. Excepting Legnth 256.");
+                    throw new ArgumentException("Invalid table size. Excepting Length 256.");
 
                 SetValue((int)TableTransferProperties.GreenTable, PropertyType.Blob,
                          new IntPtr(Interop.Fixed(localValue)), sizeof(float) * 256);
@@ -129,7 +129,7 @@ namespace SharpDX.Direct2D1.Effects
             {
                 var localValue = value;
                 if (value.Length != 256)
-                    throw new ArgumentException("Invalid table size. Excepting Legnth 256.");
+                    throw new ArgumentException("Invalid table size. Excepting Length 256.");
 
                 SetValue((int)TableTransferProperties.BlueTable, PropertyType.Blob,
                          new IntPtr(Interop.Fixed(localValue)), sizeof(float) * 256);
@@ -167,7 +167,7 @@ namespace SharpDX.Direct2D1.Effects
             {
                 var localValue = value;
                 if (value.Length != 256)
-                    throw new ArgumentException("Invalid table size. Excepting Legnth 256.");
+                    throw new ArgumentException("Invalid table size. Excepting Length 256.");
 
                 SetValue((int)TableTransferProperties.AlphaTable, PropertyType.Blob,
                          new IntPtr(Interop.Fixed(localValue)), sizeof(float) * 256);

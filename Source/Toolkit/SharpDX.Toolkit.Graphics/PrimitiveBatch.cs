@@ -133,7 +133,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Draws the indexed vertices with the specified toplogy.
+        /// Draws the indexed vertices with the specified topology.
         /// </summary>
         /// <param name="topology">The topology.</param>
         /// <param name="indices">The indices.</param>

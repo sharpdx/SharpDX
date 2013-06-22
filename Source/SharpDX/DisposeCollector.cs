@@ -134,7 +134,7 @@ namespace SharpDX
                 var disposableObject = objectToDispose as IDisposable;
                 if (disposableObject != null)
                 {
-                    // Dispose the comonent
+                    // Dispose the component
                     disposableObject.Dispose();
                 }
                 else

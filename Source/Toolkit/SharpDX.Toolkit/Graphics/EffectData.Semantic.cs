@@ -61,7 +61,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="systemValueType">A predefined string that determines the functionality of certain pipeline stages.</param>
             /// <param name="componentType">The per-component-data type that is stored in a register.</param>
             /// <param name="usageMask">Mask which indicates which components of a register are used.</param>
-            /// <param name="readWriteMask">sk which indicates whether a given component is never written (if the signature is an output signature) or always read (if the signature is an input signature).</param>
+            /// <param name="readWriteMask">Mask which indicates whether a given component is never written (if the signature is an output signature) or always read (if the signature is an input signature).</param>
             /// <param name="stream">Indicates which stream the geometry shader is using for the signature parameter.</param>
             public Semantic(string name, byte index, byte register, byte systemValueType, byte componentType, byte usageMask, byte readWriteMask, byte stream)
             {

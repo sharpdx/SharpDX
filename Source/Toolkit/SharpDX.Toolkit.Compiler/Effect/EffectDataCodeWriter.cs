@@ -39,7 +39,7 @@ namespace SharpDX.Toolkit.Graphics
         public string Namespace;
 
         /// <summary>
-        /// Gets or sets the classname.
+        /// Gets or sets the class name.
         /// </summary>
         public string ClassName;
 

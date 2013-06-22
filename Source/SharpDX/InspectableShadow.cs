@@ -32,7 +32,7 @@ namespace SharpDX
         private static readonly InspectableProviderVtbl Vtbl = new InspectableProviderVtbl();
 
         /// <summary>
-        /// Return a pointer to the unamanged version of this callback.
+        /// Return a pointer to the unmanaged version of this callback.
         /// </summary>
         /// <param name="callback">The callback.</param>
         /// <returns>A pointer to a shadow c++ callback</returns>

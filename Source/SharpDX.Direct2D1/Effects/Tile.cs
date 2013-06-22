@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin Tile effect.
+    /// Built in Tile effect.
     /// </summary>
     public class Tile : Effect
     {

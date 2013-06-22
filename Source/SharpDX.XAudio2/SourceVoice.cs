@@ -238,7 +238,7 @@ namespace SharpDX.XAudio2
         /// Occurs just before the processing pass for the voice begins.
         /// </summary>
         /// <remarks>
-        /// In order to use this delegate, this instance must have been intialized with events delegate support.
+        /// In order to use this delegate, this instance must have been initialized with events delegate support.
         /// </remarks>
         public event Action<int> ProcessingPassStart;
 
@@ -248,7 +248,7 @@ namespace SharpDX.XAudio2
         /// Occurs just after the processing pass for the voice ends.
         /// </summary>
         /// <remarks>
-        /// In order to use this delegate, this instance must have been intialized with events delegate support.
+        /// In order to use this delegate, this instance must have been initialized with events delegate support.
         /// </remarks>
         public event VoidAction ProcessingPassEnd;
 
@@ -256,7 +256,7 @@ namespace SharpDX.XAudio2
         /// Occurs when the voice has just finished playing a contiguous audio stream.
         /// </summary>
         /// <remarks>
-        /// In order to use this delegate, this instance must have been intialized with events delegate support.
+        /// In order to use this delegate, this instance must have been initialized with events delegate support.
         /// </remarks>
         public event VoidAction StreamEnd;
 
@@ -264,7 +264,7 @@ namespace SharpDX.XAudio2
         /// Occurs when the voice is about to start processing a new audio buffer.
         /// </summary>
         /// <remarks>
-        /// In order to use this delegate, this instance must have been intialized with events delegate support.
+        /// In order to use this delegate, this instance must have been initialized with events delegate support.
         /// </remarks>
         public event Action<IntPtr> BufferStart;
 
@@ -272,7 +272,7 @@ namespace SharpDX.XAudio2
         /// Occurs when the voice finishes processing a buffer.
         /// </summary>
         /// <remarks>
-        /// In order to use this delegate, this instance must have been intialized with events delegate support.
+        /// In order to use this delegate, this instance must have been initialized with events delegate support.
         /// </remarks>
         public event Action<IntPtr> BufferEnd;
 
@@ -280,7 +280,7 @@ namespace SharpDX.XAudio2
         /// Occurs when a critical error occurs during voice processing.
         /// </summary>
         /// <remarks>
-        /// In order to use this delegate, this instance must have been intialized with events delegate support.
+        /// In order to use this delegate, this instance must have been initialized with events delegate support.
         /// </remarks>
         public event Action<IntPtr> LoopEnd;
 
@@ -301,7 +301,7 @@ namespace SharpDX.XAudio2
         /// Occurs when [voice error].
         /// </summary>
         /// <remarks>
-        /// In order to use this delegate, this instance must have been intialized with events delegate support.
+        /// In order to use this delegate, this instance must have been initialized with events delegate support.
         /// </remarks>
         public event Action<VoiceErrorArgs> VoiceError;
 

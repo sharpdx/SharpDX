@@ -422,7 +422,7 @@ namespace SharpDX.Toolkit
             {
                 case GraphicsDeviceStatus.Normal:
                     // Before drawing, we should clear the state to make sure that there is no unstable graphics device states (On some WP8 devices for example)
-                    // An applicatio should not rely on previous state (last frame...etc.) after BeginDraw.
+                    // An application should not rely on previous state (last frame...etc.) after BeginDraw.
                     GraphicsDevice.ClearState();
 
                     // By default, we setup the render target to the back buffer, and the viewport as well.

@@ -62,7 +62,7 @@ namespace SharpDX.Toolkit.Input
         /// <summary>
         /// Initializes this instance and starts listening to keyboard input events
         /// </summary>
-        /// <exception cref="NotSupportedException">Is thrown if keyboard manager is used on an usupported platform.</exception>
+        /// <exception cref="NotSupportedException">Is thrown if keyboard manager is used on an unsupported platform.</exception>
         public void Initialize()
         {
             // create the platform-specific instance

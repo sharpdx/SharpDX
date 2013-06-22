@@ -27,7 +27,7 @@ namespace SharpDX.Direct2D1
     public partial class BoundsAdjustmentTransform
     {
         /// <summary>
-        /// Initialzies a new instance of <see cref="BoundsAdjustmentTransform"/> class
+        /// Initializes a new instance of <see cref="BoundsAdjustmentTransform"/> class
         /// </summary>
         /// <param name="context">The effect context</param>
         /// <param name="outputRectangle">The output rectangle region used for this transformation</param>

@@ -97,13 +97,13 @@ namespace SharpDX.WIC
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Bitmap"/> class from an array of pixel datas.
+        /// Initializes a new instance of the <see cref="Bitmap"/> class from an array of pixel data.
         /// </summary>
         /// <param name="factory">The factory.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="pixelFormat">The pixel format.</param>
-        /// <param name="pixelDatas">The pixel datas.</param>
+        /// <param name="pixelDatas">The pixel data.</param>
         /// <param name="stride">Stride of a row of pixels (number of bytes per row). By default the stride is == 0, and calculated by taking the sizeof(T) * width.</param>
         /// <msdn-id>ee690291</msdn-id>	
         /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromMemory([In] unsigned int uiWidth,[In] unsigned int uiHeight,[In] const GUID&amp; pixelFormat,[In] unsigned int cbStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>	

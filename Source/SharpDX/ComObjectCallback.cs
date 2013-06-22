@@ -22,7 +22,7 @@ using System;
 namespace SharpDX
 {
     /// <summary>
-    /// Base class for unmanaged callabackable Com object.
+    /// Base class for unmanaged callbackable Com object.
     /// </summary>
     public class ComObjectCallback : ComObject, ICallbackable
     {

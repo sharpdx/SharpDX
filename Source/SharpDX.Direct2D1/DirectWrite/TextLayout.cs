@@ -60,7 +60,7 @@ namespace SharpDX.DirectWrite
         }
         
         /// <summary>	
-        /// Create a Gdi Compatible TextLayout. Takes a string, format, and associated constraints, and produces an object representing the result, formatted for a particular display resolution and measuring mode.  	
+        /// Create a GDI Compatible TextLayout. Takes a string, format, and associated constraints, and produces an object representing the result, formatted for a particular display resolution and measuring mode.  	
         /// </summary>	
         /// <remarks>	
         /// The resulting text layout should only be used for the intended resolution, and for cases where text scalability is desired {{CreateTextLayout}} should be used instead. 	
@@ -234,7 +234,7 @@ namespace SharpDX.DirectWrite
         /// Gets the font em height of the text at the specified position. 	
         /// </summary>	
         /// <param name="currentPosition">The position of the text to inspect. </param>
-        /// <returns>the size of the font in ems  of the text at the specified position. </returns>
+        /// <returns>The size of the font in ems of the text at the specified position. </returns>
         /// <unmanaged>HRESULT IDWriteTextLayout::GetFontSize([None] int currentPosition,[Out] float* fontSize,[Out, Optional] DWRITE_TEXT_RANGE* textRange)</unmanaged>
         public float GetFontSize(int currentPosition)
         {

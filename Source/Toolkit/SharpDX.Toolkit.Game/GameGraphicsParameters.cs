@@ -25,7 +25,7 @@ using SharpDX.Toolkit.Graphics;
 namespace SharpDX.Toolkit
 {
     /// <summary>
-    ///   Describess how data will be displayed to the screen.
+    ///   Describes how data will be displayed to the screen.
     /// </summary>
     /// <msdn-id>bb173075</msdn-id>
     /// <unmanaged>DXGI_SWAP_CHAIN_DESC</unmanaged>
@@ -77,7 +77,7 @@ namespace SharpDX.Toolkit
         public bool PreferMultiSampling;
 
         /// <summary>
-        /// Gets or sets a value indicating whether to synochrnize present with vertical blanking.
+        /// Gets or sets a value indicating whether to synchronize present with vertical blanking.
         /// </summary>
         public bool SynchronizeWithVerticalRetrace;
 

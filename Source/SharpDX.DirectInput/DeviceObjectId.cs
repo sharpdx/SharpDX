@@ -32,7 +32,7 @@ namespace SharpDX.DirectInput
 
         public DeviceObjectId(DeviceObjectTypeFlags typeFlags, int instanceNumber) : this()
         {
-            // Clear anyinstance flags and use instanceNumber
+            // Clear anyInstance flags and use instanceNumber
             _rawType = ((int)typeFlags & ~AnyInstanceMask) | ((instanceNumber < 0 | instanceNumber > InstanceNumberMax) ? 0 : ((instanceNumber & 0xFFFF) << 8));
         }
 

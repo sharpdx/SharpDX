@@ -447,7 +447,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Allocate an aligned memory buffer and clear it with a specified value (0 by defaault).
+        /// Allocate an aligned memory buffer and clear it with a specified value (0 by default).
         /// </summary>
         /// <param name="sizeInBytes">Size of the buffer to allocate.</param>
         /// <param name="clearValue">Default value used to clear the buffer.</param>
@@ -490,7 +490,7 @@ namespace SharpDX
         /// <summary>
         /// Converts a pointer to a null-terminating string up to maxLength characters to a .Net string.
         /// </summary>
-        /// <param name="pointer">The pointer to an ansi null string.</param>
+        /// <param name="pointer">The pointer to an ANSI null string.</param>
         /// <param name="maxLength">Maximum length of the string.</param>
         /// <returns>The converted string.</returns>
         public static string PtrToStringAnsi(IntPtr pointer, int maxLength)
@@ -512,7 +512,7 @@ namespace SharpDX
         /// <summary>
         /// Converts a pointer to a null-terminating string up to maxLength characters to a .Net string.
         /// </summary>
-        /// <param name="pointer">The pointer to an unicode null string.</param>
+        /// <param name="pointer">The pointer to an Unicode null string.</param>
         /// <param name="maxLength">Maximum length of the string.</param>
         /// <returns>The converted string.</returns>
         public static string PtrToStringUni(IntPtr pointer, int maxLength)
@@ -583,7 +583,7 @@ namespace SharpDX
             {
                 throw new OutOfMemoryException();
             }
-            // Completely unefficient, but this is the only to the a string in WP8
+            // Completely inefficient, but this is the only to the a string in WP8
             var localArray = s.ToCharArray();
             fixed (char* str = localArray)
             {
@@ -626,7 +626,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="separator">The separator.</param>
         /// <param name="array">The array.</param>
-        /// <returns>A string with array elements serparated by the seperator.</returns>
+        /// <returns>A string with array elements separated by the separator.</returns>
         public static string Join<T>(string separator, T[] array)
         {
             var text = new StringBuilder();
@@ -642,11 +642,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// String helper join method to display an enumrable of object as a single string.
+        /// String helper join method to display an enumerable of object as a single string.
         /// </summary>
         /// <param name="separator">The separator.</param>
         /// <param name="elements">The enumerable.</param>
-        /// <returns>A string with array elements serparated by the seperator.</returns>
+        /// <returns>A string with array elements separated by the separator.</returns>
         public static string Join(string separator, IEnumerable elements)
         {
             var elementList = new List<string>();
@@ -664,11 +664,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// String helper join method to display an enumrable of object as a single string.
+        /// String helper join method to display an enumerable of object as a single string.
         /// </summary>
         /// <param name="separator">The separator.</param>
         /// <param name="elements">The enumerable.</param>
-        /// <returns>A string with array elements serparated by the seperator.</returns>
+        /// <returns>A string with array elements separated by the separator.</returns>
         public static string Join(string separator, IEnumerator elements)
         {
             var elementList = new List<string>();
@@ -766,7 +766,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="left">A "from" enumerator.</param>
         /// <param name="right">A "to" enumerator.</param>
-        /// <returns><c>true</c> if lists are identical, <c>false</c> otherwis.</returns>
+        /// <returns><c>true</c> if lists are identical, <c>false</c> otherwise.</returns>
         public static bool Compare(IEnumerable left, IEnumerable right)
         {
             if (ReferenceEquals(left, right))
@@ -814,8 +814,8 @@ namespace SharpDX
         /// Compares two collection, element by elements.
         /// </summary>
         /// <param name="left">The collection to compare from.</param>
-        /// <param name="right">The colllection to compare to.</param>
-        /// <returns><c>true</c> if lists are identical (but no necessarely of the same time); otherwise , <c>false</c>.</returns>
+        /// <param name="right">The collection to compare to.</param>
+        /// <returns><c>true</c> if lists are identical (but not necessarily of the same time); otherwise , <c>false</c>.</returns>
         public static bool Compare(ICollection left, ICollection right)
         {
             if (ReferenceEquals(left, right))
@@ -918,11 +918,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether the specified type to test is a valuetype.
+        /// Determines whether the specified type to test is a value type.
         /// </summary>
         /// <param name="typeToTest">The type to test.</param>
         /// <returns>
-        /// <c>true</c> if the specified type to test is a valuetype; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified type to test is a value type; otherwise, <c>false</c>.
         /// </returns>
         public static bool IsValueType(Type typeToTest)
         {
@@ -1146,7 +1146,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Finds an explicit converstion between a source type and a target type.
+        /// Finds an explicit conversion between a source type and a target type.
         /// </summary>
         /// <param name="sourceType">Type of the source.</param>
         /// <param name="targetType">Type of the target.</param>
@@ -1346,7 +1346,7 @@ namespace SharpDX
         /// Loads a native library.
         /// </summary>
         /// <param name="dllName">Name of the DLL.</param>
-        /// <exception cref="DllNotFoundException">If dll was not found.</exception>
+        /// <exception cref="DllNotFoundException">If DLL was not found.</exception>
         /// <returns>Handle to the module.</returns>
         public static IntPtr LoadLibrary(string dllName)
         {
@@ -1373,7 +1373,7 @@ namespace SharpDX
 #endif
 
         /// <summary>
-        /// Gets the proc address of a dll.
+        /// Gets the proc address of a DLL.
         /// </summary>
         /// <param name="handle">The handle.</param>
         /// <param name="dllFunctionToImport">The DLL function to import.</param>
@@ -1420,7 +1420,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Safely dispose a referencem if not null, and set it to null after dispose.
+        /// Safely dispose a reference if not null, and set it to null after dispose.
         /// </summary>
         /// <typeparam name="T">The type of COM interface to dispose.</typeparam>
         /// <param name="comObject">Object to dispose.</param>

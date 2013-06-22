@@ -34,7 +34,7 @@ namespace SharpDX.DXGI
         [Tag("SharpDX.ModuleInit")]
         internal static void Setup()
         {
-            // Register automatically Resultcode from DXGI
+            // Register automatically Result code from DXGI
             ResultDescriptor.RegisterProvider(typeof(ResultCode));
         }
     }

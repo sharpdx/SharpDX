@@ -33,7 +33,7 @@ namespace SharpDX.Toolkit.Input
     internal sealed class PointerPlatformWinRT : PointerPlatform
     {
         /// <summary>
-        /// Initializes a new intance of the <see cref="PointerPlatformWinRT"/> class.
+        /// Initializes a new instance of the <see cref="PointerPlatformWinRT"/> class.
         /// </summary>
         /// <param name="nativeWindow">The platform-specific reference to window object</param>
         /// <param name="manager">The <see cref="PointerManager"/> whose events will be raised in response to platform-specific events</param>

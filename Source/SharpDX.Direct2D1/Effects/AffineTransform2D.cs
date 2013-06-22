@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin AffineTransform2D effect.
+    /// Built in AffineTransform2D effect.
     /// </summary>
     public class AffineTransform2D : Effect
     {

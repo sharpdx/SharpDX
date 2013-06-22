@@ -272,7 +272,7 @@ namespace SharpDX
         /// <param name="znear">The znear.</param>
         /// <param name="zfar">The zfar.</param>
         /// <param name="aspect">The aspect.</param>
-        /// <returns>The bouding frustum calculated from perspective camera</returns>
+        /// <returns>The bounding frustum calculated from perspective camera</returns>
         public static BoundingFrustum FromCamera(Vector3 cameraPos, Vector3 lookDir, Vector3 upDir, float fov, float znear, float zfar, float aspect)
         {
             //http://knol.google.com/k/view-frustum
@@ -320,7 +320,7 @@ namespace SharpDX
         /// Creates a new frustum relaying on perspective camera parameters
         /// </summary>
         /// <param name="cameraParams">The camera params.</param>
-        /// <returns>The bouding frustum from camera params</returns>
+        /// <returns>The bounding frustum from camera params</returns>
         public static BoundingFrustum FromCamera(FrustumCameraParams cameraParams)
         {
             return FromCamera(cameraParams.Position, cameraParams.LookAtDir, cameraParams.UpDir, cameraParams.FOV, cameraParams.ZNear, cameraParams.ZFar, cameraParams.AspectRatio);
@@ -368,7 +368,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Extracts perspective camera parameters from the frustum, dosn't work with orthographic frustums.
+        /// Extracts perspective camera parameters from the frustum, doesn't work with orthographic frustums.
         /// </summary>
         /// <returns>Perspective camera parameters from the frustum</returns>
         public FrustumCameraParams GetCameraParams()
@@ -466,7 +466,7 @@ namespace SharpDX
                 return ContainmentType.Disjoint;  */
         }
         /// <summary>
-        /// Checks whether a group of points lay totally inside the frsutrum (Contains), or lay partially inside the frustum (Intersects), or lay outside the frustum (Disjoint).
+        /// Checks whether a group of points lay totally inside the frustum (Contains), or lay partially inside the frustum (Intersects), or lay outside the frustum (Disjoint).
         /// </summary>
         /// <param name="points">The points.</param>
         /// <param name="result">Type of the containment.</param>
@@ -759,7 +759,7 @@ namespace SharpDX
             else
             {
                 //We will find the two points at which the ray enters and exists the frustum
-                //These two points make a line which center inside the frustum if the ray intersets it
+                //These two points make a line which center inside the frustum if the ray intersects it
                 //Or outside the frustum if the ray intersects frustum planes outside it.
                 float minDist = float.MaxValue;
                 float maxDist = float.MinValue;
@@ -795,8 +795,8 @@ namespace SharpDX
         /// <summary>
         /// Get the distance which when added to camera position along the lookat direction will do the effect of zoom to extents (zoom to fit) operation,
         /// so all the passed points will fit in the current view.
-        /// if the returned value is poistive, the camera will move toward the lookat direction (ZoomIn).
-        /// if the returned value is negative, the camera will move in the revers direction of the lookat direction (ZoomOut).
+        /// if the returned value is positive, the camera will move toward the lookat direction (ZoomIn).
+        /// if the returned value is negative, the camera will move in the reverse direction of the lookat direction (ZoomOut).
         /// </summary>
         /// <param name="points">The points.</param>
         /// <returns>The zoom to fit distance</returns>
@@ -826,8 +826,8 @@ namespace SharpDX
         /// <summary>
         /// Get the distance which when added to camera position along the lookat direction will do the effect of zoom to extents (zoom to fit) operation,
         /// so all the passed points will fit in the current view.
-        /// if the returned value is poistive, the camera will move toward the lookat direction (ZoomIn).
-        /// if the returned value is negative, the camera will move in the revers direction of the lookat direction (ZoomOut).
+        /// if the returned value is positive, the camera will move toward the lookat direction (ZoomIn).
+        /// if the returned value is negative, the camera will move in the reverse direction of the lookat direction (ZoomOut).
         /// </summary>
         /// <param name="boundingBox">The bounding box.</param>
         /// <returns>The zoom to fit distance</returns>

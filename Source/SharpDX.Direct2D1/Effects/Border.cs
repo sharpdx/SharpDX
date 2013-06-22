@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin Border effect.
+    /// Built in Border effect.
     /// </summary>
     public class Border : Effect
     {

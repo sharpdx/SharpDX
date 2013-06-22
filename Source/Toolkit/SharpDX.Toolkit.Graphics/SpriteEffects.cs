@@ -44,7 +44,7 @@ namespace SharpDX.Toolkit.Graphics
         FlipVertically = 2,
 
         /// <summary>
-        /// Rotate 180 degress around both the X and Y axis before rendering.
+        /// Rotate 180 degrees around both the X and Y axis before rendering.
         /// </summary>
         FlipBoth = FlipHorizontally | FlipVertically,
     };

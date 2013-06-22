@@ -103,10 +103,10 @@ namespace SharpDX.Direct2D1
         }
 
         /// <summary>
-        /// Creates a Bitmap from a wic bitmap.
+        /// Creates a Bitmap from a WIC bitmap.
         /// </summary>
         /// <param name="deviceContext">The render target.</param>
-        /// <param name="wicBitmapSource">A reference to a <see cref="SharpDX.WIC.BitmapSource"/> wic bitmap.</param>
+        /// <param name="wicBitmapSource">A reference to a <see cref="SharpDX.WIC.BitmapSource"/> WIC bitmap.</param>
         /// <returns></returns>
         /// <unmanaged>HRESULT ID2D1DeviceContext::CreateBitmapFromWicBitmap([In] IWICBitmapSource* wicBitmapSource,[In, Optional] const D2D1_BITMAP_PROPERTIES1* bitmapProperties,[Out] ID2D1Bitmap1** bitmap)</unmanaged>	
         public static Bitmap1 FromWicBitmap(DeviceContext deviceContext, WIC.BitmapSource wicBitmapSource)
@@ -117,10 +117,10 @@ namespace SharpDX.Direct2D1
         }
 
         /// <summary>
-        /// Creates a Bitmap from a wic bitmap.
+        /// Creates a Bitmap from a WIC bitmap.
         /// </summary>
         /// <param name="deviceContext">The render target.</param>
-        /// <param name="wicBitmap">The wic bitmap.</param>
+        /// <param name="wicBitmap">The WIC bitmap.</param>
         /// <param name="bitmapProperties">The bitmap properties.</param>
         /// <returns></returns>
         /// <unmanaged>HRESULT ID2D1DeviceContext::CreateBitmapFromWicBitmap([In] IWICBitmapSource* wicBitmapSource,[In, Optional] const D2D1_BITMAP_PROPERTIES1* bitmapProperties,[Out] ID2D1Bitmap1** bitmap)</unmanaged>	
@@ -137,7 +137,7 @@ namespace SharpDX.Direct2D1
         /// <param name="options"><para>The options used in mapping the bitmap into memory.</para></param>	
         /// <returns>a reference to the rectangle that is mapped into memory</returns>	
         /// <remarks>	
-        /// The bitmap must have been created with the <see cref="SharpDX.Direct2D1.MapOptions.Read"/> flag specified.The caller should try to unmap the memory as quickly as is feasable to release occupied DMA aperture memory.	
+        /// The bitmap must have been created with the <see cref="SharpDX.Direct2D1.MapOptions.Read"/> flag specified.The caller should try to unmap the memory as quickly as is feasible to release occupied DMA aperture memory.	
         /// </remarks>	
         /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID2D1Bitmap1::Map']/*"/>	
         /// <unmanaged>HRESULT ID2D1Bitmap1::Map([In] D2D1_MAP_OPTIONS options,[Out] D2D1_MAPPED_RECT* mappedRect)</unmanaged>	

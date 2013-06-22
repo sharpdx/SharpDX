@@ -26,7 +26,7 @@
   <!--  This file is a common mapping file to D3D10, D3D10.1 and D3D11 APIs -->
   
   <!-- Includes are not attached to any namespace/assembly here -->
-  <!-- Attatch is done in specific D3D10/D3D11 mapping file -->
+  <!-- Attach is done in specific D3D10/D3D11 mapping file -->
 
   <!-- D3D10 includes -->
   <!-- d3d10_1.h must be included before d3d10.h -->

@@ -111,7 +111,7 @@ namespace SharpDX
 
         /// <summary>
         ///   Gets the <see cref = "T:SharpDX.Result">Result code</see> for the exception. This value indicates
-        ///   the specific type of failure that occured within SharpDX.
+        ///   the specific type of failure that occurred within SharpDX.
         /// </summary>
         public Result ResultCode
         {
@@ -120,7 +120,7 @@ namespace SharpDX
 
         /// <summary>
         ///   Gets the <see cref = "T:SharpDX.Result">Result code</see> for the exception. This value indicates
-        ///   the specific type of failure that occured within SharpDX.
+        ///   the specific type of failure that occurred within SharpDX.
         /// </summary>
         public ResultDescriptor Descriptor
         {

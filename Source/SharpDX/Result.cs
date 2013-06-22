@@ -18,9 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 using SharpDX.Serialization;
 
 namespace SharpDX
@@ -122,10 +120,12 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Equalses the specified other.
+        /// Indicates whether the current object is equal to another object of the same type.
         /// </summary>
-        /// <param name="other">The other.</param>
-        /// <returns></returns>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>
+        /// true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.
+        /// </returns>
         public bool Equals(Result other)
         {
             return this.Code == other.Code;
@@ -253,7 +253,7 @@ namespace SharpDX
         public static Result Fail = new Result(unchecked((int)0x80004005));
 
         /// <summary>
-        /// Resuld code Handle
+        /// Result code Handle
         /// </summary>
         public static Result Handle = new Result(unchecked((int)0x80070006));
 

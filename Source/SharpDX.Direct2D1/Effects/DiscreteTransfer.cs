@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin DiscreteTransfer effect.
+    /// Built in DiscreteTransfer effect.
     /// </summary>
     public class DiscreteTransfer : Effect
     {

@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin DistantSpecular effect.
+    /// Built in DistantSpecular effect.
     /// </summary>
     public class DistantSpecular : Effect
     {

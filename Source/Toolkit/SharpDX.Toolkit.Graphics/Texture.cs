@@ -309,7 +309,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <typeparam name="TData">The type of the T pixel data.</typeparam>
         /// <param name="mipLevel">The mip level.</param>
         /// <returns>The number of pixel data.</returns>
-        /// <remarks>This method is used to allocated a texture data buffer to hold pixel datas: var textureData = new T[ texture.CalculatePixelCount&lt;T&gt;() ] ;.</remarks>
+        /// <remarks>This method is used to allocated a texture data buffer to hold pixel data: var textureData = new T[ texture.CalculatePixelCount&lt;T&gt;() ] ;.</remarks>
         public int CalculatePixelDataCount<TData>(int mipLevel = 0) where TData : struct
         {
             return CalculateWidth<TData>(mipLevel) * CalculateMipSize(Description.Height, mipLevel) * CalculateMipSize(Description.Depth, mipLevel);
@@ -352,7 +352,7 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
         /// <remarks>
         /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>.
-        /// This method creates internally a stagging resource, copies to it and map it to memory. Use method with explicit staging resource
+        /// This method creates internally a staging resource, copies to it and map it to memory. Use method with explicit staging resource
         /// for optimal performances.</remarks>
         public TData[] GetData<TData>(int arrayOrDepthSlice = 0, int mipSlice = 0) where TData : struct
         {
@@ -365,7 +365,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Copies the content of this texture to an array of data.
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
-        /// <param name="toData">The destination buffer to receive a copy of the texture datas.</param>
+        /// <param name="toData">The destination buffer to receive a copy of the texture data.</param>
         /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
         /// <param name="mipSlice">The mip slice index.</param>
         /// <msdn-id>ff476457</msdn-id>
@@ -373,7 +373,7 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
         /// <remarks>
         /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>.
-        /// This method creates internally a stagging resource if this texture is not already a stagging resouce, copies to it and map it to memory. Use method with explicit staging resource
+        /// This method creates internally a staging resource if this texture is not already a staging resource, copies to it and map it to memory. Use method with explicit staging resource
         /// for optimal performances.</remarks>
         public void GetData<TData>(TData[] toData, int arraySlice = 0, int mipSlice = 0) where TData : struct
         {
@@ -385,7 +385,7 @@ namespace SharpDX.Toolkit.Graphics
             }
             else
             {
-                // Unefficient way to use the Copy method using dynamic staging texture
+                // Inefficient way to use the Copy method using dynamic staging texture
                 using (var throughStaging = this.ToStaging())
                     GetData(throughStaging, toData, arraySlice, mipSlice);
             }
@@ -569,7 +569,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Copies the content an data on CPU memory to this texture into GPU memory using the specified <see cref="GraphicsDevice"/> (The graphics device could be deffered).
+        /// Copies the content an data on CPU memory to this texture into GPU memory using the specified <see cref="GraphicsDevice"/> (The graphics device could be deferred).
         /// </summary>
         /// <param name="fromData">The data to copy from.</param>
         /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
@@ -589,7 +589,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Copies the content an array of data on CPU memory to this texture into GPU memory using the specified <see cref="GraphicsDevice"/> (The graphics device could be deffered).
+        /// Copies the content an array of data on CPU memory to this texture into GPU memory using the specified <see cref="GraphicsDevice"/> (The graphics device could be deferred).
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
@@ -971,7 +971,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Saves this texture to a file with a specified format.
         /// </summary>
-        /// <param name="filePath">The filepath to save the texture to.</param>
+        /// <param name="filePath">The file path to save the texture to.</param>
         /// <param name="fileType">Type of the image file.</param>
         public void Save(string filePath, ImageFileType fileType)
         {
@@ -984,7 +984,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Saves this texture to a stream with a specified format.
         /// </summary>
-        /// <param name="filePath">The filepath to save the texture to.</param>
+        /// <param name="filePath">The file path to save the texture to.</param>
         /// <param name="stagingTexture">The staging texture used to temporary transfer the image from the GPU to CPU.</param>
         /// <param name="fileType">Type of the image file.</param>
         /// <exception cref="ArgumentException">If stagingTexture is not a staging texture.</exception>

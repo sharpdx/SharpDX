@@ -25,7 +25,7 @@ namespace SharpDX.Direct3D9
     public partial class AdapterDetails
     {
         /// <summary>
-        /// Gets a value indicating whether the adapeter is WHQL certified.
+        /// Gets a value indicating whether the adapter is WHQL certified.
         /// </summary>
         /// <value>
         ///   <c>true</c> if certified; otherwise, <c>false</c>.

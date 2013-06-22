@@ -145,7 +145,7 @@ namespace SharpDX.Direct3D9
         /// <summary>
         /// Sets a typed value.
         /// </summary>
-        /// <typeparam name="T">Type of the value to est</typeparam>
+        /// <typeparam name="T">Type of the value to set</typeparam>
         /// <param name="effectHandle">The effect handle.</param>
         /// <param name="value">The value.</param>
         /// <returns>

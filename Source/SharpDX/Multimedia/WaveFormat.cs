@@ -423,9 +423,9 @@ namespace SharpDX.Multimedia
         }
 
         /// <summary>
-        /// Provides a Hashcode for this WaveFormat
+        /// Provides a hash code for this WaveFormat
         /// </summary>
-        /// <returns>A hashcode</returns>
+        /// <returns>A hash code</returns>
         public override int GetHashCode()
         {
             return (int)waveFormatTag ^
@@ -436,6 +436,10 @@ namespace SharpDX.Multimedia
                 (int)bitsPerSample;
         }
 
+        /// <summary>
+        /// Reads or writes data from/to the given binary serializer.
+        /// </summary>
+        /// <param name="serializer">The binary serializer.</param>
         public virtual void Serialize(BinarySerializer serializer)
         {
             __Native nativeFormat = default(__Native);

@@ -177,7 +177,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Helper for flipping winding of geometric primitives for LH vs. RH coords
+        /// Helper for flipping winding of geometric primitives for LH vs. RH coordinates
         /// </summary>
         /// <typeparam name="TIndex">The type of the T index.</typeparam>
         /// <param name="vertices">The vertices.</param>

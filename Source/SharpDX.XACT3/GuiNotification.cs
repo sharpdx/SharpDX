@@ -21,7 +21,7 @@
 namespace SharpDX.XACT3
 {
     /// <summary>
-    /// Gui notification parameters.
+    /// GUI notification parameters.
     /// </summary>
     /// <unmanaged>XACT_NOTIFICATION_GUI</unmanaged>
     public class GuiNotification : Notification

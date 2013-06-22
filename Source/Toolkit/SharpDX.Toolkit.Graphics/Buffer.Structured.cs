@@ -33,7 +33,7 @@ namespace SharpDX.Toolkit.Graphics
         public static class Structured
         {
             /// <summary>
-            /// Creates a new Structured buffer accessible as a <see cref="ShaderResourceView" /> and optionaly as a <see cref="UnorderedAccessView" />.
+            /// Creates a new Structured buffer accessible as a <see cref="ShaderResourceView" /> and optionally as a <see cref="UnorderedAccessView" />.
             /// </summary>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="count">The number of element in this buffer.</param>
@@ -51,7 +51,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             /// <summary>
-            /// Creates a new Structured buffer accessible as a <see cref="ShaderResourceView" /> and optionaly as a <see cref="UnorderedAccessView" />.
+            /// Creates a new Structured buffer accessible as a <see cref="ShaderResourceView" /> and optionally as a <see cref="UnorderedAccessView" />.
             /// </summary>
             /// <typeparam name="T">Type of the element in the structured buffer</typeparam>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
@@ -127,7 +127,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             /// <summary>
-            /// Creates a new StructuredAppend buffer accessible as a <see cref="ShaderResourceView" /> and optionaly as a <see cref="UnorderedAccessView" />.
+            /// Creates a new StructuredAppend buffer accessible as a <see cref="ShaderResourceView" /> and optionally as a <see cref="UnorderedAccessView" />.
             /// </summary>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <typeparam name="T">Type of the element in the structured buffer</typeparam>
@@ -188,7 +188,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             /// <summary>
-            /// Creates a new StructuredCounter buffer accessible as a <see cref="ShaderResourceView" /> and optionaly as a <see cref="UnorderedAccessView" />.
+            /// Creates a new StructuredCounter buffer accessible as a <see cref="ShaderResourceView" /> and optionally as a <see cref="UnorderedAccessView" />.
             /// </summary>
             /// <typeparam name="T">Type of the element in the structured buffer</typeparam>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>

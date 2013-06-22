@@ -25,7 +25,7 @@ namespace SharpDX.XAPO
         /// <summary>	
         /// Returns the registration properties of an XAPO.	
         /// </summary>	
-        /// <returns> a <see cref="SharpDX.XAPO.RegistrationProperties"/> structure containing theregistration properties the XAPO was created with; use XAPOFree to free thestructure.</returns>
+        /// <returns> a <see cref="SharpDX.XAPO.RegistrationProperties"/> structure containing the registration properties the XAPO was created with; use XAPOFree to free the structure.</returns>
         /// <unmanaged>HRESULT IXAPO::GetRegistrationProperties([Out] XAPO_REGISTRATION_PROPERTIES** ppRegistrationProperties)</unmanaged>
         SharpDX.XAPO.RegistrationProperties RegistrationProperties { get;}
 
@@ -69,8 +69,8 @@ namespace SharpDX.XAPO
         /// Called by XAudio2 to lock the input and output configurations of an XAPO allowing it to	
         /// do any final initialization before {{Process}} is called on the realtime thread.	
         /// </summary>	
-        /// <param name="inputLockedParameters"> Array of input <see cref="SharpDX.XAPO.LockParameters"/> structures.pInputLockedParameters may be NULL if InputLockedParameterCount is 0, otherwise itmust have InputLockedParameterCount elements.</param>
-        /// <param name="outputLockedParameters"> Array of output <see cref="SharpDX.XAPO.LockParameters"/> structures.pOutputLockedParameters may be NULL if OutputLockedParameterCount is 0, otherwise itmust have OutputLockedParameterCount elements.</param>
+        /// <param name="inputLockedParameters"> Array of input <see cref="SharpDX.XAPO.LockParameters"/> structures.pInputLockedParameters may be NULL if InputLockedParameterCount is 0, otherwise it must have InputLockedParameterCount elements.</param>
+        /// <param name="outputLockedParameters"> Array of output <see cref="SharpDX.XAPO.LockParameters"/> structures.pOutputLockedParameters may be NULL if OutputLockedParameterCount is 0, otherwise it must have OutputLockedParameterCount elements.</param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAPO::LockForProcess([None] UINT32 InputLockedParameterCount,[In, Buffer, Optional] const XAPO_LOCKFORPROCESS_BUFFER_PARAMETERS* pInputLockedParameters,[None] UINT32 OutputLockedParameterCount,[In, Buffer, Optional] const XAPO_LOCKFORPROCESS_BUFFER_PARAMETERS* pOutputLockedParameters)</unmanaged>
         void LockForProcess(SharpDX.XAPO.LockParameters[] inputLockedParameters, SharpDX.XAPO.LockParameters[] outputLockedParameters);

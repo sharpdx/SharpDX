@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin DisplacementMap effect.
+    /// Built in DisplacementMap effect.
     /// </summary>
     public class DisplacementMap : Effect
     {

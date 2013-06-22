@@ -167,7 +167,7 @@ namespace SharpDX.D3DCompiler
 
         public void Dispose()
         {
-            // Obsolete, just here for backware compatibility
+            // Obsolete, just here for backward compatibility
         }
     }
 }

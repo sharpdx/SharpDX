@@ -27,7 +27,7 @@ namespace SharpDX.Direct2D1
         /// Initializes a new instance of the <see cref="PixelFormat"/> struct.
         /// </summary>
         /// <param name="format">A value that specifies the size and arrangement of channels in each pixel.</param>
-        /// <param name="alphaMode">A value that specifies whether the alpha channel is using pre-multiplied alpha, straight alpha, whether it should be ignored and considered opaque, or whether it is unkown.</param>
+        /// <param name="alphaMode">A value that specifies whether the alpha channel is using pre-multiplied alpha, straight alpha, whether it should be ignored and considered opaque, or whether it is unknown.</param>
         public PixelFormat(Format format, AlphaMode alphaMode)
         {
             Format = format;

@@ -692,7 +692,7 @@ namespace SharpDX.Direct3D9
         }
 
         /// <summary>
-        /// Saves this bycode to the specified stream.
+        /// Saves this bytecode to the specified stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
         public void Save(Stream stream)
@@ -705,7 +705,7 @@ namespace SharpDX.Direct3D9
         }
 
         /// <summary>
-        /// Froms the pointer.
+        /// Create a ShaderBytecode from a pointer.
         /// </summary>
         /// <param name="pointer">The pointer.</param>
         /// <returns></returns>

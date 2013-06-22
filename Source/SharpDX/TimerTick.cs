@@ -24,7 +24,7 @@ using System.Diagnostics;
 namespace SharpDX
 {
     /// <summary>
-    /// This provides timing information similar to <see cref="System.Diagnostics.Stopwatch"/> but an update occuring only on a <see cref="Tick"/> method.
+    /// This provides timing information similar to <see cref="System.Diagnostics.Stopwatch"/> but an update occurring only on a <see cref="Tick"/> method.
     /// </summary>
     public class TimerTick
     {
@@ -53,7 +53,7 @@ namespace SharpDX
         #region Public Properties
 
         /// <summary>
-        /// Gets the total time elasped since the last reset or when this timer was created.
+        /// Gets the total time elapsed since the last reset or when this timer was created.
         /// </summary>
         public TimeSpan TotalTime { get; private set; }
 

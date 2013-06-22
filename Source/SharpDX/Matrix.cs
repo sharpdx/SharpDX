@@ -44,11 +44,9 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using SharpDX.Serialization;
 
 namespace SharpDX
@@ -627,7 +625,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Decomposes a matrix into an orthonormalized matrix Q and a right traingular matrix R.
+        /// Decomposes a matrix into an orthonormalized matrix Q and a right triangular matrix R.
         /// </summary>
         /// <param name="Q">When the method completes, contains the orthonormalized matrix of the decomposition.</param>
         /// <param name="R">When the method completes, contains the right triangular matrix of the decomposition.</param>
@@ -683,7 +681,7 @@ namespace SharpDX
         /// Decomposes a matrix into a scale, rotation, and translation.
         /// </summary>
         /// <param name="scale">When the method completes, contains the scaling component of the decomposed matrix.</param>
-        /// <param name="rotation">When the method completes, contains the rtoation component of the decomposed matrix.</param>
+        /// <param name="rotation">When the method completes, contains the rotation component of the decomposed matrix.</param>
         /// <param name="translation">When the method completes, contains the translation component of the decomposed matrix.</param>
         /// <remarks>
         /// This method is designed to decompose an SRT transformation matrix only.
@@ -1059,7 +1057,7 @@ namespace SharpDX
         public static void Exponent(ref Matrix value, int exponent, out Matrix result)
         {
             //Source: http://rosettacode.org
-            //Refrence: http://rosettacode.org/wiki/Matrix-exponentiation_operator
+            //Reference: http://rosettacode.org/wiki/Matrix-exponentiation_operator
 
             if (exponent < 0)
                 throw new ArgumentOutOfRangeException("exponent", "The exponent can not be negative.");
@@ -1147,12 +1145,12 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs a linear interpolation between two matricies.
+        /// Performs a linear interpolation between two matrices.
         /// </summary>
         /// <param name="start">Start matrix.</param>
         /// <param name="end">End matrix.</param>
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
-        /// <param name="result">When the method completes, contains the linear interpolation of the two matricies.</param>
+        /// <param name="result">When the method completes, contains the linear interpolation of the two matrices.</param>
         /// <remarks>
         /// This method performs the linear interpolation based on the following formula.
         /// <code>start + (end - start) * amount</code>
@@ -1179,7 +1177,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs a linear interpolation between two matricies.
+        /// Performs a linear interpolation between two matrices.
         /// </summary>
         /// <param name="start">Start matrix.</param>
         /// <param name="end">End matrix.</param>
@@ -1198,7 +1196,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs a cubic interpolation between two matricies.
+        /// Performs a cubic interpolation between two matrices.
         /// </summary>
         /// <param name="start">Start matrix.</param>
         /// <param name="end">End matrix.</param>
@@ -1454,7 +1452,7 @@ namespace SharpDX
         public static void Orthonormalize(ref Matrix value, out Matrix result)
         {
             //Uses the modified Gram-Schmidt process.
-            //Because we are making unit vectors, we can optimize the math for orthogonalization
+            //Because we are making unit vectors, we can optimize the math for orthonormalization
             //and simplify the projection operation to remove the division.
             //q1 = m1 / |m1|
             //q2 = (m2 - (q1 ⋅ m2) * q1) / |m2 - (q1 ⋅ m2) * q1|
@@ -1505,12 +1503,12 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Brings the matrix into upper triangular form using elementry row operations.
+        /// Brings the matrix into upper triangular form using elementary row operations.
         /// </summary>
         /// <param name="value">The matrix to put into upper triangular form.</param>
         /// <param name="result">When the method completes, contains the upper triangular matrix.</param>
         /// <remarks>
-        /// If the matrix is not invertable (i.e. its determinant is zero) than the result of this
+        /// If the matrix is not invertible (i.e. its determinant is zero) than the result of this
         /// method may produce Single.Nan and Single.Inf values. When the matrix represents a system
         /// of linear equations, than this often means that either no solution exists or an infinite
         /// number of solutions exist.
@@ -1567,12 +1565,12 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Brings the matrix into upper triangular form using elementry row operations.
+        /// Brings the matrix into upper triangular form using elementary row operations.
         /// </summary>
         /// <param name="value">The matrix to put into upper triangular form.</param>
         /// <returns>The upper triangular matrix.</returns>
         /// <remarks>
-        /// If the matrix is not invertable (i.e. its determinant is zero) than the result of this
+        /// If the matrix is not invertible (i.e. its determinant is zero) than the result of this
         /// method may produce Single.Nan and Single.Inf values. When the matrix represents a system
         /// of linear equations, than this often means that either no solution exists or an infinite
         /// number of solutions exist.
@@ -1585,12 +1583,12 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Brings the matrix into lower triangular form using elementry row operations.
+        /// Brings the matrix into lower triangular form using elementary row operations.
         /// </summary>
         /// <param name="value">The matrix to put into lower triangular form.</param>
         /// <param name="result">When the method completes, contains the lower triangular matrix.</param>
         /// <remarks>
-        /// If the matrix is not invertable (i.e. its determinant is zero) than the result of this
+        /// If the matrix is not invertible (i.e. its determinant is zero) than the result of this
         /// method may produce Single.Nan and Single.Inf values. When the matrix represents a system
         /// of linear equations, than this often means that either no solution exists or an infinite
         /// number of solutions exist.
@@ -1651,12 +1649,12 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Brings the matrix into lower triangular form using elementry row operations.
+        /// Brings the matrix into lower triangular form using elementary row operations.
         /// </summary>
         /// <param name="value">The matrix to put into lower triangular form.</param>
         /// <returns>The lower triangular matrix.</returns>
         /// <remarks>
-        /// If the matrix is not invertable (i.e. its determinant is zero) than the result of this
+        /// If the matrix is not invertible (i.e. its determinant is zero) than the result of this
         /// method may produce Single.Nan and Single.Inf values. When the matrix represents a system
         /// of linear equations, than this often means that either no solution exists or an infinite
         /// number of solutions exist.
@@ -1669,13 +1667,13 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Brings the matrix into row echelon form using elementry row operations;
+        /// Brings the matrix into row echelon form using elementary row operations;
         /// </summary>
         /// <param name="value">The matrix to put into row echelon form.</param>
         /// <param name="result">When the method completes, contains the row echelon form of the matrix.</param>
         public static void RowEchelonForm(ref Matrix value, out Matrix result)
         {
-            //Source: Wikipedia psuedo code
+            //Source: Wikipedia pseudo code
             //Reference: http://en.wikipedia.org/wiki/Row_echelon_form#Pseudocode
 
             result = value;
@@ -1731,7 +1729,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Brings the matrix into row echelon form using elementry row operations;
+        /// Brings the matrix into row echelon form using elementary row operations;
         /// </summary>
         /// <param name="value">The matrix to put into row echelon form.</param>
         /// <returns>When the method completes, contains the row echelon form of the matrix.</returns>
@@ -1743,14 +1741,14 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Brings the matrix into reduced row echelon form using elementry row operations.
+        /// Brings the matrix into reduced row echelon form using elementary row operations.
         /// </summary>
         /// <param name="value">The matrix to put into reduced row echelon form.</param>
         /// <param name="augment">The fifth column of the matrix.</param>
         /// <param name="result">When the method completes, contains the resultant matrix after the operation.</param>
         /// <param name="augmentResult">When the method completes, contains the resultant fifth column of the matrix.</param>
         /// <remarks>
-        /// <para>The fifth column is often called the agumented part of the matrix. This is because the fifth
+        /// <para>The fifth column is often called the augmented part of the matrix. This is because the fifth
         /// column is really just an extension of the matrix so that there is a place to put all of the
         /// non-zero components after the operation is complete.</para>
         /// <para>Often times the resultant matrix will the identity matrix or a matrix similar to the identity
@@ -2493,7 +2491,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a matrix that uniformally scales along all three axis.
+        /// Creates a matrix that uniformly scales along all three axis.
         /// </summary>
         /// <param name="scale">The uniform scale that is applied along all axis.</param>
         /// <param name="result">When the method completes, contains the created scaling matrix.</param>
@@ -2504,7 +2502,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a matrix that uniformally scales along all three axis.
+        /// Creates a matrix that uniformly scales along all three axis.
         /// </summary>
         /// <param name="scale">The uniform scale that is applied along all axis.</param>
         /// <returns>The created scaling matrix.</returns>
@@ -2603,7 +2601,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a matrix that rotates around an arbitary axis.
+        /// Creates a matrix that rotates around an arbitrary axis.
         /// </summary>
         /// <param name="axis">The axis around which to rotate. This parameter is assumed to be normalized.</param>
         /// <param name="angle">Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis toward the origin.</param>
@@ -2635,7 +2633,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a matrix that rotates around an arbitary axis.
+        /// Creates a matrix that rotates around an arbitrary axis.
         /// </summary>
         /// <param name="axis">The axis around which to rotate. This parameter is assumed to be normalized.</param>
         /// <param name="angle">Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis toward the origin.</param>
@@ -2768,7 +2766,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creats a skew/shear matrix by means of a translation vector, a rotation vector, and a rotation angle.
+        /// Creates a skew/shear matrix by means of a translation vector, a rotation vector, and a rotation angle.
         /// shearing is performed in the direction of translation vector, where translation vector and rotation vector define the shearing plane.
         /// The effect is such that the skewed rotation vector has the specified angle with rotation itself.
         /// </summary>
@@ -2993,11 +2991,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Adds two matricies.
+        /// Adds two matrices.
         /// </summary>
         /// <param name="left">The first matrix to add.</param>
         /// <param name="right">The second matrix to add.</param>
-        /// <returns>The sum of the two matricies.</returns>
+        /// <returns>The sum of the two matrices.</returns>
         public static Matrix operator +(Matrix left, Matrix right)
         {
             Matrix result;
@@ -3008,7 +3006,7 @@ namespace SharpDX
         /// <summary>
         /// Assert a matrix (return it unchanged).
         /// </summary>
-        /// <param name="value">The matrix to assert (unchange).</param>
+        /// <param name="value">The matrix to assert (unchanged).</param>
         /// <returns>The asserted (unchanged) matrix.</returns>
         public static Matrix operator +(Matrix value)
         {
@@ -3016,11 +3014,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Subtracts two matricies.
+        /// Subtracts two matrices.
         /// </summary>
         /// <param name="left">The first matrix to subtract.</param>
         /// <param name="right">The second matrix to subtract.</param>
-        /// <returns>The difference between the two matricies.</returns>
+        /// <returns>The difference between the two matrices.</returns>
         public static Matrix operator -(Matrix left, Matrix right)
         {
             Matrix result;
@@ -3067,11 +3065,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Multiplies two matricies.
+        /// Multiplies two matrices.
         /// </summary>
         /// <param name="left">The first matrix to multiply.</param>
         /// <param name="right">The second matrix to multiply.</param>
-        /// <returns>The product of the two matricies.</returns>
+        /// <returns>The product of the two matrices.</returns>
         public static Matrix operator *(Matrix left, Matrix right)
         {
             Matrix result;
@@ -3093,11 +3091,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Divides two matricies.
+        /// Divides two matrices.
         /// </summary>
         /// <param name="left">The first matrix to divide.</param>
         /// <param name="right">The second matrix to divide.</param>
-        /// <returns>The quotient of the two matricies.</returns>
+        /// <returns>The quotient of the two matrices.</returns>
         public static Matrix operator /(Matrix left, Matrix right)
         {
             Matrix result;

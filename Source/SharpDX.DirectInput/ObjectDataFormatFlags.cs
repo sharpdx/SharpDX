@@ -22,29 +22,29 @@ using System;
 namespace SharpDX.DirectInput
 {
     /// <summary>
-    /// Flags for a dataformat.
+    /// Flags for a data format.
     /// </summary>
     [Flags]
     public enum ObjectDataFormatFlags : int
     {
         /// <summary>
-        /// The dataformat doesn't report any specific information.
+        /// The data format doesn't report any specific information.
         /// </summary>
         None = 0,
         /// <summary>
-        /// The dataformat must report acceleration information.
+        /// The data format must report acceleration information.
         /// </summary>
         Acceleration = ObjectAspect.Acceleration,
         /// <summary>
-        /// The dataformat must report force information.
+        /// The data format must report force information.
         /// </summary>
         Force = ObjectAspect.Force,
         /// <summary>
-        /// The dataformat must report position information.
+        /// The data format must report position information.
         /// </summary>
         Position = ObjectAspect.Position,
         /// <summary>
-        /// The dataformat must report velocity information.
+        /// The data format must report velocity information.
         /// </summary>
         Velocity = ObjectAspect.Velocity   
     }

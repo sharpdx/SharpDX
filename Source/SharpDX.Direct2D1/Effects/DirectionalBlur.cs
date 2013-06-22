@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin DirectionalBlur effect.
+    /// Built in DirectionalBlur effect.
     /// </summary>
     public class DirectionalBlur : Effect
     {

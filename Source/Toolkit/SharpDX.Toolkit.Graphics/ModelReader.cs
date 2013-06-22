@@ -373,7 +373,7 @@ namespace SharpDX.Toolkit.Graphics
                 }
                 else
                 {
-                    // If the texture name is empty, the texture was probably not located when compiling, so we skipt it
+                    // If the texture name is empty, the texture was probably not located when compiling, so we skip it
                     // TODO Check if we want another behavior?
                     if (!string.IsNullOrEmpty(filePath))
                     {
@@ -426,7 +426,7 @@ namespace SharpDX.Toolkit.Graphics
             int parentBoneIndex = Reader.ReadInt32();
             if (parentBoneIndex >= 0) mesh.ParentBone = Model.Bones[parentBoneIndex];
 
-            // Read the bouding sphere
+            // Read the bounding sphere
             Serialize(ref mesh.BoundingSphere);
 
             ReadVertexBuffers(ref mesh.VertexBuffers);

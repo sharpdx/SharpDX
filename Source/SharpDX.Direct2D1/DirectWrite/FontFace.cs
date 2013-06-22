@@ -68,7 +68,7 @@ namespace SharpDX.DirectWrite
         /// <summary>	
         /// Obtains glyph metrics in font design units with the return values compatible with what GDI would produce.	
         /// </summary>	
-        /// <param name="fontSize">The ogical size of the font in DIP units. </param>
+        /// <param name="fontSize">The logical size of the font in DIP units. </param>
         /// <param name="pixelsPerDip">The number of physical pixels per DIP. </param>
         /// <param name="transform">An optional transform applied to the glyphs and their positions. This transform is applied after the scaling specified by the font size and pixelsPerDip. </param>
         /// <param name="useGdiNatural">When set to FALSE, the metrics are the same as the metrics of GDI aliased text.  When set to TRUE, the metrics are the same as the metrics of text measured by GDI using a font created with CLEARTYPE_NATURAL_QUALITY. </param>

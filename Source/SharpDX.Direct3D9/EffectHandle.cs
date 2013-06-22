@@ -29,7 +29,7 @@ namespace SharpDX.Direct3D9
         #region Constants and Fields
 
         /// <summary>
-        /// Defines the behaviour for caching strings. True by default.
+        /// Defines the behavior for caching strings. True by default.
         /// </summary>
         private const bool UseCacheStrings = true;
 

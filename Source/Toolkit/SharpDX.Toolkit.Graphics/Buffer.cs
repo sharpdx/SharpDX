@@ -228,7 +228,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <typeparam name="TData">The type of the T data.</typeparam>
         /// <remarks>
         /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>.
-        /// This method creates internally a stagging resource if this texture is not already a stagging resouce, copies to it and map it to memory. Use method with explicit staging resource
+        /// This method creates internally a staging resource if this texture is not already a staging resource, copies to it and map it to memory. Use method with explicit staging resource
         /// for optimal performances.</remarks>
         /// <msdn-id>ff476457</msdn-id>	
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
@@ -244,10 +244,10 @@ namespace SharpDX.Toolkit.Graphics
         /// Copies the content of this buffer to an array of data.
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
-        /// <param name="toData">The destination buffer to receive a copy of the texture datas.</param>
+        /// <param name="toData">The destination buffer to receive a copy of the texture data.</param>
         /// <remarks>
         /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>.
-        /// This method creates internally a stagging resource if this texture is not already a stagging resouce, copies to it and map it to memory. Use method with explicit staging resource
+        /// This method creates internally a staging resource if this texture is not already a staging resource, copies to it and map it to memory. Use method with explicit staging resource
         /// for optimal performances.</remarks>
         /// <msdn-id>ff476457</msdn-id>	
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
@@ -262,7 +262,7 @@ namespace SharpDX.Toolkit.Graphics
             }
             else
             {
-                // Unefficient way to use the Copy method using dynamic staging texture
+                // Inefficient way to use the Copy method using dynamic staging texture
                 using (var throughStaging = this.ToStaging())
                     GetData(throughStaging, toData);
             }
@@ -272,10 +272,10 @@ namespace SharpDX.Toolkit.Graphics
         /// Copies the content of this buffer to an array of data.
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
-        /// <param name="toData">The destination buffer to receive a copy of the texture datas.</param>
+        /// <param name="toData">The destination buffer to receive a copy of the texture data.</param>
         /// <remarks>
         /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>.
-        /// This method creates internally a stagging resource if this texture is not already a stagging resouce, copies to it and map it to memory. Use method with explicit staging resource
+        /// This method creates internally a staging resource if this texture is not already a staging resource, copies to it and map it to memory. Use method with explicit staging resource
         /// for optimal performances.</remarks>
         /// <msdn-id>ff476457</msdn-id>	
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
@@ -290,7 +290,7 @@ namespace SharpDX.Toolkit.Graphics
             }
             else
             {
-                // Unefficient way to use the Copy method using dynamic staging texture
+                // Inefficient way to use the Copy method using dynamic staging texture
                 using (var throughStaging = this.ToStaging())
                     GetData(throughStaging, ref toData);
             }
@@ -585,7 +585,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Creates a new <see cref="Buffer" /> instance.
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
-        /// <param name="elementCount">Number of T elment in this buffer.</param>
+        /// <param name="elementCount">Number of T elements in this buffer.</param>
         /// <param name="bufferFlags">The buffer flags to specify the type of buffer.</param>
         /// <param name="usage">The usage.</param>
         /// <returns>An instance of a new <see cref="Buffer" /></returns>
@@ -1154,7 +1154,7 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
         ///   <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
         /// <remarks>This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice" />.
-        /// This method creates internally a stagging resource if this texture is not already a stagging resouce, copies to it and map it to memory. Use method with explicit staging resource
+        /// This method creates internally a staging resource if this texture is not already a staging resource, copies to it and map it to memory. Use method with explicit staging resource
         /// for optimal performances.</remarks>
         public T[] GetData()
         {

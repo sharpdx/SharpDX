@@ -26,7 +26,7 @@ using SharpDX.Direct3D11;
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// A RenderTarget2D frontend to <see cref="SharpDX.Direct3D11.Texture2D"/>.
+    /// A RenderTarget2D front end to <see cref="SharpDX.Direct3D11.Texture2D"/>.
     /// </summary>
     /// <remarks>
     /// This class instantiates a <see cref="Texture2D"/> with the binding flags <see cref="BindFlags.RenderTarget"/>.

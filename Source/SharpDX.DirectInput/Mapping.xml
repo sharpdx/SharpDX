@@ -958,7 +958,7 @@
     <map field="DIDATAFORMAT::dwNumObjs" name="ObjectArrayCount" visibility="internal"/>
     <map field="DIDATAFORMAT::rgodf" type="void" name="ObjectArrayPointer" visibility="internal"/>
 
-    <!-- Struture mapped by hand 
+    <!-- Structure mapped by hand 
     <map struct="DIOBJECTDATAFORMAT" visibility="internal" native="true" struct-to-class="true" marshal="true" marshalto="true"/>
     <map field="DIOBJECTDATAFORMAT::pguid" name="GuidPointer"/>
     <map field="DIOBJECTDATAFORMAT::dwType" type="DIDFT"/>

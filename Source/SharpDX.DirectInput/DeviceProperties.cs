@@ -22,7 +22,7 @@ using System;
 namespace SharpDX.DirectInput
 {
     /// <summary>
-    /// Propertyies for a <see cref="Device"/>.
+    /// Properties for a <see cref="Device"/>.
     /// </summary>
     public partial class DeviceProperties : PropertyAccessor
     {
@@ -120,7 +120,7 @@ namespace SharpDX.DirectInput
         /// <summary>
         /// Gets or sets the force feedback gain of the device. 
         /// The gain value is applied to all effects created on the device. The value is an integer in the range from 0 through 10,000, specifying the amount by which effect magnitudes should be scaled for the device. For example, a value of 10,000 indicates that all effect magnitudes are to be taken at face value. A value of 9,000 indicates that all effect magnitudes are to be reduced to 90 percent of their nominal magnitudes.
-        /// DirectInput always checks the gain value before setting the gain property. If the gain is outside of the range (less than zero or greater than 10,000), setting this propery will raise an exception. Otherwise, no exception if successful, even if the device does not support force feedback.
+        /// DirectInput always checks the gain value before setting the gain property. If the gain is outside of the range (less than zero or greater than 10,000), setting this property will raise an exception. Otherwise, no exception if successful, even if the device does not support force feedback.
         /// Setting a gain value is useful when an application wants to scale down the strength of all force-feedback effects uniformly, based on user preferences.
         /// Unlike other properties, the gain can be set when the device is in an acquired state. 
         /// </summary>

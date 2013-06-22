@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin Shadow effect.
+    /// Built in Shadow effect.
     /// </summary>
     public class Shadow : Effect
     {

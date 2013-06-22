@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin Transform3D effect.
+    /// Built in Transform3D effect.
     /// </summary>
     public class Transform3D : Effect
     {

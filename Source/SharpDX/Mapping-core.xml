@@ -674,7 +674,7 @@
     <map method=".*GetType" name="GetTypeInfo" />
 
     <!--
-    // Some global macros are overiding method names
+    // Some global macros are overriding method names
     -->
     <map method=".*::GetTextMetricsW" name="GetTextMetrics" />
     <map method=".*::PreloadTextW" name="PreloadText" />

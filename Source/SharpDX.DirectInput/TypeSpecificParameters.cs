@@ -48,7 +48,7 @@ namespace SharpDX.DirectInput
         }
 
         /// <summary>
-        /// Inits this instance from the specified buffer.
+        /// Initializes this instance from the specified buffer.
         /// </summary>
         /// <param name="bufferSize">Size of the buffer.</param>
         /// <param name="bufferPointer">The buffer pointer.</param>
@@ -65,7 +65,7 @@ namespace SharpDX.DirectInput
         }
 
         /// <summary>
-        /// Marshal this class from an unamanaged buffer.
+        /// Marshal this class from an unmanaged buffer.
         /// </summary>
         /// <param name="bufferSize">The size of the unmanaged buffer.</param>
         /// <param name="bufferPointer">The pointer to the unmanaged buffer.</param>

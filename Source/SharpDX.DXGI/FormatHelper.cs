@@ -35,7 +35,7 @@ namespace SharpDX.DXGI
         /// <summary>
         /// Calculates the size of a <see cref="Format"/> in bytes.
         /// </summary>
-        /// <param name="format">The dxgi format.</param>
+        /// <param name="format">The DXGI format.</param>
         /// <returns>size of in bytes</returns>
         public static float SizeOfInBytes(Format format)
         {
@@ -45,7 +45,7 @@ namespace SharpDX.DXGI
         /// <summary>
         /// Calculates the size of a <see cref="Format"/> in bits.
         /// </summary>
-        /// <param name="format">The dxgi format.</param>
+        /// <param name="format">The DXGI format.</param>
         /// <returns>size of in bits</returns>
         public static int SizeOfInBits(Format format)
         {

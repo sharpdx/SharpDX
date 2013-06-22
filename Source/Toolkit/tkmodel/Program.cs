@@ -115,7 +115,7 @@ namespace SharpDX.Toolkit.Compiler
             
             if (result.IsContentGenerated)
             {
-                Console.WriteLine("Successfull");
+                Console.WriteLine("Successful");
             }
             else
             {
