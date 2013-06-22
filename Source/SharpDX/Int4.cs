@@ -18,10 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using SharpDX;
 using SharpDX.Serialization;
 
 namespace SharpDX
@@ -436,7 +434,7 @@ namespace SharpDX
         /// <summary>
         /// Assert a vector (return it unchanged).
         /// </summary>
-        /// <param name = "value">The vector to assert (unchange).</param>
+        /// <param name = "value">The vector to assert (unchanged).</param>
         /// <returns>The asserted (unchanged) vector.</returns>
         public static Int4 operator +(Int4 value)
         {

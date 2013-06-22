@@ -23,7 +23,7 @@ using SharpDX.DXGI;
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    ///   Describess how data will be displayed to the screen.
+    /// Describes how data will be displayed to the screen.
     /// </summary>
     /// <msdn-id>bb173075</msdn-id>
     /// <unmanaged>DXGI_SWAP_CHAIN_DESC</unmanaged>

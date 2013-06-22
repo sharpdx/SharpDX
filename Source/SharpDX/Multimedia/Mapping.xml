@@ -46,7 +46,7 @@
     </include>
   </ifndef>
   
-  <!-- Incldue mmreg.h before audiodefs.h in order to avoid redefinition problem -->
+  <!-- Include mmreg.h before audiodefs.h in order to avoid redefinition problem -->
   <include file="mmreg.h" namespace="SharpDX.Multimedia" output="Multimedia">
     <pre>
       #define WAVE_FORMAT_PCM     1

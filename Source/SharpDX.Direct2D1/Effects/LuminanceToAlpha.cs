@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin LuminanceToAlpha effect.
+    /// Built in LuminanceToAlpha effect.
     /// </summary>
     public class LuminanceToAlpha : Effect
     {

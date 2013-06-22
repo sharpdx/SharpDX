@@ -106,7 +106,7 @@ namespace SharpDX
             float d3 = Vector3.Dot(ab, bp);
             float d4 = Vector3.Dot(ac, bp);
             if (d3 >= 0.0f && d4 <= d3)
-                result = vertex2; // barycentric coordinates (0,1,0)
+                result = vertex2; // Barycentric coordinates (0,1,0)
 
             //Check if P in edge region of AB, if so return projection of P onto AB
             float vc = d1 * d4 - d3 * d2;
@@ -139,7 +139,7 @@ namespace SharpDX
                 result = vertex2 + w * (vertex3 - vertex2); //Barycentric coordinates (0,1-w,w)
             }
 
-            //P inside face region. Compute Q through its barycentric coordinates (u,v,w)
+            //P inside face region. Compute Q through its Barycentric coordinates (u,v,w)
             float denom = 1.0f / (va + vb + vc);
             float v2 = vb * denom;
             float w2 = vc * denom;
@@ -212,7 +212,7 @@ namespace SharpDX
         /// <param name="result">When the method completes, contains the closest point between the two objects;
         /// or, if the point is directly in the center of the sphere, contains <see cref="SharpDX.Vector3.Zero"/>.</param>
         /// <remarks>
-        /// If the two spheres are overlapping, but not directly ontop of each other, the closest point
+        /// If the two spheres are overlapping, but not directly on top of each other, the closest point
         /// is the 'closest' point of intersection. This can also be considered is the deepest point of
         /// intersection.
         /// </remarks>
@@ -483,7 +483,7 @@ namespace SharpDX
             Vector3 point1 = ray1.Position + (s * ray1.Direction);
             Vector3 point2 = ray2.Position + (t * ray2.Direction);
 
-            //If the points are not equal, no intersection has occured.
+            //If the points are not equal, no intersection has occurred.
             if (Math.Abs(point2.X - point1.X) > MathUtil.ZeroTolerance ||
                 Math.Abs(point2.Y - point1.Y) > MathUtil.ZeroTolerance ||
                 Math.Abs(point2.Z - point1.Z) > MathUtil.ZeroTolerance)
@@ -565,7 +565,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
-        /// <param name="vertex2">The second vertex of the triagnle to test.</param>
+        /// <param name="vertex2">The second vertex of the triangle to test.</param>
         /// <param name="vertex3">The third vertex of the triangle to test.</param>
         /// <param name="distance">When the method completes, contains the distance of the intersection,
         /// or 0 if there was no intersection.</param>
@@ -672,7 +672,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
-        /// <param name="vertex2">The second vertex of the triagnle to test.</param>
+        /// <param name="vertex2">The second vertex of the triangle to test.</param>
         /// <param name="vertex3">The third vertex of the triangle to test.</param>
         /// <param name="point">When the method completes, contains the point of intersection,
         /// or <see cref="SharpDX.Vector3.Zero"/> if there was no intersection.</param>
@@ -956,7 +956,7 @@ namespace SharpDX
 
             //We assume the planes are normalized, therefore the denominator
             //only serves as a parallel and coincident check. Otherwise we need
-            //to deivide the point by the denominator.
+            //to divide the point by the denominator.
             if (Math.Abs(denominator) < MathUtil.ZeroTolerance)
             {
                 line = new Ray();
@@ -979,7 +979,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="plane">The plane to test.</param>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
-        /// <param name="vertex2">The second vertex of the triagnle to test.</param>
+        /// <param name="vertex2">The second vertex of the triangle to test.</param>
         /// <param name="vertex3">The third vertex of the triangle to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
         public static PlaneIntersectionType PlaneIntersectsTriangle(ref Plane plane, ref Vector3 vertex1, ref Vector3 vertex2, ref Vector3 vertex3)
@@ -1059,13 +1059,13 @@ namespace SharpDX
             return PlaneIntersectionType.Intersecting;
         }
 
-        /* This implentation is wrong
+        /* This implementation is wrong
         /// <summary>
         /// Determines whether there is an intersection between a <see cref="SharpDX.BoundingBox"/> and a triangle.
         /// </summary>
         /// <param name="box">The box to test.</param>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
-        /// <param name="vertex2">The second vertex of the triagnle to test.</param>
+        /// <param name="vertex2">The second vertex of the triangle to test.</param>
         /// <param name="vertex3">The third vertex of the triangle to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
         public static bool BoxIntersectsTriangle(ref BoundingBox box, ref Vector3 vertex1, ref Vector3 vertex2, ref Vector3 vertex3)
@@ -1126,7 +1126,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="sphere">The sphere to test.</param>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
-        /// <param name="vertex2">The second vertex of the triagnle to test.</param>
+        /// <param name="vertex2">The second vertex of the triangle to test.</param>
         /// <param name="vertex3">The third vertex of the triangle to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
         public static bool SphereIntersectsTriangle(ref BoundingSphere sphere, ref Vector3 vertex1, ref Vector3 vertex2, ref Vector3 vertex3)
@@ -1174,13 +1174,13 @@ namespace SharpDX
             return ContainmentType.Disjoint;
         }
 
-        /* This implentation is wrong
+        /* This implementation is wrong
         /// <summary>
         /// Determines whether a <see cref="SharpDX.BoundingBox"/> contains a triangle.
         /// </summary>
         /// <param name="box">The box to test.</param>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
-        /// <param name="vertex2">The second vertex of the triagnle to test.</param>
+        /// <param name="vertex2">The second vertex of the triangle to test.</param>
         /// <param name="vertex3">The third vertex of the triangle to test.</param>
         /// <returns>The type of containment the two objects have.</returns>
         public static ContainmentType BoxContainsTriangle(ref BoundingBox box, ref Vector3 vertex1, ref Vector3 vertex2, ref Vector3 vertex3)
@@ -1270,7 +1270,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="sphere">The sphere to test.</param>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
-        /// <param name="vertex2">The second vertex of the triagnle to test.</param>
+        /// <param name="vertex2">The second vertex of the triangle to test.</param>
         /// <param name="vertex3">The third vertex of the triangle to test.</param>
         /// <returns>The type of containment the two objects have.</returns>
         public static ContainmentType SphereContainsTriangle(ref BoundingSphere sphere, ref Vector3 vertex1, ref Vector3 vertex2, ref Vector3 vertex3)

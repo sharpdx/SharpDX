@@ -130,7 +130,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an explcit conversion from <see cref="string"/> to <see cref="SharpDX.SingletonString"/>.
+        /// Performs an explicit conversion from <see cref="string"/> to <see cref="SharpDX.SingletonString"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>

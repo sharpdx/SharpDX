@@ -42,7 +42,7 @@ namespace SharpDX.Toolkit.Graphics
         public readonly static PropertyKey<float> BumpScaling = RegisterKey(new PropertyKey<float>("BumpScaling"));
 
         /// <summary>
-        /// Defines the shininess of a phong-shaded material. This is actually the exponent of the phong specular equation 
+        /// Defines the shininess of a Phong-shaded material. This is actually the exponent of the Phong specular equation 
         /// </summary>
         public readonly static PropertyKey<float> Shininess = RegisterKey(new PropertyKey<float>("Shininess"));
 
@@ -62,7 +62,7 @@ namespace SharpDX.Toolkit.Graphics
         public readonly static PropertyKey<float> Refraction = RegisterKey(new PropertyKey<float>("Refraction"));
 
         /// <summary>
-        /// Diffuse color of the material. This is typically scaled by the amount of incoming diffuse light (e.g. using gouraud shading).
+        /// Diffuse color of the material. This is typically scaled by the amount of incoming diffuse light (e.g. using Gouraud shading).
         /// </summary>
         public readonly static PropertyKey<Color4> ColorDiffuse = RegisterKey(new PropertyKey<Color4>("ColorDiffuse"));
 
@@ -72,12 +72,12 @@ namespace SharpDX.Toolkit.Graphics
         public readonly static PropertyKey<Color4> ColorAmbient = RegisterKey(new PropertyKey<Color4>("ColorAmbient"));
 
         /// <summary>
-        /// Specular color of the material. This is typically scaled by the amount of incoming specular light (e.g. using phong shading) 
+        /// Specular color of the material. This is typically scaled by the amount of incoming specular light (e.g. using Phong shading) 
         /// </summary>
         public readonly static PropertyKey<Color3> ColorSpecular = RegisterKey(new PropertyKey<Color3>("ColorSpecular"));
 
         /// <summary>
-        /// Emissive color of the material. This is the amount of light emitted by the object. In real time applications it will usually not affect surrounding objects, but raytracing applications may wish to treat emissive objects as light sources. 
+        /// Emissive color of the material. This is the amount of light emitted by the object. In real time applications it will usually not affect surrounding objects, but ray tracing applications may wish to treat emissive objects as light sources. 
         /// </summary>
         public readonly static PropertyKey<Color3> ColorEmissive = RegisterKey(new PropertyKey<Color3>("ColorEmissive"));
 

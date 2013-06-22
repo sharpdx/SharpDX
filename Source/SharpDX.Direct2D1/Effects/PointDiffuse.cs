@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin PointDiffuse effect.
+    /// Built in PointDiffuse effect.
     /// </summary>
     public class PointDiffuse : Effect
     {

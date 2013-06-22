@@ -470,11 +470,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Returns a color containing the smallest components of the specified colorss.
+        /// Returns a color containing the smallest components of the specified colors.
         /// </summary>
         /// <param name="left">The first source color.</param>
         /// <param name="right">The second source color.</param>
-        /// <param name="result">When the method completes, contains an new color composed of the largest components of the source colorss.</param>
+        /// <param name="result">When the method completes, contains an new color composed of the largest components of the source colors.</param>
         public static void Max(ref Color3 left, ref Color3 right, out Color3 result)
         {
             result.Red = (left.Red > right.Red) ? left.Red : right.Red;
@@ -483,7 +483,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Returns a color containing the largest components of the specified colorss.
+        /// Returns a color containing the largest components of the specified colors.
         /// </summary>
         /// <param name="left">The first source color.</param>
         /// <param name="right">The second source color.</param>
@@ -593,7 +593,7 @@ namespace SharpDX
         /// <summary>
         /// Assert a color (return it unchanged).
         /// </summary>
-        /// <param name="value">The color to assert (unchange).</param>
+        /// <param name="value">The color to assert (unchanged).</param>
         /// <returns>The asserted (unchanged) color.</returns>
         public static Color3 operator +(Color3 value)
         {

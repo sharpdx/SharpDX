@@ -212,7 +212,7 @@ namespace SharpDX.Toolkit.Graphics
 
 
         // Note that many common DDS reader/writers (including D3DX) swap the
-        // the RED/BLUE masks for 10:10:10:2 formats. We assumme
+        // the RED/BLUE masks for 10:10:10:2 formats. We assume
         // below that the 'backwards' header mask is being used since it is most
         // likely written by D3DX. The more robust solution is to use the 'DX10'
         // header extension and specify the Format.R10G10B10A2_UNorm format directly
@@ -285,8 +285,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="description">Output texture description.</param>
         /// <param name="convFlags">Output conversion flags.</param>
         /// <exception cref="ArgumentException">If the argument headerPtr is null</exception>
-        /// <exception cref="InvalidOperationException">If the DDS header contains invalid datas.</exception>
-        /// <returns>True if the decoding is successfull, false if this is not a DDS header.</returns>
+        /// <exception cref="InvalidOperationException">If the DDS header contains invalid data.</exception>
+        /// <returns>True if the decoding is successful, false if this is not a DDS header.</returns>
         private static unsafe bool DecodeDDSHeader(IntPtr headerPtr, int size, DDSFlags flags, out ImageDescription description, out ConversionFlags convFlags)
         {
             description = new ImageDescription();
@@ -487,8 +487,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="maxsize">The maximum size of the destination buffer.</param>
         /// <param name="required">Output the number of bytes required to write the DDS header.</param>
         /// <exception cref="ArgumentException">If the argument headerPtr is null</exception>
-        /// <exception cref="InvalidOperationException">If the DDS header contains invalid datas.</exception>
-        /// <returns>True if the decoding is successfull, false if this is not a DDS header.</returns>
+        /// <exception cref="InvalidOperationException">If the DDS header contains invalid data.</exception>
+        /// <returns>True if the decoding is successful, false if this is not a DDS header.</returns>
         private unsafe static void EncodeDDSHeader( ImageDescription description, DDSFlags flags,  IntPtr pDestination, int maxsize, out int required )
         {
             if (description.ArraySize > 1)

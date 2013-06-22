@@ -79,7 +79,7 @@ namespace SharpDX.Direct3D11
         private RenderTargetView renderTargetView;
 
         /// <summary>
-        /// Return a pointer to the unamanged version of this callback.
+        /// Return a pointer to the unmanaged version of this callback.
         /// </summary>
         /// <param name="callback">The callback.</param>
         /// <returns>A pointer to a shadow c++ callback</returns>

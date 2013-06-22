@@ -33,7 +33,7 @@ namespace SharpDX.Toolkit.Graphics
     /// This class manages a pool of <see cref="Effect"/>.
     /// </summary>
     /// <remarks>
-    /// This class is responsible to store all EffectData, create shareable constant buffers betwen effects and reuse shader EffectData instances.
+    /// This class is responsible to store all EffectData, create shareable constant buffers between effects and reuse shader EffectData instances.
     /// </remarks>
     public sealed class EffectPool : Component
     {
@@ -78,7 +78,7 @@ namespace SharpDX.Toolkit.Graphics
         ///   Gets or sets the constant buffer allocator used to allocate a GPU constant buffer declared in an Effect.
         /// </summary>
         /// <remarks>
-        ///   This delegate must be overriden when you want to control the creation of the GPU Constant buffer.
+        ///   This delegate must be overridden when you want to control the creation of the GPU Constant buffer.
         ///   By default, the allocator is just allocating the buffer using "Buffer.Constant.New(size)" but
         ///   It is sometimes needed to create a constant buffer with different usage scenarios (using for example
         ///   a RawBuffer with multiple usages).
@@ -122,7 +122,7 @@ namespace SharpDX.Toolkit.Graphics
                     effect = RegisterInternal(data);
                     registered.Add(data, effect);
 
-                    // Just alocate the compiled shaders array according to the currennt size of shader datas
+                    // Just allocate the compiled shaders array according to the current size of shader data
                     foreach (var compiledShaders in compiledShadersGroup)
                     {
                         for (int i = compiledShaders.Count; i < RegisteredShaders.Count; i++)
@@ -264,7 +264,7 @@ namespace SharpDX.Toolkit.Graphics
                 }
 
                 // ----------------------------------------------------------------------------
-                // 3) Get an existing constant buffer having the same name/sizel/ayout/parameters
+                // 3) Get an existing constant buffer having the same name/size/layout/parameters
                 // ----------------------------------------------------------------------------
                 var bufferKey = new EffectConstantBufferKey(bufferRaw);
                 EffectConstantBuffer buffer;

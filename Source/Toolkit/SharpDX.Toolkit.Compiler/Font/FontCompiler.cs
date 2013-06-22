@@ -166,7 +166,7 @@ namespace SharpDX.Toolkit.Graphics
         public static SpriteFontData Compile(FontDescription fontDescription)
         {
             // We are using a MemoryStream, this is not efficient
-            // but this was a quickiest way to use existing from MakeSpriteFont from DirectXTk
+            // but this was a quickest way to use existing from MakeSpriteFont from DirectXTk
             var stream = new MemoryStream();
             MakeSpriteFont(fontDescription, stream);
             stream.Position = 0;

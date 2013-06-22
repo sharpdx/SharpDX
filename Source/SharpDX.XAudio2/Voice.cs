@@ -173,7 +173,7 @@ namespace SharpDX.XAudio2
         /// <summary>	
         /// Designates a new set of submix or mastering voices to receive the output of the voice.	
         /// </summary>	
-        /// <param name="outputVoices">[in]  Array of <see cref="VoiceSendDescriptor"/> structure pointers to destination voices. If outputVoices is NULL, the voice will send its output to the current mastering voice. To set the voice to not send its output anywhere set an array of lenvth 0. All of the voices in a send list must have the same input sample rate, see {{XAudio2 Sample Rate Conversions}} for additional information. </param>
+        /// <param name="outputVoices">[in]  Array of <see cref="VoiceSendDescriptor"/> structure pointers to destination voices. If outputVoices is NULL, the voice will send its output to the current mastering voice. To set the voice to not send its output anywhere set an array of length 0. All of the voices in a send list must have the same input sample rate, see {{XAudio2 Sample Rate Conversions}} for additional information. </param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAudio2Voice::SetOutputVoices([In, Optional] const XAUDIO2_VOICE_SENDS* pSendList)</unmanaged>
         public void SetOutputVoices(params VoiceSendDescriptor[] outputVoices)

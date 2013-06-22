@@ -111,7 +111,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         ///  This method for loading/saving a font file generated from AngelCode BMFont.
         /// </summary>
-        /// <param name="serializer">The binaryserializer to use.</param>
+        /// <param name="serializer">The binary serializer to use.</param>
         private void SerializeBMFFont(BinarySerializer serializer)
         {
             // ----------------------------------------------------------

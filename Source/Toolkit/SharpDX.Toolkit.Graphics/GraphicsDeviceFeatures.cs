@@ -104,7 +104,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Gets the <see cref="FeaturesPerFormat" /> for the specified <see cref="SharpDX.DXGI.Format" />.
         /// </summary>
-        /// <param name="dxgiFormat">The dxgi format.</param>
+        /// <param name="dxgiFormat">The DXGI format.</param>
         /// <returns>Features for the specific format.</returns>
         public FeaturesPerFormat this[SharpDX.DXGI.Format dxgiFormat]
         {

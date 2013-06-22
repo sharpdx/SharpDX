@@ -51,7 +51,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Gest the maximum buffer size in bytes that will be needed when loading this model.
+        /// Gets the maximum buffer size in bytes that will be needed when loading this model.
         /// </summary>
         public int MaximumBufferSizeInBytes;
 
@@ -165,7 +165,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             // Starts the whole ModelData by the magiccode "TKMD"
             // If the serializer don't find the TKMD, It will throw an
-            // exception that will be catched by Load method.
+            // exception that will be caught by Load method.
 
             // This code should not be modified without modifying the serialize code in Model.
 

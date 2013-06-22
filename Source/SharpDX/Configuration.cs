@@ -43,7 +43,7 @@ namespace SharpDX
         public static bool EnableReleaseOnFinalizer = false;
 
         /// <summary>
-        /// Throws a <see cref="CompilationException"/> when a shader or effect compilation error occured. Default is enabled (true).
+        /// Throws a <see cref="CompilationException"/> when a shader or effect compilation error occurred. Default is enabled (true).
         /// </summary>
         public static bool ThrowOnShaderCompileError = true;
 

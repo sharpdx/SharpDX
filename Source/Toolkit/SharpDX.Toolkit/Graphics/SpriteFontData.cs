@@ -38,7 +38,7 @@ namespace SharpDX.Toolkit.Graphics
     /// Data for a SpriteFont object that supports kerning.
     /// </summary>
     /// <remarks>
-    /// Loading of SpriteFontData supports DirectXTk "MakeSpriteFont" fornat and AngelCode Bitmap Font Maker (binary format).
+    /// Loading of SpriteFontData supports DirectXTk "MakeSpriteFont" format and AngelCode Bitmap Font Maker (binary format).
     /// </remarks>
     [ContentReader(typeof(SpriteFontDataContentReader))]
     public partial class SpriteFontData : IDataSerializable
@@ -105,7 +105,7 @@ namespace SharpDX.Toolkit.Graphics
                 return null;
             }
 
-            // Glyps are null, then this is not a SpriteFondData
+            // Glyphs are null, then this is not a SpriteFondData
             if (data.Glyphs == null)
                 return null;
 

@@ -58,7 +58,7 @@ namespace SharpDX.Toolkit.Graphics
         EffectCompilerResult CompileFromFile(string filePath, EffectCompilerFlags flags = EffectCompilerFlags.None, List<EffectData.ShaderMacro> macros = null, List<string> includeDirectoryList = null, bool alloDynamicCompiling = false, string dependencyFilePath = null);
 
         /// <summary>
-        /// Compiles an effect from the specified source code and filepath.
+        /// Compiles an effect from the specified source code and file path.
         /// </summary>
         /// <param name="sourceCode">The source code.</param>
         /// <param name="filePath">The file path.</param>

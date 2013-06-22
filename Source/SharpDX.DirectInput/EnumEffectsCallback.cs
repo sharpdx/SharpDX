@@ -54,9 +54,9 @@ namespace SharpDX.DirectInput
         }
 
         /// <summary>
-        /// Gets or sets the informations.
+        /// Gets or sets the effect infos.
         /// </summary>
-        /// <value>The informations.</value>
+        /// <value>The effect infos.</value>
         public List<EffectInfo> EffectInfos { get; private set; }
 
         // BOOL DIEnumEffectsCallback(LPCDIEffectInfo pdei,LPVOID pvRef)

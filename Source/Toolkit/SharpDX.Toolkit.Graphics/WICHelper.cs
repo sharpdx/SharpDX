@@ -345,7 +345,7 @@ namespace SharpDX.Toolkit.Graphics
                 case DXGI.Format.R1_UNorm:
                     if ((flags & WICFlags.FlagsAllowMono) == 0)
                     {
-                        // By default we want to promote a black & white to gresycale since R1 is not a generally supported D3D format
+                        // By default we want to promote a black & white to greyscale since R1 is not a generally supported D3D format
                         format = DXGI.Format.R8_UNorm;
                         pixelFormatOut = WIC.PixelFormat.Format8bppGray;
                     }

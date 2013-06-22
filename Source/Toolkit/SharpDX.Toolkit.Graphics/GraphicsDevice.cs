@@ -27,7 +27,7 @@ using Device = SharpDX.Direct3D11.Device;
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// This class is a frontend to <see cref="SharpDX.Direct3D11.Device"/> and <see cref="SharpDX.Direct3D11.DeviceContext"/>.
+    /// This class is a front end to <see cref="SharpDX.Direct3D11.Device"/> and <see cref="SharpDX.Direct3D11.DeviceContext"/>.
     /// </summary>
     public class GraphicsDevice : Component
     {
@@ -292,9 +292,9 @@ namespace SharpDX.Toolkit.Graphics
         public GraphicsPresenter Presenter { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the viewport is automatically calculated and set when a rendertarget is set. Default is true.
+        /// Gets or sets a value indicating whether the viewport is automatically calculated and set when a render target is set. Default is true.
         /// </summary>
-        /// <value><c>true</c> if the viewport is automatically calculated and set when a rendertarget is set; otherwise, <c>false</c>.</value>
+        /// <value><c>true</c> if the viewport is automatically calculated and set when a render target is set; otherwise, <c>false</c>.</value>
         public bool AutoViewportFromRenderTargets { get; set; }
 
         /// <summary>
@@ -452,7 +452,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="view">The buffer to clear.</param>	
         /// <param name="value">The value used to clear.</param>	
         /// <remarks>	
-        /// <p>This API copies the lower ni bits from each array element i to the corresponding channel, where ni is the number of bits in  the ith channel of the resource format (for example, R8G8B8_FLOAT has 8 bits for the first 3 channels). This works on any UAV with no format conversion.  For a raw or structured buffer view, only the first array element value is used.</p>	
+        /// <p>This API copies the lower ni bits from each array element i to the corresponding channel, where ni is the number of bits in the ith channel of the resource format (for example, R8G8B8_FLOAT has 8 bits for the first 3 channels). This works on any UAV with no format conversion.  For a raw or structured buffer view, only the first array element value is used.</p>	
         /// </remarks>	
         /// <msdn-id>ff476391</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::ClearUnorderedAccessViewUint([In] ID3D11UnorderedAccessView* pUnorderedAccessView,[In] const unsigned int* Values)</unmanaged>	
@@ -496,7 +496,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Copy a region from a source resource to a destination resource.	
         /// </summary>	
         /// <remarks>	
-        /// The source box must be within the size of the source resource. The destination offsets, (x, y, and z) allow the source box to be offset when writing into the destination resource; however, the dimensions of the source box and the offsets must be within the size of the resource. If the resources are buffers, all coordinates are in bytes; if the resources are textures, all coordinates are in texels. {{D3D11CalcSubresource}} is a helper function for calculating subresource indexes. CopySubresourceRegion performs the copy on the GPU (similar to a memcpy by the CPU). As a consequence, the source and destination resources:  Must be different subresources (although they can be from the same resource). Must be the same type. Must have compatible DXGI formats (identical or from the same type group). For example, a DXGI_FORMAT_R32G32B32_FLOAT texture can be copied to an DXGI_FORMAT_R32G32B32_UINT texture since both of these formats are in the DXGI_FORMAT_R32G32B32_TYPELESS group. May not be currently mapped.  CopySubresourceRegion only supports copy; it does not support any stretch, color key, blend, or format conversions. An application that needs to copy an entire resource should use <see cref="SharpDX.Direct3D11.DeviceContext.CopyResource_"/> instead. CopySubresourceRegion is an asynchronous call which may be added to the command-buffer queue, this attempts to remove pipeline stalls that may occur when copying data. See performance considerations for more details. Note??If you use CopySubresourceRegion with a depth-stencil buffer or a multisampled resource, you must copy the whole subresource. In this situation, you must pass 0 to the DstX, DstY, and DstZ parameters and NULL to the pSrcBox parameter. In addition, source and destination resources, which are represented by the pSrcResource and pDstResource parameters, should have identical sample count values. Example The following code snippet copies a box (located at (120,100),(200,220)) from a source texture into a reqion (10,20),(90,140) in a destination texture. 	
+        /// The source box must be within the size of the source resource. The destination offsets, (x, y, and z) allow the source box to be offset when writing into the destination resource; however, the dimensions of the source box and the offsets must be within the size of the resource. If the resources are buffers, all coordinates are in bytes; if the resources are textures, all coordinates are in texels. {{D3D11CalcSubresource}} is a helper function for calculating subresource indexes. CopySubresourceRegion performs the copy on the GPU (similar to a memcpy by the CPU). As a consequence, the source and destination resources:  Must be different subresources (although they can be from the same resource). Must be the same type. Must have compatible DXGI formats (identical or from the same type group). For example, a DXGI_FORMAT_R32G32B32_FLOAT texture can be copied to an DXGI_FORMAT_R32G32B32_UINT texture since both of these formats are in the DXGI_FORMAT_R32G32B32_TYPELESS group. May not be currently mapped.  CopySubresourceRegion only supports copy; it does not support any stretch, color key, blend, or format conversions. An application that needs to copy an entire resource should use <see cref="SharpDX.Direct3D11.DeviceContext.CopyResource_"/> instead. CopySubresourceRegion is an asynchronous call which may be added to the command-buffer queue, this attempts to remove pipeline stalls that may occur when copying data. See performance considerations for more details. Note??If you use CopySubresourceRegion with a depth-stencil buffer or a multisampled resource, you must copy the whole subresource. In this situation, you must pass 0 to the DstX, DstY, and DstZ parameters and NULL to the pSrcBox parameter. In addition, source and destination resources, which are represented by the pSrcResource and pDstResource parameters, should have identical sample count values. Example The following code snippet copies a box (located at (120,100),(200,220)) from a source texture into a region (10,20),(90,140) in a destination texture. 	
         /// <code> D3D11_BOX sourceRegion;	
         /// sourceRegion.left = 120;	
         /// sourceRegion.right = 200;	
@@ -526,7 +526,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Copy a region from a source resource to a destination resource.	
         /// </summary>	
         /// <remarks>	
-        /// The source box must be within the size of the source resource. The destination offsets, (x, y, and z) allow the source box to be offset when writing into the destination resource; however, the dimensions of the source box and the offsets must be within the size of the resource. If the resources are buffers, all coordinates are in bytes; if the resources are textures, all coordinates are in texels. {{D3D11CalcSubresource}} is a helper function for calculating subresource indexes. CopySubresourceRegion performs the copy on the GPU (similar to a memcpy by the CPU). As a consequence, the source and destination resources:  Must be different subresources (although they can be from the same resource). Must be the same type. Must have compatible DXGI formats (identical or from the same type group). For example, a DXGI_FORMAT_R32G32B32_FLOAT texture can be copied to an DXGI_FORMAT_R32G32B32_UINT texture since both of these formats are in the DXGI_FORMAT_R32G32B32_TYPELESS group. May not be currently mapped.  CopySubresourceRegion only supports copy; it does not support any stretch, color key, blend, or format conversions. An application that needs to copy an entire resource should use <see cref="SharpDX.Direct3D11.DeviceContext.CopyResource_"/> instead. CopySubresourceRegion is an asynchronous call which may be added to the command-buffer queue, this attempts to remove pipeline stalls that may occur when copying data. See performance considerations for more details. Note??If you use CopySubresourceRegion with a depth-stencil buffer or a multisampled resource, you must copy the whole subresource. In this situation, you must pass 0 to the DstX, DstY, and DstZ parameters and NULL to the pSrcBox parameter. In addition, source and destination resources, which are represented by the pSrcResource and pDstResource parameters, should have identical sample count values. Example The following code snippet copies a box (located at (120,100),(200,220)) from a source texture into a reqion (10,20),(90,140) in a destination texture. 	
+        /// The source box must be within the size of the source resource. The destination offsets, (x, y, and z) allow the source box to be offset when writing into the destination resource; however, the dimensions of the source box and the offsets must be within the size of the resource. If the resources are buffers, all coordinates are in bytes; if the resources are textures, all coordinates are in texels. {{D3D11CalcSubresource}} is a helper function for calculating subresource indexes. CopySubresourceRegion performs the copy on the GPU (similar to a memcpy by the CPU). As a consequence, the source and destination resources:  Must be different subresources (although they can be from the same resource). Must be the same type. Must have compatible DXGI formats (identical or from the same type group). For example, a DXGI_FORMAT_R32G32B32_FLOAT texture can be copied to an DXGI_FORMAT_R32G32B32_UINT texture since both of these formats are in the DXGI_FORMAT_R32G32B32_TYPELESS group. May not be currently mapped.  CopySubresourceRegion only supports copy; it does not support any stretch, color key, blend, or format conversions. An application that needs to copy an entire resource should use <see cref="SharpDX.Direct3D11.DeviceContext.CopyResource_"/> instead. CopySubresourceRegion is an asynchronous call which may be added to the command-buffer queue, this attempts to remove pipeline stalls that may occur when copying data. See performance considerations for more details. Note??If you use CopySubresourceRegion with a depth-stencil buffer or a multisampled resource, you must copy the whole subresource. In this situation, you must pass 0 to the DstX, DstY, and DstZ parameters and NULL to the pSrcBox parameter. In addition, source and destination resources, which are represented by the pSrcResource and pDstResource parameters, should have identical sample count values. Example The following code snippet copies a box (located at (120,100),(200,220)) from a source texture into a region (10,20),(90,140) in a destination texture. 	
         /// <code> D3D11_BOX sourceRegion;	
         /// sourceRegion.left = 120;	
         /// sourceRegion.right = 200;	
@@ -557,7 +557,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Copy a multisampled resource into a non-multisampled resource.	
         /// </summary>	
         /// <remarks>	
-        /// This API is most useful when re-using the resulting rendertarget of one render pass as an input to a second render pass. The source and destination resources must be the same resource type and have the same dimensions. In addition, they must have compatible formats. There are three scenarios for this:  ScenarioRequirements Source and destination are prestructured and typedBoth the source and destination must have identical formats and that format must be specified in the Format parameter. One resource is prestructured and typed and the other is prestructured and typelessThe typed resource must have a format that is compatible with the typeless resource (i.e. the typed resource is DXGI_FORMAT_R32_FLOAT and the typeless resource is DXGI_FORMAT_R32_TYPELESS). The format of the typed resource must be specified in the Format parameter. Source and destination are prestructured and typelessBoth the source and desintation must have the same typeless format (i.e. both must have DXGI_FORMAT_R32_TYPELESS), and the Format parameter must specify a format that is compatible with the source and destination (i.e. if both are DXGI_FORMAT_R32_TYPELESS then DXGI_FORMAT_R32_FLOAT could be specified in the Format parameter). For example, given the DXGI_FORMAT_R16G16B16A16_TYPELESS format:  The source (or dest) format could be DXGI_FORMAT_R16G16B16A16_UNORM The dest (or source) format could be DXGI_FORMAT_R16G16B16A16_FLOAT    ? 	
+        /// This API is most useful when re-using the resulting render target of one render pass as an input to a second render pass. The source and destination resources must be the same resource type and have the same dimensions. In addition, they must have compatible formats. There are three scenarios for this:  ScenarioRequirements Source and destination are prestructured and typedBoth the source and destination must have identical formats and that format must be specified in the Format parameter. One resource is prestructured and typed and the other is prestructured and typelessThe typed resource must have a format that is compatible with the typeless resource (i.e. the typed resource is DXGI_FORMAT_R32_FLOAT and the typeless resource is DXGI_FORMAT_R32_TYPELESS). The format of the typed resource must be specified in the Format parameter. Source and destination are prestructured and typelessBoth the source and destination must have the same typeless format (i.e. both must have DXGI_FORMAT_R32_TYPELESS), and the Format parameter must specify a format that is compatible with the source and destination (i.e. if both are DXGI_FORMAT_R32_TYPELESS then DXGI_FORMAT_R32_FLOAT could be specified in the Format parameter). For example, given the DXGI_FORMAT_R16G16B16A16_TYPELESS format:  The source (or dest) format could be DXGI_FORMAT_R16G16B16A16_UNORM The dest (or source) format could be DXGI_FORMAT_R16G16B16A16_FLOAT    ? 	
         /// </remarks>	
         /// <param name="source">Source resource. Must be multisampled. </param>
         /// <param name="sourceSubresource">&gt;The source subresource of the source resource. </param>
@@ -798,7 +798,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Draws a fullscreen quad with a pixel shader to output a texture with a particular sampler (default linear clamp).
         /// </summary>
         /// <param name="texture">The texture.</param>
-        /// <param name="tranform">The matrix tranform.</param>
+        /// <param name="tranform">The matrix transform.</param>
         /// <param name="samplerState">State of the sampler. If null, default sampler is <see cref="SamplerStateCollection.LinearClamp" />.</param>
         public void DrawQuad(SharpDX.Direct3D11.ShaderResourceView texture, Matrix tranform, SharpDX.Direct3D11.SamplerState samplerState = null)
         {
@@ -809,7 +809,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Draw a fullscreen quad. An effect with at least a pixel shader (with the expected signature - float2:TEXCOORD) must have been applied before using this method.
         /// </summary>
-        /// <param name="tranform">The tranform.</param>
+        /// <param name="tranform">The transform.</param>
         /// <seealso cref="PrimitiveQuad"/>
         public void DrawQuad(Matrix tranform)
         {
@@ -884,7 +884,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>	
         /// <param name="threadGroupCountX"><dd>  <p>The number of groups dispatched in the x direction. <em>ThreadGroupCountX</em> must be less than <see cref="SharpDX.Direct3D11.ComputeShaderStage.DispatchMaximumThreadGroupsPerDimension"/> (65535).</p> </dd></param>	
         /// <param name="threadGroupCountY"><dd>  <p>The number of groups dispatched in the y direction. <em>ThreadGroupCountY</em> must be less than <see cref="SharpDX.Direct3D11.ComputeShaderStage.DispatchMaximumThreadGroupsPerDimension"/> (65535).</p> </dd></param>	
-        /// <param name="threadGroupCountZ"><dd>  <p>The number of groups dispatched in the z direction.  <em>ThreadGroupCountZ</em> must be less than <see cref="SharpDX.Direct3D11.ComputeShaderStage.DispatchMaximumThreadGroupsPerDimension"/> (65535).  In feature level 10 the value for <em>ThreadGroupCountZ</em> must be 1.</p> </dd></param>	
+        /// <param name="threadGroupCountZ"><dd>  <p>The number of groups dispatched in the z direction. <em>ThreadGroupCountZ</em> must be less than <see cref="SharpDX.Direct3D11.ComputeShaderStage.DispatchMaximumThreadGroupsPerDimension"/> (65535).  In feature level 10 the value for <em>ThreadGroupCountZ</em> must be 1.</p> </dd></param>	
         /// <remarks>	
         /// <p>You call the <strong>Dispatch</strong> method to execute commands in a compute shader. A compute shader can be run on many threads in parallel, within a thread group. Index a particular thread, within a thread group using a 3D vector  given by (x,y,z).</p><p>In the following illustration, assume a thread group with 50 threads where the size of the group is given by (5,5,2). A single thread is identified from a  thread group with 50 threads in it, using the vector (4,1,1).</p><p></p><p>The following illustration shows the relationship between the parameters passed to <strong><see cref="SharpDX.Direct3D11.DeviceContext.Dispatch"/></strong>, Dispatch(5,3,2), the values specified in the numthreads attribute, numthreads(10,8,3), and values that will passed to the compute shader for the thread-related system values 	
         /// (SV_GroupIndex,SV_DispatchThreadID,SV_GroupThreadID,SV_GroupID).</p><p></p>	
@@ -1067,7 +1067,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>	
         /// <p>Sets the <strong>rasterizer state</strong> for the rasterizer stage of the pipeline.</p>	
         /// </summary>	
-        /// <param name="rasterizerState">The rasterizser state to set on this device.</param>	
+        /// <param name="rasterizerState">The rasterizer state to set on this device.</param>	
         /// <msdn-id>ff476479</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::RSSetState([In, Optional] ID3D11RasterizerState* pRasterizerState)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::RSSetState</unmanaged-short>	
@@ -1131,7 +1131,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Gets the viewport.
         /// </summary>
         /// <param name="index">The index.</param>
-        /// <returns>Returns a viewport bind on a specified mulrendertarget</returns>
+        /// <returns>Returns a viewport bound to a specified render target</returns>
         public ViewportF GetViewport(int index)
         {
             RasterizerStage.GetViewports(viewports);
@@ -1141,8 +1141,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Binds a single viewport to the rasterizer stage.
         /// </summary>
-        /// <param name="x">The x coord of the viewport.</param>
-        /// <param name="y">The x coord of the viewport.</param>
+        /// <param name="x">The x coordinate of the viewport.</param>
+        /// <param name="y">The y coordinate of the viewport.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="minZ">The min Z.</param>
@@ -1210,7 +1210,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Gets the render targets currently binded to the <see cref="OutputMergerStage"/> through this <see cref="GraphicsDevice"/>instance.
+        /// Gets the render targets currently bound to the <see cref="OutputMergerStage"/> through this <see cref="GraphicsDevice"/>instance.
         /// </summary>
         /// <param name="depthStencilViewRef">The depth stencil view, may ne null.</param>
         /// <returns>An array of <see cref="RenderTargetView"/>.</returns>
@@ -1318,7 +1318,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Sets the stream output targets bound to the StreamOutput stage.
         /// </summary>
         /// <param name="buffer">The buffer to bind on the first stream output slot.</param>
-        /// <param name="offsets">The offests in bytes of the buffer. An offset of -1 will cause the stream output buffer to be appended, continuing after the last location written to the buffer in a previous stream output pass.</param>
+        /// <param name="offsets">The offsets in bytes of the buffer. An offset of -1 will cause the stream output buffer to be appended, continuing after the last location written to the buffer in a previous stream output pass.</param>
         /// <msdn-id>ff476484</msdn-id>
         /// <unmanaged>void ID3D11DeviceContext::SOSetTargets([In] unsigned int NumBuffers,[In, Buffer, Optional] const ID3D11Buffer** ppSOTargets,[In, Buffer, Optional] const unsigned int* pOffsets)</unmanaged>
         /// <unmanaged-short>ID3D11DeviceContext::SOSetTargets</unmanaged-short>

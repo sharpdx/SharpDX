@@ -42,7 +42,7 @@ namespace SharpDX.DirectWrite
         /// <summary>	
         /// <see cref="SharpDX.DirectWrite.TextLayout"/> calls this callback function to get the measurement of the inline object. 	
         /// </summary>	
-        /// <returns>a structure describing the geometric measurement of anapplication-defined inline object.  These metrics are in relation to the baseline of the adjacent text. </returns>
+        /// <returns>A structure describing the geometric measurement of an application-defined inline object.  These metrics are in relation to the baseline of the adjacent text. </returns>
         /// <unmanaged>HRESULT IDWriteInlineObject::GetMetrics([Out] DWRITE_INLINE_OBJECT_METRICS* metrics)</unmanaged>
         SharpDX.DirectWrite.InlineObjectMetrics Metrics { get; }
 

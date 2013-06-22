@@ -1,3 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
 // Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -17,27 +19,5 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
-
-namespace SharpDX.Direct3D10
-{
-    public partial struct BufferDescription
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BufferDescription"/> struct.
-        /// </summary>
-        /// <param name="sizeInBytes">The size in bytes.</param>
-        /// <param name="usage">The usage.</param>
-        /// <param name="bindFlags">The bind flags.</param>
-        /// <param name="cpuAccessFlags">The CPU access flags.</param>
-        /// <param name="optionFlags">The option flags.</param>
-        public BufferDescription(int sizeInBytes, ResourceUsage usage, BindFlags bindFlags, CpuAccessFlags cpuAccessFlags, ResourceOptionFlags optionFlags)
-        {
-            SizeInBytes = sizeInBytes;
-            Usage = usage;
-            BindFlags = bindFlags;
-            CpuAccessFlags = cpuAccessFlags;
-            OptionFlags = optionFlags;
-        }
-    }
-}
+-->
+<comments></comments>

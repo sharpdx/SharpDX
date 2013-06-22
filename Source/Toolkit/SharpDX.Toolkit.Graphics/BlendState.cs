@@ -76,7 +76,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// <p>Create a blend-state object that encapsules blend state for the output-merger stage.</p>
+        /// <p>Create a blend-state object that encapsulates blend state for the output-merger stage.</p>
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="renderTargetBlend0">The render target blend description for the first render target.</param>
@@ -96,7 +96,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// <p>Create a blend-state object that encapsules blend state for the output-merger stage.</p>
+        /// <p>Create a blend-state object that encapsulates blend state for the output-merger stage.</p>
         /// </summary>
         /// <param name="device">The  <see cref="GraphicsDevice"/>.</param>
         /// <param name="renderTargetBlend0">The render target blend description for the first render target.</param>
@@ -112,7 +112,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// <p>Create a blend-state object that encapsules blend state for the output-merger stage.</p>
+        /// <p>Create a blend-state object that encapsulates blend state for the output-merger stage.</p>
         /// </summary>
         /// <param name="device">The  <see cref="GraphicsDevice"/>.</param>
         /// <param name="sourceBlend">The source blend.</param>
@@ -134,7 +134,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// <p>Create a blend-state object that encapsules blend state for the output-merger stage.</p>
+        /// <p>Create a blend-state object that encapsulates blend state for the output-merger stage.</p>
         /// </summary>
         /// <param name="device">The  <see cref="GraphicsDevice"/>.</param>
         /// <param name="sourceBlend">The source blend.</param>
@@ -157,7 +157,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// <p>Create a blend-state object that encapsules blend state for the output-merger stage.</p>
+        /// <p>Create a blend-state object that encapsulates blend state for the output-merger stage.</p>
         /// </summary>
         /// <param name="device">The  <see cref="GraphicsDevice"/>.</param>
         /// <param name="description"><dd>  <p>Pointer to a blend-state description (see <strong><see cref="SharpDX.Direct3D11.BlendStateDescription" /></strong>).</p> </dd></param>
@@ -173,7 +173,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// <p>Create a blend-state object that encapsules blend state for the output-merger stage.</p>
+        /// <p>Create a blend-state object that encapsulates blend state for the output-merger stage.</p>
         /// </summary>
         /// <param name="device">The  <see cref="GraphicsDevice"/>.</param>
         /// <param name="name">Name of this blend state.</param>
@@ -190,7 +190,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// <p>Create a blend-state object that encapsules blend state for the output-merger stage.</p>
+        /// <p>Create a blend-state object that encapsulates blend state for the output-merger stage.</p>
         /// </summary>
         /// <param name="device">The  <see cref="GraphicsDevice"/>.</param>
         /// <param name="description"><dd>  <p>Pointer to a blend-state description (see <strong><see cref="SharpDX.Direct3D11.BlendStateDescription" /></strong>).</p> </dd></param>

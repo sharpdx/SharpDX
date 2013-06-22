@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin GaussianBlur effect.
+    /// Built in GaussianBlur effect.
     /// </summary>
     public class GaussianBlur : Effect
     {

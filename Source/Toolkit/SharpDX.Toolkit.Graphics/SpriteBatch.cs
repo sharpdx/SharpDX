@@ -346,7 +346,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>Adds a string to a batch of sprites for rendering using the specified font, text, position, and color.</summary>
-        /// <param name="spriteFont">A font for diplaying text.</param>
+        /// <param name="spriteFont">A font for displaying text.</param>
         /// <param name="text">A text string.</param>
         /// <param name="position">The location (in screen coordinates) to draw the sprite.</param>
         /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
@@ -367,7 +367,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>Adds a string to a batch of sprites for rendering using the specified font, text, position, and color.</summary>
-        /// <param name="spriteFont">A font for diplaying text.</param>
+        /// <param name="spriteFont">A font for displaying text.</param>
         /// <param name="text">Text string.</param>
         /// <param name="position">The location (in screen coordinates) to draw the sprite.</param>
         /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
@@ -387,7 +387,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>Adds a string to a batch of sprites for rendering using the specified font, text, position, color, rotation, origin, scale, effects and layer.</summary>
-        /// <param name="spriteFont">A font for diplaying text.</param>
+        /// <param name="spriteFont">A font for displaying text.</param>
         /// <param name="text">A text string.</param>
         /// <param name="position">The location (in screen coordinates) to draw the sprite.</param>
         /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
@@ -412,7 +412,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>Adds a string to a batch of sprites for rendering using the specified font, text, position, color, rotation, origin, scale, effects and layer.</summary>
-        /// <param name="spriteFont">A font for diplaying text.</param>
+        /// <param name="spriteFont">A font for displaying text.</param>
         /// <param name="text">A text string.</param>
         /// <param name="position">The location (in screen coordinates) to draw the sprite.</param>
         /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
@@ -437,7 +437,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>Adds a string to a batch of sprites for rendering using the specified font, text, position, color, rotation, origin, scale, effects and layer.</summary>
-        /// <param name="spriteFont">A font for diplaying text.</param>
+        /// <param name="spriteFont">A font for displaying text.</param>
         /// <param name="text">Text string.</param>
         /// <param name="position">The location (in screen coordinates) to draw the sprite.</param>
         /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
@@ -462,7 +462,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>Adds a string to a batch of sprites for rendering using the specified font, text, position, color, rotation, origin, scale, effects and layer.</summary>
-        /// <param name="spriteFont">A font for diplaying text.</param>
+        /// <param name="spriteFont">A font for displaying text.</param>
         /// <param name="text">Text string.</param>
         /// <param name="position">The location (in screen coordinates) to draw the sprite.</param>
         /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
@@ -586,7 +586,7 @@ namespace SharpDX.Toolkit.Graphics
             spriteQueueCount = 0;
 
             // When sorting is disabled, we persist mSortedSprites data from one batch to the next, to avoid
-            // uneccessary work in GrowSortedSprites. But we never reuse these when sorting, because re-sorting
+            // unnecessary work in GrowSortedSprites. But we never reuse these when sorting, because re-sorting
             // previously sorted items gives unstable ordering if some sprites have identical sort keys.
             if (spriteSortMode != SpriteSortMode.Deferred)
             {

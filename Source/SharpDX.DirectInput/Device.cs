@@ -249,7 +249,7 @@ namespace SharpDX.DirectInput
         //}
 
         /// <summary>	
-        /// Requests the cooperative level for this instance of the inpute device. The cooperative level determines how this instance of the device interacts with other instances of the device and the rest of the system.	
+        /// Requests the cooperative level for this instance of the input device. The cooperative level determines how this instance of the device interacts with other instances of the device and the rest of the system.	
         /// </summary>	
         /// <param name="control">Window control to be associated with the device. This parameter must be a valid top-level window handle that belongs to the process. The window associated with the device must not be destroyed while it is still active in a DirectInput device.</param>	
         /// <param name="level">Flags that specify the cooperative level to associate with the input device.</param>	
@@ -257,7 +257,7 @@ namespace SharpDX.DirectInput
         /// <remarks>	
         /// <para>Applications cannot specify <see cref="SharpDX.DirectInput.CooperativeLevel.Foreground"/> and <see cref="SharpDX.DirectInput.CooperativeLevel.Background"/> at the same time. This apply as well to <see cref="SharpDX.DirectInput.CooperativeLevel.Exclusive"/> and <see cref="SharpDX.DirectInput.CooperativeLevel.NonExclusive"/>.</para>
         ///  <para>When the mouse is acquired with exclusive access, the mouse pointer is removed from the screen until the device is unacquired.</para>	
-        ///  <para>Applications that select the background exclusive mode cooperative level are not guaranteed to retain access to the device if another application requests exclusive access. When a background exclusive mode application loses access, calls to DirectInput device methods will fail and return <see cref="SharpDX.DirectInput.ResultCode.NotAcquired"/>. The application can regain access to the device by manually unacquiring the device and reaquiring it.</para>	
+        ///  <para>Applications that select the background exclusive mode cooperative level are not guaranteed to retain access to the device if another application requests exclusive access. When a background exclusive mode application loses access, calls to DirectInput device methods will fail and return <see cref="SharpDX.DirectInput.ResultCode.NotAcquired"/>. The application can regain access to the device by manually unacquiring the device and reacquiring it.</para>	
         ///  <para>Applications must call this method before acquiring the device by using the <see cref="SharpDX.DirectInput.Device"/> method.</para>	
         /// </remarks>	
         /// <unmanaged>HRESULT IDirectInputDevice8W::SetCooperativeLevel([In] HWND arg0,[In] DISCL arg1)</unmanaged>	

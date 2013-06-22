@@ -33,7 +33,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="device">The device.</param>
         /// <param name="name">The name of the state to create.</param>
-        /// <returns>An instsance of T or null if not supported.</returns>
+        /// <returns>An instance of T or null if not supported.</returns>
         public delegate T StateAllocatorDelegate(GraphicsDevice device, string name);
 
         /// <summary>

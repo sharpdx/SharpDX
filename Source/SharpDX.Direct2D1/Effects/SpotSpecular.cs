@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin SpotSpecular effect.
+    /// Built in SpotSpecular effect.
     /// </summary>
     public class SpotSpecular : Effect
     {

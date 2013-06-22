@@ -34,7 +34,7 @@ namespace SharpDX.DXGI
         /// Get a native callback pointer from a managed callback.
         /// </summary>
         /// <param name="virtualSurfaceUpdatesCallbackNative">The geometry sink.</param>
-        /// <returns>A pointer to the unmanaged geomerty sink counterpart</returns>
+        /// <returns>A pointer to the unmanaged geometry sink counterpart</returns>
         public static IntPtr ToIntPtr(IVirtualSurfaceUpdatesCallbackNative virtualSurfaceUpdatesCallbackNative)
         {
             return ToCallbackPtr<IVirtualSurfaceUpdatesCallbackNative>(virtualSurfaceUpdatesCallbackNative);

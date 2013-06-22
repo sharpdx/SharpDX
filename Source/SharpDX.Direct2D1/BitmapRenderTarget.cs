@@ -24,7 +24,7 @@ namespace SharpDX.Direct2D1
     public partial class BitmapRenderTarget
     {
         /// <summary>	
-        ///  Creates a bitmap render target for use during intermediate offscreen drawing that is compatible with the current render targe with same size, pixel size and pixel format.
+        ///  Creates a bitmap render target for use during intermediate offscreen drawing that is compatible with the current render target with same size, pixel size and pixel format.
         /// </summary>	
         /// <param name="renderTarget">an instance of <see cref = "SharpDX.Direct2D1.RenderTarget" /></param>
         /// <param name="options">A value that specifies whether the new render target must be compatible with GDI.</param>

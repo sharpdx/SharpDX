@@ -26,7 +26,7 @@ using SharpDX.WIC;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin Morphology effect.
+    /// Built in Morphology effect.
     /// </summary>
     public class Morphology : Effect
     {

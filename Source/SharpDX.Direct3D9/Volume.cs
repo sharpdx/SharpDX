@@ -39,7 +39,7 @@ namespace SharpDX.Direct3D9
         /// <param name="srcPaletteRef"><para>Pointer to a <see cref="SharpDX.Direct3D9.PaletteEntry"/> structure, the source palette of 256 colors or <c>null</c>.</para></param>	
         /// <param name="srcBox"><para>Pointer to a <see cref="SharpDX.Direct3D9.Box"/> structure. Specifies the source box. <c>null</c> is not a valid value for this parameter.</para></param>	
         /// <param name="filter"><para>A combination of one or more <see cref="SharpDX.Direct3D9.Filter"/> controlling how the image is filtered. Specifying D3DX_DEFAULT for this parameter is the equivalent of specifying <see cref="SharpDX.Direct3D9.Filter.Triangle"/> | <see cref="SharpDX.Direct3D9.Filter.Dither"/>.</para></param>	
-        /// <param name="colorKey"><para> <see cref="SharpDX.Color4"/> value to replace with transparent black, or 0 to disable the colorkey. This is always a 32-bit ARGB color, independent of the source image format. Alpha is significant and should usually be set to FF for opaque color keys. Thus, for opaque black, the value would be equal to 0xFF000000.</para></param>	
+        /// <param name="colorKey"><para> <see cref="SharpDX.Color4"/> value to replace with transparent black, or 0 to disable the color key. This is always a 32-bit ARGB color, independent of the source image format. Alpha is significant and should usually be set to FF for opaque color keys. Thus, for opaque black, the value would be equal to 0xFF000000.</para></param>	
         /// <returns>If the function succeeds, the return value is <see cref="SharpDX.Direct3D9.ResultCode.Success"/>. If the function fails, the return value can be one of the following values: <see cref="SharpDX.Direct3D9.ResultCode.InvalidCall"/>, D3DXERR_INVALIDDATA.</returns>	
         /// <remarks>	
         /// Writing to a non-level-zero surface of the volume texture will not cause the dirty rectangle to be updated. If <see cref="SharpDX.Direct3D9.D3DX9.LoadVolumeFromMemory"/> is called and the texture was not already dirty (this is unlikely under normal usage scenarios), the application needs to explicitly call <see cref="SharpDX.Direct3D9.VolumeTexture.AddDirtyBox"/> on the volume texture.	
@@ -223,7 +223,7 @@ namespace SharpDX.Direct3D9
         }
 
         /// <summary>
-        /// Loads a volume from a file in a strean.
+        /// Loads a volume from a file in a stream.
         /// </summary>
         /// <param name="volume">The volume.</param>
         /// <param name="stream">The stream.</param>
@@ -240,7 +240,7 @@ namespace SharpDX.Direct3D9
         }
 
         /// <summary>
-        /// Loads a volume from a file in a strean.
+        /// Loads a volume from a file in a stream.
         /// </summary>
         /// <param name="volume">The volume.</param>
         /// <param name="stream">The stream.</param>
@@ -261,7 +261,7 @@ namespace SharpDX.Direct3D9
         }
 
         /// <summary>
-        /// Loads a volume from a file in a strean.
+        /// Loads a volume from a file in a stream.
         /// </summary>
         /// <param name="volume">The volume.</param>
         /// <param name="stream">The stream.</param>
@@ -281,7 +281,7 @@ namespace SharpDX.Direct3D9
         }
 
         /// <summary>
-        /// Loads a volume from a file in a strean.
+        /// Loads a volume from a file in a stream.
         /// </summary>
         /// <param name="volume">The volume.</param>
         /// <param name="stream">The stream.</param>

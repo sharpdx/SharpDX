@@ -34,7 +34,7 @@ namespace SharpDX.Direct3D11
         [Tag("SharpDX.ModuleInit")]
         internal static void Setup()
         {
-            // Register automatically Resultcode
+            // Register automatically Result code
             ResultDescriptor.RegisterProvider(typeof(ResultCode));
         }
     }

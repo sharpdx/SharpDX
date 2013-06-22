@@ -156,7 +156,7 @@ namespace SharpDX.WIC
 
 #if !WIN8METRO
         /// <summary>
-        /// Initializes a new instance of the <see cref="BitmapDecoder"/> class from a filestream.
+        /// Initializes a new instance of the <see cref="BitmapDecoder"/> class from a file stream.
         /// </summary>
         /// <param name="factory">The factory.</param>
         /// <param name="fileStream">The filename.</param>
@@ -168,7 +168,7 @@ namespace SharpDX.WIC
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BitmapDecoder"/> class from a filestream.
+        /// Initializes a new instance of the <see cref="BitmapDecoder"/> class from a file stream.
         /// </summary>
         /// <param name="factory">The factory.</param>
         /// <param name="fileStream">The filename.</param>
@@ -202,7 +202,7 @@ namespace SharpDX.WIC
         public void Initialize(IStream stream, SharpDX.WIC.DecodeOptions cacheOptions)
         {
             if (this.internalWICStream != null)
-                throw new InvalidOperationException("This instance is already intialized with an existing stream");
+                throw new InvalidOperationException("This instance is already initialized with an existing stream");
             Initialize_(ComStream.ToIntPtr(stream), cacheOptions);
         }
 

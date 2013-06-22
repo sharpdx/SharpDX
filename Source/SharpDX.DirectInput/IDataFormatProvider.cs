@@ -24,13 +24,13 @@ namespace SharpDX.DirectInput
     public interface IDataFormatProvider
     {
         /// <summary>
-        /// Gets or sets the dataformat flags.
+        /// Gets or sets the data format flags.
         /// </summary>
         /// <value>The flags.</value>
         DataFormatFlag Flags { get; }
 
         /// <summary>
-        /// Gets the defined dataformat objects.
+        /// Gets the defined data format objects.
         /// </summary>
         /// <value>The objects.</value>
         DataObjectFormat[] ObjectsFormat { get; }

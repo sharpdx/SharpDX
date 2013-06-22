@@ -162,10 +162,10 @@ namespace SharpDX.Direct2D1
         }
 
         /// <summary>
-        /// Creates a Bitmap from a wic bitmap.
+        /// Creates a Bitmap from a WIC bitmap.
         /// </summary>
         /// <param name="renderTarget">The render target.</param>
-        /// <param name="wicBitmapSource">A reference to a <see cref="SharpDX.WIC.BitmapSource"/> wic bitmap.</param>
+        /// <param name="wicBitmapSource">A reference to a <see cref="SharpDX.WIC.BitmapSource"/> WIC bitmap.</param>
         /// <returns></returns>
         /// <msdn-id>dd371797</msdn-id>	
         /// <unmanaged>HRESULT ID2D1RenderTarget::CreateBitmapFromWicBitmap([In] IWICBitmapSource* wicBitmapSource,[In, Optional] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out] ID2D1Bitmap** bitmap)</unmanaged>	
@@ -178,10 +178,10 @@ namespace SharpDX.Direct2D1
         }
 
         /// <summary>
-        /// Creates a Bitmap from a wic bitmap.
+        /// Creates a Bitmap from a WIC bitmap.
         /// </summary>
         /// <param name="renderTarget">The render target.</param>
-        /// <param name="wicBitmap">The wic bitmap.</param>
+		/// <param name="wicBitmap">The WIC bitmap.</param>
         /// <param name="bitmapProperties">The bitmap properties.</param>
         /// <returns></returns>
         /// <msdn-id>dd371797</msdn-id>	
@@ -458,7 +458,7 @@ namespace SharpDX.Direct2D1
         /// <summary>	
         /// Return the dots per inch (DPI) of the bitmap.	
         /// </summary>	
-        /// <value>The dots per inch (DPI) of the bitma.</value>
+        /// <value>The dots per inch (DPI) of the bitmap.</value>
         public Size2F DotsPerInch
         {
             get

@@ -30,7 +30,7 @@ namespace SharpDX.Direct2D1
         /// Initializes a new instance of the <see cref="PrintControl"/> class.
         /// </summary>
         /// <param name="device">The device.</param>
-        /// <param name="wicFactory">The wic factory.</param>
+        /// <param name="wicFactory">The WIC factory.</param>
         /// <param name="documentTarget">The document target.</param>
         /// <unmanaged>HRESULT ID2D1Device::CreatePrintControl([In] IWICImagingFactory* wicFactory,[In] IPrintDocumentPackageTarget* documentTarget,[In, Optional] const D2D1_PRINT_CONTROL_PROPERTIES* printControlProperties,[Out] ID2D1PrintControl** printControl)</unmanaged>
         public PrintControl(Device device, SharpDX.WIC.ImagingFactory wicFactory, SharpDX.ComObject documentTarget)

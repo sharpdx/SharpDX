@@ -27,7 +27,7 @@ namespace SharpDX.Direct2D1
     public partial class OffsetTransform
     {
         /// <summary>
-        /// Initialzies a new instance of <see cref="OffsetTransform"/> class
+        /// Initializes a new instance of <see cref="OffsetTransform"/> class
         /// </summary>
         /// <param name="context">The effect context</param>
         /// <param name="offset">The offset transformation</param>

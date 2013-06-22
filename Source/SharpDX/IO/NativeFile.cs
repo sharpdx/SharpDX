@@ -332,7 +332,7 @@ namespace SharpDX.IO
 #if W8CORE
 
         /// <summary>
-        /// Creates the specified lp file name.
+        /// Creates the file.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="desiredAccess">The desired access.</param>

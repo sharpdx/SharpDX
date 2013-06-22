@@ -229,7 +229,7 @@ namespace SharpDX
         /// <param name="value">The value.</param>
         /// <param name="min">The min.</param>
         /// <param name="max">The max.</param>
-        /// <returns>The result of clamiping a value between min and max</returns>
+        /// <returns>The result of clamping a value between min and max</returns>
         public static float Clamp(float value, float min, float max)
         {
             return value < min ? min : value > max ? max : value;
@@ -241,7 +241,7 @@ namespace SharpDX
         /// <param name="value">The value.</param>
         /// <param name="min">The min.</param>
         /// <param name="max">The max.</param>
-        /// <returns>The result of clamiping a value between min and max</returns>
+        /// <returns>The result of clamping a value between min and max</returns>
         public static int Clamp(int value, int min, int max)
         {
             return value < min ? min : value > max ? max : value;
@@ -331,7 +331,7 @@ namespace SharpDX
         /// <param name="radY">Radius Y.</param>
         /// <param name="sigmaX">Curve sigma X.</param>
         /// <param name="sigmaY">Curve sigma Y.</param>
-        /// <returns>The result of gaussian function.</returns>
+        /// <returns>The result of Gaussian function.</returns>
         public static float Gauss(float amplitude,float x,float y,float radX,float radY,float sigmaX,float sigmaY)
         {
             float AExp = (amplitude*2.718281828f);
@@ -357,7 +357,7 @@ namespace SharpDX
         /// <param name="radY">Radius Y.</param>
         /// <param name="sigmaX">Curve sigma X.</param>
         /// <param name="sigmaY">Curve sigma Y.</param>
-        /// <returns>The result of gaussian function.</returns>
+        /// <returns>The result of Gaussian function.</returns>
         public static double Gauss(double amplitude, double x, double y, double radX, double radY, double sigmaX, double sigmaY)
         {
             double AExp = (amplitude * 2.718281828);

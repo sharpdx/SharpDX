@@ -33,7 +33,7 @@ namespace SharpDX.Direct2D1
         /// Get a native callback pointer from a managed callback.
         /// </summary>
         /// <param name="tessellationSink">The geometry sink.</param>
-        /// <returns>A pointer to the unmanaged geomerty sink counterpart</returns>
+        /// <returns>A pointer to the unmanaged geometry sink counterpart</returns>
         public static IntPtr ToIntPtr(TessellationSink tessellationSink)
         {
             return ToCallbackPtr<TessellationSink>(tessellationSink);

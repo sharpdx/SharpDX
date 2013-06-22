@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin Blend effect.
+    /// Built in Blend effect.
     /// </summary>
     public class Blend : Effect
     {

@@ -26,7 +26,7 @@ using SharpDX.WIC;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin ColorMatrix effect.
+    /// Built in ColorMatrix effect.
     /// </summary>
     public class ColorMatrix : Effect
     {

@@ -53,7 +53,7 @@ using SharpDX.Serialization;
 namespace SharpDX
 {
     /// <summary>
-    /// Represents a unit independant angle using a single-precision floating-point
+    /// Represents a unit independent angle using a single-precision floating-point
     /// internal representation.
     /// </summary>
     [StructLayout(LayoutKind.Explicit)]
@@ -227,7 +227,7 @@ namespace SharpDX
 
         /// <summary>
         /// Gets or sets the seconds of the degrees this SharpDX.AngleSingle represents.
-        /// When setting te seconds, if the value is in the range (-60, 60) the whole minutes
+        /// When setting the seconds, if the value is in the range (-60, 60) the whole minutes
         /// or whole degrees are not changed; otherwise, the whole minutes or whole degrees
         /// may be changed.
         /// </summary>

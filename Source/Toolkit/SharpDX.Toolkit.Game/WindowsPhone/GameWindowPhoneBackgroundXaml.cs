@@ -226,7 +226,7 @@ namespace SharpDX.Toolkit
                     // Call the main Game.Run loop
                     RunCallback();
 
-                    // Aks the host for additional frame
+                    // Ask the host for additional frame
                     host.RequestAdditionalFrame();
                 }
             }
@@ -282,7 +282,7 @@ namespace SharpDX.Toolkit
         /// <param name="resetPresenter">if set to <c>true</c> [reset presenter].</param>
         internal void EnsurePresenter(bool resetPresenter)
         {
-            // Find any previous render target that was already alocated.
+            // Find any previous render target that was already allocated.
             if (!resetPresenter)
             {
                 foreach (RenderTargetLocal renderTargetLocal in renderTargets)

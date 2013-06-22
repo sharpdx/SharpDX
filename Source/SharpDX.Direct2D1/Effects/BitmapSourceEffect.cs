@@ -26,7 +26,7 @@ using SharpDX.WIC;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin BitmapSource effect.
+    /// Built in BitmapSource effect.
     /// </summary>
     public class BitmapSourceEffect : Effect
     {

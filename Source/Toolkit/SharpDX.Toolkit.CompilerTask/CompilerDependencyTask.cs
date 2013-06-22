@@ -170,7 +170,7 @@ namespace SharpDX.Toolkit
                 data.OutputCsFile = outputCsFile;
             }
 
-            // Fullpath to the generated Output FilePath either 
+            // Full path to the generated Output FilePath either 
             // For fxo: $(ProjectDir)/obj/Debug/XXX/YYY.fxo 
             // For cs: $(ProjectDir)/XXX/YYY.cs
             if (data.OutputCs)
@@ -186,7 +186,7 @@ namespace SharpDX.Toolkit
             // Prefix by ProjectDirectory
             data.OutputFilePath = Path.Combine(ProjectDirectory.ItemSpec, data.OutputFilePath);
 
-            // Fullpath to the input file
+            // Full path to the input file
             data.InputFilePath = Path.Combine(ProjectDirectory.ItemSpec, data.Name);
 
             return data;

@@ -43,7 +43,7 @@ namespace SharpDX.Toolkit.Graphics
         event EventHandler<EventArgs> DeviceLost;
 
         /// <summary>
-        /// Gets the current graphcs device.
+        /// Gets the current graphics device.
         /// </summary>
         /// <value>The graphics device.</value>
         GraphicsDevice GraphicsDevice { get; }

@@ -95,7 +95,7 @@ namespace SharpDX.Toolkit
         public event EventHandler<EffectCompilerEventArgs> CompilationEnded;
 
         /// <summary>
-        /// Occurs when a compilation error occured for an effect.
+        /// Occurs when a compilation error occurred for an effect.
         /// </summary>
         public event EventHandler<EffectCompilerEventArgs> CompilationError;
 
@@ -323,7 +323,7 @@ namespace SharpDX.Toolkit
                     // Clears the list of effects to recompile
                     effectsToRecompile.Clear();
 
-                    // Copy the list of effcts to check to the list of effects to recompile
+                    // Copy the list of effects to check to the list of effects to recompile
                     lock (effectsToCheck)
                     {
                         effectsToRecompile.AddRange(effectsToCheck);

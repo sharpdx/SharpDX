@@ -26,7 +26,7 @@ namespace SharpDX.Toolkit.Input
     /// <summary>
     /// The <see cref="MouseState"/> structure represents a snapshot of mouse state.
     /// </summary>
-    /// <remarks>Is inmutable.</remarks>
+    /// <remarks>Is immutable.</remarks>
     [StructLayout(LayoutKind.Sequential)]
     public struct MouseState : IEquatable<MouseState>
     {

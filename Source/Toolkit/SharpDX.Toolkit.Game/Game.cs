@@ -470,7 +470,7 @@ namespace SharpDX.Toolkit
                 // Test when we are running slowly
                 drawRunningSlowly = updateCountMean > updateCountAverageSlowLimit;
 
-                // We are going to call Update updateCount times, so we can substract this from accumulated elapsed game time
+                // We are going to call Update updateCount times, so we can subtract this from accumulated elapsed game time
                 accumulatedElapsedGameTime = new TimeSpan(accumulatedElapsedGameTime.Ticks - (updateCount * TargetElapsedTime.Ticks));
                 singleFrameElapsedTime = TargetElapsedTime;
             }
@@ -599,7 +599,7 @@ namespace SharpDX.Toolkit
             currentlyDrawingGameSystems.Clear();
         }
 
-        /// <summary>Ends the drawing of a frame. This method is preceeded by calls to Draw and BeginDraw.</summary>
+        /// <summary>Ends the drawing of a frame. This method is preceded by calls to Draw and BeginDraw.</summary>
         protected virtual void EndDraw()
         {
             if (graphicsDeviceManager != null)

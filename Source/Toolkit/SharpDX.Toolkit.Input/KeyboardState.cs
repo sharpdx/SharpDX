@@ -221,7 +221,7 @@ namespace SharpDX.Toolkit.Input
         /// <param name="chunk">The chunk from whose bits should be recreated the <see cref="Keys"/> values</param>
         /// <param name="arrayOffset">The offset of bit (0-256)</param>
         /// <param name="pressedKeys">The destination array</param>
-        /// <param name="index">The index of element in array. Increased for evey new element</param>
+        /// <param name="index">The index of element in array. Increased for every new element</param>
         private static void AddKeysToArray(uint chunk, int arrayOffset, Keys[] pressedKeys, ref int index)
         {
             if (chunk == 0) return;

@@ -137,7 +137,7 @@ namespace SharpDX.Toolkit.Input
         /// <param name="point">The raised pointer event</param>
         internal void AddPointerEvent(ref PointerPoint point)
         {
-            // use a simple lock at this time, to avoid excesive code complexity
+            // use a simple lock at this time, to avoid excessive code complexity
             lock(pointerPointLock)
                 pointerPoints.Add(point);
         }

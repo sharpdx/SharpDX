@@ -24,7 +24,7 @@ namespace SharpDX.Toolkit.Graphics
     /// Describes the interface to install effects into a model.
     /// </summary>
     /// <remarks>
-    /// This interface should be implemeneted by a client that wants to setup its own effects on a model.
+    /// This interface should be implemented by a client that wants to setup its own effects on a model.
     /// This interface doesn't force to install a single type of effects but could be use to perform more process on a model.
     /// </remarks>
     public interface IEffectInstaller

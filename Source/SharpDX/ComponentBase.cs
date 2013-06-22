@@ -22,7 +22,7 @@ using System;
 namespace SharpDX
 {
     /// <summary>
-    /// A lighweight Component base class.
+    /// A lightweight Component base class.
     /// </summary>
     public abstract class ComponentBase : IComponent
     {

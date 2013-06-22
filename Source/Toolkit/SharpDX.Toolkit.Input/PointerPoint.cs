@@ -50,12 +50,12 @@ namespace SharpDX.Toolkit.Input
         public Vector2 Position { get; internal set; }
 
         /// <summary>
-        /// The timestamp when the event occured.
+        /// The timestamp when the event occurred.
         /// </summary>
         public ulong Timestamp { get; internal set; }
 
         /// <summary>
-        /// The pressed key modifiers when the event occured.
+        /// The pressed key modifiers when the event occurred.
         /// </summary>
         public KeyModifiers KeyModifiers { get; internal set; }
 
