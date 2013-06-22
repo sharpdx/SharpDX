@@ -29,8 +29,6 @@ technique SpriteBatch
 {
     pass
     {
-        EffectName = "Toolkit::CustomSpriteEffect";
-
         VertexShader = compile vs_2_0 SpriteVertexShader();
         PixelShader  = compile ps_2_0 SpritePixelShader();
     }
