@@ -26,10 +26,11 @@
     <SharpDXSolution>SharpDX.sln</SharpDXSolution>
     <SharpDXSolutionWP8>SharpDXWP8.sln</SharpDXSolutionWP8>
     <SamplesDirectory>Samples</SamplesDirectory>
-	<GitExe>"C:\Program Files (x86)\Git\bin\git.exe"</GitExe>
-	<SharpDXDevZip>SharpDX-SDK-LatestDev.exe</SharpDXDevZip>
-	<ExtensionTasksPath>$(MSBuildThisFileDirectory)\External\MSBuildExtensionPack\</ExtensionTasksPath>
-	<SharpDXNightlyBuildsPath Condition="'$(SharpDXNightlyBuildsPath)' == ''">$(MSBuildThisFileDirectory)..\SharpDXNightlyBuilds\</SharpDXNightlyBuildsPath>
+    <GitExe>"C:\Program Files (x86)\Git\bin\git.exe"</GitExe>
+    <SharpDXDevZip>SharpDX-SDK-LatestDev.exe</SharpDXDevZip>
+    <ExtensionTasksPath>$(MSBuildThisFileDirectory)\External\MSBuildExtensionPack\</ExtensionTasksPath>
+    <SharpDXNightlyBuildsPath Condition="'$(SharpDXNightlyBuildsPath)' == ''">$(MSBuildThisFileDirectory)..\SharpDXNightlyBuilds\</SharpDXNightlyBuildsPath>
+    <BuildSignedSharpDX>true</BuildSignedSharpDX>
   </PropertyGroup>
 
   <Import Project="$(ExtensionTasksPath)MSBuild.ExtensionPack.tasks"/>
@@ -50,10 +51,8 @@
     <Exec Command="RMDIR /Q /S $(MSBuildThisFileDirectory)\Bin"/>
 
     <!--Build all targets / platforms-->
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Net20Release;Platform=Any CPU;SharpDXSign=true"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Net40Release;Platform=Any CPU;SharpDXSign=true"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Win8Release;Platform=Any CPU;SharpDXSign=true"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=DIRECTX11_1Release;Platform=Any CPU;SharpDXSign=true"/>
+
+    <CallTarget Targets="BuildSigned" Condition="'$(BuildSignedSharpDX)' == 'true'"/>
 
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Net20Release;Platform=Any CPU"/>
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Net40Release;Platform=Any CPU"/>
@@ -71,6 +70,13 @@
     <MakeDir Directories="Bin\Redist\D3D"/>
     <Copy SourceFiles="@(RedistFiles)" DestinationFiles="@(RedistFiles->'Bin\Redist\D3D\%(RecursiveDir)%(Filename)%(Extension)')" />
 
+  </Target>
+
+  <Target Name="BuildSigned">
+    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Net20Release;Platform=Any CPU;SharpDXSign=true"/>
+    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Net40Release;Platform=Any CPU;SharpDXSign=true"/>
+    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Win8Release;Platform=Any CPU;SharpDXSign=true"/>
+    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=DIRECTX11_1Release;Platform=Any CPU;SharpDXSign=true"/>
   </Target>
 
   <Target Name="CleanSamples">
