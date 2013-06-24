@@ -141,6 +141,18 @@ namespace SharpDX.DirectWrite
             return clusterMetrics;
         }
 
+        /// <summary>	
+        /// Retrieves overall metrics for the formatted string.
+        /// </summary>
+        /// <returns>Returns the measured distances of text and associated content after being formatted.</returns>
+        /// <unmanaged>HRESULT IDWriteTextLayout::GetMetrics([Out] DWRITE_TEXT_METRICS* textMetrics)</unmanaged>
+        public TextMetrics GetMetrics()
+        {
+            TextMetrics textMetrics;
+            GetMetrics(out textMetrics);
+            return textMetrics;
+        }
+
 
         /// <summary>	
         /// Sets the application-defined drawing effect. 	
