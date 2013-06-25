@@ -21,10 +21,13 @@
     </Compile>
     <Compile Include="Activate.cs" />
     <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="AsyncCallbackBase.cs" />
     <Compile Include="AudioDecoder.cs" />
     <Compile Include="ByteStream.cs" />
+    <Compile Include="AsyncCallbackShadow.cs" />
     <Compile Include="DirectX\NamespaceDoc.cs" />
     <Compile Include="DXGIDeviceManager.cs" />
+    <Compile Include="AsyncResult.cs" />
     <Compile Include="IAsyncCallback.cs" />
     <Compile Include="IByteStream.cs" />
     <Compile Include="MediaEngineClassFactory.cs" />
@@ -48,6 +51,7 @@
     <Compile Include="MediaAttributes.cs" />
     <Compile Include="MediaEngine.cs" />
     <Compile Include="MediaEngineAttributes.cs" />
+    <Compile Include="MediaEventGenerator.cs" />
     <Compile Include="MediaFactory.cs" />
     <Compile Include="MediaManager.cs" />
     <Compile Include="MediaType.cs" />

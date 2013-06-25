@@ -227,7 +227,7 @@ namespace SharpDX.MediaFoundation
             try
             {
                 fixed (void* ptr = &bRef[offset])
-                    BeginRead__((System.IntPtr) ptr, count, /*TODO callbackRef*/ IntPtr.Zero, GCHandle.ToIntPtr(handle));
+                    BeginRead__((System.IntPtr) ptr, count, AsyncCallbackShadow.ToIntPtr(callbackRef), GCHandle.ToIntPtr(handle));
             } finally
             {
                 if (handle.IsAllocated) handle.Free();
@@ -294,7 +294,7 @@ namespace SharpDX.MediaFoundation
             try
             {
                 fixed (void* ptr = &bRef[offset])
-                    BeginWrite__((System.IntPtr)ptr, count, /* TODO callbackRef */ IntPtr.Zero, GCHandle.ToIntPtr(handle));
+                    BeginWrite__((System.IntPtr)ptr, count, AsyncCallbackShadow.ToIntPtr(callbackRef), GCHandle.ToIntPtr(handle));
             }
             finally
             {

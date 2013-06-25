@@ -803,8 +803,13 @@
     <map param="IMFGetService::GetService::ppvObject" return="true"/>
 
     <map param="IMFAsyncCallback::GetParameters::pdwFlags" type="MFASYNC_CALLBACK_FLAGS"/>
-    
-    
+
+    <map method="IMFMediaEventGenerator::GetEvent" name="GetEvent" visibility="internal"/>
+    <map param="IMFMediaEventGenerator::EndGetEvent::ppEvent" return="true"/>
+    <map param="IMFMediaEventGenerator::BeginGetEvent::punkState" type="void"/>
+
+    <map method="IMFAsyncResult::.*" property="false" visibility="internal"/>
+    <map param="IMFAsyncResult::GetState::ppunkState" type="void"/>
     
     <!--
     // *****************************************************************
