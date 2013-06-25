@@ -59,7 +59,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             //testCompiler.TestMatrix();
 
             var testSpriteFont = new TestSpriteFont();
-            testSpriteFont.TestSpriteFondDataLoad();
+            testSpriteFont.TestSpriteFontDataLoad();
 
         }
     }

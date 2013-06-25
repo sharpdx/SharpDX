@@ -24,9 +24,9 @@ namespace SharpDX.Toolkit.Graphics.Tests
 {
     public class TestSpriteFont
     {
-        public void TestSpriteFondDataLoad()
+        public void TestSpriteFontDataLoad()
         {
-            // Load a spritefont file generated with DirectTk.MakeSpriteFont command line tool.
+            // Load a sprite font file generated with DirectTk.MakeSpriteFont command line tool.
             var test = SpriteFontData.Load("Arial16.spritefont");
 
             Assert.NotNull(test.Glyphs);

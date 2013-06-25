@@ -19,14 +19,12 @@
 // THE SOFTWARE.
 
 using System;
-using System.IO;
 using NUnit.Framework;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 
 namespace SharpDX.Toolkit.Graphics.Tests
 {
-
     /// <summary>
     /// Tests for all Textures
     /// </summary>
@@ -120,7 +118,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             destMatrix2.Transpose();
             Assert.AreEqual(sourceMatrix, destMatrix2);
 
-            // Test row_major float4x4 (the matrix is transfered as is)
+            // Test row_major float4x4 (the matrix is transferred as is)
             worlViewProjRowMajor.SetValue(sourceMatrix);
             destMatrix = worlViewProjRowMajor.GetMatrix();
             Assert.AreEqual(sourceMatrix, destMatrix);
@@ -128,7 +126,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             destMatrix2 = constantBuffer.GetMatrix(worlViewProjRowMajor.Offset);
             Assert.AreEqual(sourceMatrix, destMatrix2);
 
-            // Test column_major float3x3 (the matrix is transposed automatically by the effect and only the 3x3 is transfered)
+            // Test column_major float3x3 (the matrix is transposed automatically by the effect and only the 3x3 is transferred)
             var sourceMatrix3x3 = sourceMatrix;
             sourceMatrix3x3.Row4 = Vector4.Zero;
             sourceMatrix3x3.Column4 = Vector4.Zero;
