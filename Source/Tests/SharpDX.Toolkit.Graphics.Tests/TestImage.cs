@@ -42,7 +42,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             dxsdkDir = Environment.GetEnvironmentVariable("DXSDK_DIR");
 
             if (string.IsNullOrEmpty(dxsdkDir))
-                throw new NotSupportedException("Install DirectX SDK June 2010 to run this test (DXSDK_DIR env variable is missing).");            
+                throw new NotSupportedException("Install DirectX SDK June 2010 to run this test (DXSDK_DIR environment variable is missing).");            
         }
 
         /// <summary>
@@ -316,9 +316,9 @@ namespace SharpDX.Toolkit.Graphics.Tests
                 var srcPixelBuffer = from.PixelBuffer[j];
                 var dstPixelBuffer = to.PixelBuffer[j];
 
-                // Check only row and slice pitchs
-                Assert.AreEqual(srcPixelBuffer.RowStride, dstPixelBuffer.RowStride, "RowPitch are different for index [{0}], image [{1}]", j, file);
-                Assert.AreEqual(srcPixelBuffer.BufferStride, dstPixelBuffer.BufferStride, "SlicePitch are different for index [{0}], image [{1}]", j, file);
+                // Check only row and slice pitch
+                Assert.AreEqual(srcPixelBuffer.RowStride, dstPixelBuffer.RowStride, "RowPitch is different for index [{0}], image [{1}]", j, file);
+                Assert.AreEqual(srcPixelBuffer.BufferStride, dstPixelBuffer.BufferStride, "SlicePitch is different for index [{0}], image [{1}]", j, file);
 
                 var isSameBuffer = Utilities.CompareMemory(srcPixelBuffer.DataPointer, dstPixelBuffer.DataPointer, srcPixelBuffer.BufferStride);
                 if (!isSameBuffer)

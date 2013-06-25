@@ -38,7 +38,7 @@ namespace SharpDoc
         /// </summary>
         Local,
         /// <summary>
-        /// URL is an external Msdn link
+        /// URL is an external MSDN link
         /// </summary>
         Msdn        
     }

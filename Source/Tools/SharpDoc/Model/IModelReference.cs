@@ -33,7 +33,7 @@ namespace SharpDoc.Model
         int Index { get; set; }
 
         /// <summary>
-        /// Gets or sets the XML generated commment ID.
+        /// Gets or sets the XML generated comment ID.
         /// See http://msdn.microsoft.com/en-us/library/fsbx0t7x.aspx for more information.
         /// </summary>
         /// <value>The id.</value>

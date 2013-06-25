@@ -175,7 +175,7 @@ namespace SharpGen.Generator
         }
 
         /// <summary>
-        /// Protecte the name from all C# reserved words.
+        /// Protect the name from all C# reserved words.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
@@ -191,12 +191,12 @@ namespace SharpGen.Generator
         }
 
         /// <summary>
-        /// Determines whether the specified string is a valid pascal case.
+        /// Determines whether the specified string is a valid Pascal case.
         /// </summary>
         /// <param name="str">The string to validate.</param>
         /// <param name="lowerCount">The lower count.</param>
         /// <returns>
-        /// 	<c>true</c> if the specified string is a valid pascal case; otherwise, <c>false</c>.
+        /// 	<c>true</c> if the specified string is a valid Pascal case; otherwise, <c>false</c>.
         /// </returns>
         private static bool IsPascalCase(string str, out int lowerCount)
         {
@@ -278,7 +278,7 @@ namespace SharpGen.Generator
                     }
                 }
 
-                // Else, perform a standard convertion
+                // Else, perform a standard conversion
                 if (subPart.Length > 0)
                 {
                     int numberOfCharLowercase;

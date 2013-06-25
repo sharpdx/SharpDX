@@ -36,7 +36,7 @@ namespace SharpCli
     /// InteropBuilder is responsible to patch SharpDX assemblies and inject unmanaged interop call.
     /// InteropBuilder is also adding several useful methods:
     /// - memcpy using cpblk
-    /// - Read/ReadRange/Write/WriteRange of strutured datas to a memory location
+    /// - Read/ReadRange/Write/WriteRange of structured data to a memory location
     /// - SizeOf on generic structures (C# usually doesn't allow this).
     /// </summary>
     public class InteropApp
@@ -899,8 +899,8 @@ namespace SharpCli
             /// <summary>
             /// Checks the file.
             /// </summary>
-            /// <param name="checkfile">The checkfile.</param>
-            /// <returns>true if checkfile exist and as the same LastWriteTime </returns>
+            /// <param name="checkfile">The file to check.</param>
+            /// <returns>true if the file exist and has the same LastWriteTime </returns>
             public bool CheckFileUpToDate(string checkfile)
             {
                 return File.Exists(checkfile) && File.GetLastWriteTime(checkfile) == LastWriteTime;                

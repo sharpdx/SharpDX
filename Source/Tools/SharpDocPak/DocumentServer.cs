@@ -52,7 +52,7 @@ namespace SharpDocPak
         private const string NoResultsFound = "No results found.";
 
         /// <summary>
-        /// Inits this instance.
+        /// Initializes this instance.
         /// </summary>
         public void Init()
         {
@@ -91,7 +91,7 @@ namespace SharpDocPak
             bool keepAlive = false;
             try
             {
-                Console.WriteLine("Url Requested: {0}", e.RequestContext.Request.Url);
+                Console.WriteLine("URL Requested: {0}", e.RequestContext.Request.Url);
                 Console.Out.Flush();
                 var url = e.RequestContext.Request.Url;
                 response = e.RequestContext.Response;

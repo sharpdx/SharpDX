@@ -17,7 +17,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System.Xml;
 
 namespace SharpDoc.Model
 {
@@ -55,7 +54,7 @@ namespace SharpDoc.Model
         }
 
         /// <summary>
-        /// Gets or sets the assembly definition. This is interpeted by specialization of
+        /// Gets or sets the assembly definition. This is interpreted by specialization of
         /// <see cref="IModelBuilder"/>.
         /// </summary>
         /// <value>The assembly.</value>

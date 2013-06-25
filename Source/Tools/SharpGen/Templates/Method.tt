@@ -142,7 +142,7 @@
 					}						
 					// Does the structure has a Native marshalling?
 					if (param.HasNativeValueType) {
-						// If Native Marshalling and array, then marshall from managed array to a native managed array
+						// If Native Marshalling and array, then marshal from managed array to a native managed array
 						if (param.IsArray) {
 							if (param.IsOptionnal) {#>
                 <#= param.PublicType.QualifiedName #>.__Native[] <#= param.TempName #>_ = (<#= param.Name #> == null)? null : new <#= param.PublicType.QualifiedName #>.__Native[<#= param.Name #>.Length];

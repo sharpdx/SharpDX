@@ -120,7 +120,7 @@ using System.Text.RegularExpressions;
         /// This methods decompose a string in lines and generate template code for each line
         /// using Templatizer.Write/WriteLine methods.
         /// </summary>
-        /// <param name="location">The location in the texttemplate file.</param>
+        /// <param name="location">The location in the text template file.</param>
         /// <param name="content">The content to add to the code.</param>
         private void AddContent(Location location, string content)        
         {
@@ -233,7 +233,7 @@ using System.Text.RegularExpressions;
             foreach (var compilerError in compilerResults.Errors)
                 Logger.Error(compilerError.ToString());
 
-            // If successfull, gets the compiled assembly
+            // If successful, gets the compiled assembly
             if (compilerResults.Errors.Count == 0 && compilerResults.CompiledAssembly != null)
             {
                 templateAssembly = compilerResults.CompiledAssembly;

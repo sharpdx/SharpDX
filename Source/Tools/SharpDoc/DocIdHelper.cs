@@ -221,7 +221,7 @@ namespace SharpDoc
             // split name 
             string[] strSlices = originalName.Split(new[] {'`'});
 
-            // remove numbers at the begining of each string to "<" charter
+            // remove numbers at the beginning of each string to "<" charter
             if (strSlices.Length > 1)
                 for (int i = 0; i < strSlices.Length; i++)
                     if (strSlices[i].Contains("<"))
@@ -267,7 +267,7 @@ namespace SharpDoc
                     thisGenericParam = member as GenericParameter;
                     currentPathStack.Add("`" + thisGenericParam.Position);
 
-                    // return immediatelly, because there is nothing to do.
+                    // return immediately, because there is nothing to do.
                     return;
                 }
                 else
@@ -727,7 +727,7 @@ namespace SharpDoc
             op_RightShift,                  // >>
             op_BitwiseOr,                   // |
 
-            // overloadable comparision operators
+            // overloadable comparison operators
             op_Equality,                    // ==
             op_Inequality,                  // != 
             op_LessThanOrEqual,             // <=

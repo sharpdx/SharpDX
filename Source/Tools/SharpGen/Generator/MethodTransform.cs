@@ -160,7 +160,7 @@ namespace SharpGen.Generator
         /// <summary>
         /// Processes the specified C# element to complete the mapping process between the C++ and C# element.
         /// </summary>
-        /// <param name="csElement">The cs element.</param>
+        /// <param name="csElement">The C# element.</param>
         public override void Process(CsBase csElement)
         {
             try
@@ -193,7 +193,7 @@ namespace SharpGen.Generator
             method.Offset = cppMethod.Offset;
 
             // For methods, the tag "type" is only used for return type
-            // So we are overiding the return type here
+            // So we are overriding the return type here
             var tag = cppMethod.GetTagOrDefault<MappingRule>();
             if (tag.MappingType != null)
                 cppMethod.ReturnType.Tag = new MappingRule() { MappingType = tag.MappingType };
@@ -336,7 +336,7 @@ namespace SharpGen.Generator
                 }
                 if (publicType == null)
                 {
-                    throw new ArgumentException("Publictype cannot be null");
+                    throw new ArgumentException("Public type cannot be null");
                 }
 
                 paramMethod.HasPointer = hasPointer;

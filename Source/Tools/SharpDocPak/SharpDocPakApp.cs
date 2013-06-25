@@ -181,7 +181,7 @@ namespace SharpDocPak
                     if (string.IsNullOrEmpty(DirectoryLocation))
                         UsageError("option --dir is mandatory with --unpack option");
 
-                    // Create the directoy if it doesn't exist
+                    // Create the directory if it doesn't exist
                     if (!Directory.Exists(DirectoryLocation))
                         Directory.CreateDirectory(DirectoryLocation);
 
@@ -245,7 +245,7 @@ namespace SharpDocPak
             input.Close();
             output.Close();
 
-            Console.WriteLine("Docpack exe successfully generated to [{0}]", Output);
+            Console.WriteLine("Docpak exe successfully generated to [{0}]", Output);
         }
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace SharpDocPak
                 Console.WriteLine("Unpack file [{0}]", filePath);
                 File.WriteAllBytes(filePath, fileKeyValue.Value);
             }
-            Console.WriteLine("Unpack successfull.");
+            Console.WriteLine("Unpack successful.");
         }
 
         /// <summary>

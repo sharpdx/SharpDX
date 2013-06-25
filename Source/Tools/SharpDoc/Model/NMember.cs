@@ -17,7 +17,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -216,7 +215,7 @@ namespace SharpDoc.Model
         /// Helper method to return a particular collection of members.
         /// </summary>
         /// <typeparam name="T">A member</typeparam>
-        /// <returns>A collection ot <paramref name="T"/></returns>
+        /// <returns>A collection of <paramref name="T"/></returns>
         protected IEnumerable<T> MembersAs<T>() where T : NMember
         {
             return Members.OfType<T>();

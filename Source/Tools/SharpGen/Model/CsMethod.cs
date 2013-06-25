@@ -247,7 +247,7 @@ namespace SharpGen.Model
 
         /// <summary>
         /// Return the Public return type. If a out parameter is used as a public return type
-        /// then use the type of the out parameter for the public api
+        /// then use the type of the out parameter for the public API.
         /// </summary>
         public bool HasReturnTypeParameter
         {
@@ -259,7 +259,7 @@ namespace SharpGen.Model
 
         /// <summary>
         /// Return the Public return type. If a out parameter is used as a public return type
-        /// then use the type of the out parameter for the public api
+        /// then use the type of the out parameter for the public API.
         /// </summary>
         public string PublicReturnTypeQualifiedName
         {

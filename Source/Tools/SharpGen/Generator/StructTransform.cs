@@ -61,7 +61,7 @@ namespace SharpGen.Generator
                                        IsFullyMapped = false
                                    };
 
-            // Add the C# struct to its namepsace
+            // Add the C# struct to its namespace
             nameSpace.Add(csStruct);
 
             // Map the C++ name to the C# struct
@@ -73,7 +73,7 @@ namespace SharpGen.Generator
         /// <summary>
         /// Processes the specified C# element to complete the mapping process between the C++ and C# element.
         /// </summary>
-        /// <param name="csElement">The cs element.</param>
+        /// <param name="csElement">The C# element.</param>
         public override void Process(CsBase csElement)
         {
             Process((CsStruct)csElement);
@@ -85,11 +85,11 @@ namespace SharpGen.Generator
         /// <param name="csStruct">The c sharp struct.</param>
         private void Process(CsStruct csStruct)
         {
-            // TODO: this mapping must be robust. Current caculation for field offset is not always accurate for union.
+            // TODO: this mapping must be robust. Current calculation for field offset is not always accurate for union.
             // TODO: need to handle align/packing correctly.
 
-            // If a struct was already mapped, then return immediatly
-            // The method MapStruct can be called recursivelly
+            // If a struct was already mapped, then return immediately
+            // The method MapStruct can be called recursively
             if (csStruct.IsFullyMapped)
                 return;
 
@@ -100,7 +100,7 @@ namespace SharpGen.Generator
                 var cppStruct = (CppStruct)csStruct.CppElement;
                 bool hasMarshalType = csStruct.HasMarshalType;
 
-                // If this structure need to me moved to anoter container, move it now
+                // If this structure need to me moved to another container, move it now
                 foreach (var keyValuePair in _mapMoveStructToInner)
                 {
                     if (keyValuePair.Key.Match(csStruct.CppElementName).Success)

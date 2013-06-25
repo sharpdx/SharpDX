@@ -82,7 +82,7 @@ namespace SharpGen.Config
         }
 
         /// <summary>
-        /// Shoulds Attach be serialized?
+        /// Should Attach be serialized?
         /// </summary>
         /// <returns><c>true</c> if Attach property has a value; otherwise, <c>false</c></returns>
         public bool ShouldSerialize_Attach_()

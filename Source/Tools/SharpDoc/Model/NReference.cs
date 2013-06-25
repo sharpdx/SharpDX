@@ -17,7 +17,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
 using System.Xml;
 
 namespace SharpDoc.Model
@@ -32,7 +31,7 @@ namespace SharpDoc.Model
         public int Index { get; set; }
 
         /// <summary>
-        /// Gets or sets the XML generated commment ID.
+        /// Gets or sets the XML generated comment ID.
         /// See http://msdn.microsoft.com/en-us/library/fsbx0t7x.aspx for more information.
         /// </summary>
         /// <value>The id.</value>

@@ -33,7 +33,7 @@ namespace SharpPak
 {
     /// <summary>
     /// SharpPak application is able to pack/link into a single executable a SharpDX application
-    /// without requiring additionnal dependencies.
+    /// without requiring additional dependencies.
     /// </summary>
     public class SharpPakApp
     {

@@ -25,7 +25,7 @@ using System.Xml;
 namespace SharpDoc.Model
 {
     /// <summary>
-    /// Frontend to a XML generated documentation, used to find documentation about a type reference.
+    /// Front end to a XML generated documentation, used to find documentation about a type reference.
     /// </summary>
     public class NDocumentApi
     {

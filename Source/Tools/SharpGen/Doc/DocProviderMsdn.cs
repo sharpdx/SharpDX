@@ -1,23 +1,18 @@
 ﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using System.Xml;
 using HtmlAgilityPack;
 using ICSharpCode.SharpZipLib.Zip;
-
 using Microsoft.JScript;
-
 using SharpCore;
-using SharpCore.MTPS;
-
 using SharpCore.Logging;
+using SharpCore.MTPS;
 
 namespace SharpGen.Doc
 {
@@ -63,7 +58,7 @@ namespace SharpGen.Doc
         public string OutputPath { get; set; }
 
         /// <summary>
-        /// Set to true to use a zip for cacing documentation
+        /// Set to true to use a zip for caching documentation
         /// </summary>
         public bool UseArchive { get; set; }
 
@@ -88,7 +83,7 @@ namespace SharpGen.Doc
         }
 
         /// <summary>
-        /// End request to MSDN. Archive is saved if any updated occured between Begin/End.
+        /// End request to MSDN. Archive is saved if any updated occurred between Begin/End.
         /// </summary>
         public void End()
         {

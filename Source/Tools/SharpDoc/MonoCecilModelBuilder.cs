@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Xml;
 
 using Mono.Cecil;
 
@@ -56,9 +55,6 @@ namespace SharpDoc
         /// </summary>
         /// <param name="assemblySource">The assembly source definition.</param>
         /// <param name="memberRegistry">The member registry to populate with types.</param>
-        /// <returns>
-        /// An assembly documentator that contains all documented types, methods.
-        /// </returns>
         public void LoadFrom(NAssemblySource assemblySource, MemberRegistry memberRegistry)
         {
             CurrentMergeGroup = assemblySource.MergeGroup;
@@ -107,7 +103,7 @@ namespace SharpDoc
                     if (string.IsNullOrEmpty(type.Namespace) || type.Namespace.StartsWith("<"))
                         continue;
 
-                    // Create naemespace
+                    // Create namespace
                     var parentNamespace = AddNamespace(assembly, type.Namespace);
                     parentNamespace.SetApiGroup(CurrentMergeGroup, true);
 
@@ -227,7 +223,7 @@ namespace SharpDoc
                 } while (baseTypeDefinition != null);
 
                 // Flattened hierarchy initialized with all base types
-                // Derived types will be added at a later pass, when types in all asemblies 
+                // Derived types will be added at a later pass, when types in all assemblies 
                 // will be discovered.
                 var reverseBases = new List<INMemberReference>(type.Bases);
                 reverseBases.Reverse();
@@ -377,7 +373,7 @@ namespace SharpDoc
             {
                 method = NewInstance<NConstructor>(@namespace, methodDef);
 
-                // Constructors must have typename instead of .ctor
+                // Constructors must have type name instead of .ctor
                 method.Name = method.DeclaringType.Name;
             }
             else if (methodDef.IsSpecialName && methodDef.Name.StartsWith(MethodOperatorPrefix))
@@ -854,7 +850,7 @@ namespace SharpDoc
             member.Namespace = @nameSpace;
             member.Assembly = CurrentAssembly;
             this.FillMemberReference(member, memberRef);
-            // Add generic parameter contraints
+            // Add generic parameter constraints
             return member;
         }
 
@@ -864,7 +860,7 @@ namespace SharpDoc
         }
 
         /// <summary>
-        /// Gets the name of a generic type. Intead of List`1 returns List&lt;T&gt;
+        /// Gets the name of a generic type. Instead of List`1 returns List&lt;T&gt;
         /// </summary>
         /// <param name="name">The original name that contains a ` indicating the usage of generics.</param>
         /// <param name="genericParameters">The generic parameters/arguments.</param>

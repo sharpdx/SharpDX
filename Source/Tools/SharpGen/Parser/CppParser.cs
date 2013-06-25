@@ -20,11 +20,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
-using System.Linq;
-
 using SharpCore;
 using SharpCore.Logging;
 using SharpGen.Config;
@@ -632,7 +631,7 @@ namespace SharpGen.Parser
                 }
             }
 
-            // Find all elements that are refering to a context and attach them to 
+            // Find all elements that are referring to a context and attach them to 
             // the context as child elements
             foreach (var xElement in _mapIdToXElement.Values)
             {
@@ -943,7 +942,7 @@ namespace SharpGen.Parser
 
             Logger.PushContext("Field:[{0}]", cppField.Name);
 
-            // Handly bitfield info
+            // Handle bitfield info
             var bitField = xElement.AttributeValue("bits");
             if (!string.IsNullOrEmpty(bitField))
             {
@@ -1035,7 +1034,7 @@ namespace SharpGen.Parser
                     }
                     else
                     {
-                        // Get the typename from the inner-struct and set it to the field
+                        // Get the type name from the inner-struct and set it to the field
                         cppField.TypeName = fieldSubStruct.Name;
                         _currentCppInclude.Add(fieldSubStruct);
                     }                    
