@@ -82,10 +82,10 @@ namespace SharpCore
         public bool IsDisabled { get; set; }
 
         /// <summary>
-        /// Finds an URL from MSDN documentation.
+        /// Finds a URL from MSDN documentation.
         /// </summary>
         /// <param name="assetId">The asset id in the form "T:System.String"</param>
-        /// <returns>An url to MSDN or null if no url was found</returns>
+        /// <returns>A URL to MSDN or null if no URL was found</returns>
         public string FindUrl(string assetId)
         {
             // Only look for T:System. 
@@ -106,12 +106,12 @@ namespace SharpCore
                 }
                 catch (EndpointNotFoundException endpointNotFound)
                 {
-                    Logger.Warning("Unable to connect to MTPS service. Msnd resolver disabled : {0}", endpointNotFound.Message);
+                    Logger.Warning("Unable to connect to MTPS service. MSDN resolver disabled : {0}", endpointNotFound.Message);
                     IsDisabled = true;
                 }
                 catch (Exception ex)
                 {
-                    Logger.Warning("Error while getting msdn url [{0}] : {1}", assetId, ex.Message);
+                    Logger.Warning("Error while getting MSDN URL [{0}] : {1}", assetId, ex.Message);
                 }
                 _mapAssetIdToContentId[assetId] = contentId;
 

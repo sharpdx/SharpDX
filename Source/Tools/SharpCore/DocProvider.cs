@@ -36,7 +36,7 @@ namespace SharpCore
         /// <summary>
         /// Finds the documentation for a particular C++ item.
         /// </summary>
-        /// <param name="fullName">The full name. for top level elements (like struct, interfaces, enums, functions), It's the name itself of the element. For interafce methods, the name is passeed like this "IMyInterface::MyMethod".</param>
+        /// <param name="fullName">The full name. for top level elements (like struct, interfaces, enums, functions), It's the name itself of the element. For interface methods, the name is passed like this "IMyInterface::MyMethod".</param>
         /// <returns></returns>
         DocItem FindDocumentation(string fullName);
 
