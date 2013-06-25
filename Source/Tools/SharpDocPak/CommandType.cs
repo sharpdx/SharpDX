@@ -17,7 +17,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
 
 namespace SharpDocPak
 {
@@ -31,7 +30,7 @@ namespace SharpDocPak
         /// </summary>
         Show = 0,
         /// <summary>
-        /// Pak a documentation directoy into an exe.
+        /// Pak a documentation directory into an exe.
         /// </summary>
         Pak,
         /// <summary>
