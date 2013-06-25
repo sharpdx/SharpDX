@@ -49,7 +49,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 // ----------------------------------------------------------------------
-// Reuse of some metthods to navigate Mono.Cecil type definitions.
+// Reuse of some methods to navigate Mono.Cecil type definitions.
 // https://github.com/mono/mono/blob/master/mcs/tools/linker/Mono.Linker.Steps/TypeMapStep.cs
 // ----------------------------------------------------------------------
 //

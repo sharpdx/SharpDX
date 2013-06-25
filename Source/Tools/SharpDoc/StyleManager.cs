@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using SharpCore.Logging;
 
 namespace SharpDoc
@@ -73,7 +72,7 @@ namespace SharpDoc
                              continue;
                          var style = StyleDefinition.Load(styleFilename);
 
-                         // Check that style name matchs the directory name
+                         // Check that style name matches the directory name
                          if (style.Name != subStylePath.Name)
                          {
                              Logger.Error("Style [{0}] from path [{1}] doesn't match directory name [{2}]", style.Name, style.FilePath, subStylePath.Name);
@@ -145,7 +144,7 @@ namespace SharpDoc
             if (!string.IsNullOrEmpty(config.FilePath))
                 AddPath(Path.Combine(Path.GetDirectoryName(config.FilePath), DefaultStyleDirectoryName));
 
-            // Add path declared from config fle
+            // Add path declared from config file
             AddPath(config.StyleDirectories);
         }
 
@@ -167,7 +166,7 @@ namespace SharpDoc
         }
 
         /// <summary>
-        /// Writes the availaible styles.
+        /// Writes the available styles.
         /// </summary>
         public void WriteAvailaibleStyles(TextWriter writer)
         {

@@ -107,7 +107,7 @@ namespace SharpDocPak
                 stream.Seek(-8, SeekOrigin.End);
                 int sizeOfArchiveInBytes = reader.ReadInt32();
 
-                // Jump to the begining of the archive
+                // Jump to the beginning of the archive
                 stream.Seek(-sizeOfArchiveInBytes-8, SeekOrigin.End);
 
                 return stream.Position;

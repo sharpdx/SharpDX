@@ -21,7 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using Mono.Options;
 using SharpCore.Logging;
 using SharpGen.Config;
@@ -137,7 +136,7 @@ namespace SharpGen
         }
 
         /// <summary>
-        /// Inits the specified instance with a config root file.
+        /// Initializes the specified instance with a config root file.
         /// </summary>
         /// <returns>true if the config or assembly changed from the last run; otherwise returns false</returns>
         public bool Init()
@@ -208,7 +207,7 @@ namespace SharpGen
                 parser.Init(Config);
 
                 if (Logger.HasErrors)
-                    Logger.Fatal("Initalizing parser failed");
+                    Logger.Fatal("Initializing parser failed");
 
                 // Run the parser
                 var group = parser.Run();

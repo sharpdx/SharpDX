@@ -21,13 +21,13 @@
 namespace SharpDoc.Model
 {
     /// <summary>
-    /// XML Recommanded Tags for Documentation Comments.
+    /// XML Recommended Tags for Documentation Comments.
     /// http://msdn.microsoft.com/en-us/library/5ast78ax.aspx
     /// </summary>
     public static class DocTag
     {
         /// <summary>
-        /// SharpDX unamanged tag &lt;unmanaged&gt; tag.
+        /// SharpDX unmanaged tag &lt;unmanaged&gt; tag.
         /// </summary>
         public const string UnManaged = "unmanaged";
 

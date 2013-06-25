@@ -46,7 +46,7 @@ namespace SharpDX.Tests
         /// </summary>
         /// <param name="filename">The filename.</param>
         /// <param name="mode">The mode.</param>
-        /// <param name="acccess">The acccess.</param>
+        /// <param name="acccess">The access.</param>
         /// <returns></returns>
         private Stream CreateFileStream(string filename, NativeFileMode mode, NativeFileAccess acccess)
         {

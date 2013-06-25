@@ -47,7 +47,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             dxsdkDir = Environment.GetEnvironmentVariable("DXSDK_DIR");
 
             if (string.IsNullOrEmpty(dxsdkDir))
-                throw new NotSupportedException("Install DirectX SDK June 2010 to run this test (DXSDK_DIR env variable is missing).");
+                throw new NotSupportedException("Install DirectX SDK June 2010 to run this test (DXSDK_DIR environment variable is missing).");
         }
 
         [Test]
@@ -105,7 +105,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // Upload the textureData to the GPU
             texture.SetData(GraphicsDevice, textureData);
 
-            // Readback data from the GPU
+            // Read back data from the GPU
             var readBackData = texture.GetData<byte>();
 
             // Check that both content are equal
@@ -318,7 +318,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
                 ////if ((i % 10) == 0 )
                 //{
                 //    Console.WriteLine("------------------------------------------------------");
-                //    Console.WriteLine("Lived Ojbects");
+                //    Console.WriteLine("Lived Objects");
                 //    Console.WriteLine("------------------------------------------------------");
                 //    deviceDebug.ReportLiveDeviceObjects(ReportingLevel.Detail);
                 //}

@@ -59,7 +59,7 @@ namespace SharpGen.Generator
         /// <summary>
         /// Processes the specified C# element to complete the mapping process between the C++ and C# element.
         /// </summary>
-        /// <param name="csElement">The cs element.</param>
+        /// <param name="csElement">The C# element.</param>
         public override void Process(CsBase csElement)
         {
             Process((CsEnum)csElement);

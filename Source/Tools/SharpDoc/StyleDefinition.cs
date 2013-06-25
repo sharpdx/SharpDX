@@ -91,10 +91,10 @@ namespace SharpDoc
         public string FilePath { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this style is overriden.
+        /// Gets or sets a value indicating whether this style is overridden.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if this style is overriden; otherwise, <c>false</c>.
+        /// 	<c>true</c> if this style is overridden; otherwise, <c>false</c>.
         /// </value>
         [XmlIgnore]
         public bool IsOverriden { get; set; }

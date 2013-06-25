@@ -22,7 +22,7 @@ using System.Xml.Serialization;
 namespace SharpGen.CppModel
 {
     /// <summary>
-    /// The C++ calling convetion.
+    /// The C++ calling convention.
     /// </summary>
     public enum CppCallingConvention
     {

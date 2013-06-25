@@ -20,7 +20,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 using SharpCore;
 using SharpCore.Logging;
@@ -79,7 +78,7 @@ namespace SharpDoc
 
                             // Check that PageId is a valid filename
                             if (!Utility.IsValidFilename(topic.PageId))
-                                Logger.Error("Invalid PageId [{0}] for topic [{1}]. Fileid must contain valid filename chars", topic.PageId, this);
+                                Logger.Error("Invalid PageId [{0}] for topic [{1}]. PageId must contain valid filename chars", topic.PageId, this);
                         });
             }
 

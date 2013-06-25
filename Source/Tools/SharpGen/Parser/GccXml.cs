@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
 using Microsoft.Win32;
 
@@ -33,7 +32,7 @@ using SharpGen.Config;
 namespace SharpGen.Parser
 {
     /// <summary>
-    /// GccXml frontend for command line.
+    /// GccXml front end for command line.
     /// see http://www.gccxml.org/HTML/Index.html
     /// </summary>
     public class GccXml
@@ -340,7 +339,6 @@ namespace SharpGen.Parser
 
                     string vsVersion = GetVisualStudioVersion();
 
-                    // Absolutize executable path
                     ExecutablePath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, ExecutablePath));
 
                     if (!File.Exists(ExecutablePath)) Logger.Fatal("gccxml.exe not found from path: [{0}]", ExecutablePath);
@@ -358,7 +356,7 @@ namespace SharpGen.Parser
                         };
                     var xmlFile = Path.ChangeExtension(headerFile, "xml");
 
-                    // Delete any previously genereated xml file
+                    // Delete any previously generated xml file
                     File.Delete(xmlFile);
 
                     var arguments = ""; // "--gccxml-gcc-options " + GccXmlGccOptionsFile;

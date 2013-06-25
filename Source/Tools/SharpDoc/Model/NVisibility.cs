@@ -42,7 +42,7 @@ namespace SharpDoc.Model
         /// </summary>
         Internal,
         /// <summary>
-        /// Protected and Internal elemetn.
+        /// Protected and Internal element.
         /// </summary>
         ProtectedInternal,        
     }

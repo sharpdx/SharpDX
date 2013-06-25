@@ -17,19 +17,13 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
-using SharpDX.DXGI;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+using SharpDX.DXGI;
 
 namespace SharpDX.Toolkit.Graphics.Tests
 {
-    using SharpDX.Toolkit;
-
     /// <summary>
     /// Tests for <see cref="SharpDX.Toolkit.Graphics.Buffer"/>
     /// </summary>
@@ -135,7 +129,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
                 Usage = ResourceUsage.Default
             });
 
-            // Check srv description
+            // Check SRV description
             Assert.AreNotEqual((ShaderResourceView)indexBuffer, null);
 
             var srvDescription = ((ShaderResourceView)indexBuffer).Description;
@@ -153,7 +147,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             };
             Assert.AreEqual(srvDescription, srvDescriptionReference);
 
-            // Check uav description
+            // Check UAV description
             Assert.AreNotEqual((UnorderedAccessView)indexBuffer, null);
             Assert.AreEqual(((UnorderedAccessView)indexBuffer).Description, new UnorderedAccessViewDescription()
             {
@@ -189,7 +183,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // Check views
             Assert.AreEqual((UnorderedAccessView)structuredBuffer, null);
 
-            // Check srv description
+            // Check SRV description
             Assert.AreNotEqual((ShaderResourceView)structuredBuffer, null);
 
             var srvDescription = ((ShaderResourceView)structuredBuffer).Description;
@@ -219,7 +213,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             Assert.AreEqual((ShaderResourceView)structuredBuffer, null);
             Assert.AreNotEqual((UnorderedAccessView)structuredBuffer, null);
 
-            // Check uav description
+            // Check UAV description
             Assert.AreEqual(((UnorderedAccessView)structuredBuffer).Description, new UnorderedAccessViewDescription()
             {
                 Format = Format.Unknown,
@@ -249,7 +243,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             Assert.AreEqual((ShaderResourceView)structuredBuffer, null);
             Assert.AreNotEqual((UnorderedAccessView)structuredBuffer, null);
 
-            // Check uav description
+            // Check UAV description
             Assert.AreEqual(((UnorderedAccessView)structuredBuffer).Description, new UnorderedAccessViewDescription()
             {
                 Format = Format.Unknown,
@@ -278,7 +272,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
                                                                   StructureByteStride = 0,
                                                                   Usage = ResourceUsage.Default
                                                               });
-            // Check srv description
+            // Check SRV description
             Assert.AreNotEqual((ShaderResourceView)rawBuffer, null);
 
             var srvDescription = ((ShaderResourceView)rawBuffer).Description;
@@ -296,10 +290,10 @@ namespace SharpDX.Toolkit.Graphics.Tests
             };
             Assert.AreEqual(srvDescription, srvDescriptionReference);
 
-            // Check uav
+            // Check UAV
             Assert.AreNotEqual((UnorderedAccessView)rawBuffer, null);
 
-            // Check uav description
+            // Check UAV description
             Assert.AreEqual(((UnorderedAccessView)rawBuffer).Description, new UnorderedAccessViewDescription()
             {
                 Format = Format.R32_Typeless,
@@ -324,7 +318,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
                 Usage = ResourceUsage.Default
             });
 
-            // Check srv description
+            // Check SRV description
             Assert.AreNotEqual((ShaderResourceView)rawBuffer, null);
 
             srvDescription = ((ShaderResourceView)rawBuffer).Description;
@@ -342,10 +336,10 @@ namespace SharpDX.Toolkit.Graphics.Tests
             };
             Assert.AreEqual(srvDescription, srvDescriptionReference);
 
-            // Check uav
+            // Check UAV
             Assert.AreNotEqual((UnorderedAccessView)rawBuffer, null);
 
-            // Check uav description
+            // Check UAV description
             Assert.AreEqual(((UnorderedAccessView)rawBuffer).Description, new UnorderedAccessViewDescription()
             {
                 Format = Format.R32_Typeless,
@@ -353,13 +347,13 @@ namespace SharpDX.Toolkit.Graphics.Tests
                 Buffer = { ElementCount = 512 / 4, FirstElement = 0, Flags = UnorderedAccessViewBufferFlags.Raw }
             });
 
-            // Check rtv
+            // Check RTV
             var rtv = rawBuffer.GetRenderTargetView(PixelFormat.R32.UInt, 16);
             Assert.AreNotEqual(rtv, null);
 
             var rtvDescription = rtv.Description;
             rtvDescription.Texture2DArray.ArraySize = 0;
-            // Check uav description
+            // Check UAV description
             Assert.AreEqual(rtvDescription, new RenderTargetViewDescription()
             {
                 Format = Format.R32_UInt,

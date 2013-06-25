@@ -23,7 +23,7 @@ using System.Xml.Serialization;
 namespace SharpGen.Config
 {
     /// <summary>
-    /// Simple Key-Value class for xml serializeing.
+    /// Simple Key-Value class for xml serializing.
     /// </summary>
     public class KeyValue
     {

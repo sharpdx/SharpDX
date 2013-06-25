@@ -255,10 +255,12 @@ namespace SharpGen.Config
         public bool IsMappingToProcess { get; set; }
 
         /// <summary>
-        /// Equalses the specified other.
+        /// Indicates whether the current object is equal to another object of the same type.
         /// </summary>
-        /// <param name="other">The other.</param>
-        /// <returns></returns>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>
+        /// true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.
+        /// </returns>
         public bool Equals(ConfigFile other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -399,7 +401,7 @@ namespace SharpGen.Config
                                                                         localResult = Environment.GetEnvironmentVariable(name);
                                                                     if (localResult == null)
                                                                     {
-                                                                        Logger.Error("Unable to substitute config/env variable $({0}). Variable is not defined", name);
+                                                                        Logger.Error("Unable to substitute config/environment variable $({0}). Variable is not defined", name);
                                                                         return "";
                                                                     }
                                                                     return localResult;
@@ -478,11 +480,11 @@ namespace SharpGen.Config
         }
 
         /// <summary>
-        /// Loads the specified Mappingfile attached to a parent MappingFile.
+        /// Loads the specified config file attached to a parent config file.
         /// </summary>
         /// <param name="parent">The parent.</param>
         /// <param name="file">The file.</param>
-        /// <returns>The MappingFile loaded</returns>
+        /// <returns>The loaded config</returns>
         private static ConfigFile Load(ConfigFile parent, string file, string[] macros = null)
         {
             var deserializer = new XmlSerializer(typeof(ConfigFile));

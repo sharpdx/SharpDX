@@ -40,7 +40,6 @@ namespace SharpDoc.Model
         /// </summary>
         /// <param name="assemblySource">The assembly source definition.</param>
         /// <param name="memberRegistry">The member registry to populate with types.</param>
-        /// <returns>An assembly documentator that contains all documented types, methods.</returns>
         void LoadFrom(NAssemblySource assemblySource, MemberRegistry memberRegistry);
     }
 }
