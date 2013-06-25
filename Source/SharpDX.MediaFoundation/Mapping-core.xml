@@ -810,6 +810,7 @@
 
     <map method="IMFAsyncResult::.*" property="false" visibility="internal"/>
     <map param="IMFAsyncResult::GetState::ppunkState" type="void"/>
+    <map method="IMFAsyncResult::GetObjectW" name="GetObject"/>
     
     <!--
     // *****************************************************************

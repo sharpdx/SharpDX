@@ -88,7 +88,7 @@ namespace SharpDX.MediaFoundation
             get
             {
                 ComObject privateObject;
-                GetObjectW(out privateObject);
+                GetObject(out privateObject);
                 return privateObject;
             }
         }
