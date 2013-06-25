@@ -21,7 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using SharpCore.Logging;
 using SharpDoc.Model;
 
 namespace SharpDoc
@@ -142,7 +141,7 @@ namespace SharpDoc
                     {
                         var method = currentMember as NMethod;
 
-                        // Don't add method that are overriden
+                        // Don't add methods that are overridden
                         if (method != null && method.Overrides != null && nMemberReference is NMethod)
                         {
                             if (method.Overrides.Id == nMemberReference.Id)
@@ -201,7 +200,7 @@ namespace SharpDoc
                 member.PageId = id;
             }
 
-            // Tag methods that are overriden
+            // Tag methods that are overridden
             foreach (var method in type.AllMembers.OfType<NMethod>())
             {
                 if (overrides.ContainsKey(method.Name) && overrides[method.Name] > 0)

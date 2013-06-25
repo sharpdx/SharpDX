@@ -22,11 +22,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Text;
 
 using Mono.Options;
-using RazorEngine;
-using RazorEngine.Templating;
 
 using SharpCore.Logging;
 using SharpDoc.Model;
@@ -185,7 +182,7 @@ namespace SharpDoc
             
             var clock = Stopwatch.StartNew();
 
-            // New instance of a tempalte context used by the RazorEngine
+            // New instance of a template context used by the RazorEngine
             var context = new TemplateContext
             {
                 Config = Config,

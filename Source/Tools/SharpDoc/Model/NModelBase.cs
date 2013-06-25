@@ -39,7 +39,7 @@ namespace SharpDoc.Model
         public int Index { get; set; }
 
         /// <summary>
-        /// Gets or sets the XML generated commment ID.
+        /// Gets or sets the XML generated comment ID.
         /// See http://msdn.microsoft.com/en-us/library/fsbx0t7x.aspx for more information.
         /// </summary>
         /// <value>The id.</value>
@@ -148,10 +148,10 @@ namespace SharpDoc.Model
         public List<NSeeAlso> SeeAlsos { get; set; }
 
         /// <summary>
-        /// Gets or sets the group apis.
+        /// Gets or sets the group APIs.
         /// </summary>
         /// <value>
-        /// The group apis.
+        /// The group APIs.
         /// </value>
         public List<string> Groups { get; private set; }
 
@@ -207,10 +207,12 @@ namespace SharpDoc.Model
         }
 
         /// <summary>
-        /// Equalses the specified other.
+        /// Indicates whether the current object is equal to another object of the same type.
         /// </summary>
-        /// <param name="other">The other.</param>
-        /// <returns></returns>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>
+        /// true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.
+        /// </returns>
         public bool Equals(NModelBase other)
         {
             if (ReferenceEquals(null, other)) return false;

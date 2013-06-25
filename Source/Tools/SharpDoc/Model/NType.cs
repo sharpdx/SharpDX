@@ -61,7 +61,7 @@ namespace SharpDoc.Model
         public List<INMemberReference> Descendants { get; set; }
 
         /// <summary>
-        /// Gets or sets the flattened hierarchy type, including all base types and all derivated types.
+        /// Gets or sets the flattened hierarchy type, including all base types and all derived types.
         /// The T1 type as <see cref="System.Int32"/> returned by the <see cref="Tuple{T1,T2}"/> describes
         /// the level (0 for the root level) in the inheritance hierarchy.
         /// Objects are return from the most 

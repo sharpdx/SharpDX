@@ -27,7 +27,6 @@ using System.Xml.Serialization;
 
 using HtmlAgilityPack;
 
-using SharpCore;
 using SharpCore.Logging;
 
 namespace SharpDoc.Model
@@ -78,7 +77,7 @@ namespace SharpDoc.Model
         }
 
         /// <summary>
-        /// Gets or sets the XML generated commment ID.
+        /// Gets or sets the XML generated comment ID.
         /// See http://msdn.microsoft.com/en-us/library/fsbx0t7x.aspx for more information.
         /// </summary>
         /// <value>The id.</value>
@@ -263,7 +262,7 @@ namespace SharpDoc.Model
         }
 
         /// <summary>
-        /// Fors the each topic.
+        /// Performs an action on each each topic.
         /// </summary>
         /// <param name="topicFunction">The topic function.</param>
         public void ForEachTopic(Action<NTopic> topicFunction)
@@ -304,7 +303,7 @@ namespace SharpDoc.Model
         }
 
         /// <summary>
-        /// Gets the parents of this intance.
+        /// Gets the parents of this instance.
         /// </summary>
         /// <returns>Parents of this instance</returns>
         /// <remarks>

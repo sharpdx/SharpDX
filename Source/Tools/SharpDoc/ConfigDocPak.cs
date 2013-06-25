@@ -25,7 +25,7 @@ using SharpDocPak;
 namespace SharpDoc
 {
     /// <summary>
-    /// Configuration for docpak viewer.
+    /// Configuration for doc pak viewer.
     /// </summary>
     public class ConfigDocPak
     {

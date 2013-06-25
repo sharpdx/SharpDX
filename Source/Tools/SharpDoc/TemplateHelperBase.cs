@@ -29,7 +29,7 @@ using SharpDoc.Model;
 namespace SharpDoc
 {
     /// <summary>
-    /// Overrides default RazorEngine TemplateBase to provide additionnal
+    /// Overrides default RazorEngine TemplateBase to provide additional
     /// methods (Import) and properties (Helpers, Param, Style).
     /// </summary>
     /// <typeparam name="T"></typeparam>
@@ -105,7 +105,7 @@ namespace SharpDoc
         /// </returns>
         public virtual string Import(string name)
         {
-            // If helpers is already loaded, then return immediattely
+            // If helpers is already loaded, then return immediately
             if (_helpersDictionary.ContainsKey(name))
                 return "";
 
@@ -194,7 +194,7 @@ namespace SharpDoc
         /// Resolves a file from template directories.
         /// </summary>
         /// <param name="file">The file.</param>
-        /// <returns>A filepath to the file</returns>
+        /// <returns>The path to the file</returns>
         public string ResolveFile(string file)
         {
             return Model.ResolvePath(file);

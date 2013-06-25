@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -315,7 +314,7 @@ namespace SharpDoc
         }
 
         /// <summary>
-        /// Resolve a local element Id (ie. "T:System.Object") to an url.
+        /// Resolve a local element Id (i.e. "T:System.Object") to a URL.
         /// </summary>
         /// <param name="reference">The reference.</param>
         /// <param name="linkName">Name of the link.</param>
@@ -329,7 +328,7 @@ namespace SharpDoc
         }
 
         /// <summary>
-        /// Resolve a document Id (ie. "T:System.Object") to an url.
+        /// Resolve a document Id (i.e. "T:System.Object") to an URL.
         /// </summary>
         /// <param name="id">The id.</param>
         /// <param name="linkName">Name of the link.</param>
@@ -408,7 +407,7 @@ namespace SharpDoc
             var urlBuilder = new StringBuilder();
             urlBuilder.Append(LinkResolver(linkDescriptor));
 
-            // Handle url for generic instance
+            // Handle URL for generic instance
             if (genericInstance != null)
             {
                 urlBuilder.Append("&lt;");
@@ -495,7 +494,7 @@ namespace SharpDoc
         /// Resolves a path from template directories.
         /// </summary>
         /// <param name="path">The path.</param>
-        /// <returns>A filepath to the file or directory</returns>
+        /// <returns>The path to the file or directory</returns>
         public string ResolvePath(string path)
         {
             for (int i = 0; i < StyleDirectories.Count; i++)
@@ -564,7 +563,8 @@ namespace SharpDoc
         /// <summary>
         /// Copies the content of a local directory to the destination html directory.
         /// </summary>
-        /// <param name="directoryNameOrFile">Name of the src directory.</param>
+        /// <param name="directoryNameOrFile">Name of the source directory.</param>
+        /// <param name="toDirectory">Name of the destination directory.</param>
         public void CopyLocalContent(string directoryNameOrFile, string toDirectory)
         {
             var fileOrDir = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Config.FilePath), directoryNameOrFile));
@@ -697,7 +697,7 @@ namespace SharpDoc
             } catch (Exception ex)
             {
                 Logger.PushLocation(location);
-                Logger.Error("Unexpected exceprion", ex);
+                Logger.Error("Unexpected exception", ex);
                 Logger.PopLocation();
                 throw ex;
             }
