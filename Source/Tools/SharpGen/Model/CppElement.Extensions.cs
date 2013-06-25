@@ -59,7 +59,7 @@ namespace SharpGen.Model
                 return "int";
             if (cppType is CppType)
                 return (cppType as CppType).TypeName;
-            throw new ArgumentException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Cannot get typename from type {0}", cppType));
+            throw new ArgumentException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Cannot get type name from type {0}", cppType));
         }
 
         private static string RegexRename(Regex regex, string fromName, string replaceName)

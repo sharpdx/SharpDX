@@ -28,7 +28,7 @@ namespace SharpGen.Generator
     public abstract class TransformBase
     {
         /// <summary>
-        /// Inits this instanec with the specified <see cref="TransformManager"/>.
+        /// Initializes this instance with the specified <see cref="TransformManager"/>.
         /// </summary>
         /// <param name="manager">The manager.</param>
         public virtual void Init(TransformManager manager)
@@ -59,7 +59,7 @@ namespace SharpGen.Generator
         /// <summary>
         /// Processes the specified C# element to complete the mapping process between the C++ and C# element.
         /// </summary>
-        /// <param name="csElement">The cs element.</param>
+        /// <param name="csElement">The C# element.</param>
         public abstract void Process(CsBase csElement);
     }
 }

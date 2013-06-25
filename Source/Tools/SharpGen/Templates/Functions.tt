@@ -28,7 +28,7 @@ foreach (var sharpFunctionGroup in Namespace.Classes)
 <#
 	}
 
-	// Prepare for Custom Dll import
+	// Prepare for Custom DLL import
 	var dllNames = sharpFunctionGroup.GetFunctionDllNames();
 	
 	if (dllNames.Count > 0) {		

@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -55,9 +54,9 @@ namespace SharpGen.Generator
         }
 
         /// <summary>
-        /// Gets the method tranformer.
+        /// Gets the method transformer.
         /// </summary>
-        /// <value>The method tranformer.</value>
+        /// <value>The method transformer.</value>
         private MethodTransform MethodTranform { get { return Manager.MethodTransform; } }
 
         /// <summary>
@@ -83,7 +82,7 @@ namespace SharpGen.Generator
         /// <summary>
         /// Processes the specified C# element to complete the mapping process between the C++ and C# element.
         /// </summary>
-        /// <param name="csElement">The cs element.</param>
+        /// <param name="csElement">The C# element.</param>
         public override void Process(CsBase csElement)
         {
             Process((CsInterface) csElement);
@@ -98,7 +97,7 @@ namespace SharpGen.Generator
             if (interfaceType.IsFullyMapped)
                 return;
 
-            // Set IsFullyMapped to avoid recursive mappipng
+            // Set IsFullyMapped to avoid recursive mapping
             interfaceType.IsFullyMapped = true;
 
             // var cppInterface = interfaceType.CppElement as CppInterface;
@@ -412,7 +411,7 @@ namespace SharpGen.Generator
                 {
                     bool removeProperty = false;
 
-                    //// Dont add property that doesn't match with return type
+                    //// Don't add property that doesn't match with return type
                     //if (property.Setter != property.Getter.IsHResult)
                     //    continue;
                     if (csProperty.IsPropertyParam)

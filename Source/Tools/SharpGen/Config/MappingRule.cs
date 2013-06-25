@@ -239,7 +239,7 @@ namespace SharpGen.Config
         public string FunctionDllName { get; set; }
 
         /// <summary>
-        /// By default true for dll import
+        /// By default true for DLL import
         /// </summary>
         [XmlIgnore]
         public bool? UseDllImport { get; set; }

@@ -23,7 +23,7 @@ using System.Xml.Serialization;
 namespace SharpGen.Config
 {
     /// <summary>
-    /// Simple naming rule to rename shorname, abbreviation to an expanded name. 
+    /// Simple naming rule to rename short name, abbreviation to an expanded name. 
     /// For example, rename SRV to ShaderResourceView.
     /// </summary>
     [XmlType("short")]

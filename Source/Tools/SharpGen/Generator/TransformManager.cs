@@ -35,7 +35,7 @@ using SharpGen.TextTemplating;
 namespace SharpGen.Generator
 {
     /// <summary>
-    /// This class is responsible to generaete the C# model from C++ model.
+    /// This class is responsible for generating the C# model from C++ model.
     /// </summary>
     public class TransformManager
     {
@@ -146,7 +146,7 @@ namespace SharpGen.Generator
         private string CurrentNamespaceName { get; set; }
 
         /// <summary>
-        /// Inits this instance with the specified C++ module and config.
+        /// Initializes this instance with the specified C++ module and config.
         /// </summary>
         /// <param name="cppModule">The C++ module.</param>
         /// <param name="config">The root config file.</param>
@@ -728,7 +728,7 @@ namespace SharpGen.Generator
         /// <typeparam name="T">The C# type to return</typeparam>
         /// <param name="cppType">The C++ type to process.</param>
         /// <param name="isTypeUsedInStruct">if set to <c>true</c> this type is used in a struct declaration.</param>
-        /// <returns>An instanciate C# type</returns>
+        /// <returns>An instantiated C# type</returns>
         internal T GetCsType<T>(CppType cppType, bool isTypeUsedInStruct = false) where T : CsMarshalBase, new()
         {
             CsTypeBase publicType = null;
@@ -1095,7 +1095,7 @@ namespace SharpGen.Generator
         }
 
         /// <summary>
-        ///   Finds the C# type binded from a C++ typename.
+        ///   Finds the C# type binded from a C++ type name.
         /// </summary>
         /// <param name = "cppName">Name of a c++ type</param>
         /// <returns>A C# type or null</returns>
@@ -1367,7 +1367,7 @@ namespace SharpGen.Generator
         }
 
         /// <summary>
-        /// Attaches a severeal C++ to a C# namespace using a regular expression query.
+        /// Attaches C++ to a C# namespace using a regular expression query.
         /// </summary>
         /// <param name="typeNameRegex">The C++ regex selection.</param>
         /// <param name="assemblyName">Name of the assembly.</param>
