@@ -265,8 +265,7 @@
     <const from-guid="MF_EVENT_SOURCE_TOPOLOGY_CANCELED" class="SharpDX.MediaFoundation.EventAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="SourceTopologyCanceled">new MediaAttributeKey&lt;int&gt;("$1")</const>
     <const from-guid="MF_EVENT_START_PRESENTATION_TIME" class="SharpDX.MediaFoundation.EventAttributeKeys" type="MediaAttributeKey&lt;long&gt;" name="StartPresentationTime">new MediaAttributeKey&lt;long&gt;("$1")</const>
     <const from-guid="MF_EVENT_START_PRESENTATION_TIME_AT_OUTPUT" class="SharpDX.MediaFoundation.EventAttributeKeys" type="MediaAttributeKey&lt;long&gt;" name="StartPresentationTimeAtOutput">new MediaAttributeKey&lt;long&gt;("$1")</const>
-    <const from-guid="MF_EVENT_TOPOLOGY_STATUS" class="SharpDX.MediaFoundation.EventAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="TopologyStatus">new MediaAttributeKey&lt;int&gt;("$1")</const>
-    
+    <const from-guid="MF_EVENT_TOPOLOGY_STATUS" class="SharpDX.MediaFoundation.EventAttributeKeys" type="MediaAttributeKey&lt;SharpDX.MediaFoundation.TopologyStatus&gt;" name="TopologyStatus">new MediaAttributeKey&lt;SharpDX.MediaFoundation.TopologyStatus&gt;("$1")</const>
     
     <const from-guid="MF_LOW_LATENCY" class="SharpDX.MediaFoundation.SinkWriterAttributeKeys" type="MediaAttributeKey&lt;bool&gt;" name="LowLatency">new MediaAttributeKey&lt;bool&gt;("$1")</const>
     
@@ -601,11 +600,16 @@
 
     <create-cpp enum="MFASYNC_CALLBACK_FLAGS" macro="MFASYNC_.*_CALLBACK"/>
     <create-cpp enum="MFASYNC_CALLBACK_QUEUE" macro="MFASYNC_CALLBACK_QUEUE_.*"/>
-  
+    
+    <define enum="SharpDX.MediaFoundation.MediaEventTypes" sizeof="4" />
     <context-clear />
   </extension>
 
+  
+  
+  
   <bindings>
+    <bind from="MEDIA_EVENT_TYPES" to="SharpDX.MediaFoundation.MediaEventTypes"/>
     <bind from="MPEG1VIDEOINFO" to="SharpDX.MediaFoundation.Mpeg1VideoInformation"/>
     <bind from="MPEG2VIDEOINFO" to="SharpDX.MediaFoundation.Mpeg2VideoInformation"/>
     <bind from="VIDEOINFOHEADER2" to="SharpDX.MediaFoundation.VideoInformationHeader2"/>
@@ -623,6 +627,8 @@
     <map enum="MF(.*)" name-tmp="$1"/>
 
     <remove enum-item=".*_Mask"/>
+    
+    <map enum="MF_TOPOSTATUS" name="TopologyStatus"/>
     
     <map enum="MFASYNC_CALLBACK_FLAGS" name="AsyncCallbackFlags" none="true" flags="true"/>
     <map enum-item="MFASYNC_(.*)_CALLBACK" name-tmp="$1"/>
@@ -811,6 +817,9 @@
     <map method="IMFAsyncResult::.*" property="false" visibility="internal"/>
     <map param="IMFAsyncResult::GetState::ppunkState" type="void"/>
     <map method="IMFAsyncResult::GetObjectW" name="GetObject"/>
+    
+    <map param="IMFMediaSession::SetTopology::dwSetTopologyFlags" type="MFSESSION_SETTOPOLOGY_FLAGS"/>
+    <map param="IMFMediaEvent::GetType::pmet" type="MEDIA_EVENT_TYPES"/>
     
     <!--
     // *****************************************************************

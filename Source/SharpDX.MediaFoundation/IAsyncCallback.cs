@@ -20,6 +20,7 @@
 
 namespace SharpDX.MediaFoundation
 {
+    [Shadow(typeof(AsyncCallbackShadow))]
     public partial interface IAsyncCallback
     {
         /// <summary>

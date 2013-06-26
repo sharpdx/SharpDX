@@ -222,17 +222,8 @@ namespace SharpDX.MediaFoundation
         /// <unmanaged-short>IMFByteStream::BeginRead</unmanaged-short>	
         public unsafe void BeginRead(byte[] bRef, int offset, int count, SharpDX.MediaFoundation.IAsyncCallback callbackRef, object context)
         {
-            
-            var handle = GCHandle.Alloc(context);
-            try
-            {
-                fixed (void* ptr = &bRef[offset])
-                    BeginRead__((System.IntPtr) ptr, count, AsyncCallbackShadow.ToIntPtr(callbackRef), GCHandle.ToIntPtr(handle));
-            } finally
-            {
-                if (handle.IsAllocated) handle.Free();
-            }
-
+            fixed (void* ptr = &bRef[offset])
+                BeginRead__((System.IntPtr) ptr, count, AsyncCallbackShadow.ToIntPtr(callbackRef), context != null ? Marshal.GetIUnknownForObject(context) : IntPtr.Zero);
         }
 
         /// <summary>	
@@ -289,17 +280,8 @@ namespace SharpDX.MediaFoundation
         /// <unmanaged-short>IMFByteStream::BeginWrite</unmanaged-short>	
         public unsafe void BeginWrite(byte[] bRef, int offset, int count, SharpDX.MediaFoundation.IAsyncCallback callbackRef, object context)
         {
-
-            var handle = GCHandle.Alloc(context);
-            try
-            {
-                fixed (void* ptr = &bRef[offset])
-                    BeginWrite__((System.IntPtr)ptr, count, AsyncCallbackShadow.ToIntPtr(callbackRef), GCHandle.ToIntPtr(handle));
-            }
-            finally
-            {
-                if (handle.IsAllocated) handle.Free();
-            }
+            fixed (void* ptr = &bRef[offset])
+                BeginWrite__((System.IntPtr)ptr, count, AsyncCallbackShadow.ToIntPtr(callbackRef), context != null ? Marshal.GetIUnknownForObject(context) : IntPtr.Zero);
         }
 
         /// <summary>	
