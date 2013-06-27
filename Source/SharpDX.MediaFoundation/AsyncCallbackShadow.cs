@@ -71,17 +71,27 @@ namespace SharpDX.MediaFoundation
             /// <unmanaged>HRESULT IMFAsyncCallback::Invoke([In, Optional] IMFAsyncResult* pAsyncResult)</unmanaged>	
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
             private delegate int InvokeDelegate(IntPtr thisPtr, IntPtr asyncResult);
-            private static int InvokeImpl(IntPtr thisPtr, IntPtr asyncResult)
+            private static int InvokeImpl(IntPtr thisPtr, IntPtr asyncResultPtr)
             {
+                AsyncResult asyncResult = null;
                 try
                 {
                     var shadow = ToShadow<AsyncCallbackShadow>(thisPtr);
-                    var callback = (IAsyncCallback)shadow.Callback;
-                    callback.Invoke(new AsyncResult(asyncResult));
+                    var callback = (IAsyncCallback) shadow.Callback;
+                    asyncResult = new AsyncResult(asyncResultPtr);
+                    callback.Invoke(asyncResult);
                 }
                 catch (Exception exception)
                 {
-                    return (int)SharpDX.Result.GetResultFromException(exception);
+                    return (int) SharpDX.Result.GetResultFromException(exception);
+                }
+                finally
+                {
+                    // Clear the NativePointer to make sure that there will be no false indication from ObjectTracker
+                    if (asyncResult != null)
+                    {
+                        asyncResult.NativePointer = IntPtr.Zero;
+                    }
                 }
                 return Result.Ok.Code;
             }
