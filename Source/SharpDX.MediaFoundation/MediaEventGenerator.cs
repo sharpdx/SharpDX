@@ -39,7 +39,7 @@ namespace SharpDX.MediaFoundation
         public MediaEvent GetEvent(bool isBlocking)
         {
             MediaEvent mediaEvent;
-            GetEvent(isBlocking ? 1 : 0, out mediaEvent);
+            GetEvent(isBlocking ? 0 : 1, out mediaEvent);
             return mediaEvent;
         }
 
