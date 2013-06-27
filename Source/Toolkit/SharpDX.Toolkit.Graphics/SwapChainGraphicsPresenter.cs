@@ -92,7 +92,10 @@ namespace SharpDX.Toolkit.Graphics
 #else
 
                 var outputIndex = PrefferedFullScreenOutputIndex;
-                var output = GraphicsDevice.Adapter.GetOutputAt(outputIndex);
+                var availableOutputs = GraphicsDevice.Adapter.OutputsCount;
+
+                // no outputs connected to the current graphics adapter
+                var output = availableOutputs == 0 ? null : GraphicsDevice.Adapter.GetOutputAt(outputIndex);
 
                 Output currentOutput = null;
 
@@ -102,7 +105,7 @@ namespace SharpDX.Toolkit.Graphics
                     swapChain.GetFullscreenState(out isCurrentlyFullscreen, out currentOutput);
 
                     // check if the current fullscreen monitor is the same as new one
-                    if (isCurrentlyFullscreen == value && currentOutput != null && currentOutput.NativePointer == ((Output)output).NativePointer)
+                    if (isCurrentlyFullscreen == value && output != null && currentOutput != null && currentOutput.NativePointer == ((Output)output).NativePointer)
                         return;
                 }
                 finally
