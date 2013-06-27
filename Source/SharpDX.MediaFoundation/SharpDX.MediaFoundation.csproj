@@ -54,6 +54,7 @@
     <Compile Include="MediaEventGenerator.cs" />
     <Compile Include="MediaFactory.cs" />
     <Compile Include="MediaManager.cs" />
+    <Compile Include="MediaSessionCallback.cs" />
     <Compile Include="MediaType.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="OPM\NamespaceDoc.cs" />
