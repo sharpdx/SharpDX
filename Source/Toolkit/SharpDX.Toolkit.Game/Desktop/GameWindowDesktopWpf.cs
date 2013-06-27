@@ -106,7 +106,7 @@ namespace SharpDX.Toolkit
             if (presenter != null)
                 RemoveAndDispose(ref presenter);
 
-            presenter = ToDispose(new RenderTargetGraphicsPresenter(device, backbufferDesc, DepthFormat.None, false, true));
+            presenter = ToDispose(new RenderTargetGraphicsPresenter(device, backbufferDesc, parameters.DepthStencilFormat, false, true));
             element.SetBackbuffer(presenter.BackBuffer);
             return presenter;
         }
