@@ -22,6 +22,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Threading;
 using SharpDX.Direct3D9;
 
 namespace SharpDX.Toolkit
@@ -34,9 +35,41 @@ namespace SharpDX.Toolkit
         private readonly D3DImage image;
         private readonly Direct3DEx direct3D;
         private readonly DeviceEx device9;
+        private readonly DispatcherTimer resizeDelayTimer;
         private Texture texture;
 
         private bool isDisposed;
+
+        // used to avoid infinite loop when both ReceiveResizeFromGameProperty and SendResizeToGameProperty are set to true
+        private bool isResizeCompletedBeingRaised;
+
+        /// <summary>
+        /// Indicates whether the size of this <see cref="SharpDXElement"/> should be affected by the Game settings. Default is false.
+        /// </summary>
+        public static readonly DependencyProperty ReceiveResizeFromGameProperty = DependencyProperty
+            .Register("ReceiveResizeFromGame", typeof(bool), typeof(SharpDXElement), new PropertyMetadata(default(bool)));
+
+        /// <summary>
+        /// Indicates whether the <see cref="SizeChanged"/> event will cause size changes in the bound <see cref="Game"/> class. Default is false.
+        /// </summary>
+        public static readonly DependencyProperty SendResizeToGameProperty = DependencyProperty
+            .Register("SendResizeToGame", typeof(bool), typeof(SharpDXElement), new PropertyMetadata(default(bool)));
+
+        /// <summary>
+        /// Indicates the time delay before the resize event will be propagated to the bound Game class which will cause its backbuffer resize.
+        /// Default is 1 second.
+        /// </summary>
+        public static readonly DependencyProperty SendResizeDelayProperty = DependencyProperty
+            .Register("SendResizeDelay", typeof(TimeSpan), typeof(SharpDXElement), new FrameworkPropertyMetadata(TimeSpan.FromSeconds(1), HandleResizeDelayChanged));
+
+        private static void HandleResizeDelayChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        {
+            var element = dependencyObject as SharpDXElement;
+            if (element == null) return;
+
+            if (e.NewValue != DependencyProperty.UnsetValue)
+                element.resizeDelayTimer.Interval = (TimeSpan)e.NewValue;
+        }
 
         /// <summary>
         /// Creates a new instance of <see cref="SharpDXElement"/> class.
@@ -63,6 +96,11 @@ namespace SharpDX.Toolkit
                                    CreateFlags.HardwareVertexProcessing | CreateFlags.Multithreaded | CreateFlags.FpuPreserve,
                                    presentparams);
 
+            resizeDelayTimer = new DispatcherTimer(DispatcherPriority.Normal);
+            resizeDelayTimer.Interval = SendResizeDelay;
+            resizeDelayTimer.Tick += HandleResizeDelayTimerTick;
+
+            SizeChanged += HandleSizeChanged;
             Unloaded += HandleUnloaded;
         }
 
@@ -82,6 +120,33 @@ namespace SharpDX.Toolkit
         }
 
         /// <summary>
+        /// Gets or sets the value of the <see cref="ReceiveResizeFromGameProperty"/> dependency property.
+        /// </summary>
+        public bool ReceiveResizeFromGame
+        {
+            get { return (bool)GetValue(ReceiveResizeFromGameProperty); }
+            set { SetValue(ReceiveResizeFromGameProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the value of the <see cref="SendResizeToGameProperty"/> dependency property.
+        /// </summary>
+        public bool SendResizeToGame
+        {
+            get { return (bool)GetValue(SendResizeToGameProperty); }
+            set { SetValue(SendResizeToGameProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the the value of the <see cref="ResizeDelayProperty"/> dependency property.
+        /// </summary>
+        public TimeSpan SendResizeDelay
+        {
+            get { return (TimeSpan)GetValue(SendResizeDelayProperty); }
+            set { SetValue(SendResizeDelayProperty, value); }
+        }
+
+        /// <summary>
         /// Converts an <see cref="SharpDXElement"/> to <see cref="GameContext"/>.
         /// Operator is placed here to avoid WPF references when only WinForms is used.
         /// </summary>
@@ -91,6 +156,8 @@ namespace SharpDX.Toolkit
         {
             return new GameContextWpf(element);
         }
+
+        internal event EventHandler ResizeCompleted;
 
         /// <summary>
         /// Associates an D3D11 render target with the current instance.
@@ -127,6 +194,19 @@ namespace SharpDX.Toolkit
             image.Unlock();
         }
 
+        /// <summary>
+        /// Tries to set the width and height of the current instance.
+        /// </summary>
+        /// <param name="width">The width in dips.</param>
+        /// <param name="height">The height in dips.</param>
+        internal void TrySetSize(int width, int height)
+        {
+            if (!ReceiveResizeFromGame || isResizeCompletedBeingRaised) return;
+
+            Width = width;
+            Height = height;
+        }
+
         protected override void OnRender(System.Windows.Media.DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
@@ -138,6 +218,20 @@ namespace SharpDX.Toolkit
         private void HandleUnloaded(object sender, RoutedEventArgs e)
         {
             Dispose();
+        }
+
+        private void HandleResizeDelayTimerTick(object sender, EventArgs e)
+        {
+            resizeDelayTimer.Stop();
+
+            if (SendResizeToGame)
+                RaiseResizeCompleted(ResizeCompleted);
+        }
+
+        private void HandleSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            resizeDelayTimer.Stop();
+            resizeDelayTimer.Start();
         }
 
         private void TrySetBackbufferPointer(IntPtr ptr)
@@ -162,6 +256,22 @@ namespace SharpDX.Toolkit
 
                 texture.Dispose();
                 texture = null;
+            }
+        }
+
+        private void RaiseResizeCompleted(EventHandler handler)
+        {
+            if (handler != null)
+            {
+                try
+                {
+                    isResizeCompletedBeingRaised = true;
+                    handler(this, EventArgs.Empty);
+                }
+                finally
+                {
+                    isResizeCompletedBeingRaised = false;
+                }
             }
         }
 

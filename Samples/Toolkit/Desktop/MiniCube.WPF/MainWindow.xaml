@@ -4,6 +4,8 @@
         xmlns:toolkit="clr-namespace:SharpDX.Toolkit;assembly=SharpDX.Toolkit.Game"
         Title="MainWindow" Height="480" Width="800">
     <Grid>
-        <toolkit:SharpDXElement x:Name="surface" x:FieldModifier="private" />
+        <!-- SendResizeToGame: true - sends resize event to the game when the element is resized with the 'SendResizeDelay' delay -->
+        <!-- ReceiveResizeFromGame: true - the size of the element will be controller by the game -->
+        <toolkit:SharpDXElement x:Name="surface" x:FieldModifier="private" SendResizeToGame="True" SendResizeDelay="00:00:02.00" />
     </Grid>
 </Window>

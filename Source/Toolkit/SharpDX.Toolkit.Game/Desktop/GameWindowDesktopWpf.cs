@@ -80,8 +80,7 @@ namespace SharpDX.Toolkit
         {
             if (element != null)
             {
-                element.Width = clientWidth;
-                element.Height = clientHeight;
+                element.TrySetSize(clientWidth, clientHeight);
                 element.SetBackbuffer(presenter.BackBuffer);
             }
         }
@@ -126,9 +125,9 @@ namespace SharpDX.Toolkit
             if (height <= 0)
                 height = GraphicsDeviceManager.DefaultBackBufferHeight;
 
-            element.Width = width;
-            element.Height = height;
-            element.SizeChanged += OnClientSizeChanged;
+            element.TrySetSize(width, height);
+
+            element.ResizeCompleted += OnClientSizeChanged;
             element.MouseEnter += OnMouseEnter;
             element.MouseLeave += OnMouseLeave;
         }
@@ -140,14 +139,12 @@ namespace SharpDX.Toolkit
 
             InitCallback();
 
-            // TODO: render loop here...
             CompositionTarget.Rendering += OnCompositionTargetRendering;
         }
 
         internal override void Resize(int width, int height)
         {
-            element.Width = width;
-            element.Height = height;
+            element.TrySetSize(width, height);
         }
 
         protected internal override void SetSupportedOrientations(DisplayOrientation orientations)

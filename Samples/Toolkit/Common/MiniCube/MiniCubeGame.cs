@@ -126,6 +126,7 @@ namespace MiniCube
             // Rotate the cube.
             var time = (float)gameTime.TotalGameTime.TotalSeconds;
             basicEffect.World = Matrix.RotationX(time) * Matrix.RotationY(time * 2.0f) * Matrix.RotationZ(time * .7f);
+            basicEffect.Projection = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, 100.0f);
 
             // Handle base.Update
             base.Update(gameTime);
