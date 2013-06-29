@@ -83,7 +83,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="usage">The usage.</param>
         /// <returns>The CPU access flags</returns>
-        protected static CpuAccessFlags GetCputAccessFlagsFromUsage(ResourceUsage usage)
+        protected static CpuAccessFlags GetCpuAccessFlagsFromUsage(ResourceUsage usage)
         {
             switch (usage)
             {

@@ -1034,7 +1034,7 @@ namespace SharpDX.Toolkit.Graphics
 
             desc.BindFlags = GetBindFlagsFromTextureFlags(flags);
 
-            desc.CpuAccessFlags = GetCputAccessFlagsFromUsage(usage);
+            desc.CpuAccessFlags = GetCpuAccessFlagsFromUsage(usage);
             return desc;
         }
 

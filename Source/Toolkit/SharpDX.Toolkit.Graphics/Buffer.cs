@@ -909,7 +909,7 @@ namespace SharpDX.Toolkit.Graphics
             var desc = new BufferDescription() {
                 SizeInBytes = bufferSize,
                 StructureByteStride = elementSize, // We keep the element size in the structure byte stride, even if it is not a structured buffer
-                CpuAccessFlags = GetCputAccessFlagsFromUsage(usage),
+                CpuAccessFlags = GetCpuAccessFlagsFromUsage(usage),
                 BindFlags = BindFlags.None,
                 OptionFlags = ResourceOptionFlags.None,
                 Usage = usage,

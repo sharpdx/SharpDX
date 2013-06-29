@@ -251,7 +251,7 @@ namespace SharpDX.Toolkit.Graphics
                                Format = format,
                                MipLevels = CalculateMipMapCount(mipCount, width, height),
                                Usage = usage,
-                               CpuAccessFlags = GetCputAccessFlagsFromUsage(usage),
+                               CpuAccessFlags = GetCpuAccessFlagsFromUsage(usage),
                                OptionFlags = ResourceOptionFlags.None
                            };
 
