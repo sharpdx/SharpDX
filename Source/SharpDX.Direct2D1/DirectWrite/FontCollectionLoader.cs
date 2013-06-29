@@ -31,6 +31,6 @@ namespace SharpDX.DirectWrite
         /// <param name="collectionKey">A font collection key that uniquely identifies the collection of font files within the scope of the font collection loader being used. The buffer allocated for this key must be at least  the size, in bytes, specified by collectionKeySize. </param>
         /// <returns>a reference to the newly created font file enumerator.</returns>
         /// <unmanaged>HRESULT IDWriteFontCollectionLoader::CreateEnumeratorFromKey([None] IDWriteFactory* factory,[In, Buffer] const void* collectionKey,[None] int collectionKeySize,[Out] IDWriteFontFileEnumerator** fontFileEnumerator)</unmanaged>
-        SharpDX.DirectWrite.FontFileEnumerator CreateEnumeratorFromKey(SharpDX.DirectWrite.Factory factory, DataStream collectionKey);
+        SharpDX.DirectWrite.FontFileEnumerator CreateEnumeratorFromKey(SharpDX.DirectWrite.Factory factory, DataPointer collectionKey);
     }
 }

@@ -84,14 +84,14 @@ namespace SharpDX.DirectWrite
         /// </summary>	
         /// <returns>the reference to the reference key of a font file. </returns>
         /// <unmanaged>HRESULT IDWriteFontFile::GetReferenceKey([Out, Buffer] const void** fontFileReferenceKey,[Out] int* fontFileReferenceKeySize)</unmanaged>
-        public DataStream GetReferenceKey()
+        public DataPointer GetReferenceKey()
         {
             unsafe
             {
                 int keySize;
                 IntPtr keyPtr;
                 GetReferenceKey(new IntPtr(&keyPtr), out keySize);
-                return new DataStream(keyPtr, keySize, true, true);
+                return new DataPointer(keyPtr, keySize);
             }
         }
     }

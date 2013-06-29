@@ -30,9 +30,9 @@ namespace SharpDX.DirectWrite
         /// <param name="collectionLoader">An application-defined font collection loader, which must have been previously registered using <see cref="Factory.RegisterFontCollectionLoader_"/>. </param>
         /// <param name="collectionKey">The key used by the loader to identify a collection of font files.  The buffer allocated for this key should at least be the size of collectionKeySize. </param>
         /// <unmanaged>HRESULT IDWriteFactory::CreateCustomFontCollection([None] IDWriteFontCollectionLoader* collectionLoader,[In, Buffer] const void* collectionKey,[None] int collectionKeySize,[Out] IDWriteFontCollection** fontCollection)</unmanaged>
-        public FontCollection(Factory factory, FontCollectionLoader collectionLoader, DataStream collectionKey)
+        public FontCollection(Factory factory, FontCollectionLoader collectionLoader, DataPointer collectionKey)
         {
-            factory.CreateCustomFontCollection_(FontCollectionLoaderShadow.ToIntPtr(collectionLoader), collectionKey.PositionPointer, (int)collectionKey.RemainingLength, this);
+            factory.CreateCustomFontCollection_(FontCollectionLoaderShadow.ToIntPtr(collectionLoader), collectionKey.Pointer, collectionKey.Size, this);
         }
     }
 }

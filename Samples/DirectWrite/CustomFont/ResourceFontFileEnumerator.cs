@@ -37,12 +37,12 @@ namespace CustomFont
         /// </summary>
         /// <param name="factory">The factory.</param>
         /// <param name="loader">The loader.</param>
-        /// <param name="keyStream">The key stream.</param>
-        public ResourceFontFileEnumerator(Factory factory, FontFileLoader loader, DataStream keyStream)
+        /// <param name="key">The key.</param>
+        public ResourceFontFileEnumerator(Factory factory, FontFileLoader loader, DataPointer key)
         {
             _factory = factory;
             _loader = loader;
-            this.keyStream = keyStream;
+            keyStream = new DataStream(key.Pointer, key.Size, true, false);
         }
 
         /// <summary>

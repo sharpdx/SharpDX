@@ -32,10 +32,10 @@ namespace SharpDX.DirectWrite
         /// <param name="fontFileReferenceKey">A reference to a font file reference key that uniquely identifies the font file resource within the scope of the font loader being used. The buffer allocated for this key must at least be the size, in bytes, specified by  fontFileReferenceKeySize. </param>
         /// <returns>a reference to the newly created <see cref="SharpDX.DirectWrite.FontFileStream"/> object. </returns>
         /// <unmanaged>HRESULT IDWriteFontFileLoader::CreateStreamFromKey([In, Buffer] const void* fontFileReferenceKey,[None] int fontFileReferenceKeySize,[Out] IDWriteFontFileStream** fontFileStream)</unmanaged>
-        public FontFileStream CreateStreamFromKey(DataStream fontFileReferenceKey)
+        public FontFileStream CreateStreamFromKey(DataPointer fontFileReferenceKey)
         {
             FontFileStream temp;
-            CreateStreamFromKey_(fontFileReferenceKey.PositionPointer, (int)fontFileReferenceKey.RemainingLength, out temp);
+            CreateStreamFromKey_(fontFileReferenceKey.Pointer, fontFileReferenceKey.Size, out temp);
             return temp;
         }
     }

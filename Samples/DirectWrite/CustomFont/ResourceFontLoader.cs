@@ -86,9 +86,9 @@ namespace CustomFont
         /// a reference to the newly created font file enumerator.
         /// </returns>
         /// <unmanaged>HRESULT IDWriteFontCollectionLoader::CreateEnumeratorFromKey([None] IDWriteFactory* factory,[In, Buffer] const void* collectionKey,[None] int collectionKeySize,[Out] IDWriteFontFileEnumerator** fontFileEnumerator)</unmanaged>
-        FontFileEnumerator FontCollectionLoader.CreateEnumeratorFromKey(Factory factory, DataStream collectionKey)
+        FontFileEnumerator FontCollectionLoader.CreateEnumeratorFromKey(Factory factory, DataPointer collectionKey)
         {
-            var enumerator = new ResourceFontFileEnumerator(factory, this, new DataStream(_keyStream.DataPointer, _keyStream.Length, true,true));
+            var enumerator = new ResourceFontFileEnumerator(factory, this, collectionKey);
             _enumerators.Add(enumerator);
 
             return enumerator;
@@ -105,9 +105,9 @@ namespace CustomFont
         /// The resource is closed when the last reference to fontFileStream is released.
         /// </remarks>
         /// <unmanaged>HRESULT IDWriteFontFileLoader::CreateStreamFromKey([In, Buffer] const void* fontFileReferenceKey,[None] int fontFileReferenceKeySize,[Out] IDWriteFontFileStream** fontFileStream)</unmanaged>
-        FontFileStream FontFileLoader.CreateStreamFromKey(DataStream fontFileReferenceKey)
+        FontFileStream FontFileLoader.CreateStreamFromKey(DataPointer fontFileReferenceKey)
         {
-            var index = fontFileReferenceKey.Read<int>();
+            var index = Utilities.Read<int>(fontFileReferenceKey.Pointer);
             return _fontStreams[index];
         }
     }

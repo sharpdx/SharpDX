@@ -127,17 +127,17 @@ namespace SharpDX.DirectWrite
         /// <param name="tableContext">When this method returns, the address of a reference to  the opaque context, which must be freed by calling {{ReleaseFontTable}}. The context actually comes from the lower-level <see cref="T:SharpDX.DirectWrite.FontFileStream" />, which may be implemented by the application or DWrite itself. It is possible for a NULL tableContext to be returned, especially if the implementation performs direct memory mapping on the whole file. Nevertheless, always release it later, and do not use it as a test for function success. The same table can be queried multiple times, but because each returned context can be different, you must release each context separately.  </param>
         /// <returns>TRUE if the font table exists; otherwise, FALSE. </returns>
         /// <unmanaged>HRESULT IDWriteFontFace::TryGetFontTable([In] int openTypeTableTag,[Out, Buffer] const void** tableData,[Out] int* tableSize,[Out] void** tableContext,[Out] BOOL* exists)</unmanaged>
-        public bool TryGetFontTable(int openTypeTableTag, out DataStream tableData, out IntPtr tableContext)
+        public bool TryGetFontTable(int openTypeTableTag, out DataPointer tableData, out IntPtr tableContext)
         {
             unsafe
             {
-                tableData = null;
+                tableData = DataPointer.Zero;
                 IntPtr tableDataPtr = IntPtr.Zero;
                 int tableDataSize;
                 Bool exists;
                 TryGetFontTable(openTypeTableTag, new IntPtr(&tableDataPtr), out tableDataSize, out tableContext, out exists);
                 if (tableDataPtr != IntPtr.Zero)
-                    tableData = new DataStream(tableDataPtr, tableDataSize, true, true);
+                    tableData = new DataPointer(tableDataPtr, tableDataSize);
                 return exists;
             }
         }

@@ -49,17 +49,16 @@ namespace SharpDX.DirectWrite
 
             /// <unmanaged>HRESULT IDWriteFontFileLoader::CreateStreamFromKey([In, Buffer] const void* fontFileReferenceKey,[None] int fontFileReferenceKeySize,[Out] IDWriteFontFileStream** fontFileStream)</unmanaged>
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate int CreateStreamFromKeyDelegate(
-                IntPtr thisPtr, IntPtr fontFileReferenceKey, int fontFileReferenceKeySize, out IntPtr fontFileStream);
-            private static int CreateStreamFromKeyImpl(
-                IntPtr thisPtr, IntPtr fontFileReferenceKey, int fontFileReferenceKeySize, out IntPtr fontFileStreamPtr)
+            private delegate int CreateStreamFromKeyDelegate(IntPtr thisPtr, IntPtr fontFileReferenceKey, int fontFileReferenceKeySize, out IntPtr fontFileStream);
+
+            private static int CreateStreamFromKeyImpl(IntPtr thisPtr, IntPtr fontFileReferenceKey, int fontFileReferenceKeySize, out IntPtr fontFileStreamPtr)
             {
                 fontFileStreamPtr = IntPtr.Zero;
                 try
                 {
                     var shadow = ToShadow<FontFileLoaderShadow>(thisPtr);
                     var callback = (FontFileLoader)shadow.Callback;
-                    var fontFileStream = callback.CreateStreamFromKey(new DataStream(fontFileReferenceKey, fontFileReferenceKeySize, true, true));
+                    var fontFileStream = callback.CreateStreamFromKey(new DataPointer(fontFileReferenceKey, fontFileReferenceKeySize));
                     fontFileStreamPtr = FontFileStreamShadow.ToIntPtr(fontFileStream);
                 }
                 catch (Exception exception)

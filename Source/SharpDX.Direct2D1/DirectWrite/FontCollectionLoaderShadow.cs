@@ -55,8 +55,8 @@ namespace SharpDX.DirectWrite
 
             /// <unmanaged>HRESULT IDWriteFontCollectionLoader::CreateEnumeratorFromKey([None] IDWriteFactory* factory,[In, Buffer] const void* collectionKey,[None] int collectionKeySize,[Out] IDWriteFontFileEnumerator** fontFileEnumerator)</unmanaged>
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate int CreateEnumeratorFromKeyDelegate(
-                IntPtr thisPtr, IntPtr factory, IntPtr collectionKey, int collectionKeySize, out IntPtr fontFileEnumerator);
+            private delegate int CreateEnumeratorFromKeyDelegate(IntPtr thisPtr, IntPtr factory, IntPtr collectionKey, int collectionKeySize, out IntPtr fontFileEnumerator);
+
             private static int CreateEnumeratorFromKeyImpl(IntPtr thisPtr, IntPtr factory, IntPtr collectionKey, int collectionKeySize, out IntPtr fontFileEnumerator)
             {
                 fontFileEnumerator = IntPtr.Zero;
@@ -65,7 +65,7 @@ namespace SharpDX.DirectWrite
                     var shadow = ToShadow<FontCollectionLoaderShadow>(thisPtr);
                     var callback = (FontCollectionLoader)shadow.Callback;
                     Debug.Assert(factory == shadow._factory.NativePointer);
-                    var enumerator = callback.CreateEnumeratorFromKey(shadow._factory, new DataStream(collectionKey, collectionKeySize, true, true));
+                    var enumerator = callback.CreateEnumeratorFromKey(shadow._factory, new DataPointer(collectionKey, collectionKeySize));
                     fontFileEnumerator = FontFileEnumeratorShadow.ToIntPtr(enumerator);
                 }
                 catch (Exception exception)
