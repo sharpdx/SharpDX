@@ -139,9 +139,11 @@ namespace SharpDX.Toolkit.Graphics
         {
             if (effect != null)
             {
-                foreach (var pass in effect.CurrentTechnique.Passes)
+                var passes = effect.CurrentTechnique.Passes;
+                var passesCount = passes.Count;
+                for(var i = 0; i < passesCount; i++)
                 {
-                    Draw(graphicsDevice, pass);
+                    Draw(graphicsDevice, passes[i]);
                 }
             }
             else
