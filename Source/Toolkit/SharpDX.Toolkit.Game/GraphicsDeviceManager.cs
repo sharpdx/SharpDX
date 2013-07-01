@@ -160,6 +160,10 @@ namespace SharpDX.Toolkit
 
         public event EventHandler<EventArgs> DeviceLost;
 
+        public event EventHandler<EventArgs> DeviceChangeBegin;
+
+        public event EventHandler<EventArgs> DeviceChangeEnd;
+
         public event EventHandler<PreparingDeviceSettingsEventArgs> PreparingDeviceSettings;
 
         #endregion
@@ -719,38 +723,39 @@ namespace SharpDX.Toolkit
 
         protected virtual void OnDeviceCreated(object sender, EventArgs args)
         {
-            var handler = DeviceCreated;
-            if (handler != null)
-            {
-                handler(sender, args);
-            }
+            RaiseEvent(DeviceCreated, sender, args);
         }
 
         protected virtual void OnDeviceDisposing(object sender, EventArgs args)
         {
-            var handler = DeviceDisposing;
-            if (handler != null)
-            {
-                handler(sender, args);
-            }
+            RaiseEvent(DeviceDisposing, sender, args);
         }
 
         protected virtual void OnDeviceLost(object sender, EventArgs args)
         {
-            var handler = DeviceLost;
-            if (handler != null)
-            {
-                handler(sender, args);
-            }
+            RaiseEvent(DeviceLost, sender, args);
+        }
+
+        protected virtual void OnDeviceChangeBegin(object sender, EventArgs args)
+        {
+            RaiseEvent(DeviceChangeBegin, sender, args);
+        }
+
+        protected virtual void OnDeviceChangeEnd(object sender, EventArgs args)
+        {
+            RaiseEvent(DeviceChangeEnd, sender, args);
         }
 
         protected virtual void OnPreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs args)
         {
-            var handler = PreparingDeviceSettings;
+            RaiseEvent(PreparingDeviceSettings, sender, args);
+        }
+
+        private void RaiseEvent<T>(EventHandler<T> handler, object sender, T args)
+            where T : EventArgs
+        {
             if (handler != null)
-            {
                 handler(sender, args);
-            }
         }
 
         private void Window_ClientSizeChanged(object sender, EventArgs e)
@@ -764,12 +769,20 @@ namespace SharpDX.Toolkit
             }
         }
 
-        void Window_OrientationChanged(object sender, EventArgs e)
+        private void Window_OrientationChanged(object sender, EventArgs e)
         {
             if ((!isChangingDevice && ((game.Window.ClientBounds.Height != 0) || (game.Window.ClientBounds.Width != 0))) && (game.Window.CurrentOrientation != currentWindowOrientation))
             {
                 ChangeOrCreateDevice(false);
             }
+        }
+
+        private void GraphicsDevice_Disposing(object sender, EventArgs e)
+        {
+            // Clears the GraphicsDevice
+            GraphicsDevice = null;
+
+            OnDeviceDisposing(sender, e);
         }
 
         private void CreateDevice(GraphicsDeviceInformation newInfo)
@@ -790,14 +803,6 @@ namespace SharpDX.Toolkit
             OnDeviceCreated(this, EventArgs.Empty);
         }
 
-        private void GraphicsDevice_Disposing(object sender, EventArgs e)
-        {
-            // Clears the GraphicsDevice
-            GraphicsDevice = null;
-
-            OnDeviceDisposing(sender, e);
-        }
-
         private void ChangeOrCreateDevice(bool forceCreate)
         {
             if (forceCreate)
@@ -812,6 +817,8 @@ namespace SharpDX.Toolkit
             isChangingDevice = true;
             int width = game.Window.ClientBounds.Width;
             int height = game.Window.ClientBounds.Height;
+
+            OnDeviceChangeBegin(this, EventArgs.Empty);
 
             bool isBeginScreenDeviceChange = false;
             try
@@ -846,8 +853,9 @@ namespace SharpDX.Toolkit
 
                             needToCreateNewDevice = false;
                         }
-                        catch
+                        catch (Exception ex)
                         {
+                            System.Diagnostics.Debug.WriteLine(ex);
                         }
                     }
                 }
@@ -871,6 +879,8 @@ namespace SharpDX.Toolkit
                 }
 
                 deviceSettingsChanged = false;
+
+                OnDeviceChangeEnd(this, EventArgs.Empty);
             }
             finally
             {

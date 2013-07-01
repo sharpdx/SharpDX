@@ -43,6 +43,16 @@ namespace SharpDX.Toolkit.Graphics
         event EventHandler<EventArgs> DeviceLost;
 
         /// <summary>
+        /// Occurs right before device is about to change (recreate or resize)
+        /// </summary>
+        event EventHandler<EventArgs> DeviceChangeBegin;
+
+        /// <summary>
+        /// Occurs when device is changed (recreated or resized)
+        /// </summary>
+        event EventHandler<EventArgs> DeviceChangeEnd;
+            
+        /// <summary>
         /// Gets the current graphics device.
         /// </summary>
         /// <value>The graphics device.</value>
