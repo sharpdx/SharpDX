@@ -1577,6 +1577,8 @@ namespace SharpDX.Toolkit.Graphics
                     effectPool.Dispose();
                 }
 
+                GraphicsAdapter.Dispose();
+
                 EffectPools = null;
             }
 
