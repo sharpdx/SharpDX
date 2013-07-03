@@ -136,6 +136,9 @@ namespace SharpDX.Toolkit.Graphics
                     throw;
             }
 
+#if DIRECTX11_1
+            output1.Dispose();
+#endif
             SupportedDisplayModes = modesAvailable.ToArray();
         }
 

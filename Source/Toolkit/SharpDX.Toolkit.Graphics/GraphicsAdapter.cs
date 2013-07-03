@@ -54,7 +54,7 @@ namespace SharpDX.Toolkit.Graphics
 
             outputs1 = new GraphicsOutput[outputs.Length];
             for (var i = 0; i < outputs.Length; i++)
-                outputs1[i] = new GraphicsOutput(outputs[i]);
+                outputs1[i] = ToDispose(new GraphicsOutput(outputs[i]));
         }
 
         /// <summary>
