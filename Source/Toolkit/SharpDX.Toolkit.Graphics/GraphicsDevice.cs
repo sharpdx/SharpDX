@@ -18,10 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+using System;
+using System.Collections.Generic;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace SharpDX.Toolkit.Graphics
@@ -146,7 +146,7 @@ namespace SharpDX.Toolkit.Graphics
                             }
                         }
                     }
-                } 
+                }
                 catch (Exception ex)
                 {
                 }
@@ -770,7 +770,7 @@ namespace SharpDX.Toolkit.Graphics
             primitiveQuad.Draw(texture, null);
             primitiveQuad.Color = new Color4(1.0f);
         }
-        
+
         /// <summary>
         /// Draws a fullscreen quad with a pixel shader to output a texture with a particular sampler (default linear clamp).
         /// </summary>
@@ -984,7 +984,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             return new GraphicsDevice(this, new DeviceContext(Device));
         }
-        
+
         /// <summary>	
         /// <p>Sets the blend state of the output-merger stage.</p>	
         /// </summary>	
@@ -1433,7 +1433,7 @@ namespace SharpDX.Toolkit.Graphics
                 vertexBufferPtr = vertexBuffer.NativePointer;
 
                 // Update the index of the last slot buffer bounded, used by ResetVertexBuffers
-                if ((slot+1) > maxSlotCountForVertexBuffer)
+                if ((slot + 1) > maxSlotCountForVertexBuffer)
                     maxSlotCountForVertexBuffer = slot + 1;
             }
             InputAssemblerStage.SetVertexBuffers(slot, 1, new IntPtr(&vertexBufferPtr), new IntPtr(&vertexStride), new IntPtr(&offsetInBytes));
@@ -1478,7 +1478,7 @@ namespace SharpDX.Toolkit.Graphics
                 try
                 {
                     Presenter.Present();
-                } 
+                }
                 catch (SharpDXException ex)
                 {
                     if (ex.ResultCode == DXGI.ResultCode.DeviceReset || ex.ResultCode == DXGI.ResultCode.DeviceRemoved)
@@ -1556,7 +1556,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         protected override void Dispose(bool disposeManagedResources)
-        { 
+        {
             if (disposeManagedResources)
             {
                 if (Presenter != null)
@@ -1617,7 +1617,7 @@ namespace SharpDX.Toolkit.Graphics
                 currentRenderTargetViews[i] = null;
             actualRenderTargetViewCount = 1;
             currentRenderTargetView = rtv;
-            if (AutoViewportFromRenderTargets &&  rtv != null && (texture = rtv.Tag as Texture) != null)
+            if (AutoViewportFromRenderTargets && rtv != null && (texture = rtv.Tag as Texture) != null)
             {
                 SetViewport(new ViewportF(0, 0, texture.Description.Width, texture.Description.Height));
             }
