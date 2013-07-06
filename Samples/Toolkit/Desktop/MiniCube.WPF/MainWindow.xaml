@@ -6,6 +6,8 @@
     <Grid>
         <!-- SendResizeToGame: true - sends resize event to the game when the element is resized with the 'SendResizeDelay' delay -->
         <!-- ReceiveResizeFromGame: true - the size of the element will be controller by the game -->
-        <toolkit:SharpDXElement x:Name="surface" x:FieldModifier="private" SendResizeToGame="True" SendResizeDelay="00:00:02.00" />
+        <!-- SendResizeDelay: 2 seconds - wait this time after last resize event before sending resize to the game -->
+        <!-- LowPriorityRendering: false - when set to true - executes the game loop with the DispatcherPriority.Input, which allows normal processing of input events, may skip some frames -->
+        <toolkit:SharpDXElement x:Name="surface" x:FieldModifier="private" SendResizeToGame="True" SendResizeDelay="00:00:02.00" LowPriorityRendering="False" />
     </Grid>
 </Window>

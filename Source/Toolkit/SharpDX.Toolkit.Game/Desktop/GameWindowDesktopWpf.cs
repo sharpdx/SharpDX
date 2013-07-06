@@ -28,11 +28,14 @@ using System.Windows.Media;
 
 namespace SharpDX.Toolkit
 {
+    using System.Windows.Threading;
     using Direct3D11;
 
     internal class GameWindowDesktopWpf : GameWindow
     {
         private SharpDXElement element;
+        private DispatcherOperation previousRenderCall;
+        private readonly Action renderDelegate; //delegate cache to avoid garbage generation
 
         private bool isMouseVisible;
         private bool isMouseCurrentlyHidden;
@@ -45,6 +48,11 @@ namespace SharpDX.Toolkit
         public override DisplayOrientation CurrentOrientation { get { return DisplayOrientation.Default; } }
         public override bool IsMinimized { get { return false; } }
         public override object NativeWindow { get { return element; } }
+
+        public GameWindowDesktopWpf()
+        {
+            renderDelegate = RenderLoopCallback;
+        }
 
         public override bool IsMouseVisible
         {
@@ -159,7 +167,27 @@ namespace SharpDX.Toolkit
 
         private void OnCompositionTargetRendering(object sender, EventArgs e)
         {
-            RenderLoopCallback();
+            if (element.LowPriorityRendering)
+            {
+                // if we called render previously...
+                if (previousRenderCall != null)
+                {
+                    var previousStatus = previousRenderCall.Status;
+
+                    // ... and the operation didn't finish yet - then skip the current call
+                    if (previousStatus == DispatcherOperationStatus.Pending
+                        || previousStatus == DispatcherOperationStatus.Executing)
+                    {
+                        return;
+                    }
+                }
+
+                previousRenderCall = element.Dispatcher.BeginInvoke(renderDelegate, DispatcherPriority.Input);
+            }
+            else
+            {
+                RenderLoopCallback();
+            }
         }
 
         private void RenderLoopCallback()

@@ -62,6 +62,14 @@ namespace SharpDX.Toolkit
         public static readonly DependencyProperty SendResizeDelayProperty = DependencyProperty
             .Register("SendResizeDelay", typeof(TimeSpan), typeof(SharpDXElement), new FrameworkPropertyMetadata(TimeSpan.FromSeconds(1), HandleResizeDelayChanged));
 
+        /// <summary>
+        /// Indicates whether the rendering should be done in the <see cref="System.Windows.Threading.DispatcherPriority.Input"/> priority.
+        /// This may cause loss of FPS, but will not interfere with the input processing.
+        /// Default is false.
+        /// </summary>
+        public static readonly DependencyProperty LowPriorityRenderingProperty = DependencyProperty
+            .Register("LowPriorityRendering", typeof(bool), typeof(SharpDXElement), new PropertyMetadata(default(bool)));
+
         private static void HandleResizeDelayChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
             var element = dependencyObject as SharpDXElement;
@@ -138,12 +146,21 @@ namespace SharpDX.Toolkit
         }
 
         /// <summary>
-        /// Gets or sets the the value of the <see cref="ResizeDelayProperty"/> dependency property.
+        /// Gets or sets the the value of the <see cref="SendResizeDelay"/> dependency property.
         /// </summary>
         public TimeSpan SendResizeDelay
         {
             get { return (TimeSpan)GetValue(SendResizeDelayProperty); }
             set { SetValue(SendResizeDelayProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the value of the <see cref="LowPriorityRenderingProperty"/> dependency property.
+        /// </summary>
+        public bool LowPriorityRendering
+        {
+            get { return (bool)GetValue(LowPriorityRenderingProperty); }
+            set { SetValue(LowPriorityRenderingProperty, value); }
         }
 
         /// <summary>
