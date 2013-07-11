@@ -579,7 +579,7 @@ namespace SharpDX
         /// <returns>Type of the containment</returns>
         public ContainmentType Contains(BoundingSphere sphere)
         {
-            return Contains(sphere);
+            return Contains(ref sphere);
         }
 
         /// <summary>
