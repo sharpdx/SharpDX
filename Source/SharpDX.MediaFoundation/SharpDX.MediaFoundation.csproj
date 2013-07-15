@@ -34,18 +34,18 @@
     <Compile Include="MediaEngineEx.cs" />
     <Compile Include="MediaEngineNotify.cs" />
     <Compile Include="MediaEngineNotifyShadow.cs" />
-    <Compile Condition=" '$(DirectX11_1)' == 'false'" Include="Generated\DirectX\Enumerations.cs" />
-    <Compile Condition=" '$(DirectX11_1)' == 'false'" Include="Generated\DirectX\Functions.cs" />
-    <Compile Condition=" '$(DirectX11_1)' == 'false'" Include="Generated\DirectX\Interfaces.cs" />
-    <Compile Condition=" '$(DirectX11_1)' == 'false'" Include="Generated\DirectX\Structures.cs" />
+    <Compile Condition=" '$(DirectX11_1)' == 'false' and '$(DirectX11_2)' == 'false'" Include="Generated\DirectX\Enumerations.cs" />
+    <Compile Condition=" '$(DirectX11_1)' == 'false' and '$(DirectX11_2)' == 'false'" Include="Generated\DirectX\Functions.cs" />
+    <Compile Condition=" '$(DirectX11_1)' == 'false' and '$(DirectX11_2)' == 'false'" Include="Generated\DirectX\Interfaces.cs" />
+    <Compile Condition=" '$(DirectX11_1)' == 'false' and '$(DirectX11_2)' == 'false'" Include="Generated\DirectX\Structures.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
     <Compile Include="Generated\Interfaces.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
-    <Compile Condition=" '$(DirectX11_1)' == 'false'" Include="Generated\OPM\Enumerations.cs" />
-    <Compile Condition=" '$(DirectX11_1)' == 'false'" Include="Generated\OPM\Functions.cs" />
-    <Compile Condition=" '$(DirectX11_1)' == 'false'" Include="Generated\OPM\Interfaces.cs" />
-    <Compile Condition=" '$(DirectX11_1)' == 'false'" Include="Generated\OPM\Structures.cs" />
+    <Compile Condition=" '$(DirectX11_1)' == 'false' and '$(DirectX11_2)' == 'false'" Include="Generated\OPM\Enumerations.cs" />
+    <Compile Condition=" '$(DirectX11_1)' == 'false' and '$(DirectX11_2)' == 'false'" Include="Generated\OPM\Functions.cs" />
+    <Compile Condition=" '$(DirectX11_1)' == 'false' and '$(DirectX11_2)' == 'false'" Include="Generated\OPM\Interfaces.cs" />
+    <Compile Condition=" '$(DirectX11_1)' == 'false' and '$(DirectX11_2)' == 'false'" Include="Generated\OPM\Structures.cs" />
     <Compile Include="Generated\Structures.cs" />
     <Compile Include="MediaAttributeKey.cs" />
     <Compile Include="MediaAttributes.cs" />
@@ -75,7 +75,7 @@
     <None Include="SharpDX.MediaFoundation.nuspec" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpDX.Direct3D9\SharpDX.Direct3D9.csproj" Condition=" '$(DirectX11_1)' == 'false'">
+    <ProjectReference Include="..\SharpDX.Direct3D9\SharpDX.Direct3D9.csproj" Condition=" '$(DirectX11_1)' == 'false' and '$(DirectX11_2)' == 'false'">
       <Project>{B4D984DF-85B8-4BBF-8C3B-5CEF905F40D9}</Project>
       <Name>SharpDX.Direct3D9</Name>
       <Private>False</Private>

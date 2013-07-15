@@ -85,8 +85,6 @@
     <SilverlightApplication>false</SilverlightApplication>    
   </PropertyGroup>
 
-  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-
   <!--.NET 4.0 - DirectX11.2 - Windows 8 Desktop-->
   <PropertyGroup Condition=" '$(Configuration)' == 'DIRECTX11_2Debug' Or '$(Configuration)' == 'DIRECTX11_2Release'">
     <SharpDXAssemblyType>DirectX11_2</SharpDXAssemblyType>
@@ -104,8 +102,6 @@
     <SharpDXWin8Core>true</SharpDXWin8Core>
     <DirectX11_2>true</DirectX11_2>
   </PropertyGroup>
-
-  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
   <!--<Import Condition="'$(SharpDXWP8)' != 'false'"  Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />-->
   <PropertyGroup>
@@ -228,14 +224,12 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
 
-  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-
   <!--.NET 4.0 - DirectX11.2 - Windows 8 Desktop-->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DIRECTX11_2Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>pdbonly</DebugType>
     <Optimize>false</Optimize>
-    <DefineConstants>TRACE;DEBUG;DIRECTX11_2;WinFormsInterop;NET35Plus</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DIRECTX11_1;DIRECTX11_2;WinFormsInterop;NET35Plus</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -244,7 +238,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DIRECTX11_2Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <DefineConstants>TRACE;DIRECTX11_2;WinFormsInterop;NET35Plus</DefineConstants>
+    <DefineConstants>TRACE;DIRECTX11_1;DIRECTX11_2;WinFormsInterop;NET35Plus</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -256,7 +250,7 @@
   <!--.NET 4.5 - DirectX11.2 - Windows 8 Metro-->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8DX11_2Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-   <DefineConstants>TRACE;DEBUG;WIN8METRO;W8CORE;NETFX_CORE;DIRECTX11_2;NET35Plus</DefineConstants>
+   <DefineConstants>TRACE;DEBUG;WIN8METRO;W8CORE;NETFX_CORE;DIRECTX11_1;DIRECTX11_2;NET35Plus</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>
     </DocumentationFile>
@@ -268,7 +262,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8DX11_2Release|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>TRACE;WIN8METRO;W8CORE;NET35Plus;DIRECTX11_2;NET35Plus</DefineConstants>
+    <DefineConstants>TRACE;WIN8METRO;W8CORE;NET35Plus;DIRECTX11_1;DIRECTX11_2;NET35Plus</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -277,8 +271,6 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
-
-  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -353,6 +345,18 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'WP8Release|ARM' And '$(SharpDXSign)' == 'true'">
     <DefineConstants>TRACE;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE;NET35Plus;SHARPDX_SIGNED</DefineConstants>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Win8DX11_2Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
+    <DefineConstants>TRACE;WIN8METRO;W8CORE;NET35Plus;DIRECTX11_1;DIRECTX11_2;SHARPDX_SIGNED</DefineConstants>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DIRECTX11_2Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
+    <DefineConstants>TRACE;DIRECTX11_1;DIRECTX11_2;WinFormsInterop;NET35Plus;SHARPDX_SIGNED</DefineConstants>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
     <DelaySign>true</DelaySign>
