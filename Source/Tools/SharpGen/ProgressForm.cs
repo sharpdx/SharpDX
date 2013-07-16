@@ -66,8 +66,13 @@ namespace SharpGen
 
         public void FatalExit(string message)
         {
-            MessageBox.Show(this, message, "SharpGen Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            Abort();
+            if(InvokeRequired)
+                Invoke(new Action<string>(FatalExit), message);
+            else
+            {
+                MessageBox.Show(this, message, "SharpGen Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Abort();
+            }
         }
 
         /// <summary>

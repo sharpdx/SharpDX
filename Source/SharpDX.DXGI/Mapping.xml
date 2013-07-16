@@ -68,6 +68,9 @@
       <include id="windows.ui.xaml.media.dxinterop" file="windows.ui.xaml.media.dxinterop.h" attach="true" />
     </ifndef>
   </ifdef>
+  <ifdef name="DIRECTX11_2">
+    <include id="dxgi1_3" file="dxgi1_3.h" attach="true" />
+  </ifdef>
   
   <context-set id="dxgi-all">
     <context>sharpdx-dxgi</context>
@@ -76,6 +79,7 @@
     <context>dxgiformat</context>
     <context>dxgitype</context>
     <context>dxgi1_2</context>
+    <context>dxgi1_3</context>
     <context>windows.ui.xaml.media.dxinterop</context>
   </context-set>
 

@@ -162,8 +162,11 @@ namespace SharpGen
             Macros.Add("WP8");
             Macros.Add("W8CORE");
 #endif
-#if DIRECTX11_1
+#if DIRECTX11_2
             // Load configuration
+            Macros.Add("DIRECTX11_2");
+            Macros.Add("DIRECTX11_1");
+#elif DIRECTX11_1
             Macros.Add("DIRECTX11_1");
 #else
             if (GccXml.GetWindowsFramework7Version("7.0a", "7.1") == "7.0a")

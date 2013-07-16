@@ -54,6 +54,10 @@
   <ifdef name="DIRECTX11_1">
     <include file="d3d11_1.h" />
   </ifdef>
+
+  <ifdef name="DIRECTX11_2">
+    <include file="d3d11_2.h" />
+  </ifdef>
   
   <include file="d3d11sdklayers.h" />
 
@@ -89,6 +93,9 @@
     <context>d3d11</context>
     <ifdef name="DIRECTX11_1">
       <context>d3d11_1</context>
+    </ifdef>
+    <ifdef name="DIRECTX11_2">
+      <context>d3d11_2</context>
     </ifdef>
 
     <context>d3d11sdklayers</context>

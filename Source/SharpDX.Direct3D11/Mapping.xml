@@ -43,6 +43,9 @@
   <ifdef name="DIRECTX11_1">
     <include file="d3d11_1.h" attach="true" />
   </ifdef>
+  <ifdef name="DIRECTX11_2">
+    <include file="d3d11_2.h" attach="true" />
+  </ifdef>
 
   <ifdef name="WP8">
     <include file="DrawingSurfaceNative.h" attach="true" />
@@ -79,6 +82,9 @@
     <context>d3d11sdklayers</context>
     <ifdef name="DIRECTX11_1">
       <context>d3d11_1</context>
+    </ifdef>
+    <ifdef name="DIRECTX11_2">
+      <context>d3d11_2</context>
     </ifdef>
     <ifndef name="W8CORE">
       <context>d3dx11</context>
@@ -232,6 +238,7 @@
     <map param="ID3D11ClassLinkage::GetClassInstance::ppInstance" return="true" />
     <map method="ID3D11Debug::(.*)PresentPerRenderOpDelay" name="$1PresentDelay" />
     <map method="ID3D11Device::CheckFeatureSupport" visibility="internal" check="false"/>
+
     <map param="ID3D11DeviceContext::GetPredication::ppPredicate" return="true" />
     <map method="ID3D11DeviceContext::CSGetUnorderedAccessViews" visibility="internal" />
     <map method="ID3D11DeviceContext::CopyResource" visibility="internal" name="CopyResource_" />
