@@ -246,6 +246,19 @@ namespace SharpDX
         {
             return value < min ? min : value > max ? max : value;
         }
+
+        /// <summary>
+        /// Interpolates using a linear function a * (x − x1) + b
+        /// </summary>
+        /// <remarks>http://www.encyclopediaofmath.org/index.php/Linear_interpolation</remarks>
+        /// <param name="value1">Value to interpolate from</param>
+        /// <param name="value2">Value to interpolate from</param>
+        /// <param name="amount">Interpolation amount</param>
+        /// <returns>The result of linear interpolation of value2 based on the amount</returns>
+        public static float Lerp(float value1, float value2, float amount)
+        {
+            return amount * (value2 - value1) + value1;
+        }
         
         /// <summary>
         /// Calculates the modulo of the specified value.
