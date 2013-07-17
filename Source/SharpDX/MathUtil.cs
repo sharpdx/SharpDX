@@ -250,16 +250,16 @@ namespace SharpDX
         /// <summary>
         /// Interpolates between two values using a linear function by a given amount.
         /// </summary>
-        /// <remarks>See http://www.encyclopediaofmath.org/index.php/Linear_interpolation and
+        /// <remarks>
+        /// See http://www.encyclopediaofmath.org/index.php/Linear_interpolation and
         /// http://fgiesen.wordpress.com/2012/08/15/linear-interpolation-past-present-and-future/
         /// </remarks>
         /// <param name="from">Value to interpolate from.</param>
         /// <param name="to">Value to interpolate to.</param>
         /// <param name="amount">Interpolation amount.</param>
-        /// <returns>The result of linear interpolation of value2 based on the amount.</returns>
+        /// <returns>The result of linear interpolation of values based on the amount.</returns>
         public static float Lerp(float from, float to, float amount)
         {
-            //return amount * (to - from) + from;
             return (1 - amount) * from + amount * to; 
         }
         
