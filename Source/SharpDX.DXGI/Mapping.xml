@@ -156,7 +156,6 @@
     -->
     <map struct="DXGI(.+)" name-tmp="$1" />
     <remove struct="DXGI_DISPLAY_COLOR_SPACE" />
-    <map struct="DXGI_MATRIX_3X2_F" assembly="SharpDX" namespace="SharpDX" name="Matrix3x2" />
 
     <map field="DXGI_ADAPTER_DESC1?::AdapterLuid" name="Luid" />
     <map field="DXGI_ADAPTER_DESC1?::SubSysId" name="SubsystemId" />

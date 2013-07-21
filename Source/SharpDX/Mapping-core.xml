@@ -546,6 +546,11 @@
     <bind from="D3D_OMAC" to="System.Guid" />
     <bind from="D3DRECT" to="SharpDX.Rectangle" />
 
+    <!-- DirectX 11.2 structure -->
+    <ifdef name="DIRECTX11_2">
+      <bind from="DXGI_MATRIX_3X2_F" to="SharpDX.Matrix3x2" />
+    </ifdef>
+
     <!-- Win32 bindings -->
     <bind from="INT_PTR" to="System.IntPtr" />
     <bind from="UINT_PTR" to="System.IntPtr" />
