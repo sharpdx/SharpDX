@@ -308,7 +308,7 @@ namespace SharpDX.Toolkit.Content
 
                     // Rewind position every time we try to load an asset
                     stream.Position = startPosition;
-                    result = contentReader.ReadContent(this, assetNameWithExtension, stream, out keepStreamOpen);
+                    result = contentReader.ReadContent(this, assetNameWithExtension, stream, out keepStreamOpen, options);
                     stream.Position = startPosition;
                 }
                 else
@@ -322,7 +322,7 @@ namespace SharpDX.Toolkit.Content
                     foreach (IContentReader registeredContentReader in readers)
                     {
                         // Rewind position every time we try to load an asset
-                        result = registeredContentReader.ReadContent(this, assetNameWithExtension, stream, out keepStreamOpen);
+                        result = registeredContentReader.ReadContent(this, assetNameWithExtension, stream, out keepStreamOpen, options);
                         stream.Position = startPosition;
                         if (result != null) break;
                     }
