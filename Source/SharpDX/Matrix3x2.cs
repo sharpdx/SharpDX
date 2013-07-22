@@ -166,7 +166,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets or sets the translation of the matrix; that is M41, M42.
+        /// Gets or sets the translation of the matrix; that is M31, M32.
         /// </summary>
         public Vector2 TranslationVector
         {
