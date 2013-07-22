@@ -40,9 +40,9 @@ namespace SharpDX.Toolkit.Graphics
             if (service.GraphicsDevice == null)
                 throw new InvalidOperationException("GraphicsDevice is not initialized");
 
-            return ReadContent(readerManager, service.GraphicsDevice, assetName, stream);
+            return ReadContent(readerManager, service.GraphicsDevice, assetName, stream, options);
         }
 
-        protected abstract T ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Stream stream, object options = null);
+        protected abstract T ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Stream stream, object options);
     }
 }
