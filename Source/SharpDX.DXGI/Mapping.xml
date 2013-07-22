@@ -274,32 +274,6 @@
     </ifdef>
     <map function="CreateDXGIFactory.*" dll='"dxgi.dll"' group="SharpDX.DXGI.DXGI" />
     <map param="CreateDXGIFactory.*?::ppFactory" attribute="out" />
-
-    <!-- Remove this once issue with sal.h will be fixed -->
-    <ifdef name="DIRECTX11_2">
-
-      <map param="IDXGIOutputDuplication::MapDesktopSurface::pLockedRect" attribute="out"/>
-      <map param="IDXGISurface::Map::pLockedRect" attribute="out"/>
-      <map param="IDXGISurface1::ReleaseDC::pDirtyRect" attribute="in optional"/>
-      <map param="IDXGIObject::GetParent::ppParent" attribute="out"/>
-      <map param="IDXGIObject::GetPrivateData::pDataSize" attribute="inout"/>
-      <map param="IDXGIDeviceSubObject::GetDevice::ppDevice" attribute="out"/>
-      <map param="IDXGIDevice::QueryResourceResidency::ppResources" attribute="in buffer"/>
-      <map param="IDXGIDevice::QueryResourceResidency::pResidencyStatus" attribute="out buffer"/>
-      <map param="IDXGIOutput::FindClosestMatchingMode::pClosestMatch" attribute="out"/>
-      <map param="IDXGIResource1::CreateSharedHandle::pAttributes" attribute="in optional"/>
-      <map param="IDXGIResource1::CreateSharedHandle::name" attribute="in optional"/>
-      <map param="IDXGIResource1::CreateSharedHandle::pHandle" attribute="out" return="true"/>
-      <map param="IDXGIOutput1?::GetDisplayModeList1?::pNumModes" attribute="inout"/>
-      <map param="IDXGIOutput1?::GetDisplayModeList1?::pDesc" attribute="out buffer optional"/>
-      <map param="IDXGISwapChain::GetBuffer::ppSurface" attribute="out"/>
-      <map param="IDXGISwapChain::GetFullscreenState::pFullscreen" attribute="out"/>
-      <map param="IDXGIAdapter::CheckInterfaceSupport::pUMDVersion" attribute="out"/>
-      <map param="IDXGIFactory::GetWindowAssociation::pWindowHandle" attribute="out"/>
-      <map param="IDXGISurface1::GetDC::phdc" attribute="out" return="true"/>
-      <map param="IDXGISurface::GetDesc::pDesc" attribute="out" />
-
-    </ifdef>
     
     <context-clear/>
   </mapping>

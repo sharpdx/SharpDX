@@ -193,6 +193,9 @@
     <map enum-item="D3D11_VIDEO_PROCESSOR_ROTATION_90" name="Rotation90"/>
     <map enum-item="D3D11_VIDEO_PROCESSOR_ROTATION_180" name="Rotation180"/>
     <map enum-item="D3D11_VIDEO_PROCESSOR_ROTATION_270" name="Rotation270"/>
+    
+    <map enum-item="D3D11_VIDEO_PROCESSOR_NOMINAL_RANGE_16_235" name="Range_16_235"/>
+    <map enum-item="D3D11_VIDEO_PROCESSOR_NOMINAL_RANGE_0_255" name="Range_0_255"/>
 
     <!--
     // *****************************************************************
@@ -298,7 +301,7 @@
 
     <map param="ID3D11DeviceContext::CSSetUnorderedAccessViews::pUAVInitialCounts" type="void"/>
     <map param="ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews::pUAVInitialCounts" type="void"/>
-    
+
     <!--
     // *****************************************************************
     // D3D11 Functions

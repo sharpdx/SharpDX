@@ -39,7 +39,6 @@
 
     <ifndef name="WP8">
 
-
       <ifndef name="DIRECTX11_2">
         <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides\shared</include-dir>
         <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides\um</include-dir>
@@ -60,9 +59,6 @@
 
     </ifndef>
   </ifdef>
-
-
-
 
   <ifndef name="W8CORE">
     <!-- Add DirectX SDK by default -->
@@ -85,10 +81,18 @@
 
   <!-- For Win8 we need to force to use include headers for MetroApp only -->
   <ifdef name="WIN8METRO">
-    <include-prolog>
-      // For Win8 we need to force to use include headers for MetroApp only
-      #define WINAPI_FAMILY WINAPI_PARTITION_APP
-    </include-prolog>
+    <ifndef name="DIRECTX11_2">
+      <include-prolog>
+        // For Win8 we need to force to use include headers for MetroApp only
+        #define WINAPI_FAMILY WINAPI_PARTITION_APP
+      </include-prolog>
+    </ifndef>
+    <ifdef name="DIRECTX11_2">
+      <include-prolog>
+        // For Win8 we need to force to use include headers for MetroApp only
+        #define WINAPI_FAMILY WINAPI_FAMILY_PC_APP
+      </include-prolog>
+    </ifdef>
   </ifdef>
 
   <ifdef name="WP8">
