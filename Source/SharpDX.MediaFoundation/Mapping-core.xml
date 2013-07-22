@@ -782,6 +782,9 @@
 
     <map param="IMFMediaEngineEx::GetResourceCharacteristics::pCharacteristics" type="RESOURCE_CHARACTERISTICS"/>
 
+    <map method="IMFMediaEngine::SetSource" visibility="internal" property="false"/>
+    <map param="IMFMediaEngine::SetSource::pUrl" type="void"/>
+
     <map method="IMFMediaEngine::OnVideoStreamTick" name="OnVideoStreamTick_" check="false" visibility="internal"/>
 
     <map param="IMFMediaEngineEx::SetSourceFromByteStream::pURL" type="void"/>

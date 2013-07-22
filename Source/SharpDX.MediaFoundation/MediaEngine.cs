@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 #if DIRECTX11_1
 using System;
+using System.Runtime.InteropServices;
 
 namespace SharpDX.MediaFoundation
 {
@@ -120,6 +121,26 @@ namespace SharpDX.MediaFoundation
             public void OnPlaybackEvent(MediaEngineEvent mediaEngineEvent, long param1, int param2)
             {
                 MediaEngine.OnPlaybackEvent(mediaEngineEvent, param1, param2);
+            }
+        }
+
+        /// <summary>	
+        /// <p>[This documentation is preliminary and is subject to change.]</p><p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p>Sets the URL of a media resource.</p>	
+        /// </summary>	
+        /// <param name="urlRef"><dd> <p>The URL of the media resource.</p> </dd></param>	
+        /// <returns><p>If this method succeeds, it returns <strong><see cref="SharpDX.Result.Ok"/></strong>. Otherwise, it returns an <strong><see cref="SharpDX.Result"/></strong> error code.</p></returns>	
+        /// <remarks>	
+        /// <p>This method corresponds to setting the <strong>src</strong> attribute of the <strong>HTMLMediaElement</strong> interface in HTML5.</p><p>The URL specified by this method takes precedence over media resources specified in the <strong><see cref="SharpDX.MediaFoundation.MediaEngine.SetSourceElements"/></strong> method. To load the URL, call <strong><see cref="SharpDX.MediaFoundation.MediaEngine.Load"/></strong>.</p><p>This method asynchronously loads the URL. When the operation starts, the Media Engine sends an <strong><see cref="SharpDX.MediaFoundation.MediaEngineEvent.LoadStart"/></strong> event. If no errors occur during the <strong>Load</strong> operation, several other events are generated, including the following.</p><ul> <li><strong><see cref="SharpDX.MediaFoundation.MediaEngineEvent.LoadedMetadata"/></strong></li> <li><strong><see cref="SharpDX.MediaFoundation.MediaEngineEvent.LoadedData"/></strong></li> <li><strong><see cref="SharpDX.MediaFoundation.MediaEngineEvent.CanPlay"/></strong></li> <li><strong><see cref="SharpDX.MediaFoundation.MediaEngineEvent.CanPlayThrough"/></strong></li> </ul><p>If the Media Engine is unable to load the URL, the Media Engine sends an <strong><see cref="SharpDX.MediaFoundation.MediaEngineEvent.Error"/></strong> event. </p><p>For more information about event handling in the Media Engine, see <strong><see cref="SharpDX.MediaFoundation.MediaEngineNotify"/></strong>.</p>	
+        /// </remarks>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFMediaEngine::SetSource']/*"/>	
+        /// <msdn-id>hh448017</msdn-id>	
+        /// <unmanaged>HRESULT IMFMediaEngine::SetSource([In] wchar_t* pUrl)</unmanaged>	
+        /// <unmanaged-short>IMFMediaEngine::SetSource</unmanaged-short>	
+        public string Source
+        {
+            set
+            {
+                SetSource(Utilities.StringToCoTaskMemUni(value));
             }
         }
     }

@@ -561,7 +561,7 @@ namespace SharpDX
 #endif
         }
 
-	/// <summary>
+	    /// <summary>
         /// Copies the contents of a managed String into unmanaged memory.
         /// </summary>
         /// <param name="s">A managed string to be copied.</param> 
@@ -583,19 +583,46 @@ namespace SharpDX
             {
                 throw new OutOfMemoryException();
             }
-            // Completely inefficient, but this is the only to the a string in WP8
-            var localArray = s.ToCharArray();
-            fixed (char* str = localArray)
-            {
-                char* pSrc = str;
-                Utilities.CopyMemory(ptr2, new IntPtr(pSrc), s.Length + 1);
-            }
+            CopyStringToUnmanaged(ptr2, s);
             return ptr2;
 #else
             return Marshal.StringToHGlobalUni(s);
 #endif
         }
-  
+
+        /// <summary>
+        /// Copies the contents of a managed String into unmanaged memory using <see cref="Marshal.AllocCoTaskMem"/>
+        /// </summary>
+        /// <param name="s">A managed string to be copied.</param> 
+        /// <returns>The address, in unmanaged memory, to where s was copied, or IntPtr.Zero if s is null.</returns>
+        public static unsafe IntPtr StringToCoTaskMemUni(string s)
+        {
+            if (s == null)
+            {
+                return IntPtr.Zero;
+            }
+            int num = (s.Length + 1) * 2;
+            if (num < s.Length)
+            {
+                throw new ArgumentOutOfRangeException("s");
+            }
+            IntPtr ptr2 = Marshal.AllocCoTaskMem(num);
+            if (ptr2 == IntPtr.Zero)
+            {
+                throw new OutOfMemoryException();
+            }
+            CopyStringToUnmanaged(ptr2, s);
+            return ptr2;
+        }
+
+        private unsafe static void CopyStringToUnmanaged(IntPtr ptr, string str)
+        {
+            fixed (char* pStr = str)
+            {
+                CopyMemory(ptr, new IntPtr(pStr), str.Length * 2 + 1);
+            }
+        }
+
         /// <summary>
         /// Gets the IUnknown from object. Similar to <see cref="Marshal.GetIUnknownForObject"/> but accept null object
         /// by returning an IntPtr.Zero IUnknown pointer.
