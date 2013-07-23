@@ -719,6 +719,8 @@ namespace SharpDX.D3DCompiler
         }
 #endif
 
+// Win 8.1 SDK removed the corresponding functions from the WinRT platform
+#if !(WIN8METRO && DIRECTX11_2)
         /// <summary>	
         /// Compresses a set of shaders into a more compact form. 	
         /// </summary>	
@@ -821,6 +823,8 @@ namespace SharpDX.D3DCompiler
 
             return shadersByteArr;
         }
+
+#endif
 
         /// <summary>
         /// Gets this instance is composed of compressed shaders.

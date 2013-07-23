@@ -103,6 +103,8 @@ namespace SharpDX.D3DCompiler
             private set;
         }
 
+// Win 8.1 SDK removed the corresponding functions from the WinRT platform
+#if !(WIN8METRO && DIRECTX11_2)
         /// <summary>
         ///   Extracts the input and output signatures from a compiled shader or effect.
         /// </summary>
@@ -154,6 +156,7 @@ namespace SharpDX.D3DCompiler
                 return null;
             return new ShaderSignature(shaderSignature);
         }
+#endif
 
         /// <summary>
         /// Cast this <see cref="ShaderSignature"/> to the underlying byte buffer.
