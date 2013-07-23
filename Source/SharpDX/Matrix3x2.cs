@@ -601,6 +601,36 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Creates a transformation matrix.
+        /// </summary>
+        /// <param name="xScale">Scaling factor that is applied along the x-axis.</param>
+        /// <param name="yScale">Scaling factor that is applied along the y-axis.</param>
+        /// <param name="angle">Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis.</param>
+        /// <param name="xOffset">X-coordinate offset.</param>
+        /// <param name="yOffset">Y-coordinate offset.</param>
+        /// <param name="result">When the method completes, contains the created transformation matrix.</param>
+        public static void Transformation(float xScale, float yScale, float angle, float xOffset, float yOffset, out Matrix3x2 result)
+        {
+            result = Scaling(xScale, yScale) * Rotation(angle) * Translation(xOffset, yOffset);
+        }
+
+        /// <summary>
+        /// Creates a transformation matrix.
+        /// </summary>
+        /// <param name="xScale">Scaling factor that is applied along the x-axis.</param>
+        /// <param name="yScale">Scaling factor that is applied along the y-axis.</param>
+        /// <param name="angle">Angle of rotation in radians.</param>
+        /// <param name="xOffset">X-coordinate offset.</param>
+        /// <param name="yOffset">Y-coordinate offset.</param>
+        /// <returns>The created transformation matrix.</returns>
+        public static Matrix3x2 Transformation(float xScale, float yScale, float angle, float xOffset, float yOffset)
+        {
+            Matrix3x2 result;
+            Transformation(xScale, yScale, angle, xOffset, yOffset, out result);
+            return result;
+        }
+
+        /// <summary>
         /// Creates a translation matrix using the specified offsets.
         /// </summary>
         /// <param name="value">The offset for both coordinate planes.</param>
