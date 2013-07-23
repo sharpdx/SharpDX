@@ -591,7 +591,7 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     if (assimpMesh.HasVertexColors(i))
                     {
-                        layout.Add(VertexElement.Normal(localIndex, Format.R32G32B32A32_Float, vertexBufferElementSize));
+                        layout.Add(VertexElement.Color(localIndex, Format.R32G32B32A32_Float, vertexBufferElementSize));
                         vertexBufferElementSize += Utilities.SizeOf<SharpDX.Color4>();
                         localIndex++;
                     }
