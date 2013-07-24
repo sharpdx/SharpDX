@@ -26,7 +26,7 @@ using SharpDX.Serialization;
 namespace SharpDX
 {
     /// <summary>
-    /// Direct2D Matrix3x2 3x2. Use <see cref="SharpDX.Matrix3x2"/> and implicit cast to <see cref="Matrix3x2"/>.
+    /// Direct2D Matrix3x2. Supports implicit cast from <see cref="SharpDX.Matrix"/>.
     /// </summary>
 #if !W8CORE
     [Serializable]
@@ -100,15 +100,15 @@ namespace SharpDX
         /// <summary>
         /// Initializes a new instance of the <see cref="SharpDX.Matrix3x2"/> struct.
         /// </summary>
-        /// <param name="values">The values to assign to the components of the matrix. This must be an array with sixteen elements.</param>
+        /// <param name="values">The values to assign to the components of the matrix. This must be an array with six elements.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="values"/> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="values"/> contains more or less than sixteen elements.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="values"/> contains more or less than six elements.</exception>
         public Matrix3x2(float[] values)
         {
             if (values == null)
                 throw new ArgumentNullException("values");
             if (values.Length != 6)
-                throw new ArgumentOutOfRangeException("values", "There must be only input values for Matrix3x2.");
+                throw new ArgumentOutOfRangeException("values", "There must be six input values for Matrix3x2.");
 
             M11 = values[0];
             M12 = values[1];
@@ -121,7 +121,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets or sets the first row in the matrix; that is M11, M12.
+        /// Gets or sets the first row in the matrix; that is M11 and M12.
         /// </summary>
         public Vector2 Row1
         {
@@ -130,7 +130,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets or sets the second row in the matrix; that is M21, M22.
+        /// Gets or sets the second row in the matrix; that is M21 and M22.
         /// </summary>
         public Vector2 Row2
         {
@@ -139,7 +139,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets or sets the third row in the matrix; that is M31, M32.
+        /// Gets or sets the third row in the matrix; that is M31 and M32.
         /// </summary>
         public Vector2 Row3
         {
@@ -148,7 +148,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets or sets the first column in the matrix; that is M11, M21, M31.
+        /// Gets or sets the first column in the matrix; that is M11, M21, and M31.
         /// </summary>
         public Vector3 Column1
         {
@@ -157,7 +157,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets or sets the second column in the matrix; that is M12, M22, M32, and M42.
+        /// Gets or sets the second column in the matrix; that is M12, M22, and M32.
         /// </summary>
         public Vector3 Column2
         {
@@ -166,7 +166,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets or sets the translation of the matrix; that is M31, M32.
+        /// Gets or sets the translation of the matrix; that is M31 and M32.
         /// </summary>
         public Vector2 TranslationVector
         {
@@ -175,7 +175,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets or sets the scale of the matrix; that is M11, M22.
+        /// Gets or sets the scale of the matrix; that is M11 and M22.
         /// </summary>
         public Vector2 ScaleVector
         {
@@ -452,9 +452,9 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a matrix that scales along the x-axis, y-axis, and y-axis.
+        /// Creates a matrix that scales along the x-axis and y-axis.
         /// </summary>
-        /// <param name="scale">Scaling factor for all three axes.</param>
+        /// <param name="scale">Scaling factor for both axes.</param>
         /// <param name="result">When the method completes, contains the created scaling matrix.</param>
         public static void Scaling(ref Vector2 scale, out Matrix3x2 result)
         {
@@ -462,9 +462,9 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a matrix that scales along the x-axis, y-axis, and y-axis.
+        /// Creates a matrix that scales along the x-axis and y-axis.
         /// </summary>
-        /// <param name="scale">Scaling factor for all three axes.</param>
+        /// <param name="scale">Scaling factor for both axes.</param>
         /// <returns>The created scaling matrix.</returns>
         public static Matrix3x2 Scaling(Vector2 scale)
         {
@@ -474,7 +474,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a matrix that scales along the x-axis, y-axis, and y-axis.
+        /// Creates a matrix that scales along the x-axis and y-axis.
         /// </summary>
         /// <param name="x">Scaling factor that is applied along the x-axis.</param>
         /// <param name="y">Scaling factor that is applied along the y-axis.</param>
@@ -487,7 +487,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a matrix that scales along the x-axis, y-axis, and y-axis.
+        /// Creates a matrix that scales along the x-axis and y-axis.
         /// </summary>
         /// <param name="x">Scaling factor that is applied along the x-axis.</param>
         /// <param name="y">Scaling factor that is applied along the y-axis.</param>
@@ -500,9 +500,9 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a matrix that uniformly scales along all three axis.
+        /// Creates a matrix that uniformly scales along both axes.
         /// </summary>
-        /// <param name="scale">The uniform scale that is applied along all axis.</param>
+        /// <param name="scale">The uniform scale that is applied along both axes.</param>
         /// <param name="result">When the method completes, contains the created scaling matrix.</param>
         public static void Scaling(float scale, out Matrix3x2 result)
         {
@@ -511,9 +511,9 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a matrix that uniformly scales along all three axis.
+        /// Creates a matrix that uniformly scales along both axes.
         /// </summary>
-        /// <param name="scale">The uniform scale that is applied along all axis.</param>
+        /// <param name="scale">The uniform scale that is applied along both axes.</param>
         /// <returns>The created scaling matrix.</returns>
         public static Matrix3x2 Scaling(float scale)
         {
@@ -529,7 +529,7 @@ namespace SharpDX
         /// <param name="y">Scaling factor that is applied along the y-axis.</param>
         /// <param name="center">The center of the scaling.</param>
         /// <returns>The created scaling matrix.</returns>
-        public static Matrix3x2 Scaling( float x, float y, Vector2 center )
+        public static Matrix3x2 Scaling(float x, float y, Vector2 center)
         {
             Matrix3x2 result;
 
@@ -601,9 +601,39 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Creates a transformation matrix.
+        /// </summary>
+        /// <param name="xScale">Scaling factor that is applied along the x-axis.</param>
+        /// <param name="yScale">Scaling factor that is applied along the y-axis.</param>
+        /// <param name="angle">Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis.</param>
+        /// <param name="xOffset">X-coordinate offset.</param>
+        /// <param name="yOffset">Y-coordinate offset.</param>
+        /// <param name="result">When the method completes, contains the created transformation matrix.</param>
+        public static void Transformation(float xScale, float yScale, float angle, float xOffset, float yOffset, out Matrix3x2 result)
+        {
+            result = Scaling(xScale, yScale) * Rotation(angle) * Translation(xOffset, yOffset);
+        }
+
+        /// <summary>
+        /// Creates a transformation matrix.
+        /// </summary>
+        /// <param name="xScale">Scaling factor that is applied along the x-axis.</param>
+        /// <param name="yScale">Scaling factor that is applied along the y-axis.</param>
+        /// <param name="angle">Angle of rotation in radians.</param>
+        /// <param name="xOffset">X-coordinate offset.</param>
+        /// <param name="yOffset">Y-coordinate offset.</param>
+        /// <returns>The created transformation matrix.</returns>
+        public static Matrix3x2 Transformation(float xScale, float yScale, float angle, float xOffset, float yOffset)
+        {
+            Matrix3x2 result;
+            Transformation(xScale, yScale, angle, xOffset, yOffset, out result);
+            return result;
+        }
+
+        /// <summary>
         /// Creates a translation matrix using the specified offsets.
         /// </summary>
-        /// <param name="value">The offset for all three coordinate planes.</param>
+        /// <param name="value">The offset for both coordinate planes.</param>
         /// <param name="result">When the method completes, contains the created translation matrix.</param>
         public static void Translation(ref Vector2 value, out Matrix3x2 result)
         {
@@ -613,7 +643,7 @@ namespace SharpDX
         /// <summary>
         /// Creates a translation matrix using the specified offsets.
         /// </summary>
-        /// <param name="value">The offset for all three coordinate planes.</param>
+        /// <param name="value">The offset for both coordinate planes.</param>
         /// <returns>The created translation matrix.</returns>
         public static Matrix3x2 Translation(Vector2 value)
         {
@@ -627,7 +657,6 @@ namespace SharpDX
         /// </summary>
         /// <param name="x">X-coordinate offset.</param>
         /// <param name="y">Y-coordinate offset.</param>
-        /// <param name="z">Z-coordinate offset.</param>
         /// <param name="result">When the method completes, contains the created translation matrix.</param>
         public static void Translation(float x, float y, out Matrix3x2 result)
         {
@@ -641,7 +670,6 @@ namespace SharpDX
         /// </summary>
         /// <param name="x">X-coordinate offset.</param>
         /// <param name="y">Y-coordinate offset.</param>
-        /// <param name="z">Z-coordinate offset.</param>
         /// <returns>The created translation matrix.</returns>
         public static Matrix3x2 Translation(float x, float y)
         {
@@ -1001,21 +1029,21 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Matrix3x2"/> to <see cref="SharpDX.Matrix3x2"/>.
+        /// Performs an implicit conversion from <see cref="SharpDX.Matrix"/> to <see cref="SharpDX.Matrix3x2"/>.
         /// </summary>
         /// <param name="matrix">The matrix.</param>
         /// <returns>The result of the conversion.</returns>
         public static implicit operator Matrix3x2(Matrix matrix)
         {
             return new Matrix3x2
-                                   {
-                                       M11 = matrix.M11,
-                                       M12 = matrix.M12,
-                                       M21 = matrix.M21,
-                                       M22 = matrix.M22,
-                                       M31 = matrix.M41,
-                                       M32 = matrix.M42
-                                   };
+            {
+                M11 = matrix.M11,
+                M12 = matrix.M12,
+                M21 = matrix.M21,
+                M22 = matrix.M22,
+                M31 = matrix.M41,
+                M32 = matrix.M42
+            };
         }
     }
 
