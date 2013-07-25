@@ -109,9 +109,10 @@
 	  <Exec Command='$(GitExe) checkout --merge "master"'/>
 	  <Exec Command='$(GitExe) pull --rebase origin'/>
 	
-	  <!-- Rebase master_integration on master -->
+	  <!-- Merge master into master_integration -->
 	  <Exec Command='$(GitExe) checkout --merge "master_integration"'/>
-	  <Exec Command='$(GitExe) rebase "master"'/>
+    <Exec Command='$(GitExe) pull --rebase origin'/>
+    <Exec Command='$(GitExe) merge "master"'/>
 	
 	  <!-- Merge master_integration into master -->
 	  <Exec Command='$(GitExe) checkout --merge "master"'/>
