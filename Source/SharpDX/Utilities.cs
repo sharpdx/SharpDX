@@ -619,7 +619,7 @@ namespace SharpDX
         {
             fixed (char* pStr = str)
             {
-                CopyMemory(ptr, new IntPtr(pStr), str.Length * 2 + 1);
+                CopyMemory(ptr, new IntPtr(pStr), (str.Length + 1 ) * 2);
             }
         }
 
