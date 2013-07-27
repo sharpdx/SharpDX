@@ -60,6 +60,18 @@ namespace SharpDX
         public Result Result { get; private set; }
 
         /// <summary>
+        /// Gets the HRESULT error code.
+        /// </summary>
+        /// <value>The HRESULT error code.</value>
+        public int Code
+        {
+            get
+            {
+                return Result.Code;
+            }
+        }
+
+        /// <summary>
         /// Gets the module (ex: SharpDX.Direct2D1)
         /// </summary>
         public string Module { get; private set; }
@@ -136,7 +148,27 @@ namespace SharpDX
         {
             return result.Result;
         }
-        
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.ResultDescriptor"/> to <see cref="System.Int32"/>.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator int(ResultDescriptor result)
+        {
+            return result.Result.Code;
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.ResultDescriptor"/> to <see cref="System.UInt32"/>.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator uint(ResultDescriptor result)
+        {
+            return unchecked((uint)result.Result.Code);
+        }
+
         /// <summary>
         /// Implements the operator ==.
         /// </summary>

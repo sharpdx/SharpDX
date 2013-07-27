@@ -230,61 +230,85 @@ namespace SharpDX
         /// <summary>
         /// Result code Ok
         /// </summary>
-        public static Result Ok = new Result(unchecked((int)0x00000000));
+        /// <unmanaged>S_OK</unmanaged>
+        public readonly static Result Ok = new Result(unchecked((int)0x00000000));
 
         /// <summary>
         /// Result code False
         /// </summary>
-        public static Result False = new Result(unchecked((int)0x00000001));
+        /// <unmanaged>S_FALSE</unmanaged>
+        public readonly static Result False = new Result(unchecked((int)0x00000001));
 
         /// <summary>
-        /// Result code Abord
+        /// Result code Abort
         /// </summary>
-        public static Result Abord = new Result(unchecked((int)0x80004004));
+        /// <unmanaged>E_ABORT</unmanaged>
+        public static readonly SharpDX.ResultDescriptor Abort = new SharpDX.ResultDescriptor(unchecked((int)0x80004004), "General", "E_ABORT", "Operation aborted");
 
         /// <summary>
         /// Result code AccessDenied
         /// </summary>
-        public static Result AccessDenied = new Result(unchecked((int)0x80070005));
+        /// <unmanaged>E_ACCESSDENIED</unmanaged>
+        public static readonly SharpDX.ResultDescriptor AccessDenied = new SharpDX.ResultDescriptor(unchecked((int)0x80070005), "General", "E_ACCESSDENIED", "General access denied error");
 
         /// <summary>
         /// Result code Fail
         /// </summary>
-        public static Result Fail = new Result(unchecked((int)0x80004005));
+        /// <unmanaged>E_FAIL</unmanaged>
+        public static readonly SharpDX.ResultDescriptor Fail = new SharpDX.ResultDescriptor(unchecked((int)0x80004005), "General", "E_FAIL", "Unspecified error");
 
         /// <summary>
         /// Result code Handle
         /// </summary>
-        public static Result Handle = new Result(unchecked((int)0x80070006));
+        /// <unmanaged>E_HANDLE</unmanaged>
+        public static readonly SharpDX.ResultDescriptor Handle = new SharpDX.ResultDescriptor(unchecked((int)0x80070006), "General", "E_HANDLE", "Invalid handle");
 
         /// <summary>
         /// Result code invalid argument
         /// </summary>
-        public static Result InvalidArg = new Result(unchecked((int)0x80070057));
+        /// <unmanaged>E_INVALIDARG</unmanaged>
+        public static readonly SharpDX.ResultDescriptor InvalidArg = new SharpDX.ResultDescriptor(unchecked((int)0x80070057), "General", "E_INVALIDARG", "Invalid Arguments");
 
         /// <summary>
         /// Result code no interface
         /// </summary>
-        public static Result NoInterface = new Result(unchecked((int)0x80004002));
+        /// <unmanaged>E_NOINTERFACE</unmanaged>
+        public static readonly SharpDX.ResultDescriptor NoInterface = new SharpDX.ResultDescriptor(unchecked((int)0x80004002), "General", "E_NOINTERFACE", "No such interface supported");
 
         /// <summary>
         /// Result code not implemented
         /// </summary>
-        public static Result NotImplemented = new Result(unchecked((int)0x80004001));
+        /// <unmanaged>E_NOTIMPL</unmanaged>
+        public static readonly SharpDX.ResultDescriptor NotImplemented = new SharpDX.ResultDescriptor(unchecked((int)0x80004001), "General", "E_NOTIMPL", "Not implemented");
 
         /// <summary>
         /// Result code out of memory
         /// </summary>
-        public static Result OutOfMemory = new Result(unchecked((int)0x8007000E));
+        /// <unmanaged>E_OUTOFMEMORY</unmanaged>
+        public static readonly SharpDX.ResultDescriptor OutOfMemory = new SharpDX.ResultDescriptor(unchecked((int)0x8007000E), "General", "E_OUTOFMEMORY", "Out of memory");
 
         /// <summary>
         /// Result code Invalid pointer
         /// </summary>
-        public static Result InvalidPointer = new Result(unchecked((int)0x80004003));
+        /// <unmanaged>E_POINTER</unmanaged>
+        public static readonly SharpDX.ResultDescriptor InvalidPointer = new SharpDX.ResultDescriptor(unchecked((int)0x80004003), "General", "E_POINTER", "Invalid pointer");
 
         /// <summary>
         /// Unexpected failure
         /// </summary>
-        public static Result UnexpectedFailure = new Result(unchecked((int)0x8000FFFF));
+        /// <unmanaged>E_UNEXPECTED</unmanaged>
+        public static readonly SharpDX.ResultDescriptor UnexpectedFailure = new SharpDX.ResultDescriptor(unchecked((int)0x8000FFFF), "General", "E_UNEXPECTED", "Catastrophic failure");
+
+        /// <summary>
+        /// Result of a wait abandonned.
+        /// </summary>
+        /// <unmanaged>WAIT_ABANDONED</unmanaged>
+        public static readonly SharpDX.ResultDescriptor WaitAbandoned = new SharpDX.ResultDescriptor(unchecked((int)0x00000080L), "General", "WAIT_ABANDONED", "WaitAbandoned");
+
+        /// <summary>
+        /// Result of a wait timeout.
+        /// </summary>
+        /// <unmanaged>WAIT_TIMEOUT</unmanaged>
+        public static readonly SharpDX.ResultDescriptor WaitTimeout = new SharpDX.ResultDescriptor(unchecked((int)0x00000102L), "General", "WAIT_TIMEOUT", "WaitTimeout");
     }
 }

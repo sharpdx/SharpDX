@@ -201,9 +201,10 @@ namespace SharpGen.Generator
             // Get the inferred return type
             method.ReturnType = Manager.GetCsType<CsMarshalBase>(cppMethod.ReturnType);
 
+            // Hide return type only if it is a HRESULT and AlwaysReturnHResult is false
             if (method.CheckReturnType && method.ReturnType.PublicType != null && method.ReturnType.PublicType.QualifiedName == "SharpDX.Result")
             {
-                method.HideReturnType = true;
+                method.HideReturnType = !method.AlwaysReturnHResult;
             }
 
             // Iterates on parameters to convert them to C# parameters

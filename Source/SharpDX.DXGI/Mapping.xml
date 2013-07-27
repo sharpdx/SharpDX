@@ -235,6 +235,8 @@
     <map param="IDXGIResource1::CreateSharedHandle::dwAccess" type="DXGI_SHARED_RESOURCE_FLAGS"/>
     <map param="IDXGIResource1::CreateSharedHandle::pHandle" return="true"/>
 
+    <map method="IDXGIKeyedMutex::AcquireSync" hresult="true"/>
+
     <ifdef name="W8CORE">
       <map method="IDXGIOutput1::DuplicateOutput" visibility="internal"/>
       <map param="IDXGIOutput1::DuplicateOutput::ppOutputDuplication" type="void"/>
