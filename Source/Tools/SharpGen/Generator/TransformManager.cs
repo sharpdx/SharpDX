@@ -26,7 +26,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Text.RegularExpressions;
-using SharpCore.Logging;
+using SharpGen.Logging;
 using SharpGen.Config;
 using SharpGen.CppModel;
 using SharpGen.Model;

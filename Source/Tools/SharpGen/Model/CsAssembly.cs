@@ -23,7 +23,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using SharpCore.Logging;
+using SharpGen.Logging;
 using SharpGen.Config;
 
 namespace SharpGen.Model

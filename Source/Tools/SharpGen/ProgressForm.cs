@@ -20,7 +20,7 @@
 
 using System;
 using System.Windows.Forms;
-using SharpCore.Logging;
+using SharpGen.Logging;
 
 namespace SharpGen
 {

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 using System;
-using SharpCore.Logging;
+using SharpGen.Logging;
 using SharpGen.Config;
 using SharpGen.CppModel;
 using SharpGen.Model;

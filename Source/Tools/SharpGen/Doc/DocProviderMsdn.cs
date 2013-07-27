@@ -10,9 +10,10 @@ using System.Web;
 using HtmlAgilityPack;
 using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.JScript;
-using SharpCore;
-using SharpCore.Logging;
-using SharpCore.MTPS;
+using SharpGen;
+using SharpGen.Logging;
+
+using SharpGen.MTPS;
 
 namespace SharpGen.Doc
 {

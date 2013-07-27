@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using SharpCore.Logging;
+using SharpGen.Logging;
 
 namespace SharpGen.TextTemplating
 {
