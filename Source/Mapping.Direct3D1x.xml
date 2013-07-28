@@ -362,9 +362,9 @@
     <map method="ID3D(\d+)Device::GetDeviceRemovedReason" check="false"/>
     
     <map method="ID3D(\d+)Device::CheckCounter" visibility="internal"/>
-    <map method="ID3D(\d+)Device1?::Create.*" visibility="internal" />
-    <map param="ID3D(\d+)Device1?::Create.*::pp.*" attribute="out fast" />
-    <map method="ID3D(\d+)Device1?::GetImmediateContext1?" persist="true"/>
+    <map method="ID3D(\d+)Device[12]?::Create.*" visibility="internal" />
+    <map param="ID3D(\d+)Device[12]?::Create.*::pp.*" attribute="out fast" />
+    <map method="ID3D(\d+)Device[12]?::GetImmediateContext[12]?" persist="true"/>
     <remove method="ID3D(\d+)Device::.*TextFilterSize" />
     <map method="ID3D(\d+)Device::GetPredication" visibility="internal" />
     <map method="ID3D(\d+)Device1?::OpenSharedResource1?" visibility="internal" />
