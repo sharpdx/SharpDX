@@ -127,6 +127,9 @@ namespace SharpGen.Model
 
             if (tag.ParameterUsedAsReturnType.HasValue)
                 ForceReturnType = tag.ParameterUsedAsReturnType.Value;
+
+            if (tag.AlwaysReturnHResult.HasValue) 
+                AlwaysReturnHResult = tag.AlwaysReturnHResult.Value;
         }
 
         /// <summary>
@@ -177,6 +180,8 @@ namespace SharpGen.Model
         public bool ForceReturnType { get; set; }
 
         public bool HideReturnType { get; set; }
+
+        public bool AlwaysReturnHResult { get; set; }
 
         public bool HasReturnType
         {

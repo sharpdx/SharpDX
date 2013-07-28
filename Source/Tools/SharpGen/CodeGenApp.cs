@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Mono.Options;
-using SharpCore.Logging;
+using SharpGen.Logging;
 using SharpGen.Config;
 using SharpGen.Generator;
 using SharpGen.Parser;

@@ -87,6 +87,7 @@ namespace SharpGen.Model
                            if (fromTag.Namespace != null) tag.Namespace = fromTag.Namespace;
                            if (fromTag.DefaultValue != null) tag.DefaultValue = fromTag.DefaultValue;
                            if (fromTag.MethodCheckReturnType.HasValue) tag.MethodCheckReturnType = fromTag.MethodCheckReturnType;
+                           if (fromTag.AlwaysReturnHResult.HasValue) tag.AlwaysReturnHResult = fromTag.AlwaysReturnHResult;
                            if (fromTag.Visibility.HasValue) tag.Visibility = fromTag.Visibility;
                            if (fromTag.NativeCallbackVisibility.HasValue) tag.NativeCallbackVisibility = fromTag.NativeCallbackVisibility;
                            if (fromTag.NativeCallbackName != null) tag.NativeCallbackName = fromTag.NativeCallbackName;

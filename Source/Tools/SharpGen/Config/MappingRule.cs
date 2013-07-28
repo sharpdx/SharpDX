@@ -34,6 +34,11 @@ namespace SharpGen.Config
         [XmlAttribute("check")]
         public bool _MethodCheckReturnType_ { get { return MethodCheckReturnType.Value; } set { MethodCheckReturnType = value; } } public bool ShouldSerialize_MethodCheckReturnType_() { return MethodCheckReturnType != null; }
 
+        [XmlIgnore]
+        public bool? AlwaysReturnHResult { get; set; }
+        [XmlAttribute("hresult")]
+        public bool _AlwaysReturnHResult_ { get { return AlwaysReturnHResult.Value; } set { AlwaysReturnHResult = value; } } public bool ShouldSerialize_AlwaysReturnHResult_() { return AlwaysReturnHResult != null; }
+
         /// <summary>
         /// General visibility for Methods
         /// </summary>

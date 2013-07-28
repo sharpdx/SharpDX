@@ -25,7 +25,7 @@ using System.Text.RegularExpressions;
 
 using Microsoft.Win32;
 
-using SharpCore.Logging;
+using SharpGen.Logging;
 
 using SharpGen.Config;
 

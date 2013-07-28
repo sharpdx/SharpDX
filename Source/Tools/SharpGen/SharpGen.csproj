@@ -271,7 +271,16 @@
     <Compile Include="CppModel\CppParameter.cs" />
     <Compile Include="CppModel\CppStruct.cs" />
     <Compile Include="CppModel\CppType.cs" />
+    <Compile Include="DocItem.cs" />
+    <Compile Include="DocProvider.cs" />
     <Compile Include="Doc\DocProviderMsdn.cs" />
+    <Compile Include="Logging\ConsoleLogger.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\IProgressReport.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\LoggerBase.cs" />
+    <Compile Include="Logging\LogLevel.cs" />
+    <Compile Include="Logging\LogLocation.cs" />
     <Compile Include="Model\CsComArray.cs" />
     <Compile Include="Model\CsEnumItem.cs" />
     <Compile Include="Model\InteropMethodSignature.cs" />
@@ -321,6 +330,7 @@
     <Compile Include="TextTemplating\Tokenizer.cs" />
     <Compile Include="TextTemplating\TemplateEngine.cs" />
     <Compile Include="Utilities.cs" />
+    <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ProgressForm.resx">
@@ -364,13 +374,114 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpCore\SharpCore.csproj">
-      <Project>{9435EFE8-5875-42E8-983B-29298C4CE5FF}</Project>
-      <Name>SharpCore</Name>
-    </ProjectReference>
+    <Content Include="SharpGen.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SharpGen.ico" />
+    <Compile Include="Service References\Bing\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\MTPS\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Bing\search.wsdl" />
+    <None Include="Service References\Bing\SharpGen.Bing.SearchResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Bing\SharpGen.Bing.SearchResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\MTPS\atoms.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MTPS\atoms1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MTPS\atoms2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MTPS\atoms3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MTPS\atoms4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MTPS\atoms5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MTPS\atoms6.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MTPS\atoms7.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MTPS\atoms8.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MTPS\ContentService.wsdl" />
+    <None Include="Service References\MTPS\default.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MTPS\default1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MTPS\default2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MTPS\default3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MTPS\SharpGen.MTPS.getContentResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\MTPS\SharpGen.MTPS.getContentResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\MTPS\SharpGen.MTPS.getNavigationPathsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\MTPS\SharpGen.MTPS.getNavigationPathsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\MTPS\urn_msdn_com_public_content_syndication_2006_09_common.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\Bing\" />
+    <WCFMetadataStorage Include="Service References\MTPS\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Bing\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Bing\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Bing\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\MTPS\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\MTPS\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\MTPS\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -20,7 +20,7 @@
 
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using SharpCore.Logging;
+using SharpGen.Logging;
 using SharpGen.CppModel;
 using SharpGen.Model;
 

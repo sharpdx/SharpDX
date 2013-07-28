@@ -24,7 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
-using SharpCore.Logging;
+using SharpGen.Logging;
 
 namespace SharpGen.Config
 {
