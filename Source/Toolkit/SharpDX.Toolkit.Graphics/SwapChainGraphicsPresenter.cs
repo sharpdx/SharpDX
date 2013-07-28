@@ -233,10 +233,14 @@ namespace SharpDX.Toolkit.Graphics
 #else
         private SwapChain CreateSwapChainForDesktop()
         {
+            IntPtr? handle = null;
             var control = Description.DeviceWindowHandle as Control;
-            if (control == null)
+            if (control != null) handle = control.Handle;
+            else if (Description.DeviceWindowHandle is IntPtr) handle = (IntPtr)Description.DeviceWindowHandle;
+
+            if (!handle.HasValue)
             {
-                throw new NotSupportedException(string.Format("Form of type [{0}] is not supported. Only System.Windows.Control are supported", Description.DeviceWindowHandle != null ? Description.DeviceWindowHandle.GetType().Name : "null"));
+                throw new NotSupportedException(string.Format("DeviceWindowHandle of type [{0}] is not supported. Only System.Windows.Control or IntPtr are supported", Description.DeviceWindowHandle != null ? Description.DeviceWindowHandle.GetType().Name : "null"));
             }
 
             bufferCount = 1;
@@ -244,7 +248,7 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     ModeDescription = new ModeDescription(Description.BackBufferWidth, Description.BackBufferHeight, Description.RefreshRate, Description.BackBufferFormat),
                     BufferCount = bufferCount, // TODO: Do we really need this to be configurable by the user?
-                    OutputHandle = control.Handle,
+                    OutputHandle = handle.Value,
                     SampleDescription = new SampleDescription((int)Description.MultiSampleCount, 0),
                     SwapEffect = SwapEffect.Discard,
                     Usage = Description.RenderTargetUsage,

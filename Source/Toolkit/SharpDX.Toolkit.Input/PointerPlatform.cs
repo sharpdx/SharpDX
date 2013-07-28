@@ -56,7 +56,7 @@ namespace SharpDX.Toolkit.Input
         internal static PointerPlatform Create(object nativeWindow, PointerManager manager)
         {
 #if !W8CORE
-            if (nativeWindow is System.Windows.Forms.Control)
+            if (nativeWindow is System.Windows.Forms.Control || nativeWindow is IntPtr)
                 return new PointerPlatformDesktop(nativeWindow, manager); // WinForms platform
 #if !W8CORE && NET35Plus && !DIRECTX11_1
             if (nativeWindow is SharpDXElement)
