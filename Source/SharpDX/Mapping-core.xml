@@ -421,6 +421,7 @@
     <short name="INFORMATION">Information</short>
     <short name="INFO">Information</short>
     <short name="DESC1">Description1</short>
+    <short name="DESC2">Description2</short>
     <short name="DISASM">Disassembly</short>
     <short name="FFT">FastFourierTransform</short>
     <short name="DC">DeviceContext</short>
@@ -668,6 +669,7 @@
     -->
     <map field=".*::(.*)DescW?" name="$1Description" />
     <map field=".*::(.*)Desc1" name="$1Description1" />
+    <map field=".*::(.*)Desc2" name="$1Description2" />
 
     <!--
     // *****************************************************************
@@ -676,6 +678,7 @@
     -->
     <map method=".*::(.*)DescW?" name="$1Description" />
     <map method=".*::(.*)Desc1" name="$1Description1" />
+    <map method=".*::(.*)Desc2" name="$1Description2" />
     <map method=".*GetType" name="GetTypeInfo" />
 
     <!--

@@ -18,8 +18,10 @@
     </Compile>
     <Compile Include="Adapter.cs" />
     <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="Factory2.cs" />
     <Compile Include="Output1.cs" />
     <Compile Include="NamespaceDoc.cs" />
+    <Compile Include="Output2.cs" />
     <Compile Include="Surface2.cs" />
     <Compile Include="Resource1.cs" />
     <Compile Include="IVirtualSurfaceImageSourceNative.cs" />
@@ -48,6 +50,7 @@
     <Compile Include="Surface1.cs" />
     <Compile Include="SwapChain.cs" />
     <Compile Include="SwapChain1.cs" />
+    <Compile Include="SwapChain2.cs" />
     <Compile Include="VirtualSurfaceUpdatesCallbackNativeShadow.cs" />
   </ItemGroup>
   <ItemGroup>

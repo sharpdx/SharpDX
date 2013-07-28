@@ -115,6 +115,7 @@
 
     <create-cpp enum="DXGI_STATUS" macro="DXGI_STATUS_.*" />
     <create class="DXGI" />
+    <const from-macro="DXGI_(CREATE_FACTORY_DEBUG)" type="int" cpp-type="int" name="$1" class="SharpDX.DXGI.DXGI" />
 
     <context-clear/>
   </extension>
@@ -127,7 +128,7 @@
   <!-- DXGI mapping rules -->
   <mapping>
     <context id="dxgi-all"/>
-       
+
     <!--
     // *****************************************************************
     // DXGI Enumerations
@@ -157,9 +158,9 @@
     <map struct="DXGI(.+)" name-tmp="$1" />
     <remove struct="DXGI_DISPLAY_COLOR_SPACE" />
 
-    <map field="DXGI_ADAPTER_DESC1?::AdapterLuid" name="Luid" />
-    <map field="DXGI_ADAPTER_DESC1?::SubSysId" name="SubsystemId" />
-    <map field="DXGI_ADAPTER_DESC1::Flags" type="DXGI_ADAPTER_FLAG" />
+    <map field="DXGI_ADAPTER_DESC[12]?::AdapterLuid" name="Luid" />
+    <map field="DXGI_ADAPTER_DESC[12]?::SubSysId" name="SubsystemId" />
+    <map field="DXGI_ADAPTER_DESC[12]::Flags" type="DXGI_ADAPTER_FLAG" />
     
     <map field="DXGI_GAMMA_CONTROL_CAPABILITIES::MaxConvertedValue" name="MaximumConvertedValue" />
     <map field="DXGI_GAMMA_CONTROL_CAPABILITIES::MinConvertedValue" name="MinimumConvertedValue" />
@@ -171,11 +172,11 @@
     <map field="DXGI_OUTPUT_DESC::AttachedToDesktop" name="IsAttachedToDesktop" />
     <map field="DXGI_OUTPUT_DESC::Monitor" name="MonitorHandle" />
     
-    <map field="DXGI_SWAP_CHAIN_DESC1?::BufferDesc" name="ModeDescription" />
+    <map field="DXGI_SWAP_CHAIN_DESC[12]?::BufferDesc" name="ModeDescription" />
     <map field="DXGI_SWAP_CHAIN_DESC::OutputWindow" name="OutputHandle" />
     <map field="DXGI_SWAP_CHAIN_DESC::Windowed" name="IsWindowed" />
-    <map field="DXGI_SWAP_CHAIN_DESC1?::BufferUsage" name="Usage" type="DXGI_USAGE_ENUM"/>
-    <map field="DXGI_SWAP_CHAIN_DESC1?::Flags" type="DXGI_SWAP_CHAIN_FLAG" />
+    <map field="DXGI_SWAP_CHAIN_DESC[12]?::BufferUsage" name="Usage" type="DXGI_USAGE_ENUM"/>
+    <map field="DXGI_SWAP_CHAIN_DESC[12]?::Flags" type="DXGI_SWAP_CHAIN_FLAG" />
 
     <map struct="DXGI_MAPPED_RECT" visibility="internal" />
 
@@ -210,8 +211,7 @@
     <map param="pWindowHandle" return="true" />
     <map param="IDXGIFactory::MakeWindowAssociation::Flags" type="DXGI_MWA_FLAGS" />
 
-    <!--<map param="IDXGIFactory2::Create.*" visibility="internal"/>-->
-    <!--<map param="IDXGIFactory2::Create.*::ppSwapChain" attribute="out fast"/>-->
+    <map method="IDXGIFactory2::Create.*" visibility="internal"/>
     <map param="IDXGIFactory2::Create.*::ppSwapChain" return="true"/>
 
     <map method="IDXGIKeyedMutex::(.*)Sync" name="$1" />
@@ -221,6 +221,7 @@
     <map method="IDXGIOutput::SetDisplaySurface" visibility="public" property="false" />
     <map method="IDXGIOutput::GetDisplaySurfaceData" name="CopyDisplaySurfaceTo" />
     <map method="IDXGIOutput::WaitForVBlank" name="WaitForVerticalBlank" />
+    <map method="IDXGIOutput2::SupportsOverlays" visibility="internal" name="SupportsOverlays_" />
     
     <map method="IDXGISurface::Map" visibility="internal" />
     <map param="IDXGISurface1::GetDC::phdc" return="true" />
@@ -263,6 +264,12 @@
       <map method="IDXGISwapChain1::Present1" visibility="internal"/>
       <map param="IDXGISwapChain1::Present1::pPresentParameters" type="void"/>
       <map param="IDXGISwapChain1::Present1::PresentFlags" type="DXGI_PRESENT_FLAGS" />
+    </ifdef>
+
+    <ifdef name="DIRECTX11_2">
+      <map param="IDXGISwapChain2::GetMaximumFrameLatency::pMaxLatency" attribute="out" />
+      <map param="IDXGISwapChain2::GetMatrixTransform::pMatrix" attribute="out" />
+      <map method="IDXGISwapChain2::[GS]etSourceSize" visibility="internal" />
     </ifdef>
 
     <!--
