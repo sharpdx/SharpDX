@@ -22,8 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using SharpDX.Collections;
-using SharpDX.IO;
-using System.Reflection;
 
 namespace SharpDX.Toolkit.Content
 {
@@ -38,10 +36,6 @@ namespace SharpDX.Toolkit.Content
         private readonly Dictionary<string, object> loadedAssets;
         private readonly List<IContentResolver> registeredContentResolvers;
         private readonly List<IContentReader> registeredContentReaders;
-
-        private const string DefaultExtension = ".tkb";
-
-        private string rootDirectory;
 
         /// <summary>
         /// Initializes a new instance of ContentManager.  Reference page contains code sample.
@@ -87,31 +81,8 @@ namespace SharpDX.Toolkit.Content
         /// <value>The service provider.</value>
         public IServiceProvider ServiceProvider { get; protected set; }
 
-        /// <summary>
-        /// Gets or sets the root directory.
-        /// </summary>
-        public string RootDirectory
-        {
-            get
-            {
-                return rootDirectory;
-            }
-
-            set
-            {
-                if (loadedAssets.Count > 0)
-                {
-                    throw new InvalidOperationException("RootDirectory cannot be changed when a ContentManager has already assets loaded");
-                }
-
-                rootDirectory = value;
-            }
-        }
-
         public virtual bool Exists(string assetName)
         {
-            var assetPath = GetAssetPath(assetName);
-
             // First, resolve the stream for this asset.
             List<IContentResolver> resolvers;
             lock (registeredContentResolvers)
@@ -126,7 +97,7 @@ namespace SharpDX.Toolkit.Content
 
             foreach (var contentResolver in resolvers)
             {
-                if (contentResolver.Exists(assetPath)) return true;
+                if (contentResolver.Exists(assetName)) return true;
             }
 
             return false;
@@ -143,12 +114,10 @@ namespace SharpDX.Toolkit.Content
         /// <exception cref="NotSupportedException">If no content reader was suitable to decode the asset.</exception>
         public virtual T Load<T>(string assetName, object options = null)
         {
-            var assetPath = GetAssetPath(assetName);
-
             object result = null;
 
             // Lock loading by asset name, like this, we can have several loading in multithreaded // with a single instance per asset name
-            lock (GetAssetLocker(assetName))
+            lock (GetAssetLocker(assetName, true))
             {
                 // First, try to load the asset from the cache
                 lock (loadedAssets)
@@ -162,7 +131,7 @@ namespace SharpDX.Toolkit.Content
                 // Else we need to load it from a content resolver disk/zip...etc.
 
                 // First, resolve the stream for this asset.
-                Stream stream = FindStream(assetPath);
+                Stream stream = FindStream(assetName);
                 if (stream == null)
                     throw new AssetNotFoundException(assetName);
 
@@ -197,40 +166,55 @@ namespace SharpDX.Toolkit.Content
             assetLockers.Clear();
             loadedAssets.Clear();
         }
-        
-        protected string GetAssetPath(string assetNameWithExtension)
+
+        /// <summary>
+        ///	Unloads and disposes an asset.
+        /// </summary>
+        /// <param name="assetName">The asset name</param>
+        /// <returns><c>true</c> if the asset exists and was unloaded, <c>false</c> otherwise.</returns>
+        public virtual bool Unload(string assetName)
         {
-            if (string.IsNullOrEmpty(Path.GetExtension(assetNameWithExtension)))
+            object asset;
+
+            object assetLockerRead = GetAssetLocker(assetName, false);
+            if (assetLockerRead == null)
+                return false;
+
+            lock (assetLockerRead)
             {
-                assetNameWithExtension += DefaultExtension;
+                lock (loadedAssets)
+                {
+                    if (!loadedAssets.TryGetValue(assetName, out asset))
+                        return false;
+                    loadedAssets.Remove(assetName);
+                }
+
+                lock (assetLockers)
+                    assetLockers.Remove(assetName);
             }
 
-            var sourcePath = Path.Combine(rootDirectory ?? string.Empty, assetNameWithExtension);
-            var assetPath = PathUtility.GetNormalizedPath(Path.Combine(rootDirectory ?? string.Empty, assetNameWithExtension));
+            var disposable = asset as IDisposable;
+            if (disposable != null)
+                disposable.Dispose();
 
-            if (assetPath == null)
-            {
-                throw new AssetNotFoundException(string.Format("Invalid source path [{0}]", sourcePath));
-            }
-
-            return assetPath;
+            return true;
         }
 
-        private object GetAssetLocker(string assetNameWithExtension)
+        private object GetAssetLocker(string assetName, bool create)
         {
             object assetLockerRead;
             lock (assetLockers)
             {
-                if (!assetLockers.TryGetValue(assetNameWithExtension, out assetLockerRead))
+                if (!assetLockers.TryGetValue(assetName, out assetLockerRead) && create)
                 {
                     assetLockerRead = new object();
-                    assetLockers.Add(assetNameWithExtension, assetLockerRead);
+                    assetLockers.Add(assetName, assetLockerRead);
                 }
             }
             return assetLockerRead;
         }
 
-        private Stream FindStream(string assetNameWithExtension)
+        private Stream FindStream(string assetName)
         {
             Stream stream = null;
             // First, resolve the stream for this asset.
@@ -247,14 +231,14 @@ namespace SharpDX.Toolkit.Content
 
             foreach (var contentResolver in resolvers)
             {
-                stream = contentResolver.Resolve(assetNameWithExtension);
+                stream = contentResolver.Resolve(assetName);
                 if (stream != null)
                     break;
             }
             return stream;
         }
 
-        private object LoadAssetWithDynamicContentReader<T>(string assetNameWithExtension, Stream stream, object options)
+        private object LoadAssetWithDynamicContentReader<T>(string assetName, Stream stream, object options)
         {
             object result = null;
 
@@ -308,7 +292,7 @@ namespace SharpDX.Toolkit.Content
 
                     // Rewind position every time we try to load an asset
                     stream.Position = startPosition;
-                    result = contentReader.ReadContent(this, assetNameWithExtension, stream, out keepStreamOpen, options);
+                    result = contentReader.ReadContent(this, assetName, stream, out keepStreamOpen, options);
                     stream.Position = startPosition;
                 }
                 else
@@ -322,7 +306,7 @@ namespace SharpDX.Toolkit.Content
                     foreach (IContentReader registeredContentReader in readers)
                     {
                         // Rewind position every time we try to load an asset
-                        result = registeredContentReader.ReadContent(this, assetNameWithExtension, stream, out keepStreamOpen, options);
+                        result = registeredContentReader.ReadContent(this, assetName, stream, out keepStreamOpen, options);
                         stream.Position = startPosition;
                         if (result != null) break;
                     }

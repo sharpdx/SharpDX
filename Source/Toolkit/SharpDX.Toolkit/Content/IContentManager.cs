@@ -62,5 +62,12 @@ namespace SharpDX.Toolkit.Content
         /// Unlike <see cref="ContentManager.Load{T}"/> method, this method is not thread safe and must be called by a single caller at a single time.
         /// </remarks>
         void Unload();
+
+        /// <summary>
+        ///	Unloads and disposes an asset.
+        /// </summary>
+        /// <param name="assetName">The asset name</param>
+        /// <returns><c>true</c> if the asset exists and was unloaded, <c>false</c> otherwise.</returns>
+        bool Unload(string assetName);
     }
 }

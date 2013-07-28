@@ -28,6 +28,8 @@ namespace SharpDX.Toolkit.Content
     /// </summary>
     public class FileSystemContentResolver : IContentResolver
     {
+        private const string DefaultExtension = ".tkb";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FileSystemContentResolver" /> class.
         /// </summary>
@@ -45,18 +47,32 @@ namespace SharpDX.Toolkit.Content
 
         public bool Exists(string assetName)
         {
-            return NativeFile.Exists(Path.Combine(RootDirectory, assetName));
+            return NativeFile.Exists(GetAssetPath(assetName));
         }
 
         public Stream Resolve(string assetName)
         {
             try
             {
-                return new NativeFileStream(Path.Combine(RootDirectory, assetName), NativeFileMode.Open, NativeFileAccess.Read);
-            } catch
-            {
+                return new NativeFileStream(GetAssetPath(assetName), NativeFileMode.Open, NativeFileAccess.Read);
             }
-            return null;
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the full asset path based on the root directory and default extension.
+        /// </summary>
+        /// <param name="assetName">The asset name.</param>
+        /// <returns>The full asset path.</returns>
+        protected string GetAssetPath(string assetName)
+        {
+            if (string.IsNullOrEmpty(Path.GetExtension(assetName)))
+                assetName += DefaultExtension;
+
+            return PathUtility.GetNormalizedPath(Path.Combine(RootDirectory ?? string.Empty, assetName));
         }
     }
 }
