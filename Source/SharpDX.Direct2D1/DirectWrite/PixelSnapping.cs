@@ -39,7 +39,7 @@ namespace SharpDX.DirectWrite
         /// <param name="clientDrawingContext">The drawing context passed to <see cref="SharpDX.DirectWrite.TextLayout.Draw_"/>.</param>
         /// <returns>a structure which has transform information for  pixel snapping.</returns>
         /// <unmanaged>HRESULT GetCurrentTransform([None] void* clientDrawingContext,[Out] DWRITE_MATRIX* transform)</unmanaged>
-        SharpDX.DirectWrite.Matrix GetCurrentTransform(object clientDrawingContext);
+        Matrix3x2 GetCurrentTransform(object clientDrawingContext);
 
         /// <summary>	
         ///  Gets the number of physical pixels per DIP. 	
