@@ -34,6 +34,7 @@
     <Compile Include="ComputeTransform.cs" />
     <Compile Include="ComputeTransformNative.cs" />
     <Compile Include="ComputeTransformShadow.cs" />
+    <Compile Include="DirectWrite\Matrix.cs" />
     <Compile Include="DirectWrite\TextAnalyzer1.cs" />
     <Compile Include="DirectWrite\TextAnalysisSource1Shadow.cs" />
     <Compile Include="DirectWrite\TextAnalysisSource1.cs" />
