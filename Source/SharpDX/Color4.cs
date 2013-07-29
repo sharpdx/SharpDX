@@ -493,16 +493,14 @@ namespace SharpDX
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
         /// <param name="result">When the method completes, contains the linear interpolation of the two colors.</param>
         /// <remarks>
-        /// This method performs the linear interpolation based on the following formula.
-        /// <code>start + (end - start) * amount</code>
         /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
         /// </remarks>
         public static void Lerp(ref Color4 start, ref Color4 end, float amount, out Color4 result)
         {
-            result.Alpha = start.Alpha + amount * (end.Alpha - start.Alpha);
-            result.Red = start.Red + amount * (end.Red - start.Red);
-            result.Green = start.Green + amount * (end.Green - start.Green);
-            result.Blue = start.Blue + amount * (end.Blue - start.Blue);
+            result.Red = MathUtil.Lerp(start.Red, end.Red, amount);
+            result.Green = MathUtil.Lerp(start.Green, end.Green, amount);
+            result.Blue = MathUtil.Lerp(start.Blue, end.Blue, amount);
+            result.Alpha = MathUtil.Lerp(start.Alpha, end.Alpha, amount);
         }
 
         /// <summary>
@@ -513,17 +511,13 @@ namespace SharpDX
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
         /// <returns>The linear interpolation of the two colors.</returns>
         /// <remarks>
-        /// This method performs the linear interpolation based on the following formula.
-        /// <code>start + (end - start) * amount</code>
         /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
         /// </remarks>
         public static Color4 Lerp(Color4 start, Color4 end, float amount)
         {
-            return new Color4(
-                start.Red + amount * (end.Red - start.Red),
-                start.Green + amount * (end.Green - start.Green),
-                start.Blue + amount * (end.Blue - start.Blue),
-                start.Alpha + amount * (end.Alpha - start.Alpha));
+            Color4 result;
+            Lerp(ref start, ref end, amount, out result);
+            return result;
         }
 
         /// <summary>
@@ -538,10 +532,7 @@ namespace SharpDX
             amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
             amount = (amount * amount) * (3.0f - (2.0f * amount));
 
-            result.Alpha = start.Alpha + ((end.Alpha - start.Alpha) * amount);
-            result.Red = start.Red + ((end.Red - start.Red) * amount);
-            result.Green = start.Green + ((end.Green - start.Green) * amount);
-            result.Blue = start.Blue + ((end.Blue - start.Blue) * amount);
+            Lerp(ref start, ref end, amount, out result);
         }
 
         /// <summary>
@@ -553,14 +544,9 @@ namespace SharpDX
         /// <returns>The cubic interpolation of the two colors.</returns>
         public static Color4 SmoothStep(Color4 start, Color4 end, float amount)
         {
-            amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
-            amount = (amount * amount) * (3.0f - (2.0f * amount));
-
-            return new Color4(                
-                start.Red + ((end.Red - start.Red) * amount),
-                start.Green + ((end.Green - start.Green) * amount),
-                start.Blue + ((end.Blue - start.Blue) * amount),
-                start.Alpha + ((end.Alpha - start.Alpha) * amount));
+            Color4 result;
+            SmoothStep(ref start, ref end, amount, out result);
+            return result;
         }
 
         /// <summary>
@@ -797,7 +783,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="SharpDX.Color4"/> to <see cref="SharpDX.Vector4"/>.
+        /// Performs an implicit conversion from <see cref="SharpDX.Color4"/> to <see cref="SharpDX.Vector4"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
