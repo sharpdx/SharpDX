@@ -663,9 +663,6 @@ namespace SharpDX
         /// <returns>The cubic interpolation of the two colors.</returns>
         public static ColorBGRA SmoothStep(ColorBGRA start, ColorBGRA end, float amount)
         {
-            amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
-            amount = (amount * amount) * (3.0f - (2.0f * amount));
-
             ColorBGRA result;
             SmoothStep(ref start, ref end, amount, out result);
             return result;
