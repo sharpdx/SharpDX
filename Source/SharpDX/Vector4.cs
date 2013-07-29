@@ -627,16 +627,14 @@ namespace SharpDX
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
         /// <param name="result">When the method completes, contains the linear interpolation of the two vectors.</param>
         /// <remarks>
-        /// This method performs the linear interpolation based on the following formula.
-        /// <code>start + (end - start) * amount</code>
         /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
         /// </remarks>
         public static void Lerp(ref Vector4 start, ref Vector4 end, float amount, out Vector4 result)
         {
-            result.X = start.X + ((end.X - start.X) * amount);
-            result.Y = start.Y + ((end.Y - start.Y) * amount);
-            result.Z = start.Z + ((end.Z - start.Z) * amount);
-            result.W = start.W + ((end.W - start.W) * amount);
+            result.X = MathUtil.Lerp(start.X, end.X, amount);
+            result.Y = MathUtil.Lerp(start.Y, end.Y, amount);
+            result.Z = MathUtil.Lerp(start.Z, end.Z, amount);
+            result.W = MathUtil.Lerp(start.W, end.W, amount);
         }
 
         /// <summary>
@@ -647,8 +645,6 @@ namespace SharpDX
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
         /// <returns>The linear interpolation of the two vectors.</returns>
         /// <remarks>
-        /// This method performs the linear interpolation based on the following formula.
-        /// <code>start + (end - start) * amount</code>
         /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
         /// </remarks>
         public static Vector4 Lerp(Vector4 start, Vector4 end, float amount)
@@ -670,10 +666,7 @@ namespace SharpDX
             amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
             amount = (amount * amount) * (3.0f - (2.0f * amount));
 
-            result.X = start.X + ((end.X - start.X) * amount);
-            result.Y = start.Y + ((end.Y - start.Y) * amount);
-            result.Z = start.Z + ((end.Z - start.Z) * amount);
-            result.W = start.W + ((end.W - start.W) * amount);
+            Lerp(ref start, ref end, amount, out result);
         }
 
         /// <summary>

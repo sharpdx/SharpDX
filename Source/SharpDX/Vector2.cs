@@ -556,14 +556,12 @@ namespace SharpDX
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
         /// <param name="result">When the method completes, contains the linear interpolation of the two vectors.</param>
         /// <remarks>
-        /// This method performs the linear interpolation based on the following formula.
-        /// <code>start + (end - start) * amount</code>
         /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
         /// </remarks>
         public static void Lerp(ref Vector2 start, ref Vector2 end, float amount, out Vector2 result)
         {
-            result.X = start.X + ((end.X - start.X) * amount);
-            result.Y = start.Y + ((end.Y - start.Y) * amount);
+            result.X = MathUtil.Lerp(start.X, end.X, amount);
+            result.Y = MathUtil.Lerp(start.Y, end.Y, amount);
         }
 
         /// <summary>
@@ -574,8 +572,6 @@ namespace SharpDX
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
         /// <returns>The linear interpolation of the two vectors.</returns>
         /// <remarks>
-        /// This method performs the linear interpolation based on the following formula.
-        /// <code>start + (end - start) * amount</code>
         /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
         /// </remarks>
         public static Vector2 Lerp(Vector2 start, Vector2 end, float amount)
@@ -597,8 +593,7 @@ namespace SharpDX
             amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
             amount = (amount * amount) * (3.0f - (2.0f * amount));
 
-            result.X = start.X + ((end.X - start.X) * amount);
-            result.Y = start.Y + ((end.Y - start.Y) * amount);
+            Lerp(ref start, ref end, amount, out result);
         }
 
         /// <summary>
