@@ -1152,28 +1152,26 @@ namespace SharpDX
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
         /// <param name="result">When the method completes, contains the linear interpolation of the two matrices.</param>
         /// <remarks>
-        /// This method performs the linear interpolation based on the following formula.
-        /// <code>start + (end - start) * amount</code>
         /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
         /// </remarks>
         public static void Lerp(ref Matrix start, ref Matrix end, float amount, out Matrix result)
         {
-            result.M11 = start.M11 + ((end.M11 - start.M11) * amount);
-            result.M12 = start.M12 + ((end.M12 - start.M12) * amount);
-            result.M13 = start.M13 + ((end.M13 - start.M13) * amount);
-            result.M14 = start.M14 + ((end.M14 - start.M14) * amount);
-            result.M21 = start.M21 + ((end.M21 - start.M21) * amount);
-            result.M22 = start.M22 + ((end.M22 - start.M22) * amount);
-            result.M23 = start.M23 + ((end.M23 - start.M23) * amount);
-            result.M24 = start.M24 + ((end.M24 - start.M24) * amount);
-            result.M31 = start.M31 + ((end.M31 - start.M31) * amount);
-            result.M32 = start.M32 + ((end.M32 - start.M32) * amount);
-            result.M33 = start.M33 + ((end.M33 - start.M33) * amount);
-            result.M34 = start.M34 + ((end.M34 - start.M34) * amount);
-            result.M41 = start.M41 + ((end.M41 - start.M41) * amount);
-            result.M42 = start.M42 + ((end.M42 - start.M42) * amount);
-            result.M43 = start.M43 + ((end.M43 - start.M43) * amount);
-            result.M44 = start.M44 + ((end.M44 - start.M44) * amount);
+            result.M11 = MathUtil.Lerp(start.M11, end.M11, amount);
+            result.M12 = MathUtil.Lerp(start.M12, end.M12, amount);
+            result.M13 = MathUtil.Lerp(start.M13, end.M13, amount);
+            result.M14 = MathUtil.Lerp(start.M14, end.M14, amount);
+            result.M21 = MathUtil.Lerp(start.M21, end.M21, amount);
+            result.M22 = MathUtil.Lerp(start.M22, end.M22, amount);
+            result.M23 = MathUtil.Lerp(start.M23, end.M23, amount);
+            result.M24 = MathUtil.Lerp(start.M24, end.M24, amount);
+            result.M31 = MathUtil.Lerp(start.M31, end.M31, amount);
+            result.M32 = MathUtil.Lerp(start.M32, end.M32, amount);
+            result.M33 = MathUtil.Lerp(start.M33, end.M33, amount);
+            result.M34 = MathUtil.Lerp(start.M34, end.M34, amount);
+            result.M41 = MathUtil.Lerp(start.M41, end.M41, amount);
+            result.M42 = MathUtil.Lerp(start.M42, end.M42, amount);
+            result.M43 = MathUtil.Lerp(start.M43, end.M43, amount);
+            result.M44 = MathUtil.Lerp(start.M44, end.M44, amount);
         }
 
         /// <summary>
@@ -1184,8 +1182,6 @@ namespace SharpDX
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
         /// <returns>The linear interpolation of the two matrices.</returns>
         /// <remarks>
-        /// This method performs the linear interpolation based on the following formula.
-        /// <code>start + (end - start) * amount</code>
         /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
         /// </remarks>
         public static Matrix Lerp(Matrix start, Matrix end, float amount)
@@ -1207,22 +1203,7 @@ namespace SharpDX
             amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
             amount = (amount * amount) * (3.0f - (2.0f * amount));
 
-            result.M11 = start.M11 + ((end.M11 - start.M11) * amount);
-            result.M12 = start.M12 + ((end.M12 - start.M12) * amount);
-            result.M13 = start.M13 + ((end.M13 - start.M13) * amount);
-            result.M14 = start.M14 + ((end.M14 - start.M14) * amount);
-            result.M21 = start.M21 + ((end.M21 - start.M21) * amount);
-            result.M22 = start.M22 + ((end.M22 - start.M22) * amount);
-            result.M23 = start.M23 + ((end.M23 - start.M23) * amount);
-            result.M24 = start.M24 + ((end.M24 - start.M24) * amount);
-            result.M31 = start.M31 + ((end.M31 - start.M31) * amount);
-            result.M32 = start.M32 + ((end.M32 - start.M32) * amount);
-            result.M33 = start.M33 + ((end.M33 - start.M33) * amount);
-            result.M34 = start.M34 + ((end.M34 - start.M34) * amount);
-            result.M41 = start.M41 + ((end.M41 - start.M41) * amount);
-            result.M42 = start.M42 + ((end.M42 - start.M42) * amount);
-            result.M43 = start.M43 + ((end.M43 - start.M43) * amount);
-            result.M44 = start.M44 + ((end.M44 - start.M44) * amount);
+            Lerp(ref start, ref end, amount, out result);
         }
 
         /// <summary>

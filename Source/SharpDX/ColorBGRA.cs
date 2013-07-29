@@ -612,16 +612,14 @@ namespace SharpDX
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
         /// <param name="result">When the method completes, contains the linear interpolation of the two colors.</param>
         /// <remarks>
-        /// This method performs the linear interpolation based on the following formula.
-        /// <code>start + (end - start) * amount</code>
         /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
         /// </remarks>
         public static void Lerp(ref ColorBGRA start, ref ColorBGRA end, float amount, out ColorBGRA result)
         {
-            result.A = (byte)(start.A + amount * (end.A - start.A));
-            result.R = (byte)(start.R + amount * (end.R - start.R));
-            result.G = (byte)(start.G + amount * (end.G - start.G));
-            result.B = (byte)(start.B + amount * (end.B - start.B));
+            result.B = MathUtil.Lerp(start.B, end.B, amount);
+            result.G = MathUtil.Lerp(start.G, end.G, amount);
+            result.R = MathUtil.Lerp(start.R, end.R, amount);
+            result.A = MathUtil.Lerp(start.A, end.A, amount);
         }
 
         /// <summary>
@@ -632,17 +630,13 @@ namespace SharpDX
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
         /// <returns>The linear interpolation of the two colors.</returns>
         /// <remarks>
-        /// This method performs the linear interpolation based on the following formula.
-        /// <code>start + (end - start) * amount</code>
         /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
         /// </remarks>
         public static ColorBGRA Lerp(ColorBGRA start, ColorBGRA end, float amount)
         {
-            return new ColorBGRA(
-                (byte)(start.R + amount * (end.R - start.R)),
-                (byte)(start.G + amount * (end.G - start.G)),
-                (byte)(start.B + amount * (end.B - start.B)),
-                (byte)(start.A + amount * (end.A - start.A)));
+            ColorBGRA result;
+            Lerp(ref start, ref end, amount, out result);
+            return result;
         }
 
         /// <summary>
@@ -657,10 +651,7 @@ namespace SharpDX
             amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
             amount = (amount * amount) * (3.0f - (2.0f * amount));
 
-            result.A = (byte)(start.A + ((end.A - start.A) * amount));
-            result.R = (byte)(start.R + ((end.R - start.R) * amount));
-            result.G = (byte)(start.G + ((end.G - start.G) * amount));
-            result.B = (byte)(start.B + ((end.B - start.B) * amount));
+            Lerp(ref start, ref end, amount, out result);
         }
 
         /// <summary>
@@ -675,11 +666,9 @@ namespace SharpDX
             amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
             amount = (amount * amount) * (3.0f - (2.0f * amount));
 
-            return new ColorBGRA(                
-                (byte)(start.R + ((end.R - start.R) * amount)),
-                (byte)(start.G + ((end.G - start.G) * amount)),
-                (byte)(start.B + ((end.B - start.B) * amount)),
-                (byte)(start.A + ((end.A - start.A) * amount)));
+            ColorBGRA result;
+            SmoothStep(ref start, ref end, amount, out result);
+            return result;
         }
 
         /// <summary>
@@ -976,7 +965,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="SharpDX.Color"/> to <see cref="SharpDX.ColorBGRA"/>.
+        /// Performs an implicit conversion from <see cref="SharpDX.Color"/> to <see cref="SharpDX.ColorBGRA"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -986,7 +975,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="SharpDX.ColorBGRA"/> to <see cref="SharpDX.Color"/>.
+        /// Performs an implicit conversion from <see cref="SharpDX.ColorBGRA"/> to <see cref="SharpDX.Color"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
