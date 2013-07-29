@@ -452,6 +452,72 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Performs a linear interpolation between two matrices.
+        /// </summary>
+        /// <param name="start">Start matrix.</param>
+        /// <param name="end">End matrix.</param>
+        /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
+        /// <param name="result">When the method completes, contains the linear interpolation of the two matrices.</param>
+        /// <remarks>
+        /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
+        /// </remarks>
+        public static void Lerp(ref Matrix3x2 start, ref Matrix3x2 end, float amount, out Matrix3x2 result)
+        {
+            result.M11 = MathUtil.Lerp(start.M11, end.M11, amount);
+            result.M12 = MathUtil.Lerp(start.M12, end.M12, amount);
+            result.M21 = MathUtil.Lerp(start.M21, end.M21, amount);
+            result.M22 = MathUtil.Lerp(start.M22, end.M22, amount);
+            result.M31 = MathUtil.Lerp(start.M31, end.M31, amount);
+            result.M32 = MathUtil.Lerp(start.M32, end.M32, amount);
+        }
+
+        /// <summary>
+        /// Performs a linear interpolation between two matrices.
+        /// </summary>
+        /// <param name="start">Start matrix.</param>
+        /// <param name="end">End matrix.</param>
+        /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
+        /// <returns>The linear interpolation of the two matrices.</returns>
+        /// <remarks>
+        /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
+        /// </remarks>
+        public static Matrix3x2 Lerp(Matrix3x2 start, Matrix3x2 end, float amount)
+        {
+            Matrix3x2 result;
+            Lerp(ref start, ref end, amount, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Performs a cubic interpolation between two matrices.
+        /// </summary>
+        /// <param name="start">Start matrix.</param>
+        /// <param name="end">End matrix.</param>
+        /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
+        /// <param name="result">When the method completes, contains the cubic interpolation of the two matrices.</param>
+        public static void SmoothStep(ref Matrix3x2 start, ref Matrix3x2 end, float amount, out Matrix3x2 result)
+        {
+            amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
+            amount = (amount * amount) * (3.0f - (2.0f * amount));
+
+            Lerp(ref start, ref end, amount, out result);
+        }
+
+        /// <summary>
+        /// Performs a cubic interpolation between two matrices.
+        /// </summary>
+        /// <param name="start">Start matrix.</param>
+        /// <param name="end">End matrix.</param>
+        /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
+        /// <returns>The cubic interpolation of the two matrices.</returns>
+        public static Matrix3x2 SmoothStep(Matrix3x2 start, Matrix3x2 end, float amount)
+        {
+            Matrix3x2 result;
+            SmoothStep(ref start, ref end, amount, out result);
+            return result;
+        }
+
+        /// <summary>
         /// Creates a matrix that scales along the x-axis and y-axis.
         /// </summary>
         /// <param name="scale">Scaling factor for both axes.</param>
