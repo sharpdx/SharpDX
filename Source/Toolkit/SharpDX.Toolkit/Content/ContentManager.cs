@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using SharpDX.Collections;
 
 namespace SharpDX.Toolkit.Content
@@ -37,8 +38,10 @@ namespace SharpDX.Toolkit.Content
         private readonly List<IContentResolver> registeredContentResolvers;
         private readonly List<IContentReader> registeredContentReaders;
 
+        private string rootDirectory;
+
         /// <summary>
-        /// Initializes a new instance of ContentManager.  Reference page contains code sample.
+        /// Initializes a new instance of ContentManager. Reference page contains code sample.
         /// </summary>
         /// <param name="serviceProvider">The service provider that the ContentManager should use to locate services.</param>
         public ContentManager(IServiceProvider serviceProvider)
@@ -81,6 +84,27 @@ namespace SharpDX.Toolkit.Content
         /// <value>The service provider.</value>
         public IServiceProvider ServiceProvider { get; protected set; }
 
+        /// <summary>
+        /// Gets or sets the root directory.
+        /// </summary>
+        public string RootDirectory
+        {
+            get
+            {
+                return rootDirectory;
+            }
+
+            set
+            {
+                if (loadedAssets.Count > 0)
+                {
+                    throw new InvalidOperationException("RootDirectory cannot be changed when a ContentManager has already assets loaded");
+                }
+
+                rootDirectory = value;
+            }
+        }
+
         public virtual bool Exists(string assetName)
         {
             // First, resolve the stream for this asset.
@@ -95,9 +119,11 @@ namespace SharpDX.Toolkit.Content
                 throw new InvalidOperationException("No resolver registered to this content manager");
             }
 
+            string assetPath = Path.Combine(rootDirectory ?? string.Empty, assetName);
+
             foreach (var contentResolver in resolvers)
             {
-                if (contentResolver.Exists(assetName)) return true;
+                if (contentResolver.Exists(assetPath)) return true;
             }
 
             return false;
@@ -129,9 +155,10 @@ namespace SharpDX.Toolkit.Content
                 }
 
                 // Else we need to load it from a content resolver disk/zip...etc.
+                string assetPath = Path.Combine(rootDirectory ?? string.Empty, assetName);
 
                 // First, resolve the stream for this asset.
-                Stream stream = FindStream(assetName);
+                Stream stream = FindStream(assetPath);
                 if (stream == null)
                     throw new AssetNotFoundException(assetName);
 
