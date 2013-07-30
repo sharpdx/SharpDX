@@ -28,7 +28,10 @@ namespace SharpDX.Toolkit.Content
     /// </summary>
     public class FileSystemContentResolver : IContentResolver
     {
-        private const string DefaultExtension = ".tkb";
+        /// <summary>
+        ///	The default extension for asset files which is appended to any asset names that do not specify an extension.
+        /// </summary>
+        public const string DefaultExtension = ".tkb";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileSystemContentResolver" /> class.
