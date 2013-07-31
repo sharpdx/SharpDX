@@ -667,6 +667,30 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Creates a matrix that rotates about a specified center.
+        /// </summary>
+        /// <param name="angle">Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis.</param>
+        /// <param name="center">The center of the rotation.</param>
+        /// <returns>The created rotation matrix.</returns>
+        public static Matrix3x2 Rotation(float angle, Vector2 center)
+        {
+            Matrix3x2 result;
+            Rotation(angle, center, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a matrix that rotates about a specified center.
+        /// </summary>
+        /// <param name="angle">Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis.</param>
+        /// <param name="center">The center of the rotation.</param>
+        /// <param name="result">When the method completes, contains the created rotation matrix.</param>
+        public static void Rotation(float angle, Vector2 center, out Matrix3x2 result)
+        {
+            result = Translation(-center) * Rotation(angle) * Translation(center);
+        }
+
+        /// <summary>
         /// Creates a transformation matrix.
         /// </summary>
         /// <param name="xScale">Scaling factor that is applied along the x-axis.</param>
