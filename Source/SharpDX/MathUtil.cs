@@ -56,22 +56,22 @@ namespace SharpDX
         /// <summary>
         /// A value specifying the approximation of π which is 180 degrees.
         /// </summary>
-        public const float Pi = 3.141592653589793239f;
+        public const float Pi = (float)Math.PI;
 
         /// <summary>
         /// A value specifying the approximation of 2π which is 360 degrees.
         /// </summary>
-        public const float TwoPi = 6.283185307179586477f;
+        public const float TwoPi = (float)(2 * Math.PI);
 
         /// <summary>
         /// A value specifying the approximation of π/2 which is 90 degrees.
         /// </summary>
-        public const float PiOverTwo = 1.570796326794896619f;
+        public const float PiOverTwo = (float)(Math.PI / 2);
 
         /// <summary>
         /// A value specifying the approximation of π/4 which is 45 degrees.
         /// </summary>
-        public const float PiOverFour = 0.785398163397448310f;
+        public const float PiOverFour = (float)(Math.PI / 4);
 
         /// <summary>
         /// Checks if a - b are almost equals within a float <see cref="Single.Epsilon"/>.
@@ -258,6 +258,22 @@ namespace SharpDX
         /// <param name="to">Value to interpolate to.</param>
         /// <param name="amount">Interpolation amount.</param>
         /// <returns>The result of linear interpolation of values based on the amount.</returns>
+        public static double Lerp(double from, double to, double amount)
+        {
+            return (1 - amount) * from + amount * to;
+        }
+
+        /// <summary>
+        /// Interpolates between two values using a linear function by a given amount.
+        /// </summary>
+        /// <remarks>
+        /// See http://www.encyclopediaofmath.org/index.php/Linear_interpolation and
+        /// http://fgiesen.wordpress.com/2012/08/15/linear-interpolation-past-present-and-future/
+        /// </remarks>
+        /// <param name="from">Value to interpolate from.</param>
+        /// <param name="to">Value to interpolate to.</param>
+        /// <param name="amount">Interpolation amount.</param>
+        /// <returns>The result of linear interpolation of values based on the amount.</returns>
         public static float Lerp(float from, float to, float amount)
         {
             return (1 - amount) * from + amount * to;
@@ -292,7 +308,7 @@ namespace SharpDX
                 return value;
             }
 
-            return (float)(value - modulo * Math.Floor(value / modulo));
+            return value % modulo;
         }
 
         /// <summary>
@@ -364,19 +380,9 @@ namespace SharpDX
         /// <param name="sigmaX">Curve sigma X.</param>
         /// <param name="sigmaY">Curve sigma Y.</param>
         /// <returns>The result of Gaussian function.</returns>
-        public static float Gauss(float amplitude,float x,float y,float radX,float radY,float sigmaX,float sigmaY)
+        public static float Gauss(float amplitude, float x, float y, float radX, float radY, float sigmaX, float sigmaY)
         {
-            float AExp = (amplitude*2.718281828f);
-
-            return (float) 
-            (
-                AExp -
-                (
-                    Math.Pow(x - radX / 2, 2) / (2 * (float)Math.Pow(sigmaX, 2))
-                    +
-                    Math.Pow(y - radY / 2, 2) / (2 * (float)Math.Pow(sigmaY, 2))
-                )
-            );
+            return (float)Gauss((double)amplitude, x, y, radX, radY, sigmaX, sigmaY);
         }
 
         /// <summary>
@@ -392,17 +398,11 @@ namespace SharpDX
         /// <returns>The result of Gaussian function.</returns>
         public static double Gauss(double amplitude, double x, double y, double radX, double radY, double sigmaX, double sigmaY)
         {
-            double AExp = (amplitude * 2.718281828);
-
-            return 
-            (
-                AExp -
+            return (amplitude * Math.E) -
                 (
-                    Math.Pow(x - radX / 2, 2) / (2 * Math.Pow(sigmaX, 2))
-                    +
-                    Math.Pow(y - radY / 2, 2) / (2 * Math.Pow(sigmaY, 2))
-                )
-            );
+                    Math.Pow(x - (radX / 2), 2) / (2 * Math.Pow(sigmaX, 2)) +
+                    Math.Pow(y - (radY / 2), 2) / (2 * Math.Pow(sigmaY, 2))
+                );
         }
         
         
@@ -416,7 +416,7 @@ namespace SharpDX
         /// <returns>Random <c>float</c> number.</returns>
         public static float NextFloat(this Random random, float min, float max)
         {
-            return (float)(min + random.NextDouble() * (max - min));
+            return Lerp(min, max, (float)random.NextDouble());
         }
 
         /// <summary>
@@ -428,7 +428,7 @@ namespace SharpDX
         /// <returns>Random <c>double</c> number.</returns>
         public static double NextDouble(this Random random, double min, double max)
         {
-            return (min + random.NextDouble() * (max - min));
+            return Lerp(min, max, random.NextDouble());
         } 
         
         /// <summary>
@@ -589,7 +589,7 @@ namespace SharpDX
         /// <returns>Random <c>float</c> number.</returns>
         public static float NextFloat(Random random, float min, float max)
         {
-            return (float)(min + random.NextDouble() * (max - min));
+            return Lerp(min, max, (float)random.NextDouble());
         }
 
         /// <summary>
@@ -601,7 +601,7 @@ namespace SharpDX
         /// <returns>Random <c>double</c> number.</returns>
         public static double NextDouble(Random random, double min, double max)
         {
-            return (min + random.NextDouble() * (max - min));
+            return Lerp(min, max, random.NextDouble());
         }
 
         /// <summary>
