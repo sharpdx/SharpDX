@@ -267,7 +267,7 @@ namespace SharpDX
         /// <summary>Changes the position of the Rectangle.</summary>
         /// <param name="offsetX">Change in the x-position.</param>
         /// <param name="offsetY">Change in the y-position.</param>
-        public void Offset(int offsetX, int offsetY)
+        public void Offset(float offsetX, float offsetY)
         {
             X += offsetX;
             Y += offsetY;
@@ -276,7 +276,7 @@ namespace SharpDX
         /// <summary>Pushes the edges of the Rectangle out by the horizontal and vertical values specified.</summary>
         /// <param name="horizontalAmount">Value to push the sides out by.</param>
         /// <param name="verticalAmount">Value to push the top and bottom out by.</param>
-        public void Inflate(int horizontalAmount, int verticalAmount)
+        public void Inflate(float horizontalAmount, float verticalAmount)
         {
             X -= horizontalAmount;
             Y -= verticalAmount;
