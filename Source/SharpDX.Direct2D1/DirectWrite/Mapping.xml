@@ -37,7 +37,11 @@
   <extension>
     <create class="DWrite" />
   </extension>
-  
+
+  <bindings>
+    <bind from="DWRITE_MATRIX" to="SharpDX.Matrix3x2" />
+  </bindings>
+
   <mapping>
     <context>dwrite</context>
     <context>dwrite_1</context>

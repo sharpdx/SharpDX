@@ -654,16 +654,14 @@ namespace SharpDX
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
         /// <param name="result">When the method completes, contains the linear interpolation of the two colors.</param>
         /// <remarks>
-        /// This method performs the linear interpolation based on the following formula.
-        /// <code>start + (end - start) * amount</code>
         /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
         /// </remarks>
         public static void Lerp(ref Color start, ref Color end, float amount, out Color result)
         {
-            result.A = (byte)(start.A + amount * (end.A - start.A));
-            result.R = (byte)(start.R + amount * (end.R - start.R));
-            result.G = (byte)(start.G + amount * (end.G - start.G));
-            result.B = (byte)(start.B + amount * (end.B - start.B));
+            result.R = MathUtil.Lerp(start.R, end.R, amount);
+            result.G = MathUtil.Lerp(start.G, end.G, amount);
+            result.B = MathUtil.Lerp(start.B, end.B, amount);
+            result.A = MathUtil.Lerp(start.A, end.A, amount);
         }
 
         /// <summary>
@@ -674,17 +672,13 @@ namespace SharpDX
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
         /// <returns>The linear interpolation of the two colors.</returns>
         /// <remarks>
-        /// This method performs the linear interpolation based on the following formula.
-        /// <code>start + (end - start) * amount</code>
         /// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
         /// </remarks>
         public static Color Lerp(Color start, Color end, float amount)
         {
-            return new Color(
-                (byte)(start.R + amount * (end.R - start.R)),
-                (byte)(start.G + amount * (end.G - start.G)),
-                (byte)(start.B + amount * (end.B - start.B)),
-                (byte)(start.A + amount * (end.A - start.A)));
+            Color result;
+            Lerp(ref start, ref end, amount, out result);
+            return result;
         }
 
         /// <summary>
@@ -699,10 +693,7 @@ namespace SharpDX
             amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
             amount = (amount * amount) * (3.0f - (2.0f * amount));
 
-            result.A = (byte)(start.A + ((end.A - start.A) * amount));
-            result.R = (byte)(start.R + ((end.R - start.R) * amount));
-            result.G = (byte)(start.G + ((end.G - start.G) * amount));
-            result.B = (byte)(start.B + ((end.B - start.B) * amount));
+            Lerp(ref start, ref end, amount, out result);
         }
 
         /// <summary>
@@ -714,22 +705,17 @@ namespace SharpDX
         /// <returns>The cubic interpolation of the two colors.</returns>
         public static Color SmoothStep(Color start, Color end, float amount)
         {
-            amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
-            amount = (amount * amount) * (3.0f - (2.0f * amount));
-
-            return new Color(                
-                (byte)(start.R + ((end.R - start.R) * amount)),
-                (byte)(start.G + ((end.G - start.G) * amount)),
-                (byte)(start.B + ((end.B - start.B) * amount)),
-                (byte)(start.A + ((end.A - start.A) * amount)));
+            Color result;
+            SmoothStep(ref start, ref end, amount, out result);
+            return result;
         }
 
         /// <summary>
-        /// Returns a color containing the smallest components of the specified colorss.
+        /// Returns a color containing the smallest components of the specified colors.
         /// </summary>
         /// <param name="left">The first source color.</param>
         /// <param name="right">The second source color.</param>
-        /// <param name="result">When the method completes, contains an new color composed of the largest components of the source colorss.</param>
+        /// <param name="result">When the method completes, contains an new color composed of the largest components of the source colors.</param>
         public static void Max(ref Color left, ref Color right, out Color result)
         {
             result.A = (left.A > right.A) ? left.A : right.A;
@@ -854,7 +840,7 @@ namespace SharpDX
         /// <summary>
         /// Assert a color (return it unchanged).
         /// </summary>
-        /// <param name="value">The color to assert (unchange).</param>
+        /// <param name="value">The color to assert (unchanged).</param>
         /// <returns>The asserted (unchanged) color.</returns>
         public static Color operator +(Color value)
         {
@@ -977,7 +963,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="SharpDX.Color"/> to <see cref="SharpDX.Color4"/>.
+        /// Performs an implicit conversion from <see cref="SharpDX.Color"/> to <see cref="SharpDX.Color4"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>

@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using SharpDX.Collections;
+using System.Reflection;
 
 namespace SharpDX.Toolkit.Content
 {
