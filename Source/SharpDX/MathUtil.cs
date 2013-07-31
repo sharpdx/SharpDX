@@ -56,22 +56,22 @@ namespace SharpDX
         /// <summary>
         /// A value specifying the approximation of π which is 180 degrees.
         /// </summary>
-        public const float Pi = (float)Math.PI();
+        public const float Pi = (float)Math.PI;
 
         /// <summary>
         /// A value specifying the approximation of 2π which is 360 degrees.
         /// </summary>
-        public const float TwoPi = (float)(2 * Math.PI());
+        public const float TwoPi = (float)(2 * Math.PI);
 
         /// <summary>
         /// A value specifying the approximation of π/2 which is 90 degrees.
         /// </summary>
-        public const float PiOverTwo = (float)(Math.PI() / 2);
+        public const float PiOverTwo = (float)(Math.PI / 2);
 
         /// <summary>
         /// A value specifying the approximation of π/4 which is 45 degrees.
         /// </summary>
-        public const float PiOverFour = (float)(Math.PI() / 4);
+        public const float PiOverFour = (float)(Math.PI / 4);
 
         /// <summary>
         /// Checks if a - b are almost equals within a float <see cref="Single.Epsilon"/>.
