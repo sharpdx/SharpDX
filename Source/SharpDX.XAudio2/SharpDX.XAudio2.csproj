@@ -43,6 +43,7 @@
     <Compile Include="Generated\XAPO\Interfaces.cs" />
     <Compile Include="Generated\XAPO\Structures.cs" />
     <Compile Include="MasteringVoice.cs" />
+    <Compile Include="ModuleInit.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="SourceVoice.cs" />
     <Compile Include="SubmixVoice.cs" />
