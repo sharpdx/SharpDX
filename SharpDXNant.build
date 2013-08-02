@@ -26,20 +26,10 @@
   <property name="project.name" value="SharpDX"/>
   <property name="project.sname" value="sharpdx"/>
 
-  <property name="solution.platform" value="Any CPU"/>
-
-  <property name="build_type" value="net20"/>
-  <property name="build_signed" value="false"/>
-
   <property name="keeppdb" value="false"/>
   <property name="keepexe" value="false"/>
   <property name="cleandir" value="./"/>
   <property name="build-date" value=""/>
-  <property name="nightly-builds" value="false"/>
-  <property name="publish-labels" value="Type-Archive,Featured"/>
-  <property name="publish-project-name" value="sharpdx"/>
-  <property name="publish-summary" value=""/>
-  <property name="publish" value="false"/>
 
   <!-- Load NantGoogleTask  -->
   <loadtasks assembly="External\NantGoogleCode\NantGoogleCode.dll" />
@@ -49,33 +39,9 @@
     <!-- Load version from source code SharedAssemblyInfo.cs -->
     <loadfile file="Source/SharedAssemblyInfo.cs" property="assembly_version_file" />
 
-    <property name="version-dir" value="Standard-net20" if="${build_type == 'net20'}"/>
-    <property name="version-dir" value="Standard-net40" if="${build_type == 'net40'}"/>
-    <property name="version-dir" value="Signed-net20" if="${build_type == 'net20' and build_signed}"/>
-    <property name="version-dir" value="Signed-net40" if="${build_type == 'net40' and build_signed}"/>
-    <property name="version-dir" value="Standard-winrt" if="${build_type == 'win8'}"/>
-    <property name="version-dir" value="Signed-winrt" if="${build_type == 'win8' and build_signed}"/>
-    <property name="version-dir" value="Standard-wp8-${solution.platform}" if="${build_type == 'wp8'}"/>
-    <property name="version-dir" value="Signed-wp8-${solution.platform}" if="${build_type == 'wp8' and build_signed}"/>
-    <property name="version-dir" value="Win8Desktop-net40" if="${build_type == 'dx11_1'}"/>
-
-    <!-- override default solution.name for WP8 -->
-    <property name="solution.name" value="SharpDX"/>
-    <property name="solution.name" value="SharpDXWP8" if="${build_type == 'wp8'}"/>
-
     <regex pattern="AssemblyVersion\(.(?'assembly_version'\d+\.\d+.\d+)" input="${assembly_version_file}" />
     <property name="output_bin_zip" value="${project.name}-Bin-${assembly_version}${build-date}.exe"/>
     <property name="output_bin_and_samples_zip" value="${project.name}-Full-${assembly_version}${build-date}.exe"/>
-
-    <!-- Setup configuration -->
-    <property name="configuration" value="Net20Release" if="${build_type == 'net20'}"/>
-    <property name="configuration" value="Net40Release" if="${build_type == 'net40'}"/>
-    <property name="configuration" value="Win8Release"  if="${build_type == 'win8'}"/>
-    <property name="configuration" value="WP8Release"   if="${build_type == 'wp8'}"/>
-    <property name="configuration" value="DIRECTX11_1Release" if="${build_type == 'dx11_1'}"/>
-
-    <property name="bin-dir" value="${configuration}"/>
-    <property name="bin-dir" value="${configuration}-${solution.platform}" if="${build_type == 'wp8'}"/>
 
     <echo message="${project.name} version from file is ${assembly_version}"/>
   </target>
@@ -115,24 +81,6 @@
     </delete>
     <!--Reset property cleandir -->
     <property name="cleandir" value="./"/>
-  </target>
-
-  <!-- Pusblish task. Upload zip files to googlecode -->
-  <target name="publish" description="Set publish code">
-    <property name="publish" value="true"/>
-    <call target="git-sync"/>
-  </target>
-
-  <target name="publish-code" description="Publish to google code">
-    <loadfile file="googlecode_password.txt" property="googlecode_password" />
-
-    <if test="${file::exists(output_bin_zip)}">
-      <gcupload labels="Type-Archive" username="alx.xoofx@gmail.com" password="${googlecode_password}" projectname="${publish-project-name}" filename="${output_bin_zip}" targetfilename="${output_bin_zip}" summary="${publish-summary}"/>
-    </if>
-
-    <if test="${file::exists(output_bin_and_samples_zip)}">
-      <gcupload labels="Type-Archive" username="alx.xoofx@gmail.com" password="${googlecode_password}" projectname="${publish-project-name}" filename="${output_bin_and_samples_zip}" targetfilename="${output_bin_and_samples_zip}" summary="${publish-summary}"/>
-    </if>
   </target>
 
   <!-- Git-Sync task. -->
@@ -218,128 +166,13 @@
   <target name="full" description="Full build targets.">
 
     <!-- Build Signed target first -->
-    <call target="signed-net20"/>
     <call target="build"/>
 
-    <call target="signed-net40"/>
-    <call target="build"/>
+    <!-- <call target="nuget"/> -->
 
-    <call target="signed-win8"/>
-    <call target="build"/>
-
-    <!-- Build WP8 targets x86/ARM -->
-    <call target="wp8"/>
-    <call target="x86"/>
-    <call target="build"/>
-
-    <call target="wp8"/>
-    <call target="arm"/>
-    <call target="build"/>
-
-    <!-- Build all Any CPU targets -->
-    <call target="anycpu"/>
-
-    <call target="win8"/>
-    <call target="build"/>
-
-    <call target="dx11_1"/>
-    <call target="build"/>
-
-    <call target="net20"/>
-    <call target="build"/>
-
-    <call target="net40"/>
-    <call target="build"/>
-
-    <call target="nuget"/>
-
-    <call target="doc"/>
+    <!-- <call target="doc"/> -->
 
     <call target="zip"/>
-
-    <call target="publish-code" if="${publish}"/>
-  </target>
-
-  <target name="x86" description="Build x86 targets">
-    <property name="solution.platform" value="x86"/>
-  </target>
-
-  <target name="arm" description="Build arm targets">
-    <property name="solution.platform" value="ARM"/>
-  </target>
-
-  <target name="anycpu" description="Build Any CPU targets">
-    <property name="solution.platform" value="Any CPU"/>
-  </target>
-
-  <target name="net20" description="Build net20 targets">
-    <property name="build_type" value="net20"/>
-    <property name="build_signed" value="false"/>
-  </target>
-  <target name="net40" description="Build net40 targets">
-    <property name="build_type" value="net40"/>
-    <property name="build_signed" value="false"/>
-  </target>
-
-  <target name="signed-net20" description="Build signed-net20 targets">
-    <property name="build_type" value="net20"/>
-    <property name="build_signed" value="true"/>
-  </target>
-  <target name="signed-net40" description="Build signed-net40 targets">
-    <property name="build_type" value="net40"/>
-    <property name="build_signed" value="true"/>
-  </target>
-  
-  <target name="signed-win8" description="Build signed-win8 targets">
-    <property name="build_type" value="win8"/>
-    <property name="build_signed" value="true"/>
-  </target>
-
-  <target name="win8" description="Build win8 targets">
-    <property name="build_type" value="win8"/>
-    <property name="build_signed" value="false"/>
-  </target>
-
-  <target name="signed-wp8" description="Build signed-wp8 targets">
-    <property name="build_type" value="wp8"/>
-    <property name="build_signed" value="true"/>
-  </target>
-
-  <target name="wp8" description="Build wp8 targets">
-    <property name="build_type" value="wp8"/>
-    <property name="build_signed" value="false"/>
-  </target>
-
-  <target name="dx11_1" description="Build dx11_1 targets">
-    <property name="build_type" value="dx11_1"/>
-    <property name="build_signed" value="false"/>
-  </target>
-
-  <!-- Internal task to patch all samples and convert csproj -->
-  <target name="patch-samples" description="Patch Samples Files">
-    <foreach item="File" property="csproj-path">
-      <in>
-        <items>
-          <include name="Samples/**/*.sample.csproj" />
-        </items>
-      </in>
-      <do>
-        <property name="csproj-path-dest" value="${path::combine(path::get-directory-name(csproj-path),path::get-file-name-without-extension(path::get-file-name-without-extension(csproj-path)))}.csproj"/>
-        <property name="csproj-str" value="${file::read(csproj-path)}"/>
-        <property name="csproj-win8" value="${string::contains(csproj-path-dest,'Win8')}"/>
-        <if test="${csproj-win8}">
-          <echo message="Create file on  ${csproj-path-dest} ${file::write(csproj-path-dest, regex::replace(csproj-str, '\\Source\\.*?Configuration\)', '\Bin\Win8Metro')) }"/>
-        </if>
-      </do>
-    </foreach>
-  </target>
-
-  <!-- Full clean and build -->
-  <target name="nightly-builds" description="Full nighly-builds targets.">
-    <property name="nightly-builds" value="true"/>
-    <property name="publish-project-name" value="sharpdx-nightly-builds"/>
-    <property name="publish-labels" value="Type-Archive"/>
-    <property name="build-date" value="_${string::pad-left(datetime::get-year(datetime::now()),4,0)}${string::pad-left(datetime::get-month(datetime::now()),2,0)}${string::pad-left(datetime::get-day(datetime::now()),2,0)}"/>
   </target>
 
   <!-- Nuget Package build -->
@@ -399,7 +232,7 @@
     <echo message="****************************************************************************"/>
     <echo message="----------------------------------------------------------------------------"/>
     <echo message=""/>
-    <echo message="Building target [${version-dir}]"/>
+    <echo message="Building All Targets"/>
     <echo message=""/>
     <echo message="----------------------------------------------------------------------------"/>
     <echo message="****************************************************************************"/>
@@ -418,45 +251,16 @@
     </copy>
 
     <!-- Create Bin Output Directory -->
-    <delete dir="Bin/${version-dir}"/>
-    <mkdir dir="Bin/${version-dir}"/>
+    <delete dir="Bin"/>
 
     <!-- Setup MSBuild -->
     <exec program="msbuild.exe" >
-      <arg value="/t:Build"/>
-      <arg value="/p:Configuration=${configuration}"/>
-      <arg value='/p:Platform="${solution.platform}"'/>
-      <arg value='/p:SharpDXSign=${build_signed}'/>
-      <arg value="/v:normal"/>
-      <arg value="${solution.name}.sln" />
+      <arg value="/tv:4.0"/>
+      <arg value="/t:Build;BuildSamples"/>
+      <arg value="/verbosity:quiet"/>
+      <arg value="/clp:ErrorsOnly"/>
+      <arg value="SharpDX.build" />
     </exec>
-
-    <mkdir dir="Bin/Redist"/>
-    <copy todir="Bin/Redist">
-      <fileset basedir="External/">
-        <include name="D3D/**/*.dll" />
-        <include name="D3D/**/*.txt" />
-      </fileset>
-    </copy>
-
-    <foreach item="File" property="filename" if="${build_signed}">
-      <in>
-        <items>
-          <include name="Bin/${version-dir}/*.exe" />
-          <include name="Bin/${version-dir}/*.dll" />
-          <exclude name="Bin/${version-dir}/sharpdx_*.dll" />
-        </items>
-      </in>
-      <do>
-        <!-- Setup MSBuild -->
-        <exec program="C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\x64\sn.exe" workingdir="${path::get-directory-name(filename)}">
-          <arg value="-Ra"/>
-          <arg value="${filename}"/>
-          <arg value="..\..\SharpDX.snk" />
-        </exec>
-      </do>
-    </foreach>
-
   </target>
 
   <!-- Documentation  -->
@@ -483,9 +287,9 @@
     <property name="keepexe" value="false"/>
     <call target="clean"/>
 
-    <!-- Create Samples Output Directory -->
-    <delete dir="Build/Samples"/>
-
+    <delete dir="Build"/>
+    <mkdir dir="Build"/>
+    
     <copy todir="Build/">
       <fileset>
         <include name="Bin/**/*.exe"/>
