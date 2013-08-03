@@ -36,50 +36,53 @@
             <exception cref="T:NAnt.Core.ValidationException"><paramref name="value"/> cannot be converted to a <see cref="T:System.Boolean"/>.</exception>
         </member>
         <member name="T:NAnt.Core.Attributes.BuildAttributeAttribute">
-            <summary>
-            Indicates that property should be treated as a XML attribute for the 
-            task.
-            </summary>
-            <example>
-              Examples of how to specify task attributes
-              <code>
-            #region Public Instance Properties
+             <summary>
+             Indicates that property should be treated as a XML attribute for the 
+             task.
+             </summary>
+             <example>
+               Examples of how to specify task attributes
+               <code>
+             #region Public Instance Properties
+             
+             [BuildAttribute("out", Required=true)]
+             public string Output {
+                 get { return _out; }
+                 set { _out = value; }
+             }
             
-            [BuildAttribute("out", Required=true)]
-            public string Output {
-                get { return _out; }
-                set { _out = value; }
-            }
-                        [BuildAttribute("optimize")]
-            [BooleanValidator()]
-            public bool Optimize {
-                get { return _optimize; }
-                set { _optimize = value; }
-            }
-                        [BuildAttribute("warnlevel")]
-            [Int32Validator(0,4)] // limit values to 0-4
-            public int WarnLevel {
-                get { return _warnLevel; }
-                set { _warnLevel = value; }
-            }
-                        [BuildElement("sources")]
-            public FileSet Sources {
-                get { return _sources; }
-                set { _sources = value; }
-            }
+             [BuildAttribute("optimize")]
+             [BooleanValidator()]
+             public bool Optimize {
+                 get { return _optimize; }
+                 set { _optimize = value; }
+             }
             
-            #endregion Public Instance Properties
+             [BuildAttribute("warnlevel")]
+             [Int32Validator(0,4)] // limit values to 0-4
+             public int WarnLevel {
+                 get { return _warnLevel; }
+                 set { _warnLevel = value; }
+             }
             
-            #region Private Instance Fields
-            
-            private string _out = null;
-            private bool _optimize = false;
-            private int _warnLevel = 4;
-            private FileSet _sources = new FileSet();
-            
-            #endregion Private Instance Fields
-              </code>
-            </example>
+             [BuildElement("sources")]
+             public FileSet Sources {
+                 get { return _sources; }
+                 set { _sources = value; }
+             }
+             
+             #endregion Public Instance Properties
+             
+             #region Private Instance Fields
+             
+             private string _out = null;
+             private bool _optimize = false;
+             private int _warnLevel = 4;
+             private FileSet _sources = new FileSet();
+             
+             #endregion Private Instance Fields
+               </code>
+             </example>
         </member>
         <member name="M:NAnt.Core.Attributes.BuildAttributeAttribute.#ctor(System.String)">
             <summary>
@@ -631,32 +634,35 @@
             </summary>
         </member>
         <member name="T:NAnt.Core.Attributes.TaskAttributeAttribute">
-            <summary>
-            Indicates that property should be treated as a XML attribute for the 
-            task.
-            </summary>
-            <example>
-            Examples of how to specify task attributes
-            <code>
-            // task XmlType default is string
-            [TaskAttribute("out", Required=true)]
-            string _out = null; // assign default value here
-                        [TaskAttribute("optimize")]
-            [BooleanValidator()]
-            // during ExecuteTask you can safely use Convert.ToBoolean(_optimize)
-            string _optimize = Boolean.FalseString;
-                        [TaskAttribute("warnlevel")]
-            [Int32Validator(0,4)] // limit values to 0-4
-            // during ExecuteTask you can safely use Convert.ToInt32(_optimize)
-            string _warnlevel = "0";
-                        [BuildElement("sources")]
-            FileSet _sources = new FileSet();
-            </code>
-            NOTE: Attribute values must be of type of string if you want
-            to be able to have macros.  The field stores the exact value during
-            Initialize.  Just before ExecuteTask is called NAnt will expand
-            all the macros with the current values.
-            </example>
+             <summary>
+             Indicates that property should be treated as a XML attribute for the 
+             task.
+             </summary>
+             <example>
+             Examples of how to specify task attributes
+             <code>
+             // task XmlType default is string
+             [TaskAttribute("out", Required=true)]
+             string _out = null; // assign default value here
+            
+             [TaskAttribute("optimize")]
+             [BooleanValidator()]
+             // during ExecuteTask you can safely use Convert.ToBoolean(_optimize)
+             string _optimize = Boolean.FalseString;
+            
+             [TaskAttribute("warnlevel")]
+             [Int32Validator(0,4)] // limit values to 0-4
+             // during ExecuteTask you can safely use Convert.ToInt32(_optimize)
+             string _warnlevel = "0";
+            
+             [BuildElement("sources")]
+             FileSet _sources = new FileSet();
+             </code>
+             NOTE: Attribute values must be of type of string if you want
+             to be able to have macros.  The field stores the exact value during
+             Initialize.  Just before ExecuteTask is called NAnt will expand
+             all the macros with the current values.
+             </example>
         </member>
         <member name="M:NAnt.Core.Attributes.TaskAttributeAttribute.#ctor(System.String)">
             <summary>
@@ -1140,16 +1146,17 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="consumer"/> is <see langword="null"/>.</exception>
         </member>
         <member name="T:NAnt.Core.Filters.ChainableReader">
-            <summary>
-            Functions as a chainable TextReader
-            </summary>
-            <remarks>
-            Implements a abstraction over a TextReader that allows the class to represent
-            either a TextReader or another ChainableReader to which it is chained.
-                        By passing a ChainableReader as a constructor paramater it is possiable to
-            chain many ChainableReaders together.  The last ChainableReader in the chain must
-            be based on a TextReader.
-            </remarks>
+             <summary>
+             Functions as a chainable TextReader
+             </summary>
+             <remarks>
+             Implements a abstraction over a TextReader that allows the class to represent
+             either a TextReader or another ChainableReader to which it is chained.
+            
+             By passing a ChainableReader as a constructor paramater it is possiable to
+             chain many ChainableReaders together.  The last ChainableReader in the chain must
+             be based on a TextReader.
+             </remarks>
         </member>
         <member name="M:NAnt.Core.Filters.ChainableReader.Chain(NAnt.Core.Filters.ChainableReader)">
             <summary>
@@ -1536,6 +1543,18 @@
             The last <see cref="T:NAnt.Core.Filters.Filter"/> in the chain.
             </returns>
         </member>
+        <member name="M:NAnt.Core.Filters.FilterChain.IsNullOrEmpty(NAnt.Core.Filters.FilterChain)">
+            <summary>
+            Determines whether a given FilterChain is null or empty.
+            </summary>
+            <returns>
+            <c>true</c> if <paramref name="filterChain"/> is null or empty;
+            otherwise, <c>false</c>.
+            </returns>
+            <param name='filterChain'>
+            The FilterChain to check.
+            </param>
+        </member>
         <member name="P:NAnt.Core.Filters.FilterChain.Filters">
             <summary>
             The filters to apply.
@@ -1812,14 +1831,15 @@
             <returns>Char as an int or -1 if at the end of the stream</returns>
         </member>
         <member name="M:NAnt.Core.Filters.ReplaceString.Peek">
-            <summary>
-            Reads the next character applying the filter logic without
-            advancing the current position in the stream.
-                        Peek currently is not supported.
-            </summary>
-            <returns>
-            Char as an int or -1 if at the end of the stream.
-            </returns>
+             <summary>
+             Reads the next character applying the filter logic without
+             advancing the current position in the stream.
+            
+             Peek currently is not supported.
+             </summary>
+             <returns>
+             Char as an int or -1 if at the end of the stream.
+             </returns>
         </member>
         <member name="M:NAnt.Core.Filters.ReplaceString.FindString(System.Int32,System.Boolean@,System.String@)">
             <summary>
@@ -1942,14 +1962,15 @@
             <returns>Char as an int or -1 if at the end of the stream</returns>
         </member>
         <member name="M:NAnt.Core.Filters.ReplaceTokens.Peek">
-            <summary>
-            Reads the next character applying the filter logic without
-            advancing the current position in the stream.
-                        Peek currently is not supported.
-            </summary>
-            <returns>
-            Char as an int or -1 if at the end of the stream.
-            </returns>
+             <summary>
+             Reads the next character applying the filter logic without
+             advancing the current position in the stream.
+            
+             Peek currently is not supported.
+             </summary>
+             <returns>
+             Char as an int or -1 if at the end of the stream.
+             </returns>
         </member>
         <member name="M:NAnt.Core.Filters.ReplaceTokens.Initialize">
             <summary>
@@ -2484,6 +2505,22 @@
             <returns>
             A string representation of <paramref name="value"/> formatted using
             the general format specifier ("G").
+            </returns>
+            <remarks>
+            <paramref name="value"/> is formatted with the 
+            <see cref="T:System.Globalization.DateTimeFormatInfo"/> for the invariant culture.
+            </remarks>
+        </member>
+        <member name="M:NAnt.Core.Functions.DateTimeConversionFunctions.ToString(System.DateTime,System.String)">
+            <summary>
+            Converts the specified <see cref="T:System.DateTime"/> to its equivalent
+            string representation.
+            </summary>
+            <param name="value">A <see cref="T:System.DateTime"/> to convert.</param>
+            <param name="format">A format string.</param>
+            <returns>
+            A string representation of <paramref name="value"/> formatted
+            using the specified format
             </returns>
             <remarks>
             <paramref name="value"/> is formatted with the 
@@ -5104,121 +5141,123 @@
             </summary>
         </member>
         <member name="T:NAnt.Core.Tasks.CallTask">
-            <summary>
-            Calls a NAnt target in the current project.
-            </summary>
-            <remarks>
-              <para>
-              When the <see cref="T:NAnt.Core.Tasks.CallTask"/> is used to execute a target, both that 
-              target and all its dependent targets will be re-executed.
-              </para>
-              <para>
-              To avoid dependent targets from being executed more than once, two 
-              options are available:
-              </para>
-              <list type="bullet">
-                <item>
-                    <description>
-                    Add an "unless" attribute with value "${<see href="../functions/target.has-executed.html">target::has-executed</see>('<c>&lt;target name&gt;</c>')}"
-                    to the dependent targets.
-                    </description>
-                </item>
-                <item>
-                    <description>
-                    Set the <see cref="P:NAnt.Core.Tasks.CallTask.CascadeDependencies"/> attribute on the 
-                    <see cref="T:NAnt.Core.Tasks.CallTask"/> to <see langword="false "/> (<c>recommended</c>).
-                    </description>
-                </item>
-              </list>
-            </remarks>
-            <example>
-              <para>
-              Call the target "build".
-              </para>
-              <code>
-                <![CDATA[
-            <call target="build" />
-                ]]>
-              </code>
-            </example>
-            <example>
-              <para>
-              This shows how a project could 'compile' a debug and release build 
-              using a common compile target.
-              </para>
-              <code>
-                <![CDATA[
-            <project default="build">
-                <property name="debug" value="false" />
-                <target name="init">
-                    <echo message="initializing" />
-                </target>
-                <target name="compile" depends="init">
-                    <echo message="compiling with debug = ${debug}" />
-                </target>
-                <target name="build">
-                    <property name="debug" value="false" />
-                    <call target="compile" />
-                    <property name="debug" value="true" />
-                    <call target="compile" />
-                </target>
-            </project>
-                ]]>
-              </code>
-              <para>
-              The <see cref="P:NAnt.Core.Tasks.CallTask.CascadeDependencies"/> parameter of the 
-              <see cref="T:NAnt.Core.Tasks.CallTask"/> defaults to <see langword="true"/>, 
-              causing the "init" target to be executed for both
-              the "debug" and "release" build.
-              </para>
-              <para>
-              This results in the following build log:
-              </para>
-              <code>
-            build:
-              
-            init:
-                            [echo] initializing
-                
-            compile:
+             <summary>
+             Calls a NAnt target in the current project.
+             </summary>
+             <remarks>
+               <para>
+               When the <see cref="T:NAnt.Core.Tasks.CallTask"/> is used to execute a target, both that 
+               target and all its dependent targets will be re-executed.
+               </para>
+               <para>
+               To avoid dependent targets from being executed more than once, two 
+               options are available:
+               </para>
+               <list type="bullet">
+                 <item>
+                     <description>
+                     Add an "unless" attribute with value "${<see href="../functions/target.has-executed.html">target::has-executed</see>('<c>&lt;target name&gt;</c>')}"
+                     to the dependent targets.
+                     </description>
+                 </item>
+                 <item>
+                     <description>
+                     Set the <see cref="P:NAnt.Core.Tasks.CallTask.CascadeDependencies"/> attribute on the 
+                     <see cref="T:NAnt.Core.Tasks.CallTask"/> to <see langword="false "/> (<c>recommended</c>).
+                     </description>
+                 </item>
+               </list>
+             </remarks>
+             <example>
+               <para>
+               Call the target "build".
+               </para>
+               <code>
+                 <![CDATA[
+             <call target="build" />
+                 ]]>
+               </code>
+             </example>
+             <example>
+               <para>
+               This shows how a project could 'compile' a debug and release build 
+               using a common compile target.
+               </para>
+               <code>
+                 <![CDATA[
+             <project default="build">
+                 <property name="debug" value="false" />
+                 <target name="init">
+                     <echo message="initializing" />
+                 </target>
+                 <target name="compile" depends="init">
+                     <echo message="compiling with debug = ${debug}" />
+                 </target>
+                 <target name="build">
+                     <property name="debug" value="false" />
+                     <call target="compile" />
+                     <property name="debug" value="true" />
+                     <call target="compile" />
+                 </target>
+             </project>
+                 ]]>
+               </code>
+               <para>
+               The <see cref="P:NAnt.Core.Tasks.CallTask.CascadeDependencies"/> parameter of the 
+               <see cref="T:NAnt.Core.Tasks.CallTask"/> defaults to <see langword="true"/>, 
+               causing the "init" target to be executed for both
+               the "debug" and "release" build.
+               </para>
+               <para>
+               This results in the following build log:
+               </para>
+               <code>
+             build:
+               
+             init:
             
-                [echo] compiling with debug = false
-                
-            init:
+                 [echo] initializing
+                 
+             compile:
+             
+                 [echo] compiling with debug = false
+                 
+             init:
+             
+                 [echo] initializing
+                 
+             compile:
+             
+                 [echo] compiling with debug = true
+                 
+             BUILD SUCCEEDED
+               </code>
+               <para>
+               If the "init" should only be executed once, set the
+               <see cref="P:NAnt.Core.Tasks.CallTask.CascadeDependencies"/> attribute of the <see cref="T:NAnt.Core.Tasks.CallTask"/>
+               to <see langword="false"/>.
+               </para>
+               <para>
+               The build log would then look like this:
+               </para>
+               <code>
+             build:
+               
+             init:
             
-                [echo] initializing
-                
-            compile:
-            
-                [echo] compiling with debug = true
-                
-            BUILD SUCCEEDED
-              </code>
-              <para>
-              If the "init" should only be executed once, set the
-              <see cref="P:NAnt.Core.Tasks.CallTask.CascadeDependencies"/> attribute of the <see cref="T:NAnt.Core.Tasks.CallTask"/>
-              to <see langword="false"/>.
-              </para>
-              <para>
-              The build log would then look like this:
-              </para>
-              <code>
-            build:
-              
-            init:
-                            [echo] initializing
-                
-            compile:
-            
-                [echo] compiling with debug = false
-                
-            compile:
-            
-                [echo] compiling with debug = true
-                
-            BUILD SUCCEEDED
-              </code>
-            </example>
+                 [echo] initializing
+                 
+             compile:
+             
+                 [echo] compiling with debug = false
+                 
+             compile:
+             
+                 [echo] compiling with debug = true
+                 
+             BUILD SUCCEEDED
+               </code>
+             </example>
         </member>
         <member name="M:NAnt.Core.Tasks.CallTask.ExecuteTask">
             <summary>
@@ -5248,6 +5287,135 @@
             previously executed. The default is <see langword="true" />.
             </summary>
         </member>
+        <member name="T:NAnt.Core.Tasks.ChooseTask">
+            <summary>
+              <para>
+              Executes an alternate set of task or type definition depending on
+              conditions that are individually set on each group.
+              </para>
+            </summary>
+            <remarks>
+              <para>
+              The <see cref="T:NAnt.Core.Tasks.ChooseTask"/> selects one among a number of possible
+              alternatives. It consists of a sequence of <c>&lt;when&gt;</c> elements
+              followed by an optional <c>&lt;otherwise&gt;</c> element.
+              </para>
+              <para>
+              Each <c>&lt;when&gt;</c> element has a single attribute, test, which 
+              specifies an expression. The content of the <c>&lt;when&gt;</c> and 
+              <c>&lt;otherwise&gt;</c> elements is a set of nested tasks.
+              </para>
+              <para>
+              The content of the first, and only the first, <c>&lt;when&gt;</c>
+              element whose test is <see langword="true"/> is executed. If no 
+              <c>&lt;when&gt;</c> element is <see langword="true"/>, the 
+              content of the <c>&lt;otherwise&gt;</c> element is executed.
+              If no <c>&lt;when&gt;</c> element is <see langword="true"/>, and no
+              <c>&lt;otherwise&gt;</c> element is present, nothing is done.
+              </para>
+            </remarks>
+            <example>
+              <para>
+              Execute alternate set of tasks depending on the configuration being
+              built.
+              </para>
+              <code>
+                <![CDATA[
+            <choose>
+                <when test="${build.config == 'Debug'}">
+                    <!-- compile app in debug configuration -->
+                    ...
+                </when>
+                <when test="${build.config == 'Release'}">
+                    <!-- compile app in release configuration -->
+                    ...
+                </when>
+                <otherwise>
+                    <fail>Build configuration '${build.config}' is not supported!</fail>
+                </otherwise>
+            </choose>
+                ]]>
+              </code>
+            </example>
+            <example>
+              <para>
+              Define a <c>sources</c> patternset holding an alternate set of patterns
+              depending on the configuration being built.
+              </para>
+              <code>
+                <![CDATA[
+            <choose>
+                <when test="${build.config == 'Debug'}">
+                    <patternset id="sources">
+                        <include name="**/*.cs" />
+                    </patternset>
+                </when>
+                <when test="${build.config == 'Release'}">
+                    <patternset id="sources">
+                        <include name="**/*.cs" />
+                        <exclude name="**/Instrumentation/*.cs" />
+                    </patternset>
+                </when>
+                <otherwise>
+                    <fail>Build configuration '${build.config}' is not supported!</fail>
+                </otherwise>
+            </choose>
+                ]]>
+              </code>
+            </example>
+        </member>
+        <member name="M:NAnt.Core.Tasks.ChooseTask.AddCondition(NAnt.Core.Tasks.ChooseTask.When)">
+            <summary>
+            One or more alternative sets of tasks to execute.
+            </summary>
+            <param name="when">The set of tasks to add.</param>
+        </member>
+        <member name="M:NAnt.Core.Tasks.ChooseTask.AddFallback(NAnt.Core.ElementContainer)">
+            <summary>
+            The set of tasks to execute if none of the <see cref="T:NAnt.Core.Tasks.ChooseTask.When"/>
+            elements are <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.Tasks.ChooseTask.IsFallbackDefined">
+            <summary>
+            Gets a value indicating whether a fallback element is defined.
+            </summary>
+            <value>
+            <see langword="true" /> if a fallback element is defined; otherwise,
+            <see langword="false" />.
+            </value>
+        </member>
+        <member name="T:NAnt.Core.Tasks.ChooseTask.When">
+            <summary>
+            Groups a set of tasks to execute when a condition is met.
+            </summary>
+        </member>
+        <member name="T:NAnt.Core.ElementContainer">
+            <summary>
+            Executes embedded tasks/elements in the order in which they are defined.
+            </summary>
+        </member>
+        <member name="M:NAnt.Core.ElementContainer.ExecuteChildTasks">
+            <summary>
+            Creates and executes the embedded (child XML nodes) elements.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.ElementContainer.CustomXmlProcessing">
+            <summary>
+            Gets a value indicating whether the element is performing additional
+            processing using the <see cref="T:System.Xml.XmlNode"/> that was use to 
+            initialize the element.
+            </summary>
+            <value>
+            <see langword="true"/>, as a <see cref="T:NAnt.Core.ElementContainer"/> is
+            responsable for creating tasks from the nested build elements.
+            </value>
+        </member>
+        <member name="P:NAnt.Core.Tasks.ChooseTask.When.Test">
+            <summary>
+            Used to test arbitrary boolean expression.
+            </summary>
+        </member>
         <member name="T:NAnt.Core.Tasks.CopyTask">
             <summary>
             Copies a file, a directory, or set of files to a new file or directory.
@@ -5259,8 +5427,38 @@
               explicitly overwrite files with the <see cref="P:NAnt.Core.Tasks.CopyTask.Overwrite"/> attribute.
               </para>
               <para>
-              When a <see cref="T:NAnt.Core.Types.FileSet"/> is used to select files to copy, the 
-              <see cref="P:NAnt.Core.Tasks.CopyTask.ToDirectory"/> attribute must be set. Files that are 
+              Entire directory structures can be copied to a new location.  For this
+              to happen, the following criteria must be met:
+              </para>
+              <list type="bullet">
+                <item>
+                  <description>
+                  Everything in the fileset is included
+                  </description>
+                </item>
+                <item>
+                  <description>
+                  The directory structure is not flattened
+                  </description>
+                </item>
+                <item>
+                  <description>
+                  Empty directories are included
+                  </description>
+                </item>
+                <item>
+                  <description>
+                  Destination directory does not exist
+                  </description>
+                </item>
+              </list>
+              <para>
+              If any of these items are not met, then the files within the source
+              directory will be copied over instead of the entire directory structure.
+              </para>
+              <para>
+              When a <see cref="T:NAnt.Core.Types.FileSet"/> is used to select files or directories to
+              copy, the <see cref="P:NAnt.Core.Tasks.CopyTask.ToDirectory"/> attribute must be set. Files that are
               located under the base directory of the <see cref="T:NAnt.Core.Types.FileSet"/> will
               be copied to a directory under the destination directory matching the
               path relative to the base directory of the <see cref="T:NAnt.Core.Types.FileSet"/>,
@@ -5341,7 +5539,7 @@
               </para>
               <code>
                 <![CDATA[
-            <copy tofile="target/dir">
+            <copy todir="target/dir">
               <fileset basedir="source/dir"/>
             </copy>
                 ]]>
@@ -5432,10 +5630,16 @@
             </summary>
             <remarks>
               <para>
-              The key of the <see cref="T:System.Collections.Hashtable"/> is the absolute path of 
+              FileCopyMap should now be considered a readonly hashtable. Any changes to
+              this property will not be taken into account during the file operation
+              task. To interact with the file operation, use the
+              <see cref="P:NAnt.Core.Tasks.CopyTask.OperationMap"/> property.
+              </para>
+              <para>
+              The key of the <see cref="T:System.Collections.Hashtable"/> is the absolute path of
               the destination file and the value is a <see cref="T:NAnt.Core.Tasks.CopyTask.FileDateInfo"/>
               holding the path and last write time of the most recently updated
-              source file that is selected to be copied or moved to the 
+              source file that is selected to be copied or moved to the
               destination file.
               </para>
               <para>
@@ -5443,10 +5647,40 @@
               </para>
             </remarks>
         </member>
+        <member name="P:NAnt.Core.Tasks.CopyTask.OperationMap">
+            <summary>
+            Gets the operation map containing all the files/directories to
+            perform file operations on.
+            </summary>
+            <remarks>
+              <para>
+              The type of class for this object inherits from KeyedCollection
+              and is structured so that the key of this collection contains the
+              full path of the target file/location while the value contains
+              the <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperation"/> object
+              with the operation details.
+              </para>
+              <para>
+              On Windows, the <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperationMap"/>
+              is case-insensitive.
+              </para>
+            </remarks>
+        </member>
         <member name="T:NAnt.Core.Tasks.CopyTask.FileDateInfo">
             <summary>
             Holds the absolute paths and last write time of a given file.
             </summary>
+        </member>
+        <member name="M:NAnt.Core.Tasks.CopyTask.FileDateInfo.#ctor(System.IO.FileSystemInfo)">
+            <summary>
+            Initializes a new instance of the
+            <see cref="T:NAnt.Core.Tasks.CopyTask.FileDateInfo"/> class
+            for the specified <paramref name="file"/>.
+            </summary>
+            <param name="file">
+            A <see cref="T:System.IO.FileSystemInfo"/> object containing
+            the full path and last write time of the file the object represents.
+            </param>
         </member>
         <member name="M:NAnt.Core.Tasks.CopyTask.FileDateInfo.#ctor(System.String,System.DateTime)">
             <summary>
@@ -5471,6 +5705,331 @@
             <value>
             The time when the current file was last written to.
             </value>
+        </member>
+        <member name="T:NAnt.Core.Tasks.CopyTask.FileOperation">
+            <summary>
+            Provides methods and properties to properly manage file operations for
+            NAnt file system based tasks (such as CopyTask and MoveTask).
+            </summary>
+        </member>
+        <member name="M:NAnt.Core.Tasks.CopyTask.FileOperation.#ctor(System.IO.FileSystemInfo,System.IO.FileSystemInfo)">
+            <summary>
+            Initializes a new instance of the
+            <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperation"/> class with the
+            source and target locations specified.
+            </summary>
+            <param name="source">
+            A <see cref="T:System.IO.FileSystemInfo"/> object representing the file/location
+            where the file operation will start.
+            </param>
+            <param name="target">
+            A <see cref="T:System.IO.FileSystemInfo"/> object representing the file/location
+            where the file operation will end.
+            </param>
+        </member>
+        <member name="M:NAnt.Core.Tasks.CopyTask.FileOperation.NormalizeTargetAttributes">
+            <summary>
+            Normalizes the attributes of
+            <see cref="P:NAnt.Core.Tasks.CopyTask.FileOperation.TargetInfo"/>.
+            </summary>
+        </member>
+        <member name="M:NAnt.Core.Tasks.CopyTask.FileOperation.SourceEqualsTarget">
+            <summary>
+            Checks to see whether or not the full path of
+            <see cref="P:NAnt.Core.Tasks.CopyTask.FileOperation.SourceInfo"/>
+            matches the full path of
+            <see cref="P:NAnt.Core.Tasks.CopyTask.FileOperation.TargetInfo"/>.
+            </summary>
+            <remarks>
+            <see cref="P:NAnt.Core.Tasks.CopyTask.FileOperation.Comparer"/> is
+            used to check path equality.
+            </remarks>
+            <returns>
+            <c>true</c> if both paths match; otherwise <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:NAnt.Core.Tasks.CopyTask.FileOperation.SourceIsIdenticalToTarget">
+            <summary>
+            Checks to see whether or not the full path of
+            <see cref="P:NAnt.Core.Tasks.CopyTask.FileOperation.SourceInfo"/>
+            is identical to the full path of
+            <see cref="P:NAnt.Core.Tasks.CopyTask.FileOperation.TargetInfo"/>.
+            </summary>
+            <remarks>
+            The difference between this method and SourceEqualsTarget is
+            that the casing of the path is never ignored regardless of
+            operating system.
+            </remarks>
+            <returns>
+            <c>true</c> if both paths are identical; otherwise <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:NAnt.Core.Tasks.CopyTask.FileOperation.UpdateSource(System.IO.FileSystemInfo)">
+            <summary>
+            Updates the source of a given instance based on the
+            <see cref="P:System.IO.FileSystemInfo.LastWriteTime"/>.
+            <remarks>
+            If the LastWriteTime property of the <paramref name="newSource"/>
+            is greater than the LastWriteTime property of
+            <see cref="P:NAnt.Core.Tasks.CopyTask.FileOperation.SourceInfo"/>, then
+            <see cref="P:NAnt.Core.Tasks.CopyTask.FileOperation.SourceInfo"/> is
+            replaced with <paramref name="newSource"/>.
+            </remarks>
+            </summary>
+            <param name="newSource">
+            The new <see cref="T:System.IO.FileSystemInfo"/> to replace
+            the current <see cref="P:NAnt.Core.Tasks.CopyTask.FileOperation.SourceInfo"/>
+            object.
+            </param>
+        </member>
+        <member name="M:NAnt.Core.Tasks.CopyTask.FileOperation.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current
+            <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperation"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current
+            <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperation"/>.
+            </returns>
+        </member>
+        <member name="M:NAnt.Core.Tasks.CopyTask.FileOperation.TargetIsOutdated(System.IO.FileSystemInfo,System.IO.FileSystemInfo)">
+            <summary>
+            Checks to see if a given <see cref="T:System.IO.FileSystemInfo"/>
+            target is considered outdated.
+            </summary>
+            <param name="source">
+            A <see cref="T:System.IO.FileSystemInfo"/> used for comparison purposes
+            against <paramref name="target"/>.
+            </param>
+            <param name="target">
+            The <see cref="T:System.IO.FileSystemInfo"/> to check.
+            </param>
+            <returns>
+            <c>true</c> if the target file is considered out of date; otherwise
+            <c>false</c>
+            </returns>
+        </member>
+        <member name="M:NAnt.Core.Tasks.CopyTask.FileOperation.TargetDirectoryDoesNotExist(System.IO.DirectoryInfo,System.IO.DirectoryInfo)">
+            <summary>
+            Checks to see if the target directory does not exist or that
+            it does match the source directory name but not string casing.
+            </summary>
+            <param name="source">
+            Source directory to check against <paramref name="target"/>.
+            </param>
+            <param name="target">
+            The target directory to validate.
+            </param>
+            <returns>
+            <c>true</c> if the target directory does not exist or matches the source
+            directory name but not casing; otherwise <c>false</c>
+            </returns>
+        </member>
+        <member name="M:NAnt.Core.Tasks.CopyTask.FileOperation.IsFileSystemType``1(System.IO.FileSystemInfo)">
+            <summary>
+            Checks to see whether <paramref name="item"/> is a file type or
+            a directory type.
+            </summary>
+            <typeparam name="TFileSystemInfo">
+            The FileSystemInfo type used to compare <paramref name="item"/> with.
+            </typeparam>
+            <param name="item">
+            The object to check.
+            </param>
+            <returns>
+            <c>true</c> if <paramref name="item"/> is the same type as
+            <typeparamref name="TFileSystemInfo"/>; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="P:NAnt.Core.Tasks.CopyTask.FileOperation.Comparer">
+            <summary>
+            Gets or sets the string comparer to use when comparing
+            the source path to the target path.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.Tasks.CopyTask.FileOperation.Source">
+            <summary>
+            Gets the full path of
+            <see cref="P:NAnt.Core.Tasks.CopyTask.FileOperation.SourceInfo"/>.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.Tasks.CopyTask.FileOperation.SourceInfo">
+            <summary>
+            Gets the details of the source path.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.Tasks.CopyTask.FileOperation.SourceType">
+            <summary>
+            Gets the type of
+            <see cref="P:NAnt.Core.Tasks.CopyTask.FileOperation.SourceInfo"/>.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.Tasks.CopyTask.FileOperation.OperationType">
+            <summary>
+            Gets the type of the file operation an instance of
+            <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperation"/> represents.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.Tasks.CopyTask.FileOperation.Outdated">
+            <summary>
+            Gets a value indicating whether
+            <see cref="P:NAnt.Core.Tasks.CopyTask.FileOperation.TargetInfo"/> is
+            outdated.
+            </summary>
+            <value>
+            <c>true</c> if
+            <see cref="P:NAnt.Core.Tasks.CopyTask.FileOperation.TargetInfo"/> is
+            outdated (or simply a directory); otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:NAnt.Core.Tasks.CopyTask.FileOperation.Target">
+            <summary>
+            Gets the full path of
+            <see cref="P:NAnt.Core.Tasks.CopyTask.FileOperation.TargetInfo"/>.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.Tasks.CopyTask.FileOperation.TargetInfo">
+            <summary>
+            Gets the details of the target path.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.Tasks.CopyTask.FileOperation.TargetType">
+            <summary>
+            Gets the type of
+            <see cref="P:NAnt.Core.Tasks.CopyTask.FileOperation.TargetInfo"/>.
+            </summary>
+        </member>
+        <member name="T:NAnt.Core.Tasks.CopyTask.FileOperationMap">
+            <summary>
+            A collection class used to track all of the 
+            <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperation"/> objects for 
+            a given file operation task (such as the CopyTask or MoveTask).
+            </summary>
+        </member>
+        <member name="F:NAnt.Core.Tasks.CopyTask.FileOperationMap._stringComparer">
+            <summary>
+            The StringComparer used when comparing file paths.
+            </summary>
+        </member>
+        <member name="M:NAnt.Core.Tasks.CopyTask.FileOperationMap.#ctor">
+            <summary>
+            Initializes a new instance of the 
+            <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperationMap"/>
+            class that uses the default string comparer.
+            </summary>
+        </member>
+        <member name="M:NAnt.Core.Tasks.CopyTask.FileOperationMap.#ctor(System.StringComparer)">
+            <summary>
+            Initializes a new instance of the 
+            <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperationMap"/>
+            class that uses the specified string comparer.
+            </summary>
+            <param name="comparer">
+            The string comparer to use when comparing keys in the
+            <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperationMap"/>.
+            </param>
+        </member>
+        <member name="M:NAnt.Core.Tasks.CopyTask.FileOperationMap.ContainsKey(System.String)">
+            <summary>
+            Determines whether the 
+            <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperationMap"/> contains the 
+            specified key.
+            </summary>
+            <param name="key">
+            The key to locate in the 
+            <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperationMap"/>.
+            </param>
+            <returns>
+            <c>true</c> if the <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperationMap"/>
+            contains an element with the specified key; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:NAnt.Core.Tasks.CopyTask.FileOperationMap.CountDirectoryOperations">
+            <summary>
+            Counts the number of directory operations in a collection.
+            </summary>
+            <returns>
+            The number of directory operations performed by this collection.
+            </returns>
+        </member>
+        <member name="M:NAnt.Core.Tasks.CopyTask.FileOperationMap.CountFileOperations">
+            <summary>
+            Counts the number of file operations in a collection.
+            </summary>
+            <returns>
+            The number of file operations performed by this collection.
+            </returns>
+        </member>
+        <member name="M:NAnt.Core.Tasks.CopyTask.FileOperationMap.ConvertToHashtable">
+            <summary>
+            Converts the current instance of
+            <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperationMap"/> to
+            the old style FileCopyMap hashtable.
+            </summary>
+            <returns>
+            The contents of
+            <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperationMap"/> in a
+            new hashtable.
+            </returns>
+        </member>
+        <member name="M:NAnt.Core.Tasks.CopyTask.FileOperationMap.GetKeyForItem(NAnt.Core.Tasks.CopyTask.FileOperation)">
+            <summary>
+            Extracts the key from the specified 
+            <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperation"/> element.
+            </summary>
+            <param name="item">
+            The <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperation"/> from which to 
+            extract the key.
+            </param>
+            <returns>
+            The key for the specified 
+            <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperation"/>.
+            </returns>
+        </member>
+        <member name="M:NAnt.Core.Tasks.CopyTask.FileOperationMap.InsertItem(System.Int32,NAnt.Core.Tasks.CopyTask.FileOperation)">
+            <summary>
+            Inserts an element into the 
+            <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperationMap"/> at the 
+            specified index.
+            </summary>
+            <param name="index">
+            The zero-based index at which item should be inserted.
+            </param>
+            <param name="item">
+            The <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperation"/> to insert.
+            </param>
+        </member>
+        <member name="M:NAnt.Core.Tasks.CopyTask.FileOperationMap.SetItem(System.Int32,NAnt.Core.Tasks.CopyTask.FileOperation)">
+            <summary>
+            Replaces the item at the specified index with the specified item.
+            </summary>
+            <param name="index">
+            The zero-based index of the item to be replaced.
+            </param>
+            <param name="item">
+            The new item.
+            </param>
+        </member>
+        <member name="T:NAnt.Core.Tasks.CopyTask.OperationType">
+            <summary>
+            Used to identify the type of operation a given
+            <see cref="T:NAnt.Core.Tasks.CopyTask.FileOperation"/> represent.
+            </summary>
+        </member>
+        <member name="F:NAnt.Core.Tasks.CopyTask.OperationType.FileToFile">
+            <summary>
+            Indicates that the operation is from file to file.
+            </summary>
+        </member>
+        <member name="F:NAnt.Core.Tasks.CopyTask.OperationType.FileToDirectory">
+            <summary>
+            Indicates that the operation is from file to directory.
+            </summary>
+        </member>
+        <member name="F:NAnt.Core.Tasks.CopyTask.OperationType.DirectoryToDirectory">
+            <summary>
+            Indicates that the operation is from directory to directory.
+            </summary>
         </member>
         <member name="T:NAnt.Core.Tasks.DeleteTask">
             <summary>
@@ -6999,6 +7558,50 @@
                 ]]>
               </code>
             </example>
+            <example>
+              <para>
+              Sends an email from a gmail account to multiple recipients. This example
+              illustrates how to add a recipient's name to an email address.
+              </para>
+              <code>
+                <![CDATA[
+            <mail
+                from="+xxxx+@gmail.com"
+                tolist="(Rep A) recipient1@sourceforge.net;(Rep B) recipient2@sourceforge.net"
+                subject="Sample Email"
+                mailhost="smtp.gmail.com"
+                mailport="465"
+                ssl="true"
+                user="+xxxx+@gmail.com"
+                password="p@ssw0rd!"
+                message="Email from NAnt" />
+                ]]>
+              </code>
+              <para>
+              Email addresses in any of the lists (to, cc, bcc, from) can be in one of
+              the five listed formats below.
+              </para>
+              <list type="bullet">
+              <item>
+              <description>Full Name &lt;address@abcxyz.com&gt;</description>
+              </item>
+              <item>
+              <description>&lt;address@abcxyz.com&gt; Full Name</description>
+              </item>
+              <item>
+              <description>(Full Name) address@abcxyz.com</description>
+              </item>
+              <item>
+              <description>address@abcxyz.com (Full Name)</description>
+              </item>
+              <item>
+              <description>address@abcxyz.com</description>
+              </item>
+              </list>
+              <para>
+              Remember to use &amp;gt; and &amp;lt; XML entities for the angle brackets.
+              </para>
+            </example>
         </member>
         <member name="M:NAnt.Core.Tasks.MailTask.Initialize">
             <summary>
@@ -7020,6 +7623,74 @@
             The content of the specified file.
             </returns>
         </member>
+        <member name="M:NAnt.Core.Tasks.MailTask.ParseAddresses(System.String)">
+            <summary>
+            Converts an email address or a series of email addresses from
+            a <see cref="T:System.String"/> object to a new
+            <see cref="T:System.Net.Mail.MailAddressCollection"/> object.
+            </summary>
+            <param name="addresses">
+            A list of email addresses separated by a semicolon.
+            </param>
+            <returns>
+            A new <see cref="T:System.Net.Mail.MailAddressCollection"/> object
+            containing the addresses from <paramref name="addresses"/>.
+            </returns>
+        </member>
+        <member name="M:NAnt.Core.Tasks.MailTask.ConvertStringToMailAddress(System.String)">
+            <summary>
+            Converts a <see cref="T:System.String"/> object containing
+            email address information to a 
+            <see cref="T:System.Net.Mail.MailAddress"/> object.
+            </summary>
+            <remarks>
+            <para>
+            Email address information passed to this method should be in
+            one of five formats.
+            </para>
+            <list type="bullet">
+            <item>
+            <description>Full Name &lt;address@abcxyz.com&gt;</description>
+            </item>
+            <item>
+            <description>&lt;address@abcxyz.com&gt; Full Name</description>
+            </item>
+            <item>
+            <description>(Full Name) address@abcxyz.com</description>
+            </item>
+            <item>
+            <description>address@abcxyz.com (Full Name)</description>
+            </item>
+            <item>
+            <description>address@abcxyz.com</description>
+            </item>
+            </list>
+            <para>
+            If the full name of the intended recipient (or sender) is provided,
+            that information is included in the resulting 
+            <see cref="T:System.Net.Mail.MailAddress"/> object.
+            </para>
+            </remarks>
+            <param name="address">
+            The string that contains the address to parse.
+            </param>
+            <returns>
+            A new MailAddress object containing the information from
+            <paramref name="address"/>.
+            </returns>
+        </member>
+        <member name="M:NAnt.Core.Tasks.MailTask.UnescapeXmlCodes(System.String)">
+            <summary>
+            Simple method that converts an XML escaped string back to its unescaped
+            format.
+            </summary>
+            <param name="value">
+            An html encoded string.
+            </param>
+            <returns>
+            The decoded format of the html encoded string.
+            </returns>
+        </member>
         <member name="P:NAnt.Core.Tasks.MailTask.From">
             <summary>
             Email address of sender.
@@ -7028,6 +7699,11 @@
         <member name="P:NAnt.Core.Tasks.MailTask.ToList">
             <summary>
             Semicolon-separated list of recipient email addresses.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.Tasks.MailTask.ReplyTo">
+            <summary>
+            Reply to email address.
             </summary>
         </member>
         <member name="P:NAnt.Core.Tasks.MailTask.CcList">
@@ -7045,6 +7721,18 @@
             Host name of mail server. The default is <c>localhost</c>.
             </summary>
         </member>
+        <member name="P:NAnt.Core.Tasks.MailTask.Port">
+            <summary>
+            The port number used to connect to the mail server.
+            The default is <c>25</c>.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.Tasks.MailTask.EnableSsl">
+            <summary>
+            Indicates whether or not ssl should be used to
+            connect to the smtp host.
+            </summary>
+        </member>
         <member name="P:NAnt.Core.Tasks.MailTask.Message">
             <summary>
             Text to send in body of email message.
@@ -7055,9 +7743,25 @@
             Text to send in subject line of email message.
             </summary>
         </member>
+        <member name="P:NAnt.Core.Tasks.MailTask.IsBodyHtml">
+            <summary>
+            Indicates whether or not the body of the email is in
+            html format. The default value is <c>false</c>.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.Tasks.MailTask.UserName">
+            <summary>
+            The username to use when connecting to the smtp host.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.Tasks.MailTask.Password">
+            <summary>
+            The password to use when connecting to the smtp host.
+            </summary>
+        </member>
         <member name="P:NAnt.Core.Tasks.MailTask.Format">
             <summary>
-            Format of the message. The default is <see cref="F:System.Web.Mail.MailFormat.Text"/>.
+            Format of the message. The default is <see cref="F:NAnt.Core.Tasks.MailTask.MailFormat.Text"/>.
             </summary>
         </member>
         <member name="P:NAnt.Core.Tasks.MailTask.Files">
@@ -7068,6 +7772,22 @@
         <member name="P:NAnt.Core.Tasks.MailTask.Attachments">
             <summary>
             Attachments that are transmitted with the message.
+            </summary>
+        </member>
+        <member name="T:NAnt.Core.Tasks.MailTask.MailFormat">
+            <summary>
+            Temporary enum replacement of <see cref="T:System.Web.Mail.MailFormat"/>
+            to ease transition to newer property flags.
+            </summary>
+        </member>
+        <member name="F:NAnt.Core.Tasks.MailTask.MailFormat.Text">
+            <summary>
+            Indicates the body of the email is formatted in plain text.
+            </summary>
+        </member>
+        <member name="F:NAnt.Core.Tasks.MailTask.MailFormat.Html">
+            <summary>
+            Indicates the body of the email is formatted in html.
             </summary>
         </member>
         <member name="T:NAnt.Core.Tasks.MkDirTask">
@@ -7114,8 +7834,38 @@
               attribute.
               </para>
               <para>
-              A <see cref="T:NAnt.Core.Types.FileSet"/> can be used to select files to move. To use
-              a <see cref="T:NAnt.Core.Types.FileSet"/>, the <see cref="P:NAnt.Core.Tasks.CopyTask.ToDirectory"/> 
+              Entire directory structures can be moved to a new location.  For this
+              to happen, the following criteria must be met:
+              </para>
+              <list type="bullet">
+                <item>
+                  <description>
+                  Everything in the fileset is included
+                  </description>
+                </item>
+                <item>
+                  <description>
+                  The directory structure is not flattened
+                  </description>
+                </item>
+                <item>
+                  <description>
+                  Empty directories are included
+                  </description>
+                </item>
+                <item>
+                  <description>
+                  Destination directory does not exist
+                  </description>
+                </item>
+              </list>
+              <para>
+              If any of these items are not met, then the files within the source
+              directory will be moved over instead of the entire directory structure.
+              </para>
+              <para>
+              A <see cref="T:NAnt.Core.Types.FileSet"/> can be used to select files or directories to move.
+              To use a <see cref="T:NAnt.Core.Types.FileSet"/>, the <see cref="P:NAnt.Core.Tasks.CopyTask.ToDirectory"/>
               attribute must be set.
               </para>
               <h3>Encoding</h3>
@@ -7187,7 +7937,7 @@
               </para>
               <code>
                 <![CDATA[
-            <move tofile="target/dir">
+            <move todir="target/dir">
               <fileset basedir="source/dir"/>
             </move>
                 ]]>
@@ -7658,34 +8408,6 @@
               </code>
             </example>
         </member>
-        <member name="M:NAnt.Core.Tasks.SetEnvTask.SetEnvironmentVariable(System.String,System.String)">
-            <summary>
-            Win32 DllImport for the SetEnvironmentVariable function.
-            </summary>
-            <param name="lpName"></param>
-            <param name="lpValue"></param>
-            <returns></returns>
-        </member>
-        <member name="M:NAnt.Core.Tasks.SetEnvTask.setenv(System.String,System.String,System.Int32)">
-            <summary>
-            *nix dllimport for the setenv function.
-            </summary>
-            <param name="name"></param>
-            <param name="value"></param>
-            <param name="overwrite"></param>
-            <returns>
-            <c>0</c> if the execution is successful; otherwise, <c>-1</c>.
-            </returns>
-        </member>
-        <member name="M:NAnt.Core.Tasks.SetEnvTask.unsetenv(System.String)">
-            <summary>
-            Deletes all instances of the variable name.
-            </summary>
-            <param name="name">The variable to unset.</param>
-            <returns>
-            <c>0</c> if the execution is successful; otherwise, <c>-1</c>.
-            </returns>
-        </member>
         <member name="M:NAnt.Core.Tasks.SetEnvTask.Initialize">
             <summary>
             Checks whether the task is initialized with valid attributes.
@@ -8090,6 +8812,201 @@
             <summary>
             Used to select files that should be touched.
             </summary>
+        </member>
+        <member name="T:NAnt.Core.Tasks.TryCatchTask">
+            <summary>
+            Executes a set of tasks, and optionally catches a build exception to
+            allow recovery or rollback steps to be taken, or to define some steps
+            to be taken regardless if the tasks succeed or fail, or both.
+            </summary>
+            <remarks>
+              <para>
+              The tasks defined in the <c>&lt;<see cref="P:NAnt.Core.Tasks.TryCatchTask.TryBlock"/>&gt;</c> block
+              will be executed in turn, as they normally would in a target.
+              </para>
+              <para>
+              If a <c>&lt;<see cref="P:NAnt.Core.Tasks.TryCatchTask.CatchBlock"/>&gt;</c> block is defined, the 
+              tasks in that block will be executed in turn only if one of the tasks 
+              in the <c>&lt;<see cref="P:NAnt.Core.Tasks.TryCatchTask.TryBlock"/>&gt;</c> block fails. This 
+              failure will then be suppressed by the <c>&lt;<see cref="P:NAnt.Core.Tasks.TryCatchTask.CatchBlock"/>&gt;</c>
+              block.
+              </para>
+              <para>
+              The message associated with the failure can also be caught in a
+              property for use within the <c>&lt;<see cref="P:NAnt.Core.Tasks.TryCatchTask.CatchBlock"/>&gt;</c>
+              block.  The original contents of the property will be restored upon 
+              exiting the <c>&lt;<see cref="P:NAnt.Core.Tasks.TryCatchTask.CatchBlock"/>&gt;</c> block.
+              </para>
+              <para>
+              If a <c>&lt;<see cref="P:NAnt.Core.Tasks.TryCatchTask.FinallyBlock"/>&gt;</c> block is defined, the 
+              tasks in that block will be executed after the tasks in both the 
+              <c>&lt;<see cref="P:NAnt.Core.Tasks.TryCatchTask.TryBlock"/>&gt;</c> and <c>&lt;<see cref="P:NAnt.Core.Tasks.TryCatchTask.CatchBlock"/>&gt;</c>
+              blocks have been executed, regardless of whether any task fails in 
+              either block.
+              </para>
+            </remarks>
+            <example>
+              <code>
+                <![CDATA[
+            <trycatch>
+                <try>
+                    <echo message="In try" />
+                    <fail message="Failing!" />
+                </try>
+                <catch>
+                    <echo message="In catch" />
+                </catch>
+                <finally>
+                    <echo message="Finally done" />
+                </finally>
+            </trycatch>
+                ]]>
+              </code>
+              <para>
+              The output of this example will be:
+              </para>
+              <code>
+            In try
+            In catch
+            Finally done
+              </code>
+              <para>
+              The failure in the <c>&lt;<see cref="P:NAnt.Core.Tasks.TryCatchTask.TryBlock"/>&gt;</c> block will 
+              not cause the build to fail.
+              </para>
+            </example>
+            <example>
+              <code>
+                <![CDATA[
+            <trycatch>
+                <try>
+                    <echo message="In try" />
+                    <fail message="Just because..." />
+                </try>
+                <catch property="failure">
+                    <echo message="Caught failure: ${failure}" />
+                    <fail message="Bad catch" />
+                </catch>
+                <finally>
+                    <echo message="Finally done" />
+                </finally>
+            </trycatch>
+                ]]>
+              </code>
+              <para>
+              The output of this example will be:
+              </para>
+              <code>
+            In try
+            Caught failure: Just because...
+            Finally done
+            Build failed: Bad catch
+              </code>
+              <para>
+              Like the above, the failure in the <c>&lt;<see cref="P:NAnt.Core.Tasks.TryCatchTask.TryBlock"/>&gt;</c>
+              block does not cause the build to fail.  The failure in the 
+              <c>&lt;<see cref="P:NAnt.Core.Tasks.TryCatchTask.CatchBlock"/>&gt;</c> block does, however.
+              Note that the <c>&lt;<see cref="P:NAnt.Core.Tasks.TryCatchTask.FinallyBlock"/>&gt;</c> block is 
+              executed even though the <c>&lt;<see cref="P:NAnt.Core.Tasks.TryCatchTask.CatchBlock"/>&gt;</c>
+              block failed.
+              </para>
+            </example>
+            <example>
+              <code>
+                <![CDATA[
+            <trycatch>
+                <try>
+                    <echo message="In try" />
+                    <fail message="yet again" />
+                </try>
+                <catch property="failure">
+                    <echo message="Caught failure ${failure}" />
+                    <fail message="Bad catch" />
+                </catch>
+                <finally>
+                    <echo message="Finally done ${failure}" />
+                </finally>
+            </trycatch>
+                ]]>
+              </code>
+              <para>
+              The output of this example will be:
+              </para>
+              <code>
+            In try
+            Caught failure yet again
+            Build failed: Property 'failure' has not been set.
+              </code>
+              <para>
+              The <see cref="T:NAnt.Core.Tasks.EchoTask"/> in the <c>&lt;<see cref="P:NAnt.Core.Tasks.TryCatchTask.FinallyBlock"/>&gt;</c>
+              block failed because the "failure" property was not defined 
+              after exiting the <c>&lt;<see cref="P:NAnt.Core.Tasks.TryCatchTask.CatchBlock"/>&gt;</c> block.  
+              Note that the failure in the <c>&lt;<see cref="P:NAnt.Core.Tasks.TryCatchTask.FinallyBlock"/>&gt;</c> 
+              block has eclipsed the failure in the <c>&lt;<see cref="P:NAnt.Core.Tasks.TryCatchTask.CatchBlock"/>&gt;</c>
+              block.
+              </para>
+            </example>
+            <example>
+              <code>
+                <![CDATA[
+            <trycatch>
+                <try>
+                    <property name="temp.file" value="${path::get-temp-file-name()}" />
+                    <do-stuff to="${temp.file}" />
+                    <fail message="Oops..." />
+                </try>
+                <finally>
+                    <echo message="Cleaning up..." />
+                    <if test="${property::exists('temp.file')}">
+                        <delete file="${temp.file}" />
+                    </if>
+                </finally>
+            </trycatch>
+                ]]>
+              </code>
+              <para>
+              A more concrete example, that will always clean up the generated
+              temporary file after it has been created.
+              </para>
+            </example>
+        </member>
+        <member name="P:NAnt.Core.Tasks.TryCatchTask.TryBlock">
+            <summary>
+            The tasks in this block will be executed as a normal part of
+            the build script.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.Tasks.TryCatchTask.CatchBlock">
+            <summary>
+            The tasks in this block will be executed if any task in the try
+            block fails.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.Tasks.TryCatchTask.FinallyBlock">
+            <summary>
+            The tasks in this block will always be executed, regardless of
+            what happens in the try and catch blocks.
+            </summary>
+            <remarks>
+            Note that any failure in any of the tasks in this block will
+            prevent any subsequent tasks from executing.
+            </remarks>
+        </member>
+        <member name="P:NAnt.Core.Tasks.TryCatchTask.CatchElement.Property">
+            <summary>
+            Defines the name of the property to save the message describing
+            the failure that has been caught.
+            </summary>
+            <remarks>
+            <para>
+            The failure message is only available in the context of the catch
+            block.  If you wish to preserve the message, you will need to save
+            it into another property.
+            </para>
+            <para>
+            Readonly properties cannot be overridden by this mechanism.
+            </para>
+            </remarks>
         </member>
         <member name="T:NAnt.Core.Tasks.TStampTask">
             <summary>
@@ -8500,7 +9417,9 @@
         </member>
         <member name="P:NAnt.Core.Tasks.XmlPokeTask.PreserveWhitespace">
             <summary>
-            Namespace definitions to resolve prefixes in the XPath expression.
+            If <see langword="true" /> then the whitespace in the resulting
+            document will be preserved; otherwise the whitespace will be removed.
+            The default is <see langword="false" />.
             </summary>
         </member>
         <member name="T:NAnt.Core.Types.Argument">
@@ -9230,6 +10149,12 @@
             <returns>
             The <see cref="T:System.IO.FileInfo"/> of the file that has the newest (closest to present) last write time.
             </returns>
+        </member>
+        <member name="P:NAnt.Core.Types.FileSet.IsEverythingIncluded">
+            <summary>
+            Indicates whether or not every file and directory is included in
+            the fileset list.
+            </summary>
         </member>
         <member name="P:NAnt.Core.Types.FileSet.Exclude.Pattern">
             <summary>
@@ -11221,7 +12146,7 @@
         <member name="M:NAnt.Core.Util.AssemblyResolver.Attach">
             <summary> 
             Installs the assembly resolver by hooking up to the 
-            <see cref="F:System.AppDomain.AssemblyResolve"/> event.
+            <see cref="E:System.AppDomain.AssemblyResolve"/> event.
             </summary>
         </member>
         <member name="M:NAnt.Core.Util.AssemblyResolver.Detach">
@@ -11827,25 +12752,104 @@
             allow for filter chain processing.
             </summary>
         </member>
+        <member name="F:NAnt.Core.Util.FileUtils._bufferSize">
+            <summary>
+            Constant buffer size for copy/move functions.
+            </summary>
+            <remarks>Default value is 8k</remarks>
+        </member>
         <member name="M:NAnt.Core.Util.FileUtils.CopyFile(System.String,System.String,NAnt.Core.Filters.FilterChain,System.Text.Encoding,System.Text.Encoding)">
             <summary>
             Copies a file filtering its content through the filter chain.
             </summary>
-            <param name="sourceFileName">The file to copy</param>
-            <param name="destFileName">The file to copy to</param>
-            <param name="filterChain">Chain of filters to apply when copying, or <see langword="null" /> is no filters should be applied.</param>
-            <param name="inputEncoding">The encoding used to read the soure file.</param>
-            <param name="outputEncoding">The encoding used to write the destination file.</param>
+            <param name="sourceFileName">
+            The file to copy
+            </param>
+            <param name="destFileName">
+            The file to copy to
+            </param>
+            <param name="filterChain">
+            Chain of filters to apply when copying, or <see langword="null" /> is no
+            filters should be applied.
+            </param>
+            <param name="inputEncoding">
+            The encoding used to read the soure file.
+            </param>
+            <param name="outputEncoding">
+            The encoding used to write the destination file.
+            </param>
         </member>
         <member name="M:NAnt.Core.Util.FileUtils.MoveFile(System.String,System.String,NAnt.Core.Filters.FilterChain,System.Text.Encoding,System.Text.Encoding)">
             <summary>
             Moves a file filtering its content through the filter chain.
             </summary>
-            <param name="sourceFileName">The file to move.</param>
-            <param name="destFileName">The file to move move to.</param>
-            <param name="filterChain">Chain of filters to apply when moving, or <see langword="null" /> is no filters should be applied.</param>
-            <param name="inputEncoding">The encoding used to read the soure file.</param>
-            <param name="outputEncoding">The encoding used to write the destination file.</param>
+            <param name="sourceFileName">
+            The file to move.
+            </param>
+            <param name="destFileName">
+            The file to move move to.
+            </param>
+            <param name="filterChain">
+            Chain of filters to apply when moving, or <see langword="null" /> is no
+            filters should be applied.
+            </param>
+            <param name="inputEncoding">
+            The encoding used to read the soure file.
+            </param>
+            <param name="outputEncoding">
+            The encoding used to write the destination file.
+            </param>
+        </member>
+        <member name="M:NAnt.Core.Util.FileUtils.CopyDirectory(System.String,System.String,NAnt.Core.Filters.FilterChain,System.Text.Encoding,System.Text.Encoding)">
+            <summary>
+            Copies a directory while filtering its file content through the filter chain.
+            </summary>
+            <param name="sourceDirectory">
+            Source directory to copy from.
+            </param>
+            <param name="destDirectory">
+            Destination directory to copy to.
+            </param>
+            <param name="filterChain">
+            Chain of filters to apply when copying, or <see langword="null" /> is no
+            filters should be applied.
+            </param>
+            <param name="inputEncoding">
+            The encoding used to read the soure file.
+            </param>
+            <param name="outputEncoding">
+            The encoding used to write the destination file.
+            </param>
+        </member>
+        <member name="M:NAnt.Core.Util.FileUtils.MoveDirectory(System.String,System.String,NAnt.Core.Filters.FilterChain,System.Text.Encoding,System.Text.Encoding)">
+            <summary>
+            Moves a directory while filtering its file content through the filter chain.
+            </summary>
+            <param name="sourceDirectory">
+            Source directory to move from.
+            </param>
+            <param name="destDirectory">
+            Destination directory to move to.
+            </param>
+            <param name="filterChain">
+            Chain of filters to apply when copying, or <see langword="null" /> is no
+            filters should be applied.
+            </param>
+            <param name="inputEncoding">
+            The encoding used to read the soure file.
+            </param>
+            <param name="outputEncoding">
+            The encoding used to write the destination file.
+            </param>
+        </member>
+        <member name="M:NAnt.Core.Util.FileUtils.GetTempDirectoryName">
+            <summary>
+            Generates a new temporary directory name based on the system's
+            temporary path.
+            </summary>
+            <returns>
+            The temp directory name.
+            </returns>
         </member>
         <member name="M:NAnt.Core.Util.FileUtils.ReadFile(System.String,NAnt.Core.Filters.FilterChain,System.Text.Encoding)">
             <summary>
@@ -12443,6 +13447,15 @@
             Can be both a file or an URI.
             </remarks>
         </member>
+        <member name="P:NAnt.Core.CommandLineOptions.Pause">
+            <summary>
+            Pauses before program ends.
+            </summary>
+            <value>
+            <see langword="true" /> for pausing on program end; 
+            otherwise, <see langword="false" />. The default is <see langword="false" />.
+            </value>
+        </member>
         <member name="P:NAnt.Core.CommandLineOptions.Verbose">
             <summary>
             Gets or sets a value indicating whether more information should be
@@ -12901,38 +13914,43 @@
             <param name="source">DataType list to inherit</param>       
         </member>
         <member name="T:NAnt.Core.DirectoryScanner">
-            <summary>
-            Used for searching filesystem based on given include/exclude rules.
-            </summary>
-            <example>
-                <para>Simple client code for testing the class.</para>
-                <code>
-                    while (true) {
-                        DirectoryScanner scanner = new DirectoryScanner();
-                                    Console.Write("Scan Basedirectory : ");
-                        string s = Console.ReadLine();
-                        if (s.Length == 0) break;
-                        scanner.BaseDirectory = s;
-                                    while(true) {
-                            Console.Write("Include pattern : ");
-                            s = Console.ReadLine();
-                            if (s.Length == 0) break;
-                            scanner.Includes.Add(s);
-                        }
-                                    while(true) {
-                            Console.Write("Exclude pattern : ");
-                            s = Console.ReadLine();
-                            if (s.Length == 0) break;
-                            scanner.Excludes.Add(s);
-                        }
-                                    foreach (string name in scanner.FileNames)
-                            Console.WriteLine("file:" + name);
-                        foreach (string name in scanner.DirectoryNames)
-                            Console.WriteLine("dir :" + name);
-                                    Console.WriteLine("");
-                    }
-                </code>
-            </example>
+             <summary>
+             Used for searching filesystem based on given include/exclude rules.
+             </summary>
+             <example>
+                 <para>Simple client code for testing the class.</para>
+                 <code>
+                     while (true) {
+                         DirectoryScanner scanner = new DirectoryScanner();
+            
+                         Console.Write("Scan Basedirectory : ");
+                         string s = Console.ReadLine();
+                         if (s.Length == 0) break;
+                         scanner.BaseDirectory = s;
+            
+                         while(true) {
+                             Console.Write("Include pattern : ");
+                             s = Console.ReadLine();
+                             if (s.Length == 0) break;
+                             scanner.Includes.Add(s);
+                         }
+            
+                         while(true) {
+                             Console.Write("Exclude pattern : ");
+                             s = Console.ReadLine();
+                             if (s.Length == 0) break;
+                             scanner.Excludes.Add(s);
+                         }
+            
+                         foreach (string name in scanner.FileNames)
+                             Console.WriteLine("file:" + name);
+                         foreach (string name in scanner.DirectoryNames)
+                             Console.WriteLine("dir :" + name);
+            
+                         Console.WriteLine("");
+                     }
+                 </code>
+             </example>
         </member>
         <member name="M:NAnt.Core.DirectoryScanner.#ctor">
             <summary>
@@ -13036,6 +14054,12 @@
         <member name="P:NAnt.Core.DirectoryScanner.ScannedDirectories">
             <summary>
             Gets the list of directories that were scanned for files.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.DirectoryScanner.IsEverythingIncluded">
+            <summary>
+            Indicates whether or not the directory scanner included everything
+            that it scanned.
             </summary>
         </member>
         <member name="M:NAnt.Core.StringCollectionWithGoodToString.Clone">
@@ -14644,7 +15668,7 @@
         </member>
         <member name="M:NAnt.Core.Project.OnBuildStarted(System.Object,NAnt.Core.BuildEventArgs)">
             <summary>
-            Dispatches a <see cref="F:NAnt.Core.Project.BuildStarted"/> event to the build listeners 
+            Dispatches a <see cref="E:NAnt.Core.Project.BuildStarted"/> event to the build listeners 
             for this <see cref="T:NAnt.Core.Project"/>.
             </summary>
             <param name="sender">The source of the event.</param>
@@ -14652,7 +15676,7 @@
         </member>
         <member name="M:NAnt.Core.Project.OnBuildFinished(System.Object,NAnt.Core.BuildEventArgs)">
             <summary>
-            Dispatches a <see cref="F:NAnt.Core.Project.BuildFinished"/> event to the build listeners 
+            Dispatches a <see cref="E:NAnt.Core.Project.BuildFinished"/> event to the build listeners 
             for this <see cref="T:NAnt.Core.Project"/>.
             </summary>
             <param name="sender">The source of the event.</param>
@@ -14660,7 +15684,7 @@
         </member>
         <member name="M:NAnt.Core.Project.OnTargetStarted(System.Object,NAnt.Core.BuildEventArgs)">
             <summary>
-            Dispatches a <see cref="F:NAnt.Core.Project.TargetStarted"/> event to the build listeners 
+            Dispatches a <see cref="E:NAnt.Core.Project.TargetStarted"/> event to the build listeners 
             for this <see cref="T:NAnt.Core.Project"/>.
             </summary>
             <param name="sender">The source of the event.</param>
@@ -14668,7 +15692,7 @@
         </member>
         <member name="M:NAnt.Core.Project.OnTargetFinished(System.Object,NAnt.Core.BuildEventArgs)">
             <summary>
-            Dispatches a <see cref="F:NAnt.Core.Project.TargetFinished"/> event to the build listeners 
+            Dispatches a <see cref="E:NAnt.Core.Project.TargetFinished"/> event to the build listeners 
             for this <see cref="T:NAnt.Core.Project"/>.
             </summary>
             <param name="sender">The source of the event.</param>
@@ -14676,7 +15700,7 @@
         </member>
         <member name="M:NAnt.Core.Project.OnTaskStarted(System.Object,NAnt.Core.BuildEventArgs)">
             <summary>
-            Dispatches a <see cref="F:NAnt.Core.Project.TaskStarted"/> event to the build listeners 
+            Dispatches a <see cref="E:NAnt.Core.Project.TaskStarted"/> event to the build listeners 
             for this <see cref="T:NAnt.Core.Project"/>.
             </summary>
             <param name="sender">The source of the event.</param>
@@ -14684,7 +15708,7 @@
         </member>
         <member name="M:NAnt.Core.Project.OnTaskFinished(System.Object,NAnt.Core.BuildEventArgs)">
             <summary>
-            Dispatches the <see cref="F:NAnt.Core.Project.TaskFinished"/> event to the build listeners 
+            Dispatches the <see cref="E:NAnt.Core.Project.TaskFinished"/> event to the build listeners 
             for this <see cref="T:NAnt.Core.Project"/>.
             </summary>
             <param name="sender">The source of the event.</param>
@@ -14692,7 +15716,7 @@
         </member>
         <member name="M:NAnt.Core.Project.OnMessageLogged(NAnt.Core.BuildEventArgs)">
             <summary>
-            Dispatches a <see cref="F:NAnt.Core.Project.MessageLogged"/> event to the build listeners 
+            Dispatches a <see cref="E:NAnt.Core.Project.MessageLogged"/> event to the build listeners 
             for this <see cref="T:NAnt.Core.Project"/>.
             </summary>
             <param name="e">A <see cref="T:NAnt.Core.BuildEventArgs"/> that contains the event data.</param>
