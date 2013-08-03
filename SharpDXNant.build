@@ -70,6 +70,7 @@
         <include name="**/Win8Release/**" />
         <include name="**/obj/**" />
         <include name="**/Generated/**" />
+        <include name="**/*.sln.ide/**" />
         <include name="**/*.suo" />
         <include name="**/*.bak" />
         <include name="**/*.user" />
@@ -116,14 +117,14 @@
         <arg value="${assembly_version}" />
       </exec>
 
-	  <!-- This is asking for user/password WTF?!
+    <!-- This is asking for user/password WTF?!
       <exec program="git.exe">
         <arg value="push" />
         <arg value="origin" />
         <arg value="tag" />
         <arg value="${assembly_version}" />
       </exec>
-	  -->
+    -->
 
       <property name="publish-summary" value="Last commit -> ${git-last-commit}"/>
     </if>
@@ -171,8 +172,11 @@
     <!-- <call target="nuget"/> -->
 
     <!-- <call target="doc"/> -->
-
+    <call target="prepare-package"/>
     <call target="zip"/>
+    
+    <call target="fix-sharpdx-path-samples"/>
+    <!-- TODO: Add call to AdvancedInstaller here ->
   </target>
 
   <!-- Nuget Package build -->
@@ -263,6 +267,32 @@
     </exec>
   </target>
 
+  <target name="fix-sharpdx-path-samples">
+    <script language="C#">
+      <references>
+          <include name="System.dll" />
+      </references>
+      <imports>
+          <import namespace="System.Text.RegularExpressions" />
+      </imports>
+      <code>
+      <![CDATA[
+      public static void ScriptMain(Project project)
+      {
+          var regex = new Regex(@"HintPath>\.\..*Bin\\", RegexOptions.IgnoreCase);
+                foreach (var csproj in Directory.EnumerateFiles(Path.Combine(project.BaseDirectory, @"Build\Samples"), "*.csproj", SearchOption.AllDirectories))
+                {
+                    var text = File.ReadAllText(csproj);
+                    text = regex.Replace(text, @"HintPath>$(SharpDXSdkDir)\Bin\");
+                    File.WriteAllText(csproj, text);
+                    Console.WriteLine("Fix project sample [{0}]", csproj);
+                }
+      }
+      ]]>
+      </code>
+    </script>
+  </target>  
+  
   <!-- Documentation  -->
   <target name="doc" description="Generates documentation">
     <!-- Setup based on config -->
@@ -278,7 +308,7 @@
   </target>  
 
   <!-- Main zip task -->
-  <target name="zip" description="Build all targets.">
+  <target name="prepare-package" description="Package all files into a single Build directory">
     <!-- Setup based on config -->
     <call target="setup"/>
 
@@ -290,7 +320,7 @@
     <delete dir="Build"/>
     <mkdir dir="Build"/>
     
-    <copy todir="Build/">
+    <copy todir="Build/" includeemptydirs="false">
       <fileset>
         <include name="Bin/**/*.exe"/>
         <include name="Bin/**/*.dll"/>
@@ -307,7 +337,38 @@
         <exclude name="Samples/Win8/**/AppPackages/**"/>
       </fileset>
     </copy>
+  </target>
+  
+  <target name="zip" description="Build all targets.">
+    <!-- Setup based on config -->
+    <call target="setup"/>
 
+    <property name="cleandir" value="Samples/"/>
+    <property name="keeppdb" value="false"/>
+    <property name="keepexe" value="false"/>
+    <call target="clean"/>
+
+    <delete dir="Build"/>
+    <mkdir dir="Build"/>
+    
+    <copy todir="Build/" includeemptydirs="false">
+      <fileset>
+        <include name="Bin/**/*.exe"/>
+        <include name="Bin/**/*.dll"/>
+        <include name="Bin/**/*.winmd"/>
+        <include name="Bin/**/*.xml"/>
+        <include name="Samples/**"/>
+        <include name="*.html"/>
+        <include name="SharpDX.targets"/>
+        <include name="*.txt"/>
+        <exclude name="Samples/Win8/Win8Demos.sln"/>
+        <exclude name="**/*.sample.csproj"/>
+        <exclude name="**/_ReSharper.*/"/>
+        <exclude name="googlecode_password.txt"/>
+        <exclude name="Samples/Win8/**/AppPackages/**"/>
+      </fileset>
+    </copy>
+    
     <delete file="${output_bin_zip}"/>
     <exec program="External/7-Zip/7z.exe" workingdir="Build">
       <arg value="a"/>
