@@ -270,7 +270,13 @@ namespace SharpDX.Toolkit.Content
             object result = null;
 
             long startPosition = stream.Position;
-            bool keepStreamOpen = false;
+            var parameters = new ContentReaderParameters()
+                                 {
+                                     AssetName = assetName,
+                                     AssetType = typeof(T),
+                                     Stream = stream,
+                                     Options = options
+                                 };
 
             try
             {
@@ -284,19 +290,23 @@ namespace SharpDX.Toolkit.Content
                 {
                     IContentReader contentReader = null;
 
+
+#if WIN8METRO
+                    var isReaderValid = typeof(IContentReader).GetTypeInfo().IsAssignableFrom(contentReaderAttribute.ContentReaderType.GetTypeInfo());
+#else
+                    var isReaderValid = typeof(IContentReader).IsAssignableFrom(contentReaderAttribute.ContentReaderType);
+#endif
+                    if (!isReaderValid)
+                    {
+                        throw new NotSupportedException(string.Format("Invalid content reader type [{0}]. Expecting an instance of IContentReader", contentReaderAttribute.ContentReaderType.FullName));
+                    }
+
+
                     lock (registeredContentReaders)
                     {
                         foreach (var reader in registeredContentReaders)
                         {
-#if WIN8METRO
-                            var readerTypeMatchesAttribute = contentReaderAttribute.ContentReaderType
-                                .GetTypeInfo()
-                                .IsAssignableFrom(reader.GetType().GetTypeInfo());
-#else
-                            var readerTypeMatchesAttribute = contentReaderAttribute.ContentReaderType.IsInstanceOfType(reader);
-#endif
-
-                            if (readerTypeMatchesAttribute)
+                            if (contentReaderAttribute.ContentReaderType == reader.GetType())
                             {
                                 contentReader = reader;
                                 break;
@@ -305,9 +315,7 @@ namespace SharpDX.Toolkit.Content
 
                         if (contentReader == null)
                         {
-                            object contentReaderAbstract = Activator.CreateInstance(contentReaderAttribute.ContentReaderType);
-                            contentReader = contentReaderAbstract as IContentReader;
-                            if (contentReader == null) throw new NotSupportedException(string.Format("Invalid content reader type [{0}]. Expecting an instance of IContentReader", contentReaderAbstract.GetType().FullName));
+                            contentReader = (IContentReader)Activator.CreateInstance(contentReaderAttribute.ContentReaderType);
 
                             // If this content reader has been used successfully, then we can register it.
                             lock (registeredContentReaders)
@@ -319,7 +327,7 @@ namespace SharpDX.Toolkit.Content
 
                     // Rewind position every time we try to load an asset
                     stream.Position = startPosition;
-                    result = contentReader.ReadContent(this, assetName, stream, out keepStreamOpen, options);
+                    result = contentReader.ReadContent(this, ref parameters);
                     stream.Position = startPosition;
                 }
                 else
@@ -330,10 +338,11 @@ namespace SharpDX.Toolkit.Content
                     {
                         readers = new List<IContentReader>(registeredContentReaders);
                     }
+
                     foreach (IContentReader registeredContentReader in readers)
                     {
                         // Rewind position every time we try to load an asset
-                        result = registeredContentReader.ReadContent(this, assetName, stream, out keepStreamOpen, options);
+                        result = registeredContentReader.ReadContent(this, ref parameters);
                         stream.Position = startPosition;
                         if (result != null) break;
                     }
@@ -345,7 +354,7 @@ namespace SharpDX.Toolkit.Content
             {
                 // If we don't need to keep the stream open, then we can close it
                 // and make sure that we will close the stream even if there is an exception.
-                if (!keepStreamOpen)
+                if (!parameters.KeepStreamOpen)
                     stream.Dispose();
             }
 

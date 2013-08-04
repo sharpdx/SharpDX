@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,23 +18,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.IO;
-using SharpDX.Toolkit.Content;
 
-namespace SharpDX.Toolkit.Graphics
+namespace SharpDX.Toolkit.Content
 {
     /// <summary>
-    /// Content reader for an image.
+    /// Parameters used by <see cref="IContentReader.ReadContent"/>
     /// </summary>
-    class ImageContentReader : IContentReader
+    public struct ContentReaderParameters
     {
-        public object ReadContent(IContentManager readerManager, ref ContentReaderParameters parameters)
-        {
-            parameters.KeepStreamOpen = false;
-            var image = Image.Load(parameters.Stream);
-            if (image != null)
-                image.Name = parameters.AssetName;
-            return image;
-        }
+        /// <summary>
+        /// Name of the asset currently loaded when using <see cref="IContentManager.Load{T}"/>.
+        /// </summary>
+        public string AssetName;
+
+        /// <summary>
+        /// Type of the asset currently loaded when using <see cref="IContentManager.Load{T}"/>.
+        /// </summary>
+        public Type AssetType;
+
+        /// <summary>
+        /// Stream of the asset to load.
+        /// </summary>
+        public Stream Stream;
+
+        /// <summary>
+        /// This parameter is an out parameter for <see cref="IContentReader.ReadContent"/>. Set to true to let the ContentManager close the stream once the reader is done.
+        /// </summary>
+        public bool KeepStreamOpen;
+
+        /// <summary>
+        /// Custom options provided when using <see cref="IContentManager.Load{T}"/>.
+        /// </summary>
+        public object Options;
     }
 }

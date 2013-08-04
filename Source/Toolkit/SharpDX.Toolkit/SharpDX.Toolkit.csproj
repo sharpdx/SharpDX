@@ -17,6 +17,7 @@
     <Compile Include="Content\AssetNotFoundException.cs" />
     <Compile Include="Content\ContentManager.cs" />
     <Compile Include="Content\ContentReaderAttribute.cs" />
+    <Compile Include="Content\ContentReaderParameters.cs" />
     <Compile Include="Content\FileSystemContentResolver.cs" />
     <Compile Include="Content\IContentManager.cs" />
     <Compile Include="Content\IContentReader.cs" />

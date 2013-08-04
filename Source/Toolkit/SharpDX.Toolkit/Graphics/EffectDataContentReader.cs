@@ -28,10 +28,10 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     class EffectDataContentReader : IContentReader
     {
-        public object ReadContent(IContentManager readerManager, string assetName, Stream stream, out bool keepStreamOpen, object options)
+        public object ReadContent(IContentManager readerManager, ref ContentReaderParameters parameters)
         {
-            keepStreamOpen = false;
-            return EffectData.Load(stream);
+            parameters.KeepStreamOpen = false;
+            return EffectData.Load(parameters.Stream);
         }
     }
 }

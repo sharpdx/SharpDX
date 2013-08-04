@@ -28,12 +28,12 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     class TextureContentReader : GraphicsResourceContentReaderBase<Texture>
     {
-        protected override Texture ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Stream stream, object options)
+        protected override Texture ReadContent(IContentManager readerManager, GraphicsDevice device, ref ContentReaderParameters parameters)
         {
-            var texture = Texture.Load(device, stream);
+            var texture = Texture.Load(device, parameters.Stream);
             if (texture != null)
             {
-                texture.Name = assetName;
+                texture.Name = parameters.AssetName;
             }
 
             return texture;

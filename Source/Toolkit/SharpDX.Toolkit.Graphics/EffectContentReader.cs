@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.IO;
+using System;
 using SharpDX.Toolkit.Content;
 
 namespace SharpDX.Toolkit.Graphics
@@ -28,13 +28,19 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     internal class EffectContentReader : GraphicsResourceContentReaderBase<Effect>
     {
-        protected override Effect ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Stream stream, object options)
+        protected override Effect ReadContent(IContentManager readerManager, GraphicsDevice device, ref ContentReaderParameters parameters)
         {
-            var effectData = EffectData.Load(stream);
+            var effectData = EffectData.Load(parameters.Stream);
             if (effectData == null)
                 return null;
 
-            return new Effect(device, effectData);
+            if (parameters.AssetType == typeof(Effect))
+            {
+                return new Effect(device, effectData);
+            }
+
+            // Else, create a specific instance of effect using a constructor (GraphicsDevice, EffectData)
+            return (Effect)Activator.CreateInstance(parameters.AssetType, device, effectData);
         }
     }
 }
