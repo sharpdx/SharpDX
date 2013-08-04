@@ -57,7 +57,11 @@ namespace SharpDX.MediaFoundation
         /// <unmanaged-short>MFShutdown</unmanaged-short>	
         public static void Shutdown()
         {
-            MediaFactory.Shutdown();
+            if (isStartup)
+            {
+                MediaFactory.Shutdown();
+                isStartup = false;
+            }
         }
     }
 }

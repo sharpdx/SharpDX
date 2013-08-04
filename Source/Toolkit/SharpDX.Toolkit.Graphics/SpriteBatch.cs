@@ -163,7 +163,7 @@ namespace SharpDX.Toolkit.Graphics
             spriteQueue = new SpriteInfo[batchCapacity];
             spriteTextures = new TextureInfo[batchCapacity];
 
-            spriteEffect = new Effect(graphicsDevice, effectBytecode, graphicsDevice.DefaultEffectPool);
+            spriteEffect = ToDispose(new Effect(graphicsDevice, effectBytecode, graphicsDevice.DefaultEffectPool));
             spriteEffect.CurrentTechnique = spriteEffect.Techniques[0];
             spriteEffectPass = spriteEffect.CurrentTechnique.Passes[0];
 

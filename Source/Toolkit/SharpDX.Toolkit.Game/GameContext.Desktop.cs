@@ -51,6 +51,20 @@ namespace SharpDX.Toolkit
             ContextType = GameContextType.Desktop;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GameContext" /> class.
+        /// </summary>
+        /// <param name="windowHandle">The window handle.</param>
+        /// <param name="requestedWidth">Width of the requested.</param>
+        /// <param name="requestedHeight">Height of the requested.</param>
+        public GameContext(IntPtr windowHandle, int requestedWidth = 0, int requestedHeight = 0)
+        {
+            Control = System.Windows.Forms.Control.FromHandle(windowHandle);
+            RequestedWidth = requestedWidth;
+            RequestedHeight = requestedHeight;
+            ContextType = GameContextType.Desktop;
+        }
+
 #if !W8CORE && NET35Plus && !DIRECTX11_1
         protected GameContext(object control, int requestedWidth = 0, int requestedHeight = 0)
         {

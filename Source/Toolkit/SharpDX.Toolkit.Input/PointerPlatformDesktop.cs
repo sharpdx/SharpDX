@@ -54,7 +54,14 @@ namespace SharpDX.Toolkit.Input
         {
             if (nativeWindow == null) throw new ArgumentNullException("nativeWindow");
 
-            control = (Control)nativeWindow;
+            control = nativeWindow as Control;
+            if (control == null && nativeWindow is IntPtr)
+            {
+                control = Control.FromHandle((IntPtr)nativeWindow);
+            }
+
+            if (control == null)
+                throw new InvalidOperationException(string.Format("Unsupported native window: {0}", nativeWindow));
 
             control.MouseLeave += (o, e) => CreateAndAddPoint(PointerEventType.Exited, PointerUpdateKind.Other, 0);
             control.MouseEnter += (o, e) => CreateAndAddPoint(PointerEventType.Entered, PointerUpdateKind.Other, 0);

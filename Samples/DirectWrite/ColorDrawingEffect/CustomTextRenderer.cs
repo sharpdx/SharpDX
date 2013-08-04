@@ -152,19 +152,9 @@ namespace ColorDrawingEffect
 
         #region PixelSnapping Members
 
-        public SharpDX.DirectWrite.Matrix GetCurrentTransform(object clientDrawingContext)
+        public Matrix3x2 GetCurrentTransform(object clientDrawingContext)
         {
-            Matrix3x2 d2Dmatrix = _renderTarget.Transform;
-            var dwMatrix = new SharpDX.DirectWrite.Matrix()
-            {
-                M11 = d2Dmatrix.M11,
-                M12 = d2Dmatrix.M12,
-                M21 = d2Dmatrix.M22,
-                M22 = d2Dmatrix.M22,
-                Dx = d2Dmatrix.M31,
-                Dy = d2Dmatrix.M32
-            };
-            return dwMatrix;
+            return _renderTarget.Transform;
         }
 
         public float GetPixelsPerDip(object clientDrawingContext)

@@ -1083,7 +1083,7 @@ namespace SharpDX
                 System.Diagnostics.Debug.Assert(_canWrite);
                 System.Diagnostics.Debug.Assert(source != IntPtr.Zero);
                 System.Diagnostics.Debug.Assert(count > 0);
-                System.Diagnostics.Debug.Assert((_position + count) < _size);
+                System.Diagnostics.Debug.Assert((_position + count) <= _size);
 
                 // TODO: use Interop.memcpy
                 Utilities.CopyMemory((IntPtr) (_buffer + _position), source, (int) count);

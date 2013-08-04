@@ -83,7 +83,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <see cref="SharpDX.Vector2"/> is inside <see cref="SharpDX.Rectangle"/>, otherwise <c>false</c>.</returns>
         public bool Contains(Vector2 vector2D)
         {
-            return (vector2D.X >= _left && vector2D.X <= _right && vector2D.Y >= _top && vector2D.Y <= _bottom);
+            return Contains(vector2D.X, vector2D.Y);
         }
 
         /// <summary>
@@ -201,6 +201,7 @@ namespace SharpDX
                 Y = value.Y;
             }
         }
+
         /// <summary>Gets the Point that specifies the center of the rectangle.</summary>
         public Point Center
         {
@@ -215,7 +216,7 @@ namespace SharpDX
         {
             get
             {
-                return ((((Width == 0) && (Height == 0)) && (X == 0)) && (Y == 0));
+                return (Width == 0) && (Height == 0) && (X == 0) && (Y == 0);
             }
         }
 
@@ -223,8 +224,7 @@ namespace SharpDX
         /// <param name="amount">The values to adjust the position of the Rectangle by.</param>
         public void Offset(Point amount)
         {
-            X += amount.X;
-            Y += amount.Y;
+            Offset(amount.X, amount.Y);
         }
 
         /// <summary>Changes the position of the Rectangle.</summary>
@@ -252,14 +252,16 @@ namespace SharpDX
         /// <param name="y">The y-coordinate of the specified point.</param>
         public bool Contains(int x, int y)
         {
-            return ((((X <= x) && (x < Right)) && (Y <= y)) && (y < Bottom));
+            return (X <= x) && (x < Right) && (Y <= y) && (y < Bottom);
         }
 
         /// <summary>Determines whether this Rectangle contains a specified Point.</summary>
         /// <param name="value">The Point to evaluate.</param>
         public bool Contains(Point value)
         {
-            return ((((X <= value.X) && (value.X < Right)) && (Y <= value.Y)) && (value.Y < Bottom));
+            bool result;
+            Contains(ref value, out result);
+            return result;
         }
 
         /// <summary>Determines whether this Rectangle contains a specified Point.</summary>
@@ -267,14 +269,16 @@ namespace SharpDX
         /// <param name="result">[OutAttribute] true if the specified Point is contained within this Rectangle; false otherwise.</param>
         public void Contains(ref Point value, out bool result)
         {
-            result = (((X <= value.X) && (value.X < Right)) && (Y <= value.Y)) && (value.Y < Bottom);
+            result = (X <= value.X) && (value.X < Right) && (Y <= value.Y) && (value.Y < Bottom);
         }
 
         /// <summary>Determines whether this Rectangle entirely contains a specified Rectangle.</summary>
         /// <param name="value">The Rectangle to evaluate.</param>
         public bool Contains(Rectangle value)
         {
-            return ((((X <= value.X) && (value.Right <= Right)) && (Y <= value.Y)) && (value.Bottom <= Bottom));
+            bool result;
+            Contains(ref value, out result);
+            return result;
         }
 
         /// <summary>Determines whether this Rectangle entirely contains a specified Rectangle.</summary>
@@ -282,14 +286,16 @@ namespace SharpDX
         /// <param name="result">[OutAttribute] On exit, is true if this Rectangle entirely contains the specified Rectangle, or false if not.</param>
         public void Contains(ref Rectangle value, out bool result)
         {
-            result = (((X <= value.X) && (value.Right <= Right)) && (Y <= value.Y)) && (value.Bottom <= Bottom);
+            result = (X <= value.X) && (value.Right <= Right) && (Y <= value.Y) && (value.Bottom <= Bottom);
         }
 
         /// <summary>Determines whether a specified Rectangle intersects with this Rectangle.</summary>
         /// <param name="value">The Rectangle to evaluate.</param>
         public bool Intersects(Rectangle value)
         {
-            return ((((value.X < Right) && (X < value.Right)) && (value.Y < Bottom)) && (Y < value.Bottom));
+            bool result;
+            Intersects(ref value, out result);
+            return result;
         }
 
         /// <summary>
@@ -299,7 +305,7 @@ namespace SharpDX
         /// <param name="result">[OutAttribute] true if the specified Rectangle intersects with this one; false otherwise.</param>
         public void Intersects(ref Rectangle value, out bool result)
         {
-            result = (((value.X < Right) && (X < value.Right)) && (value.Y < Bottom)) && (Y < value.Bottom);
+            result = (value.X < Right) && (X < value.Right) && (value.Y < Bottom) && (Y < value.Bottom);
         }
 
         /// <summary>
@@ -310,15 +316,9 @@ namespace SharpDX
         /// <returns>Rectangle.</returns>
         public static Rectangle Intersect(Rectangle value1, Rectangle value2)
         {
-            int newLeft = (value1.X > value2.X) ? value1.X : value2.X;
-            int newTop = (value1.Y > value2.Y) ? value1.Y : value2.Y;
-            int newRight = (value1.Right < value2.Right) ? value1.Right : value2.Right;
-            int newBottom = (value1.Bottom < value2.Bottom) ? value1.Bottom : value2.Bottom;
-            if ((newRight > newLeft) && (newBottom > newTop))
-            {
-                return new Rectangle(newLeft, newTop, newRight - newLeft, newBottom - newTop);
-            }
-            return Empty;
+            Rectangle result;
+            Intersect(ref value1, ref value2, out result);
+            return result;
         }
 
         /// <summary>Creates a Rectangle defining the area where one rectangle overlaps with another rectangle.</summary>
@@ -349,15 +349,9 @@ namespace SharpDX
         /// <returns>Rectangle.</returns>
         public static Rectangle Union(Rectangle value1, Rectangle value2)
         {
-            int num6 = value1.X + value1.Width;
-            int num5 = value2.X + value2.Width;
-            int num4 = value1.Y + value1.Height;
-            int num3 = value2.Y + value2.Height;
-            int num2 = (value1.X < value2.X) ? value1.X : value2.X;
-            int num = (value1.Y < value2.Y) ? value1.Y : value2.Y;
-            int num8 = (num6 > num5) ? num6 : num5;
-            int num7 = (num4 > num3) ? num4 : num3;
-            return new Rectangle(num2, num, num8 - num2, num7 - num);
+            Rectangle result;
+            Union(ref value1, ref value2, out result);
+            return result;
         }
 
         /// <summary>

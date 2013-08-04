@@ -222,6 +222,11 @@ namespace SharpDX.Toolkit.Input
             if (nativeWindow == null) throw new ArgumentNullException("nativeWindow");
 
             var control = nativeWindow as Control;
+            if (control == null && nativeWindow is IntPtr)
+            {
+                control = Control.FromHandle((IntPtr)nativeWindow);
+            }
+
             if (control != null)
             {
                 control.PreviewKeyDown += HandlePreviewKeyDown;

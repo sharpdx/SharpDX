@@ -46,12 +46,9 @@ namespace SharpDX.DirectWrite
         /// <param name="clientDrawingContext">The drawing context passed to <see cref="SharpDX.DirectWrite.TextLayout.Draw_"/>.</param>
         /// <returns>a structure which has transform information for  pixel snapping.</returns>
         /// <unmanaged>HRESULT GetCurrentTransform([None] void* clientDrawingContext,[Out] DWRITE_MATRIX* transform)</unmanaged>
-        public virtual Matrix GetCurrentTransform(object clientDrawingContext)
+        public virtual Matrix3x2 GetCurrentTransform(object clientDrawingContext)
         {
-            Matrix matrix = new Matrix();
-            matrix.M11 = 1;
-            matrix.M22 = 1;
-            return matrix;
+            return new Matrix3x2 { M11 = 1, M22 = 1 };
         }
 
         /// <summary>	

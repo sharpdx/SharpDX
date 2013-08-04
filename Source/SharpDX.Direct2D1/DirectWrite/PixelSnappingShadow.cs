@@ -77,7 +77,7 @@ namespace SharpDX.DirectWrite
             {
                 unsafe
                 {
-                    SharpDX.DirectWrite.Matrix matrix;
+                    Matrix3x2 matrix;
                     try
                     {
                         var shadow = ToShadow<PixelSnappingShadow>(thisPtr);
