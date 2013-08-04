@@ -305,7 +305,10 @@
     <map param="ID3D11Device2::CheckMultisampleQualityLevels1::Flags" type="D3D11_CHECK_MULTISAMPLE_QUALITY_LEVELS_FLAG" />
     <map param="ID3D11Device2::CheckMultisampleQualityLevels1::pNumQualityLevels" return="true" />
     
+    <map param="ID3D11Device2::GetResourceTiling::pNumSubresourceTilings" attribute="inout" />
+    
     <map param="ID3D11DeviceContext2::.*Tile.*::Flags" type="D3D11_TILE_MAPPING_FLAG" />
+    <map param="ID3D11DeviceContext2::UpdateTileMappings::pRangeFlags" type="D3D11_TILE_RANGE_FLAG" />
 
     <!--
     // *****************************************************************
