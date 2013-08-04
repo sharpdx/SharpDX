@@ -137,26 +137,18 @@ namespace SharpDX.Toolkit.Graphics
             return result;
         }
 
-        public static ContentCompilerResult CompileFromFile(string fileName, ModelCompilerOptions compilerOptions)
-        {
-            using (var stream = new NativeFileStream(fileName, NativeFileMode.Open, NativeFileAccess.Read))
-            {
-                return Compile(stream, fileName, compilerOptions);
-            }
-        }
-
-        public static ContentCompilerResult Compile(Stream modelStream, string fileName, ModelCompilerOptions compilerOptions)
-        {
-            var compiler = new ModelCompiler();
-            return compiler.CompileFromStream(modelStream, fileName, compilerOptions);
-        }
-
         private Logger logger;
 
         private string modelFilePath;
         private string modelDirectory;
 
-        private ContentCompilerResult CompileFromStream(Stream modelStream, string fileName, ModelCompilerOptions compilerOptions)
+        public static ContentCompilerResult CompileFromFile(string fileName, ModelCompilerOptions compilerOptions)
+        {
+            var modelCompiler = new ModelCompiler();
+            return modelCompiler.CompileFromFileInternal(fileName, compilerOptions);
+        }
+
+        private ContentCompilerResult CompileFromFileInternal(string fileName, ModelCompilerOptions compilerOptions)
         {
             logger = new Logger();
             var result = new ContentCompilerResult() { Logger = logger };
@@ -190,7 +182,7 @@ namespace SharpDX.Toolkit.Graphics
                     break;
             }
 
-            scene = importer.ImportFileFromStream(modelStream, steps, Path.GetExtension(fileName));
+            scene = importer.ImportFile(fileName, steps);
             model = new ModelData();
             ProcessScene();
 
