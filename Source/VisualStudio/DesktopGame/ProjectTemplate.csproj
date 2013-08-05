@@ -142,6 +142,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
 	</ItemGroup>
   <ItemGroup>
+    <Folder Include="Content\" />
+  </ItemGroup>
+  <ItemGroup>
     $if$ ($sharpdx_feature_spritefont$ == true)
     <ToolkitFont Include="Content\Arial16.xml"/>
     $endif$
