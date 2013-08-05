@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Text;
 using SharpDX;
-using SharpDX.Toolkit;
-using SharpDX.Toolkit.Graphics;
 
 namespace $safeprojectname$
 {
+    // Use these namespace here to override SharpDX.Direct3D11
+    using SharpDX.Toolkit;
+    using SharpDX.Toolkit.Graphics;
+    using SharpDX.Toolkit.Input;
+
     /// <summary>
     /// Simple $safeclassname$ game using SharpDX.Toolkit.
     /// </summary>
@@ -27,6 +31,15 @@ $endif$$if$ ($sharpdx_feature_bloomeffect$ == true)
 $endif$$if$ ($sharpdx_feature_primitive3d$ == true)
         private BasicEffect basicEffect;
         private GeometricPrimitive primitive;
+$endif$$if$ ($sharpdx_feature_keyboard$ == true)
+        private KeyboardManager keyboard;
+        private KeyboardState keyboardState;
+$endif$$if$ ($sharpdx_feature_mouse$ == true)
+        private MouseManager mouse;
+        private MouseState mouseState;
+$endif$$if$ ($sharpdx_feature_pointer$ == true)
+        private PointerManager pointer;
+        private PointerState pointerState;
 $endif$
         /// <summary>
         /// Initializes a new instance of the <see cref="$safeclassname$" /> class.
@@ -39,7 +52,16 @@ $endif$
             // Setup the relative directory to the executable directory
             // for loading contents with the ContentManager
             Content.RootDirectory = "Content";
-        }
+$if$ ($sharpdx_feature_keyboard$ == true)
+            // Initialize input keyboard system
+            keyboard = new KeyboardManager(this);
+$endif$$if$ ($sharpdx_feature_mouse$ == true)
+            // Initialize input mouse system
+            mouse = new MouseManager(this);
+$endif$$if$ ($sharpdx_feature_pointer$ == true)
+            // Initialize input pointer system
+            pointer = new PointerManager(this);
+$endif$        }
 
         protected override void Initialize()
         {
@@ -55,18 +77,22 @@ $if$ ($sharpdx_feature_spritebatch$ == true)            // Instantiate a SpriteB
             spriteBatch = ToDisposeContent(new SpriteBatch(GraphicsDevice));
 $endif$$if$ ($sharpdx_feature_spritetexture$ == true)
             // Loads the balls texture (32 textures (32x32) stored vertically => 32 x 1024 ).
+            // The [Balls.dds] file is defined with the build action [ToolkitTexture] in the project
             ballsTexture = Content.Load<Texture2D>("Balls");
 $endif$$if$ ($sharpdx_feature_spritefont$ == true)
             // Loads a sprite font
+            // The [Arial16.xml] file is defined with the build action [ToolkitFont] in the project
             arial16Font = Content.Load<SpriteFont>("Arial16");
 $endif$$if$ ($sharpdx_feature_model3d$ == true)
             // Load a 3D model
+            // The [Ship.fbx] file is defined with the build action [ToolkitModel] in the project
             model = Content.Load<Model>("Ship");
                 
             // Enable default lighting on model.
             BasicEffect.EnableDefaultLighting(model, true);
 $endif$$if$ ($sharpdx_feature_bloomeffect$ == true)
             // Bloom Effect
+            // The [Bloom.fx] file is defined with the build action [ToolkitFxc] in the project
             bloomEffect = Content.Load<Effect>("Bloom");
 
             // Creates render targets for bloom effect
@@ -101,7 +127,16 @@ $endif$
 $if$ ($sharpdx_feature_primitive3d$ == true)            // Update basic effect for rendering the Primitive
             basicEffect.View = view;
             basicEffect.Projection = projection;
-$endif$}
+$endif$$if$ ($sharpdx_feature_keyboard$ == true)
+            // Get the current state of the keyboard
+            keyboardState = keyboard.GetState();
+$endif$$if$ ($sharpdx_feature_mouse$ == true)
+            // Get the current state of the mouse
+            mouseState = mouse.GetState();
+$endif$$if$ ($sharpdx_feature_pointer$ == true)
+            // Get the current state of the pointer
+            pointerState = pointer.GetState();
+$endif$        }
 
         protected override void Draw(GameTime gameTime)
         {
@@ -140,7 +175,31 @@ $endif$$if$ ($sharpdx_feature_spritefont$ == true)
             // Draw the some 2d text
             // ------------------------------------------------------------------------
             spriteBatch.Begin();
-            spriteBatch.DrawString(arial16Font, "This text is displayed with SpriteBatch", new Vector2(16, 16), Color.White);
+            var text = new StringBuilder("This text is displayed with SpriteBatch").AppendLine();
+$endif$$if$ ($sharpdx_feature_keyboard$ == true)
+            // Display pressed keys
+            var pressedKeys = keyboardState.GetPressedKeys();
+            text.Append("Key Pressed: [");
+            foreach (var key in pressedKeys)
+            {
+                text.Append(key.ToString());
+                text.Append(" ");
+            }
+            text.Append("]").AppendLine();
+$endif$$if$ ($sharpdx_feature_mouse$ == true)
+            // Display mouse coordinates and mouse button status
+            text.AppendFormat("Mouse ({0},{1}) Left: {2}, Right {3}", mouseState.X, mouseState.Y, mouseState.Left, mouseState.Right).AppendLine();
+$endif$$if$ ($sharpdx_feature_pointer$ == true)
+            var points = pointerState.Points;
+            if (points.Count > 0)
+            {
+                foreach (var point in points)
+                {
+                    text.AppendFormat("Pointer event: [{0}] {1} {2} ({3}, {4})", point.PointerId, point.DeviceType, point.EventType, point.Position.X, point.Position.Y).AppendLine();
+                }
+            }
+$endif$$if$ ($sharpdx_feature_spritefont$ == true)
+            spriteBatch.DrawString(arial16Font, text.ToString(), new Vector2(16, 16), Color.White);
             spriteBatch.End();
 $endif$$if$ ($sharpdx_feature_spritetexture$ == true)
             // ------------------------------------------------------------------------

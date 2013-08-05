@@ -43,6 +43,8 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.buttonOk = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.buttonCheckAll = new System.Windows.Forms.Button();
+            this.buttonUncheckAll = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -150,7 +152,7 @@
             this.checkInputTouch.Name = "checkInputTouch";
             this.checkInputTouch.Size = new System.Drawing.Size(57, 17);
             this.checkInputTouch.TabIndex = 4;
-            this.checkInputTouch.Tag = "$sharpdx_feature_touch$";
+            this.checkInputTouch.Tag = "$sharpdx_feature_pointer$";
             this.checkInputTouch.Text = "Touch";
             this.checkInputTouch.UseVisualStyleBackColor = true;
             this.checkInputTouch.CheckedChanged += new System.EventHandler(this.features_CheckedChanged);
@@ -191,7 +193,7 @@
             // buttonOk
             // 
             this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOk.Location = new System.Drawing.Point(203, 177);
+            this.buttonOk.Location = new System.Drawing.Point(112, 177);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(75, 23);
             this.buttonOk.TabIndex = 4;
@@ -201,12 +203,32 @@
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(313, 177);
+            this.buttonCancel.Location = new System.Drawing.Point(275, 177);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
             this.buttonCancel.Text = "&Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
+            // 
+            // buttonCheckAll
+            // 
+            this.buttonCheckAll.Location = new System.Drawing.Point(394, 25);
+            this.buttonCheckAll.Name = "buttonCheckAll";
+            this.buttonCheckAll.Size = new System.Drawing.Size(75, 23);
+            this.buttonCheckAll.TabIndex = 7;
+            this.buttonCheckAll.Text = "Check All";
+            this.buttonCheckAll.UseVisualStyleBackColor = true;
+            this.buttonCheckAll.Click += new System.EventHandler(this.buttonCheckAll_Click);
+            // 
+            // buttonUncheckAll
+            // 
+            this.buttonUncheckAll.Location = new System.Drawing.Point(394, 54);
+            this.buttonUncheckAll.Name = "buttonUncheckAll";
+            this.buttonUncheckAll.Size = new System.Drawing.Size(75, 23);
+            this.buttonUncheckAll.TabIndex = 8;
+            this.buttonUncheckAll.Text = "Uncheck All";
+            this.buttonUncheckAll.UseVisualStyleBackColor = true;
+            this.buttonUncheckAll.Click += new System.EventHandler(this.buttonUncheckAll_Click);
             // 
             // WizardForm
             // 
@@ -214,7 +236,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(405, 210);
+            this.ClientSize = new System.Drawing.Size(484, 219);
+            this.Controls.Add(this.buttonUncheckAll);
+            this.Controls.Add(this.buttonCheckAll);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOk);
             this.Controls.Add(this.groupBox4);
@@ -222,9 +246,11 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximumSize = new System.Drawing.Size(421, 249);
-            this.MinimumSize = new System.Drawing.Size(421, 249);
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(500, 258);
+            this.MinimumSize = new System.Drawing.Size(500, 258);
             this.Name = "WizardForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Select samples to include in the Project";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -252,5 +278,7 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Button buttonOk;
         private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.Button buttonCheckAll;
+        private System.Windows.Forms.Button buttonUncheckAll;
     }
 }

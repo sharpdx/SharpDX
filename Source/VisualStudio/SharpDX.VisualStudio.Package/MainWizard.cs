@@ -30,7 +30,7 @@ namespace SharpDX.VisualStudio.ProjectWizard
 {
     public class MainWizard : IWizard
     {
-        private WizardForm wizardFrm;
+        private WizardForm wizardForm;
 
         public void BeforeOpeningFile(ProjectItem projectItem)
         {
@@ -48,7 +48,7 @@ namespace SharpDX.VisualStudio.ProjectWizard
         {
         }
 
-        public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
+        public void RunStarted(object automationObject, Dictionary<string, string> props, WizardRunKind runKind, object[] customParams)
         {
             // Check that SharpDX is correctly installed
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SharpDXSdkDir")))
@@ -56,28 +56,36 @@ namespace SharpDX.VisualStudio.ProjectWizard
                 MessageBox.Show("Unable to find SharpDX installation directory. Expecting [SharpDXSdkDir] environment variable", "SharpDX Toolkit Wizard Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw new WizardCancelledException("Expecting [SharpDXSdkDir] environment variable");
             }
-
-            replacementsDictionary.Add("$sharpdx_platform_desktop$", "true");
-            replacementsDictionary.Add("$safeclassname$", replacementsDictionary["$safeprojectname$"].Replace(".", string.Empty));
+            props.Add("$safeclassname$", props["$safeprojectname$"].Replace(".", string.Empty));
 
             //Call win form created in the project to accept user input
-            wizardFrm = new WizardForm { Properties = replacementsDictionary };
-            var result = wizardFrm.ShowDialog();
+            wizardForm = new WizardForm { Properties = props };
+            var result = wizardForm.ShowDialog();
             if (result == DialogResult.Cancel)
             {
                 throw new WizardCancelledException();
             }
 
             // Set spritebatch feature if spritetexture or spritefont is true
-            if (wizardFrm.Properties.ContainsKey("$sharpdx_feature_spritetexture$") || wizardFrm.Properties.ContainsKey("$sharpdx_feature_spritefont$"))
+            if (GetKey(props, "$sharpdx_feature_spritetexture$") || GetKey(props, "$sharpdx_feature_spritefont$"))
             {
-                wizardFrm.Properties["$sharpdx_feature_spritebatch$"] = "true";
+                wizardForm.Properties["$sharpdx_feature_spritebatch$"] = "true";
             }
 
-            if (wizardFrm.Properties.ContainsKey("$sharpdx_feature_model3d$") || wizardFrm.Properties.ContainsKey("$sharpdx_feature_primitive3d$"))
+            if (GetKey(props, "$sharpdx_feature_model3d$") || GetKey(props, "$sharpdx_feature_primitive3d$"))
             {
-                wizardFrm.Properties["$sharpdx_feature_3d$"] = "true";
+                wizardForm.Properties["$sharpdx_feature_3d$"] = "true";
             }
+        }
+
+        private bool GetKey(Dictionary<string, string> replacementsDictionary, string name)
+        {
+            string value;
+            if (replacementsDictionary.TryGetValue(name, out value))
+            {
+                return value == "true";
+            }
+            return false;
         }
 
         public bool ShouldAddProjectItem(string filePath)

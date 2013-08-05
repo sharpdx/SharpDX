@@ -14,6 +14,9 @@
     <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
   </TemplateData>
   <TemplateContent>
+    <CustomParameters>
+        <CustomParameter Name="$sharpdx_platform_desktop$" Value="true"/>
+    </CustomParameters>    
     <Project File="ProjectTemplate.csproj" ReplaceParameters="true">
       <ProjectItem ReplaceParameters="true" TargetFileName="Properties\AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" OpenInEditor="true">$safeclassname$.cs</ProjectItem>
