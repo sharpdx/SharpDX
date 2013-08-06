@@ -55,7 +55,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Application_TemporaryKey.pfx" />
     <None Include="Balls.dds" />
+    <None Include="Package-managed.appxmanifest">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Ship.fbx" />
@@ -67,17 +71,21 @@
     <None Include="ProjectTemplate.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <VSTemplate Include="DesktopGame.vstemplate">
+    <VSTemplate Include="ToolkitGame.vstemplate">
       <SubType>Designer</SubType>
       <OutputSubPath>SharpDX</OutputSubPath>
     </VSTemplate>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Logo.png" />
+    <None Include="SmallLogo.png" />
+    <None Include="SplashScreen.png" />
+    <None Include="StoreLogo.png" />
     <None Include="Arial16.xml" />
     <None Include="Bloom.fx" />
-    <Content Include="logo.ico">
+    <None Include="logo.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

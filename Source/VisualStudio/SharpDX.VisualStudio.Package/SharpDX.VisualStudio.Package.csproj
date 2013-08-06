@@ -170,9 +170,9 @@
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DesktopGame\DesktopGame.csproj">
+    <ProjectReference Include="..\ToolkitGame\ToolkitGame.csproj">
       <Project>{0B3215F2-A447-4E44-A111-0CCC5E4F0D14}</Project>
-      <Name>DesktopGame</Name>
+      <Name>ToolkitGame</Name>
       <VSIXSubPath>ProjectTemplates</VSIXSubPath>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>

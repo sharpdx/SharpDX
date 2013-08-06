@@ -45,9 +45,15 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonCheckAll = new System.Windows.Forms.Button();
             this.buttonUncheckAll = new System.Windows.Forms.Button();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.checkPlatformDesktop = new System.Windows.Forms.RadioButton();
+            this.radioButtonPlatformWinRT = new System.Windows.Forms.RadioButton();
+            this.radioButtonPlatformWinRTXaml = new System.Windows.Forms.RadioButton();
+            this.radioButtonPlatformWP8 = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -56,7 +62,7 @@
             this.groupBox1.Controls.Add(this.checkModel3d);
             this.groupBox1.Controls.Add(this.checkSpriteFont);
             this.groupBox1.Controls.Add(this.checkSpriteBatch);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
+            this.groupBox1.Location = new System.Drawing.Point(12, 88);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(185, 75);
             this.groupBox1.TabIndex = 0;
@@ -114,7 +120,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.checkBloomEffect);
-            this.groupBox2.Location = new System.Drawing.Point(203, 15);
+            this.groupBox2.Location = new System.Drawing.Point(203, 91);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(185, 72);
             this.groupBox2.TabIndex = 1;
@@ -138,7 +144,7 @@
             this.groupBox3.Controls.Add(this.checkInputTouch);
             this.groupBox3.Controls.Add(this.checkInputMouse);
             this.groupBox3.Controls.Add(this.checkInputKeyboard);
-            this.groupBox3.Location = new System.Drawing.Point(12, 93);
+            this.groupBox3.Location = new System.Drawing.Point(12, 169);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(185, 78);
             this.groupBox3.TabIndex = 2;
@@ -183,7 +189,7 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Location = new System.Drawing.Point(203, 93);
+            this.groupBox4.Location = new System.Drawing.Point(203, 169);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(185, 78);
             this.groupBox4.TabIndex = 3;
@@ -193,7 +199,7 @@
             // buttonOk
             // 
             this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOk.Location = new System.Drawing.Point(112, 177);
+            this.buttonOk.Location = new System.Drawing.Point(112, 253);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(75, 23);
             this.buttonOk.TabIndex = 4;
@@ -203,7 +209,7 @@
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(275, 177);
+            this.buttonCancel.Location = new System.Drawing.Point(275, 253);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
@@ -212,7 +218,7 @@
             // 
             // buttonCheckAll
             // 
-            this.buttonCheckAll.Location = new System.Drawing.Point(394, 25);
+            this.buttonCheckAll.Location = new System.Drawing.Point(394, 101);
             this.buttonCheckAll.Name = "buttonCheckAll";
             this.buttonCheckAll.Size = new System.Drawing.Size(75, 23);
             this.buttonCheckAll.TabIndex = 7;
@@ -222,7 +228,7 @@
             // 
             // buttonUncheckAll
             // 
-            this.buttonUncheckAll.Location = new System.Drawing.Point(394, 54);
+            this.buttonUncheckAll.Location = new System.Drawing.Point(394, 130);
             this.buttonUncheckAll.Name = "buttonUncheckAll";
             this.buttonUncheckAll.Size = new System.Drawing.Size(75, 23);
             this.buttonUncheckAll.TabIndex = 8;
@@ -230,13 +236,79 @@
             this.buttonUncheckAll.UseVisualStyleBackColor = true;
             this.buttonUncheckAll.Click += new System.EventHandler(this.buttonUncheckAll_Click);
             // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.radioButtonPlatformWP8);
+            this.groupBox5.Controls.Add(this.radioButtonPlatformWinRTXaml);
+            this.groupBox5.Controls.Add(this.radioButtonPlatformWinRT);
+            this.groupBox5.Controls.Add(this.checkPlatformDesktop);
+            this.groupBox5.Location = new System.Drawing.Point(12, 5);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(376, 77);
+            this.groupBox5.TabIndex = 9;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Select a platform";
+            // 
+            // checkPlatformDesktop
+            // 
+            this.checkPlatformDesktop.AutoSize = true;
+            this.checkPlatformDesktop.Location = new System.Drawing.Point(6, 19);
+            this.checkPlatformDesktop.Name = "checkPlatformDesktop";
+            this.checkPlatformDesktop.Size = new System.Drawing.Size(65, 17);
+            this.checkPlatformDesktop.TabIndex = 0;
+            this.checkPlatformDesktop.TabStop = true;
+            this.checkPlatformDesktop.Tag = "$sharpdx_platform_desktop$";
+            this.checkPlatformDesktop.Text = "Desktop";
+            this.checkPlatformDesktop.UseVisualStyleBackColor = true;
+            this.checkPlatformDesktop.CheckedChanged += new System.EventHandler(this.platform_CheckedChanged);
+            // 
+            // radioButtonPlatformWinRT
+            // 
+            this.radioButtonPlatformWinRT.AutoSize = true;
+            this.radioButtonPlatformWinRT.Location = new System.Drawing.Point(93, 19);
+            this.radioButtonPlatformWinRT.Name = "radioButtonPlatformWinRT";
+            this.radioButtonPlatformWinRT.Size = new System.Drawing.Size(97, 17);
+            this.radioButtonPlatformWinRT.TabIndex = 1;
+            this.radioButtonPlatformWinRT.TabStop = true;
+            this.radioButtonPlatformWinRT.Tag = "$sharpdx_platform_winrt$";
+            this.radioButtonPlatformWinRT.Text = "Windows Store";
+            this.radioButtonPlatformWinRT.UseVisualStyleBackColor = true;
+            this.radioButtonPlatformWinRT.CheckedChanged += new System.EventHandler(this.platform_CheckedChanged);
+            // 
+            // radioButtonPlatformWinRTXaml
+            // 
+            this.radioButtonPlatformWinRTXaml.AutoSize = true;
+            this.radioButtonPlatformWinRTXaml.Location = new System.Drawing.Point(197, 19);
+            this.radioButtonPlatformWinRTXaml.Name = "radioButtonPlatformWinRTXaml";
+            this.radioButtonPlatformWinRTXaml.Size = new System.Drawing.Size(129, 17);
+            this.radioButtonPlatformWinRTXaml.TabIndex = 2;
+            this.radioButtonPlatformWinRTXaml.TabStop = true;
+            this.radioButtonPlatformWinRTXaml.Tag = "$sharpdx_platform_winrt_xaml$";
+            this.radioButtonPlatformWinRTXaml.Text = "Windows Store XAML";
+            this.radioButtonPlatformWinRTXaml.UseVisualStyleBackColor = true;
+            this.radioButtonPlatformWinRTXaml.CheckedChanged += new System.EventHandler(this.platform_CheckedChanged);
+            // 
+            // radioButtonPlatformWP8
+            // 
+            this.radioButtonPlatformWP8.AutoSize = true;
+            this.radioButtonPlatformWP8.Location = new System.Drawing.Point(6, 42);
+            this.radioButtonPlatformWP8.Name = "radioButtonPlatformWP8";
+            this.radioButtonPlatformWP8.Size = new System.Drawing.Size(112, 17);
+            this.radioButtonPlatformWP8.TabIndex = 3;
+            this.radioButtonPlatformWP8.TabStop = true;
+            this.radioButtonPlatformWP8.Tag = "$sharpdx_platform_wp8$";
+            this.radioButtonPlatformWP8.Text = "Windows Phone 8";
+            this.radioButtonPlatformWP8.UseVisualStyleBackColor = true;
+            this.radioButtonPlatformWP8.CheckedChanged += new System.EventHandler(this.platform_CheckedChanged);
+            // 
             // WizardForm
             // 
             this.AcceptButton = this.buttonOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(484, 219);
+            this.ClientSize = new System.Drawing.Size(484, 294);
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.buttonUncheckAll);
             this.Controls.Add(this.buttonCheckAll);
             this.Controls.Add(this.buttonCancel);
@@ -247,8 +319,6 @@
             this.Controls.Add(this.groupBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(500, 258);
-            this.MinimumSize = new System.Drawing.Size(500, 258);
             this.Name = "WizardForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Select samples to include in the Project";
@@ -258,6 +328,8 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -280,5 +352,10 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonCheckAll;
         private System.Windows.Forms.Button buttonUncheckAll;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.RadioButton radioButtonPlatformWP8;
+        private System.Windows.Forms.RadioButton radioButtonPlatformWinRTXaml;
+        private System.Windows.Forms.RadioButton radioButtonPlatformWinRT;
+        private System.Windows.Forms.RadioButton checkPlatformDesktop;
     }
 }

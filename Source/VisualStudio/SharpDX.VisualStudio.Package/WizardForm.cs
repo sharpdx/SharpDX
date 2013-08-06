@@ -15,7 +15,8 @@ namespace SharpDX.VisualStudio.ProjectWizard
 
         private void features_CheckedChanged(object sender, EventArgs e)
         {
-            var checkbox = ((CheckBox)sender);
+            var checkbox = (CheckBox)sender;
+
             Properties[(string)checkbox.Tag] = checkbox.Checked.ToString().ToLowerInvariant();
 
             // If We are using the bloom effect, It requires to have at least one basic effect setup
@@ -35,6 +36,13 @@ namespace SharpDX.VisualStudio.ProjectWizard
                 // By default 
                 checkSpriteFont.Checked = true;
             }
+        }
+
+        private void platform_CheckedChanged(object sender, EventArgs e)
+        {
+            var radioButton = (RadioButton)sender;
+
+            Properties[(string)radioButton.Tag] = radioButton.Checked.ToString().ToLowerInvariant();
         }
 
         private void buttonCheckAll_Click(object sender, EventArgs e)

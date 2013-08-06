@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Windows.Forms;
 
 using EnvDTE;
@@ -32,20 +33,26 @@ namespace SharpDX.VisualStudio.ProjectWizard
     {
         private WizardForm wizardForm;
 
+        private IWizard winRTCertificateWizard;
+
         public void BeforeOpeningFile(ProjectItem projectItem)
         {
+            if (winRTCertificateWizard != null) winRTCertificateWizard.BeforeOpeningFile(projectItem);
         }
 
         public void ProjectFinishedGenerating(Project project)
         {
+            if (winRTCertificateWizard != null) winRTCertificateWizard.ProjectFinishedGenerating(project);
         }
 
         public void ProjectItemFinishedGenerating(ProjectItem projectItem)
         {
+            if (winRTCertificateWizard != null) winRTCertificateWizard.ProjectItemFinishedGenerating(projectItem);
         }
 
         public void RunFinished()
         {
+            if (winRTCertificateWizard != null) winRTCertificateWizard.RunFinished();
         }
 
         public void RunStarted(object automationObject, Dictionary<string, string> props, WizardRunKind runKind, object[] customParams)
@@ -65,6 +72,21 @@ namespace SharpDX.VisualStudio.ProjectWizard
             {
                 throw new WizardCancelledException();
             }
+
+            // Hack on WinRT / WinRT XAML to run the certificate wizards as well as our own wizard
+            if (GetKey(props, "$sharpdx_platform_winrt$") || GetKey(props, "$sharpdx_platform_winrt_xaml$"))
+            {
+                try
+                {
+                    var assembly = Assembly.Load("Microsoft.VisualStudio.WinRT.TemplateWizards, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
+                    var type = assembly.GetType("Microsoft.VisualStudio.WinRT.TemplateWizards.CreateProjectCertificate.Wizard");
+                    winRTCertificateWizard = (IWizard)Activator.CreateInstance(type);
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+            if (winRTCertificateWizard != null) winRTCertificateWizard.RunStarted(automationObject, props, runKind, customParams);
 
             // Set spritebatch feature if spritetexture or spritefont is true
             if (GetKey(props, "$sharpdx_feature_spritetexture$") || GetKey(props, "$sharpdx_feature_spritefont$"))
