@@ -46,7 +46,7 @@
             this.buttonCheckAll = new System.Windows.Forms.Button();
             this.buttonUncheckAll = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.checkPlatformDesktop = new System.Windows.Forms.RadioButton();
+            this.radioButtonPlatformDesktop = new System.Windows.Forms.RadioButton();
             this.radioButtonPlatformWinRT = new System.Windows.Forms.RadioButton();
             this.radioButtonPlatformWinRTXaml = new System.Windows.Forms.RadioButton();
             this.radioButtonPlatformWP8 = new System.Windows.Forms.RadioButton();
@@ -241,7 +241,7 @@
             this.groupBox5.Controls.Add(this.radioButtonPlatformWP8);
             this.groupBox5.Controls.Add(this.radioButtonPlatformWinRTXaml);
             this.groupBox5.Controls.Add(this.radioButtonPlatformWinRT);
-            this.groupBox5.Controls.Add(this.checkPlatformDesktop);
+            this.groupBox5.Controls.Add(this.radioButtonPlatformDesktop);
             this.groupBox5.Location = new System.Drawing.Point(12, 5);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(376, 77);
@@ -249,18 +249,18 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Select a platform";
             // 
-            // checkPlatformDesktop
+            // radioButtonPlatformDesktop
             // 
-            this.checkPlatformDesktop.AutoSize = true;
-            this.checkPlatformDesktop.Location = new System.Drawing.Point(6, 19);
-            this.checkPlatformDesktop.Name = "checkPlatformDesktop";
-            this.checkPlatformDesktop.Size = new System.Drawing.Size(65, 17);
-            this.checkPlatformDesktop.TabIndex = 0;
-            this.checkPlatformDesktop.TabStop = true;
-            this.checkPlatformDesktop.Tag = "$sharpdx_platform_desktop$";
-            this.checkPlatformDesktop.Text = "Desktop";
-            this.checkPlatformDesktop.UseVisualStyleBackColor = true;
-            this.checkPlatformDesktop.CheckedChanged += new System.EventHandler(this.platform_CheckedChanged);
+            this.radioButtonPlatformDesktop.AutoSize = true;
+            this.radioButtonPlatformDesktop.Location = new System.Drawing.Point(6, 19);
+            this.radioButtonPlatformDesktop.Name = "radioButtonPlatformDesktop";
+            this.radioButtonPlatformDesktop.Size = new System.Drawing.Size(65, 17);
+            this.radioButtonPlatformDesktop.TabIndex = 0;
+            this.radioButtonPlatformDesktop.TabStop = true;
+            this.radioButtonPlatformDesktop.Tag = "$sharpdx_platform_desktop$";
+            this.radioButtonPlatformDesktop.Text = "Desktop";
+            this.radioButtonPlatformDesktop.UseVisualStyleBackColor = true;
+            this.radioButtonPlatformDesktop.CheckedChanged += new System.EventHandler(this.platform_CheckedChanged);
             // 
             // radioButtonPlatformWinRT
             // 
@@ -356,6 +356,6 @@
         private System.Windows.Forms.RadioButton radioButtonPlatformWP8;
         private System.Windows.Forms.RadioButton radioButtonPlatformWinRTXaml;
         private System.Windows.Forms.RadioButton radioButtonPlatformWinRT;
-        private System.Windows.Forms.RadioButton checkPlatformDesktop;
+        private System.Windows.Forms.RadioButton radioButtonPlatformDesktop;
     }
 }

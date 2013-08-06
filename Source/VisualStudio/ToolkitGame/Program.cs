@@ -18,8 +18,10 @@ namespace $safeprojectname$
 #endif
         static void Main()
         {
-            using (var program = new $safeclassname$())
+$if$ ($sharpdx_platform_winrt_xaml$ == true)            global::Windows.UI.Xaml.Application.Start((p) => new App());
+$else$            using (var program = new $safeclassname$())
                 program.Run();
+$endif$
         }
     }
 }

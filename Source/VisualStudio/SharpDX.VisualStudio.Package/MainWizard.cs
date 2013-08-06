@@ -66,7 +66,7 @@ namespace SharpDX.VisualStudio.ProjectWizard
             props.Add("$safeclassname$", props["$safeprojectname$"].Replace(".", string.Empty));
 
             //Call win form created in the project to accept user input
-            wizardForm = new WizardForm { Properties = props };
+            wizardForm = new WizardForm(props);
             var result = wizardForm.ShowDialog();
             if (result == DialogResult.Cancel)
             {
@@ -91,12 +91,17 @@ namespace SharpDX.VisualStudio.ProjectWizard
             // Set spritebatch feature if spritetexture or spritefont is true
             if (GetKey(props, "$sharpdx_feature_spritetexture$") || GetKey(props, "$sharpdx_feature_spritefont$"))
             {
-                wizardForm.Properties["$sharpdx_feature_spritebatch$"] = "true";
+                props["$sharpdx_feature_spritebatch$"] = "true";
             }
 
             if (GetKey(props, "$sharpdx_feature_model3d$") || GetKey(props, "$sharpdx_feature_primitive3d$"))
             {
-                wizardForm.Properties["$sharpdx_feature_3d$"] = "true";
+                props["$sharpdx_feature_3d$"] = "true";
+            }
+
+            if (GetKey(props, "$sharpdx_platform_winrt_xaml$"))
+            {
+                props["$sharpdx_platform_winrt$"] = "true";
             }
         }
 

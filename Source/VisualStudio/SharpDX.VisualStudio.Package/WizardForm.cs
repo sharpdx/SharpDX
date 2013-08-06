@@ -6,11 +6,17 @@ namespace SharpDX.VisualStudio.ProjectWizard
 {
     public partial class WizardForm : Form
     {
-        public Dictionary<string, string> Properties { get; set; }
+        public Dictionary<string, string> Properties { get; private set; }
 
-        public WizardForm()
+        private WizardForm()
         {
             InitializeComponent();
+        }
+
+        public WizardForm(Dictionary<string, string> properties) : this()
+        {
+            Properties = properties;
+            radioButtonPlatformDesktop.Checked = true;
         }
 
         private void features_CheckedChanged(object sender, EventArgs e)
@@ -42,7 +48,17 @@ namespace SharpDX.VisualStudio.ProjectWizard
         {
             var radioButton = (RadioButton)sender;
 
-            Properties[(string)radioButton.Tag] = radioButton.Checked.ToString().ToLowerInvariant();
+            var platform = (string)radioButton.Tag;
+            Properties[platform] = radioButton.Checked.ToString().ToLowerInvariant();
+
+            var isNotPlatformWP8 = !platform.Contains("wp8");
+            if (!isNotPlatformWP8)
+            {
+                checkInputKeyboard.Checked = false;
+                checkInputMouse.Checked = false;
+            }
+            checkInputMouse.Enabled = isNotPlatformWP8;
+            checkInputKeyboard.Enabled = isNotPlatformWP8;            
         }
 
         private void buttonCheckAll_Click(object sender, EventArgs e)

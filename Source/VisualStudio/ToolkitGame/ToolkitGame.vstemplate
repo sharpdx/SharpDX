@@ -23,12 +23,18 @@
       <ProjectItem TargetFileName="Content\Ship.fbx">Ship.fbx</ProjectItem>
       <ProjectItem TargetFileName="Content\ShipDiffuse.dds">ShipDiffuse.dds</ProjectItem>
       <ProjectItem TargetFileName="Content\Bloom.fx">Bloom.fx</ProjectItem>
+      
       <ProjectItem ReplaceParameters="true" TargetFileName="Package.appxmanifest">Package-managed.appxmanifest</ProjectItem>
       <ProjectItem ReplaceParameters="false" TargetFileName="Assets\Logo.png">Logo.png</ProjectItem>
       <ProjectItem ReplaceParameters="false" TargetFileName="Assets\SmallLogo.png">SmallLogo.png</ProjectItem>
       <ProjectItem ReplaceParameters="false" TargetFileName="Assets\SplashScreen.png">SplashScreen.png</ProjectItem>
       <ProjectItem ReplaceParameters="false" TargetFileName="Assets\StoreLogo.png">StoreLogo.png</ProjectItem>
       <ProjectItem ReplaceParameters="false" TargetFileName="$safeprojectname$_TemporaryKey.pfx" BlendDoNotCreate="true">Application_TemporaryKey.pfx</ProjectItem>
+      
+      <ProjectItem ReplaceParameters="true" TargetFileName="App.xaml">App.xaml</ProjectItem>
+      <ProjectItem ReplaceParameters="true" BlendOpenInEditor="false" TargetFileName="App.xaml.cs">App.xaml.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" BlendOpenInEditor="true" TargetFileName="MainPage.xaml">MainPage.xaml</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="MainPage.xaml.cs">MainPage.xaml.cs</ProjectItem>
     </Project>
   </TemplateContent>
   <WizardExtension>
