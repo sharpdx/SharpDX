@@ -17,18 +17,6 @@ namespace SharpDX
         /// </summary>
         public event EventHandler<EventArgs> Disposed;
 
-#if !W8CORE
-        /// <summary>
-        /// Releases unmanaged resources and performs other cleanup operations before the
-        /// <see cref="DisposeBase"/> is reclaimed by garbage collection.
-        /// </summary>
-        ~DisposeBase()
-        {
-            // Finalizer calls Dispose(false)
-            CheckAndDispose(false);
-        }
-#endif
-
         /// <summary>
         /// Gets a value indicating whether this instance is disposed.
         /// </summary>
@@ -50,7 +38,6 @@ namespace SharpDX
         /// </summary>
         private void CheckAndDispose(bool disposing)
         {
-            // TODO Should we throw an exception if this method is called more than once?
             if (!IsDisposed)
             {
 	            EventHandler<EventArgs> disposingHandlers = Disposing;
@@ -58,10 +45,6 @@ namespace SharpDX
 					disposingHandlers(this, EventArgs.Empty);
 
                 Dispose(disposing);
-#if !W8CORE
-                if (disposing)
-                    GC.SuppressFinalize(this);
-#endif
                 IsDisposed = true;
 
 	            EventHandler<EventArgs> disposedHandlers = Disposed;
