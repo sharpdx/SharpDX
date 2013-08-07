@@ -85,5 +85,10 @@ namespace SharpDX.Toolkit
         /// The output (monitor) index to use when switching to fullscreen mode. Doesn't have any effect when windowed mode is used.
         /// </summary>
         public int PreferredFullScreenOutputIndex;
+
+        /// <summary>
+        /// Indicates whether the DepthBuffer should be created with the ShaderResource flag. Default is false.
+        /// </summary>
+        public bool DepthBufferShaderResource;
     }
 }

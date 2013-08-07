@@ -64,6 +64,8 @@ namespace SharpDX.Toolkit
 
         private int preferredFullScreenOutputIndex;
 
+        private bool depthBufferShaderResource;
+
         private DisplayOrientation supportedOrientations;
 
         private bool synchronizeWithVerticalRetrace;
@@ -85,7 +87,6 @@ namespace SharpDX.Toolkit
         private bool isReallyFullScreen;
 
         private GraphicsDevice graphicsDevice;
-
 
         #endregion
 
@@ -359,6 +360,22 @@ namespace SharpDX.Toolkit
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the DepthBuffer should be created with the ShaderResource flag. Default is false.
+        /// </summary>
+        public bool DepthBufferShaderResource
+        {
+            get { return depthBufferShaderResource; }
+            set
+            {
+                if(depthBufferShaderResource != value)
+                {
+                    depthBufferShaderResource = value;
+                    deviceSettingsChanged = true;
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the supported orientations.
         /// </summary>
         /// <value>The supported orientations.</value>
@@ -550,6 +567,7 @@ namespace SharpDX.Toolkit
                     PreferredDepthStencilFormat = PreferredDepthStencilFormat,
                     IsFullScreen = IsFullScreen,
                     PreferredFullScreenOutputIndex = PreferredFullScreenOutputIndex,
+                    DepthBufferShaderResource = DepthBufferShaderResource,
                     PreferMultiSampling = PreferMultiSampling,
                     SynchronizeWithVerticalRetrace = SynchronizeWithVerticalRetrace,
                     PreferredGraphicsProfile = (FeatureLevel[])PreferredGraphicsProfile.Clone(),

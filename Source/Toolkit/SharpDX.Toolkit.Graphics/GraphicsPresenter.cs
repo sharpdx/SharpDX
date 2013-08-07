@@ -161,7 +161,13 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             // Creates the depth stencil buffer.
-            DepthStencilBuffer = ToDispose(DepthStencilBuffer.New(GraphicsDevice, Description.BackBufferWidth, Description.BackBufferHeight, Description.MultiSampleCount, Description.DepthStencilFormat));
+            DepthStencilBuffer =
+                ToDispose(DepthStencilBuffer.New(GraphicsDevice,
+                                                 Description.BackBufferWidth,
+                                                 Description.BackBufferHeight,
+                                                 Description.MultiSampleCount,
+                                                 Description.DepthStencilFormat,
+                                                 Description.DepthBufferShaderResource));
         }
     }
 }
