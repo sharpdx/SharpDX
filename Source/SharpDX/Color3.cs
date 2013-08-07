@@ -60,6 +60,8 @@ namespace SharpDX
     [DynamicSerializer("TKC3")]
     public struct Color3 : IEquatable<Color3>, IFormattable, IDataSerializable
     {
+        private const string toStringFormat = "Red:{0} Green:{1} Blue:{2}";
+
         /// <summary>
         /// The Black color (0, 0, 0).
         /// </summary>
@@ -713,23 +715,19 @@ namespace SharpDX
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.CurrentCulture, "Red:{1} Green:{2} Blue:{3}", Red, Green, Blue);
+            return ToString(CultureInfo.CurrentCulture);
         }
 
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.
         /// </summary>
-        /// <param name="format">The format.</param>
+        /// <param name="format">The format to apply to each channel element (float)</param>
         /// <returns>
         /// A <see cref="System.String"/> that represents this instance.
         /// </returns>
         public string ToString(string format)
         {
-            if (format == null)
-                return ToString();
-
-            return string.Format(CultureInfo.CurrentCulture, "Red:{0} Green:{1} Blue:{2}", Red.ToString(format, CultureInfo.CurrentCulture),
-                Green.ToString(format, CultureInfo.CurrentCulture), Blue.ToString(format, CultureInfo.CurrentCulture));
+            return ToString(format, CultureInfo.CurrentCulture);
         }
 
         /// <summary>
@@ -741,13 +739,13 @@ namespace SharpDX
         /// </returns>
         public string ToString(IFormatProvider formatProvider)
         {
-            return string.Format(formatProvider, "Red:{0} Green:{1} Blue:{2}", Red, Green, Blue);
+            return string.Format(formatProvider, toStringFormat, Red, Green, Blue);
         }
 
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.
         /// </summary>
-        /// <param name="format">The format.</param>
+        /// <param name="format">The format to apply to each channel element (float).</param>
         /// <param name="formatProvider">The format provider.</param>
         /// <returns>
         /// A <see cref="System.String"/> that represents this instance.
@@ -757,8 +755,11 @@ namespace SharpDX
             if (format == null)
                 return ToString(formatProvider);
 
-            return string.Format(formatProvider, "Red:{0} Green:{1} Blue:{2}",Red.ToString(format, formatProvider),
-                Green.ToString(format, formatProvider), Blue.ToString(format, formatProvider));
+            return string.Format(formatProvider,
+                                 toStringFormat,
+                                 Red.ToString(format, formatProvider),
+                                 Green.ToString(format, formatProvider),
+                                 Blue.ToString(format, formatProvider));
         }
 
         /// <summary>
