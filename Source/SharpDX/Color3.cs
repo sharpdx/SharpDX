@@ -728,7 +728,7 @@ namespace SharpDX
             if (format == null)
                 return ToString();
 
-            return string.Format(CultureInfo.CurrentCulture, "Red:{1} Green:{2} Blue:{3}", Red.ToString(format, CultureInfo.CurrentCulture),
+            return string.Format(CultureInfo.CurrentCulture, "Red:{0} Green:{1} Blue:{2}", Red.ToString(format, CultureInfo.CurrentCulture),
                 Green.ToString(format, CultureInfo.CurrentCulture), Blue.ToString(format, CultureInfo.CurrentCulture));
         }
 
@@ -741,7 +741,7 @@ namespace SharpDX
         /// </returns>
         public string ToString(IFormatProvider formatProvider)
         {
-            return string.Format(formatProvider, "Red:{1} Green:{2} Blue:{3}", Red, Green, Blue);
+            return string.Format(formatProvider, "Red:{0} Green:{1} Blue:{2}", Red, Green, Blue);
         }
 
         /// <summary>
