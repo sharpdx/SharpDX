@@ -66,27 +66,6 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Checks, if specified point is inside <see cref="SharpDX.Rectangle"/>.
-        /// </summary>
-        /// <param name="x">X point coordinate.</param>
-        /// <param name="y">Y point coordinate.</param>
-        /// <returns><c>true</c> if point is inside <see cref="SharpDX.Rectangle"/>, otherwise <c>false</c>.</returns>
-        public bool Contains(float x, float y)
-        {
-            return (x >= _left && x <= _right && y >= _top && y <= _bottom);
-        }
-
-        /// <summary>
-        /// Checks, if specified <see cref="SharpDX.Vector2"/> is inside <see cref="SharpDX.Rectangle"/>. 
-        /// </summary> 
-        /// <param name="vector2D">Coordinate <see cref="SharpDX.Vector2"/>.</param>
-        /// <returns><c>true</c> if <see cref="SharpDX.Vector2"/> is inside <see cref="SharpDX.Rectangle"/>, otherwise <c>false</c>.</returns>
-        public bool Contains(Vector2 vector2D)
-        {
-            return Contains(vector2D.X, vector2D.Y);
-        }
-
-        /// <summary>
         /// Gets or sets the left.
         /// </summary>
         /// <value>The left.</value>
@@ -97,20 +76,6 @@ namespace SharpDX
             {
                 _right = value + Width;
                 _left = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the size of the rectangle.
-        /// </summary>
-        /// <value>The size of the rectangle.</value>
-        public Size2 Size
-        {
-            get { return new Size2(Width, Height); }
-            set
-            {
-                Width = value.Width;
-                Height = value.Height;
             }
         }
 
@@ -127,18 +92,6 @@ namespace SharpDX
                 _top = value;
             }
         }
-
-        /// <summary>
-        /// Gets the position of the top-left corner of the rectangle.
-        /// </summary>
-        /// <value>The top-left corner of the rectangle.</value>
-        public Point TopLeft { get { return new Point(_left, _top); } }
-
-        /// <summary>
-        /// Gets the position of the top-right corner of the rectangle.
-        /// </summary>
-        /// <value>The top-right corner of the rectangle.</value>
-        public Point TopRight { get { return new Point(_right, _top); } }
 
         /// <summary>
         /// Gets or sets the right.
@@ -159,18 +112,6 @@ namespace SharpDX
             get { return _bottom; }
             set { _bottom = value; }
         }
-
-        /// <summary>
-        /// Gets the position of the bottom-left corner of the rectangle.
-        /// </summary>
-        /// <value>The bottom-left corner of the rectangle.</value>
-        public Point BottomLeft { get { return new Point(_left, _bottom); } }
-
-        /// <summary>
-        /// Gets the position of the bottom-right corner of the rectangle.
-        /// </summary>
-        /// <value>The bottom-right corner of the rectangle.</value>
-        public Point BottomRight { get { return new Point(_right, _bottom); } }
 
         /// <summary>
         /// Gets the left position.
@@ -258,6 +199,44 @@ namespace SharpDX
             }
         }
 
+        /// <summary>
+        /// Gets or sets the size of the rectangle.
+        /// </summary>
+        /// <value>The size of the rectangle.</value>
+        public Size2 Size
+        {
+            get { return new Size2(Width, Height); }
+            set
+            {
+                Width = value.Width;
+                Height = value.Height;
+            }
+        }
+
+        /// <summary>
+        /// Gets the position of the top-left corner of the rectangle.
+        /// </summary>
+        /// <value>The top-left corner of the rectangle.</value>
+        public Point TopLeft { get { return new Point(_left, _top); } }
+
+        /// <summary>
+        /// Gets the position of the top-right corner of the rectangle.
+        /// </summary>
+        /// <value>The top-right corner of the rectangle.</value>
+        public Point TopRight { get { return new Point(_right, _top); } }
+
+        /// <summary>
+        /// Gets the position of the bottom-left corner of the rectangle.
+        /// </summary>
+        /// <value>The bottom-left corner of the rectangle.</value>
+        public Point BottomLeft { get { return new Point(_left, _bottom); } }
+
+        /// <summary>
+        /// Gets the position of the bottom-right corner of the rectangle.
+        /// </summary>
+        /// <value>The bottom-right corner of the rectangle.</value>
+        public Point BottomRight { get { return new Point(_right, _bottom); } }
+
         /// <summary>Changes the position of the Rectangle.</summary>
         /// <param name="amount">The values to adjust the position of the Rectangle by.</param>
         public void Offset(Point amount)
@@ -325,6 +304,27 @@ namespace SharpDX
         public void Contains(ref Rectangle value, out bool result)
         {
             result = (X <= value.X) && (value.Right <= Right) && (Y <= value.Y) && (value.Bottom <= Bottom);
+        }
+
+        /// <summary>
+        /// Checks, if specified point is inside <see cref="SharpDX.Rectangle"/>.
+        /// </summary>
+        /// <param name="x">X point coordinate.</param>
+        /// <param name="y">Y point coordinate.</param>
+        /// <returns><c>true</c> if point is inside <see cref="SharpDX.Rectangle"/>, otherwise <c>false</c>.</returns>
+        public bool Contains(float x, float y)
+        {
+            return (x >= _left && x <= _right && y >= _top && y <= _bottom);
+        }
+
+        /// <summary>
+        /// Checks, if specified <see cref="SharpDX.Vector2"/> is inside <see cref="SharpDX.Rectangle"/>. 
+        /// </summary> 
+        /// <param name="vector2D">Coordinate <see cref="SharpDX.Vector2"/>.</param>
+        /// <returns><c>true</c> if <see cref="SharpDX.Vector2"/> is inside <see cref="SharpDX.Rectangle"/>, otherwise <c>false</c>.</returns>
+        public bool Contains(Vector2 vector2D)
+        {
+            return Contains(vector2D.X, vector2D.Y);
         }
 
         /// <summary>Determines whether a specified Rectangle intersects with this Rectangle.</summary>
