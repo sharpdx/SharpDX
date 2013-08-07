@@ -111,6 +111,20 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Gets or sets the size of the rectangle.
+        /// </summary>
+        /// <value>The size of the rectangle.</value>
+        public Size2F Size
+        {
+            get { return new Size2F(Width, Height); }
+            set
+            {
+                Width = value.Width;
+                Height = value.Height;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the top.
         /// </summary>
         /// <value>The top.</value>
@@ -123,6 +137,18 @@ namespace SharpDX
                 _top = value;
             }
         }
+
+        /// <summary>
+        /// Gets the position of the top-left corner of the rectangle.
+        /// </summary>
+        /// <value>The top-left corner of the rectangle.</value>
+        public Vector2 TopLeft { get { return new Vector2(_left, _top); } }
+
+        /// <summary>
+        /// Gets the position of the top-right corner of the rectangle.
+        /// </summary>
+        /// <value>The top-right corner of the rectangle.</value>
+        public Vector2 TopRight { get { return new Vector2(_right, _top); } }
 
         /// <summary>
         /// Gets or sets the right.
@@ -143,6 +169,18 @@ namespace SharpDX
             get { return _bottom; }
             set { _bottom = value; }
         }
+
+        /// <summary>
+        /// Gets the position of the bottom-left corner of the rectangle.
+        /// </summary>
+        /// <value>The bottom-left corner of the rectangle.</value>
+        public Vector2 BottomLeft { get { return new Vector2(_left, _bottom); } }
+
+        /// <summary>
+        /// Gets the position of the bottom-right corner of the rectangle.
+        /// </summary>
+        /// <value>The bottom-right corner of the rectangle.</value>
+        public Vector2 BottomRight { get { return new Vector2(_right, _bottom); } }
 
         /// <summary>
         /// Gets the left position.
