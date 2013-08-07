@@ -33,10 +33,12 @@ namespace SharpDX.Tests
         [TestCase(-10.0f, -1.0f, -15.0f, -6.0f)]
         [TestCase(-1.0f, -10.0f, -15.0f, -6.0f)]
         [TestCase(-10.0f, 0.0f, 15.0f, -5.0f)]
+        [TestCase(0.0f, 0.1f, 10.0f, 0.0f)]
         public void WrapsFloat(float min, float max, float valueToWrap, float expectedResult)
         {
             var result = MathUtil.Wrap(valueToWrap, min, max);
-            Assert.True(MathUtil.WithinEpsilon(expectedResult, result), "Expected [{0}] : Result [{1}]", expectedResult, result);
+            Assert.True(Math.Abs(expectedResult - result) < 0.00001f ||
+            Math.Abs(max - result) < 0.00001f , "Expected [{0}] : Result [{1}]", expectedResult, result);
         }
     }
 }
