@@ -322,7 +322,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Wraps the specified value into a range.
+        /// Wraps the specified value into a range [min, max]
         /// </summary>
         /// <param name="value">The value to wrap.</param>
         /// <param name="min">The min.</param>
@@ -330,23 +330,22 @@ namespace SharpDX
         /// <returns>Result of the wrapping.</returns>
         public static int Wrap(int value, int min, int max)
         {
-            if (min == max) return min;
-
-            int v = (((value - min) % (max - min)));
-            if (value > max)
+            if (min > max)
             {
-                return min + v;
+                Utilities.Swap(ref min, ref max);
             }
+
+            // Code from http://stackoverflow.com/a/707426/1356325
+            int range_size = max - min + 1;
+
             if (value < min)
-            {
-                return max + v;
-            }
+                value += range_size * ((min - value) / range_size + 1);
 
-            return value;
+            return min + (value - min) % range_size;
         }
 
         /// <summary>
-        /// Wraps the specified value into a range.
+        /// Wraps the specified value into a range [min, max[
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="min">The min.</param>
@@ -356,17 +355,17 @@ namespace SharpDX
         {
             if (WithinEpsilon(min, max)) return min;
 
-            float v = (((value - min) % (max - min)));
-            if (value > max)
+            double mind = min;
+            double maxd = max;
+            double valued = value;
+
+            if (mind > maxd)
             {
-                return min + v;
-            }
-            if (value < min)
-            {
-                return max + v;
+                Utilities.Swap(ref mind, ref maxd);
             }
 
-            return value;
+            var range_size = maxd - mind;
+            return (float)(mind + (valued - mind) - (range_size * Math.Floor((valued - mind) / range_size)));
         }
         
         /// <summary>
