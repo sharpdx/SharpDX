@@ -13,9 +13,9 @@ namespace SharpDX.Tests
         [TestCase(0, 10, 0, 0)]
         [TestCase(0, 10, 10, 10)]
         [TestCase(0, 0, 10, 0)]
-        [TestCase(10, 0, 15, 4)]
+        [TestCase(10, 0, 15, 4, ExpectedException = typeof(ArgumentException))]
         [TestCase(-10, -1, -15, -5)]
-        [TestCase(-1, -10, -15, -5)]
+        [TestCase(-1, -10, -15, -5, ExpectedException = typeof(ArgumentException))]
         [TestCase(-10, 0, 15, -7)]
         public void WrapsInt(int min, int max, int valueToWrap, int expectedResult)
         {
@@ -29,16 +29,16 @@ namespace SharpDX.Tests
         [TestCase(0.0f, 10.0f, 0.0f, 0.0f)]
         [TestCase(0.0f, 10.0f, 10.0f, 0.0f)]
         [TestCase(0.0f, 0.0f, 10.0f, 0.0f)]
-        [TestCase(10.0f, 0.0f, 15.0f, 5.0f)]
+        [TestCase(10.0f, 0.0f, 15.0f, 5.0f, ExpectedException = typeof(ArgumentException))]
         [TestCase(-10.0f, -1.0f, -15.0f, -6.0f)]
-        [TestCase(-1.0f, -10.0f, -15.0f, -6.0f)]
+        [TestCase(-1.0f, -10.0f, -15.0f, -6.0f, ExpectedException = typeof(ArgumentException))]
         [TestCase(-10.0f, 0.0f, 15.0f, -5.0f)]
         [TestCase(0.0f, 0.1f, 10.0f, 0.0f)]
         public void WrapsFloat(float min, float max, float valueToWrap, float expectedResult)
         {
             var result = MathUtil.Wrap(valueToWrap, min, max);
             Assert.True(Math.Abs(expectedResult - result) < 0.00001f ||
-            Math.Abs(max - result) < 0.00001f , "Expected [{0}] : Result [{1}]", expectedResult, result);
+            Math.Abs(max - result) < 0.00001f, "Expected [{0}] : Result [{1}]", expectedResult, result);
         }
     }
 }
