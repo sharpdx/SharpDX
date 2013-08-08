@@ -166,7 +166,6 @@ namespace SharpDX.Direct3D9
         /// <param name="indexData">The index data.</param>
         /// <param name="indexDataFormat">The index data format.</param>
         /// <param name="vertexData">The vertex data.</param>
-        /// <param name="vertexStride">The vertex stride.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         public void DrawIndexedUserPrimitives<S, T>(PrimitiveType primitiveType, int startIndex, int minimumVertexIndex, int vertexCount, int primitiveCount, S[] indexData, Format indexDataFormat, T[] vertexData)
             where S : struct
@@ -189,7 +188,6 @@ namespace SharpDX.Direct3D9
         /// <param name="indexData">The index data.</param>
         /// <param name="indexDataFormat">The index data format.</param>
         /// <param name="vertexData">The vertex data.</param>
-        /// <param name="vertexStride">The vertex stride.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         public void DrawIndexedUserPrimitives<S, T>(PrimitiveType primitiveType, int startIndex, int startVertex, int minimumVertexIndex, int vertexCount, int primitiveCount, S[] indexData, Format indexDataFormat, T[] vertexData)
             where S : struct
@@ -198,7 +196,7 @@ namespace SharpDX.Direct3D9
             unsafe
             {
                 DrawIndexedPrimitiveUP(primitiveType, minimumVertexIndex, vertexCount, primitiveCount, (IntPtr)Interop.Fixed(ref indexData[startIndex]), indexDataFormat, (IntPtr)Interop.Fixed(ref vertexData[startVertex]), Utilities.SizeOf<T>());
-            }            
+            }
         }
 
 

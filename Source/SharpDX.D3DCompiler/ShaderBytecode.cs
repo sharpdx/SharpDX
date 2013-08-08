@@ -482,7 +482,6 @@ namespace SharpDX.D3DCompiler
         /// <param name="effectFlags">Effect compilation options.</param>
         /// <param name="defines">A set of macros to define during compilation.</param>
         /// <param name="include">An interface for handling include files.</param>
-        /// <param name="compilationErrors">When the method completes, contains a string of compilation errors, or an empty string if compilation succeeded.</param>
         /// <param name="sourceFileName">Name of the source file.</param>
         /// <returns>
         /// The compiled shader bytecode, or <c>null</c> if the method fails.
@@ -529,7 +528,6 @@ namespace SharpDX.D3DCompiler
         /// <param name="effectFlags">Effect compilation options.</param>
         /// <param name="defines">A set of macros to define during compilation.</param>
         /// <param name="include">An interface for handling include files.</param>
-        /// <param name="compilationErrors">When the method completes, contains a string of compilation errors, or an empty string if compilation succeeded.</param>
         /// <param name="sourceFileName">Name of the source file.</param>
         /// <returns>
         /// The compiled shader bytecode, or <c>null</c> if the method fails.
@@ -555,7 +553,6 @@ namespace SharpDX.D3DCompiler
         /// <param name = "effectFlags">Effect compilation options.</param>
         /// <param name = "defines">A set of macros to define during compilation.</param>
         /// <param name = "include">An interface for handling include files.</param>
-        /// <param name = "compilationErrors">When the method completes, contains a string of compilation errors, or an empty string if compilation succeeded.</param>
         /// <returns>The compiled shader bytecode, or <c>null</c> if the method fails.</returns>
         public static CompilationResult CompileFromFile(string fileName, string profile, ShaderFlags shaderFlags = ShaderFlags.None , EffectFlags effectFlags = EffectFlags.None, ShaderMacro[] defines = null, Include include = null)
         {
@@ -1019,7 +1016,8 @@ namespace SharpDX.D3DCompiler
         /// <summary>
         ///   Preprocesses the provided shader or effect source.
         /// </summary>
-        /// <param name = "shaderSource">An array of bytes containing the raw source of the shader or effect to preprocess.</param>
+        /// <param name = "shaderSourcePtr">An array of bytes containing the raw source of the shader or effect to preprocess.</param>
+        /// <param name = "shaderSourceLength"></param>
         /// <param name = "defines">A set of macros to define during preprocessing.</param>
         /// <param name = "include">An interface for handling include files.</param>
         /// <param name = "compilationErrors">When the method completes, contains a string of compilation errors, or an empty string if preprocessing succeeded.</param>

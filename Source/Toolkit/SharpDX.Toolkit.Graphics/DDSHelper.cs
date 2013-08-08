@@ -980,8 +980,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Load a DDS file in memory
         /// </summary>
-        /// <param name="pSource"></param>
-        /// <param name="size"></param>
+        /// <param name="pSource">Source buffer</param>
+        /// <param name="size">Size of the DDS texture.</param>
+        /// <param name="makeACopy">Whether or not to make a copy of the DDS</param>
         /// <param name="handle"></param>
         /// <returns></returns>
         public unsafe static Image LoadFromDDSMemory(IntPtr pSource, int size, bool makeACopy, GCHandle? handle)
