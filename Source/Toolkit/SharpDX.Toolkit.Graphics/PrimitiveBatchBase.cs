@@ -227,7 +227,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             if (isIndexed && indices == IntPtr.Zero)
             {
-                throw new ArgumentNullException("Indices cannot be null");
+                throw new ArgumentNullException("indices", "Indices cannot be null.");
             }
 
             if (indexCount >= maxIndices)

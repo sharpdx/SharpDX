@@ -1093,7 +1093,7 @@ namespace SharpDX.D3DCompiler
             string str = File.ReadAllText(fileName);
             if (string.IsNullOrEmpty(str))
             {
-                throw new ArgumentNullException("shaderSource");
+                throw new ArgumentNullException("fileName");
             }
             return Preprocess(Encoding.ASCII.GetBytes(str), null, null, out errors, fileName);
         }
