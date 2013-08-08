@@ -28,12 +28,12 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     class ImageContentReader : IContentReader
     {
-        public object ReadContent(IContentManager readerManager, string assetName, Stream stream, out bool keepStreamOpen, object options)
+        public object ReadContent(IContentManager readerManager, ref ContentReaderParameters parameters)
         {
-            keepStreamOpen = false;
-            var image = Image.Load(stream);
+            parameters.KeepStreamOpen = false;
+            var image = Image.Load(parameters.Stream);
             if (image != null)
-                image.Name = assetName;
+                image.Name = parameters.AssetName;
             return image;
         }
     }

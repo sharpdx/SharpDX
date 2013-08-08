@@ -234,7 +234,7 @@ namespace SharpDX
         {
             return value < min ? min : value > max ? max : value;
         }
-        
+
         /// <summary>
         /// Clamps the specified value.
         /// </summary>
@@ -322,53 +322,50 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Wraps the specified value into a range.
+        /// Wraps the specified value into a range [min, max]
         /// </summary>
         /// <param name="value">The value to wrap.</param>
         /// <param name="min">The min.</param>
         /// <param name="max">The max.</param>
         /// <returns>Result of the wrapping.</returns>
+        /// <exception cref="ArgumentException">Is thrown when <paramref name="min"/> is greater than <paramref name="max"/>.</exception>
         public static int Wrap(int value, int min, int max)
         {
-            if (min == max) return min;
+            if(min > max)
+                throw new ArgumentException(string.Format("min {0} should be less than or equal to max {1}", min, max), "min");
 
-            int v = (((value - min) % (max - min)));
-            if (value > max)
-            {
-                return min + v;
-            }
+            // Code from http://stackoverflow.com/a/707426/1356325
+            int range_size = max - min + 1;
+
             if (value < min)
-            {
-                return max + v;
-            }
+                value += range_size * ((min - value) / range_size + 1);
 
-            return value;
+            return min + (value - min) % range_size;
         }
 
         /// <summary>
-        /// Wraps the specified value into a range.
+        /// Wraps the specified value into a range [min, max[
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="min">The min.</param>
         /// <param name="max">The max.</param>
         /// <returns>Result of the wrapping.</returns>
+        /// <exception cref="ArgumentException">Is thrown when <paramref name="min"/> is greater than <paramref name="max"/>.</exception>
         public static float Wrap(float value, float min, float max)
         {
             if (WithinEpsilon(min, max)) return min;
 
-            float v = (((value - min) % (max - min)));
-            if (value > max)
-            {
-                return min + v;
-            }
-            if (value < min)
-            {
-                return max + v;
-            }
+            double mind = min;
+            double maxd = max;
+            double valued = value;
 
-            return value;
+            if(mind > maxd)
+                throw new ArgumentException(string.Format("min {0} should be less than or equal to max {1}", min, max), "min");
+
+            var range_size = maxd - mind;
+            return (float)(mind + (valued - mind) - (range_size * Math.Floor((valued - mind) / range_size)));
         }
-        
+
         /// <summary>
         /// Gauss function.
         /// </summary>
@@ -404,9 +401,9 @@ namespace SharpDX
                     Math.Pow(y - (radY / 2), 2) / (2 * Math.Pow(sigmaY, 2))
                 );
         }
-        
-        
-#if NET35Plus                    
+
+
+#if NET35Plus
         /// <summary>
         /// Gets random <c>float</c> number within range.
         /// </summary>
@@ -429,15 +426,15 @@ namespace SharpDX
         public static double NextDouble(this Random random, double min, double max)
         {
             return Lerp(min, max, random.NextDouble());
-        } 
-        
+        }
+
         /// <summary>
         /// Gets random <c>long</c> number.
         /// </summary>
         /// <param name="random">Current <see cref="System.Random"/>.</param>
         /// <returns>Random <c>long</c> number.</returns>
         public static long NextLong(this Random random)
-        { 
+        {
             var buffer = new byte[sizeof(long)];
             random.NextBytes(buffer);
             return BitConverter.ToInt64(buffer, 0);
@@ -450,14 +447,14 @@ namespace SharpDX
         /// <param name="min">Minimum.</param>
         /// <param name="max">Maximum.</param>
         /// <returns>Random <c>long</c> number.</returns>
-        public static long NextLong(this Random random,long min,long max)
+        public static long NextLong(this Random random, long min, long max)
         {
             byte[] buf = new byte[sizeof(long)];
             random.NextBytes(buf);
             long longRand = BitConverter.ToInt64(buf, 0);
 
             return (Math.Abs(longRand % (max - min)) + min);
-        } 
+        }
 
         /// <summary>
         /// Gets random <see cref="SharpDX.Vector2"/> within range.
@@ -528,7 +525,7 @@ namespace SharpDX
         public static Color NextColor(this Random random, float minBrightness, float maxBrightness, float alpha)
         {
             return new Color(random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), alpha);
-        } 
+        }
 
         /// <summary>
         /// Gets random <see cref="SharpDX.Color"/>.
@@ -551,9 +548,9 @@ namespace SharpDX
         /// <param name="min">Minimum.</param>
         /// <param name="max">Maximum.</param>
         /// <returns>Random <see cref="SharpDX.Point"/>.</returns>
-        public static Point NextDPoint(this Random random,Point min,Point max)
+        public static Point NextDPoint(this Random random, Point min, Point max)
         {
-            return new Point(random.Next(min.X,max.X),random.Next(min.Y,max.Y));
+            return new Point(random.Next(min.X, max.X), random.Next(min.Y, max.Y));
         }
 
         /// <summary>
@@ -567,7 +564,7 @@ namespace SharpDX
         {
             return new Vector2(random.NextFloat(min.X, max.X), random.NextFloat(min.Y, max.Y));
         }
-        
+
         /// <summary>
         /// Gets random <see cref="System.TimeSpan"/>.
         /// </summary>
@@ -576,8 +573,8 @@ namespace SharpDX
         /// <param name="max">Maximum.</param>
         /// <returns>Random <see cref="System.TimeSpan"/>.</returns>
         public static TimeSpan NextTime(this Random random, TimeSpan min, TimeSpan max)
-        { 
-            return TimeSpan.FromTicks(random.NextLong(min.Ticks,max.Ticks));
+        {
+            return TimeSpan.FromTicks(random.NextLong(min.Ticks, max.Ticks));
         }
 #else
         /// <summary>

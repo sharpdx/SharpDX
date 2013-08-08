@@ -28,10 +28,10 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     class SpriteFontDataContentReader : IContentReader
     {
-        public object ReadContent(IContentManager readerManager, string assetName, Stream stream, out bool keepStreamOpen, object options)
+        public object ReadContent(IContentManager readerManager, ref ContentReaderParameters parameters)
         {
-            keepStreamOpen = false;
-            return SpriteFontData.Load(stream);
+            parameters.KeepStreamOpen = false;
+            return SpriteFontData.Load(parameters.Stream);
         }
     }
 }

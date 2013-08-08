@@ -84,13 +84,7 @@ namespace SharpDX.Toolkit.Graphics
 
             set
             {
-#if WIN8METRO
-                if (!value)
-                {
-                    throw new ArgumentException("Cannot switch to non-full screen in Windows RT");
-                }
-#else
-
+#if !WIN8METRO
                 var outputIndex = PrefferedFullScreenOutputIndex;
                 var availableOutputs = GraphicsDevice.Adapter.OutputsCount;
 

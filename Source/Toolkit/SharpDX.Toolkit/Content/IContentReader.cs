@@ -18,8 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.IO;
-
 namespace SharpDX.Toolkit.Content
 {
     /// <summary>
@@ -31,11 +29,8 @@ namespace SharpDX.Toolkit.Content
         /// Reads the content of a particular data from a stream.
         /// </summary>
         /// <param name="contentManager">The content manager.</param>
-        /// <param name="assetName">The name of the asset associated with the stream.</param>
-        /// <param name="stream">The steam of the asset to load data from.</param>
-        /// <param name="keepStreamOpen"><c>true</c> to keep the stream opened after the content was read, otherwise the stream will be closed after if this content reader succeeded to read the data.</param>
-        /// <param name="options">The options passed to the content manager.</param>
+        /// <param name="parameters"></param>
         /// <returns>The data decoded from the stream, or null if the kind of asset is not supported by this content reader.</returns>
-        object ReadContent(IContentManager contentManager, string assetName, Stream stream, out bool keepStreamOpen, object options);
+        object ReadContent(IContentManager contentManager, ref ContentReaderParameters parameters);
     }
 }

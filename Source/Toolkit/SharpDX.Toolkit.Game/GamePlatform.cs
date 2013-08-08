@@ -182,6 +182,7 @@ namespace SharpDX.Toolkit
 
             deviceInfo.PresentationParameters.RefreshRate = mode.RefreshRate;
             deviceInfo.PresentationParameters.PreferredFullScreenOutputIndex = prefferedParameters.PreferredFullScreenOutputIndex;
+            deviceBaseInfo.PresentationParameters.DepthBufferShaderResource = prefferedParameters.DepthBufferShaderResource;
 
             if (prefferedParameters.IsFullScreen)
             {
@@ -275,6 +276,7 @@ namespace SharpDX.Toolkit
                            MultiSampleCount = MSAALevel.None,
                            IsFullScreen = prefferedParameters.IsFullScreen,
                            PreferredFullScreenOutputIndex = prefferedParameters.PreferredFullScreenOutputIndex,
+                           DepthBufferShaderResource = prefferedParameters.DepthBufferShaderResource,
                            PresentationInterval = prefferedParameters.SynchronizeWithVerticalRetrace ? PresentInterval.One : PresentInterval.Immediate,
                            DeviceWindowHandle = MainWindow.NativeWindow,
                            RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput

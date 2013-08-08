@@ -66,37 +66,6 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Checks, if specified point is inside <see cref="SharpDX.RectangleF"/>.
-        /// </summary>
-        /// <param name="x">X point coordinate.</param>
-        /// <param name="y">Y point coordinate.</param>
-        /// <returns><c>true</c> if point is inside <see cref="SharpDX.RectangleF"/>, otherwise <c>false</c>.</returns>
-        public bool Contains(float x, float y)
-        {
-            return (x >= _left && x <= _right && y >= _top && y <= _bottom);
-        }
-
-        /// <summary>
-        /// Checks, if specified <see cref="SharpDX.Vector2"/> is inside <see cref="SharpDX.RectangleF"/>. 
-        /// </summary> 
-        /// <param name="vector2D">Coordinate <see cref="SharpDX.Vector2"/>.</param>
-        /// <returns><c>true</c> if <see cref="SharpDX.Vector2"/> is inside <see cref="SharpDX.RectangleF"/>, otherwise <c>false</c>.</returns>
-        public bool Contains(Vector2 vector2D)
-        {
-            return Contains(vector2D.X, vector2D.Y);
-        }
-
-        /// <summary>
-        /// Checks, if specified <see cref="SharpDX.Point"/> is inside <see cref="SharpDX.RectangleF"/>. 
-        /// </summary>
-        /// <param name="point">Coordinate <see cref="SharpDX.Point"/>.</param> 
-        /// <returns><c>true</c> if <see cref="SharpDX.Point"/> is inside <see cref="SharpDX.RectangleF"/>, otherwise <c>false</c>.</returns>
-        public bool Contains(Point point)
-        {
-            return Contains(point.X, point.Y);
-        }
-
-        /// <summary>
         /// Gets or sets the left.
         /// </summary>
         /// <value>The left.</value>
@@ -230,6 +199,45 @@ namespace SharpDX
             }
         }
 
+        /// <summary>
+        /// Gets or sets the size of the rectangle.
+        /// </summary>
+        /// <value>The size of the rectangle.</value>
+        public Size2F Size
+        {
+            get { return new Size2F(Width, Height); }
+            set
+            {
+                Width = value.Width;
+                Height = value.Height;
+            }
+        }
+
+        /// <summary>
+        /// Gets the position of the top-left corner of the rectangle.
+        /// </summary>
+        /// <value>The top-left corner of the rectangle.</value>
+        public Vector2 TopLeft { get { return new Vector2(_left, _top); } }
+
+        /// <summary>
+        /// Gets the position of the top-right corner of the rectangle.
+        /// </summary>
+        /// <value>The top-right corner of the rectangle.</value>
+        public Vector2 TopRight { get { return new Vector2(_right, _top); } }
+
+
+        /// <summary>
+        /// Gets the position of the bottom-left corner of the rectangle.
+        /// </summary>
+        /// <value>The bottom-left corner of the rectangle.</value>
+        public Vector2 BottomLeft { get { return new Vector2(_left, _bottom); } }
+
+        /// <summary>
+        /// Gets the position of the bottom-right corner of the rectangle.
+        /// </summary>
+        /// <value>The bottom-right corner of the rectangle.</value>
+        public Vector2 BottomRight { get { return new Vector2(_right, _bottom); } }
+
         /// <summary>Changes the position of the Rectangle.</summary>
         /// <param name="amount">The values to adjust the position of the Rectangle by.</param>
         public void Offset(Point amount)
@@ -285,6 +293,37 @@ namespace SharpDX
         public void Contains(ref RectangleF value, out bool result)
         {
             result = (X <= value.X) && (value.Right <= Right) && (Y <= value.Y) && (value.Bottom <= Bottom);
+        }
+
+        /// <summary>
+        /// Checks, if specified point is inside <see cref="SharpDX.RectangleF"/>.
+        /// </summary>
+        /// <param name="x">X point coordinate.</param>
+        /// <param name="y">Y point coordinate.</param>
+        /// <returns><c>true</c> if point is inside <see cref="SharpDX.RectangleF"/>, otherwise <c>false</c>.</returns>
+        public bool Contains(float x, float y)
+        {
+            return (x >= _left && x <= _right && y >= _top && y <= _bottom);
+        }
+
+        /// <summary>
+        /// Checks, if specified <see cref="SharpDX.Vector2"/> is inside <see cref="SharpDX.RectangleF"/>. 
+        /// </summary> 
+        /// <param name="vector2D">Coordinate <see cref="SharpDX.Vector2"/>.</param>
+        /// <returns><c>true</c> if <see cref="SharpDX.Vector2"/> is inside <see cref="SharpDX.RectangleF"/>, otherwise <c>false</c>.</returns>
+        public bool Contains(Vector2 vector2D)
+        {
+            return Contains(vector2D.X, vector2D.Y);
+        }
+
+        /// <summary>
+        /// Checks, if specified <see cref="SharpDX.Point"/> is inside <see cref="SharpDX.RectangleF"/>. 
+        /// </summary>
+        /// <param name="point">Coordinate <see cref="SharpDX.Point"/>.</param> 
+        /// <returns><c>true</c> if <see cref="SharpDX.Point"/> is inside <see cref="SharpDX.RectangleF"/>, otherwise <c>false</c>.</returns>
+        public bool Contains(Point point)
+        {
+            return Contains(point.X, point.Y);
         }
 
         /// <summary>Determines whether a specified Rectangle intersects with this Rectangle.</summary>

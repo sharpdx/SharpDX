@@ -282,18 +282,8 @@ namespace SharpDX
             // Only dispose non-zero object
             if (NativePointer != IntPtr.Zero)
             {
-//                // If object is disposed by the finalizer, emits a warning
-//                if (Configuration.EnableObjectTracking && !disposing)
-//                {
-//                    var objectReference = ObjectTracker.Find(this);
-//#if !WIN8METRO
-//                    Console.WriteLine("Warning, ComObject dispose on finalizer: {0}", objectReference);
-//#endif
-//                }
-
                 // Release the object
-                if (disposing || Configuration.EnableReleaseOnFinalizer)
-                    ((IUnknown)this).Release();
+                ((IUnknown)this).Release();
 
                 // Untrack the object
                 if (Configuration.EnableObjectTracking)

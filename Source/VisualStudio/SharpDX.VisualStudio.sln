@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolkitGame", "ToolkitGame\ToolkitGame.csproj", "{0B3215F2-A447-4E44-A111-0CCC5E4F0D14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDX.VisualStudio.Package", "SharpDX.VisualStudio.Package\SharpDX.VisualStudio.Package.csproj", "{CA8F0A7A-75E1-4626-9B39-8CB0AC32330F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0B3215F2-A447-4E44-A111-0CCC5E4F0D14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B3215F2-A447-4E44-A111-0CCC5E4F0D14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B3215F2-A447-4E44-A111-0CCC5E4F0D14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B3215F2-A447-4E44-A111-0CCC5E4F0D14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA8F0A7A-75E1-4626-9B39-8CB0AC32330F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA8F0A7A-75E1-4626-9B39-8CB0AC32330F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA8F0A7A-75E1-4626-9B39-8CB0AC32330F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA8F0A7A-75E1-4626-9B39-8CB0AC32330F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

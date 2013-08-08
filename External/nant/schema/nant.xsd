@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<xs:schema xmlns:nant="http://nant.sf.net/release/0.91-alpha2/nant.xsd" elementFormDefault="qualified" targetNamespace="http://nant.sf.net/release/0.91-alpha2/nant.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:nant="http://nant.sf.net/release/0.92/nant.xsd" elementFormDefault="qualified" targetNamespace="http://nant.sf.net/release/0.92/nant.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:annotation>
-    <xs:documentation>NAnt schema generated at 08/17/2010 19:32:03</xs:documentation>
+    <xs:documentation>NAnt schema generated at 06/09/2012 07:28:04</xs:documentation>
   </xs:annotation>
   <xs:complexType name="NAnt.Core.TaskContainer">
     <xs:sequence minOccurs="0" maxOccurs="unbounded">
@@ -46,6 +46,7 @@
         <xs:element name="solution" type="nant:NAnt.VSNet.Tasks.SolutionTask" />
         <xs:element name="aximp" type="nant:NAnt.Win32.Tasks.AxImpTask" />
         <xs:element name="locatesdk" type="nant:NAnt.Win32.Tasks.LocateSdkTask" />
+        <xs:element name="monoregistry" type="nant:NAnt.Win32.Tasks.MonoRegistryTask" />
         <xs:element name="readregistry" type="nant:NAnt.Win32.Tasks.ReadRegistryTask" />
         <xs:element name="regasm" type="nant:NAnt.Win32.Tasks.RegAsmTask" />
         <xs:element name="tlbexp" type="nant:NAnt.Win32.Tasks.TlbExpTask" />
@@ -53,6 +54,7 @@
         <xs:element name="attrib" type="nant:NAnt.Core.Tasks.AttribTask" />
         <xs:element name="available" type="nant:NAnt.Core.Tasks.AvailableTask" />
         <xs:element name="call" type="nant:NAnt.Core.Tasks.CallTask" />
+        <xs:element name="choose" type="nant:NAnt.Core.Tasks.ChooseTask" />
         <xs:element name="copy" type="nant:NAnt.Core.Tasks.CopyTask" />
         <xs:element name="delete" type="nant:NAnt.Core.Tasks.DeleteTask" />
         <xs:element name="description" type="nant:NAnt.Core.Tasks.DescriptionTask" />
@@ -78,6 +80,7 @@
         <xs:element name="style" type="nant:NAnt.Core.Tasks.StyleTask" />
         <xs:element name="sysinfo" type="nant:NAnt.Core.Tasks.SysInfoTask" />
         <xs:element name="touch" type="nant:NAnt.Core.Tasks.TouchTask" />
+        <xs:element name="trycatch" type="nant:NAnt.Core.Tasks.TryCatchTask" />
         <xs:element name="tstamp" type="nant:NAnt.Core.Tasks.TStampTask" />
         <xs:element name="uptodate" type="nant:NAnt.Core.Tasks.UpToDateTask" />
         <xs:element name="xmlpeek" type="nant:NAnt.Core.Tasks.XmlPeekTask" />
@@ -430,6 +433,7 @@
     </xs:sequence>
     <xs:attribute name="destfile" use="required" />
     <xs:attribute name="includeemptydirs" use="optional" />
+    <xs:attribute name="flatten" use="optional" />
     <xs:attribute name="compression" use="optional" />
     <xs:attribute name="failonerror" use="optional" />
     <xs:attribute name="verbose" use="optional" />
@@ -468,6 +472,7 @@
     <xs:attribute name="stampdatetime" use="optional" />
     <xs:attribute name="ziplevel" use="optional" />
     <xs:attribute name="includeemptydirs" use="optional" />
+    <xs:attribute name="flatten" use="optional" />
     <xs:attribute name="duplicate" use="optional" />
     <xs:attribute name="encoding" use="optional" />
     <xs:attribute name="failonerror" use="optional" />
@@ -953,6 +958,7 @@
       <xs:element minOccurs="0" maxOccurs="1" name="formatter" type="nant:NAnt.NUnit.Types.FormatterElement" />
     </xs:sequence>
     <xs:attribute name="haltonfailure" use="optional" />
+    <xs:attribute name="labels" use="optional" />
     <xs:attribute name="failonerror" use="optional" />
     <xs:attribute name="verbose" use="optional" />
     <xs:attribute name="if" use="optional" />
@@ -1400,6 +1406,18 @@
     <xs:attribute name="unless" use="optional" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
+  <xs:complexType name="NAnt.Core.Tasks.PropertyTask">
+    <xs:attribute name="name" use="required" />
+    <xs:attribute name="value" use="required" />
+    <xs:attribute name="readonly" use="optional" />
+    <xs:attribute name="dynamic" use="optional" />
+    <xs:attribute name="overwrite" use="optional" />
+    <xs:attribute name="failonerror" use="optional" />
+    <xs:attribute name="verbose" use="optional" />
+    <xs:attribute name="if" use="optional" />
+    <xs:attribute name="unless" use="optional" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:complexType>
   <xs:complexType name="NAnt.VSNet.Tasks.SolutionTask">
     <xs:sequence minOccurs="0" maxOccurs="unbounded">
       <xs:element minOccurs="0" maxOccurs="1" name="projects" type="nant:NAnt.Core.Types.FileSet" />
@@ -1413,6 +1431,7 @@
       </xs:element>
       <xs:element minOccurs="0" maxOccurs="1" name="excludeprojects" type="nant:NAnt.Core.Types.FileSet" />
       <xs:element minOccurs="0" maxOccurs="1" name="assemblyfolders" type="nant:NAnt.Core.Types.FileSet" />
+      <xs:element minOccurs="0" maxOccurs="1" name="property" type="nant:NAnt.Core.Tasks.PropertyTask" />
     </xs:sequence>
     <xs:attribute name="solutionfile" use="optional" />
     <xs:attribute name="configuration" use="required" />
@@ -1451,6 +1470,14 @@
     <xs:attribute name="maxwinsdkver" use="optional" />
     <xs:attribute name="minnetfxver" use="optional" />
     <xs:attribute name="maxnetfxver" use="optional" />
+    <xs:attribute name="failonerror" use="optional" />
+    <xs:attribute name="verbose" use="optional" />
+    <xs:attribute name="if" use="optional" />
+    <xs:attribute name="unless" use="optional" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:complexType>
+  <xs:complexType name="NAnt.Win32.Tasks.MonoRegistryTask">
+    <xs:attribute name="property" use="required" />
     <xs:attribute name="failonerror" use="optional" />
     <xs:attribute name="verbose" use="optional" />
     <xs:attribute name="if" use="optional" />
@@ -1562,6 +1589,24 @@
     <xs:attribute name="unless" use="optional" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
+  <xs:complexType name="NAnt.Core.Tasks.ChooseTask-When">
+    <xs:attribute name="test" use="required" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:complexType>
+  <xs:complexType name="NAnt.Core.ElementContainer">
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:complexType>
+  <xs:complexType name="NAnt.Core.Tasks.ChooseTask">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element minOccurs="1" maxOccurs="1" name="when" type="nant:NAnt.Core.Tasks.ChooseTask-When" />
+      <xs:element minOccurs="0" maxOccurs="1" name="otherwise" type="nant:NAnt.Core.ElementContainer" />
+    </xs:sequence>
+    <xs:attribute name="failonerror" use="optional" />
+    <xs:attribute name="verbose" use="optional" />
+    <xs:attribute name="if" use="optional" />
+    <xs:attribute name="unless" use="optional" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:complexType>
   <xs:complexType name="NAnt.Core.Tasks.CopyTask">
     <xs:sequence minOccurs="0" maxOccurs="unbounded">
       <xs:element minOccurs="0" maxOccurs="1" name="fileset" type="nant:NAnt.Core.Types.FileSet" />
@@ -1594,7 +1639,7 @@
     <xs:attribute name="unless" use="optional" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
-  <xs:complexType name="NAnt.Core.Tasks.DescriptionTask">
+  <xs:complexType name="NAnt.Core.Tasks.DescriptionTask" mixed="true">
     <xs:attribute name="failonerror" use="optional" />
     <xs:attribute name="verbose" use="optional" />
     <xs:attribute name="if" use="optional" />
@@ -1727,6 +1772,7 @@
         <xs:element name="solution" type="nant:NAnt.VSNet.Tasks.SolutionTask" />
         <xs:element name="aximp" type="nant:NAnt.Win32.Tasks.AxImpTask" />
         <xs:element name="locatesdk" type="nant:NAnt.Win32.Tasks.LocateSdkTask" />
+        <xs:element name="monoregistry" type="nant:NAnt.Win32.Tasks.MonoRegistryTask" />
         <xs:element name="readregistry" type="nant:NAnt.Win32.Tasks.ReadRegistryTask" />
         <xs:element name="regasm" type="nant:NAnt.Win32.Tasks.RegAsmTask" />
         <xs:element name="tlbexp" type="nant:NAnt.Win32.Tasks.TlbExpTask" />
@@ -1734,6 +1780,7 @@
         <xs:element name="attrib" type="nant:NAnt.Core.Tasks.AttribTask" />
         <xs:element name="available" type="nant:NAnt.Core.Tasks.AvailableTask" />
         <xs:element name="call" type="nant:NAnt.Core.Tasks.CallTask" />
+        <xs:element name="choose" type="nant:NAnt.Core.Tasks.ChooseTask" />
         <xs:element name="copy" type="nant:NAnt.Core.Tasks.CopyTask" />
         <xs:element name="delete" type="nant:NAnt.Core.Tasks.DeleteTask" />
         <xs:element name="description" type="nant:NAnt.Core.Tasks.DescriptionTask" />
@@ -1759,6 +1806,7 @@
         <xs:element name="style" type="nant:NAnt.Core.Tasks.StyleTask" />
         <xs:element name="sysinfo" type="nant:NAnt.Core.Tasks.SysInfoTask" />
         <xs:element name="touch" type="nant:NAnt.Core.Tasks.TouchTask" />
+        <xs:element name="trycatch" type="nant:NAnt.Core.Tasks.TryCatchTask" />
         <xs:element name="tstamp" type="nant:NAnt.Core.Tasks.TStampTask" />
         <xs:element name="uptodate" type="nant:NAnt.Core.Tasks.UpToDateTask" />
         <xs:element name="xmlpeek" type="nant:NAnt.Core.Tasks.XmlPeekTask" />
@@ -1825,6 +1873,7 @@
         <xs:element name="solution" type="nant:NAnt.VSNet.Tasks.SolutionTask" />
         <xs:element name="aximp" type="nant:NAnt.Win32.Tasks.AxImpTask" />
         <xs:element name="locatesdk" type="nant:NAnt.Win32.Tasks.LocateSdkTask" />
+        <xs:element name="monoregistry" type="nant:NAnt.Win32.Tasks.MonoRegistryTask" />
         <xs:element name="readregistry" type="nant:NAnt.Win32.Tasks.ReadRegistryTask" />
         <xs:element name="regasm" type="nant:NAnt.Win32.Tasks.RegAsmTask" />
         <xs:element name="tlbexp" type="nant:NAnt.Win32.Tasks.TlbExpTask" />
@@ -1832,6 +1881,7 @@
         <xs:element name="attrib" type="nant:NAnt.Core.Tasks.AttribTask" />
         <xs:element name="available" type="nant:NAnt.Core.Tasks.AvailableTask" />
         <xs:element name="call" type="nant:NAnt.Core.Tasks.CallTask" />
+        <xs:element name="choose" type="nant:NAnt.Core.Tasks.ChooseTask" />
         <xs:element name="copy" type="nant:NAnt.Core.Tasks.CopyTask" />
         <xs:element name="delete" type="nant:NAnt.Core.Tasks.DeleteTask" />
         <xs:element name="description" type="nant:NAnt.Core.Tasks.DescriptionTask" />
@@ -1857,6 +1907,7 @@
         <xs:element name="style" type="nant:NAnt.Core.Tasks.StyleTask" />
         <xs:element name="sysinfo" type="nant:NAnt.Core.Tasks.SysInfoTask" />
         <xs:element name="touch" type="nant:NAnt.Core.Tasks.TouchTask" />
+        <xs:element name="trycatch" type="nant:NAnt.Core.Tasks.TryCatchTask" />
         <xs:element name="tstamp" type="nant:NAnt.Core.Tasks.TStampTask" />
         <xs:element name="uptodate" type="nant:NAnt.Core.Tasks.UpToDateTask" />
         <xs:element name="xmlpeek" type="nant:NAnt.Core.Tasks.XmlPeekTask" />
@@ -1962,6 +2013,7 @@
         <xs:element name="solution" type="nant:NAnt.VSNet.Tasks.SolutionTask" />
         <xs:element name="aximp" type="nant:NAnt.Win32.Tasks.AxImpTask" />
         <xs:element name="locatesdk" type="nant:NAnt.Win32.Tasks.LocateSdkTask" />
+        <xs:element name="monoregistry" type="nant:NAnt.Win32.Tasks.MonoRegistryTask" />
         <xs:element name="readregistry" type="nant:NAnt.Win32.Tasks.ReadRegistryTask" />
         <xs:element name="regasm" type="nant:NAnt.Win32.Tasks.RegAsmTask" />
         <xs:element name="tlbexp" type="nant:NAnt.Win32.Tasks.TlbExpTask" />
@@ -1969,6 +2021,7 @@
         <xs:element name="attrib" type="nant:NAnt.Core.Tasks.AttribTask" />
         <xs:element name="available" type="nant:NAnt.Core.Tasks.AvailableTask" />
         <xs:element name="call" type="nant:NAnt.Core.Tasks.CallTask" />
+        <xs:element name="choose" type="nant:NAnt.Core.Tasks.ChooseTask" />
         <xs:element name="copy" type="nant:NAnt.Core.Tasks.CopyTask" />
         <xs:element name="delete" type="nant:NAnt.Core.Tasks.DeleteTask" />
         <xs:element name="description" type="nant:NAnt.Core.Tasks.DescriptionTask" />
@@ -1994,6 +2047,7 @@
         <xs:element name="style" type="nant:NAnt.Core.Tasks.StyleTask" />
         <xs:element name="sysinfo" type="nant:NAnt.Core.Tasks.SysInfoTask" />
         <xs:element name="touch" type="nant:NAnt.Core.Tasks.TouchTask" />
+        <xs:element name="trycatch" type="nant:NAnt.Core.Tasks.TryCatchTask" />
         <xs:element name="tstamp" type="nant:NAnt.Core.Tasks.TStampTask" />
         <xs:element name="uptodate" type="nant:NAnt.Core.Tasks.UpToDateTask" />
         <xs:element name="xmlpeek" type="nant:NAnt.Core.Tasks.XmlPeekTask" />
@@ -2021,11 +2075,17 @@
     </xs:sequence>
     <xs:attribute name="from" use="required" />
     <xs:attribute name="tolist" use="optional" />
+    <xs:attribute name="replyto" use="optional" />
     <xs:attribute name="cclist" use="optional" />
     <xs:attribute name="bcclist" use="optional" />
     <xs:attribute name="mailhost" use="optional" />
+    <xs:attribute name="mailport" use="optional" />
+    <xs:attribute name="ssl" use="optional" />
     <xs:attribute name="message" use="optional" />
     <xs:attribute name="subject" use="optional" />
+    <xs:attribute name="isbodyhtml" use="optional" />
+    <xs:attribute name="user" use="optional" />
+    <xs:attribute name="password" use="optional" />
     <xs:attribute name="format" use="optional" />
     <xs:attribute name="failonerror" use="optional" />
     <xs:attribute name="verbose" use="optional" />
@@ -2064,18 +2124,6 @@
     <xs:attribute name="output" use="required" />
     <xs:attribute name="target-ns" use="optional" />
     <xs:attribute name="class" use="optional" />
-    <xs:attribute name="failonerror" use="optional" />
-    <xs:attribute name="verbose" use="optional" />
-    <xs:attribute name="if" use="optional" />
-    <xs:attribute name="unless" use="optional" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
-  </xs:complexType>
-  <xs:complexType name="NAnt.Core.Tasks.PropertyTask">
-    <xs:attribute name="name" use="required" />
-    <xs:attribute name="value" use="required" />
-    <xs:attribute name="readonly" use="optional" />
-    <xs:attribute name="dynamic" use="optional" />
-    <xs:attribute name="overwrite" use="optional" />
     <xs:attribute name="failonerror" use="optional" />
     <xs:attribute name="verbose" use="optional" />
     <xs:attribute name="if" use="optional" />
@@ -2206,6 +2254,22 @@
     <xs:attribute name="unless" use="optional" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
+  <xs:complexType name="NAnt.Core.Tasks.TryCatchTask-CatchElement">
+    <xs:attribute name="property" use="optional" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:complexType>
+  <xs:complexType name="NAnt.Core.Tasks.TryCatchTask">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element minOccurs="1" maxOccurs="1" name="try" type="nant:NAnt.Core.ElementContainer" />
+      <xs:element minOccurs="0" maxOccurs="1" name="catch" type="nant:NAnt.Core.Tasks.TryCatchTask-CatchElement" />
+      <xs:element minOccurs="0" maxOccurs="1" name="finally" type="nant:NAnt.Core.ElementContainer" />
+    </xs:sequence>
+    <xs:attribute name="failonerror" use="optional" />
+    <xs:attribute name="verbose" use="optional" />
+    <xs:attribute name="if" use="optional" />
+    <xs:attribute name="unless" use="optional" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:complexType>
   <xs:complexType name="NAnt.Core.Types.Formatter">
     <xs:attribute name="property" use="required" />
     <xs:attribute name="pattern" use="required" />
@@ -2324,7 +2388,7 @@
     <xs:attribute name="unless" use="optional" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
-  <xs:complexType name="Target">
+  <xs:complexType name="Target" mixed="true">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
       <xs:element name="gunzip" type="nant:NAnt.Compression.Tasks.GUnzip" />
       <xs:element name="tar" type="nant:NAnt.Compression.Tasks.TarTask" />
@@ -2366,6 +2430,7 @@
       <xs:element name="solution" type="nant:NAnt.VSNet.Tasks.SolutionTask" />
       <xs:element name="aximp" type="nant:NAnt.Win32.Tasks.AxImpTask" />
       <xs:element name="locatesdk" type="nant:NAnt.Win32.Tasks.LocateSdkTask" />
+      <xs:element name="monoregistry" type="nant:NAnt.Win32.Tasks.MonoRegistryTask" />
       <xs:element name="readregistry" type="nant:NAnt.Win32.Tasks.ReadRegistryTask" />
       <xs:element name="regasm" type="nant:NAnt.Win32.Tasks.RegAsmTask" />
       <xs:element name="tlbexp" type="nant:NAnt.Win32.Tasks.TlbExpTask" />
@@ -2373,6 +2438,7 @@
       <xs:element name="attrib" type="nant:NAnt.Core.Tasks.AttribTask" />
       <xs:element name="available" type="nant:NAnt.Core.Tasks.AvailableTask" />
       <xs:element name="call" type="nant:NAnt.Core.Tasks.CallTask" />
+      <xs:element name="choose" type="nant:NAnt.Core.Tasks.ChooseTask" />
       <xs:element name="copy" type="nant:NAnt.Core.Tasks.CopyTask" />
       <xs:element name="delete" type="nant:NAnt.Core.Tasks.DeleteTask" />
       <xs:element name="description" type="nant:NAnt.Core.Tasks.DescriptionTask" />
@@ -2398,6 +2464,7 @@
       <xs:element name="style" type="nant:NAnt.Core.Tasks.StyleTask" />
       <xs:element name="sysinfo" type="nant:NAnt.Core.Tasks.SysInfoTask" />
       <xs:element name="touch" type="nant:NAnt.Core.Tasks.TouchTask" />
+      <xs:element name="trycatch" type="nant:NAnt.Core.Tasks.TryCatchTask" />
       <xs:element name="tstamp" type="nant:NAnt.Core.Tasks.TStampTask" />
       <xs:element name="uptodate" type="nant:NAnt.Core.Tasks.UpToDateTask" />
       <xs:element name="xmlpeek" type="nant:NAnt.Core.Tasks.XmlPeekTask" />
@@ -2471,6 +2538,7 @@
         <xs:element name="solution" type="nant:NAnt.VSNet.Tasks.SolutionTask" />
         <xs:element name="aximp" type="nant:NAnt.Win32.Tasks.AxImpTask" />
         <xs:element name="locatesdk" type="nant:NAnt.Win32.Tasks.LocateSdkTask" />
+        <xs:element name="monoregistry" type="nant:NAnt.Win32.Tasks.MonoRegistryTask" />
         <xs:element name="readregistry" type="nant:NAnt.Win32.Tasks.ReadRegistryTask" />
         <xs:element name="regasm" type="nant:NAnt.Win32.Tasks.RegAsmTask" />
         <xs:element name="tlbexp" type="nant:NAnt.Win32.Tasks.TlbExpTask" />
@@ -2478,6 +2546,7 @@
         <xs:element name="attrib" type="nant:NAnt.Core.Tasks.AttribTask" />
         <xs:element name="available" type="nant:NAnt.Core.Tasks.AvailableTask" />
         <xs:element name="call" type="nant:NAnt.Core.Tasks.CallTask" />
+        <xs:element name="choose" type="nant:NAnt.Core.Tasks.ChooseTask" />
         <xs:element name="copy" type="nant:NAnt.Core.Tasks.CopyTask" />
         <xs:element name="delete" type="nant:NAnt.Core.Tasks.DeleteTask" />
         <xs:element name="description" type="nant:NAnt.Core.Tasks.DescriptionTask" />
@@ -2503,6 +2572,7 @@
         <xs:element name="style" type="nant:NAnt.Core.Tasks.StyleTask" />
         <xs:element name="sysinfo" type="nant:NAnt.Core.Tasks.SysInfoTask" />
         <xs:element name="touch" type="nant:NAnt.Core.Tasks.TouchTask" />
+        <xs:element name="trycatch" type="nant:NAnt.Core.Tasks.TryCatchTask" />
         <xs:element name="tstamp" type="nant:NAnt.Core.Tasks.TStampTask" />
         <xs:element name="uptodate" type="nant:NAnt.Core.Tasks.UpToDateTask" />
         <xs:element name="xmlpeek" type="nant:NAnt.Core.Tasks.XmlPeekTask" />

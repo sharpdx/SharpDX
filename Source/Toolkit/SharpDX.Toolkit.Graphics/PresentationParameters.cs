@@ -118,6 +118,11 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public int PreferredFullScreenOutputIndex;
 
+        /// <summary>
+        /// Indicates whether the DepthBuffer should be created with the ShaderResource flag. Default is false.
+        /// </summary>
+        public bool DepthBufferShaderResource;
+
         #endregion
 
         #region Constructors and Destructors

@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MathUtilWrapTests.cs" />
     <Compile Include="TestUtilityCompare.cs" />
     <Compile Include="TestMediaAttributes.cs" />
     <Compile Include="TestGetterSetter.cs" />

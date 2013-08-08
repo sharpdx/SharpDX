@@ -30,18 +30,18 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     internal class ModelContentReader : GraphicsResourceContentReaderBase<Model>
     {
-        protected override Model ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Stream stream, object options)
+        protected override Model ReadContent(IContentManager readerManager, GraphicsDevice device, ref ContentReaderParameters parameters)
         {
-            var readerOptions = options as ModelContentReaderOptions;
-            if (options != null && readerOptions == null)
+            var readerOptions = parameters.Options as ModelContentReaderOptions;
+            if (parameters.Options != null && readerOptions == null)
             {
                 throw new ArgumentException("Invalid options. Must be instance of ModelContentReaderOptions", "options");
             }
 
-            var assetPath = Path.GetDirectoryName(assetName);
+            var assetPath = Path.GetDirectoryName(parameters.AssetName);
 
             // Loads the model.
-            var model = Model.Load(device, stream, name =>
+            var model = Model.Load(device, parameters.Stream, name =>
                 {
                     // Try to load the texture with its texture path as is
                     // otherwise try to load with tkb extension
@@ -64,7 +64,7 @@ namespace SharpDX.Toolkit.Graphics
             // If the model has no name, use filename
             if (model.Name == null)
             {
-                model.Name = Path.GetFileName(assetName);
+                model.Name = Path.GetFileName(parameters.AssetName);
             }
 
             // Applies the Effect installer on the model.
