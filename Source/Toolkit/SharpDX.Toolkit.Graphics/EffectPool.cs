@@ -283,7 +283,6 @@ namespace SharpDX.Toolkit.Graphics
         /// Creates a new effect pool from a specified list of <see cref="EffectData" />.
         /// </summary>
         /// <param name="device">The device.</param>
-        /// <param name="effectData">The effect data.</param>
         /// <returns>An instance of <see cref="EffectPool" />.</returns>
         public static EffectPool New(GraphicsDevice device)
         {
@@ -313,7 +312,6 @@ namespace SharpDX.Toolkit.Graphics
         /// Merges an existing <see cref="EffectData" /> into this instance.
         /// </summary>
         /// <param name="source">The EffectData to merge.</param>
-        /// <param name="logger">Logger used to report merging errors.</param>
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise</returns>
         /// <remarks>This method is useful to build an archive of several effects.</remarks>
         private EffectData.Effect RegisterInternal(EffectData source)

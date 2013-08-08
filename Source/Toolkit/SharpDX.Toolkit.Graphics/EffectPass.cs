@@ -94,6 +94,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="logger">The logger used to log errors.</param>
         /// <param name="effect"> The effect. </param>
+        /// <param name="technique">The technique. </param>
         /// <param name="pass"> The pass. </param>
         /// <param name="name"> The name. </param>
         internal EffectPass(Logger logger, Effect effect, EffectTechnique technique, EffectData.Pass pass, string name)

@@ -131,7 +131,6 @@ namespace SharpGen.Doc
         /// <summary>
         /// Get the documentation for a particular prefix (include name) and a full name item
         /// </summary>
-        /// <param name="prefixName"></param>
         /// <param name="name"></param>
         /// <returns></returns>
         public DocItem FindDocumentation(string name)

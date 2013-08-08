@@ -96,7 +96,7 @@ namespace SharpDX.Direct3D11
         /// <summary>
         /// Determines whether the specified <see cref="InputElement"/> is equal to this instance.
         /// </summary>
-        /// <param name="obj">The <see cref="InputElement"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="InputElement"/> to compare with this instance.</param>
         /// <returns>
         ///   <c>true</c> if the specified <see cref="InputElement"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>

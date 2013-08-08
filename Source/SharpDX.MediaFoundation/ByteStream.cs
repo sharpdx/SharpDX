@@ -209,8 +209,9 @@ namespace SharpDX.MediaFoundation
         /// <summary>	
         /// <p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p> Begins an asynchronous read operation from the stream. </p>	
         /// </summary>	
-        /// <param name="bRef"><dd> <p> Pointer to a buffer that receives the data. The caller must allocate the buffer. </p> </dd></param>	
-        /// <param name="cb"><dd> <p> Size of the buffer in bytes. </p> </dd></param>	
+        /// <param name="bRef"><dd> <p> Pointer to a buffer that receives the data. The caller must allocate the buffer. </p> </dd></param>
+        /// <param name="offset">The offset in the buffer to begin reading from.</param>
+        /// <param name="count"><dd> <p> Size of the buffer in bytes. </p> </dd></param>	
         /// <param name="callbackRef"><dd> <p> Pointer to the <strong><see cref="SharpDX.MediaFoundation.IAsyncCallback"/></strong> interface of a callback object. The caller must implement this interface. </p> </dd></param>	
         /// <param name="context"><dd> <p> Pointer to the <strong><see cref="SharpDX.ComObject"/></strong> interface of a state object, defined by the caller. This parameter can be <strong><c>null</c></strong>. You can use this object to hold state information. The object is returned to the caller when the callback is invoked. </p> </dd></param>	
         /// <returns><p>If this method succeeds, it returns <strong><see cref="SharpDX.Result.Ok"/></strong>. Otherwise, it returns an <strong><see cref="SharpDX.Result"/></strong> error code.</p></returns>	
@@ -247,8 +248,9 @@ namespace SharpDX.MediaFoundation
         /// <summary>	
         /// <p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p> </p><p>Writes data to the stream.</p>	
         /// </summary>	
-        /// <param name="bRef"><dd> <p> Pointer to a buffer that contains the data to write. </p> </dd></param>	
-        /// <param name="cb"><dd> <p> Size of the buffer in bytes. </p> </dd></param>	
+        /// <param name="bRef"><dd> <p> Pointer to a buffer that contains the data to write. </p> </dd></param>
+        /// <param name="offset">The offset within the buffer to begin writing at.</param>
+        /// <param name="count"><dd> <p> Size of the buffer in bytes. </p> </dd></param>	
         /// <returns>The number of bytes that are written.</returns>	
         /// <remarks>	
         /// <p> This method writes the contents of the <em>pb</em> buffer to the stream, starting at the current stream position. The number of bytes that were written is returned in the <em>pcbWritten</em> parameter. </p><p> This method is synchronous. It blocks until the write operation completes. </p><p>This interface is available on the following platforms if the Windows Media Format 11 SDK redistributable components are installed:</p><ul> <li>Windows?XP with Service Pack?2 (SP2) and later.</li> <li>Windows?XP Media Center Edition?2005 with KB900325 (Windows?XP Media Center Edition?2005) and KB925766 (October 2006 Update Rollup for Windows?XP Media Center Edition) installed.</li> </ul>	
@@ -267,8 +269,9 @@ namespace SharpDX.MediaFoundation
         /// <summary>	
         /// <p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p> Begins an asynchronous write operation to the stream. </p>	
         /// </summary>	
-        /// <param name="bRef"><dd> <p> Pointer to a buffer containing the data to write. </p> </dd></param>	
-        /// <param name="cb"><dd> <p> Size of the buffer in bytes. </p> </dd></param>	
+        /// <param name="bRef"><dd> <p> Pointer to a buffer containing the data to write. </p> </dd></param>
+        /// <param name="offset">The offset within the buffer to begin writing at.</param>
+        /// <param name="count"><dd> <p> Size of the buffer in bytes. </p> </dd></param>	
         /// <param name="callbackRef"><dd> <p> Pointer to the <strong><see cref="SharpDX.MediaFoundation.IAsyncCallback"/></strong> interface of a callback object. The caller must implement this interface. </p> </dd></param>	
         /// <param name="context"><dd> <p> Pointer to the <strong><see cref="SharpDX.ComObject"/></strong> interface of a state object, defined by the caller. This parameter can be <strong><c>null</c></strong>. You can use this object to hold state information. The object is returned to the caller when the callback is invoked. </p> </dd></param>	
         /// <returns><p>If this method succeeds, it returns <strong><see cref="SharpDX.Result.Ok"/></strong>. Otherwise, it returns an <strong><see cref="SharpDX.Result"/></strong> error code.</p></returns>	
