@@ -369,6 +369,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <typeparam name="TData">The type of the T data.</typeparam>
         /// <param name="fromData">The data to copy from.</param>
         /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <param name="options">Data writing behavior</param>
         /// <exception cref="System.ArgumentException"></exception>
         /// <remarks>
         /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>. See the unmanaged documentation about Map/UnMap for usage and restrictions.
@@ -386,6 +387,8 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
         /// <param name="fromData">The data to copy from.</param>
+        /// <param name="startIndex">Index to begin setting data from.</param>
+        /// <param name="elementCount">The number of elements to set.</param>
         /// <param name="offsetInBytes">The offset in bytes to write to.</param>
         /// <exception cref="System.ArgumentException"></exception>
         /// <remarks>
@@ -404,6 +407,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="fromData">A data pointer.</param>
         /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <param name="options">Buffer data behavior</param>
         /// <exception cref="System.ArgumentException"></exception>
         /// <msdn-id>ff476457</msdn-id>
         ///   <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
@@ -423,6 +427,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="fromData">The data to copy from.</param>
         /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <param name="options">Buffer data behavior</param>
         /// <exception cref="System.ArgumentException"></exception>
         /// <remarks>
         /// See the unmanaged documentation about Map/UnMap for usage and restrictions.
@@ -441,7 +446,10 @@ namespace SharpDX.Toolkit.Graphics
         /// <typeparam name="TData">The type of the T data.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="fromData">The data to copy from.</param>
+        /// <param name="startIndex">The starting index to begin setting data from.</param>
+        /// <param name="elementCount">The number of elements to set.</param>
         /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <param name="options">Buffer data behavior.</param>
         /// <exception cref="System.ArgumentException"></exception>
         /// <remarks>
         /// See the unmanaged documentation about Map/UnMap for usage and restrictions.
@@ -463,6 +471,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="fromData">A data pointer.</param>
         /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <param name="options">Buffer data behavior.</param>
         /// <exception cref="System.ArgumentException"></exception>
         /// <msdn-id>ff476457</msdn-id>
         ///   <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
@@ -512,6 +521,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="fromData">A data pointer.</param>
         /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <param name="options">Buffer data behavior</param>
         /// <exception cref="System.ArgumentException"></exception>
         /// <msdn-id>ff476457</msdn-id>
         ///   <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
@@ -1166,6 +1176,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="fromData">The data to copy from.</param>
         /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <param name="options">Buffer data behavior.</param>
         /// <exception cref="System.ArgumentException"></exception>
         /// <remarks>
         /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>. See the unmanaged documentation about Map/UnMap for usage and restrictions.
@@ -1182,7 +1193,10 @@ namespace SharpDX.Toolkit.Graphics
         /// Copies the content an array of data from CPU memory to this buffer into GPU memory.
         /// </summary>
         /// <param name="fromData">The data to copy from.</param>
+        /// <param name="startIndex">Index to start copying from.</param>
+        /// <param name="elementCount">Number of elements to copy.</param>
         /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <param name="options">Buffer data behavior.</param>
         /// <remarks>
         /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>. See the unmanaged documentation about Map/UnMap for usage and restrictions.
         /// </remarks>
@@ -1200,6 +1214,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="fromData">The data to copy from.</param>
         /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <param name="options">Buffer data behavior.</param>
         /// <exception cref="System.ArgumentException"></exception>
         /// <remarks>
         /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>. See the unmanaged documentation about Map/UnMap for usage and restrictions.
@@ -1217,7 +1232,10 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="fromData">The data to copy from.</param>
+        /// <param name="startIndex">Buffer index to begin copying from.</param>
+        /// <param name="elementCount">Number of elements to copy.</param>
         /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <param name="options">Buffer data behavior.</param>
         /// <remarks>
         /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>. See the unmanaged documentation about Map/UnMap for usage and restrictions.
         /// </remarks>

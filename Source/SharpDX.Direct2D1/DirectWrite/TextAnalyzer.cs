@@ -308,8 +308,8 @@ namespace SharpDX.DirectWrite
                     // Calculate size (2)
                     foreach (var fontFeature in features)
                     {
-                        if (fontFeature == null) 
-                            throw new ArgumentNullException("FontFeature[] inside features array cannot be null", "features");
+                        if (fontFeature == null)
+                            throw new ArgumentNullException("features", "FontFeature[] inside features array cannot be null.");
 
                         // calcSize += typographicFeatures.Length * sizeof(FontFeature)
                         calcSize += sizeof(FontFeature) * fontFeature.Length;

@@ -50,7 +50,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             if (destinationBoneTransformsPtr == IntPtr.Zero)
             {
-                throw new ArgumentNullException("destinationBoneTransforms");
+                throw new ArgumentNullException("destinationBoneTransformsPtr");
             }
 
             var destinationBoneTransforms = (Matrix*)destinationBoneTransformsPtr;

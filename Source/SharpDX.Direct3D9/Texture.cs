@@ -424,7 +424,8 @@ namespace SharpDX.Direct3D9
         /// </summary>
         /// <param name="device">The device.</param>
         /// <param name="buffer">The buffer.</param>
-        /// <param name="size">The size.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
         /// <param name="levelCount">The level count.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="format">The format.</param>
@@ -448,7 +449,8 @@ namespace SharpDX.Direct3D9
         /// </summary>
         /// <param name="device">The device.</param>
         /// <param name="buffer">The buffer.</param>
-        /// <param name="size">The size.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
         /// <param name="levelCount">The level count.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="format">The format.</param>
@@ -516,7 +518,8 @@ namespace SharpDX.Direct3D9
         /// </summary>
         /// <param name="device">The device.</param>
         /// <param name="stream">The stream.</param>
-        /// <param name="size">The size.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
         /// <param name="levelCount">The level count.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="format">The format.</param>
@@ -539,7 +542,8 @@ namespace SharpDX.Direct3D9
         /// <param name="device">The device.</param>
         /// <param name="stream">The stream.</param>
         /// <param name="sizeBytes">The size bytes.</param>
-        /// <param name="size">The size.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
         /// <param name="levelCount">The level count.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="format">The format.</param>
@@ -562,7 +566,8 @@ namespace SharpDX.Direct3D9
         /// <param name="device">The device.</param>
         /// <param name="stream">The stream.</param>
         /// <param name="sizeBytes">The size bytes.</param>
-        /// <param name="size">The size.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height</param>
         /// <param name="levelCount">The level count.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="format">The format.</param>
@@ -587,7 +592,8 @@ namespace SharpDX.Direct3D9
         /// <param name="device">The device.</param>
         /// <param name="stream">The stream.</param>
         /// <param name="sizeBytes">The size bytes.</param>
-        /// <param name="size">The size.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
         /// <param name="levelCount">The level count.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="format">The format.</param>
@@ -613,7 +619,8 @@ namespace SharpDX.Direct3D9
         /// </summary>
         /// <param name="device">The device.</param>
         /// <param name="buffer">The buffer.</param>
-        /// <param name="size">The size.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
         /// <param name="levelCount">The level count.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="format">The format.</param>
@@ -656,7 +663,8 @@ namespace SharpDX.Direct3D9
         /// <param name="device">The device.</param>
         /// <param name="stream">The stream.</param>
         /// <param name="sizeBytes">The size bytes.</param>
-        /// <param name="size">The size.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height</param>
         /// <param name="levelCount">The level count.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="format">The format.</param>
@@ -722,7 +730,8 @@ namespace SharpDX.Direct3D9
         /// <param name="device">The device.</param>
         /// <param name="pointer">The pointer.</param>
         /// <param name="sizeInBytes">The size in bytes.</param>
-        /// <param name="size">The size.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
         /// <param name="levelCount">The level count.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="format">The format.</param>
@@ -764,7 +773,8 @@ namespace SharpDX.Direct3D9
         /// </summary>
         /// <param name="device">The device.</param>
         /// <param name="fileName">Name of the file.</param>
-        /// <param name="size">The size.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
         /// <param name="levelCount">The level count.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="format">The format.</param>

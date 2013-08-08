@@ -705,6 +705,7 @@ namespace SharpDX
         /// <param name="x">Scaling factor that is applied along the x-axis.</param>
         /// <param name="y">Scaling factor that is applied along the y-axis.</param>
         /// <param name="z">Scaling factor that is applied along the z-axis.</param>
+        /// <param name="w">Scaling factor that is applied along the w-axis.</param>
         /// <param name="result">When the method completes, contains the created scaling Matrix5x4.</param>
         public static void Scaling(float x, float y, float z, float w, out Matrix5x4 result)
         {
@@ -781,6 +782,7 @@ namespace SharpDX
         /// <param name="x">X-coordinate offset.</param>
         /// <param name="y">Y-coordinate offset.</param>
         /// <param name="z">Z-coordinate offset.</param>
+        /// <param name="w">W-coordinate offset.</param>
         /// <param name="result">When the method completes, contains the created translation Matrix5x4.</param>
         public static void Translation(float x, float y, float z, float w,  out Matrix5x4 result)
         {

@@ -43,12 +43,12 @@ namespace SharpDX.Toolkit.Graphics
             public int MaterialIndex;
 
             /// <summary>
-            /// The index buffer range. The slot in the buffer range is the position of the index buffer in <see cref="ModelData.IndexBuffers"/>.
+            /// The index buffer range. The slot in the buffer range is the position of the index buffer in <see cref="ModelData.IndexBuffer"/>s.
             /// </summary>
             public BufferRange IndexBufferRange;
 
             /// <summary>
-            /// The vertex buffer range. The slot in the buffer range is the position of the vertex buffer in <see cref="ModelData.VertexBuffers"/>.
+            /// The vertex buffer range. The slot in the buffer range is the position of the vertex buffer in <see cref="ModelData.VertexBuffer"/>s.
             /// </summary>
             public BufferRange VertexBufferRange;
 

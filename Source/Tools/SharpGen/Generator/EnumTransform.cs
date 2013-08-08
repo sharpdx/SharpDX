@@ -68,7 +68,7 @@ namespace SharpGen.Generator
         /// <summary>
         /// Maps a C++ Enum to a C# enum.
         /// </summary>
-        /// <param name="cppEnum">the c++ enum.</param>
+        /// <param name="newEnum">the C# enum.</param>
         private void Process(CsEnum newEnum)
         {
             var cppEnum = (CppEnum) newEnum.CppElement;

@@ -48,8 +48,7 @@ namespace SharpGen.Model
         /// <summary>
         /// Tag an Enum and force it to be interpreted as a flag.
         /// </summary>
-        /// <param name="element"></param>
-        /// <param name="regex"></param>
+        /// <param name="cppType"></param>
         public static string GetTypeNameWithMapping(this CppElement cppType)
         {
             var tag = cppType.GetTagOrDefault<MappingRule>();
@@ -70,8 +69,7 @@ namespace SharpGen.Model
         /// <summary>
         ///   Fully rename a type and all references
         /// </summary>
-        /// <param name = "fromType"></param>
-        /// <param name = "toType"></param>
+        /// <param name = "fromTag"></param>
         /// <returns></returns>
         private static CppElement.ProcessModifier ProcessTag(MappingRule fromTag)
         {

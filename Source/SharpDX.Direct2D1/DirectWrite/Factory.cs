@@ -119,7 +119,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::UnregisterFontFileLoader([None] IDWriteFontFileLoader* fontFileLoader)</unmanaged>
         public void UnregisterFontFileLoader(FontFileLoader fontFileLoader)
         {
-            if (!_fontFileLoaderCallbacks.Contains(fontFileLoader)) throw new ArgumentException("This font file loader is not registered", "FontFileLoader");
+            if (!_fontFileLoaderCallbacks.Contains(fontFileLoader)) throw new ArgumentException("This font file loader is not registered", "fontFileLoader");
 
             UnregisterFontFileLoader_(FontFileLoaderShadow.ToIntPtr(fontFileLoader));
             _fontFileLoaderCallbacks.Remove(fontFileLoader);

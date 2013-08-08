@@ -97,7 +97,7 @@ namespace SharpDX.Toolkit.Graphics
             var vertexElements = VertexElement.FromType(structType);
             if (vertexElements == null)
             {
-                throw new ArgumentException(string.Format("Unable to calculate VertexElements from Type [{0}]. This type is not using VertexElementAttribute.", structType.Name), "type");
+                throw new ArgumentException(string.Format("Unable to calculate VertexElements from Type [{0}]. This type is not using VertexElementAttribute.", structType.Name), "structType");
             }
 
             return New(slot, vertexElements);
