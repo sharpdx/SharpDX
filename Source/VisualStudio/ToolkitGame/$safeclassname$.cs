@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Text;
 using SharpDX;
+$if$ ($sharpdx_platform_wp8$ == true)using SharpDX.Direct3D;$endif$
 
 namespace $safeprojectname$
 {
-    // Use these namespace here to override SharpDX.Direct3D11
+    // Use these namespaces here to override SharpDX.Direct3D11
     using SharpDX.Toolkit;
     using SharpDX.Toolkit.Graphics;
     using SharpDX.Toolkit.Input;
@@ -48,7 +49,8 @@ $endif$
         {
             // Creates a graphics manager. This is mandatory.
             graphicsDeviceManager = new GraphicsDeviceManager(this);
-
+$if$ ($sharpdx_platform_wp8$ == true)            graphicsDeviceManager.PreferredGraphicsProfile = new[] { FeatureLevel.Level_9_3 };
+$endif$
             // Setup the relative directory to the executable directory
             // for loading contents with the ContentManager
             Content.RootDirectory = "Content";

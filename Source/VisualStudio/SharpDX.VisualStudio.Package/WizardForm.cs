@@ -6,6 +6,8 @@ namespace SharpDX.VisualStudio.ProjectWizard
 {
     public partial class WizardForm : Form
     {
+        private bool isNotPlatformWP8;
+
         public Dictionary<string, string> Properties { get; private set; }
 
         private WizardForm()
@@ -16,6 +18,7 @@ namespace SharpDX.VisualStudio.ProjectWizard
         public WizardForm(Dictionary<string, string> properties) : this()
         {
             Properties = properties;
+            isNotPlatformWP8 = true;
             radioButtonPlatformDesktop.Checked = true;
         }
 
@@ -51,7 +54,7 @@ namespace SharpDX.VisualStudio.ProjectWizard
             var platform = (string)radioButton.Tag;
             Properties[platform] = radioButton.Checked.ToString().ToLowerInvariant();
 
-            var isNotPlatformWP8 = !platform.Contains("wp8");
+            isNotPlatformWP8 = !platform.Contains("wp8");
             if (!isNotPlatformWP8)
             {
                 checkInputKeyboard.Checked = false;
@@ -74,8 +77,8 @@ namespace SharpDX.VisualStudio.ProjectWizard
         private void CheckUncheckAll(bool state)
         {
             checkBloomEffect.Checked = state;
-            checkInputKeyboard.Checked = state;
-            checkInputMouse.Checked = state;
+            checkInputKeyboard.Checked = isNotPlatformWP8 && state;
+            checkInputMouse.Checked = isNotPlatformWP8 && state;
             checkInputTouch.Checked = state;
 
             checkSpriteFont.Checked = state;
