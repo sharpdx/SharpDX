@@ -25,9 +25,9 @@ using SharpDX.Serialization;
 namespace SharpDX
 {
     /// <summary>
-    /// Define a RectangleF. This structure is slightly different from System.Drawing.RectangleF as It is 
+    /// Define a RectangleF. This structure is slightly different from System.Drawing.RectangleF as it is 
     /// internally storing Left,Top,Right,Bottom instead of Left,Top,Width,Height.
-    /// Although automatic casting from a to System.Drawing.Rectangle is provided by this class.
+    /// Explicit casting to/from a System.Drawing.RectangleF is provided by this class.
     /// </summary>
 #if !W8CORE
     [Serializable]
@@ -471,6 +471,26 @@ namespace SharpDX
         public static bool operator !=(RectangleF left, RectangleF right)
         {
             return !(left == right);
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="SharpDX.RectangleF"/> to <see cref="System.Drawing.RectangleF"/>.
+        /// </summary>
+        /// <param name="rectangle">The SharpDX.RectangleF.</param>
+        /// <returns>The System.Drawing.RectangleF.</returns>
+        public static explicit operator System.Drawing.RectangleF(RectangleF rectangle)
+        {
+            return new System.Drawing.RectangleF(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="System.Drawing.RectangleF"/> to <see cref="SharpDX.RectangleF"/>.
+        /// </summary>
+        /// <param name="rectangle">The System.Drawing.RectangleF.</param>
+        /// <returns>The SharpDX.RectangleF.</returns>
+        public static explicit operator RectangleF(System.Drawing.RectangleF rectangle)
+        {
+            return new RectangleF(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
         }
 
         /// <inheritdoc/>
