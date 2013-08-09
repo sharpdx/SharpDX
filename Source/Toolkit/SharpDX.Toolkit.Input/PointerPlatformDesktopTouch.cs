@@ -245,7 +245,7 @@ namespace SharpDX.Toolkit.Input
         /// <summary>
         /// Adjusts the value by current DPI on Y axis
         /// </summary>
-        /// <param name="x">Value to adjust</param>
+        /// <param name="y">Value to adjust</param>
         /// <returns>Adjusted value</returns>
         private int AdjustY(int y)
         {

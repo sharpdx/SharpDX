@@ -131,8 +131,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Resizes the current presenter, by resizing the back buffer and the depth stencil buffer.
         /// </summary>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
+        /// <param name="width">New backbuffer width</param>
+        /// <param name="height">New backbuffer height</param>
+        /// <param name="format">Backbuffer display format.</param>
         public virtual void Resize(int width, int height, DXGI.Format format)
         {
             if (DepthStencilBuffer != null)

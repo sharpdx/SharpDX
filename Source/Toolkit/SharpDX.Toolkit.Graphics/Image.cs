@@ -244,7 +244,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             // If reference equals, then it is null
             if (ReferenceEquals(loader, saver))
-                throw new ArgumentNullException("Can set both loader and saver to null", "loader/saver");
+                throw new ArgumentNullException("loader/saver", "Can set both loader and saver to null");
 
             var newDelegate = new LoadSaveDelegate(type, loader, saver);
             for (int i = 0; i < loadSaveDelegates.Count; i++)

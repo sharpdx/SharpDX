@@ -402,7 +402,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public bool Equals(PixelFormat other)
         {
-            return Value.Equals(other.Value);
+            return Value == other.Value;
         }
 
         public override bool Equals(object obj)

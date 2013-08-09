@@ -35,23 +35,23 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="device">The device.</param>
             /// <param name="sizeX">The size X.</param>
             /// <param name="sizeY">The size Y.</param>
-            /// <param name="tesselation">The tessellation, as the number of quads per axis.</param>
+            /// <param name="tessellation">The tessellation, as the number of quads per axis.</param>
             /// <param name="toLeftHanded">if set to <c>true</c> vertices and indices will be transformed to left handed. Default is true.</param>
             /// <returns>A Plane primitive.</returns>
             /// <exception cref="System.ArgumentOutOfRangeException">tessellation;tessellation must be > 0</exception>
-            public static GeometricPrimitive New(GraphicsDevice device, float sizeX = 1.0f, float sizeY = 1.0f, int tesselation = 1, bool toLeftHanded = true)
+            public static GeometricPrimitive New(GraphicsDevice device, float sizeX = 1.0f, float sizeY = 1.0f, int tessellation = 1, bool toLeftHanded = true)
             {
-                if (tesselation < 1)
+                if (tessellation < 1)
                 {
                     throw new ArgumentOutOfRangeException("tessellation", "tessellation must be > 0");
                 }
 
-                var lineWidth = tesselation + 1;
+                var lineWidth = tessellation + 1;
                 var vertices = new VertexPositionNormalTexture[lineWidth * lineWidth];
-                var indices = new int[tesselation * tesselation * 6];
+                var indices = new int[tessellation * tessellation * 6];
 
-                var deltaX = sizeX/tesselation;
-                var deltaY = sizeY/tesselation;
+                var deltaX = sizeX/tessellation;
+                var deltaY = sizeY/tessellation;
 
                 sizeX /= 2.0f;
                 sizeY /= 2.0f;
@@ -61,20 +61,20 @@ namespace SharpDX.Toolkit.Graphics
                 var normal = -Vector3.UnitZ;
 
                 // Create vertices
-                for (int y = 0; y < (tesselation+1); y++)
+                for (int y = 0; y < (tessellation+1); y++)
                 {
-                    for (int x = 0; x < (tesselation+1); x++)
+                    for (int x = 0; x < (tessellation+1); x++)
                     {
                         var position = new Vector3(-sizeX + deltaX * x, -sizeY + deltaY * y, 0);
-                        var texCoord = new Vector2(1.0f * x / tesselation, 1.0f * y / tesselation);
+                        var texCoord = new Vector2(1.0f * x / tessellation, 1.0f * y / tessellation);
                         vertices[vertexCount++] = new VertexPositionNormalTexture(position, normal, texCoord);
                     }
                 }
 
                 // Create indices
-                for (int y = 0; y < tesselation; y++)
+                for (int y = 0; y < tessellation; y++)
                 {
-                    for (int x = 0; x < tesselation; x++)
+                    for (int x = 0; x < tessellation; x++)
                     {
                         // Six indices (two triangles) per face.
                         int vbase = lineWidth * y + x;

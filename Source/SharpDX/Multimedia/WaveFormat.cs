@@ -248,7 +248,7 @@ namespace SharpDX.Multimedia
         {
             if (channels  < 1)
             {
-                throw new ArgumentOutOfRangeException("Channels must be 1 or greater", "channels");
+                throw new ArgumentOutOfRangeException("channels", "Channels must be 1 or greater");
             }
             // minimum 16 bytes, sometimes 18 for PCM
             this.waveFormatTag = bits<32?WaveFormatEncoding.Pcm:WaveFormatEncoding.IeeeFloat;
