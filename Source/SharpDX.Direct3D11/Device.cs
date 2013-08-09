@@ -374,6 +374,19 @@ namespace SharpDX.Direct3D11
         }
 #endif
 
+#if DIRECTX11_2
+        public FeatureDataD3D11Options1 CheckD3D112Feature()
+        {
+            unsafe
+            {
+                var support = default(FeatureDataD3D11Options1);
+                if (CheckFeatureSupport(Feature.D3D11Options1, new IntPtr(&support), Utilities.SizeOf<FeatureDataD3D11Options1>()).Failure)
+                    return default(FeatureDataD3D11Options1);
+                return support;
+            }
+        }
+#endif
+
 
         /// <summary>
         /// Check if this device is supporting a feature.
