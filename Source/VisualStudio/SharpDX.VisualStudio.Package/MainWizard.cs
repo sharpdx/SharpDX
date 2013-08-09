@@ -25,15 +25,24 @@ using System.Windows.Forms;
 
 using EnvDTE;
 
+using EnvDTE80;
+
 using Microsoft.VisualStudio.TemplateWizard;
 
 namespace SharpDX.VisualStudio.ProjectWizard
 {
+    /// <summary>
+    /// Main wizard class called by the SharpDX project template.
+    /// </summary>
     public class MainWizard : IWizard
     {
         private WizardForm wizardForm;
 
+        private EnvDTE._DTE dte;
+
         private IWizard winRTCertificateWizard;
+
+        private bool isPlatformWP8;
 
         public void BeforeOpeningFile(ProjectItem projectItem)
         {
@@ -43,6 +52,34 @@ namespace SharpDX.VisualStudio.ProjectWizard
         public void ProjectFinishedGenerating(Project project)
         {
             if (winRTCertificateWizard != null) winRTCertificateWizard.ProjectFinishedGenerating(project);
+
+            // Because SharpDX assemblies cannot be compiled with Any CPU on Windows Phone 8
+            // We need to patch the generated solution file to force solution config "Any CPU" to use a 
+            // project platform "x86" instead of "Any CPU", otherwise the project will not compile in Any CPU
+            // by default.
+            // Once They will provide DllImport on Windows Phone 8, we will be able to remove this annoying code.
+            if (isPlatformWP8)
+            {
+                try
+                {
+                    var solution = dte.Solution as Solution2;
+                    var solutionBuild = (SolutionBuild2)solution.SolutionBuild;
+                    foreach (SolutionConfiguration2 solutionConfiguration in solutionBuild.SolutionConfigurations)
+                    {
+                        if (solutionConfiguration.PlatformName == "Any CPU")
+                        {
+                            foreach (SolutionContext solutionContext in solutionConfiguration.SolutionContexts)
+                            {
+                                solutionContext.ConfigurationName = solutionContext.ConfigurationName + "|x86";
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Don't bother if we failed to do anything with the solution, let the code generator continue.
+                }
+            }
         }
 
         public void ProjectItemFinishedGenerating(ProjectItem projectItem)
@@ -57,6 +94,8 @@ namespace SharpDX.VisualStudio.ProjectWizard
 
         public void RunStarted(object automationObject, Dictionary<string, string> props, WizardRunKind runKind, object[] customParams)
         {
+            this.dte = automationObject as EnvDTE._DTE;
+
             // Check that SharpDX is correctly installed
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SharpDXSdkDir")))
             {
@@ -105,6 +144,8 @@ namespace SharpDX.VisualStudio.ProjectWizard
             {
                 props["$sharpdx_platform_winrt$"] = "true";
             }
+
+            isPlatformWP8 = props.ContainsKey("$sharpdx_platform_wp8$");
         }
 
         private bool GetKey(Dictionary<string, string> replacementsDictionary, string name)
