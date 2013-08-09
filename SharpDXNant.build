@@ -176,7 +176,7 @@
     <call target="zip"/>
     
     <call target="fix-sharpdx-path-samples"/>
-    <!-- TODO: Add call to AdvancedInstaller here ->
+    <!-- TODO: Add call to AdvancedInstaller here -->
   </target>
 
   <!-- Nuget Package build -->
