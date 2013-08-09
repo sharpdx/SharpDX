@@ -65,6 +65,8 @@ namespace SharpDX.VisualStudio.ProjectWizard
             }
             props.Add("$safeclassname$", props["$safeprojectname$"].Replace(".", string.Empty));
 
+            props["$currentVsCulture$"] = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
+
             //Call win form created in the project to accept user input
             wizardForm = new WizardForm(props);
             var result = wizardForm.ShowDialog();

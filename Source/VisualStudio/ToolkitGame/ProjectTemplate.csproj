@@ -4,8 +4,12 @@
   <PropertyGroup>
     <!-- Common Properties -->
 		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-		<ProductVersion>8.0.30703</ProductVersion>
+    $if$ ($sharpdx_platform_wp8$ == true)
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    $else$
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    $endif$
+    <ProductVersion>8.0.30703</ProductVersion>
 		<SchemaVersion>2.0</SchemaVersion>
 		<ProjectGuid>$guid1$</ProjectGuid>
     <AppDesignerFolder>Properties</AppDesignerFolder>

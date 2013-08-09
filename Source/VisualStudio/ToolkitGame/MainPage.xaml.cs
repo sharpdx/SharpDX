@@ -1,4 +1,20 @@
-﻿using System;
+﻿$if$ ($sharpdx_platform_wp8$ == true)namespace $safeprojectname$
+{
+    public partial class MainPage
+    {
+        private readonly $safeclassname$ game;
+
+        // Constructor
+        public MainPage()
+        {
+            InitializeComponent();
+
+            game = new $safeclassname$();
+            game.Run(DrawingSurface);
+        }
+    }
+}
+$else$using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -32,3 +48,4 @@ namespace $safeprojectname$
         }
     }
 }
+$endif$
