@@ -291,6 +291,9 @@
 
     <map param="ID3D11DeviceContext::CSSetUnorderedAccessViews::pUAVInitialCounts" type="void"/>
     <map param="ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews::pUAVInitialCounts" type="void"/>
+
+    <map method="ID3D11VideoContext::GetDecoderBuffer" visibility="internal"/>
+    <map param="ID3D11VideoContext::GetDecoderBuffer::ppBuffer" attribute="out"/>
     
     <!--
     // *****************************************************************
