@@ -65,6 +65,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonitorInfo.Desktop", "Tool
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteBatchCustomEffect.Desktop", "Toolkit\Desktop\SpriteBatchCustomEffect\SpriteBatchCustomEffect.Desktop.csproj", "{247252A9-B082-49C2-92A5-98DF322A2A5E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiledResources.Desktop", "Toolkit\Desktop\TiledResources\TiledResources.Desktop.csproj", "{C956F938-87B0-4F94-A5B2-0FE4DD5ADEE7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -596,6 +598,18 @@ Global
 		{247252A9-B082-49C2-92A5-98DF322A2A5E}.Release|ARM.ActiveCfg = Release|Any CPU
 		{247252A9-B082-49C2-92A5-98DF322A2A5E}.Release|x64.ActiveCfg = Release|Any CPU
 		{247252A9-B082-49C2-92A5-98DF322A2A5E}.Release|x86.ActiveCfg = Release|Any CPU
+		{C956F938-87B0-4F94-A5B2-0FE4DD5ADEE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C956F938-87B0-4F94-A5B2-0FE4DD5ADEE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C956F938-87B0-4F94-A5B2-0FE4DD5ADEE7}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{C956F938-87B0-4F94-A5B2-0FE4DD5ADEE7}.Debug|x64.ActiveCfg = Debug|X64
+		{C956F938-87B0-4F94-A5B2-0FE4DD5ADEE7}.Debug|x64.Build.0 = Debug|X64
+		{C956F938-87B0-4F94-A5B2-0FE4DD5ADEE7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C956F938-87B0-4F94-A5B2-0FE4DD5ADEE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C956F938-87B0-4F94-A5B2-0FE4DD5ADEE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C956F938-87B0-4F94-A5B2-0FE4DD5ADEE7}.Release|ARM.ActiveCfg = Release|Any CPU
+		{C956F938-87B0-4F94-A5B2-0FE4DD5ADEE7}.Release|x64.ActiveCfg = Release|X64
+		{C956F938-87B0-4F94-A5B2-0FE4DD5ADEE7}.Release|x64.Build.0 = Release|X64
+		{C956F938-87B0-4F94-A5B2-0FE4DD5ADEE7}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
