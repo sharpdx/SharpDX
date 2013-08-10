@@ -283,6 +283,16 @@ namespace SharpDX.Toolkit.Graphics
             return MeasureString(ref proxyText);
         }
 
+        /// <summary>
+        /// Checks whether the provided character is present in the character map of the current <see cref="SpriteFont"/>.
+        /// </summary>
+        /// <param name="c">The character to check.</param>
+        /// <returns>true if the <paramref name="c"/> is pesent in the character map, false - otherwise.</returns>
+        public bool IsCharPresent(char c)
+        {
+            return characterMap.ContainsKey(c);
+        }
+
         private Vector2 MeasureString(ref StringProxy text)
         {
             var result = Vector2.Zero;
