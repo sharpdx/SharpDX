@@ -32,7 +32,7 @@
     <iconUrl>http://sharpdx.org/logo_100x100.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Assembly providing DirectX - D3DCompiler managed API.</description>
-    <copyright>Copyright (c) 2010-2011 Alexandre Mutel</copyright>
+    <copyright>Copyright (c) 2010-2013 Alexandre Mutel</copyright>
     <tags>SharpDX DirectX Direct3D MDX 3D D3DCompiler HLSL fx Shaders</tags>
     <!-- Release notes for this version-->
     <releaseNotes></releaseNotes>
@@ -42,17 +42,17 @@
   </metadata>
 
   <files>
-    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.D3DCompiler.dll" target="lib\net20" />
-    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.D3DCompiler.pdb" target="lib\net20" />
-    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.D3DCompiler.xml" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11-Signed-net20\SharpDX.D3DCompiler.dll" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11-Signed-net20\SharpDX.D3DCompiler.pdb" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11-Signed-net20\SharpDX.D3DCompiler.xml" target="lib\net20" />
 
-    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.D3DCompiler.dll" target="lib\net40" />
-    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.D3DCompiler.pdb" target="lib\net40" />
-    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.D3DCompiler.xml" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.D3DCompiler.dll" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.D3DCompiler.pdb" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.D3DCompiler.xml" target="lib\net40" />
 
-    <file src="..\..\Bin\DirectX11_Signed-winrt\SharpDX.D3DCompiler.dll" target="lib\win8" />
-    <file src="..\..\Bin\DirectX11_Signed-winrt\SharpDX.D3DCompiler.pdb" target="lib\win8" />
-    <file src="..\..\Bin\DirectX11_Signed-winrt\SharpDX.D3DCompiler.xml" target="lib\win8" />
+    <file src="..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.D3DCompiler.dll" target="lib\win8" />
+    <file src="..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.D3DCompiler.pdb" target="lib\win8" />
+    <file src="..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.D3DCompiler.xml" target="lib\win8" />
 
     <file src="**\*.cs" target="src" />
   </files>

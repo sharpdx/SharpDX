@@ -32,7 +32,7 @@
     <iconUrl>http://sharpdx.org/logo_100x100.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Assembly providing DirectX - Effects11 managed API for Direct3D11.</description>
-    <copyright>Copyright (c) 2010-2011 Alexandre Mutel</copyright>
+    <copyright>Copyright (c) 2010-2013 Alexandre Mutel</copyright>
     <tags>SharpDX DirectX Direct3D MDX 3D Direct3D11 D3D11 Effects11</tags>
     <!-- Release notes for this version-->
     <releaseNotes></releaseNotes>
@@ -45,16 +45,16 @@
   </metadata>
 
   <files>
-    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.Direct3D11.Effects.dll" target="lib\net20" />
-    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.Direct3D11.Effects.pdb" target="lib\net20" />
-    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.Direct3D11.Effects.xml" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11-Signed-net20\SharpDX.Direct3D11.Effects.dll" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11-Signed-net20\SharpDX.Direct3D11.Effects.pdb" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11-Signed-net20\SharpDX.Direct3D11.Effects.xml" target="lib\net20" />
 
-    <file src="..\..\Bin\DirectX11_Signed-net20\sharpdx_direct3d11_effects_x86.dll" target="Content" />
-    <file src="..\..\Bin\DirectX11_Signed-net20\sharpdx_direct3d11_effects_x64.dll" target="Content" />
+    <file src="..\..\Bin\DirectX11-Signed-net20\sharpdx_direct3d11_effects_x86.dll" target="Content" />
+    <file src="..\..\Bin\DirectX11-Signed-net20\sharpdx_direct3d11_effects_x64.dll" target="Content" />
 
-    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.Direct3D11.Effects.dll" target="lib\net40" />
-    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.Direct3D11.Effects.pdb" target="lib\net40" />
-    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.Direct3D11.Effects.xml" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.Direct3D11.Effects.dll" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.Direct3D11.Effects.pdb" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.Direct3D11.Effects.xml" target="lib\net40" />
 
     <file src="**\*.cs" target="src" />
   </files>
