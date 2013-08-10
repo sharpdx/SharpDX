@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FRAGMENT Type="ReadOnly" Language="en">
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiBinaryComponent">
+    <ROW Name="folderpageicon" SourcePath="&lt;AI_RES_COLOR&gt;FolderPage.ico"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
+    <ROW Property="FolderPageIcon" Value="folderpageicon" Type="1"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiControlComponent">
+    <ROW Dialog_="SamplesFolderPage" Control="DefBut" Type="PushButton" X="0" Y="0" Width="0" Height="0" Attributes="2" Text="" Order="100" TextLocId="-"/>
+    <ROW Dialog_="SamplesFolderPage" Control="Background" Type="Bitmap" X="0" Y="0" Width="416" Height="287" Attributes="1" Text="[TabBackground]" Order="200"/>
+    <ROW Dialog_="SamplesFolderPage" Control="Browse" Type="PushButton" X="294" Y="79" Width="88" Height="21" Attributes="3" Text="[ButtonText_Browse]" Help="|" Order="300" TextLocId="-" HelpLocId="Control.Help.FolderDlg#Browse"/>
+    <ROW Dialog_="SamplesFolderPage" Control="FolderEdit" Type="PathEdit" X="52" Y="81" Width="232" Height="18" Attributes="7" Property="SAMPLESDIR" Help="|" Order="400" HelpLocId="Control.Help.FolderDlg#FolderEdit"/>
+    <ROW Dialog_="SamplesFolderPage" Control="Text" Type="Text" X="52" Y="44" Width="300" Height="30" Attributes="196611" Order="500" Text="SharpDX Samples will be installed on your computer. To Install to a different location, enter it below or click 'Browse'" TextLocId="-"/>
+    <ROW Dialog_="SamplesFolderPage" Control="TotalSpaceText" Type="Text" X="182" Y="110" Width="46" Height="11" Attributes="589827" Property="PrimaryVolumeSpaceRequired" Order="600" TextLocId="Azure.Control.Text.FolderDlg#TotalSpaceText"/>
+    <ROW Dialog_="SamplesFolderPage" Control="AvailableSpaceText" Type="Text" X="182" Y="121" Width="46" Height="11" Attributes="589827" Property="PrimaryVolumeSpaceAvailable" Order="700" TextLocId="Azure.Control.Text.FolderDlg#AvailableSpaceText"/>
+    <ROW Dialog_="SamplesFolderPage" Control="RemainingSpaceText" Type="Text" X="182" Y="133" Width="46" Height="11" Attributes="589827" Property="PrimaryVolumeSpaceRemaining" Order="800" TextLocId="Azure.Control.Text.FolderDlg#RemainingSpaceText"/>
+    <ROW Dialog_="SamplesFolderPage" Control="RemainingSpaceLabel" Type="Text" X="52" Y="133" Width="116" Height="11" Attributes="196611" Property="REMAINING_SPACE_LABEL_PROP" Order="900" TextLocId="Azure.Control.Text.FolderDlg#RemainingSpaceLabel"/>
+    <ROW Dialog_="SamplesFolderPage" Control="AvailableSpaceLabel" Type="Text" X="52" Y="121" Width="116" Height="11" Attributes="196611" Property="AVAILABLE_SPACE_LABEL_PROP" Order="1000" TextLocId="Azure.Control.Text.FolderDlg#AvailableSpaceLabel"/>
+    <ROW Dialog_="SamplesFolderPage" Control="TotalSpaceLabel" Type="Text" X="52" Y="110" Width="116" Height="11" Attributes="196611" Property="TOTAL_SPACE_LABEL_PROP" Order="1100" TextLocId="Azure.Control.Text.FolderDlg#TotalSpaceLabel"/>
+    <ROW Dialog_="SamplesFolderPage" Control="TitleIcon" Type="Icon" X="10" Y="10" Width="36" Height="36" Attributes="7340033" Text="[FolderPageIcon]" Order="1200"/>
+    <ROW Dialog_="SamplesFolderPage" Control="Title" Type="Text" X="52" Y="17" Width="300" Height="21" Attributes="196611" TextStyle="TitleFont" Order="1300" Text="Choose a file location for samples" TextLocId="-"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiControlEventComponent">
+    <ROW Dialog_="SamplesFolderPage" Control_="DefBut" Event="[AiStopPageChange]" Argument="{}" Condition="1" Ordering="100"/>
+    <ROW Dialog_="SamplesFolderPage" Control_="DefBut" Event="SetTargetPath" Argument="SAMPLESDIR" Condition="NOT AiTabPagePreChange" Ordering="200"/>
+    <ROW Dialog_="SamplesFolderPage" Control_="DefBut" Event="EndDialog" Argument="Return" Condition="1" Ordering="300"/>
+    <ROW Dialog_="SamplesFolderPage" Control_="Browse" Event="[_BrowseProperty]" Argument="SAMPLESDIR" Condition="1" Ordering="100"/>
+    <ROW Dialog_="SamplesFolderPage" Control_="Browse" Event="SpawnDialog" Argument="BrowseDlg" Condition="1" Ordering="200"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiDialogComponent">
+    <ROW Dialog="SamplesFolderPage" HCentering="50" VCentering="50" Width="415" Height="287" Attributes="3" Control_Default="DefBut" Control_Cancel="DefBut" Title="Samples folder" TitleLocId="-"/>
+  </COMPONENT>
+</FRAGMENT>
