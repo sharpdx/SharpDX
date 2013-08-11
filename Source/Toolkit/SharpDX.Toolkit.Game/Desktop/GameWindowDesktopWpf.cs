@@ -28,8 +28,11 @@ using System.Windows.Media;
 
 namespace SharpDX.Toolkit
 {
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Windows.Threading;
     using Direct3D11;
+    using Device = Direct3D11.Device;
 
     internal class GameWindowDesktopWpf : GameWindow
     {
@@ -42,17 +45,21 @@ namespace SharpDX.Toolkit
         private bool isVisible;
         private Cursor oldCursor;
         private RenderTargetGraphicsPresenter presenter;
+        private Query queryForCompletion;
+
+        private TimeSpan lastRenderTime;
+        private DeviceContext deviceContext;
+
+        public GameWindowDesktopWpf()
+        {
+            renderDelegate = RenderLoopCallback;
+        }
 
         public override bool AllowUserResizing { get { return false; } set { /* ignore, WPF will resize everything itself */ } }
         public override Rectangle ClientBounds { get { return new Rectangle(0, 0, (int)element.ActualWidth, (int)element.ActualHeight); } }
         public override DisplayOrientation CurrentOrientation { get { return DisplayOrientation.Default; } }
         public override bool IsMinimized { get { return false; } }
         public override object NativeWindow { get { return element; } }
-
-        public GameWindowDesktopWpf()
-        {
-            renderDelegate = RenderLoopCallback;
-        }
 
         public override bool IsMouseVisible
         {
@@ -110,10 +117,15 @@ namespace SharpDX.Toolkit
             // mandatory to share the surface with D3D9
             backbufferDesc.OptionFlags |= ResourceOptionFlags.Shared;
 
-            if (presenter != null)
-                RemoveAndDispose(ref presenter);
+            RemoveAndDispose(ref presenter);
+            RemoveAndDispose(ref queryForCompletion);
 
             presenter = ToDispose(new RenderTargetGraphicsPresenter(device, backbufferDesc, parameters.DepthStencilFormat, false, true));
+            // used to indicate if all drawing operations have completed
+            queryForCompletion = ToDispose(new Query(presenter.GraphicsDevice, new QueryDescription { Type = QueryType.Event, Flags = QueryFlags.None }));
+
+            // device context will be used to query drawing operations status
+            deviceContext = ((Device)presenter.GraphicsDevice).ImmediateContext;
             element.SetBackbuffer(presenter.BackBuffer);
             return presenter;
         }
@@ -167,6 +179,10 @@ namespace SharpDX.Toolkit
 
         private void OnCompositionTargetRendering(object sender, EventArgs e)
         {
+            var args = (RenderingEventArgs)e;
+            if (args.RenderingTime == lastRenderTime) return;
+            lastRenderTime = args.RenderingTime;
+
             if (element.LowPriorityRendering)
             {
                 // if we called render previously...
@@ -186,7 +202,7 @@ namespace SharpDX.Toolkit
             }
             else
             {
-                RenderLoopCallback();
+                renderDelegate();
             }
         }
 
@@ -203,8 +219,17 @@ namespace SharpDX.Toolkit
                 return;
             }
 
+            // run render loop once
             RunCallback();
+            // mark completion of drawing operations
+            deviceContext.End(queryForCompletion);
 
+            // wait until drawing completes
+            Bool completed;
+            while (!(deviceContext.GetData(queryForCompletion, out completed)
+                   && completed)) Thread.Yield();
+
+            // syncronize D3D surface with WPF
             element.InvalidateRendering();
         }
 
