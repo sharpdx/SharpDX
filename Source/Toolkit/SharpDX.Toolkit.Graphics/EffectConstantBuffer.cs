@@ -84,6 +84,26 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Copies the CPU content of this buffer to another constant buffer. 
+        /// Destination buffer will be flagged as dirty.
+        /// </summary>
+        /// <param name="toBuffer">To buffer to receive the content.</param>
+        public void CopyTo(EffectConstantBuffer toBuffer)
+        {
+            if (toBuffer == null)
+                throw new ArgumentNullException("toBuffer");
+
+            if (Size != toBuffer.Size)
+            {
+                throw new ArgumentOutOfRangeException("toBuffer",
+                                                      "Size of the source and destination buffer are not the same");
+            }
+
+            Utilities.CopyMemory(toBuffer.DataPointer, DataPointer, Size);
+            toBuffer.IsDirty = true;
+        }
+
+        /// <summary>
         /// Updates the specified constant buffer from all parameters value.
         /// </summary>
         /// <param name="device">The device.</param>

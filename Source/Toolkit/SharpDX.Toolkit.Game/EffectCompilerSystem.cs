@@ -138,7 +138,7 @@ namespace SharpDX.Toolkit
                 var newEffect = effect.Pool.RegisterBytecode(effectData);
 
                 // Then re-instantiate this effect.
-                effect.InitializeFrom(newEffect);
+                effect.InitializeFrom(newEffect, null);
             }
 
             base.Update(gameTime);

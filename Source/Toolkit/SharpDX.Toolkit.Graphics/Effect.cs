@@ -41,17 +41,17 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Gets a collection of constant buffers that are defined for this effect.
         /// </summary>
-        public readonly EffectConstantBufferCollection ConstantBuffers;
+        public EffectConstantBufferCollection ConstantBuffers { get; private set; }
 
         /// <summary>
         /// Gets a collection of parameters that are defined for this effect.
         /// </summary>
-        public readonly EffectParameterCollection Parameters;
+        public EffectParameterCollection Parameters { get; private set; }
 
         /// <summary>
         /// Gets a collection of techniques that are defined for this effect.
         /// </summary>
-        public readonly EffectTechniqueCollection Techniques;
+        public EffectTechniqueCollection Techniques { get; private set; }
 
         /// <summary>
         /// Gets the data associated to this effect.
@@ -91,30 +91,15 @@ namespace SharpDX.Toolkit.Graphics
         public Effect(GraphicsDevice device, EffectData effectData, EffectPool effectPool = null)
             : base(device)
         {
-            ConstantBuffers = new EffectConstantBufferCollection();
-            Parameters = new EffectParameterCollection();
-            Techniques = new EffectTechniqueCollection();
+            CreateInstanceFrom(device, effectData, effectPool);
 
-            Pool = effectPool ?? device.DefaultEffectPool;
-
-            // Sets the effect name
-            Name = effectData.Description.Name;
-
-            // Register the bytecode to the pool
-            var effect = Pool.RegisterBytecode(effectData);
-
-            // Initialize from effect
-            InitializeFrom(effect);
-
-            // If everything was fine, then we can register it into the pool
-            Pool.AddEffect(this);
         }
 
         /// <summary>
         /// Gets the pool this effect attached to.
         /// </summary>
         /// <value> The pool. </value>
-        public readonly EffectPool Pool;
+        public EffectPool Pool { get; private set; }
 
         /// <summary>
         /// Occurs when the on apply is applied on a pass.
@@ -141,13 +126,36 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public EffectDefaultParameters DefaultParameters { get; private set; }
 
+        internal void CreateInstanceFrom(GraphicsDevice device, EffectData effectData, EffectPool effectPool)
+        {
+            GraphicsDevice = device;
+            ConstantBuffers = new EffectConstantBufferCollection();
+            Parameters = new EffectParameterCollection();
+            Techniques = new EffectTechniqueCollection();
+
+            Pool = effectPool ?? device.DefaultEffectPool;
+
+            // Sets the effect name
+            Name = effectData.Description.Name;
+
+            // Register the bytecode to the pool
+            var effect = Pool.RegisterBytecode(effectData);
+
+            // Initialize from effect
+            InitializeFrom(effect, null);
+
+            // If everything was fine, then we can register it into the pool
+            Pool.AddEffect(this);
+        }
+
         /// <summary>
         /// Binds the specified effect data to this instance.
         /// </summary>
         /// <param name="effectDataArg">The effect data arg.</param>
-        /// <exception cref="System.ArgumentException">If unable to find effect [effectName] from the EffectPool.</exception>
+        /// <param name="cloneFromEffect">The clone from effect.</param>
         /// <exception cref="System.InvalidOperationException">If no techniques found in this effect.</exception>
-        public void InitializeFrom(EffectData.Effect effectDataArg)
+        /// <exception cref="System.ArgumentException">If unable to find effect [effectName] from the EffectPool.</exception>
+        internal void InitializeFrom(EffectData.Effect effectDataArg, Effect cloneFromEffect)
         {
             RawEffectData = effectDataArg;
 
@@ -288,6 +296,33 @@ namespace SharpDX.Toolkit.Graphics
             // Initialize predefined parameters used by Model.Draw (to speedup things internally)
             DefaultParameters = new EffectDefaultParameters(this);
 
+            // If this is a clone, we need to 
+            if (cloneFromEffect != null)
+            {
+                // Copy the content of the constant buffers to the new instance.
+                for (int i = 0; i < ConstantBuffers.Count; i++)
+                {
+                    cloneFromEffect.ConstantBuffers[i].CopyTo(ConstantBuffers[i]);
+                }
+
+                // Copy back all bound resources except constant buffers
+                // that are already initialized with InitializeFrom method.
+                for (int i = 0; i < cloneFromEffect.ResourceLinker.Count; i++)
+                {
+                    if (cloneFromEffect.ResourceLinker.BoundResources[i] is EffectConstantBuffer)
+                        continue;
+
+                    ResourceLinker.BoundResources[i] = cloneFromEffect.ResourceLinker.BoundResources[i];
+                    unsafe
+                    {
+                        ResourceLinker.Pointers[i] = cloneFromEffect.ResourceLinker.Pointers[i];
+                    }
+                }
+
+                // If everything was fine, then we can register it into the pool
+                Pool.AddEffect(this);
+            }
+
             // Allow subclasses to complete initialization.
             Initialize();
         }
@@ -296,9 +331,29 @@ namespace SharpDX.Toolkit.Graphics
         {
         }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns>A new instance of this Effect.</returns>
+        public virtual Effect Clone()
+        {
+            var effect = (Effect)MemberwiseClone();
+            effect.DisposeCollector = new DisposeCollector();
+            effect.ConstantBuffers = new EffectConstantBufferCollection();
+            effect.Parameters = new EffectParameterCollection();
+            effect.Techniques = new EffectTechniqueCollection();
+            effect.effectConstantBuffersCache = null;
+
+            // Initialize from effect
+            effect.InitializeFrom(effect.RawEffectData, this);
+
+            return effect;
+        }
+
         internal new DisposeCollector DisposeCollector
         {
             get { return base.DisposeCollector; }
+            private set { base.DisposeCollector = value; }
         }
 
         protected internal virtual EffectPass OnApply(EffectPass pass)
