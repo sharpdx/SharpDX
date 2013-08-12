@@ -464,6 +464,7 @@ namespace SharpDX.D3DCompiler
         /// <param name = "profile">The shader target or set of shader features to compile against.</param>
         /// <param name = "shaderFlags">Shader compilation options.</param>
         /// <param name = "effectFlags">Effect compilation options.</param>
+        /// <param name="sourceFileName">Name of the source file.</param>
         /// <returns>The compiled shader bytecode, or <c>null</c> if the method fails.</returns>
         public static CompilationResult Compile(byte[] shaderSource, string entryPoint, string profile,
                                              ShaderFlags shaderFlags = ShaderFlags.None,
@@ -962,6 +963,7 @@ namespace SharpDX.D3DCompiler
         /// <param name = "shaderSource">A string containing the source of the shader or effect to preprocess.</param>
         /// <param name = "defines">A set of macros to define during preprocessing.</param>
         /// <param name = "include">An interface for handling include files.</param>
+        /// <param name="sourceFileName">Name of the source file.</param>
         /// <returns>The preprocessed shader source.</returns>
         public static string Preprocess(string shaderSource, ShaderMacro[] defines = null, Include include = null, string sourceFileName = "")
         {
@@ -988,6 +990,7 @@ namespace SharpDX.D3DCompiler
         /// <param name = "shaderSource">An array of bytes containing the raw source of the shader or effect to preprocess.</param>
         /// <param name = "defines">A set of macros to define during preprocessing.</param>
         /// <param name = "include">An interface for handling include files.</param>
+        /// <param name="sourceFileName">Name of the source file.</param>
         /// <returns>The preprocessed shader source.</returns>
         public static string Preprocess(byte[] shaderSource, ShaderMacro[] defines = null, Include include = null, string sourceFileName = "")
         {
@@ -1002,6 +1005,7 @@ namespace SharpDX.D3DCompiler
         /// <param name = "defines">A set of macros to define during preprocessing.</param>
         /// <param name = "include">An interface for handling include files.</param>
         /// <param name = "compilationErrors">When the method completes, contains a string of compilation errors, or an empty string if preprocessing succeeded.</param>
+        /// <param name="sourceFileName">Name of the source file.</param>
         /// <returns>The preprocessed shader source.</returns>
         public static string Preprocess(byte[] shaderSource, ShaderMacro[] defines, Include include, out string compilationErrors, string sourceFileName = "")
         {
@@ -1021,6 +1025,7 @@ namespace SharpDX.D3DCompiler
         /// <param name = "defines">A set of macros to define during preprocessing.</param>
         /// <param name = "include">An interface for handling include files.</param>
         /// <param name = "compilationErrors">When the method completes, contains a string of compilation errors, or an empty string if preprocessing succeeded.</param>
+        /// <param name="sourceFileName">Name of the source file.</param>
         /// <returns>The preprocessed shader source.</returns>
         public static string Preprocess(IntPtr shaderSourcePtr, int shaderSourceLength, ShaderMacro[] defines, Include include, out string compilationErrors, string sourceFileName = "")
         {
@@ -1055,6 +1060,7 @@ namespace SharpDX.D3DCompiler
         /// <param name = "defines">A set of macros to define during preprocessing.</param>
         /// <param name = "include">An interface for handling include files.</param>
         /// <param name = "compilationErrors">When the method completes, contains a string of compilation errors, or an empty string if preprocessing succeeded.</param>
+        /// <param name="sourceFileName">Name of the source file.</param>
         /// <returns>The preprocessed shader source.</returns>
         public static string Preprocess(string shaderSource, ShaderMacro[] defines, Include include, out string compilationErrors, string sourceFileName = "")
         {

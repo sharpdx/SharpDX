@@ -247,6 +247,7 @@ namespace SharpDX.Direct3D9
         /// <param name="filename">The filename.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
+        /// <param name="depth">The depth.</param>
         /// <param name="levelCount">The level count.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="format">The format.</param>

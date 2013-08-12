@@ -32,13 +32,11 @@ namespace SharpDX.Collections
         /// <summary>
         /// Raised when an item is added to this instance.
         /// </summary>
-        /// <param name="" />
         public event EventHandler<ObservableCollectionEventArgs<T>> ItemAdded;
 
         /// <summary>
         /// Raised when a item is removed from this instance.
         /// </summary>
-        /// <param name="" />
         public event EventHandler<ObservableCollectionEventArgs<T>> ItemRemoved;
 
         protected override void ClearItems()

@@ -26,15 +26,12 @@ namespace SharpDX.Direct2D1
 {
     public partial class ColorContext
     {
-
         /// <summary>	
         /// Initializes a new instance of <see cref="ColorContext"/> class from a color profile.
-        /// </summary>	
-        /// <param name="space">No documentation.</param>	
-        /// <param name="rofileRef">No documentation.</param>	
-        /// <param name="profileSize">No documentation.</param>	
-        /// <param name="colorContext">No documentation.</param>	
-        /// <returns>No documentation.</returns>	
+        /// </summary>
+        /// <param name="context">The effect context.</param>
+        /// <param name="space">The space of color context to create.</param>	
+        /// <param name="profileRef">No documentation.</param>	
         /// <unmanaged>HRESULT ID2D1EffectContext::CreateColorContext([In] D2D1_COLOR_SPACE space,[In, Buffer, Optional] const unsigned char* profile,[In] unsigned int profileSize,[Out] ID2D1ColorContext** colorContext)</unmanaged>	
         public ColorContext(EffectContext context, SharpDX.Direct2D1.ColorSpace space, byte[] profileRef) : base(IntPtr.Zero)
         {
@@ -44,8 +41,8 @@ namespace SharpDX.Direct2D1
         /// <summary>	
         /// Initializes a new instance of <see cref="ColorContext"/> class from a filename.
         /// </summary>	
-        /// <param name="filename">No documentation.</param>	
-        /// <param name="colorContext">No documentation.</param>	
+        /// <param name="context">The effect context.</param>	
+        /// <param name="filename">The path to the file containing the profile bytes to initialize the color context with..</param>	
         /// <unmanaged>HRESULT ID2D1EffectContext::CreateColorContextFromFilename([In] const wchar_t* filename,[Out] ID2D1ColorContext** colorContext)</unmanaged>	
         public ColorContext(EffectContext context, string filename)
             : base(IntPtr.Zero)
@@ -56,8 +53,8 @@ namespace SharpDX.Direct2D1
         /// <summary>	
         /// Initializes a new instance of <see cref="ColorContext"/> class from WIC color context.
         /// </summary>	
+        /// <param name="context">No documentation.</param>	
         /// <param name="wicColorContext">No documentation.</param>	
-        /// <param name="colorContext">No documentation.</param>	
         /// <unmanaged>HRESULT ID2D1EffectContext::CreateColorContextFromWicColorContext([In] IWICColorContext* wicColorContext,[Out] ID2D1ColorContext** colorContext)</unmanaged>	
         public ColorContext(EffectContext context, SharpDX.WIC.ColorContext wicColorContext)
             : base(IntPtr.Zero)

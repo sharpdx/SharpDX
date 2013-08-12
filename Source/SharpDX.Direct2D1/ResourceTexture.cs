@@ -44,6 +44,8 @@ namespace SharpDX.Direct2D1
         /// <param name="context">The effect context</param>
         /// <param name="resourceId">A unique identifier to the resource</param>
         /// <param name="resourceTextureProperties">The description of the resource</param>
+        /// <param name="data">The data to be loaded into the resource texture.</param>
+        /// <param name="strides">Reference to the stride to advance through the resource texture, according to dimension.</param>
         /// <unmanaged>HRESULT ID2D1EffectContext::CreateResourceTexture([In, Optional] const GUID* resourceId,[In] const D2D1_RESOURCE_TEXTURE_PROPERTIES* resourceTextureProperties,[In, Buffer, Optional] const unsigned char* data,[In, Buffer, Optional] const unsigned int* strides,[In] unsigned int dataSize,[Out] ID2D1ResourceTexture** resourceTexture)</unmanaged>	
         public ResourceTexture(EffectContext context, System.Guid resourceId, SharpDX.Direct2D1.ResourceTextureProperties resourceTextureProperties, byte[] data, int[] strides)
             : base(IntPtr.Zero)

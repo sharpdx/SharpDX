@@ -107,7 +107,7 @@ namespace SharpDX
         /// <summary>
         /// Initializes a new instance of the <see cref = "T:SharpDX.Half" /> structure.
         /// </summary>
-        /// <param name = "value">The floating point value that should be stored in 16 bit format.</param>
+        /// <param name = "rawvalue">The floating point value that should be stored in 16 bit format.</param>
         public Half(ushort rawvalue)
         {
             this.value = rawvalue;

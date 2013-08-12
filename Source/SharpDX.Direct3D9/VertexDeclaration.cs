@@ -30,6 +30,7 @@ namespace SharpDX.Direct3D9
         /// <remarks>
         ///  See the {{Vertex Declaration (Direct3D 9)}} page for a detailed description of how to map vertex declarations between different versions of DirectX. 
         /// </remarks>
+        /// <param name="device">The device.</param>
         /// <param name="elements"> An array of <see cref="SharpDX.Direct3D9.VertexElement"/> vertex elements. </param>
         /// <returns><see cref="VertexDeclaration"/> If the method succeeds</returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::CreateVertexDeclaration([In, Buffer] const D3DVERTEXELEMENT9* pVertexElements,[None] IDirect3DVertexDeclaration9** ppDecl)</unmanaged>
