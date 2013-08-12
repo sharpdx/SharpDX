@@ -35,6 +35,7 @@
     <Compile Include="GeometricPrimitive.Teapot.cs" />
     <Compile Include="GeometricPrimitive.Torus.cs" />
     <Compile Include="GraphicsOutput.cs" />
+    <Compile Include="GraphicsPerformance.cs" />
     <Compile Include="IEffectInstaller.cs" />
     <Compile Include="ModelContentReader.cs" />
     <Compile Include="MaterialKeys.cs" />

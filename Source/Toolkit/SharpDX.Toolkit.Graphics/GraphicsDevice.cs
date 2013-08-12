@@ -215,6 +215,9 @@ namespace SharpDX.Toolkit.Graphics
             primitiveQuad = ToDispose(new PrimitiveQuad(this));
         }
 
+        /// <summary>
+        /// Initializes this instance.
+        /// </summary>
         private void Initialize()
         {
             // Default null VertexBuffers used to reset
@@ -244,6 +247,8 @@ namespace SharpDX.Toolkit.Graphics
                                    Context.PixelShader,
                                    Context.ComputeShader
                                };
+
+            Performance = new GraphicsPerformance(this);
         }
 
         /// <summary>
@@ -342,6 +347,12 @@ namespace SharpDX.Toolkit.Graphics
                 return GraphicsDeviceStatus.Normal;
             }
         }
+
+        /// <summary>
+        /// Gets the access to performance profiler.
+        /// </summary>
+        /// <value>The access to performance profiler.</value>
+        public GraphicsPerformance Performance { get; private set; }
 
         /// <summary>
         /// Clears the default render target and depth stencil buffer attached to the current <see cref="Presenter"/>.
