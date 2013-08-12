@@ -22,6 +22,9 @@ using System.Xml.Serialization;
 
 namespace SharpGen.Config
 {
+    /// <summary>
+    /// Defines naming options.
+    /// </summary>
     [Flags]
     public enum NamingFlags
     {        

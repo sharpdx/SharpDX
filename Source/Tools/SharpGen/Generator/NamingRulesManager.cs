@@ -231,8 +231,8 @@ namespace SharpGen.Generator
         /// Converts a string to PascalCase..
         /// </summary>
         /// <param name="text">The text to convert.</param>
-        /// <param name="keepUnderscore">if set to <c>true</c> keep underscore in this name.</param>
-        /// <returns></returns>
+        /// <param name="namingFlags">The naming options to apply to the given string to convert.</param>
+        /// <returns>The given string in PascalCase.</returns>
         public string ConvertToPascalCase(string text, NamingFlags namingFlags)
         {
             string[] splittedPhrase = text.Split('_');
@@ -306,10 +306,10 @@ namespace SharpGen.Generator
         }
 
         /// <summary>
-        /// Returns true if the name is a C# keyword
+        /// Checks if a given string is a C# keyword. 
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The name to check.</param>
+        /// <returns>true if the name is a C# keyword; false otherwise.</returns>
         private static bool IsKeyword(string name)
         {
             return CSharpKeywords.Contains(name);

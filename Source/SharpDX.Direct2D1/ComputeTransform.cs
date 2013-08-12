@@ -37,10 +37,7 @@ namespace SharpDX.Direct2D1
         /// <summary>	
         /// [This documentation is preliminary and is subject to change.]	
         /// </summary>	
-        /// <param name="outputRect"><para>The output rectangle that will be filled by the compute transform.</para></param>	
-        /// <param name="dimensionX"><para>The number of threads in the x dimension.</para></param>	
-        /// <param name="dimensionY"><para>The number of threads in the y dimension.</para></param>	
-        /// <param name="dimensionZ"><para>The number of threads in the z dimension.</para></param>	
+        /// <param name="outputRect"><para>The output rectangle that will be filled by the compute transform.</para></param>
         /// <returns>An <see cref="Int3"/> containing the number of threads of x,y,z dimensions.</returns>	
         /// <remarks>	
         /// If this call fails, the corresponding <see cref="SharpDX.Direct2D1.Effect"/> instance is placed into an error state and fails to draw.	

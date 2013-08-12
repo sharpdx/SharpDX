@@ -35,6 +35,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="depth">The depth.</param>
         /// <param name="rowStride">The row stride.</param>
         /// <param name="depthStride">The depth stride.</param>
+        /// <param name="widthPacked">The packed width.</param>
+        /// <param name="heightPacked">The packed height.</param>
         public MipMapDescription(int width, int height, int depth, int rowStride, int depthStride, int widthPacked, int heightPacked)
         {
             Width = width;

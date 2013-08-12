@@ -93,8 +93,7 @@ namespace SharpDX
         /// <summary>
         /// Initializes a new instance of the <see cref="T:SharpDX.Half2" /> structure.
         /// </summary>
-        /// <param name="x">The X component.</param>
-        /// <param name="y">The Y component.</param>
+        /// <param name="value">Value to initialize X and Y components with.</param>
         public Half2(float value)
         {
             this.X = new Half(value);

@@ -95,7 +95,7 @@ namespace SharpDX.Direct2D1
         /// <summary>
         /// Register a <see cref="CustomEffect"/>.
         /// </summary>
-        /// <typeparam name="T">Type of <see </typeparam>
+        /// <typeparam name="T">Type of </typeparam>
         public void RegisterEffect<T>() where T : CustomEffect, new()
         {
             CustomEffectFactory factory;

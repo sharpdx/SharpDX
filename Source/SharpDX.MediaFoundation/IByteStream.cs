@@ -72,7 +72,8 @@ namespace SharpDX.MediaFoundation
         /// <summary>	
         /// <p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p> Reads data from the stream. </p>	
         /// </summary>	
-        /// <param name="bRef"><dd> <p> Pointer to a buffer that receives the data. The caller must allocate the buffer. </p> </dd></param>	
+        /// <param name="bRef"><dd> <p> Pointer to a buffer that receives the data. The caller must allocate the buffer. </p> </dd></param>
+        /// <param name="offset">Offset to begin reading from</param>
         /// <param name="count"><dd> <p> Size of the buffer in bytes. </p> </dd></param>	
         /// <returns>The number of bytes that are copied into the buffer</returns>	
         /// <remarks>	

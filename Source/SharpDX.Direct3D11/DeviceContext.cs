@@ -69,6 +69,7 @@ namespace SharpDX.Direct3D11
         /// Determines whether asynchronous query data is available.
         /// </summary>
         /// <param name="data">The data.</param>
+        /// <param name="flags">Optional flags</param>
         /// <returns>
         ///   <c>true</c> if asynchronous query data is available; otherwise, <c>false</c>.
         /// </returns>
@@ -367,6 +368,7 @@ namespace SharpDX.Direct3D11
         /// <param name="subresource">The destination subresource.</param>
         /// <param name="rowPitch">The row pitch.</param>
         /// <param name="depthPitch">The depth pitch.</param>
+        /// <param name="region">The region</param>
         /// <remarks>
         /// This method is implementing the <a href="http://blogs.msdn.com/b/chuckw/archive/2010/07/28/known-issue-direct3d-11-updatesubresource-and-deferred-contexts.aspx">workaround for deferred context</a>.
         /// </remarks>

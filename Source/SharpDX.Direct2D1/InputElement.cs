@@ -41,10 +41,7 @@ namespace SharpDX.Direct2D1
         /// <param name = "name">The HLSL semantic associated with this element in a shader input-signature.</param>
         /// <param name = "index">The semantic index for the element. A semantic index modifies a semantic, with an integer index number. A semantic index is only needed in a case where there is more than one element with the same semantic. For example, a 4x4 matrix would have four components each with the semantic name matrix, however each of the four component would have different semantic indices (0, 1, 2, and 3).</param>
         /// <param name = "format">The data type of the element data.</param>
-        /// <param name = "offset">Offset (in bytes) between each element. Use AppendAligned for convenience to define the current element directly after the previous one, including any packing if necessary.</param>
         /// <param name = "slot">An integer value that identifies the input-assembler. Valid values are between 0 and 15.</param>
-        /// <param name = "slotClass">Identifies the input data class for a single input slot.</param>
-        /// <param name = "stepRate">The number of instances to draw using the same per-instance data before advancing in the buffer by one element. This value must be 0 for an element that contains per-vertex data.</param>
         public InputElement(string name, int index, Format format, int slot)
         {
             this.SemanticName = name;
@@ -62,8 +59,6 @@ namespace SharpDX.Direct2D1
         /// <param name = "format">The data type of the element data.</param>
         /// <param name = "offset">Offset (in bytes) between each element. Use AppendAligned for convenience to define the current element directly after the previous one, including any packing if necessary.</param>
         /// <param name = "slot">An integer value that identifies the input-assembler. Valid values are between 0 and 15.</param>
-        /// <param name = "slotClass">Identifies the input data class for a single input slot.</param>
-        /// <param name = "stepRate">The number of instances to draw using the same per-instance data before advancing in the buffer by one element. This value must be 0 for an element that contains per-vertex data.</param>
         public InputElement(string name, int index, Format format, int offset, int slot)
         {
             this.SemanticName = name;
@@ -76,7 +71,7 @@ namespace SharpDX.Direct2D1
         /// <summary>
         /// Determines whether the specified <see cref="InputElement"/> is equal to this instance.
         /// </summary>
-        /// <param name="obj">The <see cref="InputElement"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="InputElement"/> to compare with this instance.</param>
         /// <returns>
         ///   <c>true</c> if the specified <see cref="InputElement"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>

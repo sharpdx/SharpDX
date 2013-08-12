@@ -23,7 +23,7 @@ namespace SharpDX.MediaFoundation
     public partial class DXGIDeviceManager
     {
         /// <summary>
-        /// A token that identifies this instance of the DXGI Device Manager. Use this token when calling <strong><see cref="SharpDX.MediaFoundation.DXGIDeviceManager.ResetDevice"/>
+        /// A token that identifies this instance of the DXGI Device Manager. Use this token when calling <strong><see cref="SharpDX.MediaFoundation.DXGIDeviceManager.ResetDevice"/></strong>
         /// </summary>
         private int ResetToken;
 

@@ -390,6 +390,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="startIndex">Index to begin setting data from.</param>
         /// <param name="elementCount">The number of elements to set.</param>
         /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <param name="options">Buffer data behavior.</param>
         /// <exception cref="System.ArgumentException"></exception>
         /// <remarks>
         /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>. See the unmanaged documentation about Map/UnMap for usage and restrictions.
