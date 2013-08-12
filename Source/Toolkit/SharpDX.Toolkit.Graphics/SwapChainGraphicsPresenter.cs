@@ -151,6 +151,12 @@ namespace SharpDX.Toolkit.Graphics
         {
             base.Resize(width, height, format);
 
+            // Only resize when necessary
+            if (Description.BackBufferWidth == width && Description.BackBufferHeight == height && Description.BackBufferFormat == format)
+            {
+                return;
+            }
+
             RemoveAndDispose(ref backBuffer);
 
             swapChain.ResizeBuffers(bufferCount, width, height, format, Description.Flags);

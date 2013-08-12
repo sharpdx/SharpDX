@@ -136,6 +136,11 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="format">Backbuffer display format.</param>
         public virtual void Resize(int width, int height, DXGI.Format format)
         {
+            if (Description.BackBufferWidth == width && Description.BackBufferHeight == height && Description.BackBufferFormat == format)
+            {
+                return;
+            }
+
             if (DepthStencilBuffer != null)
             {
                 RemoveAndDispose(ref depthStencilBuffer);
