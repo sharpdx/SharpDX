@@ -30,6 +30,8 @@ namespace SharpDX.Toolkit.Graphics
     {
         private readonly GraphicsDevice device;
 
+        private bool allowProfiling;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphicsPerformance"/> class.
         /// </summary>
@@ -38,7 +40,35 @@ namespace SharpDX.Toolkit.Graphics
         {
             // currently not used, but will be used by Direct3D11.1 annotation API.
             this.device = device;
+
+            // By default, profiling is authorized.
+            allowProfiling = true;
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this program give permission to be profiled, by default true.
+        /// </summary>
+        /// <value><c>true</c> if this program give permission to be profiled; otherwise, <c>false</c>.</value>
+        public bool AllowProfiling
+        {
+            get
+            {
+                return allowProfiling;
+            }
+            set
+            {
+#if !W8CORE
+                PixHelper.AllowProfiling(value);
+#endif
+                allowProfiling = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="GraphicsPerformance"/> is enabled.
+        /// </summary>
+        /// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
+        public bool Enabled { get; set; }
 
         /// <summary>
         /// Begins a section of profiling.
@@ -46,6 +76,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="name">The name.</param>
         public void Begin(string name)
         {
+            if (!Enabled) return;
             Begin(Color.Green, name);
         }
 
@@ -56,6 +87,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="name">The name.</param>
         public void Begin(Color color, string name)
         {
+            if (!Enabled) return;
 #if !W8CORE
             PixHelper.BeginEvent(color, name);
 #endif
@@ -70,6 +102,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="parameters">The parameters.</param>
         public void Begin(Color color, string formatName, params object[] parameters)
         {
+            if (!Enabled) return;
 #if !W8CORE
             PixHelper.BeginEvent(color, formatName, parameters);
 #endif
@@ -82,6 +115,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="name">The name.</param>
         public void SetMarker(string name)
         {
+            if (!Enabled) return;
             SetMarker(Color.Black, name);
         }
 
@@ -92,6 +126,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="name">The name.</param>
         public void SetMarker(Color color, string name)
         {
+            if (!Enabled) return;
 #if !W8CORE
             PixHelper.SetMarker(color, name);
 #endif
@@ -106,6 +141,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="parameters">The parameters.</param>
         public void SetMarker(Color color, string formatName, params object[] parameters)
         {
+            if (!Enabled) return;
 #if !W8CORE
             PixHelper.SetMarker(color, formatName, parameters);
 #endif
@@ -113,10 +149,11 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Ends a begin profiling.
+        /// Ends the current section of profiling (must match with a begin).
         /// </summary>
         public void End()
         {
+            if (!Enabled) return;
 #if !W8CORE
             PixHelper.EndEvent();
 #endif
