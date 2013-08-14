@@ -365,19 +365,17 @@ namespace SharpDX.Toolkit.Graphics
                             {
                                 if (!IgnoreUnkownCharacters)
                                 {
-                                    if(DefaultCharacter.HasValue && defaultGlyphIndex >= 0)
-                                    {
-                                        character = DefaultCharacter.Value;
-                                        glyphIndex = defaultGlyphIndex;
-                                    }
-                                    else
-                                    {
-                                        throw new ArgumentException(string.Format("Character '{0}' is not available in the SpriteFont character map", character), "text");
-                                    }
+                                    continue;
+                                }
+
+                                if(DefaultCharacter.HasValue && defaultGlyphIndex >= 0)
+                                {
+                                    character = DefaultCharacter.Value;
+                                    glyphIndex = defaultGlyphIndex;
                                 }
                                 else
                                 {
-                                    continue;
+                                    throw new ArgumentException(string.Format("Character '{0}' is not available in the SpriteFont character map", character), "text");
                                 }
                             }
                             key |= character;
