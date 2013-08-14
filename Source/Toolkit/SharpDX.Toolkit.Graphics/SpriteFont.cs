@@ -363,7 +363,7 @@ namespace SharpDX.Toolkit.Graphics
                             int glyphIndex;
                             if (!characterMap.TryGetValue(character, out glyphIndex))
                             {
-                                if (!IgnoreUnkownCharacters)
+                                if (IgnoreUnkownCharacters)
                                 {
                                     continue;
                                 }
