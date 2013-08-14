@@ -184,6 +184,10 @@
     <map method="ID3D11FunctionLinkingGraph::CreateModuleInstance" visibility="internal" check="false" />
     <map method="ID3D11Linker::Link" visibility="internal" check="false" />
     <map param="ID3D11FunctionLinkingGraph::CallFunction::ppCallNode" return="true" />
+    
+    <!-- HRESULTs for Bind methods are intentionally ignored as compiler optimizations may eliminate the source bindings.
+         In these cases, the Bind operation will fail, but the final shader will function normally. -->
+    <map method="ID3D11ModuleInstance::Bind.+?" check="false" />
 
     <!--
     // *****************************************************************
