@@ -97,6 +97,7 @@
     -->
     <map enum="D3D(.*)" name-tmp="$1" />
     <map enum-item="D3D(.*)" name-tmp="$1" />
+    <map enum-item="D3D_PF(.*)" name-tmp="$1" />
     <map enum="D3DCOMPILE_(.+)" name-tmp="$1" />
     <map enum="D3DCOMPILER_(.+)" name-tmp="$1" />
     <map enum="D3D11(.*)" name-tmp="$1" />
@@ -176,6 +177,14 @@
     <map method="ID3D11ShaderReflectionType::IsOfType" visibility="internal" name="IsOfType_" return="true" check="false"/>
     <map method="ID3D11ShaderReflectionVariable::GetType" property="false" name="GetVariableType"/>
 
+    <map method="ID3D11Module::CreateInstance" visibility="internal" />
+    <map param="ID3D11Module::CreateInstance::ppModuleInstance" attribute="out fast" />
+    
+    <map method="ID3D11FunctionLinkingGraph::SetInputSignature" visibility="internal" />
+    <map method="ID3D11FunctionLinkingGraph::CreateModuleInstance" visibility="internal" check="false" />
+    <map method="ID3D11Linker::Link" visibility="internal" check="false" />
+    <map param="ID3D11FunctionLinkingGraph::CallFunction::ppCallNode" return="true" />
+
     <!--
     // *****************************************************************
     // D3DCompiler Functions
@@ -207,7 +216,12 @@
     <map param="D3DCompile2::SecondaryDataFlags" type="D3DCOMPILE_SECDATA_FLAGS"/>
 
     <map function="D3DCompile.*" check="false"/>
-    
+
+    <map function="D3DLoadModule" check="false" />
+    <map param="D3DLoadModule::ppModule" attribute="out fast" />
+    <map param="D3DCreateLinker::ppLinker" attribute="out fast" />
+    <map param="D3DCreateFunctionLinkingGraph::ppFunctionLinkingGraph" attribute="out fast" />
+
     <context-clear />
   </mapping>
 </config>

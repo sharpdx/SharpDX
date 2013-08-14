@@ -19,12 +19,16 @@
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="CompilationResult.cs" />
     <Compile Include="D3D.cs" />
+    <Compile Include="FunctionLinkingGraph.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
     <Compile Include="Generated\Interfaces.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="IncludeShadow.cs" />
+    <Compile Include="Linker.cs" />
     <Compile Include="LocalInterop.cs" />
+    <Compile Include="Module.cs" />
+    <Compile Include="ModuleInstance.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="RegisterComponentMaskFlags.cs" />
     <Compile Include="Generated\Structures.cs" />
