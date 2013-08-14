@@ -320,6 +320,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>Gets or sets the default character for the font.</summary>
         public char? DefaultCharacter { get; set; }
 
+        /// <summary>Completely skips characters that are not in the glyphmap. Useful if there is no suitable DefaultCharacter in the Font.</summary>
+        public bool IgnoreUnkownCharacters { get; set; } 
+
         /// <summary>Gets or sets the vertical distance (in pixels) between the base lines of two consecutive lines of text. Line spacing includes the blank space between lines as well as the height of the characters.</summary>
         public float LineSpacing { get; set; }
 
@@ -360,14 +363,21 @@ namespace SharpDX.Toolkit.Graphics
                             int glyphIndex;
                             if (!characterMap.TryGetValue(character, out glyphIndex))
                             {
-                                if(DefaultCharacter.HasValue && defaultGlyphIndex >= 0)
+                                if (!IgnoreUnkownCharacters)
                                 {
-                                    character = DefaultCharacter.Value;
-                                    glyphIndex = defaultGlyphIndex;
+                                    if(DefaultCharacter.HasValue && defaultGlyphIndex >= 0)
+                                    {
+                                        character = DefaultCharacter.Value;
+                                        glyphIndex = defaultGlyphIndex;
+                                    }
+                                    else
+                                    {
+                                        throw new ArgumentException(string.Format("Character '{0}' is not available in the SpriteFont character map", character), "text");
+                                    }
                                 }
                                 else
                                 {
-                                    throw new ArgumentException(string.Format("Character '{0}' is not available in the SpriteFont character map", character), "text");
+                                    continue;
                                 }
                             }
                             key |= character;
