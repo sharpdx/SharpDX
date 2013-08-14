@@ -32,6 +32,11 @@ namespace SharpDX.Toolkit.Graphics
     [ContentReader(typeof(EffectContentReader))]
     public class Effect : GraphicsResource
     {
+        /// <summary>
+        /// Occurs when the effect is being initialized (after a recompilation at runtime for example)
+        /// </summary>
+        public event EventHandler<EventArgs> Initialized;
+
         public delegate EffectPass OnApplyDelegate(EffectPass pass);
 
         private Dictionary<EffectConstantBufferKey, EffectConstantBuffer> effectConstantBuffersCache;
@@ -325,6 +330,8 @@ namespace SharpDX.Toolkit.Graphics
 
             // Allow subclasses to complete initialization.
             Initialize();
+
+            OnInitialized();
         }
 
         protected virtual void Initialize()
@@ -397,6 +404,15 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             return constantBuffer;
+        }
+
+        protected virtual void OnInitialized()
+        {
+            EventHandler<EventArgs> handler = Initialized;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
         }
     }
 }
