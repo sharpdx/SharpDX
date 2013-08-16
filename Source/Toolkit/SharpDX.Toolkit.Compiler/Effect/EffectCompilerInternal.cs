@@ -38,22 +38,21 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     internal class EffectCompilerInternal
     {
-        private static Regex MatchVariableArray = new Regex(@"(.*)\[(\d+)\]");
+        private static readonly Regex MatchVariableArray = new Regex(@"(.*)\[(\d+)\]");
+        private static readonly Regex splitSODeclartionRegex = new Regex(@"\s*;\s*");
+        private static readonly Regex soDeclarationItemRegex = new Regex(@"^\s*(\d+)?\s*:?\s*([A-Za-z][A-Za-z0-9_]*)(\.[xyzw]+|\.[rgba]+)?$");
+        private static readonly Regex soSemanticIndex = new Regex(@"^([A-Za-z][A-Za-z0-9_]*?)([0-9]*)?$");
+        private static readonly Regex replaceBackSlash = new Regex(@"\\+");
+        private static readonly List<char> xyzwrgbaComponents = new List<char>() { 'x', 'y', 'z', 'w', 'r', 'g', 'b', 'a' };
 
-        private static readonly Dictionary<string, ValueConverter> ValueConverters = new Dictionary<string, ValueConverter>()
-                                                                           {
-                                                                               {
-                                                                                   "float4",
-                                                                                   new ValueConverter("float4", 4, ToFloat,
-                                                                                                      (compiler, parameters) => new Vector4((float) parameters[0], (float) parameters[1], (float) parameters[2], (float) parameters[3]))
-                                                                               },
-                                                                               {
-                                                                                   "float3",
-                                                                                   new ValueConverter("float3", 3, ToFloat, (compiler, parameters) => new Vector3((float) parameters[0], (float) parameters[1], (float) parameters[2]))
-                                                                               },
-                                                                               {"float2", new ValueConverter("float2", 2, ToFloat, (compiler, parameters) => new Vector2((float) parameters[0], (float) parameters[1]))},
-                                                                               {"float", new ValueConverter("float", 1, ToFloat, (compiler, parameters) => (float) parameters[0])},
-                                                                           };
+        private static readonly Dictionary<string, ValueConverter> ValueConverters =
+            new Dictionary<string, ValueConverter>()
+            {
+                {"float4", new ValueConverter("float4", 4, ToFloat, (compiler, parameters) => new Vector4((float)parameters[0], (float)parameters[1], (float)parameters[2], (float)parameters[3]))},
+                {"float3", new ValueConverter("float3", 3, ToFloat, (compiler, parameters) => new Vector3((float)parameters[0], (float)parameters[1], (float)parameters[2]))},
+                {"float2", new ValueConverter("float2", 2, ToFloat, (compiler, parameters) => new Vector2((float)parameters[0], (float)parameters[1]))},
+                {"float", new ValueConverter("float", 1, ToFloat, (compiler, parameters) => (float)parameters[0])},
+            };
 
         private readonly List<string> currentExports = new List<string>();
         private EffectCompilerFlags compilerFlags;
@@ -142,7 +141,7 @@ namespace SharpDX.Toolkit.Graphics
                 dependencyList.Save(dependencyFilePath);
 
                 // If dynamic compiling, store the parameters used to compile this effect directly in the bytecode
-                if (allowDynamicCompiling && result.EffectData != null) 
+                if (allowDynamicCompiling && result.EffectData != null)
                 {
                     var compilerArguments = new EffectData.CompilerArguments { FilePath = filePath, DependencyFilePath = dependencyFilePath, Macros = new List<EffectData.ShaderMacro>(), IncludeDirectoryList = new List<string>() };
                     if (macrosArgs != null)
@@ -172,6 +171,43 @@ namespace SharpDX.Toolkit.Graphics
             return new ShaderBytecode(shader.Bytecode).Disassemble(DisassemblyFlags.EnableColorCode | DisassemblyFlags.EnableInstructionNumbering);
         }
 
+        public EffectData Build(params ShaderBytecode[] bytecodes)
+        {
+            if (bytecodes == null || bytecodes.Length == 0)
+                throw new ArgumentException("Expected at least one bytecode", "bytecodes");
+
+            SetupEffectData(Guid.NewGuid().ToString("N"));
+
+            effectData.Description.ShareConstantBuffers = true;
+
+            SetupTechnique("Technique0", new SourceSpan());
+            SetupPass("Pass0", new SourceSpan());
+
+            for (var i = 0; i < bytecodes.Length; i++)
+                ProcessShader(bytecodes[i]);
+
+            CheckPassConsistency(new SourceSpan());
+
+            return effectData;
+        }
+
+        private void ProcessShader(ShaderBytecode shaderBytecode)
+        {
+            var shaderVersionText = ShaderVersionReader.GetVersion(shaderBytecode).ToLowerInvariant();
+
+            var shaderVersionChunks = shaderVersionText.Split(new[] { '_' }, 2);
+            System.Diagnostics.Debug.Assert(shaderVersionChunks.Length == 2);
+
+            var typePrefix = shaderVersionChunks[0];
+
+            ProfileToFeatureLevel(typePrefix + "_", shaderVersionText, out level);
+
+            var shaderType = StringToStageType(typePrefix);
+
+            var shader = CreateEffectShader(shaderType, typePrefix, shaderBytecode);
+            ProcessShaderData(shaderType, shaderBytecode, shader);
+        }
+
         private void InternalCompile(string sourceCode, string fileName)
         {
             effectData = null;
@@ -179,7 +215,7 @@ namespace SharpDX.Toolkit.Graphics
             fileName = fileName.Replace(@"\\", @"\");
 
             logger = new EffectCompilerLogger();
-            var parser = new EffectParser { Logger = logger, IncludeFileCallback = IncludeFileDelegate};
+            var parser = new EffectParser { Logger = logger, IncludeFileCallback = IncludeFileDelegate };
             parser.Macros.AddRange(macros);
             parser.IncludeDirectoryList.AddRange(includeDirectoryList);
 
@@ -191,16 +227,7 @@ namespace SharpDX.Toolkit.Graphics
             // Get back include handler.
             includeHandler = parserResult.IncludeHandler;
 
-            effectData = new EffectData
-                                 {
-                                     Shaders = new List<EffectData.Shader>(),
-                                     Description = new EffectData.Effect()
-                                                       {
-                                                           Name = Path.GetFileNameWithoutExtension(fileName),
-                                                           Techniques = new List<EffectData.Technique>(),
-                                                       }
-                                 };
-            effect = effectData.Description;
+            SetupEffectData(Path.GetFileNameWithoutExtension(fileName));
 
             if (parserResult.Shader != null)
             {
@@ -211,29 +238,24 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        private void SetupEffectData(string name)
+        {
+            effectData = new EffectData
+                         {
+                             Shaders = new List<EffectData.Shader>(),
+                             Description = new EffectData.Effect()
+                                           {
+                                               Name = name,
+                                               Techniques = new List<EffectData.Technique>(),
+                                           }
+                         };
+
+            effect = effectData.Description;
+        }
+
         private void HandleTechnique(Ast.Technique techniqueAst)
         {
-            technique = new EffectData.Technique()
-                            {
-                                Name = techniqueAst.Name,
-                                Passes = new List<EffectData.Pass>()
-                            };
-
-            // Check that the name of this technique is not already used.
-            if (technique.Name != null)
-            {
-                foreach (var registeredTechnique in effect.Techniques)
-                {
-                    if (registeredTechnique.Name == technique.Name)
-                    {
-                        logger.Error("A technique with the same name [{0}] already exist", techniqueAst.Span, technique.Name);
-                        break;
-                    }
-                }
-            }
-
-            // Adds the technique to the list of technique for the current effect
-            effect.Techniques.Add(technique);
+            SetupTechnique(techniqueAst.Name, techniqueAst.Span);
 
             // Process passes for this technique
             foreach (var passAst in techniqueAst.Passes)
@@ -242,33 +264,34 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        private void HandlePass(Ast.Pass passAst)
+        private void SetupTechnique(string techniqueName, SourceSpan sourceSpan)
         {
-            pass = new EffectData.Pass()
-                       {
-                           Name = passAst.Name,
-                           Pipeline = new EffectData.Pipeline(),
-                           Properties = new CommonData.PropertyCollection()
-                       };
+            technique = new EffectData.Technique()
+                        {
+                            Name = techniqueName,
+                            Passes = new List<EffectData.Pass>()
+                        };
 
-            // Clear current exports
-            currentExports.Clear();
-
-            // Check that the name of this pass is not already used.
-            if (pass.Name != null)
+            // Check that the name of this technique is not already used.
+            if (technique.Name != null)
             {
-                foreach (var registeredPass in technique.Passes)
+                foreach (var registeredTechnique in effect.Techniques)
                 {
-                    if (registeredPass.Name == pass.Name)
+                    if (registeredTechnique.Name == technique.Name)
                     {
-                        logger.Error("A pass with the same name [{0}] already exist", passAst.Span, pass.Name);
+                        logger.Error("A technique with the same name [{0}] already exist", sourceSpan, technique.Name);
                         break;
                     }
                 }
             }
 
-            // Adds the pass to the list of pass for the current technique
-            technique.Passes.Add(pass);
+            // Adds the technique to the list of technique for the current effect
+            effect.Techniques.Add(technique);
+        }
+
+        private void HandlePass(Ast.Pass passAst)
+        {
+            SetupPass(passAst.Name, passAst.Span);
 
             if (nextSubPassCount > 0)
             {
@@ -285,14 +308,46 @@ namespace SharpDX.Toolkit.Graphics
                 HandleExpression(expressionStatement.Expression);
             }
 
+            CheckPassConsistency(passAst.Span);
+        }
+
+        private void SetupPass(string name, SourceSpan span)
+        {
+            pass = new EffectData.Pass()
+                   {
+                       Name = name,
+                       Pipeline = new EffectData.Pipeline(),
+                       Properties = new CommonData.PropertyCollection()
+                   };
+
+            // Clear current exports
+            currentExports.Clear();
+
+            // Check that the name of this pass is not already used.
+            if (pass.Name != null)
+            {
+                foreach (var registeredPass in technique.Passes)
+                {
+                    if (registeredPass.Name == pass.Name)
+                    {
+                        logger.Error("A pass with the same name [{0}] already exist", span, pass.Name);
+                        break;
+                    }
+                }
+            }
+
+            // Adds the pass to the list of pass for the current technique
+            technique.Passes.Add(pass);
+        }
+
+        private void CheckPassConsistency(SourceSpan span)
+        {
             // Check pass consistency (mainly for the GS)
             var gsLink = pass.Pipeline[EffectShaderType.Geometry];
             if (gsLink != null && gsLink.IsNullShader && (gsLink.StreamOutputRasterizedStream >= 0 || gsLink.StreamOutputElements != null))
             {
                 if (pass.Pipeline[EffectShaderType.Vertex] == null || pass.Pipeline[EffectShaderType.Vertex].IsNullShader)
-                {
-                    logger.Error("Cannot specify StreamOutput for null geometry shader / vertex shader", passAst.Span);
-                }
+                    logger.Error("Cannot specify StreamOutput for null geometry shader / vertex shader", span);
                 else
                 {
                     // For null geometry shaders with StreamOutput, directly use the VertexShader
@@ -306,11 +361,11 @@ namespace SharpDX.Toolkit.Graphics
         {
             if (expression is Ast.AssignExpression)
             {
-                HandleAssignExpression((Ast.AssignExpression) expression);
+                HandleAssignExpression((Ast.AssignExpression)expression);
             }
             else if (expression is Ast.MethodExpression)
             {
-                HandleMethodExpression((Ast.MethodExpression) expression);
+                HandleMethodExpression((Ast.MethodExpression)expression);
             }
             else
             {
@@ -407,11 +462,6 @@ namespace SharpDX.Toolkit.Graphics
 
             pass.Pipeline[EffectShaderType.Geometry].StreamOutputRasterizedStream = (int)value;
         }
-
-        private static readonly Regex splitSODeclartionRegex = new Regex(@"\s*;\s*");
-        private static readonly Regex soDeclarationItemRegex = new Regex(@"^\s*(\d+)?\s*:?\s*([A-Za-z][A-Za-z0-9_]*)(\.[xyzw]+|\.[rgba]+)?$");
-        private static readonly Regex soSemanticIndex = new Regex(@"^([A-Za-z][A-Za-z0-9_]*?)([0-9]*)?$");
-        private static readonly List<char> xyzwrgbaComponents = new List<char>() { 'x', 'y', 'z', 'w', 'r', 'g', 'b', 'a' };
 
         private void HandleStreamOutput(Ast.Expression expression)
         {
@@ -589,8 +639,6 @@ namespace SharpDX.Toolkit.Graphics
             return values;
         }
 
-
-
         private void HandleShareConstantBuffers(Ast.Expression expression)
         {
             object value;
@@ -653,18 +701,18 @@ namespace SharpDX.Toolkit.Graphics
             var builder = new StringBuilder();
             if (value is string)
             {
-                builder.AppendLine((string) value);
+                builder.AppendLine((string)value);
             }
             else if (value is object[])
             {
-                var arrayValue = (object[]) value;
+                var arrayValue = (object[])value;
                 foreach (var stringItem in arrayValue)
                 {
                     if (!(stringItem is string))
                     {
                         logger.Error("Unexpected type. Preprocessor only support strings in array declaration", expression.Span);
                     }
-                    builder.AppendLine((string) stringItem);
+                    builder.AppendLine((string)stringItem);
                 }
             }
             preprocessorText = builder.ToString();
@@ -688,17 +736,17 @@ namespace SharpDX.Toolkit.Graphics
             {
                 if (typeof(T) == typeof(uint) && value is int)
                 {
-                    value = unchecked((uint) (int) value);
+                    value = unchecked((uint)(int)value);
                 }
                 else
                 {
                     try
                     {
-                        value = Convert.ChangeType(value, typeof (T));
+                        value = Convert.ChangeType(value, typeof(T));
                     }
                     catch (Exception ex)
                     {
-                        logger.Error("Invalid type for attribute [{0}]. Expecting [{1}]", expression.Value.Span, expression.Name.Text, typeof (T).Name);
+                        logger.Error("Invalid type for attribute [{0}]. Expecting [{1}]", expression.Value.Span, expression.Name.Text, typeof(T).Name);
                     }
                 }
 
@@ -711,15 +759,15 @@ namespace SharpDX.Toolkit.Graphics
             value = null;
             if (expression is Ast.LiteralExpression)
             {
-                value = ((Ast.LiteralExpression) expression).Value.Value;
+                value = ((Ast.LiteralExpression)expression).Value.Value;
             }
             else if (expression is Ast.IdentifierExpression)
             {
-                value = ((Ast.IdentifierExpression) expression).Name.Text;
+                value = ((Ast.IdentifierExpression)expression).Name.Text;
             }
             else if (expression is Ast.ArrayInitializerExpression)
             {
-                var arrayExpression = (Ast.ArrayInitializerExpression) expression;
+                var arrayExpression = (Ast.ArrayInitializerExpression)expression;
                 var arrayValue = new object[arrayExpression.Values.Count];
                 for (int i = 0; i < arrayValue.Length; i++)
                 {
@@ -730,7 +778,7 @@ namespace SharpDX.Toolkit.Graphics
             }
             else if (expression is Ast.MethodExpression)
             {
-                var methodExpression = (Ast.MethodExpression) expression;
+                var methodExpression = (Ast.MethodExpression)expression;
                 value = ExtractValueFromMethodExpression(methodExpression);
                 if (value == null)
                 {
@@ -827,10 +875,10 @@ namespace SharpDX.Toolkit.Graphics
             }
             else if (expression is Ast.LiteralExpression)
             {
-                var literalValue = ((Ast.LiteralExpression) expression).Value.Value;
+                var literalValue = ((Ast.LiteralExpression)expression).Value.Value;
                 try
                 {
-                    var rawLevel = (int) (Convert.ToSingle(literalValue, CultureInfo.InvariantCulture) * 10);
+                    var rawLevel = (int)(Convert.ToSingle(literalValue, CultureInfo.InvariantCulture) * 10);
                     switch (rawLevel)
                     {
                         case 91:
@@ -873,11 +921,11 @@ namespace SharpDX.Toolkit.Graphics
 
             if (expression is Ast.IdentifierExpression)
             {
-                shaderName = ((Ast.IdentifierExpression) expression).Name.Text;
+                shaderName = ((Ast.IdentifierExpression)expression).Name.Text;
             }
             else if (expression is Ast.LiteralExpression)
             {
-                var value = ((Ast.LiteralExpression) expression).Value.Value;
+                var value = ((Ast.LiteralExpression)expression).Value.Value;
                 if (Equals(value, 0) || Equals(value, null))
                 {
                     return null;
@@ -885,7 +933,7 @@ namespace SharpDX.Toolkit.Graphics
             }
             else if (expression is Ast.CompileExpression)
             {
-                var compileExpression = (Ast.CompileExpression) expression;
+                var compileExpression = (Ast.CompileExpression)expression;
 
                 var profileName = compileExpression.Profile.Text;
 
@@ -912,7 +960,7 @@ namespace SharpDX.Toolkit.Graphics
             else if (expression is Ast.MethodExpression)
             {
                 // CompileShader( vs_4_0, VS() )
-                var compileExpression = (Ast.MethodExpression) expression;
+                var compileExpression = (Ast.MethodExpression)expression;
 
                 if (compileExpression.Name.Text == "CompileShader")
                 {
@@ -933,7 +981,7 @@ namespace SharpDX.Toolkit.Graphics
                         return null;
                     }
 
-                    ProfileToFeatureLevel(StageTypeToString(effectShaderType) + "_", (string) profileName, out level);
+                    ProfileToFeatureLevel(StageTypeToString(effectShaderType) + "_", (string)profileName, out level);
 
 
                     var shaderMethod = compileExpression.Arguments[1] as Ast.MethodExpression;
@@ -989,7 +1037,53 @@ namespace SharpDX.Toolkit.Graphics
                 return;
             }
 
-            string profile = StageTypeToString(type) + "_";
+            var profile = GetShaderProfile(type);
+
+            var saveState = Configuration.ThrowOnShaderCompileError;
+            Configuration.ThrowOnShaderCompileError = false;
+            try
+            {
+                var result = CompileParsedShader(shaderName, profile);
+
+                var compilerMessages = result.Message;
+                if (result.HasErrors)
+                {
+                    logger.LogMessage(new LogMessageRaw(LogMessageType.Error, compilerMessages));
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(compilerMessages))
+                        logger.LogMessage(new LogMessageRaw(LogMessageType.Warning, compilerMessages));
+
+                    // Check if this shader is exported
+                    if (currentExports.Contains(shaderName))
+                    {
+                        // the exported name is EffectName::ShaderName
+                        shaderName = effect.Name + "::" + shaderName;
+                    }
+                    else
+                    {
+                        // If the shader is not exported, set the name to null
+                        shaderName = null;
+                    }
+
+                    var shader = CreateEffectShader(type, shaderName, result.Bytecode);
+
+                    if (logger.HasErrors)
+                        return;
+
+                    ProcessShaderData(type, result.Bytecode, shader);
+                }
+            }
+            finally
+            {
+                Configuration.ThrowOnShaderCompileError = saveState;
+            }
+        }
+
+        private string GetShaderProfile(EffectShaderType type)
+        {
+            var profile = StageTypeToString(type) + "_";
             switch (this.level)
             {
                 case FeatureLevel.Level_9_1:
@@ -1016,119 +1110,94 @@ namespace SharpDX.Toolkit.Graphics
                     break;
 #endif
             }
+            return profile;
+        }
 
-            var saveState = Configuration.ThrowOnShaderCompileError;
-            Configuration.ThrowOnShaderCompileError = false;
-            try
+        private CompilationResult CompileParsedShader(string shaderName, string profile)
+        {
+            var sourcecodeBuilder = new StringBuilder();
+            if (!string.IsNullOrEmpty(preprocessorText))
+                sourcecodeBuilder.Append(preprocessorText);
+            sourcecodeBuilder.Append(parserResult.PreprocessedSource);
+
+            var sourcecode = sourcecodeBuilder.ToString();
+
+            var filePath = replaceBackSlash.Replace(parserResult.SourceFileName, @"\");
+            var result = ShaderBytecode.Compile(sourcecode,
+                                                shaderName,
+                                                profile,
+                                                (ShaderFlags)compilerFlags,
+                                                D3DCompiler.EffectFlags.None,
+                                                null,
+                                                includeHandler,
+                                                filePath);
+            return result;
+        }
+
+        private EffectData.Shader CreateEffectShader(EffectShaderType type, string shaderName, ShaderBytecode bytecode)
+        {
+            var shader = new EffectData.Shader()
+                         {
+                             Name = shaderName,
+                             Level = level,
+                             Bytecode = bytecode,
+                             Type = type,
+                             ConstantBuffers = new List<EffectData.ConstantBuffer>(),
+                             ResourceParameters = new List<EffectData.ResourceParameter>(),
+                             InputSignature = new EffectData.Signature(),
+                             OutputSignature = new EffectData.Signature()
+                         };
+
+            using (var reflect = new ShaderReflection(shader.Bytecode))
             {
-                var sourcecodeBuilder = new StringBuilder();
-                if (!string.IsNullOrEmpty(preprocessorText))
-                    sourcecodeBuilder.Append(preprocessorText);
-                sourcecodeBuilder.Append(parserResult.PreprocessedSource);
-
-                var sourcecode = sourcecodeBuilder.ToString();
-
-                var filePath = replaceBackSlash.Replace(parserResult.SourceFileName, @"\");
-                var result = ShaderBytecode.Compile(sourcecode, shaderName, profile, (ShaderFlags)compilerFlags, D3DCompiler.EffectFlags.None, null, includeHandler, filePath);
-
-                var compilerMessages = result.Message;
-                if (result.HasErrors)
-                {
-                    logger.LogMessage(new LogMessageRaw(LogMessageType.Error, compilerMessages));
-                }
-                else
-                {
-                    if (!string.IsNullOrEmpty(compilerMessages))
-                    {
-                        logger.LogMessage(new LogMessageRaw(LogMessageType.Warning, compilerMessages));
-                    }
-
-                    // Check if this shader is exported
-                    if (currentExports.Contains(shaderName))
-                    {
-                        // the exported name is EffectName::ShaderName
-                        shaderName = effect.Name + "::" + shaderName;
-                    }
-                    else
-                    {
-                        // If the shader is not exported, set the name to null
-                        shaderName = null;
-                    }
-
-                    var shader = new EffectData.Shader()
-                                     {
-                                         Name = shaderName,
-                                         Level = this.level,
-                                         Bytecode = result.Bytecode,
-                                         Type = type,
-                                         ConstantBuffers = new List<EffectData.ConstantBuffer>(),
-                                         ResourceParameters = new List<EffectData.ResourceParameter>(),
-                                         InputSignature = new EffectData.Signature(),
-                                         OutputSignature = new EffectData.Signature()
-                                     };
-
-                    using (var reflect = new ShaderReflection(shader.Bytecode))
-                    {
-                        BuiltSemanticInputAndOutput(shader, reflect);
-                        BuildParameters(shader, reflect);
-                    }
-
-                    if (logger.HasErrors)
-                    {
-                        return;
-                    }
-
-                    // Strip reflection data, as we are storing it in the toolkit format.
-                    var byteCodeNoDebugReflection = result.Bytecode.Strip(StripFlags.CompilerStripReflectionData | StripFlags.CompilerStripDebugInformation);
-
-                    // Compute Hashcode
-                    shader.Hashcode = Utilities.ComputeHashFNVModified(byteCodeNoDebugReflection);
-
-                    // if No debug is required, take the bytecode without any debug/reflection info.
-                    if ((compilerFlags & EffectCompilerFlags.Debug) == 0)
-                    {
-                        shader.Bytecode = byteCodeNoDebugReflection;
-                    }
-
-                    // Check that this shader was not already generated
-                    int shaderIndex;
-                    for (shaderIndex = 0; shaderIndex < effectData.Shaders.Count; shaderIndex++)
-                    {
-                        var shaderItem = effectData.Shaders[shaderIndex];
-                        if (shaderItem.IsSimilar(shader))
-                        {
-                            break;
-                        }
-                    }
-
-                    // Check if there is a new shader to store in the archive
-                    if (shaderIndex >= effectData.Shaders.Count)
-                    {
-                        shaderIndex = effectData.Shaders.Count;
-
-                        // If this is a Vertex shader, compute the binary signature for the input layout
-                        if (shader.Type == EffectShaderType.Vertex)
-                        {
-                            // Gets the signature from the stripped bytecode and compute the hashcode.
-                            shader.InputSignature.Bytecode = ShaderSignature.GetInputSignature(byteCodeNoDebugReflection);
-                            shader.InputSignature.Hashcode = Utilities.ComputeHashFNVModified(shader.InputSignature.Bytecode);
-                        }
-
-                        effectData.Shaders.Add(shader);
-                    }
-
-                    if (pass.Pipeline[type] == null)
-                    {
-                        pass.Pipeline[type] = new EffectData.ShaderLink();
-                    }
-
-                    pass.Pipeline[type].Index = shaderIndex;
-                }
+                BuiltSemanticInputAndOutput(shader, reflect);
+                BuildParameters(shader, reflect);
             }
-            finally
+
+            return shader;
+        }
+
+        private void ProcessShaderData(EffectShaderType type, ShaderBytecode bytecode, EffectData.Shader shader)
+        {
+            // Strip reflection data, as we are storing it in the toolkit format.
+            var byteCodeNoDebugReflection = bytecode.Strip(StripFlags.CompilerStripReflectionData | StripFlags.CompilerStripDebugInformation);
+
+            // Compute Hashcode
+            shader.Hashcode = Utilities.ComputeHashFNVModified(byteCodeNoDebugReflection);
+
+            // if No debug is required, take the bytecode without any debug/reflection info.
+            if ((compilerFlags & EffectCompilerFlags.Debug) == 0)
+                shader.Bytecode = byteCodeNoDebugReflection;
+
+            // Check that this shader was not already generated
+            int shaderIndex;
+            for (shaderIndex = 0; shaderIndex < effectData.Shaders.Count; shaderIndex++)
             {
-                Configuration.ThrowOnShaderCompileError = saveState;
+                var shaderItem = effectData.Shaders[shaderIndex];
+                if (shaderItem.IsSimilar(shader))
+                    break;
             }
+
+            // Check if there is a new shader to store in the archive
+            if (shaderIndex >= effectData.Shaders.Count)
+            {
+                shaderIndex = effectData.Shaders.Count;
+
+                // If this is a Vertex shader, compute the binary signature for the input layout
+                if (shader.Type == EffectShaderType.Vertex)
+                {
+                    // Gets the signature from the stripped bytecode and compute the hashcode.
+                    shader.InputSignature.Bytecode = ShaderSignature.GetInputSignature(byteCodeNoDebugReflection);
+                    shader.InputSignature.Hashcode = Utilities.ComputeHashFNVModified(shader.InputSignature.Bytecode);
+                }
+
+                effectData.Shaders.Add(shader);
+            }
+
+            if (pass.Pipeline[type] == null)
+                pass.Pipeline[type] = new EffectData.ShaderLink();
+
+            pass.Pipeline[type].Index = shaderIndex;
         }
 
         private void HandleMethodExpression(Ast.MethodExpression expression)
@@ -1195,6 +1264,20 @@ namespace SharpDX.Toolkit.Graphics
             return profile;
         }
 
+        private static EffectShaderType StringToStageType(string stageText)
+        {
+            switch (stageText)
+            {
+                case "vs": return EffectShaderType.Vertex;
+                case "ds": return EffectShaderType.Domain;
+                case "hs": return EffectShaderType.Hull;
+                case "gs": return EffectShaderType.Geometry;
+                case "ps": return EffectShaderType.Pixel;
+                case "cs": return EffectShaderType.Compute;
+            }
+
+            throw new ArgumentException("Unknown shader stage type: " + stageText);
+        }
 
         private void BuiltSemanticInputAndOutput(EffectData.Shader shader, ShaderReflection reflect)
         {
@@ -1212,13 +1295,13 @@ namespace SharpDX.Toolkit.Graphics
         {
             return new EffectData.Semantic(
                 shaderParameterDescription.SemanticName,
-                (byte) shaderParameterDescription.SemanticIndex,
-                (byte) shaderParameterDescription.Register,
-                (byte) shaderParameterDescription.SystemValueType,
-                (byte) shaderParameterDescription.ComponentType,
-                (byte) shaderParameterDescription.UsageMask,
-                (byte) shaderParameterDescription.ReadWriteMask,
-                (byte) shaderParameterDescription.Stream
+                (byte)shaderParameterDescription.SemanticIndex,
+                (byte)shaderParameterDescription.Register,
+                (byte)shaderParameterDescription.SystemValueType,
+                (byte)shaderParameterDescription.ComponentType,
+                (byte)shaderParameterDescription.UsageMask,
+                (byte)shaderParameterDescription.ReadWriteMask,
+                (byte)shaderParameterDescription.Stream
                 );
         }
 
@@ -1379,19 +1462,6 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        private class IndexedInputBindingDescription
-        {
-            public IndexedInputBindingDescription(int index, InputBindingDescription description)
-            {
-                Index = index;
-                Description = description;
-            }
-
-            public int Index;
-
-            public InputBindingDescription Description;
-        }
-
         /// <summary>
         ///   Builds an effect parameter from a reflection variable.
         /// </summary>
@@ -1408,10 +1478,10 @@ namespace SharpDX.Toolkit.Graphics
                                     Offset = variableDescription.StartOffset,
                                     Size = variableDescription.Size,
                                     Count = variableTypeDescription.ElementCount,
-                                    Class = (EffectParameterClass) variableTypeDescription.Class,
-                                    Type = (EffectParameterType) variableTypeDescription.Type,
-                                    RowCount = (byte) variableTypeDescription.RowCount,
-                                    ColumnCount = (byte) variableTypeDescription.ColumnCount,
+                                    Class = (EffectParameterClass)variableTypeDescription.Class,
+                                    Type = (EffectParameterType)variableTypeDescription.Type,
+                                    RowCount = (byte)variableTypeDescription.RowCount,
+                                    ColumnCount = (byte)variableTypeDescription.ColumnCount,
                                 };
 
             if (variableDescription.DefaultValue != IntPtr.Zero)
@@ -1433,8 +1503,8 @@ namespace SharpDX.Toolkit.Graphics
                                 {
                                     Name = name,
                                     Class = EffectParameterClass.Object,
-                                    Slot = (byte) variableBinding.BindPoint,
-                                    Count = (byte) variableBinding.BindCount,
+                                    Slot = (byte)variableBinding.BindPoint,
+                                    Count = (byte)variableBinding.BindCount,
                                 };
 
             switch (variableBinding.Type)
@@ -1530,7 +1600,6 @@ namespace SharpDX.Toolkit.Graphics
             }
             return parameter;
         }
-        private static readonly Regex replaceBackSlash = new Regex(@"\\+");
 
         private static object ToFloat(EffectCompilerInternal compiler, object value)
         {
@@ -1544,6 +1613,23 @@ namespace SharpDX.Toolkit.Graphics
             }
             return null;
         }
+
+        #region Nested type: IndexedInputBindingDescription
+
+        private class IndexedInputBindingDescription
+        {
+            public IndexedInputBindingDescription(int index, InputBindingDescription description)
+            {
+                Index = index;
+                Description = description;
+            }
+
+            public int Index;
+
+            public InputBindingDescription Description;
+        }
+
+        #endregion
 
         #region Nested type: ConvertFullItem
 

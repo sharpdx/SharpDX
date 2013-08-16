@@ -26,6 +26,8 @@ using SharpDX.Text;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    using D3DCompiler;
+
     public delegate Stream IncludeFileDelegate(bool isSystemInclude, string file);
 
     /// <summary>
@@ -91,5 +93,16 @@ namespace SharpDX.Toolkit.Graphics
             var compiler = new EffectCompilerInternal();
             return compiler.DisassembleShader(shader);
         }
-   }
+
+        /// <summary>
+        /// Builds effect data from the provided bytecode.
+        /// </summary>
+        /// <param name="shaderSource">The bytecode list to for the provided effect.</param>
+        /// <returns>Built effect data.</returns>
+        public EffectData Compile(params ShaderBytecode[] shaderSource)
+        {
+            var compiler = new EffectCompilerInternal();
+            return compiler.Build(shaderSource);
+        }
+    }
 }
