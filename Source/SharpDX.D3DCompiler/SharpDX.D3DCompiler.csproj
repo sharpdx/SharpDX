@@ -38,6 +38,7 @@
     <Compile Include="ShaderReflection.cs" />
     <Compile Include="ShaderReflectionType.cs" />
     <Compile Include="ShaderSignature.cs" />
+    <Compile Include="ShaderProfile.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Mapping.xml">

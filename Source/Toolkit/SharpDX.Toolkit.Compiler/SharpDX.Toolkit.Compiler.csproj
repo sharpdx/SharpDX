@@ -25,7 +25,6 @@
     <Compile Include="Effect\EffectCompilerLogger.cs" />
     <Compile Include="Effect\EffectCompiler.cs" />
     <Compile Include="Effect\EffectDataCodeWriter.cs" />
-    <Compile Include="Effect\ShaderVersionReader.cs" />
     <Compile Include="FileDependencyList.cs" />
     <Compile Include="Effect\EffectParser.cs" />
     <Compile Include="Effect\EffectCompilerMessage.cs" />

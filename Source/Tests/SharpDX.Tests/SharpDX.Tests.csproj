@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MathUtilWrapTests.cs" />
+    <Compile Include="ShaderBytecodeProfileTests.cs" />
     <Compile Include="TestUtilityCompare.cs" />
     <Compile Include="TestMediaAttributes.cs" />
     <Compile Include="TestGetterSetter.cs" />
@@ -56,6 +57,10 @@
     <Compile Include="TestSerialization.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj">
+      <Project>{361d3f81-a48a-47f2-80df-ca4f9536cb4e}</Project>
+      <Name>SharpDX.D3DCompiler</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
       <Project>{736DFB52-1AFE-4EFF-9710-89046AB5B1F9}</Project>
       <Name>SharpDX.Direct3D11</Name>

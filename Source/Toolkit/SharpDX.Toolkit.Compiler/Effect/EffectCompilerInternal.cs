@@ -193,16 +193,13 @@ namespace SharpDX.Toolkit.Graphics
 
         private void ProcessShader(ShaderBytecode shaderBytecode)
         {
-            var shaderVersionText = ShaderVersionReader.GetVersion(shaderBytecode).ToLowerInvariant();
-
-            var shaderVersionChunks = shaderVersionText.Split(new[] { '_' }, 2);
-            System.Diagnostics.Debug.Assert(shaderVersionChunks.Length == 2);
-
-            var typePrefix = shaderVersionChunks[0];
+            var shaderProfile = shaderBytecode.GetVersion();
+            var shaderVersionText = shaderProfile.ToString();
+            var typePrefix = shaderProfile.GetTypePrefix();
 
             ProfileToFeatureLevel(typePrefix + "_", shaderVersionText, out level);
 
-            var shaderType = StringToStageType(typePrefix);
+            var shaderType = VersionToShaderType(shaderProfile.Version);
 
             var shader = CreateEffectShader(shaderType, typePrefix, shaderBytecode);
             ProcessShaderData(shaderType, shaderBytecode, shader);
@@ -1264,16 +1261,16 @@ namespace SharpDX.Toolkit.Graphics
             return profile;
         }
 
-        private static EffectShaderType StringToStageType(string stageText)
+        private static EffectShaderType VersionToShaderType(ShaderVersion stageText)
         {
             switch (stageText)
             {
-                case "vs": return EffectShaderType.Vertex;
-                case "ds": return EffectShaderType.Domain;
-                case "hs": return EffectShaderType.Hull;
-                case "gs": return EffectShaderType.Geometry;
-                case "ps": return EffectShaderType.Pixel;
-                case "cs": return EffectShaderType.Compute;
+                case ShaderVersion.VertexShader: return EffectShaderType.Vertex;
+                case ShaderVersion.DomainShader: return EffectShaderType.Domain;
+                case ShaderVersion.HullShader: return EffectShaderType.Hull;
+                case ShaderVersion.GeometryShader: return EffectShaderType.Geometry;
+                case ShaderVersion.PixelShader: return EffectShaderType.Pixel;
+                case ShaderVersion.ComputeShader: return EffectShaderType.Compute;
             }
 
             throw new ArgumentException("Unknown shader stage type: " + stageText);

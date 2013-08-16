@@ -52,6 +52,8 @@ using SharpDX.Direct3D;
 
 namespace SharpDX.D3DCompiler
 {
+    using Multimedia;
+
     /// <summary>
     ///   Represents the compiled bytecode of a shader or effect.
     /// </summary>
@@ -79,7 +81,7 @@ namespace SharpDX.D3DCompiler
         /// <param name = "data">A <see cref = "T:System.IO.Stream" /> containing the compiled bytecode.</param>
         public ShaderBytecode(Stream data)
         {
-            int size = (int) (data.Length - data.Position);
+            int size = (int)(data.Length - data.Position);
 
             byte[] localBuffer = new byte[size];
             data.Read(localBuffer, 0, size);
@@ -554,7 +556,7 @@ namespace SharpDX.D3DCompiler
         /// <param name = "defines">A set of macros to define during compilation.</param>
         /// <param name = "include">An interface for handling include files.</param>
         /// <returns>The compiled shader bytecode, or <c>null</c> if the method fails.</returns>
-        public static CompilationResult CompileFromFile(string fileName, string profile, ShaderFlags shaderFlags = ShaderFlags.None , EffectFlags effectFlags = EffectFlags.None, ShaderMacro[] defines = null, Include include = null)
+        public static CompilationResult CompileFromFile(string fileName, string profile, ShaderFlags shaderFlags = ShaderFlags.None, EffectFlags effectFlags = EffectFlags.None, ShaderMacro[] defines = null, Include include = null)
         {
             return CompileFromFile(fileName, null, profile, shaderFlags, effectFlags, defines, include);
         }
@@ -711,12 +713,12 @@ namespace SharpDX.D3DCompiler
         /// <param name="fileName">Name of the file.</param>
         public void Save(string fileName)
         {
-            using (var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write)) 
+            using (var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
                 Save(stream);
         }
 #endif
 
-// Win 8.1 SDK removed the corresponding functions from the WinRT platform
+        // Win 8.1 SDK removed the corresponding functions from the WinRT platform
 #if !(WIN8METRO && DIRECTX11_2)
         /// <summary>	
         /// Compresses a set of shaders into a more compact form. 	
@@ -743,12 +745,13 @@ namespace SharpDX.D3DCompiler
                                   };
                 }
                 D3D.CompressShaders(shaderBytecodes.Length, temp, 1, out blob);
-            } finally
+            }
+            finally
             {
                 foreach (var gcHandle in handles)
                     gcHandle.Free();
             }
-            return new ShaderBytecode(blob) {IsCompressed = true};
+            return new ShaderBytecode(blob) { IsCompressed = true };
         }
 
         /// <summary>	
@@ -763,7 +766,7 @@ namespace SharpDX.D3DCompiler
             //which doesn't seem to accept zero pointer, I didn't find any other work around.
             var shadersBlobs = new Blob[1];
             int totalShadersRef;
-            fixed(void* bufferPtr = Data)
+            fixed (void* bufferPtr = Data)
                 D3D.DecompressShaders((IntPtr)bufferPtr, Data.Length, 0, 0, null, 0, shadersBlobs, out totalShadersRef);
 
             //Then we call D3D.DecompressShaders again and we know how much shaders we will get
@@ -978,10 +981,10 @@ namespace SharpDX.D3DCompiler
             try
             {
                 return Preprocess(shaderSourcePtr, shaderSource.Length, defines, include, out errors, sourceFileName);
-            } 
+            }
             finally
             {
-                if (shaderSourcePtr != IntPtr.Zero) 
+                if (shaderSourcePtr != IntPtr.Zero)
                     Marshal.FreeHGlobal(shaderSourcePtr);
             }
         }
@@ -1147,8 +1150,8 @@ namespace SharpDX.D3DCompiler
         {
             Blob blob;
             fixed (void* bufferPtr = Data)
-            if (D3D.StripShader((IntPtr)bufferPtr, Data.Length, flags, out blob).Failure)
-                return null;
+                if (D3D.StripShader((IntPtr)bufferPtr, Data.Length, flags, out blob).Failure)
+                    return null;
             return new ShaderBytecode(blob);
         }
 
@@ -1204,6 +1207,112 @@ namespace SharpDX.D3DCompiler
         public void Dispose()
         {
             // Just to keep backward compatibility
+        }
+
+        /// <summary>
+        /// Gets the shader type and version string from the provided bytecode.
+        /// </summary>
+        /// <param name="shaderBytecode">The shader bytecode data.</param>
+        /// <returns>The type and version string of the provided shader bytecode.</returns>
+        /// <exception cref="ArgumentNullException">Is thrown when <paramref name="shaderBytecode"/> is null.</exception>
+        /// <exception cref="ArgumentException">Is thrown when bytecode contains invalid data or the version could not be read.</exception>
+        /// <exception cref="IndexOutOfRangeException">Is thrown when bytecode contains invalid data.</exception>
+        public ShaderProfile GetVersion()
+        {
+            // the offset where chunks count is stored
+            const int chunksCountOffset = 4 * 7;
+            // the offset of the version bytes from the start of the chunk
+            const int shaderCodeVersionOffset = 4 * 2;
+            // invalid offset marker - used to find out if the shader version cannot be read
+            const int invalidOffset = -1;
+
+            var data = Data;
+
+            // read the number of data chunks in the bytecode
+            var chunksCount = BitConverter.ToUInt32(data, chunksCountOffset);
+
+            // find the offset of the chunk where we can read the data:
+            var chunkOffset = invalidOffset;
+            var dx9ChunkOffset = invalidOffset;
+            for (var i = 0; i < chunksCount; i++)
+            {
+                var offset = BitConverter.ToInt32(data, chunksCountOffset + 4 + 4 * i);
+                var code = (FourCC)BitConverter.ToUInt32(data, offset);
+                // these chunks contain the shader version
+                if (code == "SHEX" || code == "SHDR")
+                    chunkOffset = offset;
+
+                // this chunk is present only for d3d9-level hardware
+                if (code == "Aon9")
+                    dx9ChunkOffset = offset;
+            }
+
+            if (chunkOffset == invalidOffset)
+                throw new ArgumentException("Cannot find the chunk with version in provided bytecode");
+
+            // read the shader version
+            var versionValue = BitConverter.ToInt32(data, chunkOffset + shaderCodeVersionOffset);
+            var minor = DecodeValue(versionValue, 0, 3);
+            var major = DecodeValue(versionValue, 4, 7);
+            var type = (ShaderVersion)DecodeValue(versionValue, 16, 31);
+
+            var profileMinor = 0;
+            var profileMajor = 0;
+
+            // we have a DX9 chunk here - try to decode profile level version
+            // this is possible only for SM 4.0
+            if (dx9ChunkOffset != invalidOffset && major == 4 && minor == 0)
+            {
+                // http://msdn.microsoft.com/en-us/library/ff570156%28v=vs.85%29.aspx
+                // 0xFFFE - Vertex Shader
+                // 0xFFFF - Pixel Shader
+                // order is inversed due to endianess
+                byte magicByte1 = (byte)(type == ShaderVersion.VertexShader ? 0xfe : 0xff);
+                byte magicByte2 = 0xff;
+
+                // skip 16 bytes (4 dwords): FourCC, ChunkSize,
+                // other 2 are some magic numbers that may mess with the VersionToken detection
+                var startOffset = dx9ChunkOffset + 16;
+                // chunk size is the second dword at the chunk offset
+                var endOffset = dx9ChunkOffset + 8 + BitConverter.ToUInt32(data, dx9ChunkOffset + 4);
+                for (var j = startOffset; j < endOffset; j += 4)
+                {
+                    if (data[j + 2] == magicByte1 && data[j + 3] == magicByte2)
+                    {
+                        // first byte is the minor version, 0 maps to 4_0_level_9_1 and 1 maps to 4_0_level_9_3
+                        profileMinor = data[j] == 1 ? 3 : 1;
+
+                        System.Diagnostics.Debug.Assert(data[j] == 0 || data[j] == 1);
+                        System.Diagnostics.Debug.Assert(data[j + 1] == 2);
+                        break;
+                    }
+                }
+
+                profileMajor = 9;
+            }
+
+            // just make sure we computed everything correctly
+            System.Diagnostics.Debug.Assert((profileMajor == 9 && (profileMinor == 1 || profileMinor == 3)) || (profileMajor == 0 && profileMinor == 0));
+
+            return new ShaderProfile(type, major, minor, profileMajor, profileMinor);
+        }
+
+        /// <summary>
+        /// Reads the value between start and end bits from the provided token.
+        /// </summary>
+        /// <param name="token">The source of the data to read.</param>
+        /// <param name="start">The start bit.</param>
+        /// <param name="end">The end bit.</param>
+        /// <returns></returns>
+        private static int DecodeValue(int token, int start, int end)
+        {
+            // create the mask to read the data
+            var mask = 0;
+            for (var i = start; i <= end; i++)
+                mask |= 1 << i;
+
+            // read the needed bits and shift them accordingly
+            return (token & mask) >> start;
         }
     }
 }
