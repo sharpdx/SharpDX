@@ -46,7 +46,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
     <SharpDXDirectXVersion Condition="'$(SharpDXDirectXVersion)' == ''">DirectX11</SharpDXDirectXVersion>
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework' and ('$(TargetFrameworkVersion)' == 'v2.0' or '$(TargetFrameworkVersion)' == 'v3.5') ">DirectX11-net20</SharpDXPlatform>
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework' and $(TargetFrameworkVersion.Contains('v4'))">$(SharpDXDirectXVersion)-net40</SharpDXPlatform>
-    <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETCore'">DirectX11_1-winrt</SharpDXPlatform>
+    <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETCore'">$(SharpDXDirectXVersion)-winrt</SharpDXPlatform>
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == 'WindowsPhone' and $(TargetFrameworkVersion.Contains('v8'))">DirectX11_1-wp8-$(Platform)</SharpDXPlatform>
 
     <!-- Variable used to select the platform used for the tool at compile time - default to Win8Desktop-net40 -->
