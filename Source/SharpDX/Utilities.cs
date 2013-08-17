@@ -429,6 +429,36 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Determines whether a given type inherits from a generic type.
+        /// </summary>
+        /// <param name="givenType">Type of the class to check if it inherits from generic type.</param>
+        /// <param name="genericType">Type of the generic.</param>
+        /// <returns><c>true</c> if [is assignable to generic type] [the specified given type]; otherwise, <c>false</c>.</returns>
+        public static bool IsAssignableToGenericType(Type givenType, Type genericType)
+        {
+#if W8CORE
+            throw new NotImplementedException();
+#else
+            // from http://stackoverflow.com/a/1075059/1356325
+            var interfaceTypes = givenType.GetInterfaces();
+
+            foreach (var it in interfaceTypes)
+            {
+                if (it.IsGenericType && it.GetGenericTypeDefinition() == genericType)
+                    return true;
+            }
+
+            if (givenType.IsGenericType && givenType.GetGenericTypeDefinition() == genericType)
+                return true;
+
+            Type baseType = givenType.BaseType;
+            if (baseType == null) return false;
+
+            return IsAssignableToGenericType(baseType, genericType);
+#endif
+        }
+
+        /// <summary>
         /// Allocate an aligned memory buffer.
         /// </summary>
         /// <param name="sizeInBytes">Size of the buffer to allocate.</param>
