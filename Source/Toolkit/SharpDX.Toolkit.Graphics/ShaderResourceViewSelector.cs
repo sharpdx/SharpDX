@@ -41,6 +41,6 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="arrayOrDepthSlice">The texture array slice index.</param>
         /// <param name="mipIndex">The mip map slice index.</param>
         /// <returns>An <see cref="ShaderResourceView" /></returns>
-        public ShaderResourceView this[ViewType viewType, int arrayOrDepthSlice, int mipIndex] { get { return this.texture.GetShaderResourceView(viewType, arrayOrDepthSlice, mipIndex); } }
+        public TextureView this[ViewType viewType, int arrayOrDepthSlice, int mipIndex] { get { return this.texture.GetShaderResourceView(viewType, arrayOrDepthSlice, mipIndex); } }
     }
 }

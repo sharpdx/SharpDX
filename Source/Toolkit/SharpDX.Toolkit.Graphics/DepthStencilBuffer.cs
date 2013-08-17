@@ -139,7 +139,7 @@ namespace SharpDX.Toolkit.Graphics
             return buffer == null ? null : buffer.depthStencilView;
         }
 
-        internal override RenderTargetView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipIndex)
+        internal override TextureView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipIndex)
         {
             throw new NotSupportedException();
         }

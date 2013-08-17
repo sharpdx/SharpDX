@@ -33,7 +33,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// GraphicsDevice used to create this instance.
         /// </summary>
-        public GraphicsDevice GraphicsDevice { get; internal set; }
+        protected internal GraphicsDevice GraphicsDevice { get; set; }
 
         /// <summary>
         /// The attached Direct3D11 resource to this instance.
@@ -44,12 +44,8 @@ namespace SharpDX.Toolkit.Graphics
         {
         }
 
-        protected GraphicsResource(GraphicsDevice graphicsDevice)
+        protected GraphicsResource(GraphicsDevice graphicsDevice) : this(graphicsDevice, null)
         {
-            if (graphicsDevice == null)
-                throw new ArgumentNullException("graphicsDevice");
-
-            GraphicsDevice = graphicsDevice;
         }
 
         protected GraphicsResource(GraphicsDevice graphicsDevice, string name) : base(name)
@@ -109,11 +105,13 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Called when name changed for this component.
         /// </summary>
-        protected override void OnNameChanged()
+        protected override void OnPropertyChanged(string propertyName)
         {
-            base.OnNameChanged();
-            if (GraphicsDevice.IsDebugMode && this.Resource != null)
-                this.Resource.DebugName = Name;
+            base.OnPropertyChanged(propertyName);
+            if (propertyName == "Name")
+            {
+                if (GraphicsDevice.IsDebugMode && this.Resource != null) this.Resource.DebugName = Name;
+            }
         }
 
         protected static void UnPin(GCHandle[] handles)

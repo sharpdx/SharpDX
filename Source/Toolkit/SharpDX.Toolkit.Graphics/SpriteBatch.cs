@@ -633,12 +633,12 @@ namespace SharpDX.Toolkit.Graphics
             Array.Sort(sortIndices, 0, spriteQueueCount, comparer);
         }
 
-        internal unsafe void DrawSprite(ShaderResourceView texture, ref RectangleF destination, bool scaleDestination, ref Rectangle? sourceRectangle, Color color, float rotation, ref Vector2 origin, SpriteEffects effects, float depth)
+        internal unsafe void DrawSprite(ShaderResourceView shaderResourceView, ref RectangleF destination, bool scaleDestination, ref Rectangle? sourceRectangle, Color color, float rotation, ref Vector2 origin, SpriteEffects effects, float depth)
         {
             // Check that texture is not null
-            if (texture == null || texture.NativePointer == IntPtr.Zero)
+            if (shaderResourceView == null || shaderResourceView.NativePointer == IntPtr.Zero)
             {
-                throw new ArgumentNullException("texture");
+                throw new ArgumentNullException("shaderResourceView");
             }
 
             // Make sure that Begin was called
@@ -657,14 +657,14 @@ namespace SharpDX.Toolkit.Graphics
             // Cache the result in order to avoid this request if the texture is reused 
             // inside a same Begin/End block.
             TextureInfo textureInfo;
-            if (!textureInfos.TryGetValue(texture, out textureInfo))
+            if (!textureInfos.TryGetValue(shaderResourceView, out textureInfo))
             {
                 // otherwise go to the slow path
-                textureInfo.ShaderResourceView = texture.NativePointer;
+                textureInfo.ShaderResourceView = shaderResourceView.NativePointer;
 
                 // If this is a shader resource view from the toolkit
                 // go the fast path
-                var tkTexture = texture.Tag as Texture;
+                var tkTexture = shaderResourceView.Tag as TextureView;
                 if (tkTexture != null)
                 {
                     textureInfo.Width = tkTexture.Width;
@@ -673,7 +673,7 @@ namespace SharpDX.Toolkit.Graphics
                 else
                 {
                     IntPtr resourcePtr;
-                    texture.GetResource(out resourcePtr);
+                    shaderResourceView.GetResource(out resourcePtr);
                     tempResource._nativePointer = (void*)resourcePtr;
                     switch (tempResource.Dimension)
                     {
@@ -695,17 +695,17 @@ namespace SharpDX.Toolkit.Graphics
                             textureInfo.Height = description3D.Height;
                             break;
                         default:
-                            throw new ArgumentException("Invalid resource for texture. Must be Texture1D/2D/3D", "texture");
+                            throw new ArgumentException("Invalid resource for texture. Must be Texture1D/2D/3D", "shaderResourceView");
                     }
+
+                    // Then calculate the actual width of the view
+                    // Use the first MostDetailedMip to calculate the actual size of this view
+                    var mipIndex = shaderResourceView.Description.Texture1D.MostDetailedMip;
+                    textureInfo.Width = Math.Max(1, textureInfo.Width >> mipIndex);
+                    textureInfo.Height = Math.Max(1, textureInfo.Height >> mipIndex);
                 }
 
-                // Then calculate the actual width of the view
-                // Use the first MostDetailedMip to calculate the actual size of this view
-                var mipIndex = texture.Description.Texture1D.MostDetailedMip;
-                textureInfo.Width = Math.Max(1, textureInfo.Width >> mipIndex);
-                textureInfo.Height = Math.Max(1, textureInfo.Height >> mipIndex);
-
-                textureInfos.Add(texture, textureInfo);
+                textureInfos.Add(shaderResourceView, textureInfo);
             }
 
             // Put values in next SpriteInfo

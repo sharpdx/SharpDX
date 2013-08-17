@@ -56,6 +56,7 @@
     <Compile Include="ModelMeshPartCollection.cs" />
     <Compile Include="ModelReader.cs" />
     <Compile Include="BasicEffectInstaller.cs" />
+    <Compile Include="TextureView.cs" />
     <Compile Include="VertexBufferBindingCollection.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="PrimitiveBatch.cs" />

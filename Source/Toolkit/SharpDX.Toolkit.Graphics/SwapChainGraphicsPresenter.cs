@@ -138,12 +138,18 @@ namespace SharpDX.Toolkit.Graphics
             swapChain.Present((int)PresentInterval, PresentFlags.None);
         }
 
-        protected override void OnNameChanged()
+        /// <summary>
+        /// Called when name changed for this component.
+        /// </summary>
+        protected override void OnPropertyChanged(string propertyName)
         {
-            base.OnNameChanged();
-            if (GraphicsDevice.IsDebugMode && swapChain != null)
+            base.OnPropertyChanged(propertyName);
+            if (propertyName == "Name")
             {
-                swapChain.DebugName = Name;
+                if (GraphicsDevice.IsDebugMode && swapChain != null)
+                {
+                    swapChain.DebugName = Name;
+                }
             }
         }
 

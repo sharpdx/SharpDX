@@ -41,6 +41,6 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="arrayOrDepthSlice">The texture array slice index.</param>
         /// <param name="mipIndex">The mip map slice index.</param>
         /// <returns>An <see cref="RenderTargetView" /></returns>
-        public RenderTargetView this[ViewType viewType, int arrayOrDepthSlice, int mipIndex] { get { return this.texture.GetRenderTargetView(viewType, arrayOrDepthSlice, mipIndex); } }
+        public TextureView this[ViewType viewType, int arrayOrDepthSlice, int mipIndex] { get { return this.texture.GetRenderTargetView(viewType, arrayOrDepthSlice, mipIndex); } }
     }
 }

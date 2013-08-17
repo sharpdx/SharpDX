@@ -807,16 +807,20 @@ namespace SharpDX.Toolkit.Graphics
             return new Buffer(device, description, bufferFlags, viewFormat, dataPointer.Pointer);
         }
 
-        protected override void OnNameChanged()
+        /// <summary>
+        /// Called when name changed for this component.
+        /// </summary>
+        protected override void OnPropertyChanged(string propertyName)
         {
-            base.OnNameChanged();
-            if (GraphicsDevice.IsDebugMode)
+            base.OnPropertyChanged(propertyName);
+            if (propertyName == "Name")
             {
-                if (shaderResourceView != null)
-                    shaderResourceView.DebugName = Name == null ? null : string.Format("{0} SRV", Name);
+                if (GraphicsDevice.IsDebugMode)
+                {
+                    if (shaderResourceView != null) shaderResourceView.DebugName = Name == null ? null : string.Format("{0} SRV", Name);
 
-                if (unorderedAccessView != null)
-                    unorderedAccessView.DebugName = Name == null ? null : string.Format("{0} UAV", Name);
+                    if (unorderedAccessView != null) unorderedAccessView.DebugName = Name == null ? null : string.Format("{0} UAV", Name);
+                }
             }
         }
 

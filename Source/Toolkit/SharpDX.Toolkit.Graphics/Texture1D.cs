@@ -40,7 +40,7 @@ namespace SharpDX.Toolkit.Graphics
         {
         }
 
-        internal override RenderTargetView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipMapSlice)
+        internal override TextureView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipMapSlice)
         {
             throw new System.NotSupportedException();
         }
