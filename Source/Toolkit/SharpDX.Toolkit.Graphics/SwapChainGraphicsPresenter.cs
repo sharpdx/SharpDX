@@ -202,13 +202,14 @@ namespace SharpDX.Toolkit.Graphics
             if (coreWindow != null)
             {
                 // Creates a SwapChain from a CoreWindow pointer
-                using (var comWindow = new ComObject(coreWindow)) return ((DXGI.Factory2)GraphicsAdapter.Factory).CreateSwapChainForCoreWindow((Direct3D11.Device)GraphicsDevice, comWindow, ref description, null);
+                using(var comWindow = new ComObject(coreWindow))
+                    return new SwapChain1((DXGI.Factory2)GraphicsAdapter.Factory, (Direct3D11.Device)GraphicsDevice, comWindow, ref description);
             }
             else if (swapChainBackgroundPanel != null)
             {
                 var nativePanel = ComObject.As<ISwapChainBackgroundPanelNative>(swapChainBackgroundPanel);
                 // Creates the swap chain for XAML composition
-                var swapChain = ((DXGI.Factory2)GraphicsAdapter.Factory).CreateSwapChainForComposition((Direct3D11.Device)GraphicsDevice, ref description, null);
+                var swapChain = new SwapChain1((DXGI.Factory2)GraphicsAdapter.Factory,(Direct3D11.Device)GraphicsDevice, ref description);
 
                 // Associate the SwapChainBackgroundPanel with the swap chain
                 nativePanel.SwapChain = swapChain;

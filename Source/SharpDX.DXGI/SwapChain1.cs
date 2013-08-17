@@ -26,6 +26,48 @@ namespace SharpDX.DXGI
 {
     public partial class SwapChain1
     {
+        /// <summary>
+        /// Creates a swapchain associated to the specified HWND. This is applicable only for Desktop platform.
+        /// </summary>
+        /// <param name="factory">The DXGI Factory used to create the swapchain.</param>
+        /// <param name="device">The associated device instance.</param>
+        /// <param name="hwnd">The HWND of the window to which this swapchain is associated.</param>
+        /// <param name="description">The swap chain description.</param>
+        /// <param name="fullScreenDescription">The fullscreen description of the swap chain. Default is null.</param>
+        /// <param name="restrictToOutput">The output to which this swap chain should be restricted. Default is null, meaning that there is no restriction.</param>
+        public SwapChain1(Factory2 factory, ComObject device, IntPtr hwnd, ref SwapChainDescription1 description, SwapChainFullScreenDescription? fullScreenDescription = null, Output restrictToOutput = null)
+            : base(IntPtr.Zero)
+        {
+            factory.CreateSwapChainForHwnd(device, hwnd, ref description, fullScreenDescription, restrictToOutput, this);
+        }
+
+        /// <summary>
+        /// Creates a swapchain associated to the specified CoreWindow. This is applicable only for WinRT platform.
+        /// </summary>
+        /// <param name="factory">The DXGI Factory used to create the swapchain.</param>
+        /// <param name="device">The associated device instance.</param>
+        /// <param name="coreWindow">The HWND of the window to which this swapchain is associated.</param>
+        /// <param name="description">The swap chain description.</param>
+        /// <param name="restrictToOutput">The output to which this swap chain should be restricted. Default is null, meaning that there is no restriction.</param>
+        public SwapChain1(Factory2 factory, ComObject device, ComObject coreWindow, ref SwapChainDescription1 description, Output restrictToOutput = null)
+            : base(IntPtr.Zero)
+        {
+            factory.CreateSwapChainForCoreWindow(device, coreWindow, ref description, restrictToOutput, this);
+        }
+
+        /// <summary>
+        /// Creates a swapchain for DirectComposition API or WinRT XAML framework. This is applicable only for WinRT platform.
+        /// </summary>
+        /// <param name="factory">The DXGI Factory used to create the swapchain.</param>
+        /// <param name="device">The associated device instance.</param>
+        /// <param name="description">The swap chain description.</param>
+        /// <param name="restrictToOutput">The output to which this swap chain should be restricted. Default is null, meaning that there is no restriction.</param>
+        public SwapChain1(Factory2 factory, ComObject device, ref SwapChainDescription1 description, Output restrictToOutput = null)
+            : base(IntPtr.Zero)
+        {
+            factory.CreateSwapChainForComposition(device, ref description, restrictToOutput, this);
+        }
+
         /// <summary>	
         /// [This documentation is preliminary and is subject to change.]	
         /// </summary>	
@@ -44,7 +86,7 @@ namespace SharpDX.DXGI
             bool hasScrollOffset = presentParameters.ScrollOffset.HasValue;
 
             var scrollRectangle = hasScrollRectangle ? presentParameters.ScrollRectangle.Value : Rectangle.Empty;
-            var scrollOffset = hasScrollOffset? presentParameters.ScrollOffset.Value : default(Point);
+            var scrollOffset = hasScrollOffset ? presentParameters.ScrollOffset.Value : default(Point);
 
             fixed (void* pDirtyRects = presentParameters.DirtyRectangles)
             {
