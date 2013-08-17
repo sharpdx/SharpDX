@@ -43,7 +43,11 @@ It compiles all files of type ToolkitFxc/ToolkitFont
   <!-- The Most important variable is SharpDXSdkDir that should be a global system environement variable --> 
   <PropertyGroup>
     <!--Detect SharpDX Platform based on .NETFramework version-->
-    <SharpDXDirectXVersion Condition="'$(SharpDXDirectXVersion)' == ''">DirectX11</SharpDXDirectXVersion>
+
+    <!--By default DX11 is used for Desktop platform and DX11.1 for WinRT-->
+    <SharpDXDirectXVersion Condition="'$(SharpDXDirectXVersion)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework'">DirectX11</SharpDXDirectXVersion>
+    <SharpDXDirectXVersion Condition="'$(SharpDXDirectXVersion)' == '' and '$(TargetFrameworkIdentifier)' == '.NETCore'">DirectX11_1</SharpDXDirectXVersion>
+
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework' and ('$(TargetFrameworkVersion)' == 'v2.0' or '$(TargetFrameworkVersion)' == 'v3.5') ">DirectX11-net20</SharpDXPlatform>
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework' and $(TargetFrameworkVersion.Contains('v4'))">$(SharpDXDirectXVersion)-net40</SharpDXPlatform>
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETCore'">$(SharpDXDirectXVersion)-winrt</SharpDXPlatform>
