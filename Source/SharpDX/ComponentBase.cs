@@ -83,7 +83,9 @@ namespace SharpDX
         /// Gets or sets the tag associated to this object.
         /// </summary>
         /// <value>The tag.</value>
+#if !W8CORE
         [Browsable(false)]
+#endif
         public object Tag
         {
             get
