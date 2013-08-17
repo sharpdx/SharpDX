@@ -79,7 +79,7 @@ namespace SharpDX.Direct2D1
         /// </summary>	
         /// <param name="fromNode">The node from which the connection will be made.</param>	
         /// <param name="toNode">The node to which the connection will be made.</param>	
-        /// <param name="toNodeInputIndex">The node input that will be connected.param>	
+        /// <param name="toNodeInputIndex">The node input that will be connected.</param>	
         /// <unmanaged>HRESULT ID2D1TransformGraph::ConnectNode([In] ID2D1TransformNode* fromNode,[In] ID2D1TransformNode* toNode,[In] unsigned int toNodeInputIndex)</unmanaged>	
         public void ConnectNode(TransformNode fromNode, TransformNode toNode, int toNodeInputIndex)
         {

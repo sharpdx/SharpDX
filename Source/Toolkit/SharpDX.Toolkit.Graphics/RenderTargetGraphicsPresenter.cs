@@ -137,12 +137,12 @@ namespace SharpDX.Toolkit.Graphics
 #endif
         }
 
-        public override void Resize(int width, int height, Format format)
+        public override bool Resize(int width, int height, Format format)
         {
-            base.Resize(width, height, format);
+            if (!base.Resize(width, height, format)) return false;
 
             // backbuffer was set externally, do not touch it
-            if (!allowRecreateBackBuffer) return;
+            if (!allowRecreateBackBuffer) return false;
             
             renderTargetDescription.Width = width;
             renderTargetDescription.Height = height;
@@ -155,6 +155,7 @@ namespace SharpDX.Toolkit.Graphics
                 RemoveAndDispose(ref backBuffer);
                 backBuffer = RenderTarget2D.New(GraphicsDevice, renderTargetDescription);
             }
+            return true;
         }
     }
 }

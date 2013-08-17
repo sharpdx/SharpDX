@@ -60,7 +60,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="vertices">The vertices described in right handed form.</param>
         /// <param name="indices">The indices described in right handed form.</param>
         /// <param name="toLeftHanded">if set to <c>true</c> vertices and indices will be transformed to left handed. Default is true.</param>
-        /// <exception cref="System.InvalidOperationException">Cannot generate more than 65535 indices on feature level HW <= 9.3</exception>
+        /// <exception cref="System.InvalidOperationException">Cannot generate more than 65535 indices on feature level HW &lt;= 9.3</exception>
         public GeometricPrimitive(GraphicsDevice graphicsDevice, T[] vertices, short[] indices, bool toLeftHanded = true)
         {
             GraphicsDevice = graphicsDevice;
@@ -206,7 +206,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="vertices">The vertices described in right handed form.</param>
         /// <param name="indices">The indices described in right handed form.</param>
         /// <param name="toLeftHanded">if set to <c>true</c> vertices and indices will be transformed to left handed. Default is true.</param>
-        /// <exception cref="System.InvalidOperationException">Cannot generate more than 65535 indices on feature level HW <= 9.3</exception>
+        /// <exception cref="System.InvalidOperationException">Cannot generate more than 65535 indices on feature level HW &lt;= 9.3</exception>
         public GeometricPrimitive(GraphicsDevice graphicsDevice, VertexPositionNormalTexture[] vertices, short[] indices, bool toLeftHanded = true)
             : base(graphicsDevice, vertices, indices, toLeftHanded)
         {
@@ -219,7 +219,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="vertices">The vertices.</param>
         /// <param name="indices">The indices.</param>
         /// <param name="toLeftHanded">if set to <c>true</c> vertices and indices will be transformed to left handed. Default is true.</param>
-        /// <exception cref="System.InvalidOperationException">Cannot generate more than 65535 indices on feature level HW <= 9.3</exception>
+        /// <exception cref="System.InvalidOperationException">Cannot generate more than 65535 indices on feature level HW &lt;= 9.3</exception>
         public GeometricPrimitive(GraphicsDevice graphicsDevice, VertexPositionNormalTexture[] vertices, int[] indices, bool toLeftHanded = true)
             : base(graphicsDevice, vertices, indices, toLeftHanded)
         {

@@ -28,8 +28,8 @@ namespace SharpDX.MediaFoundation
         /// <summary>	
         /// <p>[This documentation is preliminary and is subject to change.]</p><p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p>Opens a media resource from a byte stream.</p>	
         /// </summary>	
-        /// <param name="byteStreamRef"><dd> <p>A reference to the <strong><see cref="SharpDX.MediaFoundation.IByteStream"/></strong> interface of the byte stream.</p> </dd></param>	
-        /// <param name="uRLRef"><dd> <p>The URL of the byte stream.</p> </dd></param>	
+        /// <param name="byteStream"><dd> <p>A reference to the <strong><see cref="SharpDX.MediaFoundation.IByteStream"/></strong> interface of the byte stream.</p> </dd></param>	
+        /// <param name="url"><dd> <p>The URL of the byte stream.</p> </dd></param>	
         /// <returns><p>If this method succeeds, it returns <strong><see cref="SharpDX.Result.Ok"/></strong>. Otherwise, it returns an <strong><see cref="SharpDX.Result"/></strong> error code.</p></returns>	
         /// <msdn-id>hh447956</msdn-id>	
         /// <unmanaged>HRESULT IMFMediaEngineEx::SetSourceFromByteStream([In] IMFByteStream* pByteStream,[In] wchar_t* pURL)</unmanaged>	

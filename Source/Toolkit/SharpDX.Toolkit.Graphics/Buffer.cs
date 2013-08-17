@@ -390,6 +390,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="startIndex">Index to begin setting data from.</param>
         /// <param name="elementCount">The number of elements to set.</param>
         /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <param name="options">Buffer data behavior.</param>
         /// <exception cref="System.ArgumentException"></exception>
         /// <remarks>
         /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>. See the unmanaged documentation about Map/UnMap for usage and restrictions.
@@ -806,16 +807,20 @@ namespace SharpDX.Toolkit.Graphics
             return new Buffer(device, description, bufferFlags, viewFormat, dataPointer.Pointer);
         }
 
-        protected override void OnNameChanged()
+        /// <summary>
+        /// Called when name changed for this component.
+        /// </summary>
+        protected override void OnPropertyChanged(string propertyName)
         {
-            base.OnNameChanged();
-            if (GraphicsDevice.IsDebugMode)
+            base.OnPropertyChanged(propertyName);
+            if (propertyName == "Name")
             {
-                if (shaderResourceView != null)
-                    shaderResourceView.DebugName = Name == null ? null : string.Format("{0} SRV", Name);
+                if (GraphicsDevice.IsDebugMode)
+                {
+                    if (shaderResourceView != null) shaderResourceView.DebugName = Name == null ? null : string.Format("{0} SRV", Name);
 
-                if (unorderedAccessView != null)
-                    unorderedAccessView.DebugName = Name == null ? null : string.Format("{0} UAV", Name);
+                    if (unorderedAccessView != null) unorderedAccessView.DebugName = Name == null ? null : string.Format("{0} UAV", Name);
+                }
             }
         }
 

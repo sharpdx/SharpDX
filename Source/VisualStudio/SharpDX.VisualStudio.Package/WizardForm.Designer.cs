@@ -46,10 +46,10 @@
             this.buttonCheckAll = new System.Windows.Forms.Button();
             this.buttonUncheckAll = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.radioButtonPlatformDesktop = new System.Windows.Forms.RadioButton();
-            this.radioButtonPlatformWinRT = new System.Windows.Forms.RadioButton();
-            this.radioButtonPlatformWinRTXaml = new System.Windows.Forms.RadioButton();
             this.radioButtonPlatformWP8 = new System.Windows.Forms.RadioButton();
+            this.radioButtonPlatformWinRTXaml = new System.Windows.Forms.RadioButton();
+            this.radioButtonPlatformWinRT = new System.Windows.Forms.RadioButton();
+            this.radioButtonPlatformDesktop = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -249,31 +249,18 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Select a platform";
             // 
-            // radioButtonPlatformDesktop
+            // radioButtonPlatformWP8
             // 
-            this.radioButtonPlatformDesktop.AutoSize = true;
-            this.radioButtonPlatformDesktop.Location = new System.Drawing.Point(6, 19);
-            this.radioButtonPlatformDesktop.Name = "radioButtonPlatformDesktop";
-            this.radioButtonPlatformDesktop.Size = new System.Drawing.Size(65, 17);
-            this.radioButtonPlatformDesktop.TabIndex = 0;
-            this.radioButtonPlatformDesktop.TabStop = true;
-            this.radioButtonPlatformDesktop.Tag = "$sharpdx_platform_desktop$";
-            this.radioButtonPlatformDesktop.Text = "Desktop";
-            this.radioButtonPlatformDesktop.UseVisualStyleBackColor = true;
-            this.radioButtonPlatformDesktop.CheckedChanged += new System.EventHandler(this.platform_CheckedChanged);
-            // 
-            // radioButtonPlatformWinRT
-            // 
-            this.radioButtonPlatformWinRT.AutoSize = true;
-            this.radioButtonPlatformWinRT.Location = new System.Drawing.Point(93, 19);
-            this.radioButtonPlatformWinRT.Name = "radioButtonPlatformWinRT";
-            this.radioButtonPlatformWinRT.Size = new System.Drawing.Size(97, 17);
-            this.radioButtonPlatformWinRT.TabIndex = 1;
-            this.radioButtonPlatformWinRT.TabStop = true;
-            this.radioButtonPlatformWinRT.Tag = "$sharpdx_platform_winrt$";
-            this.radioButtonPlatformWinRT.Text = "Windows Store";
-            this.radioButtonPlatformWinRT.UseVisualStyleBackColor = true;
-            this.radioButtonPlatformWinRT.CheckedChanged += new System.EventHandler(this.platform_CheckedChanged);
+            this.radioButtonPlatformWP8.AutoSize = true;
+            this.radioButtonPlatformWP8.Location = new System.Drawing.Point(6, 42);
+            this.radioButtonPlatformWP8.Name = "radioButtonPlatformWP8";
+            this.radioButtonPlatformWP8.Size = new System.Drawing.Size(112, 17);
+            this.radioButtonPlatformWP8.TabIndex = 3;
+            this.radioButtonPlatformWP8.TabStop = true;
+            this.radioButtonPlatformWP8.Tag = "$sharpdx_platform_wp8$";
+            this.radioButtonPlatformWP8.Text = "Windows Phone 8";
+            this.radioButtonPlatformWP8.UseVisualStyleBackColor = true;
+            this.radioButtonPlatformWP8.CheckedChanged += new System.EventHandler(this.platform_CheckedChanged);
             // 
             // radioButtonPlatformWinRTXaml
             // 
@@ -288,18 +275,31 @@
             this.radioButtonPlatformWinRTXaml.UseVisualStyleBackColor = true;
             this.radioButtonPlatformWinRTXaml.CheckedChanged += new System.EventHandler(this.platform_CheckedChanged);
             // 
-            // radioButtonPlatformWP8
+            // radioButtonPlatformWinRT
             // 
-            this.radioButtonPlatformWP8.AutoSize = true;
-            this.radioButtonPlatformWP8.Location = new System.Drawing.Point(6, 42);
-            this.radioButtonPlatformWP8.Name = "radioButtonPlatformWP8";
-            this.radioButtonPlatformWP8.Size = new System.Drawing.Size(112, 17);
-            this.radioButtonPlatformWP8.TabIndex = 3;
-            this.radioButtonPlatformWP8.TabStop = true;
-            this.radioButtonPlatformWP8.Tag = "$sharpdx_platform_wp8$";
-            this.radioButtonPlatformWP8.Text = "Windows Phone 8";
-            this.radioButtonPlatformWP8.UseVisualStyleBackColor = true;
-            this.radioButtonPlatformWP8.CheckedChanged += new System.EventHandler(this.platform_CheckedChanged);
+            this.radioButtonPlatformWinRT.AutoSize = true;
+            this.radioButtonPlatformWinRT.Location = new System.Drawing.Point(93, 19);
+            this.radioButtonPlatformWinRT.Name = "radioButtonPlatformWinRT";
+            this.radioButtonPlatformWinRT.Size = new System.Drawing.Size(97, 17);
+            this.radioButtonPlatformWinRT.TabIndex = 1;
+            this.radioButtonPlatformWinRT.TabStop = true;
+            this.radioButtonPlatformWinRT.Tag = "$sharpdx_platform_winrt$";
+            this.radioButtonPlatformWinRT.Text = "Windows Store";
+            this.radioButtonPlatformWinRT.UseVisualStyleBackColor = true;
+            this.radioButtonPlatformWinRT.CheckedChanged += new System.EventHandler(this.platform_CheckedChanged);
+            // 
+            // radioButtonPlatformDesktop
+            // 
+            this.radioButtonPlatformDesktop.AutoSize = true;
+            this.radioButtonPlatformDesktop.Location = new System.Drawing.Point(6, 19);
+            this.radioButtonPlatformDesktop.Name = "radioButtonPlatformDesktop";
+            this.radioButtonPlatformDesktop.Size = new System.Drawing.Size(65, 17);
+            this.radioButtonPlatformDesktop.TabIndex = 0;
+            this.radioButtonPlatformDesktop.TabStop = true;
+            this.radioButtonPlatformDesktop.Tag = "$sharpdx_platform_desktop$";
+            this.radioButtonPlatformDesktop.Text = "Desktop";
+            this.radioButtonPlatformDesktop.UseVisualStyleBackColor = true;
+            this.radioButtonPlatformDesktop.CheckedChanged += new System.EventHandler(this.platform_CheckedChanged);
             // 
             // WizardForm
             // 
@@ -319,6 +319,8 @@
             this.Controls.Add(this.groupBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(500, 333);
+            this.MinimumSize = new System.Drawing.Size(500, 333);
             this.Name = "WizardForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Select samples to include in the Project";

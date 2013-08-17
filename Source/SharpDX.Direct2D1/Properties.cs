@@ -484,7 +484,8 @@ namespace SharpDX.Direct2D1
         /// <summary>	
         /// Gets the value of the specified property by name.
         /// </summary>	
-        /// <param name="name">The name of the property.</param>	
+        /// <param name="name">The name of the property.</param>
+        /// <param name="type">Specifies the type of property to get.</param>
         /// <returns>The value of the specified property by name.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
         public unsafe T GetValue<T>(string name, PropertyType type) where T : struct
@@ -667,6 +668,7 @@ namespace SharpDX.Direct2D1
         /// Sets the named property to the given value.
         /// </summary>
         /// <param name="name">Name of the property</param>
+        /// <param name="type">Specifies the type of property to set.</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
         public unsafe void SetValueByName<T>(string name, PropertyType type, T value) where T : struct
@@ -871,6 +873,7 @@ namespace SharpDX.Direct2D1
         /// Sets the named property to the given value.
         /// </summary>
         /// <param name="index">Index of the property</param>
+        /// <param name="type">Specifies the type of property to set.</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValue([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
         public unsafe void SetValue<T>(int index, PropertyType type, T value) where T : struct

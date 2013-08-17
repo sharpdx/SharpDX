@@ -32,7 +32,7 @@
     <iconUrl>http://sharpdx.org/logo_100x100.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Core assembly for SharpDX.Toolkit assemblies.</description>
-    <copyright>Copyright (c) 2010-2011 Alexandre Mutel</copyright>
+    <copyright>Copyright (c) 2010-2013 Alexandre Mutel</copyright>
     <tags>SharpDX DirectX Direct3D Multimedia MDX 3D</tags>
 
     <!-- Release notes for this version-->
@@ -46,20 +46,20 @@
   </metadata>
 
   <files>
-    <file src="..\..\..\Bin\DirectX11_Signed-net20\SharpDX.Toolkit.dll" target="lib\net20" />
-    <file src="..\..\..\Bin\DirectX11_Signed-net20\SharpDX.Toolkit.pdb" target="lib\net20" />
-    <file src="..\..\..\Bin\DirectX11_Signed-net20\SharpDX.Toolkit.xml" target="lib\net20" />
+    <file src="..\..\..\Bin\DirectX11-Signed-net20\SharpDX.Toolkit.dll" target="lib\net20" />
+    <file src="..\..\..\Bin\DirectX11-Signed-net20\SharpDX.Toolkit.pdb" target="lib\net20" />
+    <file src="..\..\..\Bin\DirectX11-Signed-net20\SharpDX.Toolkit.xml" target="lib\net20" />
 
-    <file src="..\..\..\Bin\DirectX11_Signed-net40\SharpDX.Toolkit.dll" target="lib\net40" />
-    <file src="..\..\..\Bin\DirectX11_Signed-net40\SharpDX.Toolkit.pdb" target="lib\net40" />
-    <file src="..\..\..\Bin\DirectX11_Signed-net40\SharpDX.Toolkit.xml" target="lib\net40" />
+    <file src="..\..\..\Bin\DirectX11-Signed-net40\SharpDX.Toolkit.dll" target="lib\net40" />
+    <file src="..\..\..\Bin\DirectX11-Signed-net40\SharpDX.Toolkit.pdb" target="lib\net40" />
+    <file src="..\..\..\Bin\DirectX11-Signed-net40\SharpDX.Toolkit.xml" target="lib\net40" />
 
-    <!--<file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.dll" target="lib\net40" />-->
-    <!--<file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.xml" target="lib\net40" />-->
+    <!--<file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.dll" target="lib\net40" />-->
+    <!--<file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.xml" target="lib\net40" />-->
 
-    <file src="..\..\..\Bin\DirectX11_Signed-winrt\SharpDX.Toolkit.dll" target="lib\win8" />
-    <file src="..\..\..\Bin\DirectX11_Signed-winrt\SharpDX.Toolkit.pdb" target="lib\win8" />
-    <file src="..\..\..\Bin\DirectX11_Signed-winrt\SharpDX.Toolkit.xml" target="lib\win8" />
+    <file src="..\..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.Toolkit.dll" target="lib\win8" />
+    <file src="..\..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.Toolkit.pdb" target="lib\win8" />
+    <file src="..\..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.Toolkit.xml" target="lib\win8" />
 
     <file src="**\*.cs" target="src" />
   </files>

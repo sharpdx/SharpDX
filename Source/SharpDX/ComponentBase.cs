@@ -18,13 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace SharpDX
 {
     /// <summary>
     /// A lightweight Component base class.
     /// </summary>
-    public abstract class ComponentBase : IComponent
+    public abstract class ComponentBase : IComponent, INotifyPropertyChanged
     {
         /// <summary>
         /// Occurs while this component is disposing and before it is disposed.
@@ -37,6 +39,8 @@ namespace SharpDX
         /// </summary>
         /// <value><c>true</c> if this instance is name immutable; otherwise, <c>false</c>.</value>
         private readonly bool isNameImmutable;
+
+        private object tag;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ComponentBase" /> class with a mutable name.
@@ -69,8 +73,9 @@ namespace SharpDX
             {
                 if (isNameImmutable)
                     throw new ArgumentException("Name property is immutable for this instance", "value");
+                if (name == value) return;
                 name = value;
-                OnNameChanged();
+                OnPropertyChanged("Name");
             }
         }
 
@@ -78,10 +83,35 @@ namespace SharpDX
         /// Gets or sets the tag associated to this object.
         /// </summary>
         /// <value>The tag.</value>
-        public object Tag { get; set; }
-
-        protected virtual void OnNameChanged()
+#if !W8CORE
+        [Browsable(false)]
+#endif
+        public object Tag
         {
+            get
+            {
+                return tag;
+            }
+            set
+            {
+                if (ReferenceEquals(tag, value)) return;
+                tag = value;
+                OnPropertyChanged("Tag");
+            }
+        }
+
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }

@@ -72,8 +72,8 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         internal readonly int DepthStride;
 
-        internal ShaderResourceView[] shaderResourceViews;
-        internal RenderTargetView[] renderTargetViews;
+        internal TextureView[] shaderResourceViews;
+        internal TextureView[] renderTargetViews;
         internal UnorderedAccessView[] unorderedAccessViews;
         private MipMapDescription[] mipmapDescriptions;
 
@@ -815,7 +815,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="arrayOrDepthSlice">The texture array slice index.</param>
         /// <param name="mipIndex">The mip map slice index.</param>
         /// <returns>An <see cref="ShaderResourceView" /></returns>
-        internal abstract ShaderResourceView GetShaderResourceView(ViewType viewType, int arrayOrDepthSlice, int mipIndex);
+        internal abstract TextureView GetShaderResourceView(ViewType viewType, int arrayOrDepthSlice, int mipIndex);
 
         /// <summary>
         /// Gets a specific <see cref="RenderTargetView" /> from this texture.
@@ -824,7 +824,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="arrayOrDepthSlice">The texture array slice index.</param>
         /// <param name="mipMapSlice">The mip map slice index.</param>
         /// <returns>An <see cref="RenderTargetView" /></returns>
-        internal abstract RenderTargetView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipMapSlice);
+        internal abstract TextureView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipMapSlice);
 
         /// <summary>
         /// Gets a specific <see cref="UnorderedAccessView"/> from this texture.
@@ -1081,38 +1081,41 @@ namespace SharpDX.Toolkit.Graphics
             return (((int)viewType) * arrayOrDepthSize + arrayOrDepthIndex) * this.Description.MipLevels + mipIndex;
         }
 
-        protected override void OnNameChanged()
+        /// <summary>
+        /// Called when name changed for this component.
+        /// </summary>
+        protected override void OnPropertyChanged(string propertyName)
         {
-            base.OnNameChanged();
-            if (GraphicsDevice.IsDebugMode)
+            base.OnPropertyChanged(propertyName);
+            if (propertyName == "Name")
             {
-                if (this.shaderResourceViews != null)
+                if (GraphicsDevice.IsDebugMode)
                 {
-                    for (int i = 0; i < this.shaderResourceViews.Length; i++)
+                    if (this.shaderResourceViews != null)
                     {
-                        var shaderResourceView = this.shaderResourceViews[i];
-                        if (shaderResourceView != null)
-                            shaderResourceView.DebugName = Name == null ? null : String.Format("{0} SRV[{1}]", i, Name);
+                        for (int i = 0; i < this.shaderResourceViews.Length; i++)
+                        {
+                            var shaderResourceView = this.shaderResourceViews[i];
+                            if (shaderResourceView != null) shaderResourceView.View.DebugName = Name == null ? null : String.Format("{0} SRV[{1}]", i, Name);
+                        }
                     }
-                }
 
-                if (this.renderTargetViews != null)
-                {
-                    for (int i = 0; i < this.renderTargetViews.Length; i++)
+                    if (this.renderTargetViews != null)
                     {
-                        var renderTargetView = this.renderTargetViews[i];
-                        if (renderTargetView != null)
-                            renderTargetView.DebugName = Name == null ? null : String.Format("{0} RTV[{1}]", i, Name);
+                        for (int i = 0; i < this.renderTargetViews.Length; i++)
+                        {
+                            var renderTargetView = this.renderTargetViews[i];
+                            if (renderTargetView != null) renderTargetView.View.DebugName = Name == null ? null : String.Format("{0} RTV[{1}]", i, Name);
+                        }
                     }
-                }
 
-                if (this.unorderedAccessViews != null)
-                {
-                    for (int i = 0; i < this.unorderedAccessViews.Length; i++)
+                    if (this.unorderedAccessViews != null)
                     {
-                        var unorderedAccessView = this.unorderedAccessViews[i];
-                        if (unorderedAccessView != null)
-                            unorderedAccessView.DebugName = Name == null ? null : String.Format("{0} UAV[{1}]", i, Name);
+                        for (int i = 0; i < this.unorderedAccessViews.Length; i++)
+                        {
+                            var unorderedAccessView = this.unorderedAccessViews[i];
+                            if (unorderedAccessView != null) unorderedAccessView.DebugName = Name == null ? null : String.Format("{0} UAV[{1}]", i, Name);
+                        }
                     }
                 }
             }

@@ -6,10 +6,12 @@
     <Description>Provides SharpDX Toolkit project integration into VisualStudio</Description>
     <MoreInfo>http://sharpdx.org</MoreInfo>
     <License>License.txt</License>
+    <ReleaseNotes>ReleaseNotes.html</ReleaseNotes>
     <Icon>logo.ico</Icon>
+    <Tags>SharpDX Toolkit Direct3D11 Direct2D XAudio2 MediaFoundation</Tags>
   </Metadata>
   <Installation InstalledByMsi="false">
-    <InstallationTarget Version="[10.0,12.0)" Id="Microsoft.VisualStudio.Pro" />
+    <InstallationTarget Version="[11.0,12.0)" Id="Microsoft.VisualStudio.Pro" />
   </Installation>
   <Dependencies>
     <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="4.5" />

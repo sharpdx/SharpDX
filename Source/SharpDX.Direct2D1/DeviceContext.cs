@@ -79,7 +79,7 @@ namespace SharpDX.Direct2D1
         /// <summary>
         /// No documentation.
         /// </summary>
-        /// <param name="image">No documentation.</param>
+        /// <param name="effect">No documentation.</param>
         /// <param name="interpolationMode">No documentation.</param>
         /// <param name="compositeMode">No documentation.</param>
         /// <unmanaged>void ID2D1DeviceContext::DrawImage([In] ID2D1Image* image,[In, Optional] const D2D_POINT_2F* targetOffset,[In, Optional] const D2D_RECT_F* imageRectangle,[In] D2D1_INTERPOLATION_MODE interpolationMode,[In] D2D1_COMPOSITE_MODE compositeMode)</unmanaged>

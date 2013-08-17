@@ -6,36 +6,31 @@
         <p>Release Notes (2013-08-10)</p>
         <h2 class="title">General Information</h2>
         <p><strong>A new version 2.5.0 of SharpDX is available today for download.</strong></p>
-        <p>This version is a maintenance version of legacy APIs (Direct3D1, Direct2D...etc.) and contains also <b>lots of improvements for the SharpDX Toolkit</b> with new features and several issues fixed.</p>
+        <p>This version is a maintenance version of legacy APIs (Direct3D1, Direct2D...etc.) and contains also lots of improvements for the SharpDX Toolkit with new features and several issues fixed.</p>
         <p>Among the list of new features and fixes in this release for the Toolkit, It contains most notably:</p>
         <ul>
-            <li>An <b>installer</b> to ease the installation of SharpDX.</li>
-            <li>A <b>Visual Studio package</b> that you can download from the extension manager that provides an <b>advanced project template Wizard</b> for the Toolkit. You can see the <a href="http://visualstudiogallery.msdn.microsoft.com/6f220534-d52e-4e16-a45b-c6086b3a3ae8" target="_blank">SharpDX Toolkit for VisualStudio</a> on the Visual Studio Gallery.</li>
-            <li>Add support for <b>Input</b> via the new assembly SharpDX.Toolkit.Input supporting Mouse, Keyboard and Pointer APIs - for Desktop, WinRT and WP8.</li>
-            <li>Add support for <b>integration of WPF</b> in the Toolkit.</li>
-            <li>Add support for <b>3D Model</b> loading.</li>
-            <li>Add support for <b>Primitive 3D</b>.</li>
-            <li>Add support for <b>DrawingSurface on WP8</b>.</li>
-            <li>Add support for <b>dynamic re-compilation of effects at runtime</b> when sourcecode changed without having to recompile an application (Check Toolkit CustomEffect sample).</li>
-            <li>Add support for more events for better notification in GraphicsDevice state changes.</li>
-            <li>Add support for multiple-window/control on Desktop with the Toolkit (see MultiWindow Sample).</li>
-            <li>Several issues fixed in the Toolkit preventing correct usage of custom effects.</li>
-            <li>An improved SharpDX.Toolkit.Compiler/tkfxc supporting input file dependency to track changes and compile an effect only if all dependent files - including indirect "includes" - changed. This improves drastically the performance when compiling.</li>
+            <li>A Visual Studio package that you can download from the extension manager that provides an advanced project template Wizard for the Toolkit.</li>
+            <li>Add support for Input via the new assembly SharpDX.Toolkit.Input supporting Mouse, Keyboard and Pointer APis - for Desktop, WinRT and WP8.</li>
+            <li>Add support for integration of WPF in the Toolkit.</li>
+            <li>Add support for 3D Model loading</li>
+            <li>Add support for Primitive 3D</li>
+            <li>Add support for automatically re-compilation of effects at runtime when sourcecode changed without having to recompile an application (Check Toolkit CustomEffect sample) -</li>
+            <li>An improved SharpDX.Toolkit.Compiler/tkfxc supporting input file dependency to track changes and compile an effect only if all dependent files - including indirect "includes" - changed-. This improves drastically the performance when compiling.</li>
             <li>A new Toolkit.CompilerTask and a msbuild extension "SharpDX.targets" (used in Toolkit samples), that provides FX file compiling and automatic references of SharpDX assemblies depending on the project settings.</li>
+            <li>Add support for multiple-window/control on Desktop with the Toolkit (see MultiWindow Sample)</li>
+            <li>Added more events for better notification in GraphicsDevice state changes</li>
+            <li>Add support in WP8 for DrawingSurface (Thanks to Jose Fajardo).</li>
+            <li>Several issues fixed in the Toolkit preventing correct usage of custom effects.</li>
             <li>Various fixes, performance improvements, etc.</li>
         </ul>
-        <p>There are also some <u>breaking changes</u> since 2.4.2:</p>
+        <p>There are also some breaking changes since 2.4.2:</p>
         <ul>
             <li>Viewport/ViewportF is now part of SharpDX core instead of having different structure for each D3D APIs</li>
-            <li>DrawingRectangle/DrawingRectangleF is removed, as they were confusing. New Rectangle and RectangleF is used for all D3D APIs. The old Rectangle constructor was changed from (left, top, right, bottom) to (x, y, width, height).</li>
-            <li>Support for Dispose on finalizers for ComObject is removed, as they are not supported by all platforms and can lead to unpredictable results.</li>
+            <li>DrawingRectangle/DrawingRectangleF were removed, as they were confusing. New Rectangle and RectangleF is used for all D3D APIs. The old Rectangle constructor was changed from (left, top, right, bottom) to (x, y, width, height).</li>
+            <li>Support for Dispose on finalizers for ComObject was removed, as they are not supported by all platforms and can lead to unpredictible results.</li>
         </ul>
-        <p>For building easily SharpDX, there is also a new batch file <code>MakeSharpDX_localbuild.cmd</code>. This will rebuild all SharpDX platforms at once. Any build errors will be written in console and in the <code>BuildErrors.log</code> file.</p>
+        <p>For building easily SharpDX, there is also a new batch file <code>MakeSharpDX_localbuild.cmd</code></p>
         <p>This release is integrating several patches made by the community on github. Thanks to all of them!</p>
-        <p>
-        Best regards,<br/>
-        The SharpDX team
-        </p>
         <h2 class="title">Changes and bugfixes</h2>
         <p>Please find below an auto-generated list of all changes and fixes from previous 2.4.2 version.</p>
 <h4>Animation</h4>
@@ -44,9 +39,9 @@
 </ul>
 <h4>Build</h4>
 <ul>
-  <li>Make sure that we perform a pull rebase just before pushing back master_integration (<a href='https://github.com/sharpdx/SharpDX/commit/19572a16c003c72bb94baf9f5cf1cb2bddea998e' target='_blank'>changes</a>)</li>
-  <li>Remove work-tree (<a href='https://github.com/sharpdx/SharpDX/commit/84f11be8199d2f72d28d5e0e388032cec12633d3' target='_blank'>changes</a>)</li>
-  <li>Fix SharpDX.targets (changes: <a href='https://github.com/sharpdx/SharpDX/commit/55a31b00cd41eb7567deb0d6c071ff5ea1ab4085' target='_blank'>1</a>, <a href='https://github.com/sharpdx/SharpDX/commit/dbaa8335bb0472b5841f931067ec54b5987ecd3a' target='_blank'>2</a>)</li>
+  <li>*[Build] Make sure that we perform a pull rebase just before pushing back master_integration (<a href='https://github.com/sharpdx/SharpDX/commit/19572a16c003c72bb94baf9f5cf1cb2bddea998e' target='_blank'>changes</a>)</li>
+  <li>*[Build] Remove work-tree (<a href='https://github.com/sharpdx/SharpDX/commit/84f11be8199d2f72d28d5e0e388032cec12633d3' target='_blank'>changes</a>)</li>
+  <li>*[Toolkit] Fix SharpDX.targets (changes: <a href='https://github.com/sharpdx/SharpDX/commit/55a31b00cd41eb7567deb0d6c071ff5ea1ab4085' target='_blank'>1</a>, <a href='https://github.com/sharpdx/SharpDX/commit/dbaa8335bb0472b5841f931067ec54b5987ecd3a' target='_blank'>2</a>)</li>
   <li>Add auto commit to master from master_integration when build is fine for all platforms. Used from TeamCity server. (<a href='https://github.com/sharpdx/SharpDX/commit/9007b02f7a3247f7943071c2f21145e06e8cd4e2' target='_blank'>changes</a>)</li>
   <li>Add FtpUpload to FullBuild (<a href='https://github.com/sharpdx/SharpDX/commit/16c2c00070f9295302d6f26ffcd60231590fd9d4' target='_blank'>changes</a>)</li>
   <li>Add Net35Plus defines to build project to allow usage of 3.5+ language features (extension methods...etc.) (<a href='https://github.com/sharpdx/SharpDX/commit/979ab041d04d3e445eece79388ab812af59000a2' target='_blank'>changes</a>)</li>
@@ -554,7 +549,7 @@
 </ul>
 <h4>Toolkit.Input</h4>
 <ul>
-  <li>Added KeyboardInput samples, fixed modifier keys handling (<a href='https://github.com/sharpdx/SharpDX/commit/f39baefa4f70f86cd0c0846047f0a739d182254d' target='_blank'>changes</a>)</li>
+  <li>+ added KeyboardInput samples + fixed modifier keys handling (<a href='https://github.com/sharpdx/SharpDX/commit/f39baefa4f70f86cd0c0846047f0a739d182254d' target='_blank'>changes</a>)</li>
   <li>Add IEquatable and ==, != operator to KeyboardState, MouseState, PointerPoint (<a href='https://github.com/sharpdx/SharpDX/commit/d9e0007d2a4c07d15467613c1b94a985fbd0a3ad' target='_blank'>changes</a>)</li>
   <li>added blank Toolkit.Input project to solution (<a href='https://github.com/sharpdx/SharpDX/commit/2f54ca695f0e5ae2b3dccded50cab1c0dccc5f09' target='_blank'>changes</a>)</li>
   <li>added comments for Pointer* classes. (<a href='https://github.com/sharpdx/SharpDX/commit/f0ff78975145d713958ac9757c5fd7aec4a1ca38' target='_blank'>changes</a>)</li>

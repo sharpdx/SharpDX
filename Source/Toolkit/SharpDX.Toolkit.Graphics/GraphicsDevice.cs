@@ -215,6 +215,9 @@ namespace SharpDX.Toolkit.Graphics
             primitiveQuad = ToDispose(new PrimitiveQuad(this));
         }
 
+        /// <summary>
+        /// Initializes this instance.
+        /// </summary>
         private void Initialize()
         {
             // Default null VertexBuffers used to reset
@@ -244,6 +247,8 @@ namespace SharpDX.Toolkit.Graphics
                                    Context.PixelShader,
                                    Context.ComputeShader
                                };
+
+            Performance = new GraphicsPerformance(this);
         }
 
         /// <summary>
@@ -342,6 +347,12 @@ namespace SharpDX.Toolkit.Graphics
                 return GraphicsDeviceStatus.Normal;
             }
         }
+
+        /// <summary>
+        /// Gets the access to performance profiler.
+        /// </summary>
+        /// <value>The access to performance profiler.</value>
+        public GraphicsPerformance Performance { get; private set; }
 
         /// <summary>
         /// Clears the default render target and depth stencil buffer attached to the current <see cref="Presenter"/>.
@@ -1611,21 +1622,22 @@ namespace SharpDX.Toolkit.Graphics
 
         private void CommonSetRenderTargets(RenderTargetView rtv)
         {
-            Texture texture;
             currentRenderTargetViews[0] = rtv;
             for (int i = 1; i < actualRenderTargetViewCount; i++)
                 currentRenderTargetViews[i] = null;
             actualRenderTargetViewCount = 1;
             currentRenderTargetView = rtv;
-            if (AutoViewportFromRenderTargets && rtv != null && (texture = rtv.Tag as Texture) != null)
+
+            // Setup the viewport from the rendertarget view
+            TextureView textureView;
+            if (AutoViewportFromRenderTargets && rtv != null && (textureView = rtv.Tag as TextureView) != null)
             {
-                SetViewport(new ViewportF(0, 0, texture.Description.Width, texture.Description.Height));
+                SetViewport(new ViewportF(0, 0, textureView.Width, textureView.Height));
             }
         }
 
         private void CommonSetRenderTargets(RenderTargetView[] rtvs)
         {
-            Texture texture;
             var rtv0 = rtvs.Length > 0 ? rtvs[0] : null;
             for (int i = 0; i < rtvs.Length; i++)
                 currentRenderTargetViews[i] = rtvs[i];
@@ -1633,11 +1645,13 @@ namespace SharpDX.Toolkit.Graphics
                 currentRenderTargetViews[i] = null;
             actualRenderTargetViewCount = rtvs.Length;
             currentRenderTargetView = rtv0;
-            if (AutoViewportFromRenderTargets && rtv0 != null && (texture = rtv0.Tag as Texture) != null)
+
+            // Setup the viewport from the rendertarget view
+            TextureView textureView;
+            if (AutoViewportFromRenderTargets && rtv0 != null && (textureView = rtv0.Tag as TextureView) != null)
             {
-                SetViewport(new ViewportF(0, 0, texture.Description.Width, texture.Description.Height));
+                SetViewport(new ViewportF(0, 0, textureView.Width, textureView.Height));
             }
         }
-
     }
 }

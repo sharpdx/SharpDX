@@ -61,11 +61,43 @@ namespace SharpDX
         /// <summary>
         /// Initializes a new instance of the <see cref="T:SharpDX.Half2" /> structure.
         /// </summary>
+        /// <param name="x">The X component.</param>
+        /// <param name="y">The Y component.</param>
+        public Half2(float x, float y)
+        {
+            this.X = new Half(x);
+            this.Y = new Half(y);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half2" /> structure.
+        /// </summary>
+        /// <param name="x">The X component.</param>
+        /// <param name="y">The Y component.</param>
+        public Half2(ushort x, ushort y)
+        {
+            this.X = new Half(x);
+            this.Y = new Half(y);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half2" /> structure.
+        /// </summary>
         /// <param name="value">The value to set for both the X and Y components.</param>
         public Half2(Half value)
         {
             this.X = value;
             this.Y = value;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half2" /> structure.
+        /// </summary>
+        /// <param name="value">Value to initialize X and Y components with.</param>
+        public Half2(float value)
+        {
+            this.X = new Half(value);
+            this.Y = new Half(value);
         }
 
         /// <summary>

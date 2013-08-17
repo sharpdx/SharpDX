@@ -39,6 +39,7 @@ namespace SharpDX.DXGI
         /// Acquires access to the surface data.
         /// </summary>
         /// <param name="flags">Flags specifying CPU access permissions.</param>
+        /// <param name="dataStream">Stream to contain the surface data.</param>
         /// <returns>A <see cref="T:SharpDX.DataRectangle" /> for accessing the mapped data, or <c>null</c> on failure.</returns>.
         public DataRectangle Map(MapFlags flags, out DataStream dataStream)
         {

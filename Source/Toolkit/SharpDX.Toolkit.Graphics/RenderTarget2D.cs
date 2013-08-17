@@ -64,12 +64,12 @@ namespace SharpDX.Toolkit.Graphics
         {
             if ((this.Description.BindFlags & BindFlags.RenderTarget) != 0)
             {
-                this.renderTargetViews = new RenderTargetView[GetViewCount()];
+                this.renderTargetViews = new TextureView[GetViewCount()];
             }
 
             if (pureRenderTarget)
             {
-                renderTargetViews[0] = customRenderTargetView;
+                renderTargetViews[0] = new TextureView(this, customRenderTargetView);
             }
             else
             {
@@ -83,7 +83,7 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        internal override RenderTargetView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipIndex)
+        internal override TextureView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipIndex)
         {
             if ((this.Description.BindFlags & BindFlags.RenderTarget) == 0)
                 return null;
@@ -129,12 +129,9 @@ namespace SharpDX.Toolkit.Graphics
                             rtvDescription.Texture2D.MipSlice = mipIndex;
                     }
 
-                    rtv = new RenderTargetView(GraphicsDevice, Resource, rtvDescription);
+                    rtv = new TextureView(this, new RenderTargetView(GraphicsDevice, Resource, rtvDescription));
                     this.renderTargetViews[rtvIndex] = ToDispose(rtv);
                 }
-
-                // Associate this instance
-                rtv.Tag = this;
 
                 return rtv;
             }

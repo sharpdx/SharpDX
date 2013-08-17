@@ -138,18 +138,24 @@ namespace SharpDX.Toolkit.Graphics
             swapChain.Present((int)PresentInterval, PresentFlags.None);
         }
 
-        protected override void OnNameChanged()
+        /// <summary>
+        /// Called when name changed for this component.
+        /// </summary>
+        protected override void OnPropertyChanged(string propertyName)
         {
-            base.OnNameChanged();
-            if (GraphicsDevice.IsDebugMode && swapChain != null)
+            base.OnPropertyChanged(propertyName);
+            if (propertyName == "Name")
             {
-                swapChain.DebugName = Name;
+                if (GraphicsDevice.IsDebugMode && swapChain != null)
+                {
+                    swapChain.DebugName = Name;
+                }
             }
         }
 
-        public override void Resize(int width, int height, Format format)
+        public override bool Resize(int width, int height, Format format)
         {
-            base.Resize(width, height, format);
+            if (!base.Resize(width, height, format)) return false;
 
             RemoveAndDispose(ref backBuffer);
 
@@ -160,6 +166,8 @@ namespace SharpDX.Toolkit.Graphics
 
             // Reinit the Viewport
             DefaultViewport = new ViewportF(0, 0, backBuffer.Width, backBuffer.Height);
+
+            return true;
         }
 
         private SwapChain CreateSwapChain()

@@ -176,7 +176,7 @@
     <call target="zip"/>
     
     <call target="fix-sharpdx-path-samples"/>
-    <!-- TODO: Add call to AdvancedInstaller here ->
+    <!-- TODO: Add call to AdvancedInstaller here -->
   </target>
 
   <!-- Nuget Package build -->
@@ -280,10 +280,14 @@
       public static void ScriptMain(Project project)
       {
           var regex = new Regex(@"HintPath>\.\..*Bin\\", RegexOptions.IgnoreCase);
+          var regexTargets = new Regex(@"Project="".*SharpDX.targets", RegexOptions.IgnoreCase);
+          var regexIncludes =new Regex(@"Include=""\.\..*Bin\\", RegexOptions.IgnoreCase);
                 foreach (var csproj in Directory.EnumerateFiles(Path.Combine(project.BaseDirectory, @"Build\Samples"), "*.csproj", SearchOption.AllDirectories))
                 {
                     var text = File.ReadAllText(csproj);
                     text = regex.Replace(text, @"HintPath>$(SharpDXSdkDir)\Bin\");
+                    text = regexTargets.Replace(text, @"Project=""$(SharpDXSdkDir)\SharpDX.targets");
+                    text = regexIncludes.Replace(text, @"Include=""$(SharpDXSdkDir)\Bin\");
                     File.WriteAllText(csproj, text);
                     Console.WriteLine("Fix project sample [{0}]", csproj);
                 }

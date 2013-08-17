@@ -134,8 +134,14 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="width">New backbuffer width</param>
         /// <param name="height">New backbuffer height</param>
         /// <param name="format">Backbuffer display format.</param>
-        public virtual void Resize(int width, int height, DXGI.Format format)
+        /// <returns><c>true</c> if the presenter was resized, <c>false</c> otherwise</returns>
+        public virtual bool Resize(int width, int height, DXGI.Format format)
         {
+            if (Description.BackBufferWidth == width && Description.BackBufferHeight == height && Description.BackBufferFormat == format)
+            {
+                return false;
+            }
+
             if (DepthStencilBuffer != null)
             {
                 RemoveAndDispose(ref depthStencilBuffer);
@@ -148,6 +154,7 @@ namespace SharpDX.Toolkit.Graphics
             DefaultViewport = new ViewportF(0, 0, Description.BackBufferWidth, Description.BackBufferHeight);
 
             CreateDepthStencilBuffer();
+            return true;
         }
 
         /// <summary>

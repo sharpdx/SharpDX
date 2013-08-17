@@ -283,6 +283,16 @@ namespace SharpDX.Toolkit.Graphics
             return MeasureString(ref proxyText);
         }
 
+        /// <summary>
+        /// Checks whether the provided character is present in the character map of the current <see cref="SpriteFont"/>.
+        /// </summary>
+        /// <param name="c">The character to check.</param>
+        /// <returns>true if the <paramref name="c"/> is pesent in the character map, false - otherwise.</returns>
+        public bool IsCharPresent(char c)
+        {
+            return characterMap.ContainsKey(c);
+        }
+
         private Vector2 MeasureString(ref StringProxy text)
         {
             var result = Vector2.Zero;
@@ -309,6 +319,9 @@ namespace SharpDX.Toolkit.Graphics
 
         /// <summary>Gets or sets the default character for the font.</summary>
         public char? DefaultCharacter { get; set; }
+
+        /// <summary>Completely skips characters that are not in the glyphmap. Useful if there is no suitable DefaultCharacter in the Font.</summary>
+        public bool IgnoreUnkownCharacters { get; set; } 
 
         /// <summary>Gets or sets the vertical distance (in pixels) between the base lines of two consecutive lines of text. Line spacing includes the blank space between lines as well as the height of the characters.</summary>
         public float LineSpacing { get; set; }
@@ -350,6 +363,11 @@ namespace SharpDX.Toolkit.Graphics
                             int glyphIndex;
                             if (!characterMap.TryGetValue(character, out glyphIndex))
                             {
+                                if (IgnoreUnkownCharacters)
+                                {
+                                    continue;
+                                }
+
                                 if(DefaultCharacter.HasValue && defaultGlyphIndex >= 0)
                                 {
                                     character = DefaultCharacter.Value;
@@ -364,10 +382,12 @@ namespace SharpDX.Toolkit.Graphics
 
                             var glyph = (SpriteFontData.Glyph*) pGlyph + glyphIndex;
 
-                            x += glyph->Offset.X;
+                            // do not offset the first character, otherwise it is impossible to compute correct alignment
+                            // using MeasureString results
+                            if (x > 0f) x += glyph->Offset.X;
 
-                            if (x < 0)
-                                x = 0;
+                            // reset negative offset (it can happen only for first character)
+                            if(x < 0f) x = 0f;
 
                             // Offset the kerning
                             float kerningOffset;

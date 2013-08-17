@@ -85,7 +85,7 @@ namespace SharpDX.Toolkit.Graphics
             return new Texture3D(this.GraphicsDevice, this.Description.ToStagingDescription());
         }
 
-        internal override ShaderResourceView GetShaderResourceView(ViewType viewType, int arrayOrDepthSlice, int mipIndex)
+        internal override TextureView GetShaderResourceView(ViewType viewType, int arrayOrDepthSlice, int mipIndex)
         {
             if ((this.Description.BindFlags & BindFlags.ShaderResource) == 0)
                 return null;
@@ -113,12 +113,9 @@ namespace SharpDX.Toolkit.Graphics
                         }
                     };
 
-                    srv = new ShaderResourceView(this.GraphicsDevice, this.Resource, srvDescription);
+                    srv = new TextureView(this, new ShaderResourceView(this.GraphicsDevice, this.Resource, srvDescription));
                     this.shaderResourceViews[srvIndex] = ToDispose(srv);
                 }
-
-                // Associate this instance
-                srv.Tag = this;
 
                 return srv;
             }
@@ -151,12 +148,9 @@ namespace SharpDX.Toolkit.Graphics
                         }
                     };
 
-                    uav = new UnorderedAccessView(GraphicsDevice, Resource, uavDescription);
+                    uav = new UnorderedAccessView(GraphicsDevice, Resource, uavDescription) { Tag = this };
                     this.unorderedAccessViews[uavIndex] = ToDispose(uav);
                 }
-
-                // Associate this instance
-                uav.Tag = this;
 
                 return uav;
             }
@@ -167,7 +161,7 @@ namespace SharpDX.Toolkit.Graphics
             // Creates the shader resource view
             if ((this.Description.BindFlags & BindFlags.ShaderResource) != 0)
             {
-                this.shaderResourceViews = new ShaderResourceView[GetViewCount()];
+                this.shaderResourceViews = new TextureView[GetViewCount()];
 
                 // Pre initialize by default the view on the first array/mipmap
                 GetShaderResourceView(ViewType.Full, 0, 0);

@@ -48,7 +48,8 @@ namespace SharpDX.Direct2D1
         /// <p>[This documentation is preliminary and is subject to change.]</p><p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p>Performs the inverse mapping to <strong>MapOutputRectToInputRects</strong>.</p>	
         /// </summary>	
         /// <param name="inputRects">No documentation.</param>	
-        /// <param name="inputOpaqueSubRects">No documentation.</param>	
+        /// <param name="inputOpaqueSubRects">No documentation.</param>
+        /// <param name="outputOpaqueSubRect">No documentation.</param>
         /// <returns>No outputOpaqueSubRect.</returns>	
         /// <remarks>	
         /// <p>The transform implementation must ensure that any pixel shader or software callback implementation it provides honors this calculation.</p><p>The transform implementation must regard this method as purely functional. It can base the mapped input and output rectangles on its current state as specified by the encapsulating effect properties. However, it must not change its own state in response to this method being invoked. The Direct2D renderer implementation reserves the right to call this method at any time and in any sequence.</p>	
