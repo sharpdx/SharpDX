@@ -66,6 +66,7 @@ namespace SharpDX
         /// Gets the name of this component.
         /// </summary>
         /// <value>The name.</value>
+        [DefaultValue(null)]
         public string Name
         {
             get { return name; }
@@ -86,6 +87,7 @@ namespace SharpDX
 #if !W8CORE
         [Browsable(false)]
 #endif
+        [DefaultValue(null)]
         public object Tag
         {
             get
