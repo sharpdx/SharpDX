@@ -297,6 +297,20 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Converts the color into a packed integer.
+        /// </summary>
+        /// <returns>A packed integer containing all four color components.</returns>
+        public int ToAbgr()
+        {
+            int value = A;
+            value |= B << 8;
+            value |= G << 16;
+            value |= R << 24;
+
+            return (int)value;
+        }
+
+        /// <summary>
         /// Converts the color into a three component vector.
         /// </summary>
         /// <returns>A three component vector containing the red, green, and blue components of the color.</returns>
@@ -612,6 +626,26 @@ namespace SharpDX
         public static Color FromBgra(uint color)
         {
             return FromBgra(unchecked((int) color));
+        }
+
+        /// <summary>
+        /// Converts the color from a packed ABGR integer.
+        /// </summary>
+        /// <param name="color">A packed integer containing all four color components in ABGR order</param>
+        /// <returns>A color.</returns>
+        public static Color FromAbgr(int color)
+        {
+            return new Color((byte)(color >> 24), (byte)(color >> 16), (byte)(color >> 8), (byte)color);
+        }
+
+        /// <summary>
+        /// Converts the color from a packed ABGR integer.
+        /// </summary>
+        /// <param name="color">A packed integer containing all four color components in ABGR order</param>
+        /// <returns>A color.</returns>
+        public static Color FromAbgr(uint color)
+        {
+            return FromAbgr(unchecked((int)color));
         }
 
         /// <summary>

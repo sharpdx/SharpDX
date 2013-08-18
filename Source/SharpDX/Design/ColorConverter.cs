@@ -96,10 +96,12 @@ namespace SharpDX.Design
 			{
 				var color = (Color)value;
 
-				if (destinationType == typeof(string))
-					return ConvertFromValues(context, culture, color.ToArray());
+			    if (destinationType == typeof(string))
+			    {
+			        return string.Format("#{0:X8}", color.ToAbgr());
+			    }
 
-				if (destinationType == typeof(InstanceDescriptor))
+			    if (destinationType == typeof(InstanceDescriptor))
 				{
 					var constructor = typeof(Color).GetConstructor(MathUtil.Array(typeof(byte), 4));
 					if (constructor != null)
@@ -124,8 +126,28 @@ namespace SharpDX.Design
 		/// </exception>
 		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
 		{
-			var values = ConvertToValues<byte>(context, culture, value);
-			return values != null ? new Color(values) : base.ConvertFrom(context, culture, value);
+            var str = value as string;
+            if (string.IsNullOrEmpty(str))
+                return null;
+
+		    if (str.StartsWith("#"))
+		    {
+		        uint colorValue;
+                if (uint.TryParse(str.Substring(1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out colorValue))
+                {
+                    if (str.Length == 7) // #RRGGBB
+                    {
+                        colorValue = colorValue | 0x000000FF;
+                    }
+                    return Color.FromAbgr(colorValue);
+                }
+		        return null;
+		    }
+		    else
+		    {
+		        var values = ConvertToValues<byte>(context, culture, value);
+		        return values != null ? new Color(values) : base.ConvertFrom(context, culture, value);
+		    }
 		}
 
 		/// <summary>
