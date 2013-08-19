@@ -41,7 +41,7 @@ namespace SharpDX.Toolkit
 
         internal override GameWindow[] GetSupportedGameWindows()
         {
-            return new GameWindow[] { new GameWindowWinRT(), new GameWindowWinRTBackgroundXaml(),  };
+            return new GameWindow[] { new GameWindowWinRT(), new GameWindowWinRTXaml(),  };
         }
 
         public override List<GraphicsDeviceInformation> FindBestDevices(GameGraphicsParameters prefferedParameters)

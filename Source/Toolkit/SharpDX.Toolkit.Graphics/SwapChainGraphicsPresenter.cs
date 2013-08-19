@@ -205,19 +205,19 @@ namespace SharpDX.Toolkit.Graphics
                 BufferCount = bufferCount,
                 Scaling = SharpDX.DXGI.Scaling.Stretch,
                 SwapEffect = SharpDX.DXGI.SwapEffect.FlipSequential,
-            }; 
-            
+            };
+
             if (coreWindow != null)
             {
                 // Creates a SwapChain from a CoreWindow pointer
-                using(var comWindow = new ComObject(coreWindow))
+                using (var comWindow = new ComObject(coreWindow))
                     return new SwapChain1((DXGI.Factory2)GraphicsAdapter.Factory, (Direct3D11.Device)GraphicsDevice, comWindow, ref description);
             }
             else if (swapChainBackgroundPanel != null)
             {
                 var nativePanel = ComObject.As<ISwapChainBackgroundPanelNative>(swapChainBackgroundPanel);
                 // Creates the swap chain for XAML composition
-                var swapChain = new SwapChain1((DXGI.Factory2)GraphicsAdapter.Factory,(Direct3D11.Device)GraphicsDevice, ref description);
+                var swapChain = new SwapChain1((DXGI.Factory2)GraphicsAdapter.Factory, (Direct3D11.Device)GraphicsDevice, ref description);
 
                 // Associate the SwapChainBackgroundPanel with the swap chain
                 nativePanel.SwapChain = swapChain;
@@ -225,6 +225,18 @@ namespace SharpDX.Toolkit.Graphics
             }
             else
             {
+#if DIRECTX11_2
+                using (var comObject = new ComObject(Description.DeviceWindowHandle))
+                {
+                    var swapChainPanel = comObject.QueryInterfaceOrNull<ISwapChainPanelNative>();
+                    if (swapChainPanel != null)
+                    {
+                        var swapChain = new SwapChain1((DXGI.Factory2)GraphicsAdapter.Factory, (Direct3D11.Device)GraphicsDevice, ref description);
+                        swapChainPanel.SwapChain = swapChain;
+                        return swapChain;
+                    }
+                }
+#endif
                 throw new NotSupportedException();
             }
         }

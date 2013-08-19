@@ -41,7 +41,7 @@
     <Compile Include="IContentable.cs" />
     <Compile Include="GameGraphicsParameters.cs" />
     <Compile Include="WindowsPhone\GameWindowPhoneXaml.cs" />
-    <Compile Include="WinRT\GameWindowWinRTBackgroundXaml.cs" />
+    <Compile Include="WinRT\GameWindowWinRTXaml.cs" />
     <Compile Include="WinRT\GameWindowWinRT.cs" />
     <Compile Include="WindowsPhone\GameWindowPhoneBackgroundXaml.cs" />
     <Compile Include="WindowsPhone\GamePlatformPhone.cs" />

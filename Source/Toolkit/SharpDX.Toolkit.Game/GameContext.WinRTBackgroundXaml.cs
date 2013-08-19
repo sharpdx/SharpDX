@@ -21,14 +21,12 @@
 
 using System;
 
-using Windows.UI.Xaml.Controls;
-
 namespace SharpDX.Toolkit
 {
     /// <summary>
     /// A <see cref="GameContext"/> to use for rendering to an existing WinForm <see cref="Control"/>.
     /// </summary>
-    public partial class GameContext 
+    public partial class GameContext
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="GameContext" /> class.
@@ -36,12 +34,13 @@ namespace SharpDX.Toolkit
         /// <param name="control">The control.</param>
         /// <param name="requestedWidth">Width of the requested.</param>
         /// <param name="requestedHeight">Height of the requested.</param>
-        public GameContext(SwapChainBackgroundPanel control, int requestedWidth = 0, int requestedHeight = 0)
+        /// <exception cref="NotSupportedException">Is thrown when <paramref name="control"/> is not supported.</exception>
+        public GameContext(global::Windows.UI.Xaml.Controls.Grid control, int requestedWidth = 0, int requestedHeight = 0)
         {
-            if (control == null)
-            {
+            if(control == null)
                 throw new ArgumentNullException("control");
-            }
+
+            ValidateControl(control);
 
             Control = control;
             RequestedWidth = requestedWidth;
@@ -59,9 +58,50 @@ namespace SharpDX.Toolkit
         /// </summary>
         /// <param name="control">The control.</param>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator GameContext(SwapChainBackgroundPanel control)
+        /// <exception cref="NotSupportedException">Is thrown when <paramref name="control"/> is not supported.</exception>
+        public static implicit operator GameContext(global::Windows.UI.Xaml.Controls.Grid control)
         {
+            ValidateControl(control);
+
             return new GameContext(control);
+        }
+
+        /// <summary>
+        /// Checks if the provided control supports any of the native interfaces for Direct3D interop.
+        /// </summary>
+        /// <param name="control">The control to check.</param>
+        /// <exception cref="NotSupportedException">Is thrown when <paramref name="control"/> is not supported.</exception>
+        private static void ValidateControl(global::Windows.UI.Xaml.FrameworkElement control)
+        {
+            using (var comObject = new ComObject(control))
+            {
+                if (SupportsInterface<DXGI.ISwapChainBackgroundPanelNative>(comObject)) return;
+
+#if DIRECTX11_2
+                if (SupportsInterface<DXGI.ISwapChainPanelNative>(comObject)) return;
+#endif
+            }
+
+            throw new NotSupportedException("Expected a control supporting native Direct3D interop");
+        }
+
+        /// <summary>
+        /// Checks if the provided <see cref="ComObject"/> instance supports a certain interface.
+        /// </summary>
+        /// <typeparam name="T">The interface type to check the support for.</typeparam>
+        /// <param name="comObject">The <see cref="ComObject"/> instance to check for support.</param>
+        /// <returns>true - if the interface <typeparamref name="T"/> is supported, false - otherwise.</returns>
+        private static bool SupportsInterface<T>(ComObject comObject)
+            where T : ComObject
+        {
+            var suppotedInterface = comObject.QueryInterfaceOrNull<T>();
+            if (suppotedInterface != null)
+            {
+                suppotedInterface.Dispose();
+                return true;
+            }
+
+            return false;
         }
     }
 }

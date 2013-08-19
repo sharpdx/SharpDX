@@ -33,11 +33,11 @@ namespace SharpDX.Toolkit
     /// <summary>
     /// An abstract window.
     /// </summary>
-    internal class GameWindowWinRTBackgroundXaml : GameWindow
+    internal class GameWindowWinRTXaml : GameWindow
     {
         #region Fields
 
-        private SwapChainBackgroundPanel swapChainBackgroundPanel;
+        private FrameworkElement surfaceControl;
 
         #endregion
 
@@ -58,7 +58,7 @@ namespace SharpDX.Toolkit
         {
             get
             {
-                return new Rectangle(0, 0, (int)(this.swapChainBackgroundPanel.ActualWidth * DisplayProperties.LogicalDpi / 96.0), (int)(this.swapChainBackgroundPanel.ActualHeight * DisplayProperties.LogicalDpi / 96.0));
+                return new Rectangle(0, 0, (int)(this.surfaceControl.ActualWidth * DisplayProperties.LogicalDpi / 96.0), (int)(this.surfaceControl.ActualHeight * DisplayProperties.LogicalDpi / 96.0));
             }
         }
 
@@ -84,7 +84,7 @@ namespace SharpDX.Toolkit
         {
             get
             {
-                return swapChainBackgroundPanel;
+                return surfaceControl;
             }
         }
 
@@ -128,19 +128,16 @@ namespace SharpDX.Toolkit
         {
             if (windowContext != null)
             {
-                swapChainBackgroundPanel = windowContext.Control as SwapChainBackgroundPanel;
-                if (swapChainBackgroundPanel == null)
-                {
-                    throw new NotSupportedException(string.Format("Unsupported window context [{0}]. Only  SwapChainBackgroundPanel",  windowContext.Control.GetType().FullName));
-                }
+                surfaceControl = windowContext.Control as FrameworkElement;
+                if (surfaceControl == null)
+                    throw new ArgumentException("A FrameworkElement expected.");
 
-                //clientBounds = new DrawingRectangle(0, 0, (int)swapChainBackgroundPanel.ActualWidth, (int)swapChainBackgroundPanel.ActualHeight);
-                swapChainBackgroundPanel.SizeChanged += swapChainBackgroundPanel_SizeChanged;
+                surfaceControl.SizeChanged += SurfaceControlSizeChanged;
 
             }
         }
 
-        private void swapChainBackgroundPanel_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void SurfaceControlSizeChanged(object sender, SizeChangedEventArgs e)
         {
             OnClientSizeChanged(sender, EventArgs.Empty);
         }
@@ -177,8 +174,8 @@ namespace SharpDX.Toolkit
         protected override void Dispose(bool disposeManagedResources)
         {
             CompositionTarget.Rendering -= CompositionTarget_Rendering;
-            
-            
+
+
             base.Dispose(disposeManagedResources);
         }
 
