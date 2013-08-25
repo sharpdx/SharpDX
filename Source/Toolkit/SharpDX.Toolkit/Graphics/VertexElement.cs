@@ -329,7 +329,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Declares a VertexElement with the semantic "BLENDWEIGHTS".
+        /// Declares a VertexElement with the semantic "BLENDWEIGHT".
         /// </summary>
         /// <typeparam name="T">Type of the BlendWeights semantic.</typeparam>
         /// <param name="semanticIndex">The semantic index.</param>
@@ -341,7 +341,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Declares a VertexElement with the semantic "BLENDWEIGHTS".
+        /// Declares a VertexElement with the semantic "BLENDWEIGHT".
         /// </summary>
         /// <param name="format">Format of this element.</param>
         /// <param name="offsetInBytes">The offset in bytes of this element. Use <see cref="AppendAligned"/> to compute automatically the offset from previous elements.</param>
@@ -352,7 +352,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Declares a VertexElement with the semantic "BLENDWEIGHTS".
+        /// Declares a VertexElement with the semantic "BLENDWEIGHT".
         /// </summary>
         /// <param name="semanticIndex">The semantic index.</param>
         /// <param name="format">Format of this element.</param>
