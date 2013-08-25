@@ -360,7 +360,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>A new instance of <see cref="VertexElement" /> that represents this semantic.</returns>
         public static VertexElement BlendWeights(int semanticIndex, Format format, int offsetInBytes = AppendAligned)
         {
-            return new VertexElement("BLENDWEIGHTS", semanticIndex, format, offsetInBytes);
+            return new VertexElement("BLENDWEIGHT", semanticIndex, format, offsetInBytes);
         }
 
         /// <summary>
