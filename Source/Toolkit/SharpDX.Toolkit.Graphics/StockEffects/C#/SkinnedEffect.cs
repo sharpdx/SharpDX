@@ -413,7 +413,7 @@ namespace SharpDX.Toolkit.Graphics
             if (count <= 0 || count > MaxBones)
                 throw new ArgumentOutOfRangeException("count");
 
-            var bones = bonesParam.GetValueArray<Matrix>(count);
+			var bones = bonesParam.GetMatrixArray(count);
             
             // Convert matrices from 43 to 44 format.
             for (int i = 0; i < bones.Length; i++)
