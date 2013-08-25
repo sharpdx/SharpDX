@@ -169,12 +169,37 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Gets a single value to the associated parameter in the constant buffer.
+        /// </summary>
+        /// <typeparam name="T">The type of the value to read from the buffer.</typeparam>
+        /// <param name="index">The index of the value (for value array).</param>
+        /// <returns>The value of this parameter.</returns>
+        public T GetValue<T>(int index) where T : struct
+        {
+            int size;
+            AlignedToFloat4<T>(out size);
+            return buffer.Get<T>(offset + index * size);
+        }
+
+        /// <summary>
         /// Gets an array of values to the associated parameter in the constant buffer.
         /// </summary>
         /// <typeparam name = "T">The type of the value to read from the buffer.</typeparam>
         /// <returns>The value of this parameter.</returns>
         public T[] GetValueArray<T>(int count) where T : struct
         {
+            int size;
+            if (AlignedToFloat4<T>(out size))
+            {
+                var values = new T[count];
+                int localOffset = offset;
+                for (int i = 0; i < values.Length; i++, localOffset += size)
+                {
+                    buffer.Get(localOffset, out values[i]);
+                }
+
+                return values;
+            }
             return buffer.GetRange<T>(offset, count);
         }
 
@@ -318,7 +343,20 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "values">An array of values to be written to the current buffer.</param>
         public void SetValue<T>(T[] values) where T : struct
         {
-            buffer.Set(offset, values);
+            int size;
+            if (AlignedToFloat4<T>(out size))
+            {
+                int localOffset = offset;
+                for (int i = 0; i < values.Length; i++, localOffset += size)
+                {
+                    buffer.Set(localOffset, ref values[i]);
+                }
+            }
+            else
+            {
+                buffer.Set(offset, values);
+            }
+
             buffer.IsDirty = true;
         }
 
@@ -330,7 +368,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "value">The value to write to the buffer.</param>
         public void SetValue<T>(int index, ref T value) where T : struct
         {
-            buffer.Set(offset + Interop.SizeOf<T>() * index, ref value);
+            int size;
+            AlignedToFloat4<T>(out size);
+            buffer.Set(offset + size * index, ref value);
             buffer.IsDirty = true;
         }
 
@@ -342,7 +382,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "value">The value to write to the buffer.</param>
         public void SetValue<T>(int index, T value) where T : struct
         {
-            buffer.Set(offset + Interop.SizeOf<T>() * index, value);
+            int size;
+            AlignedToFloat4<T>(out size);
+            buffer.Set(offset + size * index, ref value);
             buffer.IsDirty = true;
         }
 
@@ -354,7 +396,19 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "values">An array of values to be written to the current buffer.</param>
         public void SetValue<T>(int index, T[] values) where T : struct
         {
-            buffer.Set(offset + Interop.SizeOf<T>() * index, values);
+            int size;
+            if (AlignedToFloat4<T>(out size))
+            {
+                int localOffset = offset + size * index; 
+                for (int i = 0; i < values.Length; i++, localOffset += size)
+                {
+                    buffer.Set(localOffset, ref values[i]);
+                }
+            }
+            else
+            {
+                buffer.Set(offset + size * index, values);
+            }
             buffer.IsDirty = true;
         }
 
@@ -513,6 +567,14 @@ namespace SharpDX.Toolkit.Graphics
                         pDest[j] = pSrc[j * 4];
                 }
             }
+        }
+
+        private static bool AlignedToFloat4<T>(out int size) where T : struct
+        {
+            size = Utilities.SizeOf<T>();
+            var requireAlign = (size & 0xF) != 0;
+            if (requireAlign) size = ((size >> 4) + 1) << 4;
+            return requireAlign;
         }
 
         /// <summary>
