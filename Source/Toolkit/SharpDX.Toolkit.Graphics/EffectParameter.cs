@@ -35,6 +35,7 @@ namespace SharpDX.Toolkit.Graphics
         private readonly EffectResourceLinker resourceLinker;
         private readonly GetMatrixDelegate GetMatrixImpl;
         private readonly CopyMatrixDelegate CopyMatrix;
+        private readonly int matrixSize;
         private int offset;
 
         /// <summary>
@@ -59,7 +60,8 @@ namespace SharpDX.Toolkit.Graphics
             // If the expecting Matrix is column_major or the expected size is != from Matrix, than we need to remap SharpDX.Matrix to it.
             if (ParameterClass == EffectParameterClass.MatrixRows || ParameterClass == EffectParameterClass.MatrixColumns)
             {
-                var isMatrixToMap = parameterDescription.Size != Interop.SizeOf<Matrix>() || ParameterClass == EffectParameterClass.MatrixColumns;
+                var isMatrixToMap = RowCount != 4 || ColumnCount != 4  || ParameterClass == EffectParameterClass.MatrixColumns;
+                matrixSize = (ParameterClass == EffectParameterClass.MatrixColumns ? ColumnCount : RowCount) * 4 * sizeof(float);
                 // Use the correct function for this parameter
                 CopyMatrix = isMatrixToMap ? (ParameterClass == EffectParameterClass.MatrixRows) ? new CopyMatrixDelegate(CopyMatrixRowMajor) : CopyMatrixColumnMajor : CopyMatrixDirect;
                 GetMatrixImpl = isMatrixToMap ? (ParameterClass == EffectParameterClass.MatrixRows) ? new GetMatrixDelegate(GetMatrixRowMajorFrom) : GetMatrixColumnMajorFrom : GetMatrixDirectFrom;
@@ -191,7 +193,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>The value of this parameter.</returns>
         public Matrix GetMatrix(int startIndex)
         {
-            return GetMatrixImpl(offset + (startIndex << 6));
+            return GetMatrixImpl(offset + (startIndex * matrixSize));
         }
 
         /// <summary>
@@ -212,11 +214,11 @@ namespace SharpDX.Toolkit.Graphics
         public unsafe Matrix[] GetMatrixArray(int startIndex, int count)
         {
             var result = new Matrix[count];
-            var localOffset = offset + (startIndex << 6);
+            var localOffset = offset + (startIndex * matrixSize);
             // Fix the whole buffer
             fixed (Matrix* pMatrix = result)
             {
-                for (int i = 0; i < result.Length; i++, localOffset += Utilities.SizeOf<Matrix>())
+                for (int i = 0; i < result.Length; i++, localOffset += matrixSize)
                     pMatrix[i] = GetMatrixImpl(localOffset);
             }
             buffer.IsDirty = true;
@@ -275,7 +277,7 @@ namespace SharpDX.Toolkit.Graphics
             // Fix the whole buffer
             fixed (Matrix* pMatrix = values)
             {
-                for (int i = 0; i < values.Length; i++, localOffset += Utilities.SizeOf<Matrix>())
+                for (int i = 0; i < values.Length; i++, localOffset += matrixSize)
                     CopyMatrix(ref pMatrix[i], localOffset);
             }
             buffer.IsDirty = true;
@@ -288,7 +290,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "value">The matrix to write to the buffer.</param>
         public void SetValue(int index, Matrix value) 
         {
-            CopyMatrix(ref value, offset + (index << 6));
+            CopyMatrix(ref value, offset + index * matrixSize);
             buffer.IsDirty = true;
         }
 
@@ -297,13 +299,13 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="index">Index of the matrix to write in element count.</param>
         /// <param name = "values">An array of matrices to be written to the current buffer.</param>
-        public unsafe void SetValue(int index, Matrix[] values) 
+        public unsafe void SetValue(int index, Matrix[] values)
         {
-            var localOffset = this.offset + (index << 6);
+            var localOffset = this.offset + (index * matrixSize);
             // Fix the whole buffer
             fixed (Matrix* pMatrix = values)
             {
-                for (int i = 0; i < values.Length; i++, localOffset += Utilities.SizeOf<Matrix>())
+                for (int i = 0; i < values.Length; i++, localOffset += matrixSize)
                     CopyMatrix(ref pMatrix[i], localOffset);
             }
             buffer.IsDirty = true;

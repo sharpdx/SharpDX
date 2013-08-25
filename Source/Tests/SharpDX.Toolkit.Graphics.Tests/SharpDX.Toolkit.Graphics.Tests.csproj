@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestEffectMatrix.cs" />
     <Compile Include="TestEffectTextureArray.cs" />
     <Compile Include="TestEffect.cs" />
     <Compile Include="TestImage.cs" />
@@ -95,6 +96,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestEffectMatrix.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestEffectTextureArray.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
