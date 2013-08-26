@@ -818,6 +818,32 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Creates a skew matrix.
+        /// </summary>
+        /// <param name="angleX">Angle of skew along the X-axis in radians.</param>
+        /// <param name="angleY">Angle of skew along the Y-axis in radians.</param>
+        /// <returns>The created skew matrix.</returns>
+        public static Matrix3x2 Skew(float angleX, float angleY)
+        {
+            Matrix3x2 result;
+            Skew(angleX, angleY, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a skew matrix.
+        /// </summary>
+        /// <param name="angleX">Angle of skew along the X-axis in radians.</param>
+        /// <param name="angleY">Angle of skew along the Y-axis in radians.</param>
+        /// <param name="result">When the method completes, contains the created skew matrix.</param>
+        public static void Skew(float angleX, float angleY, out Matrix3x2 result)
+        {
+            result = Matrix.Identity;
+            result.M12 = (float) Math.Tan(angleX);
+            result.M21 = (float) Math.Tan(angleY);
+        }
+
+        /// <summary>
         /// Calculates the inverse of the specified matrix.
         /// </summary>
         /// <param name="value">The matrix whose inverse is to be calculated.</param>
