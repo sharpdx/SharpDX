@@ -216,7 +216,7 @@ namespace SharpDX
                 if (length < MathUtil.ZeroTolerance)
                     return 0.0f;
 
-                return (float)(2.0 * Math.Acos(W));
+                return (float)(2.0 * Math.Acos(MathUtil.Clamp(W, -1f, 1f)));
             }
         }
 
