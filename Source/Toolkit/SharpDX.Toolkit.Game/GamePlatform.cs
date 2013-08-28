@@ -113,6 +113,9 @@ namespace SharpDX.Toolkit
         {
             gameWindow = CreateWindow(gameContext);
 
+            // set the mouse visibility in case if it was set in the game constructor:
+            gameWindow.IsMouseVisible = game.IsMouseVisible;
+
             // Register on Activated 
             gameWindow.Activated += OnActivated;
             gameWindow.Deactivated += OnDeactivated;
