@@ -72,7 +72,12 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT D3DXCheckCubeTextureRequirements([In] IDirect3DDevice9* pDevice,[InOut] unsigned int* pSize,[InOut] unsigned int* pNumMipLevels,[In] unsigned int Usage,[InOut] D3DFORMAT* pFormat,[In] D3DPOOL Pool)</unmanaged>
         public static CubeTextureRequirements CheckRequirements(Device device, int size, int mipLevelCount, Usage usage, Format format, Pool pool)
         {
-            var result = new CubeTextureRequirements();
+            var result = new CubeTextureRequirements
+                {
+                    Size = size,
+                    MipLevelCount = mipLevelCount,
+                    Format = format
+                };
             D3DX9.CheckCubeTextureRequirements(device, ref result.Size, ref result.MipLevelCount, (int)usage, ref result.Format, pool);
             return result;
         }
