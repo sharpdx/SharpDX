@@ -37,9 +37,9 @@ namespace SharpDX.Direct2D1
             BeginFigure_(startPoint, figureBegin);
         }
 
-        public void AddLines(Vector2[] ointsRef)
+        public void AddLines(Vector2[] points)
         {
-            AddLines_(ointsRef, ointsRef.Length);
+            AddLines_(points, points.Length);
         }
 
         public void AddBeziers(BezierSegment[] beziers)
