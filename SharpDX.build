@@ -40,6 +40,7 @@
   </Target>
 
   <Target Name="FullBuild">
+	<CallTarget Targets="GitCheckout"/>
 	<CallTarget Targets="Build"/>
 	<CallTarget Targets="BuildSamples"/>
 	<CallTarget Targets="GitUpdate"/>
@@ -102,6 +103,11 @@
     <!-- <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXWP8Samples.sln" Properties="Configuration=Debug;Platform=Any CPU"/> -->
 
 	<CallTarget Targets="CleanSamples"/>
+  </Target>
+  
+  <Target Name="GitCheckout">
+    <Exec Command='$(GitExe) checkout --merge "master_integration"'/>
+    <Exec Command='$(GitExe) pull --rebase origin'/>
   </Target>
   
   <Target Name="GitUpdate">
