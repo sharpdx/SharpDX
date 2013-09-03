@@ -145,7 +145,15 @@
   </Target>
   
   <Target Name="GitUpload">
-
+	<!-- Get Last commit log from git  -->
+	<PropertyGroup>
+		<LastCommitPath>last_commit.txt</LastCommitPath>
+	</PropertyGroup>
+	<Exec Command='$(GitExe) log --format=%%H -1 > $(LastCommitPath)'/>
+	<PropertyGroup>
+		<LastCommit>$([System.IO.File]::ReadAllText($(LastCommitPath)))</LastCommit>
+	</PropertyGroup>
+  
 	<!-- Checkout latest version of nightly builds  -->
 	<Exec Command='$(GitExe) checkout --merge "master"' WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
 	<Exec Command='$(GitExe) pull --rebase origin' WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
@@ -165,9 +173,6 @@
 		<LastCommitPath>last_commit.txt</LastCommitPath>
 	</PropertyGroup>
 	<Exec Command='$(GitExe) log --format=%%H -1 > $(LastCommitPath)'/>
-	<PropertyGroup>
-		<LastCommit>$([System.IO.File]::ReadAllText($(LastCommitPath)))</LastCommit>
-	</PropertyGroup>
 
 	<!-- Upload Last Commit file -->
 	<MSBuild.ExtensionPack.Communication.Ftp TaskAction="UploadFiles" Host="sharpdx.org" RemoteDirectoryName="/sharpdx/upload" FileNames="$(LastCommitPath)" UserName="$(SharpDXFtpUser)" UserPassword="$(SharpDXFtpPassword)" />
