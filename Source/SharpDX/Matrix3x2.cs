@@ -497,9 +497,7 @@ namespace SharpDX
         /// <param name="result">When the method completes, contains the cubic interpolation of the two matrices.</param>
         public static void SmoothStep(ref Matrix3x2 start, ref Matrix3x2 end, float amount, out Matrix3x2 result)
         {
-            amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
-            amount = (amount * amount) * (3.0f - (2.0f * amount));
-
+            amount = MathUtil.SmoothStep(amount);
             Lerp(ref start, ref end, amount, out result);
         }
 
