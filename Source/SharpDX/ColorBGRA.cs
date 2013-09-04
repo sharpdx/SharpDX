@@ -650,9 +650,7 @@ namespace SharpDX
         /// <param name="result">When the method completes, contains the cubic interpolation of the two colors.</param>
         public static void SmoothStep(ref ColorBGRA start, ref ColorBGRA end, float amount, out ColorBGRA result)
         {
-            amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
-            amount = (amount * amount) * (3.0f - (2.0f * amount));
-
+            amount = MathUtil.SmoothStep(amount);
             Lerp(ref start, ref end, amount, out result);
         }
 
