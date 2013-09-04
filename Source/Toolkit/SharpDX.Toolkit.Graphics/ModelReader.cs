@@ -356,7 +356,7 @@ namespace SharpDX.Toolkit.Graphics
             // Loads the texture
             string filePath = null;
             Serialize(ref filePath);
-            materialTexture.name = Path.GetFileNameWithoutExtension(filePath);
+            materialTexture.Name = Path.GetFileNameWithoutExtension(filePath);
 
             if (!string.IsNullOrEmpty(filePath))
             {
@@ -407,7 +407,9 @@ namespace SharpDX.Toolkit.Graphics
             Serialize(ref bone.Transform);
 
             // Name
-            Serialize(ref bone.name, false, SerializeFlags.Nullable);
+            string boneName = null;
+            Serialize(ref boneName, false, SerializeFlags.Nullable);
+            bone.Name = boneName;
 
             // Indices
             List<int> indices = null;
@@ -422,7 +424,9 @@ namespace SharpDX.Toolkit.Graphics
         protected virtual void ReadMesh(ref ModelMesh mesh)
         {
             CurrentMesh = mesh;
-            Serialize(ref mesh.name, false, SerializeFlags.Nullable);
+            string meshName = null;
+            Serialize(ref meshName, false, SerializeFlags.Nullable);
+            mesh.Name = meshName;
             int parentBoneIndex = Reader.ReadInt32();
             if (parentBoneIndex >= 0) mesh.ParentBone = Model.Bones[parentBoneIndex];
 

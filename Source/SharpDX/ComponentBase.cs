@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 using System;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace SharpDX
 {
@@ -32,7 +31,7 @@ namespace SharpDX
         /// Occurs while this component is disposing and before it is disposed.
         /// </summary>
         //internal event EventHandler<EventArgs> Disposing;
-        internal protected string name;
+        private string name;
 
         /// <summary>
         /// Gets or sets a value indicating whether the name of this instance is immutable.
