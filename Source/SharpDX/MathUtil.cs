@@ -481,7 +481,7 @@ namespace SharpDX
             random.NextBytes(buf);
             long longRand = BitConverter.ToInt64(buf, 0);
 
-            return (Math.Abs(longRand % (max - min)) + min);
+            return (Math.Abs(longRand % (max - min + 1)) + min);
         }
 
         /// <summary>
@@ -654,7 +654,7 @@ namespace SharpDX
             random.NextBytes(buf);
             long longRand = BitConverter.ToInt64(buf, 0);
 
-            return (Math.Abs(longRand % (max - min)) + min);
+            return (Math.Abs(longRand % (max - min + 1)) + min);
         }
 
         /// <summary>
