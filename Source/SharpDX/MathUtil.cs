@@ -481,7 +481,7 @@ namespace SharpDX
             random.NextBytes(buf);
             long longRand = BitConverter.ToInt64(buf, 0);
 
-            return (Math.Abs(longRand % (max - min)) + min);
+            return (Math.Abs(longRand % (max - min + 1)) + min);
         }
 
         /// <summary>
@@ -576,21 +576,9 @@ namespace SharpDX
         /// <param name="min">Minimum.</param>
         /// <param name="max">Maximum.</param>
         /// <returns>Random <see cref="SharpDX.Point"/>.</returns>
-        public static Point NextDPoint(this Random random, Point min, Point max)
+        public static Point NextPoint(this Random random, Point min, Point max)
         {
             return new Point(random.Next(min.X, max.X), random.Next(min.Y, max.Y));
-        }
-
-        /// <summary>
-        /// Gets random <see cref="SharpDX.Vector2"/>.
-        /// </summary>
-        /// <param name="random">Current <see cref="System.Random"/>.</param>
-        /// <param name="min">Minimum.</param>
-        /// <param name="max">Maximum.</param>
-        /// <returns>Random <see cref="SharpDX.Vector2"/>.</returns>
-        public static Vector2 NextDPointF(this Random random, Vector2 min, Vector2 max)
-        {
-            return new Vector2(random.NextFloat(min.X, max.X), random.NextFloat(min.Y, max.Y));
         }
 
         /// <summary>
@@ -654,7 +642,7 @@ namespace SharpDX
             random.NextBytes(buf);
             long longRand = BitConverter.ToInt64(buf, 0);
 
-            return (Math.Abs(longRand % (max - min)) + min);
+            return (Math.Abs(longRand % (max - min + 1)) + min);
         }
 
         /// <summary>
@@ -749,21 +737,9 @@ namespace SharpDX
         /// <param name="min">Minimum.</param>
         /// <param name="max">Maximum.</param>
         /// <returns>Random <see cref="SharpDX.Point"/>.</returns>
-        public static Point NextDPoint(Random random, Point min, Point max)
+        public static Point NextPoint(Random random, Point min, Point max)
         {
             return new Point(random.Next(min.X, max.X), random.Next(min.Y, max.Y));
-        }
-
-        /// <summary>
-        /// Gets random <see cref="SharpDX.Vector2"/>.
-        /// </summary>
-        /// <param name="random">A <see cref="System.Random"/> instance.</param>
-        /// <param name="min">Minimum.</param>
-        /// <param name="max">Maximum.</param>
-        /// <returns>Random <see cref="SharpDX.Vector2"/>.</returns>
-        public static Vector2 NextDPointF(Random random, Vector2 min, Vector2 max)
-        {
-            return new Vector2(NextFloat(random, min.X, max.X), NextFloat(random, min.Y, max.Y));
         }
 
         /// <summary>
