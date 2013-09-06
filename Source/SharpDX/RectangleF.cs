@@ -74,7 +74,6 @@ namespace SharpDX
             get { return _left; }
             set
             {
-                _right = value + Width;
                 _left = value;
             }
         }
@@ -88,7 +87,6 @@ namespace SharpDX
             get { return _top; }
             set
             {
-                _bottom = value + Height;
                 _top = value;
             }
         }
