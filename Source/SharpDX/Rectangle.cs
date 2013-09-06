@@ -1,15 +1,15 @@
 ﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,11 +25,11 @@ using SharpDX.Serialization;
 namespace SharpDX
 {
     /// <summary>
-    /// Define a Rectangle. This structure is slightly different from System.Drawing.Rectangle as It is 
+    /// Define a Rectangle. This structure is slightly different from System.Drawing.Rectangle as it is
     /// internally storing Left,Top,Right,Bottom instead of Left,Top,Width,Height.
-    /// Although automatic casting from a to System.Drawing.Rectangle is provided by this class.
     /// </summary>
 #if !W8CORE
+
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential)]
@@ -72,10 +72,7 @@ namespace SharpDX
         public int Left
         {
             get { return _left; }
-            set
-            {
-                _left = value;
-            }
+            set { _left = value; }
         }
 
         /// <summary>
@@ -85,10 +82,7 @@ namespace SharpDX
         public int Top
         {
             get { return _top; }
-            set
-            {
-                _top = value;
-            }
+            set { _top = value; }
         }
 
         /// <summary>
@@ -112,12 +106,15 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets the left position.
+        /// Gets or sets the X position.
         /// </summary>
-        /// <value>The left position.</value>
+        /// <value>The X position.</value>
         public int X
         {
-            get { return _left; }
+            get
+            {
+                return _left;
+            }
             set
             {
                 _right = value + Width;
@@ -126,12 +123,15 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets the top position.
+        /// Gets or sets the Y position.
         /// </summary>
-        /// <value>The top position.</value>
+        /// <value>The Y position.</value>
         public int Y
         {
-            get { return _top; }
+            get
+            {
+                return _top;
+            }
             set
             {
                 _bottom = value + Height;
@@ -140,32 +140,31 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets the width.
+        /// Gets or sets the width.
         /// </summary>
         /// <value>The width.</value>
         public int Width
         {
             get { return _right - _left; }
-            set
-            {
-                _right = _left + value;
-            }
+            set { _right = _left + value; }
         }
 
         /// <summary>
-        /// Gets the height.
+        /// Gets or sets the height.
         /// </summary>
         /// <value>The height.</value>
         public int Height
         {
             get { return _bottom - _top; }
-            set
-            {
-                _bottom = _top + value;
-            }
+            set { _bottom = _top + value; }
         }
 
-        /// <summary>Gets or sets the upper-left value of the Rectangle.</summary>
+        /// <summary>
+        /// Gets or sets the location.
+        /// </summary>
+        /// <value>
+        /// The location.
+        /// </value>
         public Point Location
         {
             get
@@ -179,7 +178,12 @@ namespace SharpDX
             }
         }
 
-        /// <summary>Gets the Point that specifies the center of the rectangle.</summary>
+        /// <summary>
+        /// Gets the Point that specifies the center of the rectangle.
+        /// </summary>
+        /// <value>
+        /// The center.
+        /// </value>
         public Point Center
         {
             get
@@ -188,7 +192,12 @@ namespace SharpDX
             }
         }
 
-        /// <summary>Gets a value that indicates whether the Rectangle is empty.</summary>
+        /// <summary>
+        /// Gets a value that indicates whether the rectangle is empty.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [is empty]; otherwise, <c>false</c>.
+        /// </value>
         public bool IsEmpty
         {
             get
@@ -203,7 +212,10 @@ namespace SharpDX
         /// <value>The size of the rectangle.</value>
         public Size2 Size
         {
-            get { return new Size2(Width, Height); }
+            get
+            {
+                return new Size2(Width, Height);
+            }
             set
             {
                 Width = value.Width;
@@ -235,14 +247,14 @@ namespace SharpDX
         /// <value>The bottom-right corner of the rectangle.</value>
         public Point BottomRight { get { return new Point(_right, _bottom); } }
 
-        /// <summary>Changes the position of the Rectangle.</summary>
-        /// <param name="amount">The values to adjust the position of the Rectangle by.</param>
+        /// <summary>Changes the position of the rectangle.</summary>
+        /// <param name="amount">The values to adjust the position of the rectangle by.</param>
         public void Offset(Point amount)
         {
             Offset(amount.X, amount.Y);
         }
 
-        /// <summary>Changes the position of the Rectangle.</summary>
+        /// <summary>Changes the position of the rectangle.</summary>
         /// <param name="offsetX">Change in the x-position.</param>
         /// <param name="offsetY">Change in the y-position.</param>
         public void Offset(int offsetX, int offsetY)
@@ -251,7 +263,7 @@ namespace SharpDX
             Y += offsetY;
         }
 
-        /// <summary>Pushes the edges of the Rectangle out by the horizontal and vertical values specified.</summary>
+        /// <summary>Pushes the edges of the rectangle out by the horizontal and vertical values specified.</summary>
         /// <param name="horizontalAmount">Value to push the sides out by.</param>
         /// <param name="verticalAmount">Value to push the top and bottom out by.</param>
         public void Inflate(int horizontalAmount, int verticalAmount)
@@ -262,7 +274,7 @@ namespace SharpDX
             Height += verticalAmount * 2;
         }
 
-        /// <summary>Determines whether this Rectangle contains a specified point represented by its x- and y-coordinates.</summary>
+        /// <summary>Determines whether this rectangle contains a specified point represented by its x- and y-coordinates.</summary>
         /// <param name="x">The x-coordinate of the specified point.</param>
         /// <param name="y">The y-coordinate of the specified point.</param>
         public bool Contains(int x, int y)
@@ -270,7 +282,7 @@ namespace SharpDX
             return (X <= x) && (x < Right) && (Y <= y) && (y < Bottom);
         }
 
-        /// <summary>Determines whether this Rectangle contains a specified Point.</summary>
+        /// <summary>Determines whether this rectangle contains a specified Point.</summary>
         /// <param name="value">The Point to evaluate.</param>
         public bool Contains(Point value)
         {
@@ -279,16 +291,16 @@ namespace SharpDX
             return result;
         }
 
-        /// <summary>Determines whether this Rectangle contains a specified Point.</summary>
+        /// <summary>Determines whether this rectangle contains a specified Point.</summary>
         /// <param name="value">The Point to evaluate.</param>
-        /// <param name="result">[OutAttribute] true if the specified Point is contained within this Rectangle; false otherwise.</param>
+        /// <param name="result">[OutAttribute] true if the specified Point is contained within this rectangle; false otherwise.</param>
         public void Contains(ref Point value, out bool result)
         {
             result = (X <= value.X) && (value.X < Right) && (Y <= value.Y) && (value.Y < Bottom);
         }
 
-        /// <summary>Determines whether this Rectangle entirely contains a specified Rectangle.</summary>
-        /// <param name="value">The Rectangle to evaluate.</param>
+        /// <summary>Determines whether this rectangle entirely contains a specified rectangle.</summary>
+        /// <param name="value">The rectangle to evaluate.</param>
         public bool Contains(Rectangle value)
         {
             bool result;
@@ -296,9 +308,9 @@ namespace SharpDX
             return result;
         }
 
-        /// <summary>Determines whether this Rectangle entirely contains a specified Rectangle.</summary>
-        /// <param name="value">The Rectangle to evaluate.</param>
-        /// <param name="result">[OutAttribute] On exit, is true if this Rectangle entirely contains the specified Rectangle, or false if not.</param>
+        /// <summary>Determines whether this rectangle entirely contains a specified rectangle.</summary>
+        /// <param name="value">The rectangle to evaluate.</param>
+        /// <param name="result">[OutAttribute] On exit, is true if this rectangle entirely contains the specified rectangle, or false if not.</param>
         public void Contains(ref Rectangle value, out bool result)
         {
             result = (X <= value.X) && (value.Right <= Right) && (Y <= value.Y) && (value.Bottom <= Bottom);
@@ -316,8 +328,8 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Checks, if specified <see cref="SharpDX.Vector2"/> is inside <see cref="SharpDX.Rectangle"/>. 
-        /// </summary> 
+        /// Checks, if specified <see cref="SharpDX.Vector2"/> is inside <see cref="SharpDX.Rectangle"/>.
+        /// </summary>
         /// <param name="vector2D">Coordinate <see cref="SharpDX.Vector2"/>.</param>
         /// <returns><c>true</c> if <see cref="SharpDX.Vector2"/> is inside <see cref="SharpDX.Rectangle"/>, otherwise <c>false</c>.</returns>
         public bool Contains(Vector2 vector2D)
@@ -325,8 +337,8 @@ namespace SharpDX
             return Contains(vector2D.X, vector2D.Y);
         }
 
-        /// <summary>Determines whether a specified Rectangle intersects with this Rectangle.</summary>
-        /// <param name="value">The Rectangle to evaluate.</param>
+        /// <summary>Determines whether a specified rectangle intersects with this rectangle.</summary>
+        /// <param name="value">The rectangle to evaluate.</param>
         public bool Intersects(Rectangle value)
         {
             bool result;
@@ -335,21 +347,21 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether a specified Rectangle intersects with this Rectangle.
+        /// Determines whether a specified rectangle intersects with this rectangle.
         /// </summary>
-        /// <param name="value">The Rectangle to evaluate</param>
-        /// <param name="result">[OutAttribute] true if the specified Rectangle intersects with this one; false otherwise.</param>
+        /// <param name="value">The rectangle to evaluate</param>
+        /// <param name="result">[OutAttribute] true if the specified rectangle intersects with this one; false otherwise.</param>
         public void Intersects(ref Rectangle value, out bool result)
         {
             result = (value.X < Right) && (X < value.Right) && (value.Y < Bottom) && (Y < value.Bottom);
         }
 
         /// <summary>
-        /// Creates a Rectangle defining the area where one rectangle overlaps with another rectangle.
+        /// Creates a rectangle defining the area where one rectangle overlaps with another rectangle.
         /// </summary>
-        /// <param name="value1">The first Rectangle to compare.</param>
-        /// <param name="value2">The second Rectangle to compare.</param>
-        /// <returns>Rectangle.</returns>
+        /// <param name="value1">The first rectangle to compare.</param>
+        /// <param name="value2">The second rectangle to compare.</param>
+        /// <returns>The intersection rectangle.</returns>
         public static Rectangle Intersect(Rectangle value1, Rectangle value2)
         {
             Rectangle result;
@@ -357,9 +369,9 @@ namespace SharpDX
             return result;
         }
 
-        /// <summary>Creates a Rectangle defining the area where one rectangle overlaps with another rectangle.</summary>
-        /// <param name="value1">The first Rectangle to compare.</param>
-        /// <param name="value2">The second Rectangle to compare.</param>
+        /// <summary>Creates a rectangle defining the area where one rectangle overlaps with another rectangle.</summary>
+        /// <param name="value1">The first rectangle to compare.</param>
+        /// <param name="value2">The second rectangle to compare.</param>
         /// <param name="result">[OutAttribute] The area where the two first parameters overlap.</param>
         public static void Intersect(ref Rectangle value1, ref Rectangle value2, out Rectangle result)
         {
@@ -378,11 +390,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a new Rectangle that exactly contains two other rectangles.
+        /// Creates a new rectangle that exactly contains two other rectangles.
         /// </summary>
-        /// <param name="value1">The first Rectangle to contain.</param>
-        /// <param name="value2">The second Rectangle to contain.</param>
-        /// <returns>Rectangle.</returns>
+        /// <param name="value1">The first rectangle to contain.</param>
+        /// <param name="value2">The second rectangle to contain.</param>
+        /// <returns>The union rectangle.</returns>
         public static Rectangle Union(Rectangle value1, Rectangle value2)
         {
             Rectangle result;
@@ -391,22 +403,18 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a new Rectangle that exactly contains two other rectangles.
+        /// Creates a new rectangle that exactly contains two other rectangles.
         /// </summary>
-        /// <param name="value1">The first Rectangle to contain.</param>
-        /// <param name="value2">The second Rectangle to contain.</param>
-        /// <param name="result">[OutAttribute] The Rectangle that must be the union of the first two rectangles.</param>
+        /// <param name="value1">The first rectangle to contain.</param>
+        /// <param name="value2">The second rectangle to contain.</param>
+        /// <param name="result">[OutAttribute] The rectangle that must be the union of the first two rectangles.</param>
         public static void Union(ref Rectangle value1, ref Rectangle value2, out Rectangle result)
         {
-            int num6 = value1.X + value1.Width;
-            int num5 = value2.X + value2.Width;
-            int num4 = value1.Y + value1.Height;
-            int num3 = value2.Y + value2.Height;
-            int num2 = (value1.X < value2.X) ? value1.X : value2.X;
-            int num = (value1.Y < value2.Y) ? value1.Y : value2.Y;
-            int num8 = (num6 > num5) ? num6 : num5;
-            int num7 = (num4 > num3) ? num4 : num3;
-            result = new Rectangle(num2, num, num8 - num2, num7 - num);
+            var left = Math.Min(value1.Left, value2.Left);
+            var right = Math.Max(value1.Right, value2.Right);
+            var top = Math.Min(value1.Top, value2.Top);
+            var bottom = Math.Max(value1.Bottom, value2.Bottom);
+            result = new Rectangle(left, top, right - left, bottom - top);
         }
 
         /// <summary>
@@ -439,7 +447,7 @@ namespace SharpDX
         /// Returns a hash code for this instance.
         /// </summary>
         /// <returns>
-        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
         public override int GetHashCode()
         {
