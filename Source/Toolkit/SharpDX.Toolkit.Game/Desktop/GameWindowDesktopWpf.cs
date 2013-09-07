@@ -133,9 +133,12 @@ namespace SharpDX.Toolkit
         internal override void Initialize(GameContext gameContext)
         {
             if (gameContext == null) throw new ArgumentNullException("gameContext");
-
-            element = gameContext.Control as SharpDXElement;
-            if (element == null) throw new ArgumentException("Only SharpDXElement is supported at this time", "gameContext");
+						/* imho
+						 * element = gameContext.Control as SharpDXElement;
+						 * isn't that good. Checking if gameContext.Control is assignable from SharpDXElement is better. */
+						if (gameContext.Control.GetType().IsAssignableFrom(typeof(SharpDXElement)))
+							element = (SharpDXElement)gameContext.Control; // may be an Operator for SharpDXElement can be used here.
+            if (element == null) throw new ArgumentException("Only SharpDXElement is supported at this time", "gameContext"); // modify exception message
 
             var width = gameContext.RequestedWidth;
             if (width <= 0)
