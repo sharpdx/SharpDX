@@ -30,8 +30,9 @@ namespace SharpDX.Toolkit
     /// <summary>
     /// An framework element that supports rendering D3D11 scene.
     /// </summary>
-    public sealed class SharpDXElement : FrameworkElement, IDisposable
+    public class SharpDXElement : FrameworkElement, IDisposable // removed sealed
     {
+			//does it have to be sealed? If I want to have another implementation of this in my own program this won't work!
         private readonly D3DImage image;
         private readonly Direct3DEx direct3D;
         private readonly DeviceEx device9;
@@ -61,6 +62,9 @@ namespace SharpDX.Toolkit
         /// </summary>
         public static readonly DependencyProperty SendResizeDelayProperty = DependencyProperty
             .Register("SendResizeDelay", typeof(TimeSpan), typeof(SharpDXElement), new FrameworkPropertyMetadata(TimeSpan.FromSeconds(1), HandleResizeDelayChanged));
+
+				public static readonly DependencyProperty GameProperty = DependencyProperty
+					.Register("Game", typeof(Game), typeof(SharpDXElement), new PropertyMetadata(default(Game)));
 
         /// <summary>
         /// Indicates whether the rendering should be done in the <see cref="System.Windows.Threading.DispatcherPriority.Input"/> priority.
@@ -162,6 +166,24 @@ namespace SharpDX.Toolkit
             get { return (bool)GetValue(LowPriorityRenderingProperty); }
             set { SetValue(LowPriorityRenderingProperty, value); }
         }
+
+				public Game Game {
+					get {
+						return (Game)GetValue(GameProperty);
+					}
+					set {
+						SetValue(GameProperty, value);
+
+						if (Game != null && !Game.IsRunning)
+							Game.Run(this);
+					}
+				}
+
+			//fallback if above does not work!
+				public void Run() {
+					if (Game != null)
+						Game.Run(this);
+				}
 
         /// <summary>
         /// Converts an <see cref="SharpDXElement"/> to <see cref="GameContext"/>.
