@@ -372,7 +372,7 @@ namespace SharpDX.Direct3D11
 
         internal abstract void SetConstantBuffers(int startSlot, int numBuffers, IntPtr constantBuffersRef);
 
-        internal abstract void SetShader(DeviceChild shader, SharpDX.Direct3D11.ClassInstance[] classInstancesOut, int numClassInstances);
+        public abstract void SetShader(DeviceChild shader, SharpDX.Direct3D11.ClassInstance[] classInstancesOut, int numClassInstances);
 
         internal abstract void SetUnorderedAccessViews(int startSlot, int numBuffers, IntPtr unorderedAccessBuffer, IntPtr uavCount);
     }
@@ -447,7 +447,7 @@ namespace SharpDX.Direct3D11
             SetShader(shader, classInstances, classInstances == null ? 0 : classInstances.Length);
         }
 
-        internal override void SetShader(DeviceChild shader, SharpDX.Direct3D11.ClassInstance[] classInstancesOut, int numClassInstances)
+        public override void SetShader(DeviceChild shader, SharpDX.Direct3D11.ClassInstance[] classInstancesOut, int numClassInstances)
         {
             SetShader((T)shader, classInstancesOut, numClassInstances);
         }
