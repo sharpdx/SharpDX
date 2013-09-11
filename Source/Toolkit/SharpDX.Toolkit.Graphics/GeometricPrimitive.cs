@@ -73,8 +73,8 @@ namespace SharpDX.Toolkit.Graphics
             if (toLeftHanded)
                 ReverseWinding(vertices, indices);
 
-            indexBuffer = Buffer.Index.New(graphicsDevice, indices);
-            vertexBuffer = Buffer.Vertex.New(graphicsDevice, vertices);
+            indexBuffer = ToDispose(Buffer.Index.New(graphicsDevice, indices));
+            vertexBuffer = ToDispose(Buffer.Vertex.New(graphicsDevice, vertices));
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     indicesShort[i] = (ushort)indices[i];
                 }
-                indexBuffer = Buffer.Index.New(graphicsDevice, indicesShort);
+                indexBuffer = ToDispose(Buffer.Index.New(graphicsDevice, indicesShort));
             }
             else
             {
@@ -108,11 +108,11 @@ namespace SharpDX.Toolkit.Graphics
                     throw new InvalidOperationException("Cannot generate more than 65535 indices on feature level HW <= 9.3");
                 }
 
-                indexBuffer = Buffer.Index.New(graphicsDevice, indices);
+                indexBuffer = ToDispose(Buffer.Index.New(graphicsDevice, indices));
                 isIndex32Bits = true;
             }
 
-            vertexBuffer = Buffer.Vertex.New(graphicsDevice, vertices);
+            vertexBuffer = ToDispose(Buffer.Vertex.New(graphicsDevice, vertices));
         }
 
         /// <summary>
