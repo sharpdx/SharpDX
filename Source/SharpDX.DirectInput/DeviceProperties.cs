@@ -211,12 +211,14 @@ namespace SharpDX.DirectInput
         }
 
         /// <summary>
-        /// Gets the range of values an object can possibly report.
+        /// Gets or sets the range of values an object can possibly report.
         /// </summary>
         /// <value>The range.</value>
+        /// <remarks>For some devices, this is a read-only property.</remarks>
         public InputRange Range
         {
             get { return GetRange(PropertyGuids.Range); }
+            set { Set(PropertyGuids.Range, value);}
         }
 
         /// <summary>

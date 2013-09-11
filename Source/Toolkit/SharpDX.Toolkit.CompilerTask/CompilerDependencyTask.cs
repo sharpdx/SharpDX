@@ -158,7 +158,8 @@ namespace SharpDX.Toolkit
                            LinkName = item.GetMetadata("Link", item.ItemSpec),
                            OutputNamespace = item.GetMetadata("OutputNamespace", RootNamespace),
                            OutputFieldName = item.GetMetadata("OutputFieldName", "bytecode"),
-                           OutputCs = item.GetMetadata("OutputCs", false)
+                           OutputCs = item.GetMetadata("OutputCs", false),
+                           ParentTaskItem = item
                        };
 
             data.OutputClassName = item.GetMetadata("OutputClassName", Path.GetFileNameWithoutExtension(data.LinkName));

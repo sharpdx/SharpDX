@@ -196,6 +196,21 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Gets a single value from the current buffer at the specified position.
+        /// </summary>
+        /// <typeparam name="T">The type of the value to be read from the buffer.</typeparam>
+        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to get the data from.</param>
+        /// <param name="value">The value as out.</param>
+        /// <returns>The value that was read.</returns>
+        public void Get<T>(int positionInBytes, out T value) where T : struct
+        {
+            unsafe
+            {
+                Utilities.ReadOut((IntPtr)(_buffer + positionInBytes), out value);
+            }
+        }
+
+        /// <summary>
         /// Gets a float.
         /// </summary>
         /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to get the data from.</param>

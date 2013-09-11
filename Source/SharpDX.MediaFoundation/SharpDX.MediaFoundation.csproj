@@ -25,7 +25,12 @@
     <Compile Include="AudioDecoder.cs" />
     <Compile Include="ByteStream.cs" />
     <Compile Include="AsyncCallbackShadow.cs" />
+    <Compile Condition=" '$(DirectX11_1)' == 'false'" Include="DirectX\HDDevice.cs" />
+    <Compile Condition=" '$(DirectX11_1)' == 'false'" Include="DirectX\Direct3DDeviceManager.cs" />
     <Compile Include="DirectX\NamespaceDoc.cs" />
+    <Compile Condition=" '$(DirectX11_1)' == 'false'" Include="DirectX\VideoAccelerationService.cs" />
+    <Compile Condition=" '$(DirectX11_1)' == 'false'" Include="DirectX\VideoDecoderService.cs" />
+    <Compile Condition=" '$(DirectX11_1)' == 'false'" Include="DirectX\VideoProcessorService.cs" />
     <Compile Include="DXGIDeviceManager.cs" />
     <Compile Include="AsyncResult.cs" />
     <Compile Include="IAsyncCallback.cs" />

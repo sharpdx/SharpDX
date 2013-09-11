@@ -287,6 +287,7 @@
 
     <map interface="ID3DDeviceContextState" name="DeviceContextState"/>
     <map interface="ID3DUserDefinedAnnotation" name="UserDefinedAnnotation"/>
+    <map method="ID3DUserDefinedAnnotation::SetMarker" property="false" />
 
     <map param="ID3D11Device1::CreateDeviceContextState::Flags" type="D3D11_1_CREATE_DEVICE_CONTEXT_STATE_FLAG"/>
 

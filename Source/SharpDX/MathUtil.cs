@@ -296,6 +296,34 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Performs smooth (cubic Hermite) interpolation between 0 and 1.
+        /// </summary>
+        /// <remarks>
+        /// See https://en.wikipedia.org/wiki/Smoothstep
+        /// </remarks>
+        /// <param name="amount">Value between 0 and 1 indicating interpolation amount.</param>
+        public static float SmoothStep(float amount)
+        {
+            return (amount <= 0) ? 0
+                : (amount >= 1) ? 1
+                : amount * amount * (3 - (2 * amount));
+        }
+
+        /// <summary>
+        /// Performs a smooth(er) interpolation between 0 and 1 with 1st and 2nd order derivatives of zero at endpoints.
+        /// </summary>
+        /// <remarks>
+        /// See https://en.wikipedia.org/wiki/Smoothstep
+        /// </remarks>
+        /// <param name="amount">Value between 0 and 1 indicating interpolation amount.</param>
+        public static float SmootherStep(float amount)
+        {
+            return (amount <= 0) ? 0
+                : (amount >= 1) ? 1
+                : amount * amount * amount * (amount * ((amount * 6) - 15) + 10);
+        }
+
+        /// <summary>
         /// Calculates the modulo of the specified value.
         /// </summary>
         /// <param name="value">The value.</param>
@@ -453,7 +481,7 @@ namespace SharpDX
             random.NextBytes(buf);
             long longRand = BitConverter.ToInt64(buf, 0);
 
-            return (Math.Abs(longRand % (max - min)) + min);
+            return (Math.Abs(longRand % (max - min + 1)) + min);
         }
 
         /// <summary>
@@ -548,21 +576,9 @@ namespace SharpDX
         /// <param name="min">Minimum.</param>
         /// <param name="max">Maximum.</param>
         /// <returns>Random <see cref="SharpDX.Point"/>.</returns>
-        public static Point NextDPoint(this Random random, Point min, Point max)
+        public static Point NextPoint(this Random random, Point min, Point max)
         {
             return new Point(random.Next(min.X, max.X), random.Next(min.Y, max.Y));
-        }
-
-        /// <summary>
-        /// Gets random <see cref="SharpDX.Vector2"/>.
-        /// </summary>
-        /// <param name="random">Current <see cref="System.Random"/>.</param>
-        /// <param name="min">Minimum.</param>
-        /// <param name="max">Maximum.</param>
-        /// <returns>Random <see cref="SharpDX.Vector2"/>.</returns>
-        public static Vector2 NextDPointF(this Random random, Vector2 min, Vector2 max)
-        {
-            return new Vector2(random.NextFloat(min.X, max.X), random.NextFloat(min.Y, max.Y));
         }
 
         /// <summary>
@@ -626,7 +642,7 @@ namespace SharpDX
             random.NextBytes(buf);
             long longRand = BitConverter.ToInt64(buf, 0);
 
-            return (Math.Abs(longRand % (max - min)) + min);
+            return (Math.Abs(longRand % (max - min + 1)) + min);
         }
 
         /// <summary>
@@ -721,21 +737,9 @@ namespace SharpDX
         /// <param name="min">Minimum.</param>
         /// <param name="max">Maximum.</param>
         /// <returns>Random <see cref="SharpDX.Point"/>.</returns>
-        public static Point NextDPoint(Random random, Point min, Point max)
+        public static Point NextPoint(Random random, Point min, Point max)
         {
             return new Point(random.Next(min.X, max.X), random.Next(min.Y, max.Y));
-        }
-
-        /// <summary>
-        /// Gets random <see cref="SharpDX.Vector2"/>.
-        /// </summary>
-        /// <param name="random">A <see cref="System.Random"/> instance.</param>
-        /// <param name="min">Minimum.</param>
-        /// <param name="max">Maximum.</param>
-        /// <returns>Random <see cref="SharpDX.Vector2"/>.</returns>
-        public static Vector2 NextDPointF(Random random, Vector2 min, Vector2 max)
-        {
-            return new Vector2(NextFloat(random, min.X, max.X), NextFloat(random, min.Y, max.Y));
         }
 
         /// <summary>

@@ -127,7 +127,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
   <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\Assimp64.dll') and '$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Content Include="$(SharpDXSdkBinDir)\Assimp64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Assimp32.dll</Link>
+      <Link>Assimp64.dll</Link>
     </Content>
   </ItemGroup>
 

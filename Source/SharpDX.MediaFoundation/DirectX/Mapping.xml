@@ -120,6 +120,7 @@
     -->
     <map interface="IDirectX(.*)" name="$1"/>
     <map interface="IDXVAHD_(.*)" name="HD$1"/>
+    <map interface="IDirect3DDeviceManager9" name="Direct3DDeviceManager"/>
 
     <!--
     // *****************************************************************
@@ -128,6 +129,8 @@
     -->
     <map function="DXVA2(.*)" name-tmp="$1"  dll='"Dxva2.dll"' group="SharpDX.MediaFoundation.DirectX.DXVAFactory"/>
     <map function="DXVAHD(.*)" name-tmp="$1"  dll='"Dxva2.dll"' group="SharpDX.MediaFoundation.DirectX.DXVAFactory"/>
+    <map param="DXVA2CreateDirect3DDeviceManager9::ppDeviceManager" attribute="out fast" />
+    <map param="DXVAHD_CreateDevice::ppDevice" attribute="out fast" />
 
     <context-clear />
   </mapping>

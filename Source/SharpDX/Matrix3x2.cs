@@ -497,9 +497,7 @@ namespace SharpDX
         /// <param name="result">When the method completes, contains the cubic interpolation of the two matrices.</param>
         public static void SmoothStep(ref Matrix3x2 start, ref Matrix3x2 end, float amount, out Matrix3x2 result)
         {
-            amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
-            amount = (amount * amount) * (3.0f - (2.0f * amount));
-
+            amount = MathUtil.SmoothStep(amount);
             Lerp(ref start, ref end, amount, out result);
         }
 
@@ -815,6 +813,32 @@ namespace SharpDX
             Matrix3x2 result;
             Invert(ref value, out result);
             return result;
+        }
+
+        /// <summary>
+        /// Creates a skew matrix.
+        /// </summary>
+        /// <param name="angleX">Angle of skew along the X-axis in radians.</param>
+        /// <param name="angleY">Angle of skew along the Y-axis in radians.</param>
+        /// <returns>The created skew matrix.</returns>
+        public static Matrix3x2 Skew(float angleX, float angleY)
+        {
+            Matrix3x2 result;
+            Skew(angleX, angleY, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a skew matrix.
+        /// </summary>
+        /// <param name="angleX">Angle of skew along the X-axis in radians.</param>
+        /// <param name="angleY">Angle of skew along the Y-axis in radians.</param>
+        /// <param name="result">When the method completes, contains the created skew matrix.</param>
+        public static void Skew(float angleX, float angleY, out Matrix3x2 result)
+        {
+            result = Matrix.Identity;
+            result.M12 = (float) Math.Tan(angleX);
+            result.M21 = (float) Math.Tan(angleY);
         }
 
         /// <summary>

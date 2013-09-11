@@ -18,21 +18,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace SharpDX.Toolkit.Graphics
+#if DIRECTX11_1
+
+using System;
+
+namespace SharpDX.DirectWrite
 {
-    /// <summary>
-    /// Describes the interface to install effects into a model.
-    /// </summary>
-    /// <remarks>
-    /// This interface should be implemented by a client that wants to setup its own effects on a model.
-    /// This interface doesn't force to install a single type of effects but could be use to perform more process on a model.
-    /// </remarks>
-    public interface IEffectInstaller
+    /// <summary>	
+    /// <p>Creates a rendering parameters object with the specified properties.</p>	
+    /// </summary>	
+    /// <include file='..\Documentation\CodeComments.xml' path="/comments/comment[@id='IDWriteFactory1']/*"/>	
+    /// <msdn-id>Hh780402</msdn-id>	
+    /// <unmanaged>IDWriteFactory1</unmanaged>	
+    /// <unmanaged-short>IDWriteFactory1</unmanaged-short>	
+    public partial class Factory1
     {
         /// <summary>
-        /// Applies this installer to a model.
+        /// Creates a new instance of the <see cref="Factory1"/> class with the <see cref="FactoryType.Shared"/> type.
         /// </summary>
-        /// <param name="model">The model to be processed by this installer.</param>
-        void Apply(Model model);
+        public Factory1()
+            : this(FactoryType.Shared)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="Factory1"/> class.
+        /// </summary>
+        /// <param name="factoryType">The factory type.</param>
+        public Factory1(FactoryType factoryType)
+            : base(IntPtr.Zero)
+        {
+            DWrite.CreateFactory(factoryType, Utilities.GetGuidFromType(typeof(Factory1)), this);
+        }
     }
 }
+
+#endif

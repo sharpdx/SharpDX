@@ -33,6 +33,7 @@ namespace SharpDX.Toolkit
     /// </remarks>
     public class GameSystem : Component, IGameSystem, IUpdateable, IDrawable, IContentable
     {
+        private readonly DisposeCollector contentCollector = new DisposeCollector();
         private readonly IServiceRegistry registry;
         private int drawOrder;
         private bool enabled;
@@ -55,7 +56,8 @@ namespace SharpDX.Toolkit
         /// Initializes a new instance of the <see cref="GameSystem" /> class.
         /// </summary>
         /// <param name="game">The game.</param>
-        public GameSystem(Game game) : this(game.Services)
+        public GameSystem(Game game)
+            : this(game.Services)
         {
             this.game = game;
         }
@@ -236,6 +238,8 @@ namespace SharpDX.Toolkit
 
         void IContentable.UnloadContent()
         {
+            contentCollector.DisposeAndClear();
+
             UnloadContent();
         }
 
@@ -248,6 +252,20 @@ namespace SharpDX.Toolkit
         }
 
         #endregion
+
+        /// <summary>
+        /// Adds an object to be disposed automatically when <see cref="UnloadContent"/> is called. See remarks.
+        /// </summary>
+        /// <typeparam name="T">Type of the object to dispose</typeparam>
+        /// <param name="disposable">The disposable object.</param>
+        /// <returns>The disposable object.</returns>
+        /// <remarks>
+        /// Use this method for any content that is not loaded through the <see cref="ContentManager"/>.
+        /// </remarks>
+        protected T ToDisposeContent<T>(T disposable) where T : IDisposable
+        {
+            return contentCollector.Collect(disposable);
+        }
     }
 }
 

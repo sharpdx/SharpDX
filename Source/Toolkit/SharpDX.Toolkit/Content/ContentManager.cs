@@ -269,7 +269,6 @@ namespace SharpDX.Toolkit.Content
         {
             object result = null;
 
-            long startPosition = stream.Position;
             var parameters = new ContentReaderParameters()
                                  {
                                      AssetName = assetName,
@@ -325,27 +324,11 @@ namespace SharpDX.Toolkit.Content
                         }
                     }
 
-                    // Rewind position every time we try to load an asset
-                    stream.Position = startPosition;
                     result = contentReader.ReadContent(this, ref parameters);
-                    stream.Position = startPosition;
                 }
                 else
                 {
-                    // Try to load from registered content readers
-                    List<IContentReader> readers;
-                    lock (registeredContentReaders)
-                    {
-                        readers = new List<IContentReader>(registeredContentReaders);
-                    }
-
-                    foreach (IContentReader registeredContentReader in readers)
-                    {
-                        // Rewind position every time we try to load an asset
-                        result = registeredContentReader.ReadContent(this, ref parameters);
-                        stream.Position = startPosition;
-                        if (result != null) break;
-                    }
+                    throw new InvalidOperationException(string.Format("Type [{0}] doesn't provide a ContentReaderAttribute", typeof(T).FullName));
                 }
 
                 if (result == null) throw new NotSupportedException("Unable to load content");

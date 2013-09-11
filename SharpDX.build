@@ -40,11 +40,13 @@
   </Target>
 
   <Target Name="FullBuild">
+	<CallTarget Targets="GitCheckout"/>
 	<CallTarget Targets="Build"/>
 	<CallTarget Targets="BuildSamples"/>
 	<CallTarget Targets="GitUpdate"/>
 	<CallTarget Targets="ZipBuild"/>
 	<CallTarget Targets="GitUpload"/>
+	<CallTarget Targets="FtpTimestamp"/>
   </Target>
   
   <Target Name="Build">
@@ -108,6 +110,11 @@
 	<CallTarget Targets="CleanSamples"/>
   </Target>
   
+  <Target Name="GitCheckout">
+    <Exec Command='$(GitExe) checkout --merge "master_integration"'/>
+    <Exec Command='$(GitExe) pull --rebase origin'/>
+  </Target>
+  
   <Target Name="GitUpdate">
 	  <!-- Update master -->
 	  <Exec Command='$(GitExe) checkout --merge "master"'/>
@@ -150,7 +157,7 @@
 	<PropertyGroup>
 		<LastCommit>$([System.IO.File]::ReadAllText($(LastCommitPath)))</LastCommit>
 	</PropertyGroup>
-	
+  
 	<!-- Checkout latest version of nightly builds  -->
 	<Exec Command='$(GitExe) checkout --merge "master"' WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
 	<Exec Command='$(GitExe) pull --rebase origin' WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
@@ -160,10 +167,19 @@
 	
 	<!-- Push nightly builds master -->
 	<Exec Command='$(GitExe) add $(SharpDXDevZip)' WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
-	<Exec Command='$(GitExe) commit -m "Link to latest commit http://code.google.com/p/sharpdx/source/detail?r=$(LastCommit.Trim())"'  WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
+	<Exec Command='$(GitExe) commit -m "Link to latest commit https://github.com/sharpdx/SharpDX/commit/$(LastCommit.Trim())"'  WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
 	<Exec Command='$(GitExe) push "origin" master:master' WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
-	
+  </Target>
+  
+  <Target Name="FtpTimestamp">
+	<!-- Get Last commit log from git  -->
+	<PropertyGroup>
+		<LastCommitPath>last_commit.txt</LastCommitPath>
+	</PropertyGroup>
+	<Exec Command='$(GitExe) log --format=%%H -1 > $(LastCommitPath)'/>
+
 	<!-- Upload Last Commit file -->
 	<MSBuild.ExtensionPack.Communication.Ftp TaskAction="UploadFiles" Host="sharpdx.org" RemoteDirectoryName="/sharpdx/upload" FileNames="$(LastCommitPath)" UserName="$(SharpDXFtpUser)" UserPassword="$(SharpDXFtpPassword)" />
   </Target>
+  
 </Project>
