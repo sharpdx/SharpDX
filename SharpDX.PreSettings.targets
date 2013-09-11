@@ -89,6 +89,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'DIRECTX11_2Debug' Or '$(Configuration)' == 'DIRECTX11_2Release'">
     <SharpDXAssemblyType>DirectX11_2</SharpDXAssemblyType>
     <SharpDXPlatform>net40</SharpDXPlatform>
+    <DirectX11_1>true</DirectX11_1>
     <DirectX11_2>true</DirectX11_2>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
@@ -100,6 +101,7 @@
     <SharpDXPlatform>winrt</SharpDXPlatform>
     <SharpDXWin8>true</SharpDXWin8>
     <SharpDXWin8Core>true</SharpDXWin8Core>
+    <DirectX11_1>true</DirectX11_1>
     <DirectX11_2>true</DirectX11_2>
   </PropertyGroup>
 
