@@ -22,7 +22,7 @@
 -->
 <config id="sharpdx-dxgi" xmlns="urn:SharpGen.Config">
   <depends>sharpdx</depends>
-  
+
   <namespace>SharpDX.DXGI</namespace>
   <assembly>SharpDX.DXGI</assembly>
 
@@ -57,7 +57,7 @@
         #define DXGI_ERROR_DRIVER_INTERNAL_ERROR        MAKE_DXGI_HRESULT(32)
         #define DXGI_ERROR_NONEXCLUSIVE                 MAKE_DXGI_HRESULT(33)
         #define DXGI_ERROR_NOT_CURRENTLY_AVAILABLE      MAKE_DXGI_HRESULT(34)
-        #define DXGI_ERROR_REMOTE_CLIENT_DISCONNECTED   MAKE_DXGI_HRESULT(35)        
+        #define DXGI_ERROR_REMOTE_CLIENT_DISCONNECTED   MAKE_DXGI_HRESULT(35)
         #define DXGI_ERROR_REMOTE_OUTOFMEMORY           MAKE_DXGI_HRESULT(36)
       </post>
     </ifdef>
@@ -71,7 +71,7 @@
   <ifdef name="DIRECTX11_2">
     <include id="dxgi1_3" file="dxgi1_3.h" attach="true" />
   </ifdef>
-  
+
   <context-set id="dxgi-all">
     <context>sharpdx-dxgi</context>
     <context>sharpdx-dxgi-ext</context>
@@ -133,7 +133,7 @@
     // *****************************************************************
     // DXGI Enumerations
     // *****************************************************************
-    -->    
+    -->
     <map enum="DXGI(.+)" name-tmp="$1" />
     <map enum="DXGI_USAGE_ENUM" name="Usage" flags="true" none="false" />
     <map enum-item="DXGI_USAGE_(.+)" name-tmp="$1" />
@@ -161,17 +161,17 @@
     <map field="DXGI_ADAPTER_DESC[12]?::AdapterLuid" name="Luid" />
     <map field="DXGI_ADAPTER_DESC[12]?::SubSysId" name="SubsystemId" />
     <map field="DXGI_ADAPTER_DESC[12]::Flags" type="DXGI_ADAPTER_FLAG" />
-    
+
     <map field="DXGI_GAMMA_CONTROL_CAPABILITIES::MaxConvertedValue" name="MaximumConvertedValue" />
     <map field="DXGI_GAMMA_CONTROL_CAPABILITIES::MinConvertedValue" name="MinimumConvertedValue" />
     <map field="DXGI_GAMMA_CONTROL_CAPABILITIES::NumGammaControlPoints" name="ControlPointsCount" />
     <map field="DXGI_GAMMA_CONTROL_CAPABILITIES::ControlPointPositions" name="ControlPoints" />
     <map field="DXGI_GAMMA_CONTROL_CAPABILITIES::ScaleAndOffsetSupported" name="IsScaleAndOffsetSupported" />
-    
+
     <map field="DXGI_OUTPUT_DESC::DesktopCoordinates" name="DesktopBounds" />
     <map field="DXGI_OUTPUT_DESC::AttachedToDesktop" name="IsAttachedToDesktop" />
     <map field="DXGI_OUTPUT_DESC::Monitor" name="MonitorHandle" />
-    
+
     <map field="DXGI_SWAP_CHAIN_DESC[12]?::BufferDesc" name="ModeDescription" />
     <map field="DXGI_SWAP_CHAIN_DESC::OutputWindow" name="OutputHandle" />
     <map field="DXGI_SWAP_CHAIN_DESC::Windowed" name="IsWindowed" />
@@ -195,15 +195,15 @@
     <map method=".*::GetPrivateData" check="false"/>
 
     <map method="IDXGIAdapter::EnumOutputs" name="GetOutput" visibility="internal" check="false"/>
-    
+
     <map method="IDXGIAdapter::CheckInterfaceSupport" visibility="internal" check="false"/>
-    
+
     <map method="IDXGIDevice::CreateSurface" visibility="internal" />
     <map method="IDXGIDevice::QueryResourceResidency" visibility="internal" />
 
     <map method="IDXGIFactory::CreateSwapChain" visibility="internal" />
     <map param="ppSwapChain" attribute="out fast"/>
-    
+
     <map param="IDXGIFactory::CreateSoftwareAdapter::ppAdapter" return="true" />
     <map method="IDXGIFactory::EnumAdapters" name="GetAdapter" visibility="internal" check="false"/>
     <map method="IDXGIFactory1::EnumAdapters1" name="GetAdapter1" visibility="internal" check="false"/>
@@ -215,18 +215,18 @@
     <map param="IDXGIFactory2::Create.*::ppSwapChain" attribute="out fast" />
 
     <map method="IDXGIKeyedMutex::(.*)Sync" name="$1" />
-    
+
     <map method="IDXGIOutput::FindClosestMatchingMode" visibility="internal" />
     <map method="IDXGIOutput1?::GetDisplayModeList1?" visibility="internal" />
     <map method="IDXGIOutput::SetDisplaySurface" visibility="public" property="false" />
     <map method="IDXGIOutput::GetDisplaySurfaceData" name="CopyDisplaySurfaceTo" />
     <map method="IDXGIOutput::WaitForVBlank" name="WaitForVerticalBlank" />
     <map method="IDXGIOutput2::SupportsOverlays" visibility="internal" name="SupportsOverlays_" />
-    
+
     <map method="IDXGISurface::Map" visibility="internal" />
     <map param="IDXGISurface1::GetDC::phdc" return="true" />
     <map method="IDXGISurface1::ReleaseDC" visibility="internal" name="ReleaseDC_" />
-    
+
     <map method="IDXGISwapChain::GetBuffer" visibility="internal" />
     <map param="IDXGISwapChain::Present::Flags" type="DXGI_PRESENT_FLAGS" />
     <map param="IDXGISwapChain::ResizeBuffers::SwapChainFlags" type="DXGI_SWAP_CHAIN_FLAG" />
@@ -253,12 +253,17 @@
 
     <ifdef name="DIRECTX11_1">
       <map param="ISurfaceImageSourceNative::BeginDraw::pSurface" return="true"/>
-      
+
       <map interface="IVirtualSurfaceUpdatesCallbackNative" visibility="internal" callback="true" callback-dual="true" />
       <map method="IVirtualSurfaceImageSourceNative::RegisterForUpdatesNeeded" visibility="internal"/>
 
       <map method="IVirtualSurfaceImageSourceNative::GetUpdateRectCount" visibility="internal" property="false"/>
-      <map param="IVirtualSurfaceImageSourceNative::GetUpdateRectCount::pCount" return="true"/>
+      <ifndef name="DIRECTX11_2">
+        <map param="IVirtualSurfaceImageSourceNative::GetUpdateRectCount::pCount" return="true"/>
+      </ifndef>
+      <ifdef name="DIRECTX11_2">
+        <map param="IVirtualSurfaceImageSourceNative::GetUpdateRectCount::count" return="true"/>
+      </ifdef>
       <map method="IVirtualSurfaceImageSourceNative::GetUpdateRects" visibility="internal"/>
 
       <map method="IDXGISwapChain1::Present1" visibility="internal"/>
@@ -283,7 +288,12 @@
     </ifdef>
     <map function="CreateDXGIFactory.*" dll='"dxgi.dll"' group="SharpDX.DXGI.DXGI" />
     <map param="CreateDXGIFactory.*?::ppFactory" attribute="out" />
-    
+
+    <ifdef name="DIRECTX11_2">
+      <!-- TODO: No documentation - don't know how to map it. -->
+      <remove function="DXGIGetDebugInterface1" />
+    </ifdef>
+
     <context-clear/>
   </mapping>
 </config>
