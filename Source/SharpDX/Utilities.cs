@@ -53,9 +53,10 @@ namespace SharpDX
     public delegate TResult Func<out TResult>();
     public delegate TResult Func<in T1, out TResult>(T1 paramT1);
     public delegate TResult Func<in T1, in T2, out TResult>(T1 paramT1, T2 paramT2);
-#endif
 
-    public delegate void VoidAction();
+    public delegate void Action();
+    public delegate void Action<T1, T2>(T1 paramT1, T2 paramT2);
+#endif
 
     /// <summary>
     /// A Delegate to get a property value from an object.
