@@ -300,7 +300,7 @@ namespace SharpDX.Toolkit.Content
                         {
                             contentReader = Activator.CreateInstance(contentReaderAttribute.ContentReaderType) as IContentReader;
                             if (contentReader != null)
-                                Register<T>(contentReader);
+                                Readers.Add(typeof(T), contentReader);
                         }
                     }
                 }

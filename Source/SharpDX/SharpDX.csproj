@@ -31,6 +31,7 @@
     <Compile Include="Collections\ObservableCollection.cs" />
     <Compile Include="Collections\ObservableCollectionEventArgs.cs" />
     <Compile Include="Collections\ObservableDictionary.cs" />
+    <Compile Include="Collections\ObservableDictionaryEventArgs.cs" />
     <Compile Include="ComponentCollection.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="OrientedBoundingBox.cs" />

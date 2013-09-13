@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2013 SharpDX - SharpDX Team
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,47 @@ namespace SharpDX.Collections
     /// <typeparam name="TValue">The dictionary's value type.</typeparam>
     public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
-        private readonly Dictionary<TKey, TValue> dictionary = new Dictionary<TKey, TValue>();
+        private readonly Dictionary<TKey, TValue> dictionary;
+
+        /// <inheritdoc/>
+        public ObservableDictionary()
+            : this(0, null)
+        {
+        }
+
+        /// <inheritdoc/>
+        public ObservableDictionary(int capacity)
+            : this(capacity, null)
+        {
+        }
+
+        /// <inheritdoc/>
+        public ObservableDictionary(IEqualityComparer<TKey> comparer)
+            : this(0, comparer)
+        {
+        }
+
+        /// <inheritdoc/>
+        public ObservableDictionary(IDictionary<TKey, TValue> dictionary)
+            : this(dictionary, null)
+        {
+        }
+
+        /// <inheritdoc/>
+        public ObservableDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer)
+            : this(dictionary != null ? dictionary.Count : 0, comparer)
+        {
+            if (dictionary == null) throw new ArgumentNullException("dictionary");
+
+            foreach (var pair in dictionary)
+                Add(pair.Key, pair.Value);
+        }
+
+        /// <inheritdoc/>
+        public ObservableDictionary(int capacity, IEqualityComparer<TKey> comparer)
+        {
+            dictionary = new Dictionary<TKey, TValue>(capacity, comparer);
+        }
 
         /// <summary>
         /// Returns the collection of the keys present in dictionary.
@@ -79,7 +119,7 @@ namespace SharpDX.Collections
 
             dictionary.Clear();
 
-            foreach(var e in args)
+            foreach (var e in args)
                 OnItemRemoved(e);
         }
 
