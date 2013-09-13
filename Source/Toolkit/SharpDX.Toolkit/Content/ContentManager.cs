@@ -36,7 +36,7 @@ namespace SharpDX.Toolkit.Content
         private readonly Dictionary<string, object> assetLockers;
         private readonly Dictionary<string, object> loadedAssets;
         private readonly List<IContentResolver> registeredContentResolvers;
-        private readonly List<IContentReader> registeredContentReaders;
+        private readonly Dictionary<Type, IContentReader> registeredContentReaders;
 
         private string rootDirectory;
 
@@ -59,10 +59,10 @@ namespace SharpDX.Toolkit.Content
             registeredContentResolvers = new List<IContentResolver>();
 
             // Content readers.
-            Readers = new ObservableCollection<IContentReader>();
+            Readers = new ObservableCollection<KeyValuePair<Type, IContentReader>>();
             Readers.ItemAdded += ContentReaders_ItemAdded;
             Readers.ItemRemoved += ContentReaders_ItemRemoved;
-            registeredContentReaders = new List<IContentReader>();
+            registeredContentReaders = new Dictionary<Type, IContentReader>();
 
             loadedAssets = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             assetLockers = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
@@ -76,7 +76,7 @@ namespace SharpDX.Toolkit.Content
         /// <summary>
         /// Add or remove registered <see cref="IContentReader"/> to this instance.
         /// </summary>
-        public ObservableCollection<IContentReader> Readers { get; private set; }
+        public ObservableCollection<KeyValuePair<Type, IContentReader>> Readers { get; private set; }
 
         /// <summary>
         /// Gets the service provider associated with the ContentManager.
@@ -268,70 +268,49 @@ namespace SharpDX.Toolkit.Content
         private object LoadAssetWithDynamicContentReader<T>(string assetName, Stream stream, object options)
         {
             object result = null;
+            Type type = typeof(T);
 
             var parameters = new ContentReaderParameters()
                                  {
                                      AssetName = assetName,
-                                     AssetType = typeof(T),
+                                     AssetType = type,
                                      Stream = stream,
                                      Options = options
                                  };
 
             try
             {
-                // Else try to load using a dynamic content reader attribute
+                IContentReader contentReader;
+                lock(registeredContentReaders) {
+                    if (!registeredContentReaders.TryGetValue(type, out contentReader))
+                    {
 #if WIN8METRO
-                var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(typeof(T).GetTypeInfo(), true);
+                        var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(type.GetTypeInfo(), true);
 #else
-                var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(typeof(T), true);
+                        var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(type, true);
 #endif
-                if (contentReaderAttribute != null)
+                    
+                        if (contentReaderAttribute != null)
+                        {
+                            contentReader = Activator.CreateInstance(contentReaderAttribute.ContentReaderType) as IContentReader;
+                            if(contentReader != null) Register<T>(contentReader);
+                        }
+                    }
+                }
+
+                if (contentReader == null)
                 {
-                    IContentReader contentReader = null;
-
-
-#if WIN8METRO
-                    var isReaderValid = typeof(IContentReader).GetTypeInfo().IsAssignableFrom(contentReaderAttribute.ContentReaderType.GetTypeInfo());
-#else
-                    var isReaderValid = typeof(IContentReader).IsAssignableFrom(contentReaderAttribute.ContentReaderType);
-#endif
-                    if (!isReaderValid)
-                    {
-                        throw new NotSupportedException(string.Format("Invalid content reader type [{0}]. Expecting an instance of IContentReader", contentReaderAttribute.ContentReaderType.FullName));
-                    }
-
-
-                    lock (registeredContentReaders)
-                    {
-                        foreach (var reader in registeredContentReaders)
-                        {
-                            if (contentReaderAttribute.ContentReaderType == reader.GetType())
-                            {
-                                contentReader = reader;
-                                break;
-                            }
-                        }
-
-                        if (contentReader == null)
-                        {
-                            contentReader = (IContentReader)Activator.CreateInstance(contentReaderAttribute.ContentReaderType);
-
-                            // If this content reader has been used successfully, then we can register it.
-                            lock (registeredContentReaders)
-                            {
-                                registeredContentReaders.Add(contentReader);
-                            }
-                        }
-                    }
-
+                    throw new NotSupportedException(string.Format("Type [{0}] doesn't provide a ContentReaderAttribute, and you have failed to register a content reader for it.", type.FullName));
+                }
+                else 
+                {
                     result = contentReader.ReadContent(this, ref parameters);
                 }
-                else
-                {
-                    throw new InvalidOperationException(string.Format("Type [{0}] doesn't provide a ContentReaderAttribute", typeof(T).FullName));
-                }
 
-                if (result == null) throw new NotSupportedException("Unable to load content");
+                if (result == null)
+                {
+                    throw new NotSupportedException(string.Format("Registered ContentReader of type [{0}] fails to load content of type [{1}] from file [{2}].", contentReader.GetType(), type.FullName, assetName));
+                }
             }
             finally
             {
@@ -342,6 +321,36 @@ namespace SharpDX.Toolkit.Content
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Associates a type with a reader.  If a default reader is specified for a type, this will override it.
+        /// </summary>
+        /// <typeparam name="T">The type that this <see cref="IContentReader"/> is able to read</typeparam>
+        /// <param name="reader">The <see cref="IContentReader" /> to use when reading this type</param>
+        public void Register<T>(IContentReader reader)
+        {
+            if (reader == null) throw new ArgumentNullException("reader");
+
+            Type type = typeof(T);
+            lock (registeredContentReaders)
+            {
+                registeredContentReaders.Add(type, reader);
+            }
+        }
+
+        /// <summary>
+        /// Dissociates a type from the reader if one exists. If the type is loaded after this call, then
+        /// the IContentManager should attempt to find the relevant reader for the type using ContentReaderAttribute
+        /// </summary>
+        /// <typeparam name="T">The type to Unregister</typeparam>
+        public void Unregister<T>()
+        {
+            Type type = typeof(T);
+            lock (registeredContentReaders)
+            {
+                registeredContentReaders.Remove(type);
+            }
         }
 
         protected override void Dispose(bool disposeManagedResources)
@@ -366,23 +375,23 @@ namespace SharpDX.Toolkit.Content
         {
             lock (registeredContentResolvers)
             {
-                registeredContentResolvers.Add(e.Item);
+                registeredContentResolvers.Remove(e.Item);
             }
         }
 
-        private void ContentReaders_ItemAdded(object sender, ObservableCollectionEventArgs<IContentReader> e)
+        private void ContentReaders_ItemAdded(object sender, ObservableCollectionEventArgs<KeyValuePair<Type, IContentReader>> e)
         {
             lock (registeredContentReaders)
             {
-                registeredContentReaders.Add(e.Item);
+                registeredContentReaders.Add(e.Item.Key, e.Item.Value);
             }
         }
 
-        private void ContentReaders_ItemRemoved(object sender, ObservableCollectionEventArgs<IContentReader> e)
+        private void ContentReaders_ItemRemoved(object sender, ObservableCollectionEventArgs<KeyValuePair<Type, IContentReader>> e)
         {
             lock (registeredContentReaders)
             {
-                registeredContentReaders.Add(e.Item);
+                registeredContentReaders.Remove(e.Item.Key);
             }
         }
     }
