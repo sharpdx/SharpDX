@@ -30,6 +30,7 @@
     <Compile Include="Collections\EqualityComparer.cs" />
     <Compile Include="Collections\ObservableCollection.cs" />
     <Compile Include="Collections\ObservableCollectionEventArgs.cs" />
+    <Compile Include="Collections\ObservableDictionary.cs" />
     <Compile Include="ComponentCollection.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="OrientedBoundingBox.cs" />

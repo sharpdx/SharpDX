@@ -59,7 +59,7 @@ namespace SharpDX.Toolkit.Content
             registeredContentResolvers = new List<IContentResolver>();
 
             // Content readers.
-            Readers = new ObservableCollection<KeyValuePair<Type, IContentReader>>();
+            Readers = new ObservableDictionary<Type, IContentReader>();
             Readers.ItemAdded += ContentReaders_ItemAdded;
             Readers.ItemRemoved += ContentReaders_ItemRemoved;
             registeredContentReaders = new Dictionary<Type, IContentReader>();
@@ -76,7 +76,7 @@ namespace SharpDX.Toolkit.Content
         /// <summary>
         /// Add or remove registered <see cref="IContentReader"/> to this instance.
         /// </summary>
-        public ObservableCollection<KeyValuePair<Type, IContentReader>> Readers { get; private set; }
+        public ObservableDictionary<Type, IContentReader> Readers { get; private set; }
 
         /// <summary>
         /// Gets the service provider associated with the ContentManager.
@@ -105,6 +105,11 @@ namespace SharpDX.Toolkit.Content
             }
         }
 
+        /// <summary>
+        /// Checks if the specified assets exists.
+        /// </summary>
+        /// <param name="assetName">The asset name with extension.</param>
+        /// <returns><c>true</c> if the specified assets exists, <c>false</c> otherwise</returns>
         public virtual bool Exists(string assetName)
         {
             // First, resolve the stream for this asset.
@@ -267,11 +272,11 @@ namespace SharpDX.Toolkit.Content
 
         private object LoadAssetWithDynamicContentReader<T>(string assetName, Stream stream, object options)
         {
-            object result = null;
-            Type type = typeof(T);
+            object result;
+            var type = typeof(T);
 
-            var parameters = new ContentReaderParameters()
-                                 {
+            var parameters = new ContentReaderParameters
+                             {
                                      AssetName = assetName,
                                      AssetType = type,
                                      Stream = stream,
@@ -281,7 +286,8 @@ namespace SharpDX.Toolkit.Content
             try
             {
                 IContentReader contentReader;
-                lock(registeredContentReaders) {
+                lock (registeredContentReaders)
+                {
                     if (!registeredContentReaders.TryGetValue(type, out contentReader))
                     {
 #if WIN8METRO
@@ -289,23 +295,22 @@ namespace SharpDX.Toolkit.Content
 #else
                         var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(type, true);
 #endif
-                    
+
                         if (contentReaderAttribute != null)
                         {
                             contentReader = Activator.CreateInstance(contentReaderAttribute.ContentReaderType) as IContentReader;
-                            if(contentReader != null) Register<T>(contentReader);
+                            if (contentReader != null)
+                                Register<T>(contentReader);
                         }
                     }
                 }
 
                 if (contentReader == null)
                 {
-                    throw new NotSupportedException(string.Format("Type [{0}] doesn't provide a ContentReaderAttribute, and you have failed to register a content reader for it.", type.FullName));
+                    throw new NotSupportedException(string.Format("Type [{0}] doesn't provide a ContentReaderAttribute, and there is no registered content reader for it.", type.FullName));
                 }
-                else 
-                {
-                    result = contentReader.ReadContent(this, ref parameters);
-                }
+
+                result = contentReader.ReadContent(this, ref parameters);
 
                 if (result == null)
                 {
@@ -321,36 +326,6 @@ namespace SharpDX.Toolkit.Content
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Associates a type with a reader.  If a default reader is specified for a type, this will override it.
-        /// </summary>
-        /// <typeparam name="T">The type that this <see cref="IContentReader"/> is able to read</typeparam>
-        /// <param name="reader">The <see cref="IContentReader" /> to use when reading this type</param>
-        public void Register<T>(IContentReader reader)
-        {
-            if (reader == null) throw new ArgumentNullException("reader");
-
-            Type type = typeof(T);
-            lock (registeredContentReaders)
-            {
-                registeredContentReaders.Add(type, reader);
-            }
-        }
-
-        /// <summary>
-        /// Dissociates a type from the reader if one exists. If the type is loaded after this call, then
-        /// the IContentManager should attempt to find the relevant reader for the type using ContentReaderAttribute
-        /// </summary>
-        /// <typeparam name="T">The type to Unregister</typeparam>
-        public void Unregister<T>()
-        {
-            Type type = typeof(T);
-            lock (registeredContentReaders)
-            {
-                registeredContentReaders.Remove(type);
-            }
         }
 
         protected override void Dispose(bool disposeManagedResources)
@@ -379,19 +354,19 @@ namespace SharpDX.Toolkit.Content
             }
         }
 
-        private void ContentReaders_ItemAdded(object sender, ObservableCollectionEventArgs<KeyValuePair<Type, IContentReader>> e)
+        private void ContentReaders_ItemAdded(object sender, ObservableDictionaryEventArgs<Type, IContentReader> e)
         {
             lock (registeredContentReaders)
             {
-                registeredContentReaders.Add(e.Item.Key, e.Item.Value);
+                registeredContentReaders.Add(e.Key, e.Value);
             }
         }
 
-        private void ContentReaders_ItemRemoved(object sender, ObservableCollectionEventArgs<KeyValuePair<Type, IContentReader>> e)
+        private void ContentReaders_ItemRemoved(object sender, ObservableDictionaryEventArgs<Type, IContentReader> e)
         {
             lock (registeredContentReaders)
             {
-                registeredContentReaders.Remove(e.Item.Key);
+                registeredContentReaders.Remove(e.Key);
             }
         }
     }

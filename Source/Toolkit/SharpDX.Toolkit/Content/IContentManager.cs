@@ -56,20 +56,6 @@ namespace SharpDX.Toolkit.Content
         T Load<T>(string assetName, object options = null);
 
         /// <summary>
-        /// Associates a type with a reader.  If a default reader is specified for a type, this will override it.
-        /// </summary>
-        /// <typeparam name="T">The type that this <see cref="IContentReader"/> is able to read</typeparam>
-        /// <param name="reader">The <see cref="IContentReader" /> to use when reading this type</param>
-        void Register<T>(IContentReader reader);
-
-        /// <summary>
-        /// Dissociates a type from the reader if one exists. If the type is loaded after this call, then
-        /// the IContentManager should attempt to find the relevant reader for the type using ContentReaderAttribute
-        /// </summary>
-        /// <typeparam name="T">The type to Unregister</typeparam>
-        void Unregister<T>();
-
-        /// <summary>
         /// Unloads all data that was loaded by this ContentManager. All data will be disposed.
         /// </summary>
         /// <remarks>
