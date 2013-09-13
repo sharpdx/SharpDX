@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Threading;
 
 namespace SharpDX.Threading
@@ -32,7 +33,7 @@ namespace SharpDX.Threading
         /// </summary>
         /// <param name="action">The action.</param>
         /// <param name="taskName">Name of the task.</param>
-        public static void Run(VoidAction action, string taskName = "SharpDXTask")
+        public static void Run(Action action, string taskName = "SharpDXTask")
         {
 #if W8CORE
             System.Threading.Tasks.Task.Factory.StartNew(() => action(), System.Threading.Tasks.TaskCreationOptions.LongRunning);

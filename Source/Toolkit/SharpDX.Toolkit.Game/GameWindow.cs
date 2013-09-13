@@ -156,11 +156,11 @@ namespace SharpDX.Toolkit
 
         internal bool Exiting;
 
-        internal VoidAction InitCallback;
+        internal Action InitCallback;
 
-        internal VoidAction RunCallback;
+        internal Action RunCallback;
 
-        internal VoidAction ExitCallback;
+        internal Action ExitCallback;
 
         internal abstract void Run();
 
