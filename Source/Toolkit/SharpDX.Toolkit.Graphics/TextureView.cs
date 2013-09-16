@@ -155,7 +155,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>The result of the conversion.</returns>
         public static implicit operator ShaderResourceView(TextureView view)
         {
-            return view.View as ShaderResourceView;
+            return view == null ? null : view.View as ShaderResourceView;
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>The result of the conversion.</returns>
         public static implicit operator RenderTargetView(TextureView view)
         {
-            return view.View as RenderTargetView;
+            return view == null ? null : view.View as RenderTargetView;
         }
     }
 }
