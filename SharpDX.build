@@ -45,8 +45,7 @@
 	<CallTarget Targets="BuildSamples"/>
 	<CallTarget Targets="GitUpdate"/>
 	<CallTarget Targets="ZipBuild"/>
-	<CallTarget Targets="GitUpload"/>
-	<CallTarget Targets="FtpTimestamp"/>
+	<CallTarget Targets="FtpZip"/>
   </Target>
   
   <Target Name="Build">
@@ -148,38 +147,20 @@
 	<Exec Command='External\7-Zip\7z.exe a -r -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.exp $(SharpDXDevZip) Bin\*.* Samples\*.* SharpDX.targets CommitLog.txt License.txt'/>
   </Target>
   
-  <Target Name="GitUpload">
+  <Target Name="FtpZip">
 	<!-- Get Last commit log from git  -->
 	<PropertyGroup>
 		<LastCommitPath>last_commit.txt</LastCommitPath>
 	</PropertyGroup>
 	<Exec Command='$(GitExe) log --format=%%H -1 > $(LastCommitPath)'/>
-	<PropertyGroup>
-		<LastCommit>$([System.IO.File]::ReadAllText($(LastCommitPath)))</LastCommit>
-	</PropertyGroup>
   
-	<!-- Checkout latest version of nightly builds  -->
-	<Exec Command='$(GitExe) checkout --merge "master"' WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
-	<Exec Command='$(GitExe) pull --rebase origin' WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
-
-	<!-- Copy Zip file to nightly builds -->
-	<Copy SourceFiles="$(SharpDXDevZip)" DestinationFolder="$(SharpDXNightlyBuildsPath)"/>
-	
-	<!-- Push nightly builds master -->
-	<Exec Command='$(GitExe) add $(SharpDXDevZip)' WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
-	<Exec Command='$(GitExe) commit -m "Link to latest commit https://github.com/sharpdx/SharpDX/commit/$(LastCommit.Trim())"'  WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
-	<Exec Command='$(GitExe) push "origin" master:master' WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
-  </Target>
+    <ItemGroup>
+      <FilesToUpload Include="$(SharpDXDevZip)" />
+      <FilesToUpload Include="$(LastCommitPath)" />
+    </ItemGroup>  
   
-  <Target Name="FtpTimestamp">
-	<!-- Get Last commit log from git  -->
-	<PropertyGroup>
-		<LastCommitPath>last_commit.txt</LastCommitPath>
-	</PropertyGroup>
-	<Exec Command='$(GitExe) log --format=%%H -1 > $(LastCommitPath)'/>
-
-	<!-- Upload Last Commit file -->
-	<MSBuild.ExtensionPack.Communication.Ftp TaskAction="UploadFiles" Host="sharpdx.org" RemoteDirectoryName="/sharpdx/upload" FileNames="$(LastCommitPath)" UserName="$(SharpDXFtpUser)" UserPassword="$(SharpDXFtpPassword)" />
+	<!-- Upload Zip -->
+	<MSBuild.ExtensionPack.Communication.Ftp TaskAction="UploadFiles" Host="sharpdx.org" RemoteDirectoryName="/sharpdx/upload" FileNames="@(FilesToUpload)" UserName="$(SharpDXFtpUser)" UserPassword="$(SharpDXFtpPassword)" />
   </Target>
   
 </Project>
