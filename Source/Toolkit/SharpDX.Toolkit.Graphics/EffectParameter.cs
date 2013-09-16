@@ -336,6 +336,17 @@ namespace SharpDX.Toolkit.Graphics
             buffer.IsDirty = true;
         }
 
+
+        /// <summary>
+        /// Sets an array of raw values to the associated parameter in the constant buffer.
+        /// </summary>
+        /// <param name = "values">An array of values to be written to the current buffer.</param>
+        public void SetRawValue(byte[] values)
+        {
+            buffer.Set(offset, values);
+            buffer.IsDirty = true;
+        }
+
         /// <summary>
         /// Sets an array of values to the associated parameter in the constant buffer.
         /// </summary>
@@ -511,7 +522,7 @@ namespace SharpDX.Toolkit.Graphics
                 var defaultValue = ((EffectData.ValueTypeParameter) ParameterDescription).DefaultValue;
                 if (defaultValue != null)
                 {
-                    SetValue(defaultValue);
+                    SetRawValue(defaultValue);
                 }
             }
         }
