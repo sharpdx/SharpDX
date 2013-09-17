@@ -73,6 +73,17 @@ namespace SharpDX.XInput
         }
 
         /// <summary>
+        /// Gets the capabilities.
+        /// </summary>
+        /// <param name="deviceQueryType">Type of the device query.</param>
+        /// <param name="capabilities">The capabilities of this controller.</param>
+        /// <returns><c>true</c> if the controller is connected, <c>false</c> otherwise.</returns>
+        public bool GetCapabilities(DeviceQueryType deviceQueryType, out Capabilities capabilities)
+        {
+            return XInput.XInputGetCapabilities((int)userIndex, deviceQueryType, out capabilities) == 0;
+        }
+
+        /// <summary>
         /// Gets the keystroke.
         /// </summary>
         /// <param name="deviceQueryType">The flag.</param>
