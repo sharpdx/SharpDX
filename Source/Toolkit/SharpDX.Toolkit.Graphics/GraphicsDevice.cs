@@ -1583,9 +1583,10 @@ namespace SharpDX.Toolkit.Graphics
                     Presenter = null;
                 }
 
-                foreach (var effectPool in EffectPools)
+                // dispose EffectPools in reverse order as they will remove themselves from the list
+                for(var i = EffectPools.Count - 1; i >= 0; i--)
                 {
-                    effectPool.Dispose();
+                    EffectPools[i].Dispose();
                 }
 
                 EffectPools = null;
