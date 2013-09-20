@@ -183,6 +183,21 @@ namespace SharpDX.Direct3D11
         }
 
         /// <summary>
+        /// Binds a depth-stencil buffer and a set of render targets to the output-merger stage.
+        /// </summary>
+        /// <param name="depthStencilView">A view of the depth-stencil buffer to bind.</param>
+        /// <param name="renderTargetCount">The render target count.</param>
+        /// <param name="renderTargetViews">A set of render target views to bind.</param>
+        /// <msdn-id>ff476464</msdn-id>
+        ///   <unmanaged>void ID3D11DeviceContext::OMSetRenderTargets([In] unsigned int NumViews,[In] const void** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView)</unmanaged>
+        ///   <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>
+        /// <remarks><p>The maximum number of active render targets a device can have active at any given time is set by a #define in D3D11.h called  D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT. It is invalid to try to set the same subresource to multiple render target slots.  Any render targets not defined by this call are set to <strong><c>null</c></strong>.</p><p>If any subresources are also currently bound for reading in a different stage or writing (perhaps in a different part of the pipeline),  those bind points will be set to <strong><c>null</c></strong>, in order to prevent the same subresource from being read and written simultaneously in a single rendering operation.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p><p>If the render-target views were created from an array resource type, then all of the render-target views must have the same array size.   This restriction also applies to the depth-stencil view, its array size must match that of the render-target views being bound.</p><p>The pixel shader must be able to simultaneously render to at least eight separate render targets. All of these render targets must access the same type of resource: Buffer, Texture1D, Texture1DArray, Texture2D, Texture2DArray, Texture3D, or TextureCube. All render targets must have the same size in all dimensions (width and height, and depth for 3D or array size for *Array types). If render targets use multisample anti-aliasing, all bound render targets and depth buffer must be the same form of multisample resource (that is, the sample counts must be the same). Each render target can have a different data format. These render target formats are not required to have identical bit-per-element counts.</p><p>Any combination of the eight slots for render targets can have a render target set or not set.</p><p>The same resource view cannot be bound to multiple render target slots simultaneously. However, you can set multiple non-overlapping resource views of a single resource as simultaneous multiple render targets.</p></remarks>
+        public void SetTargets(DepthStencilView depthStencilView, int renderTargetCount, RenderTargetView[] renderTargetViews)
+        {
+            SetRenderTargets(renderTargetCount, renderTargetViews, depthStencilView);
+        }
+
+        /// <summary>
         ///   Binds a depth-stencil buffer and a single render target to the output-merger stage.
         /// </summary>
         /// <param name = "depthStencilView">A view of the depth-stencil buffer to bind.</param>
