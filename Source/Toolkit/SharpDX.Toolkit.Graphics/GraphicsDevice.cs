@@ -1540,7 +1540,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// Because this method is being called from a lock region, this method should not be time consuming.
         /// </remarks>
-        public delegate T CreateSharedData<out T>();
+        public delegate T CreateSharedData<out T>() where T : IDisposable;
 
         /// <summary>
         /// Gets a shared data for this device context with a delegate to create the shared data if it is not present.
