@@ -206,7 +206,6 @@ namespace SharpDX.Toolkit.Input
         private void HandleWindowKeyDown(CoreWindow sender, KeyEventArgs args)
         {
             ProcessKeyEvent(args.VirtualKey, RaiseKeyPressed);
-            args.Handled = true;
         }
 
         /// <summary>
@@ -217,7 +216,6 @@ namespace SharpDX.Toolkit.Input
         private void HandleWindowKeyUp(CoreWindow sender, KeyEventArgs args)
         {
             ProcessKeyEvent(args.VirtualKey, RaiseKeyReleased);
-            args.Handled = true;
         }
 
         /// <summary>
@@ -228,7 +226,6 @@ namespace SharpDX.Toolkit.Input
         private void HandleUIElementKeyDown(object sender, KeyRoutedEventArgs args)
         {
             ProcessKeyEvent(args.Key, RaiseKeyPressed);
-            args.Handled = true;
         }
 
         /// <summary>
@@ -239,7 +236,6 @@ namespace SharpDX.Toolkit.Input
         private void HandleUIElementKeyUp(object sender, KeyRoutedEventArgs args)
         {
             ProcessKeyEvent(args.Key, RaiseKeyReleased);
-            args.Handled = true;
         }
 
         /// <summary>
