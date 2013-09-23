@@ -198,7 +198,7 @@ namespace SharpDX
         /// <returns>Random <c>float</c> number.</returns>
         public static float NextFloat(Random random, float min, float max)
         {
-            return Lerp(min, max, (float)random.NextDouble());
+            return MathUtil.Lerp(min, max, (float)random.NextDouble());
         }
 
         /// <summary>
@@ -210,7 +210,7 @@ namespace SharpDX
         /// <returns>Random <c>double</c> number.</returns>
         public static double NextDouble(Random random, double min, double max)
         {
-            return Lerp(min, max, random.NextDouble());
+            return MathUtil.Lerp(min, max, random.NextDouble());
         }
 
         /// <summary>
