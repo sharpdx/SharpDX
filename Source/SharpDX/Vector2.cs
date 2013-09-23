@@ -139,7 +139,7 @@ namespace SharpDX
         /// </summary>
         public bool IsNormalized
         {
-            get { return Math.Abs((X * X) + (Y * Y) - 1f) < MathUtil.ZeroTolerance; }
+            get { return MathUtil.IsOne((X * X) + (Y * Y)); }
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace SharpDX
         public void Normalize()
         {
             float length = Length();
-            if (length > MathUtil.ZeroTolerance)
+            if (!MathUtil.IsZero(length))
             {
                 float inv = 1.0f / length;
                 X *= inv;
@@ -1358,8 +1358,7 @@ namespace SharpDX
         /// </returns>
         public bool Equals(Vector2 other)
         {
-            return ((float)Math.Abs(other.X - X) < MathUtil.ZeroTolerance &&
-                (float)Math.Abs(other.Y - Y) < MathUtil.ZeroTolerance);
+            return MathUtil.NearEqual(other.X, X) && MathUtil.NearEqual(other.Y, Y);
         }
 
         /// <summary>

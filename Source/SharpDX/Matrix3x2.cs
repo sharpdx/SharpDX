@@ -850,7 +850,7 @@ namespace SharpDX
         {
             float determinant = value.Determinant();
 
-            if (MathUtil.WithinEpsilon(determinant, 0.0f))
+            if (MathUtil.IsZero(determinant))
             {
                 result = Identity;
                 return;
@@ -1114,14 +1114,12 @@ namespace SharpDX
         /// </returns>
         public bool Equals(Matrix3x2 other)
         {
-            return (Math.Abs(other.M11 - M11) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M12 - M12) < MathUtil.ZeroTolerance &&
-
-                Math.Abs(other.M21 - M21) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M22 - M22) < MathUtil.ZeroTolerance &&
-
-                Math.Abs(other.M31 - M31) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M32 - M32) < MathUtil.ZeroTolerance);
+            return (MathUtil.NearEqual(other.M11, M11) &&
+                MathUtil.NearEqual(other.M12, M12) &&
+                MathUtil.NearEqual(other.M21, M21) &&
+                MathUtil.NearEqual(other.M22, M22) &&
+                MathUtil.NearEqual(other.M31, M31) &&
+                MathUtil.NearEqual(other.M32, M32));
         }
 
         /// <summary>

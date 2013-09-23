@@ -432,10 +432,10 @@ namespace SharpDX
         /// <inheritdoc/>
         public bool Equals(RectangleF other)
         {
-            return (float)Math.Abs(other.Left - Left) < MathUtil.ZeroTolerance &&
-                   (float)Math.Abs(other.Right - Right) < MathUtil.ZeroTolerance &&
-                   (float)Math.Abs(other.Top - Top) < MathUtil.ZeroTolerance &&
-                   (float)Math.Abs(other.Bottom - Bottom) < MathUtil.ZeroTolerance;
+            return MathUtil.NearEqual(other.Left,   Left)   &&
+                   MathUtil.NearEqual(other.Right,  Right)  &&
+                   MathUtil.NearEqual(other.Top,    Top)    &&
+                   MathUtil.NearEqual(other.Bottom, Bottom);
         }
 
         /// <summary>

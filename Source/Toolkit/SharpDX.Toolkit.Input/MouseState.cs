@@ -109,7 +109,7 @@ namespace SharpDX.Toolkit.Input
         /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
         public bool Equals(MouseState other)
         {
-            return left == other.left && middle == other.middle && right == other.right && xButton1 == other.xButton1 && xButton2 == other.xButton2 && MathUtil.WithinEpsilon(x, other.x) && MathUtil.WithinEpsilon(y, other.y) && wheelDelta == other.wheelDelta;
+            return left == other.left && middle == other.middle && right == other.right && xButton1 == other.xButton1 && xButton2 == other.xButton2 && MathUtil.NearEqual(x, other.x) && MathUtil.NearEqual(y, other.y) && wheelDelta == other.wheelDelta;
         }
 
         public override bool Equals(object obj)

@@ -201,7 +201,7 @@ namespace SharpDX
         /// </summary>
         public bool IsNormalized
         {
-            get { return Math.Abs((X * X) + (Y * Y) + (Z * Z) + (W * W) - 1f) < MathUtil.ZeroTolerance; }
+            get { return MathUtil.IsOne((X * X) + (Y * Y) + (Z * Z) + (W * W)); }
         }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace SharpDX
             get
             {
                 float length = (X * X) + (Y * Y) + (Z * Z);
-                if (length < MathUtil.ZeroTolerance)
+                if (MathUtil.IsZero(length))
                     return 0.0f;
 
                 return (float)(2.0 * Math.Acos(MathUtil.Clamp(W, -1f, 1f)));
@@ -229,7 +229,7 @@ namespace SharpDX
             get
             {
                 float length = (X * X) + (Y * Y) + (Z * Z);
-                if (length < MathUtil.ZeroTolerance)
+                if (MathUtil.IsZero(length))
                     return Vector3.UnitX;
 
                 float inv = 1.0f / length;
@@ -288,7 +288,7 @@ namespace SharpDX
         public void Invert()
         {
             float lengthSq = LengthSquared();
-            if (lengthSq > MathUtil.ZeroTolerance)
+            if (!MathUtil.IsZero(lengthSq))
             {
                 lengthSq = 1.0f / lengthSq;
 
@@ -331,7 +331,7 @@ namespace SharpDX
         public void Normalize()
         {
             float length = Length();
-            if (length > MathUtil.ZeroTolerance)
+            if (!MathUtil.IsZero(length))
             {
                 float inverse = 1.0f / length;
                 X *= inverse;
@@ -585,7 +585,7 @@ namespace SharpDX
             float angle = (float)Math.Sqrt((value.X * value.X) + (value.Y * value.Y) + (value.Z * value.Z));
             float sin = (float)Math.Sin(angle);
 
-            if (Math.Abs(sin) >= MathUtil.ZeroTolerance)
+            if (!MathUtil.IsZero(sin))
             {
                 float coeff = sin / angle;
                 result.X = coeff * value.X;
@@ -700,7 +700,7 @@ namespace SharpDX
                 float angle = (float)Math.Acos(value.W);
                 float sin = (float)Math.Sin(angle);
 
-                if (Math.Abs(sin) >= MathUtil.ZeroTolerance)
+                if (!MathUtil.IsZero(sin))
                 {
                     float coeff = angle / sin;
                     result.X = value.X * coeff;
@@ -1196,10 +1196,7 @@ namespace SharpDX
         /// </returns>
         public bool Equals(Quaternion other)
         {
-            return ((float)Math.Abs(other.X - X) < MathUtil.ZeroTolerance &&
-                (float)Math.Abs(other.Y - Y) < MathUtil.ZeroTolerance &&
-                (float)Math.Abs(other.Z - Z) < MathUtil.ZeroTolerance &&
-                (float)Math.Abs(other.W - W) < MathUtil.ZeroTolerance);
+            return MathUtil.NearEqual(other.X, X) && MathUtil.NearEqual(other.Y, Y) && MathUtil.NearEqual(other.Z, Z) && MathUtil.NearEqual(other.W, W);
         }
 
         /// <summary>

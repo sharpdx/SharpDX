@@ -702,9 +702,9 @@ namespace SharpDX
             scale.Z = (float)Math.Sqrt((M31 * M31) + (M32 * M32) + (M33 * M33));
 
             //If any of the scaling factors are zero, than the rotation matrix can not exist.
-            if (Math.Abs(scale.X) < MathUtil.ZeroTolerance ||
-                Math.Abs(scale.Y) < MathUtil.ZeroTolerance ||
-                Math.Abs(scale.Z) < MathUtil.ZeroTolerance)
+            if (MathUtil.IsZero(scale.X) ||
+                MathUtil.IsZero(scale.Y) ||
+                MathUtil.IsZero(scale.Z))
             {
                 rotation = Quaternion.Identity;
                 return false;
@@ -1507,7 +1507,7 @@ namespace SharpDX
 
                 int i = r;
 
-                while (Math.Abs(result[i, lead]) < MathUtil.ZeroTolerance)
+                while (MathUtil.IsZero(result[i, lead]))
                 {
                     i++;
 
@@ -1589,7 +1589,7 @@ namespace SharpDX
 
                 int i = r;
 
-                while (Math.Abs(result[i, lead]) < MathUtil.ZeroTolerance)
+                while (MathUtil.IsZero(result[i, lead]))
                 {
                     i++;
 
@@ -1667,7 +1667,7 @@ namespace SharpDX
 
                 int i = r;
 
-                while (Math.Abs(result[i, lead]) < MathUtil.ZeroTolerance)
+                while (MathUtil.IsZero(result[i, lead]))
                 {
                     i++;
 
@@ -1859,7 +1859,7 @@ namespace SharpDX
             Vector3 difference = objectPosition - cameraPosition;
 
             float lengthSq = difference.LengthSquared();
-            if (lengthSq < MathUtil.ZeroTolerance)
+            if (MathUtil.IsZero(lengthSq))
                 difference = -cameraForwardVector;
             else
                 difference *= (float)(1.0 / Math.Sqrt(lengthSq));
@@ -3237,25 +3237,22 @@ namespace SharpDX
         /// </returns>
         public bool Equals(Matrix other)
         {
-            return (Math.Abs(other.M11 - M11) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M12 - M12) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M13 - M13) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M14 - M14) < MathUtil.ZeroTolerance &&
-
-                Math.Abs(other.M21 - M21) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M22 - M22) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M23 - M23) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M24 - M24) < MathUtil.ZeroTolerance &&
-
-                Math.Abs(other.M31 - M31) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M32 - M32) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M33 - M33) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M34 - M34) < MathUtil.ZeroTolerance &&
-
-                Math.Abs(other.M41 - M41) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M42 - M42) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M43 - M43) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M44 - M44) < MathUtil.ZeroTolerance);
+            return (MathUtil.NearEqual(other.M11, M11) &&
+                MathUtil.NearEqual(other.M12, M12) &&
+                MathUtil.NearEqual(other.M13, M13) &&
+                MathUtil.NearEqual(other.M14, M14) &&
+                MathUtil.NearEqual(other.M21, M21) &&
+                MathUtil.NearEqual(other.M22, M22) &&
+                MathUtil.NearEqual(other.M23, M23) &&
+                MathUtil.NearEqual(other.M24, M24) &&
+                MathUtil.NearEqual(other.M31, M31) &&
+                MathUtil.NearEqual(other.M32, M32) &&
+                MathUtil.NearEqual(other.M33, M33) &&
+                MathUtil.NearEqual(other.M34, M34) &&
+                MathUtil.NearEqual(other.M41, M41) &&
+                MathUtil.NearEqual(other.M42, M42) &&
+                MathUtil.NearEqual(other.M43, M43) &&
+                MathUtil.NearEqual(other.M44, M44));
         }
 
         /// <summary>

@@ -427,12 +427,12 @@ namespace SharpDX
             float denominator = cross.Length();
 
             //Lines are parallel.
-            if (Math.Abs(denominator) < MathUtil.ZeroTolerance)
+            if (MathUtil.IsZero(denominator))
             {
                 //Lines are parallel and on top of each other.
-                if (Math.Abs(ray2.Position.X - ray1.Position.X) < MathUtil.ZeroTolerance &&
-                    Math.Abs(ray2.Position.Y - ray1.Position.Y) < MathUtil.ZeroTolerance &&
-                    Math.Abs(ray2.Position.Z - ray1.Position.Z) < MathUtil.ZeroTolerance)
+                if (MathUtil.NearEqual(ray2.Position.X, ray1.Position.X) &&
+                    MathUtil.NearEqual(ray2.Position.Y, ray1.Position.Y) &&
+                    MathUtil.NearEqual(ray2.Position.Z, ray1.Position.Z))
                 {
                     point = Vector3.Zero;
                     return true;
@@ -484,9 +484,9 @@ namespace SharpDX
             Vector3 point2 = ray2.Position + (t * ray2.Direction);
 
             //If the points are not equal, no intersection has occurred.
-            if (Math.Abs(point2.X - point1.X) > MathUtil.ZeroTolerance ||
-                Math.Abs(point2.Y - point1.Y) > MathUtil.ZeroTolerance ||
-                Math.Abs(point2.Z - point1.Z) > MathUtil.ZeroTolerance)
+            if (!MathUtil.NearEqual(point2.X, point1.X) ||
+                !MathUtil.NearEqual(point2.Y, point1.Y) ||
+                !MathUtil.NearEqual(point2.Z, point1.Z))
             {
                 point = Vector3.Zero;
                 return false;
@@ -512,7 +512,7 @@ namespace SharpDX
             float direction;
             Vector3.Dot(ref plane.Normal, ref ray.Direction, out direction);
 
-            if (Math.Abs(direction) < MathUtil.ZeroTolerance)
+            if (MathUtil.IsZero(direction))
             {
                 distance = 0f;
                 return false;
@@ -524,7 +524,7 @@ namespace SharpDX
 
             if (distance < 0f)
             {
-                if (distance < -MathUtil.ZeroTolerance)
+                if (MathUtil.IsZero(distance))
                 {
                     distance = 0;
                     return false;
@@ -609,7 +609,7 @@ namespace SharpDX
             //If the ray is parallel to the triangle plane, there is no collision.
             //This also means that we are not culling, the ray may hit both the
             //back and the front of the triangle.
-            if (determinant > -MathUtil.ZeroTolerance && determinant < MathUtil.ZeroTolerance)
+            if (MathUtil.IsZero(determinant))
             {
                 distance = 0f;
                 return false;
@@ -706,7 +706,7 @@ namespace SharpDX
             distance = 0f;
             float tmax = float.MaxValue;
 
-            if (Math.Abs(ray.Direction.X) < MathUtil.ZeroTolerance)
+            if (MathUtil.IsZero(ray.Direction.X))
             {
                 if (ray.Position.X < box.Minimum.X || ray.Position.X > box.Maximum.X)
                 {
@@ -737,7 +737,7 @@ namespace SharpDX
                 }
             }
 
-            if (Math.Abs(ray.Direction.Y) < MathUtil.ZeroTolerance)
+            if (MathUtil.IsZero(ray.Direction.Y))
             {
                 if (ray.Position.Y < box.Minimum.Y || ray.Position.Y > box.Maximum.Y)
                 {
@@ -768,7 +768,7 @@ namespace SharpDX
                 }
             }
 
-            if (Math.Abs(ray.Direction.Z) < MathUtil.ZeroTolerance)
+            if (MathUtil.IsZero(ray.Direction.Z))
             {
                 if (ray.Position.Z < box.Minimum.Z || ray.Position.Z > box.Maximum.Z)
                 {
@@ -922,7 +922,7 @@ namespace SharpDX
             float denominator;
             Vector3.Dot(ref direction, ref direction, out denominator);
 
-            if (Math.Abs(denominator) < MathUtil.ZeroTolerance)
+            if (MathUtil.IsZero(denominator))
                 return false;
 
             return true;
@@ -957,7 +957,7 @@ namespace SharpDX
             //We assume the planes are normalized, therefore the denominator
             //only serves as a parallel and coincident check. Otherwise we need
             //to divide the point by the denominator.
-            if (Math.Abs(denominator) < MathUtil.ZeroTolerance)
+            if (MathUtil.IsZero(denominator))
             {
                 line = new Ray();
                 return false;

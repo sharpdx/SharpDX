@@ -35,6 +35,7 @@
     <Compile Include="ComponentCollection.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="OrientedBoundingBox.cs" />
+    <Compile Include="RandomUtil.cs" />
     <Compile Include="Threading\TaskUtil.cs" />
     <Compile Include="ViewportF.cs" />
     <Compile Include="Design\Color4Converter.cs" />

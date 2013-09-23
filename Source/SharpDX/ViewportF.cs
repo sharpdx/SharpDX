@@ -141,8 +141,8 @@ namespace SharpDX
         /// </returns>
         public bool Equals(ViewportF other)
         {
-            return MathUtil.WithinEpsilon(X, other.X) && MathUtil.WithinEpsilon(Y, other.Y) && MathUtil.WithinEpsilon(Width, other.Width) && MathUtil.WithinEpsilon(Height, other.Height) && MathUtil.WithinEpsilon(MinDepth, other.MinDepth)
-                   && MathUtil.WithinEpsilon(MaxDepth, other.MaxDepth);
+            return MathUtil.NearEqual(X, other.X) && MathUtil.NearEqual(Y, other.Y) && MathUtil.NearEqual(Width, other.Width) && MathUtil.NearEqual(Height, other.Height) && MathUtil.NearEqual(MinDepth, other.MinDepth)
+                   && MathUtil.NearEqual(MaxDepth, other.MaxDepth);
         }
 	
         /// <summary>
@@ -226,7 +226,7 @@ namespace SharpDX
             var vector = (Vector3)Vector3.Transform(source, matrix);
             float a = (((source.X * matrix.M14) + (source.Y * matrix.M24)) + (source.Z * matrix.M34)) + matrix.M44;
 
-            if (!MathUtil.WithinEpsilon(a, 1f))
+            if (!MathUtil.IsOne(a))
             {
                 vector = (vector / a);
             }
@@ -255,7 +255,7 @@ namespace SharpDX
             var vector = (Vector3)Vector3.Transform(source, matrix);
 
             float a = (((source.X * matrix.M14) + (source.Y * matrix.M24)) + (source.Z * matrix.M34)) + matrix.M44;
-            if (!MathUtil.WithinEpsilon(a, 1f))
+            if (!MathUtil.IsOne(a))
             {
                 vector = (vector / a);
             }
@@ -271,7 +271,7 @@ namespace SharpDX
         {
             get
             {
-                if (!MathUtil.WithinEpsilon(Height, 0.0f))
+                if (!MathUtil.IsZero(Height))
                 {
                     return Width / Height;
                 }
