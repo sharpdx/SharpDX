@@ -88,7 +88,7 @@ namespace SharpDX
         {
             // Check if the numbers are really close -- needed
             // when comparing numbers near zero.
-            if(Math.Abs(a - b) < ZeroTolerance)
+            if(IsZero(a - b))
                 return true;
 
             // Original from Bruce Dawson: http://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/
@@ -129,7 +129,7 @@ namespace SharpDX
         /// <returns><c>true</c> if the specified value is close to one (1.0f); otherwise, <c>false</c>.</returns>
         public static bool IsOne(float a)
         {
-            return Math.Abs(a - 1.0f) < ZeroTolerance;
+            return IsZero(a - 1.0f);
         }
 
         /// <summary>
