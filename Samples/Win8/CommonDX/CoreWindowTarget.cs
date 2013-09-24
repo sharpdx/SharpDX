@@ -27,6 +27,8 @@ using Windows.UI.Core;
 
 namespace CommonDX
 {
+    using SharpDX.DXGI;
+
     /// <summary>
     /// Target to render to a <see cref="CoreWindow"/>
     /// </summary>
@@ -72,7 +74,7 @@ namespace CommonDX
         {
             // Creates a SwapChain from a CoreWindow pointer
             using (var comWindow = new ComObject(window))
-                return factory.CreateSwapChainForCoreWindow(device, comWindow, ref desc, null);
+                return new SwapChain1(factory, device, comWindow, ref desc);
         }
 
         private void window_SizeChanged(CoreWindow sender, WindowSizeChangedEventArgs args)
