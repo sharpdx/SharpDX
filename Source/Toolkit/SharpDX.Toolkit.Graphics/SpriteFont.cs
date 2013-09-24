@@ -118,9 +118,17 @@ namespace SharpDX.Toolkit.Graphics
                                                                         new Vector2(1, 1),
                                                                     };
 
-        public static SpriteFont New(GraphicsDevice device, SpriteFontData spriteFontData)
+        /// <summary>
+        /// Creates a new instance of the <see cref="SpriteFont"/> class from the specified <see cref="SpriteFontData"/>.
+        /// </summary>
+        /// <param name="device">The graphics device which will manage graphics resources of the created instance.</param>
+        /// <param name="spriteFontData">The font data to load from.</param>
+        /// <param name="disposeSpriteFontDataResources">true - if disposal of the created instance should dispose the unmanaged resources from the <paramref name="spriteFontData"/>,
+        ///  false - if the unmanaged resources should be disposed manually, default is false.</param>
+        /// <returns>The loaded <see cref="SpriteFont"/> instance.</returns>
+        public static SpriteFont New(GraphicsDevice device, SpriteFontData spriteFontData, bool disposeSpriteFontDataResources = false)
         {
-            return new SpriteFont(device, spriteFontData);
+            return new SpriteFont(device, spriteFontData, disposeSpriteFontDataResources);
         }
 
 
@@ -138,7 +146,9 @@ namespace SharpDX.Toolkit.Graphics
             var spriteFontData = SpriteFontData.Load(stream, bitmapDataLoader);
             if (spriteFontData == null)
                 return null;
-            return New(device, spriteFontData);
+            // the SpriteFontData is loaded here and will be used only in the current SpriteFont instance
+            // therefore it is safe to dispose it's Texture2D instances, if any.
+            return New(device, spriteFontData, true);
         }
 
         /// <summary>
@@ -166,7 +176,7 @@ namespace SharpDX.Toolkit.Graphics
                 return Load(device, stream, bitmapName => Texture2D.Load(device, Path.Combine(fileDirectory, bitmapName)));
         }
        
-        internal SpriteFont(GraphicsDevice device, SpriteFontData spriteFontData)
+        internal SpriteFont(GraphicsDevice device, SpriteFontData spriteFontData, bool disposeSpriteFontDataResources)
             : base(device)
         {
             drawGlyphDelegate = InternalDrawGlyph;
@@ -225,6 +235,8 @@ namespace SharpDX.Toolkit.Graphics
                 else if (bitmap.Data is Texture2D)
                 {
                     textures[i] = (Texture2D) bitmap.Data;
+                    if(disposeSpriteFontDataResources)
+                        ToDispose(textures[i]);
                 }
                 else
                 {
