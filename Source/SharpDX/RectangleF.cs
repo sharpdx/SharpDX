@@ -478,6 +478,17 @@ namespace SharpDX
             return !(left == right);
         }
 
+        /// <summary>
+        /// Performs an explicit conversion to <see cref="Rectangle"/> structure.
+        /// </summary>
+        /// <remarks>Performs direct float to int conversion, any fractional data is truncated.</remarks>
+        /// <param name="value">The source <see cref="RectangleF"/> value.</param>
+        /// <returns>A converted <see cref="Rectangle"/> structure.</returns>
+        public static explicit operator Rectangle(RectangleF value)
+        {
+            return new Rectangle((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);
+        }
+
         /// <inheritdoc/>
         void IDataSerializable.Serialize(BinarySerializer serializer)
         {

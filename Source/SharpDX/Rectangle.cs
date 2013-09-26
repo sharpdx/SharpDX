@@ -483,6 +483,17 @@ namespace SharpDX
             return !(left == right);
         }
 
+        /// <summary>
+        /// Performs an implicit conversion to the <see cref="RectangleF"/> structure.
+        /// </summary>
+        /// <remarks>Performs direct converstion from int to float.</remarks>
+        /// <param name="value">The source <see cref="Rectangle"/> value.</param>
+        /// <returns>The converted structure.</returns>
+        public static implicit operator RectangleF(Rectangle value)
+        {
+            return new RectangleF(value.X, value.Y, value.Width, value.Height);
+        }
+
         internal void MakeXYAndWidthHeight()
         {
             _right = (_right - _left);
