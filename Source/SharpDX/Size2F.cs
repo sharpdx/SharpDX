@@ -34,6 +34,16 @@ namespace SharpDX
     public struct Size2F : IEquatable<Size2F>, IDataSerializable
     {
         /// <summary>
+        /// A zero size with (width, height) = (0,0)
+        /// </summary>
+        public static readonly Size2F Zero = new Size2F(0, 0);
+
+        /// <summary>
+        /// A zero size with (width, height) = (0,0)
+        /// </summary>
+        public static readonly Size2F Empty = Zero;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Size2F"/> struct.
         /// </summary>
         /// <param name="width">The x.</param>
