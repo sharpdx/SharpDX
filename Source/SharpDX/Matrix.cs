@@ -731,6 +731,54 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Decomposes a uniform scale matrix into a scale, rotation, and translation.
+        /// A uniform scale matrix has the same scale in every axis.
+        /// </summary>
+        /// <param name="scale">When the method completes, contains the scaling component of the decomposed matrix.</param>
+        /// <param name="rotation">When the method completes, contains the rotation component of the decomposed matrix.</param>
+        /// <param name="translation">When the method completes, contains the translation component of the decomposed matrix.</param>
+        /// <remarks>
+        /// This method is designed to decompose only an SRT transformation matrix that has the same scale in every axis.
+        /// </remarks>
+        public bool DecomposeUniformScale(out float scale, out Quaternion rotation, out Vector3 translation)
+        {
+            //Get the translation.
+            translation.X = this.M41;
+            translation.Y = this.M42;
+            translation.Z = this.M43;
+
+            //Scaling is the length of the rows. ( just take one row since this is a uniform matrix)
+            scale = (float)Math.Sqrt((M11 * M11) + (M12 * M12) + (M13 * M13));
+            var inv_scale = 1f / scale;
+
+            //If any of the scaling factors are zero, then the rotation matrix can not exist.
+            if (Math.Abs(scale) < MathUtil.ZeroTolerance)
+            {
+                rotation = Quaternion.Identity;
+                return false;
+            }
+
+            //The rotation is the left over matrix after dividing out the scaling.
+            Matrix rotationmatrix = new Matrix();
+            rotationmatrix.M11 = M11 * inv_scale;
+            rotationmatrix.M12 = M12 * inv_scale;
+            rotationmatrix.M13 = M13 * inv_scale;
+
+            rotationmatrix.M21 = M21 * inv_scale;
+            rotationmatrix.M22 = M22 * inv_scale;
+            rotationmatrix.M23 = M23 * inv_scale;
+
+            rotationmatrix.M31 = M31 * inv_scale;
+            rotationmatrix.M32 = M32 * inv_scale;
+            rotationmatrix.M33 = M33 * inv_scale;
+
+            rotationmatrix.M44 = 1f;
+
+            Quaternion.RotationMatrix(ref rotationmatrix, out rotation);
+            return true;
+        }
+
+        /// <summary>
         /// Exchanges two rows in the matrix.
         /// </summary>
         /// <param name="firstRow">The first row to exchange. This is an index of the row starting at zero.</param>
