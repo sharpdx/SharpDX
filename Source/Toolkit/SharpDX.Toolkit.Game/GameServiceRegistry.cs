@@ -31,7 +31,15 @@ namespace SharpDX.Toolkit
     {
         private readonly Dictionary<Type, object> registeredService = new Dictionary<Type, object>();
 
-        #region IServiceRegistry Members
+        /// <summary>
+        /// Occurs when a new service is added.
+        /// </summary>
+        public event EventHandler<ServiceEventArgs> ServiceAdded;
+
+        /// <summary>
+        /// Occurs when when a service is removed.
+        /// </summary>
+        public event EventHandler<ServiceEventArgs> ServiceRemoved;
 
         /// <summary>
         /// Gets the instance service providing a specified service.
@@ -53,9 +61,22 @@ namespace SharpDX.Toolkit
             return null;
         }
 
-        public event EventHandler<ServiceEventArgs> ServiceAdded;
+        /// <summary>
+        /// Gets the service object of specified type. The service must be registered with the <typeparamref name="T"/> type key.
+        /// </summary>
+        /// <remarks>This method will thrown an exception if the service is not registered, it null value can be accepted - use the <see cref="IServiceProvider.GetService"/> method.</remarks>
+        /// <typeparam name="T">The type of the service to get.</typeparam>
+        /// <returns>The service instance.</returns>
+        /// <exception cref="ArgumentException">Is thrown when the corresponding service is not registered.</exception>
+        public T GetService<T>()
+        {
+            var service = GetService(typeof(T));
 
-        public event EventHandler<ServiceEventArgs> ServiceRemoved;
+            if (service == null)
+                throw new ArgumentException(string.Format("Service of type {0} is not registered.", typeof(T)));
+
+            return (T)service;
+        }
 
         /// <summary>
         /// Adds a service to this <see cref="GameServiceRegistry"/>.
@@ -89,6 +110,18 @@ namespace SharpDX.Toolkit
             OnServiceAdded(new ServiceEventArgs(type, provider));
         }
 
+        /// <summary>
+        /// Adds a service to this service provider.
+        /// </summary>
+        /// <typeparam name="T">The type of the service to add.</typeparam>
+        /// <param name="provider">The instance of the service provider to add.</param>
+        /// <exception cref="System.ArgumentNullException">Service type cannot be null</exception>
+        /// <exception cref="System.ArgumentException">Service is already registered</exception>
+        public void AddService<T>(T provider)
+        {
+            AddService(typeof(T), provider);
+        }
+
         /// <summary>Removes the object providing a specified service.</summary>
         /// <param name="type">The type of service.</param>
         public void RemoveService(Type type)
@@ -105,8 +138,6 @@ namespace SharpDX.Toolkit
             if (oldService != null)
                 OnServiceRemoved(new ServiceEventArgs(type, oldService));
         }
-
-        #endregion
 
         private void OnServiceAdded(ServiceEventArgs e)
         {
