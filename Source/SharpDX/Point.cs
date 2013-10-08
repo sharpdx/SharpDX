@@ -39,11 +39,6 @@ namespace SharpDX
         public static readonly Point Zero = new Point(0, 0);
 
         /// <summary>
-        /// A point with (0,0) coordinates.
-        /// </summary>
-        public static readonly Point Empty = Zero;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Point"/> struct.
         /// </summary>
         /// <param name="x">The x.</param>
