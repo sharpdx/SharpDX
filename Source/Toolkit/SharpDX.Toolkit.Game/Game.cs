@@ -90,7 +90,7 @@ namespace SharpDX.Toolkit
             gameTime = new GameTime();
             totalGameTime = new TimeSpan();
             timer = new TimerTick();
-            IsFixedTimeStep = true;
+            IsFixedTimeStep = false;
             maximumElapsedTime = TimeSpan.FromMilliseconds(500.0);
             TargetElapsedTime = TimeSpan.FromTicks(10000000 / 60); // target elapsed time is by default 60Hz
             lastUpdateCount = new int[4];
