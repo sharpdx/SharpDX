@@ -88,7 +88,7 @@ namespace SharpDX
         {
             // Check if the numbers are really close -- needed
             // when comparing numbers near zero.
-            if(IsZero(a - b))
+            if (IsZero(a - b))
                 return true;
 
             // Original from Bruce Dawson: http://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/
@@ -97,15 +97,20 @@ namespace SharpDX
             // Make aInt lexicographically ordered as a twos-complement int
             int aInt = *(int*)&a;
             if (aInt < 0)
-                aInt = Int32.MinValue - aInt;
+                aInt = unchecked(Int32.MinValue - aInt);
 
             // Make bInt lexicographically ordered as a twos-complement int
             int bInt = *(int*)&b;
             if (bInt < 0)
-                bInt = Int32.MinValue - bInt;
+                bInt = unchecked(Int32.MinValue - bInt);
 
-            int ulp = Math.Abs(aInt - bInt);
-            
+            // some combinations can give int.MinValue for which we cannot compute Abs value
+            int diff = unchecked(aInt - bInt);
+            if(diff == int.MinValue)
+                return false;
+
+            int ulp = Math.Abs(diff);
+
             // Choose of maxUlp = 4
             // according to http://code.google.com/p/googletest/source/browse/trunk/include/gtest/internal/gtest-internal.h
             const int maxUlp = 4;
@@ -407,7 +412,7 @@ namespace SharpDX
         /// <exception cref="ArgumentException">Is thrown when <paramref name="min"/> is greater than <paramref name="max"/>.</exception>
         public static int Wrap(int value, int min, int max)
         {
-            if(min > max)
+            if (min > max)
                 throw new ArgumentException(string.Format("min {0} should be less than or equal to max {1}", min, max), "min");
 
             // Code from http://stackoverflow.com/a/707426/1356325
@@ -435,7 +440,7 @@ namespace SharpDX
             double maxd = max;
             double valued = value;
 
-            if(mind > maxd)
+            if (mind > maxd)
                 throw new ArgumentException(string.Format("min {0} should be less than or equal to max {1}", min, max), "min");
 
             var range_size = maxd - mind;

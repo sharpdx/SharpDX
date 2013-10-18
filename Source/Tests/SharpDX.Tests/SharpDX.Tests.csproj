@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MathUtilNearEqualTests.cs" />
     <Compile Include="MathUtilWrapTests.cs" />
     <Compile Include="ShaderBytecodeProfileTests.cs" />
     <Compile Include="TestUtilityCompare.cs" />
