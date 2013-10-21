@@ -163,9 +163,7 @@ namespace SharpDX.Toolkit.Content
                 string assetPath = Path.Combine(rootDirectory ?? string.Empty, assetName);
 
                 // First, resolve the stream for this asset.
-                Stream stream = FindStream(assetPath);
-                if (stream == null)
-                    throw new AssetNotFoundException(assetName);
+                var stream = FindStream(assetPath);
 
                 result = LoadAssetWithDynamicContentReader<T>(assetName, stream, options);
 
@@ -261,12 +259,28 @@ namespace SharpDX.Toolkit.Content
                 throw new InvalidOperationException("No resolver registered to this content manager");
             }
 
+            Exception lastException = null;
             foreach (var contentResolver in resolvers)
             {
-                stream = contentResolver.Resolve(assetName);
-                if (stream != null)
-                    break;
+                try
+                {
+                    if(contentResolver.Exists(assetName))
+                    {
+                        stream = contentResolver.Resolve(assetName);
+                        if(stream != null)
+                            break;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex);
+                    lastException = ex;
+                }
             }
+
+            if (stream == null)
+                throw new AssetNotFoundException(assetName, lastException);
+
             return stream;
         }
 
