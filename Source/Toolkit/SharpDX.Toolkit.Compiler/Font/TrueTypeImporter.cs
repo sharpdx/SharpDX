@@ -241,7 +241,7 @@ namespace SharpDX.Toolkit.Graphics
                         // Query the character spacing.
                         var result = new NativeMethods.ABCFloat[1];
 
-                        if (NativeMethods.GetCharABCWidthsFloat(hdc, character, character, result))
+                        if (NativeMethods.GetCharABCWidthsFloatW(hdc, character, character, result))
                         {
                             return result[0].A + 
                                    result[0].B + 
@@ -279,7 +279,7 @@ namespace SharpDX.Toolkit.Graphics
             public static extern bool DeleteObject(IntPtr hObject);
 
             [DllImport("gdi32.dll")]
-            public static extern bool GetCharABCWidthsFloat(IntPtr hdc, uint iFirstChar, uint iLastChar, [Out] ABCFloat[] lpABCF);
+            public static extern bool GetCharABCWidthsFloatW(IntPtr hdc, uint iFirstChar, uint iLastChar, [Out] ABCFloat[] lpABCF);
 
 
             [StructLayout(LayoutKind.Sequential)]
