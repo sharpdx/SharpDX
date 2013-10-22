@@ -92,24 +92,15 @@ namespace SharpDX
                 return true;
 
             // Original from Bruce Dawson: http://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/
-            // Make sure maxUlps is non-negative and small enough that the
-            // default NAN won't compare as equal to anything.
-            // Make aInt lexicographically ordered as a twos-complement int
             int aInt = *(int*)&a;
-            if (aInt < 0)
-                aInt = unchecked(Int32.MinValue - aInt);
-
-            // Make bInt lexicographically ordered as a twos-complement int
             int bInt = *(int*)&b;
-            if (bInt < 0)
-                bInt = unchecked(Int32.MinValue - bInt);
 
-            // some combinations can give int.MinValue for which we cannot compute Abs value
-            int diff = unchecked(aInt - bInt);
-            if(diff == int.MinValue)
+            // Different signs means they do not match.
+            if((aInt < 0) != (bInt < 0))
                 return false;
 
-            int ulp = Math.Abs(diff);
+            // Find the difference in ULPs.
+            int ulp = Math.Abs(aInt - bInt);
 
             // Choose of maxUlp = 4
             // according to http://code.google.com/p/googletest/source/browse/trunk/include/gtest/internal/gtest-internal.h
