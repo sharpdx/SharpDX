@@ -1,0 +1,1 @@
+This version of YamlDotNet is a fork available at https://github.com/xoofx/YamlDotNet
