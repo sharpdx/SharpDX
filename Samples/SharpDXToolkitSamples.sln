@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld.Desktop", "Toolkit\Desktop\HelloWorld\HelloWorld.Desktop.csproj", "{05D111D6-C8FD-4DA4-B6C0-8C47E7081C3F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomEffect.Desktop", "Toolkit\Desktop\CustomEffect\CustomEffect.Desktop.csproj", "{0C9A4884-6357-4392-9341-27B43E195456}"
@@ -70,6 +72,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderLinking.Desktop", "Toolkit\Desktop\ShaderLinking\ShaderLinking.Desktop.csproj", "{DA209939-ADD7-4640-A847-0D867FF21997}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForegroundSwapChains.WinRT", "Toolkit\WinRT\ForegroundSwapChains\ForegroundSwapChains.WinRT.csproj", "{1855D2D9-0009-4825-A333-11230556445E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomDataLoading.Desktop", "Toolkit\Desktop\CustomDataLoading\CustomDataLoading.Desktop.csproj", "{72E1AFCD-4E5B-428A-A4C8-0B179F660BA6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -826,6 +830,20 @@ Global
 		{1855D2D9-0009-4825-A333-11230556445E}.Release|x86.ActiveCfg = Release|x86
 		{1855D2D9-0009-4825-A333-11230556445E}.Release|x86.Build.0 = Release|x86
 		{1855D2D9-0009-4825-A333-11230556445E}.Release|x86.Deploy.0 = Release|x86
+		{72E1AFCD-4E5B-428A-A4C8-0B179F660BA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72E1AFCD-4E5B-428A-A4C8-0B179F660BA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72E1AFCD-4E5B-428A-A4C8-0B179F660BA6}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{72E1AFCD-4E5B-428A-A4C8-0B179F660BA6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{72E1AFCD-4E5B-428A-A4C8-0B179F660BA6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{72E1AFCD-4E5B-428A-A4C8-0B179F660BA6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{72E1AFCD-4E5B-428A-A4C8-0B179F660BA6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{72E1AFCD-4E5B-428A-A4C8-0B179F660BA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72E1AFCD-4E5B-428A-A4C8-0B179F660BA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72E1AFCD-4E5B-428A-A4C8-0B179F660BA6}.Release|ARM.ActiveCfg = Release|Any CPU
+		{72E1AFCD-4E5B-428A-A4C8-0B179F660BA6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{72E1AFCD-4E5B-428A-A4C8-0B179F660BA6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{72E1AFCD-4E5B-428A-A4C8-0B179F660BA6}.Release|x64.ActiveCfg = Release|Any CPU
+		{72E1AFCD-4E5B-428A-A4C8-0B179F660BA6}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
