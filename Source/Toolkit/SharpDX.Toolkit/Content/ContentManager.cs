@@ -474,7 +474,7 @@ namespace SharpDX.Toolkit.Content
 
             public bool Equals(AssetKey other)
             {
-                return AssetType == other.AssetType && string.Equals(AssetName, other.AssetName, StringComparison.InvariantCultureIgnoreCase);
+                return AssetType == other.AssetType && string.Equals(AssetName, other.AssetName, StringComparison.OrdinalIgnoreCase);
             }
 
             public override bool Equals(object obj)
