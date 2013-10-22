@@ -68,6 +68,6 @@ namespace SharpDX.Toolkit.Content
         /// </summary>
         /// <param name="assetName">The asset name</param>
         /// <returns><c>true</c> if the asset exists and was unloaded, <c>false</c> otherwise.</returns>
-        bool Unload(string assetName);
+        bool Unload<T>(string assetName);
     }
 }

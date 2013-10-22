@@ -33,10 +33,11 @@ namespace SharpDX.Toolkit.Content
     /// </summary>
     public class ContentManager : Component, IContentManager
     {
-        private readonly Dictionary<string, object> assetLockers;
-        private readonly Dictionary<string, object> loadedAssets;
+        private readonly Dictionary<AssetKey, object> assetLockers;
+        private readonly Dictionary<AssetKey, object> loadedAssets;
         private readonly List<IContentResolver> registeredContentResolvers;
         private readonly Dictionary<Type, IContentReader> registeredContentReaders;
+        private readonly List<IContentReaderFactory> registeredContentReaderFactories;
 
         private string rootDirectory;
 
@@ -64,8 +65,14 @@ namespace SharpDX.Toolkit.Content
             Readers.ItemRemoved += ContentReaders_ItemRemoved;
             registeredContentReaders = new Dictionary<Type, IContentReader>();
 
-            loadedAssets = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-            assetLockers = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            // Content Reader Factories
+            ReaderFactories = new ObservableCollection<IContentReaderFactory>();
+            ReaderFactories.ItemAdded += ReaderFactories_ItemAdded;
+            ReaderFactories.ItemRemoved += ReaderFactories_ItemRemoved;
+            registeredContentReaderFactories = new List<IContentReaderFactory>();
+
+            loadedAssets = new Dictionary<AssetKey, object>();
+            assetLockers = new Dictionary<AssetKey, object>();
         }
 
         /// <summary>
@@ -77,6 +84,12 @@ namespace SharpDX.Toolkit.Content
         /// Add or remove registered <see cref="IContentReader"/> to this instance.
         /// </summary>
         public ObservableDictionary<Type, IContentReader> Readers { get; private set; }
+
+        /// <summary>
+        /// Add or remove a registered <see cref="IContentReaderFactory"/> to this instance.
+        /// </summary>
+        /// <value>The reader factories.</value>
+        public ObservableCollection<IContentReaderFactory> ReaderFactories { get; private set; }
 
         /// <summary>
         /// Gets the service provider associated with the ContentManager.
@@ -112,6 +125,8 @@ namespace SharpDX.Toolkit.Content
         /// <returns><c>true</c> if the specified assets exists, <c>false</c> otherwise</returns>
         public virtual bool Exists(string assetName)
         {
+            if(assetName == null) throw new ArgumentNullException("assetName");
+
             // First, resolve the stream for this asset.
             List<IContentResolver> resolvers;
             lock (registeredContentResolvers)
@@ -137,7 +152,7 @@ namespace SharpDX.Toolkit.Content
         /// <summary>
         /// Loads an asset that has been processed by the Content Pipeline.  Reference page contains code sample.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">Type of the asset</typeparam>
         /// <param name="assetName">The asset name </param>
         /// <param name="options">The options to pass to the content reader (null by default).</param>
         /// <returns>``0.</returns>
@@ -145,15 +160,20 @@ namespace SharpDX.Toolkit.Content
         /// <exception cref="NotSupportedException">If no content reader was suitable to decode the asset.</exception>
         public virtual T Load<T>(string assetName, object options = null)
         {
+            if(assetName == null) throw new ArgumentNullException("assetName");
+
             object result = null;
 
+            // Build asset key
+            var assetKey = new AssetKey(typeof(T), assetName);
+
             // Lock loading by asset name, like this, we can have several loading in multithreaded // with a single instance per asset name
-            lock (GetAssetLocker(assetName, true))
+            lock (GetAssetLocker(assetKey, true))
             {
                 // First, try to load the asset from the cache
                 lock (loadedAssets)
                 {
-                    if (loadedAssets.TryGetValue(assetName, out result))
+                    if (loadedAssets.TryGetValue(assetKey, out result))
                     {
                         return (T)result;
                     }
@@ -170,7 +190,7 @@ namespace SharpDX.Toolkit.Content
                 // Cache the loaded assets
                 lock (loadedAssets)
                 {
-                    loadedAssets.Add(assetName, result);
+                    loadedAssets.Add(assetKey, result);
                 }
             }
 
@@ -186,15 +206,21 @@ namespace SharpDX.Toolkit.Content
         /// </remarks>
         public virtual void Unload()
         {
-            foreach (var loadedAsset in loadedAssets.Values)
+            lock(assetLockers)
             {
-                var disposable = loadedAsset as IDisposable;
-                if (disposable != null)
-                    disposable.Dispose();
-            }
+                lock(loadedAssets)
+                {
+                    foreach(var loadedAsset in loadedAssets.Values)
+                    {
+                        var disposable = loadedAsset as IDisposable;
+                        if(disposable != null)
+                            disposable.Dispose();
+                    }
 
-            assetLockers.Clear();
-            loadedAssets.Clear();
+                    assetLockers.Clear();
+                    loadedAssets.Clear();
+                }
+            }
         }
 
         /// <summary>
@@ -202,11 +228,15 @@ namespace SharpDX.Toolkit.Content
         /// </summary>
         /// <param name="assetName">The asset name</param>
         /// <returns><c>true</c> if the asset exists and was unloaded, <c>false</c> otherwise.</returns>
-        public virtual bool Unload(string assetName)
+        public virtual bool Unload<T>(string assetName)
         {
+            if(assetName == null) throw new ArgumentNullException("assetName");
             object asset;
 
-            object assetLockerRead = GetAssetLocker(assetName, false);
+            // Build asset key
+            var assetKey = new AssetKey(typeof(T), assetName);
+
+            object assetLockerRead = GetAssetLocker(assetKey, false);
             if (assetLockerRead == null)
                 return false;
 
@@ -214,13 +244,13 @@ namespace SharpDX.Toolkit.Content
             {
                 lock (loadedAssets)
                 {
-                    if (!loadedAssets.TryGetValue(assetName, out asset))
+                    if (!loadedAssets.TryGetValue(assetKey, out asset))
                         return false;
-                    loadedAssets.Remove(assetName);
+                    loadedAssets.Remove(assetKey);
                 }
 
                 lock (assetLockers)
-                    assetLockers.Remove(assetName);
+                    assetLockers.Remove(assetKey);
             }
 
             var disposable = asset as IDisposable;
@@ -230,15 +260,15 @@ namespace SharpDX.Toolkit.Content
             return true;
         }
 
-        private object GetAssetLocker(string assetName, bool create)
+        private object GetAssetLocker(AssetKey assetKey, bool create)
         {
             object assetLockerRead;
             lock (assetLockers)
             {
-                if (!assetLockers.TryGetValue(assetName, out assetLockerRead) && create)
+                if (!assetLockers.TryGetValue(assetKey, out assetLockerRead) && create)
                 {
                     assetLockerRead = new object();
-                    assetLockers.Add(assetName, assetLockerRead);
+                    assetLockers.Add(assetKey, assetLockerRead);
                 }
             }
             return assetLockerRead;
@@ -304,24 +334,42 @@ namespace SharpDX.Toolkit.Content
                 {
                     if (!registeredContentReaders.TryGetValue(type, out contentReader))
                     {
+                        // Use registered factories to handle a type
+                        lock(registeredContentReaderFactories)
+                        {
+                            foreach(var factory in registeredContentReaderFactories)
+                            {
+                                contentReader = factory.TryCreate(type);
+                                if(contentReader != null)
+                                {
+                                    registeredContentReaders.Add(type, contentReader);
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Else tries to get a ContentReaderAttribute to resolve the type
+                        if(contentReader == null)
+                        {
 #if WIN8METRO
-                        var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(type.GetTypeInfo(), true);
+                            var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(type.GetTypeInfo(), true);
 #else
-                        var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(type, true);
+                            var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(type, true);
 #endif
 
-                        if (contentReaderAttribute != null)
-                        {
-                            contentReader = Activator.CreateInstance(contentReaderAttribute.ContentReaderType) as IContentReader;
-                            if (contentReader != null)
-                                Readers.Add(typeof(T), contentReader);
+                            if(contentReaderAttribute != null)
+                            {
+                                contentReader = Activator.CreateInstance(contentReaderAttribute.ContentReaderType) as IContentReader;
+                                if(contentReader != null)
+                                    Readers.Add(typeof(T), contentReader);
+                            }
                         }
                     }
                 }
 
                 if (contentReader == null)
                 {
-                    throw new NotSupportedException(string.Format("Type [{0}] doesn't provide a ContentReaderAttribute, and there is no registered content reader for it.", type.FullName));
+                    throw new NotSupportedException(string.Format("Type [{0}] doesn't provide a ContentReaderAttribute, and there is no registered content reader/factory for it.", type.FullName));
                 }
 
                 result = contentReader.ReadContent(this, ref parameters);
@@ -354,6 +402,9 @@ namespace SharpDX.Toolkit.Content
 
         private void ContentResolvers_ItemAdded(object sender, ObservableCollectionEventArgs<IContentResolver> e)
         {
+            if (e.Item == null)
+                throw new ArgumentNullException("Cannot add a null IContentResolver", "value");
+
             lock (registeredContentResolvers)
             {
                 registeredContentResolvers.Add(e.Item);
@@ -370,6 +421,9 @@ namespace SharpDX.Toolkit.Content
 
         private void ContentReaders_ItemAdded(object sender, ObservableDictionaryEventArgs<Type, IContentReader> e)
         {
+            if (e.Key == null || e.Value == null)
+                throw new ArgumentNullException("Cannot add a null Type/IContentReader", "value");
+
             lock (registeredContentReaders)
             {
                 registeredContentReaders.Add(e.Key, e.Value);
@@ -381,6 +435,70 @@ namespace SharpDX.Toolkit.Content
             lock (registeredContentReaders)
             {
                 registeredContentReaders.Remove(e.Key);
+            }
+        }
+
+        void ReaderFactories_ItemAdded(object sender, ObservableCollectionEventArgs<IContentReaderFactory> e)
+        {
+            if (e.Item == null)
+                throw new ArgumentNullException("Cannot add a null IContentReader", "value");
+
+            lock (registeredContentReaderFactories)
+            {
+                registeredContentReaderFactories.Add(e.Item);
+            }
+        }
+
+        void ReaderFactories_ItemRemoved(object sender, ObservableCollectionEventArgs<IContentReaderFactory> e)
+        {
+            lock (registeredContentReaderFactories)
+            {
+                registeredContentReaderFactories.Remove(e.Item);
+            }
+        }
+
+        /// <summary>
+        /// Use this key to store loaded assets.
+        /// </summary>
+        private struct AssetKey : IEquatable<AssetKey>
+        {
+            public AssetKey(Type assetType, string assetName)
+            {
+                AssetType = assetType;
+                AssetName = assetName;
+            }
+
+            public readonly Type AssetType;
+
+            public readonly string AssetName;
+
+            public bool Equals(AssetKey other)
+            {
+                return AssetType == other.AssetType && string.Equals(AssetName, other.AssetName, StringComparison.InvariantCultureIgnoreCase);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if(ReferenceEquals(null, obj)) return false;
+                return obj is AssetKey && Equals((AssetKey)obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return (AssetType.GetHashCode() * 397) ^ AssetName.GetHashCode();
+                }
+            }
+
+            public static bool operator ==(AssetKey left, AssetKey right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(AssetKey left, AssetKey right)
+            {
+                return !left.Equals(right);
             }
         }
     }

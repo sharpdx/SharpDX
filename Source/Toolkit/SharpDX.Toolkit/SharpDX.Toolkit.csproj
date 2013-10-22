@@ -21,6 +21,7 @@
     <Compile Include="Content\FileSystemContentResolver.cs" />
     <Compile Include="Content\IContentManager.cs" />
     <Compile Include="Content\IContentReader.cs" />
+    <Compile Include="Content\IContentReaderFactory.cs" />
     <Compile Include="Content\IContentResolver.cs" />
     <Compile Include="Content\NamespaceDoc.cs" />
     <Compile Include="Diagnostics\LogMessage.cs" />
