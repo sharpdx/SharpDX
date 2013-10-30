@@ -111,7 +111,15 @@ namespace SharpDX.Toolkit
 
         internal override void Switch(GameContext context)
         {
-            throw new NotImplementedException();
+            element.ResizeCompleted -= OnClientSizeChanged;
+            element.MouseEnter -= OnMouseEnter;
+            element.MouseLeave -= OnMouseLeave;
+
+            element = null;
+
+            Initialize(context);
+
+            InitDeviceCallback();
         }
 
         internal override GraphicsPresenter CreateGraphicsPresenter(GraphicsDevice device, PresentationParameters parameters)
@@ -161,9 +169,11 @@ namespace SharpDX.Toolkit
 
         internal override void Run()
         {
+            Debug.Assert(InitDeviceCallback != null);
             Debug.Assert(InitCallback != null);
             Debug.Assert(RunCallback != null);
 
+            InitDeviceCallback();
             InitCallback();
 
             CompositionTarget.Rendering += OnCompositionTargetRendering;
