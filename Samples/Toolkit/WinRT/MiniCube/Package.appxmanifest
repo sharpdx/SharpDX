@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="6CD7A1DC-DC81-4310-A572-6D9E956EF4AF" Publisher="CN=Home" Version="1.0.0.0" />
+  <Identity Name="6CD7A1DC-DC81-4310-A572-6D9E956EF4AF" Publisher="CN=SharpDX Team" Version="1.0.0.0" />
   <Properties>
     <DisplayName>MiniCube.WinRT</DisplayName>
     <PublisherDisplayName>Home</PublisherDisplayName>

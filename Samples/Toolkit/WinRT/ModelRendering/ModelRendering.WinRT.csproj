@@ -12,7 +12,8 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>ModelRendering_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>ModelRendering.WinRT_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>F4A393A064F69E7FCA70C5E7BBCCF1C06A08AE8E</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -86,7 +87,7 @@
     <ToolkitTexture Include="..\..\Common\ModelRendering\Content\upBodyC.dds">
       <Link>Content\upBodyC.dds</Link>
     </ToolkitTexture>
-    <None Include="ModelRendering_TemporaryKey.pfx" />
+    <None Include="ModelRendering.WinRT_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <ToolkitFont Include="..\..\Common\ModelRendering\Content\Arial16.xml">

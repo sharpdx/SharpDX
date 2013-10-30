@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="e4e0c09f-b2db-40a2-ad3e-03be25cd55a0" Publisher="CN=Home" Version="1.0.0.0" />
+  <Identity Name="e4e0c09f-b2db-40a2-ad3e-03be25cd55a0" Publisher="CN=SharpDX Team" Version="1.0.0.0" />
   <Properties>
     <DisplayName>HelloWorld.WinRTXaml</DisplayName>
     <PublisherDisplayName>Home</PublisherDisplayName>

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="a7b33af5-ec81-40fd-8961-f6fceb8fc393" Publisher="CN=Home" Version="1.0.0.0" />
+  <Identity Name="a7b33af5-ec81-40fd-8961-f6fceb8fc393" Publisher="CN=SharpDX Team" Version="1.0.0.0" />
   <Properties>
     <DisplayName>HelloWorld.WinRT</DisplayName>
     <PublisherDisplayName>Home</PublisherDisplayName>

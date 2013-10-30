@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="1E99D17D-E422-401F-88A2-1367F26D3A65" Publisher="CN=Home" Version="1.0.0.0" />
+  <Identity Name="1E99D17D-E422-401F-88A2-1367F26D3A65" Publisher="CN=SharpDX Team" Version="1.0.0.0" />
   <Properties>
     <DisplayName>SpriteBatchAndFont.WinRTXaml</DisplayName>
     <PublisherDisplayName>Home</PublisherDisplayName>
