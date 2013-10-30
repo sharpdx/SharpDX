@@ -45,7 +45,7 @@ namespace SharpDX.Toolkit
         private readonly List<IContentable> contentableGameSystems;
         private readonly int[] lastUpdateCount;
         private readonly float updateCountAverageSlowLimit;
-        private readonly GamePlatform gamePlatform;
+        private GamePlatform gamePlatform;
         private IGraphicsDeviceService graphicsDeviceService;
         private IGraphicsDeviceManager graphicsDeviceManager;
 
@@ -295,11 +295,14 @@ namespace SharpDX.Toolkit
             nextLastUpdateCountIndex = 0;
         }
 
-        internal void InitializeBeforeRun()
+        internal void InitializeDevice()
         {
             // Make sure that the device is already created
             graphicsDeviceManager.CreateDevice();
+        }
 
+        internal void InitializeBeforeRun()
+        {
             // Gets the graphics device service
             graphicsDeviceService = Services.GetService(typeof(IGraphicsDeviceService)) as IGraphicsDeviceService;
             if (graphicsDeviceService == null)
@@ -388,6 +391,21 @@ namespace SharpDX.Toolkit
                     IsRunning = false;
                 }
             }
+        }
+
+        /// <summary>
+        /// Call this method to switch game rendering to a different control.
+        /// </summary>
+        /// <param name="context">The new game context.</param>
+        /// <exception cref="ArgumentNullException">Is thrown when <paramref name="context"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">Is thrown when game is not running (<see cref="IsRunning"/> is false).</exception>
+        public void Switch(GameContext context)
+        {
+            if(context == null) throw new ArgumentNullException("context");
+
+            if (!IsRunning) throw new InvalidOperationException("Cannot switch context while not running, call Run(GameContext) instead.");
+
+            gamePlatform.Switch(context);
         }
 
         /// <summary>

@@ -32,7 +32,6 @@ namespace SharpDX.Toolkit
     {
         public GamePlatformDesktop(Game game) : base(game)
         {
-            IsBlockingRun = true;
         }
 
         public override string DefaultAppDirectory

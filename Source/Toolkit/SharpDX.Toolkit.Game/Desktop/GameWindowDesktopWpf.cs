@@ -87,6 +87,8 @@ namespace SharpDX.Toolkit
             }
         }
 
+        internal override bool IsBlockingRun { get { return false; } }
+
         public override void BeginScreenDeviceChange(bool willBeFullScreen)
         {
         }
@@ -105,6 +107,11 @@ namespace SharpDX.Toolkit
             if (gameContext == null) throw new ArgumentNullException("gameContext");
 
             return gameContext.ContextType == GameContextType.DesktopWpf;
+        }
+
+        internal override void Switch(GameContext context)
+        {
+            throw new NotImplementedException();
         }
 
         internal override GraphicsPresenter CreateGraphicsPresenter(GraphicsDevice device, PresentationParameters parameters)

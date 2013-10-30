@@ -46,7 +46,7 @@ namespace SharpDX.Windows
         /// </summary>
         public static void Run(ApplicationContext context, RenderCallback renderCallback)
         {
-            Run(context.MainForm, renderCallback);            
+            Run(context.MainForm, renderCallback);
         }
 
         /// <summary>
@@ -56,8 +56,21 @@ namespace SharpDX.Windows
         /// <param name="renderCallback">The rendering callback.</param>
         public static void Run(Control form, RenderCallback renderCallback)
         {
-            var proxyWindow = new ProxyNativeWindow(form);
-            proxyWindow.Run(renderCallback);
+            IRenderLoopController controller;
+            Run(form, renderCallback, out controller);
+        }
+
+        /// <summary>
+        /// Runs the specified main loop for the specified windows form.
+        /// </summary>
+        /// <remarks>This method call is blocking and the only way to control it is to return an instance of the <see cref="IRenderLoopController"/> via an out parameter.</remarks>
+        /// <param name="form">The form.</param>
+        /// <param name="renderCallback">The rendering callback.</param>
+        /// <param name="controller">Contains the object that allows control over the rendering loop.</param>
+        public static void Run(Control form, RenderCallback renderCallback, out IRenderLoopController controller)
+        {
+            controller = new RenderLoopController(renderCallback);
+            controller.RunRenderOnForm(form);
         }
 
         /// <summary>
@@ -71,7 +84,7 @@ namespace SharpDX.Windows
             get
             {
                 Win32Native.NativeMessage msg;
-                return (bool) (Win32Native.PeekMessage(out msg, IntPtr.Zero, 0, 0, 0) == 0);
+                return (bool)(Win32Native.PeekMessage(out msg, IntPtr.Zero, 0, 0, 0) == 0);
             }
         }
 
@@ -113,7 +126,7 @@ namespace SharpDX.Windows
             {
                 _isAlive = false;
             }
-            
+
             /// <summary>
             /// Private rendering loop
             /// </summary>
@@ -125,30 +138,8 @@ namespace SharpDX.Windows
                 // Main rendering loop);
                 while (_isAlive)
                 {
-                    if (UseCustomDoEvents)
-                    {
-                        // Previous code not compatible with Application.AddMessageFilter but faster then DoEvents
-                        Win32Native.NativeMessage msg;
-                        while (Win32Native.PeekMessage(out msg, _windowHandle, 0, 0, 0) != 0)
-                        {
-                            if (Win32Native.GetMessage(out msg, _windowHandle, 0, 0) == -1)
-                            {
-                                throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture,
-                                    "An error happened in rendering loop while processing windows messages. Error: {0}",
-                                    Marshal.GetLastWin32Error()));
-                            }
+                    ProcessWindowMessages();
 
-                            Win32Native.TranslateMessage(ref msg);
-                            Win32Native.DispatchMessage(ref msg);
-                        }
-                    }
-                    else
-                    {
-                        // Revert back to Application.DoEvents in order to support Application.AddMessageFilter
-                        // Seems that DoEvents is compatible with Mono unlike Application.Run that was not running
-                        // correctly.
-                        Application.DoEvents();
-                    }
                     if (_isAlive)
                         renderCallback();
                 }
@@ -166,6 +157,89 @@ namespace SharpDX.Windows
                     _isAlive = false;
                 }
                 return false;
+            }
+
+            public void Exit()
+            {
+                _isAlive = false;
+            }
+
+            private void ProcessWindowMessages()
+            {
+                if (UseCustomDoEvents)
+                {
+                    // Previous code not compatible with Application.AddMessageFilter but faster then DoEvents
+                    Win32Native.NativeMessage msg;
+                    while (Win32Native.PeekMessage(out msg, _windowHandle, 0, 0, 0) != 0)
+                    {
+                        if (Win32Native.GetMessage(out msg, _windowHandle, 0, 0) == -1)
+                        {
+                            throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture,
+                                                                              "An error happened in rendering loop while processing windows messages. Error: {0}",
+                                                                              Marshal.GetLastWin32Error()));
+                        }
+
+                        Win32Native.TranslateMessage(ref msg);
+                        Win32Native.DispatchMessage(ref msg);
+                    }
+                }
+                else
+                {
+                    // Revert back to Application.DoEvents in order to support Application.AddMessageFilter
+                    // Seems that DoEvents is compatible with Mono unlike Application.Run that was not running
+                    // correctly.
+                    Application.DoEvents();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Allows switching of control where rendering is hapening and exiting the render loop.
+        /// </summary>
+        public interface IRenderLoopController
+        {
+            /// <summary>
+            /// Runs the rendering loop on the provided control.
+            /// </summary>
+            /// <param name="form">The control on which the rendering loop should run.</param>
+            void RunRenderOnForm(Control form);
+
+            /// <summary>
+            /// Exits the rendering loop and allows starting of the new one.
+            /// </summary>
+            void ExitRenderLoop();
+        }
+
+        private sealed class RenderLoopController : IRenderLoopController
+        {
+            private readonly RenderCallback renderCallback;
+
+            private ProxyNativeWindow proxyNativeWindow;
+
+            public RenderLoopController(RenderCallback renderCallback)
+            {
+                if (renderCallback == null) throw new ArgumentNullException("renderCallback");
+
+                this.renderCallback = renderCallback;
+            }
+
+            public void RunRenderOnForm(Control form)
+            {
+                if (proxyNativeWindow != null)
+                    throw new InvalidOperationException("Exit the previous rendering loop, otherwise the application can experience a stack overflow exception.");
+
+                proxyNativeWindow = new ProxyNativeWindow(form);
+                proxyNativeWindow.Run(renderCallback);
+            }
+
+            public void ExitRenderLoop()
+            {
+                // exit render loop from previous window
+                if (proxyNativeWindow != null)
+                {
+                    proxyNativeWindow.Exit();
+                    proxyNativeWindow = null;
+                }
             }
         }
     }

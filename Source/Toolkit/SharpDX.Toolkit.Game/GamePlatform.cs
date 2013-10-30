@@ -107,7 +107,7 @@ namespace SharpDX.Toolkit
             throw new ArgumentException("Game Window context not supported on this platform");
         }
 
-        public bool IsBlockingRun { get; protected set; }
+        public bool IsBlockingRun { get { return gameWindow != null && gameWindow.IsBlockingRun; } }
 
         public void Run(GameContext gameContext)
         {
@@ -119,6 +119,7 @@ namespace SharpDX.Toolkit
             // Register on Activated 
             gameWindow.Activated += OnActivated;
             gameWindow.Deactivated += OnDeactivated;
+            gameWindow.InitDeviceCallback = game.InitializeDevice;
             gameWindow.InitCallback = game.InitializeBeforeRun;
             gameWindow.RunCallback = game.Tick;
             gameWindow.ExitCallback = () => OnExiting(this, EventArgs.Empty);
@@ -130,6 +131,21 @@ namespace SharpDX.Toolkit
             }
 
             gameWindow.Run();
+        }
+
+        /// <summary>
+        /// Switches the game to a new game context.
+        /// </summary>
+        /// <param name="context">The new game context.</param>
+        /// <exception cref="NotSupportedException">Is thrown when a different game context type is passed (for example initially it was WinForms and became WPF).</exception>
+        public void Switch(GameContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+
+            if(gameWindow.CanHandle(context))
+                gameWindow.Switch(context);
+            else
+                throw new NotSupportedException("Switching to a different game window type is not supported yet.");
         }
 
         public virtual void Exit()

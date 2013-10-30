@@ -33,12 +33,15 @@ namespace SharpDX.Toolkit
     internal class GameWindowDesktop : GameWindow
     {
         private bool isMouseVisible;
-
         private bool isMouseCurrentlyHidden;
 
         public Control Control;
 
         private RenderForm gameForm;
+        private RenderLoop.RenderCallback runRenderCallback;
+        private RenderLoop.IRenderLoopController controller;
+
+        private System.Action startRenderLoopAction;
 
         internal GameWindowDesktop()
         {
@@ -51,6 +54,8 @@ namespace SharpDX.Toolkit
                 return Control;
             }
         }
+
+        internal override bool IsBlockingRun { get { return false; } }
 
         public override void BeginScreenDeviceChange(bool willBeFullScreen)
         {
@@ -112,23 +117,30 @@ namespace SharpDX.Toolkit
             }
         }
 
-        private RenderLoop.RenderCallback runRenderCallback;
-
         internal override void Run()
         {
+            Debug.Assert(InitDeviceCallback != null);
             Debug.Assert(InitCallback != null);
             Debug.Assert(RunCallback != null);
 
-            // Initialize the init callback
+            InitDeviceCallback();
             InitCallback();
 
             runRenderCallback = new RenderLoop.RenderCallback(RenderLoopCallback);
 
+            startRenderLoopAction = RunFirstTimeRenderLoop;
+
             // Run the rendering loop
             try
             {
-                // Use custom do events to improve performance and avoid GC caused by Application.DoEvents
-                RenderLoop.Run(Control, runRenderCallback);
+                // allows restarting the rendering loop without increasing method stack depth
+                // otherwise a StackOverflowException can occur
+                while(startRenderLoopAction != null)
+                {
+                    var action = startRenderLoopAction;
+                    startRenderLoopAction = null; // set the delegate to null to detect when render loop has exited without restart
+                    action();
+                }
             }
             finally
             {
@@ -137,6 +149,28 @@ namespace SharpDX.Toolkit
                     ExitCallback();
                 }
             }
+        }
+
+        /// <summary>
+        /// Runs the render loop at first time
+        /// </summary>
+        private void RunFirstTimeRenderLoop()
+        {
+            // Use custom do events to improve performance and avoid GC caused by Application.DoEvents
+            RenderLoop.Run(Control, runRenderCallback, out controller);
+        }
+
+        /// <summary>
+        /// Restarts the render loop
+        /// </summary>
+        private void RunNextRenderLoop()
+        {
+            Debug.Assert(controller != null);
+
+            // recreate the graphics device
+            // TODO: check if we can recreate only the renderer
+            InitDeviceCallback();
+            controller.RunRenderOnForm(Control);
         }
 
         private void RenderLoopCallback()
@@ -230,6 +264,15 @@ namespace SharpDX.Toolkit
             Control.ClientSize = new Size(width, height);
         }
 
+        /// <inheritdoc />
+        internal override void Switch(GameContext context)
+        {
+            Control = (Control)context.Control; // save the new control
+            startRenderLoopAction = RunNextRenderLoop; // reset the start render loop delegate
+
+            controller.ExitRenderLoop(); // exit the current render loop
+        }
+
         public override bool AllowUserResizing
         {
             get
@@ -289,7 +332,7 @@ namespace SharpDX.Toolkit
 
                 gameForm = null;
             }
-            
+
             base.Dispose(disposeManagedResources);
         }
     }
