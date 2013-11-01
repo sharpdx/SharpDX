@@ -78,6 +78,8 @@ namespace SharpDX.Toolkit
             }
         }
 
+        internal override bool IsBlockingRun { get { return false; } }
+
         public override bool IsMouseVisible { get; set; }
 
         public override object NativeWindow
@@ -128,12 +130,7 @@ namespace SharpDX.Toolkit
         {
             if (windowContext != null)
             {
-                surfaceControl = windowContext.Control as FrameworkElement;
-                if (surfaceControl == null)
-                    throw new ArgumentException("A FrameworkElement expected.");
-
-                surfaceControl.SizeChanged += SurfaceControlSizeChanged;
-
+                BindSurfaceControl(windowContext);
             }
         }
 
@@ -150,10 +147,28 @@ namespace SharpDX.Toolkit
         internal override void Run()
         {
             // Initialize Game
+            InitDeviceCallback();
             InitCallback();
 
             // Perform the rendering loop
             CompositionTarget.Rendering += CompositionTarget_Rendering;
+        }
+
+        internal override void Switch(GameContext context)
+        {
+            surfaceControl.SizeChanged -= SurfaceControlSizeChanged;
+
+            BindSurfaceControl(context);
+            InitDeviceCallback();
+        }
+
+        private void BindSurfaceControl(GameContext windowContext)
+        {
+            surfaceControl = windowContext.Control as FrameworkElement;
+            if (surfaceControl == null)
+                throw new ArgumentException("A FrameworkElement expected.");
+
+            surfaceControl.SizeChanged += SurfaceControlSizeChanged;
         }
 
         void CompositionTarget_Rendering(object sender, object e)
