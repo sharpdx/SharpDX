@@ -165,7 +165,7 @@ namespace SharpDX.D3DCompiler
         /// <returns>A byte buffer</returns>
         public static implicit operator byte[](ShaderSignature shaderSignature)
         {
-            return (shaderSignature != null) shaderSignature.Data : null;
+            return (shaderSignature != null) ? shaderSignature.Data : null;
         }
 
         public void Dispose()
