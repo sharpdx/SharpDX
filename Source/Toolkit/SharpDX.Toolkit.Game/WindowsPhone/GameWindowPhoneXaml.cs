@@ -94,6 +94,8 @@ namespace SharpDX.Toolkit
             set { }
         }
 
+        internal override bool IsBlockingRun { get { return false; } }
+
         #region Implementation of ICallbackable
 
         IDisposable ICallbackable.Shadow { get; set; }
@@ -138,6 +140,7 @@ namespace SharpDX.Toolkit
 
                     if (!isInitialized)
                     {
+                        InitDeviceCallback();
                         InitCallback();
                         isInitialized = true;
                     }
@@ -214,6 +217,11 @@ namespace SharpDX.Toolkit
 
             // Never called??
             drawingSurface.Unloaded += DrawingSurfaceUnloaded;
+        }
+
+        internal override void Switch(GameContext context)
+        {
+            throw new NotImplementedException();
         }
 
         internal override void Resize(int width, int height)

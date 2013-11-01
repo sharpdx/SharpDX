@@ -79,6 +79,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCube.SwitchContext.WPF"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCube.SwitchContext.WinRTXaml", "Toolkit\WinRT\MiniCube.SwitchContext.WinRTXaml\MiniCube.SwitchContext.WinRTXaml.csproj", "{408E78AC-268C-4804-B9D2-78AD842E0976}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCube.SwitchContext.WP8", "Toolkit\WP8\MiniCube.SwitchContext.WP8\MiniCube.SwitchContext.WP8.csproj", "{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -906,6 +908,32 @@ Global
 		{408E78AC-268C-4804-B9D2-78AD842E0976}.Release|x86.ActiveCfg = Release|x86
 		{408E78AC-268C-4804-B9D2-78AD842E0976}.Release|x86.Build.0 = Release|x86
 		{408E78AC-268C-4804-B9D2-78AD842E0976}.Release|x86.Deploy.0 = Release|x86
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Debug|ARM.ActiveCfg = Debug|ARM
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Debug|ARM.Build.0 = Debug|ARM
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Debug|ARM.Deploy.0 = Debug|ARM
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Debug|Mixed Platforms.Deploy.0 = Debug|x86
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Debug|x86.ActiveCfg = Debug|x86
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Debug|x86.Build.0 = Debug|x86
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Debug|x86.Deploy.0 = Debug|x86
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Release|ARM.ActiveCfg = Release|ARM
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Release|ARM.Build.0 = Release|ARM
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Release|ARM.Deploy.0 = Release|ARM
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Release|Mixed Platforms.Build.0 = Release|x86
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Release|Mixed Platforms.Deploy.0 = Release|x86
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Release|x64.ActiveCfg = Release|Any CPU
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Release|x86.ActiveCfg = Release|x86
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Release|x86.Build.0 = Release|x86
+		{F0A9A088-D048-4DFA-8F42-8C27B871F6AD}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
