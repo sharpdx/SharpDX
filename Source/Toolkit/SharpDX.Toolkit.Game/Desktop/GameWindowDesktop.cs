@@ -267,10 +267,26 @@ namespace SharpDX.Toolkit
         /// <inheritdoc />
         internal override void Switch(GameContext context)
         {
+            // unbind event handlers from previous control
+            Control.MouseEnter -= GameWindowForm_MouseEnter;
+            Control.MouseLeave -= GameWindowForm_MouseLeave;
+
+            gameForm = Control as RenderForm;
+            if (gameForm != null)
+            {
+                gameForm.AppActivated -= OnActivated;
+                gameForm.AppDeactivated -= OnDeactivated;
+                gameForm.UserResized -= OnClientSizeChanged;
+            }
+            else
+            {
+                Control.Resize -= OnClientSizeChanged;
+            }
+
+            // setup and bind event handlers to new control
             Initialize(context);
 
             startRenderLoopAction = RunNextRenderLoop; // reset the start render loop delegate
-
             controller.ExitRenderLoop(); // exit the current render loop
         }
 
