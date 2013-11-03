@@ -38,8 +38,7 @@ namespace SharpDX.Toolkit
         public Control Control;
 
         private RenderForm gameForm;
-        private RenderLoop.RenderCallback runRenderCallback;
-        private RenderLoop.IRenderLoopController controller;
+        private RenderLoop renderLoop;
 
         private System.Action startRenderLoopAction;
 
@@ -126,20 +125,26 @@ namespace SharpDX.Toolkit
             InitDeviceCallback();
             InitCallback();
 
-            runRenderCallback = new RenderLoop.RenderCallback(RenderLoopCallback);
-
-            startRenderLoopAction = RunFirstTimeRenderLoop;
-
-            // Run the rendering loop
             try
             {
-                // allows restarting the rendering loop without increasing method stack depth
-                // otherwise a StackOverflowException can occur
-                while(startRenderLoopAction != null)
+                // Use custom render loop
+                Control.Show();
+                using(renderLoop = new RenderLoop(Control))
                 {
-                    var action = startRenderLoopAction;
-                    startRenderLoopAction = null; // set the delegate to null to detect when render loop has exited without restart
-                    action();
+                    while(renderLoop.NextFrame())
+                    {
+                        if (Exiting)
+                        {
+                            if (Control != null)
+                            {
+                                Control.Dispose();
+                                Control = null;
+                            }
+                            break;
+                        }
+
+                        RunCallback();
+                    }
                 }
             }
             finally
@@ -149,43 +154,6 @@ namespace SharpDX.Toolkit
                     ExitCallback();
                 }
             }
-        }
-
-        /// <summary>
-        /// Runs the render loop at first time
-        /// </summary>
-        private void RunFirstTimeRenderLoop()
-        {
-            // Use custom do events to improve performance and avoid GC caused by Application.DoEvents
-            RenderLoop.Run(Control, runRenderCallback, out controller);
-        }
-
-        /// <summary>
-        /// Restarts the render loop
-        /// </summary>
-        private void RunNextRenderLoop()
-        {
-            Debug.Assert(controller != null);
-
-            // recreate the graphics device
-            // TODO: check if we can recreate only the renderer
-            InitDeviceCallback();
-            controller.RunRenderOnForm(Control);
-        }
-
-        private void RenderLoopCallback()
-        {
-            if (Exiting)
-            {
-                if (Control != null)
-                {
-                    Control.Dispose();
-                    Control = null;
-                }
-                return;
-            }
-
-            RunCallback();
         }
 
         private void GameWindowForm_MouseEnter(object sender, System.EventArgs e)
@@ -286,8 +254,9 @@ namespace SharpDX.Toolkit
             // setup and bind event handlers to new control
             Initialize(context);
 
-            startRenderLoopAction = RunNextRenderLoop; // reset the start render loop delegate
-            controller.ExitRenderLoop(); // exit the current render loop
+            InitDeviceCallback(); // TODO: Change this and recreate only the swapchain
+            Control.Show(); // Make sure the control is visible
+            renderLoop.Control = Control;
         }
 
         public override bool AllowUserResizing

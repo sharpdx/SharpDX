@@ -28,12 +28,157 @@ using SharpDX.Win32;
 namespace SharpDX.Windows
 {
     /// <summary>
-    /// RenderLoop provides a rendering loop infrastructure.
+    /// RenderLoop provides a rendering loop infrastructure. See remarks for usage. 
     /// </summary>
-    public class RenderLoop
+    /// <remarks>
+    /// Use static <see cref="Run(System.Windows.Forms.Control,SharpDX.Windows.RenderLoop.RenderCallback)"/>  
+    /// method to directly use a renderloop with a render callback or use your own loop:
+    /// <code>
+    /// control.Show();
+    /// using (var loop = new RenderLoop(control))
+    /// {
+    ///     while (loop.NextFrame())
+    ///     {
+    ///        // Perform draw operations here.
+    ///     }
+    /// }
+    /// </code>
+    /// Note that the main control can be changed at anytime inside the loop.
+    /// </remarks>
+    public class RenderLoop : IDisposable, IMessageFilter
     {
-        private RenderLoop()
+        private IntPtr controlHandle;
+        private Control control;
+        private bool isControlAlive;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RenderLoop"/> class.
+        /// </summary>
+        public RenderLoop() {}
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RenderLoop"/> class.
+        /// </summary>
+        public RenderLoop(Control control)
         {
+            Control = control;
+        }
+
+        /// <summary>
+        /// Gets or sets the control to associate with the current render loop.
+        /// </summary>
+        /// <value>The control.</value>
+        /// <exception cref="System.InvalidOperationException">Control is already disposed</exception>
+        public Control Control
+        {
+            get
+            {
+                return control;
+            }
+            set
+            {
+                if(control == value) return;
+
+                // Remove any previous control
+                if(control != null)
+                {
+                    isControlAlive = false;
+                    MessageFilterHook.RemoveMessageFilter(control.Handle, this);
+                    control.Disposed -= ControlDisposed;
+                    controlHandle = IntPtr.Zero;
+                }
+
+                // TODO: we should actually switch to the real control on the NextFrame method for thread safety
+                control = value;
+
+                // Setup new control
+                if(control != null)
+                {
+                    if (control.IsDisposed)
+                    {
+                        throw new InvalidOperationException("Control is already disposed");
+                    }
+
+                    controlHandle = control.Handle;
+                    control.Disposed += ControlDisposed;
+                    MessageFilterHook.AddMessageFilter(control.Handle, this);
+                    isControlAlive = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the render loop should use a custom windows event handler (default false).
+        /// </summary>
+        /// <value><c>true</c> if the render loop should use a custom windows event handler (default false); otherwise, <c>false</c>.</value>
+        /// <remarks>By default, RenderLoop is using <see cref="Application.DoEvents" /> to process windows event message. Set this parameter to true to use a custom event handler that could
+        /// lead to better performance. Note that using a custom windows event message handler is not compatible with <see cref="Application.AddMessageFilter" /> or any other features
+        /// that are part of <see cref="Application" />.</remarks>
+        public bool UseCustomDoEvents { get; set; }
+
+        /// <summary>
+        /// Calls this method on each frame.
+        /// </summary>
+        /// <returns><c>true</c> if if the control is still active, <c>false</c> otherwise.</returns>
+        /// <exception cref="System.InvalidOperationException">An error occured </exception>
+        public bool NextFrame()
+        {
+            if(isControlAlive)
+            {
+                if(UseCustomDoEvents)
+                {
+                    var localHandle = controlHandle;
+                    if(localHandle != IntPtr.Zero)
+                    {
+                        // Previous code not compatible with Application.AddMessageFilter but faster then DoEvents
+                        Win32Native.NativeMessage msg;
+                        while (Win32Native.PeekMessage(out msg, localHandle, 0, 0, 0) != 0)
+                        {
+                            if (Win32Native.GetMessage(out msg, localHandle, 0, 0) == -1)
+                            {
+                                throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture,
+                                    "An error happened in rendering loop while processing windows messages. Error: {0}",
+                                    Marshal.GetLastWin32Error()));
+                            }
+
+                            Win32Native.TranslateMessage(ref msg);
+                            Win32Native.DispatchMessage(ref msg);
+                        }
+                    }
+                }
+                else
+                {
+                    // Revert back to Application.DoEvents in order to support Application.AddMessageFilter
+                    // Seems that DoEvents is compatible with Mono unlike Application.Run that was not running
+                    // correctly.
+                    Application.DoEvents();
+                }
+            }
+
+            return isControlAlive;
+        }
+
+        bool IMessageFilter.PreFilterMessage(ref Message m)
+        {
+            // NCDESTROY event?
+            if(m.Msg == 130)
+            {
+                isControlAlive = false;
+            }
+            return false;
+        }
+
+        private void ControlDisposed(object sender, EventArgs e)
+        {
+            isControlAlive = false;
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            Control = null;
         }
 
         /// <summary>
@@ -56,21 +201,17 @@ namespace SharpDX.Windows
         /// <param name="renderCallback">The rendering callback.</param>
         public static void Run(Control form, RenderCallback renderCallback)
         {
-            IRenderLoopController controller;
-            Run(form, renderCallback, out controller);
-        }
+            if(form == null) throw new ArgumentNullException("form");
+            if(renderCallback == null) throw new ArgumentNullException("renderCallback");
 
-        /// <summary>
-        /// Runs the specified main loop for the specified windows form.
-        /// </summary>
-        /// <remarks>This method call is blocking and the only way to control it is to return an instance of the <see cref="IRenderLoopController"/> via an out parameter.</remarks>
-        /// <param name="form">The form.</param>
-        /// <param name="renderCallback">The rendering callback.</param>
-        /// <param name="controller">Contains the object that allows control over the rendering loop.</param>
-        public static void Run(Control form, RenderCallback renderCallback, out IRenderLoopController controller)
-        {
-            controller = new RenderLoopController(renderCallback);
-            controller.RunRenderOnForm(form);
+            form.Show();
+            using(var renderLoop = new RenderLoop(form))
+            {
+                while(renderLoop.NextFrame())
+                {
+                    renderCallback();
+                }
+            }
         }
 
         /// <summary>
@@ -87,161 +228,6 @@ namespace SharpDX.Windows
                 return (bool)(Win32Native.PeekMessage(out msg, IntPtr.Zero, 0, 0, 0) == 0);
             }
         }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the render loop should use a custom windows event handler (default false).
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if the render loop should use a custom windows event handler (default false); otherwise, <c>false</c>.
-        /// </value>
-        /// <remarks>
-        /// By default, RenderLoop is using <see cref="Application.DoEvents"/> to process windows event message. Set this parameter to true to use a custom event handler that could
-        /// lead to better performance. Note that using a custom windows event message handler is not compatible with <see cref="Application.AddMessageFilter"/> or any other features
-        /// that are part of <see cref="Application"/>.
-        /// </remarks>
-        public static bool UseCustomDoEvents { get; set; }
-
-        /// <summary>
-        /// ProxyNativeWindow, used only to detect if the original window is destroyed
-        /// </summary>
-        private class ProxyNativeWindow : IMessageFilter
-        {
-            private readonly Control _form;
-            private readonly IntPtr _windowHandle;
-            private bool _isAlive;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="ProxyNativeWindow"/> class.
-            /// </summary>
-            public ProxyNativeWindow(Control form)
-            {
-                _form = form;
-                _windowHandle = form.Handle;
-                _form.Disposed += _form_Disposed;
-                MessageFilterHook.AddMessageFilter(_windowHandle, this);
-                _isAlive = true;
-            }
-
-            void _form_Disposed(object sender, EventArgs e)
-            {
-                _isAlive = false;
-            }
-
-            /// <summary>
-            /// Private rendering loop
-            /// </summary>
-            public void Run(RenderCallback renderCallback)
-            {
-                // Show the form
-                _form.Show();
-
-                // Main rendering loop);
-                while (_isAlive)
-                {
-                    ProcessWindowMessages();
-
-                    if (_isAlive)
-                        renderCallback();
-                }
-
-                _form.Disposed -= _form_Disposed;
-
-                MessageFilterHook.RemoveMessageFilter(_windowHandle, this);
-            }
-
-            public bool PreFilterMessage(ref Message m)
-            {
-                // NCDESTROY event?
-                if (m.Msg == 130)
-                {
-                    _isAlive = false;
-                }
-                return false;
-            }
-
-            public void Exit()
-            {
-                _isAlive = false;
-            }
-
-            private void ProcessWindowMessages()
-            {
-                if (UseCustomDoEvents)
-                {
-                    // Previous code not compatible with Application.AddMessageFilter but faster then DoEvents
-                    Win32Native.NativeMessage msg;
-                    while (Win32Native.PeekMessage(out msg, _windowHandle, 0, 0, 0) != 0)
-                    {
-                        if (Win32Native.GetMessage(out msg, _windowHandle, 0, 0) == -1)
-                        {
-                            throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture,
-                                                                              "An error happened in rendering loop while processing windows messages. Error: {0}",
-                                                                              Marshal.GetLastWin32Error()));
-                        }
-
-                        Win32Native.TranslateMessage(ref msg);
-                        Win32Native.DispatchMessage(ref msg);
-                    }
-                }
-                else
-                {
-                    // Revert back to Application.DoEvents in order to support Application.AddMessageFilter
-                    // Seems that DoEvents is compatible with Mono unlike Application.Run that was not running
-                    // correctly.
-                    Application.DoEvents();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Allows switching of control where rendering is hapening and exiting the render loop.
-        /// </summary>
-        public interface IRenderLoopController
-        {
-            /// <summary>
-            /// Runs the rendering loop on the provided control.
-            /// </summary>
-            /// <param name="form">The control on which the rendering loop should run.</param>
-            void RunRenderOnForm(Control form);
-
-            /// <summary>
-            /// Exits the rendering loop and allows starting of the new one.
-            /// </summary>
-            void ExitRenderLoop();
-        }
-
-        private sealed class RenderLoopController : IRenderLoopController
-        {
-            private readonly RenderCallback renderCallback;
-
-            private ProxyNativeWindow proxyNativeWindow;
-
-            public RenderLoopController(RenderCallback renderCallback)
-            {
-                if (renderCallback == null) throw new ArgumentNullException("renderCallback");
-
-                this.renderCallback = renderCallback;
-            }
-
-            public void RunRenderOnForm(Control form)
-            {
-                if (proxyNativeWindow != null)
-                    throw new InvalidOperationException("Exit the previous rendering loop, otherwise the application can experience a stack overflow exception.");
-
-                proxyNativeWindow = new ProxyNativeWindow(form);
-                proxyNativeWindow.Run(renderCallback);
-            }
-
-            public void ExitRenderLoop()
-            {
-                // exit render loop from previous window
-                if (proxyNativeWindow != null)
-                {
-                    proxyNativeWindow.Exit();
-                    proxyNativeWindow = null;
-                }
-            }
-        }
-    }
+   }
 }
 #endif
