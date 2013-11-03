@@ -45,11 +45,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="SharpDX.Toolkit.Yaml.nuspec" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="YamlDotNet">
-      <HintPath>..\..\..\External\YamlDotNet\YamlDotNet.dll</HintPath>
+    <Reference Include="SharpYaml, Version=1.0.2.31337, Culture=neutral, PublicKeyToken=1ced8108e942bc02, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\SharpYaml.1.0.2\lib\SharpYaml.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
