@@ -267,7 +267,8 @@ namespace SharpDX.Toolkit
         /// <inheritdoc />
         internal override void Switch(GameContext context)
         {
-            Control = (Control)context.Control; // save the new control
+            Initialize(context);
+
             startRenderLoopAction = RunNextRenderLoop; // reset the start render loop delegate
 
             controller.ExitRenderLoop(); // exit the current render loop
