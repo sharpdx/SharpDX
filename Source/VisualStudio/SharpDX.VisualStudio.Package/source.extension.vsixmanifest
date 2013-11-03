@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="c9f3eae3-5b73-4a71-a3b7-da6e1fc935b5" Version="1.0" Language="en-US" Publisher="SharpDX" />
+    <Identity Id="c9f3eae3-5b73-4a71-a3b7-da6e1fc935b5" Version="1.1" Language="en-US" Publisher="SharpDX" />
     <DisplayName>SharpDX Toolkit for VisualStudio</DisplayName>
     <Description>Provides SharpDX Toolkit project integration into VisualStudio</Description>
     <MoreInfo>http://sharpdx.org</MoreInfo>
     <License>License.txt</License>
-    <ReleaseNotes>ReleaseNotes.html</ReleaseNotes>
+    <ReleaseNotes>ReleaseNotes.txt</ReleaseNotes>
     <Icon>logo.ico</Icon>
     <Tags>SharpDX Toolkit Direct3D11 Direct2D XAudio2 MediaFoundation</Tags>
   </Metadata>
   <Installation InstalledByMsi="false">
-    <InstallationTarget Version="[11.0,12.0)" Id="Microsoft.VisualStudio.Pro" />
+    <InstallationTarget Version="[11.0, 13.0]" Id="Microsoft.VisualStudio.Pro" />
   </Installation>
   <Dependencies>
     <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="4.5" />
