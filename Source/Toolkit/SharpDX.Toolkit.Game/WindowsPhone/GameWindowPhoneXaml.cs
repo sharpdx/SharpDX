@@ -214,14 +214,24 @@ namespace SharpDX.Toolkit
         internal override void Run()
         {
             drawingSurface.Loaded += DrawingSurfaceOnLoaded;
-
-            // Never called??
             drawingSurface.Unloaded += DrawingSurfaceUnloaded;
         }
 
         internal override void Switch(GameContext context)
         {
-            throw new NotImplementedException();
+            drawingSurface.Loaded -= DrawingSurfaceOnLoaded;
+            drawingSurface.Unloaded -= DrawingSurfaceUnloaded;
+            drawingSurface.SetContentProvider(null);
+
+            drawingSurface = (DrawingSurface)context.Control;
+            isInitialized = false;
+            synchronizedTexture.Dispose();
+            synchronizedTexture = null;
+
+            drawingSurface.Loaded += DrawingSurfaceOnLoaded;
+            drawingSurface.Unloaded += DrawingSurfaceUnloaded;
+
+            drawingSurface.SetContentProvider(this);
         }
 
         internal override void Resize(int width, int height)
