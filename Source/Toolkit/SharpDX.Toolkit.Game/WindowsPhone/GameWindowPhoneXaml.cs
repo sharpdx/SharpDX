@@ -140,7 +140,6 @@ namespace SharpDX.Toolkit
 
                     if (!isInitialized)
                     {
-                        InitDeviceCallback();
                         InitCallback();
                         isInitialized = true;
                     }

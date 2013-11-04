@@ -147,7 +147,6 @@ namespace SharpDX.Toolkit
         internal override void Run()
         {
             // Initialize Game
-            InitDeviceCallback();
             InitCallback();
 
             // Perform the rendering loop
@@ -159,7 +158,6 @@ namespace SharpDX.Toolkit
             surfaceControl.SizeChanged -= SurfaceControlSizeChanged;
 
             BindSurfaceControl(context);
-            InitDeviceCallback();
         }
 
         private void BindSurfaceControl(GameContext windowContext)

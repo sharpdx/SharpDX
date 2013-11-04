@@ -119,7 +119,6 @@ namespace SharpDX.Toolkit
             // Register on Activated 
             gameWindow.Activated += OnActivated;
             gameWindow.Deactivated += OnDeactivated;
-            gameWindow.InitDeviceCallback = game.InitializeDevice;
             gameWindow.InitCallback = game.InitializeBeforeRun;
             gameWindow.RunCallback = game.Tick;
             gameWindow.ExitCallback = () => OnExiting(this, EventArgs.Empty);
@@ -142,8 +141,11 @@ namespace SharpDX.Toolkit
         {
             if (context == null) throw new ArgumentNullException("context");
 
-            if(gameWindow.CanHandle(context))
+            if (gameWindow.CanHandle(context))
+            {
                 gameWindow.Switch(context);
+                CreatePresenter(game.GraphicsDevice, null, context.Control);
+            }
             else
                 throw new NotSupportedException("Switching to a different game window type is not supported yet.");
         }
@@ -245,16 +247,55 @@ namespace SharpDX.Toolkit
 
             var parameters = deviceInformation.PresentationParameters;
 
-            // Give a chance to gameWindow to create desired graphics presenter, otherwise - create our own.
-            var presenter = gameWindow.CreateGraphicsPresenter(device, parameters)
-                            ?? new SwapChainGraphicsPresenter(device, parameters);
-
-            device.Presenter = presenter;
+            CreatePresenter(device, parameters);
 
             // Force to resize the gameWindow
             gameWindow.Resize(parameters.BackBufferWidth, parameters.BackBufferHeight);
 
             return device;
+        }
+
+        protected virtual void CreatePresenter(GraphicsDevice device, PresentationParameters parameters, object newControl = null)
+        {
+            if (device == null) throw new ArgumentNullException("device");
+
+            parameters = TryGetParameters(device, parameters);
+
+            DisposeGraphicsPresenter(device);
+
+            // override the device window, if available
+            if (newControl != null)
+                parameters.DeviceWindowHandle = newControl;
+
+            // Give a chance to gameWindow to create desired graphics presenter, otherwise - create our own.
+            device.Presenter = gameWindow.CreateGraphicsPresenter(device, parameters)
+                               ?? new SwapChainGraphicsPresenter(device, parameters);
+        }
+
+        protected PresentationParameters TryGetParameters(GraphicsDevice device, PresentationParameters parameters)
+        {
+            var oldPresenter = device.Presenter;
+
+            if (parameters == null)
+            {
+                if (oldPresenter == null)
+                    throw new InvalidOperationException("Cannot retrieve PresentationParameters.");
+
+                // preserve the parameters from old GraphicsPresenter
+                parameters = oldPresenter.Description.Clone();
+            }
+
+            return parameters;
+        }
+
+        protected void DisposeGraphicsPresenter(GraphicsDevice device)
+        {
+            var oldPresenter = device.Presenter;
+            if(oldPresenter != null)
+            {
+                device.Presenter = null;
+                oldPresenter.Dispose();
+            }
         }
 
         protected void TryFindSupportedFeatureLevel(GameGraphicsParameters prefferedParameters,

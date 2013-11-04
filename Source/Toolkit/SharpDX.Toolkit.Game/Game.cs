@@ -295,14 +295,11 @@ namespace SharpDX.Toolkit
             nextLastUpdateCountIndex = 0;
         }
 
-        internal void InitializeDevice()
+        internal void InitializeBeforeRun()
         {
             // Make sure that the device is already created
             graphicsDeviceManager.CreateDevice();
-        }
 
-        internal void InitializeBeforeRun()
-        {
             // Gets the graphics device service
             graphicsDeviceService = Services.GetService(typeof(IGraphicsDeviceService)) as IGraphicsDeviceService;
             if (graphicsDeviceService == null)

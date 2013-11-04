@@ -158,8 +158,6 @@ namespace SharpDX.Toolkit
 
         internal bool Exiting;
 
-        internal Action InitDeviceCallback;
-
         internal Action InitCallback;
 
         internal Action RunCallback;

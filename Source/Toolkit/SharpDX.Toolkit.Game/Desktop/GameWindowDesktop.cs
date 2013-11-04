@@ -118,11 +118,9 @@ namespace SharpDX.Toolkit
 
         internal override void Run()
         {
-            Debug.Assert(InitDeviceCallback != null);
             Debug.Assert(InitCallback != null);
             Debug.Assert(RunCallback != null);
 
-            InitDeviceCallback();
             InitCallback();
 
             try
@@ -254,7 +252,6 @@ namespace SharpDX.Toolkit
             // setup and bind event handlers to new control
             Initialize(context);
 
-            InitDeviceCallback(); // TODO: Change this and recreate only the swapchain
             Control.Show(); // Make sure the control is visible
             renderLoop.Control = Control;
         }

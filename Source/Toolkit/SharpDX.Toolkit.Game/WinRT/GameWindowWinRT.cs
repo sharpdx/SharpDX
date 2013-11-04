@@ -153,7 +153,6 @@ namespace SharpDX.Toolkit
             CoreWindow = window;
 
             // Call the init callback once the window is activated
-            InitDeviceCallback();
             InitCallback();
         }
 

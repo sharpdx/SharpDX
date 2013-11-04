@@ -210,7 +210,6 @@ namespace SharpDX.Toolkit
                         if (!isInitialized)
                         {
                             // The InitCallback will call us back on EnsureDevice method
-                            InitDeviceCallback();
                             InitCallback();
                             isInitialized = true;
                         }
