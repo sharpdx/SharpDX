@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
 #if !W8CORE
 using System;
 using System.Globalization;
@@ -86,7 +85,7 @@ namespace SharpDX.Windows
                 if(control != null && !switchControl)
                 {
                     isControlAlive = false;
-                    MessageFilterHook.RemoveMessageFilter(control.Handle, this);
+                    MessageFilterHook.RemoveMessageFilter(controlHandle, this); // use cached controlHandle as control can be disposed at this time
                     control.Disposed -= ControlDisposed;
                     controlHandle = IntPtr.Zero;
                 }
@@ -95,6 +94,7 @@ namespace SharpDX.Windows
                 {
                     throw new InvalidOperationException("Control is already disposed");
                 }
+
                 control = value;
                 switchControl = true;
             }
@@ -159,7 +159,7 @@ namespace SharpDX.Windows
                 }
             }
 
-            return isControlAlive;
+            return isControlAlive || switchControl;
         }
 
         bool IMessageFilter.PreFilterMessage(ref Message m)
