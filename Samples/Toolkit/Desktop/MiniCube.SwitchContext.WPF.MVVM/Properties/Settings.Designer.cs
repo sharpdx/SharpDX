@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MiniCube.SwitchContext.WPF.Properties {
+namespace MiniCube.SwitchContext.WPF.MVVM.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

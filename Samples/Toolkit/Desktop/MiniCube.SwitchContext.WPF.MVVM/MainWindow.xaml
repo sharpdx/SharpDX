@@ -1,0 +1,21 @@
+﻿<Window x:Class="MiniCube.SwitchContext.WPF.MVVM.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mvvm="clr-namespace:MiniCube.SwitchContext.WPF.MVVM"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <TabControl ItemsSource="{Binding}">
+            <TabControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type mvvm:GameViewModel}">
+                    <TextBlock Text="{Binding Name,Mode=OneWay}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            
+            <TabControl.ContentTemplate>
+                <DataTemplate DataType="{x:Type mvvm:GameViewModel}">
+                    <mvvm:GameView Game="{Binding Game,Mode=OneWay}" />
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+    </Grid>
+</Window>

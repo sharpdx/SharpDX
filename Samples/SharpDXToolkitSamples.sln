@@ -83,6 +83,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCube.SwitchContext.WP8"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCube.SwitchContext.WP8.DrawingSurface", "Toolkit\WP8\MiniCube.SwitchContext.WP8.DrawingSurface\MiniCube.SwitchContext.WP8.DrawingSurface.csproj", "{DDE23A6B-D856-477E-B4A4-4B97D0014B85}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCube.SwitchContext.WPF.MVVM", "Toolkit\Desktop\MiniCube.SwitchContext.WPF.MVVM\MiniCube.SwitchContext.WPF.MVVM.csproj", "{3214BC9A-30DF-4180-8FB7-57AE86BBB8E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -962,6 +964,20 @@ Global
 		{DDE23A6B-D856-477E-B4A4-4B97D0014B85}.Release|x86.ActiveCfg = Release|x86
 		{DDE23A6B-D856-477E-B4A4-4B97D0014B85}.Release|x86.Build.0 = Release|x86
 		{DDE23A6B-D856-477E-B4A4-4B97D0014B85}.Release|x86.Deploy.0 = Release|x86
+		{3214BC9A-30DF-4180-8FB7-57AE86BBB8E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3214BC9A-30DF-4180-8FB7-57AE86BBB8E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3214BC9A-30DF-4180-8FB7-57AE86BBB8E8}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{3214BC9A-30DF-4180-8FB7-57AE86BBB8E8}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{3214BC9A-30DF-4180-8FB7-57AE86BBB8E8}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{3214BC9A-30DF-4180-8FB7-57AE86BBB8E8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3214BC9A-30DF-4180-8FB7-57AE86BBB8E8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3214BC9A-30DF-4180-8FB7-57AE86BBB8E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3214BC9A-30DF-4180-8FB7-57AE86BBB8E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3214BC9A-30DF-4180-8FB7-57AE86BBB8E8}.Release|ARM.ActiveCfg = Release|Any CPU
+		{3214BC9A-30DF-4180-8FB7-57AE86BBB8E8}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{3214BC9A-30DF-4180-8FB7-57AE86BBB8E8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{3214BC9A-30DF-4180-8FB7-57AE86BBB8E8}.Release|x64.ActiveCfg = Release|Any CPU
+		{3214BC9A-30DF-4180-8FB7-57AE86BBB8E8}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

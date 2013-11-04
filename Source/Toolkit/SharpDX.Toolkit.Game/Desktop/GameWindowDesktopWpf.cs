@@ -95,7 +95,7 @@ namespace SharpDX.Toolkit
 
         public override void EndScreenDeviceChange(int clientWidth, int clientHeight)
         {
-            if (element != null)
+            if (element != null && !element.IsDisposed)
             {
                 element.TrySetSize(clientWidth, clientHeight);
                 element.SetBackbuffer(presenter.BackBuffer);
@@ -139,7 +139,10 @@ namespace SharpDX.Toolkit
 
             // device context will be used to query drawing operations status
             deviceContext = ((Device)presenter.GraphicsDevice).ImmediateContext;
-            element.SetBackbuffer(presenter.BackBuffer);
+
+            if (!element.IsDisposed)
+                element.SetBackbuffer(presenter.BackBuffer);
+
             return presenter;
         }
 
@@ -163,7 +166,13 @@ namespace SharpDX.Toolkit
             element.ResizeCompleted += OnClientSizeChanged;
             element.MouseEnter += OnMouseEnter;
             element.MouseLeave += OnMouseLeave;
+            element.Loaded += HandleElementLoaded;
+            element.Unloaded += HandleElementUnloaded;
         }
+
+
+
+
 
         internal override void Run()
         {
@@ -177,7 +186,8 @@ namespace SharpDX.Toolkit
 
         internal override void Resize(int width, int height)
         {
-            element.TrySetSize(width, height);
+            if (!element.IsDisposed)
+                element.TrySetSize(width, height);
         }
 
         protected internal override void SetSupportedOrientations(DisplayOrientation orientations)
@@ -243,7 +253,18 @@ namespace SharpDX.Toolkit
                    && completed)) Thread.Yield();
 
             // syncronize D3D surface with WPF
-            element.InvalidateRendering();
+            if (!element.IsDisposed)
+                element.InvalidateRendering();
+        }
+
+        private void HandleElementLoaded(object sender, RoutedEventArgs e)
+        {
+            OnActivated(this, EventArgs.Empty);
+        }
+
+        private void HandleElementUnloaded(object sender, RoutedEventArgs e)
+        {
+            OnDeactivated(this, EventArgs.Empty);
         }
 
         private void OnMouseEnter(object sender, MouseEventArgs e)
