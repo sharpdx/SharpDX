@@ -219,8 +219,11 @@ namespace WPFHost
         {
             // this fires when the screensaver kicks in, the machine goes into sleep or hibernate
             // and any other catastrophic losses of the d3d device from WPF's point of view
-            if (this.D3DSurface.IsFrontBufferAvailable)
+            if(this.D3DSurface.IsFrontBufferAvailable)
+            {
+                CreateAndBindTargets();
                 this.StartRendering();
+            }
             else
                 this.StopRendering();
         }
