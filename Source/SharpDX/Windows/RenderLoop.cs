@@ -17,6 +17,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System.Collections.Generic;
 #if !W8CORE
 using System;
 using System.Globalization;
@@ -50,6 +52,7 @@ namespace SharpDX.Windows
         private IntPtr controlHandle;
         private Control control;
         private bool isControlAlive;
+        private bool switchControl;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RenderLoop"/> class.
@@ -80,7 +83,7 @@ namespace SharpDX.Windows
                 if(control == value) return;
 
                 // Remove any previous control
-                if(control != null)
+                if(control != null && !switchControl)
                 {
                     isControlAlive = false;
                     MessageFilterHook.RemoveMessageFilter(control.Handle, this);
@@ -88,22 +91,12 @@ namespace SharpDX.Windows
                     controlHandle = IntPtr.Zero;
                 }
 
-                // TODO: we should actually switch to the real control on the NextFrame method for thread safety
-                control = value;
-
-                // Setup new control
-                if(control != null)
+                if (value != null && value.IsDisposed)
                 {
-                    if (control.IsDisposed)
-                    {
-                        throw new InvalidOperationException("Control is already disposed");
-                    }
-
-                    controlHandle = control.Handle;
-                    control.Disposed += ControlDisposed;
-                    MessageFilterHook.AddMessageFilter(control.Handle, this);
-                    isControlAlive = true;
+                    throw new InvalidOperationException("Control is already disposed");
                 }
+                control = value;
+                switchControl = true;
             }
         }
 
@@ -123,6 +116,17 @@ namespace SharpDX.Windows
         /// <exception cref="System.InvalidOperationException">An error occured </exception>
         public bool NextFrame()
         {
+            // Setup new control
+            // TODO this is not completely thread-safe. We should use a lock to handle this correctly
+            if (switchControl && control != null)
+            {
+                controlHandle = control.Handle;
+                control.Disposed += ControlDisposed;
+                MessageFilterHook.AddMessageFilter(control.Handle, this);
+                isControlAlive = true;
+                switchControl = false;
+            }
+
             if(isControlAlive)
             {
                 if(UseCustomDoEvents)
