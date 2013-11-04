@@ -114,6 +114,8 @@ namespace SharpDX.Toolkit
             element.ResizeCompleted -= OnClientSizeChanged;
             element.MouseEnter -= OnMouseEnter;
             element.MouseLeave -= OnMouseLeave;
+            element.Loaded -= HandleElementLoaded;
+            element.Unloaded -= HandleElementUnloaded;
 
             element = null;
 
@@ -169,10 +171,6 @@ namespace SharpDX.Toolkit
             element.Loaded += HandleElementLoaded;
             element.Unloaded += HandleElementUnloaded;
         }
-
-
-
-
 
         internal override void Run()
         {
