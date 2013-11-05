@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Xml.Serialization;
 using NUnit.Framework;
 using SharpDX.Serialization;
@@ -66,7 +67,7 @@ namespace SharpDX.Tests
         public void TestString()
         {
             var stream = new MemoryStream();
-            var rw = new BinarySerializer(stream, SerializerMode.Write, Text.Encoding.ASCII);
+            var rw = new BinarySerializer(stream, SerializerMode.Write, Encoding.ASCII);
 
             var string1 = "0123";
             var string2 = "4567";

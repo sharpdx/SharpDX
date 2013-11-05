@@ -62,21 +62,21 @@ namespace SharpDX.Toolkit.Graphics
             var material = meshPart.Material;
 
             // Setup ColorDiffuse
-            if (material.HasProperty(MaterialKeys.ColorDiffuse))
+            if (material.HasProperty(MaterialKeysBase.ColorDiffuse))
             {
-                effect.DiffuseColor = material.GetProperty(MaterialKeys.ColorDiffuse);
+                effect.DiffuseColor = material.GetProperty(MaterialKeysBase.ColorDiffuse);
             }
 
             // Setup ColorSpecular
-            if (material.HasProperty(MaterialKeys.ColorSpecular))
+            if (material.HasProperty(MaterialKeysBase.ColorSpecular))
             {
-                effect.SpecularColor = material.GetProperty(MaterialKeys.ColorSpecular);
+                effect.SpecularColor = material.GetProperty(MaterialKeysBase.ColorSpecular);
             }
 
             // Setup ColorEmissive
-            if (material.HasProperty(MaterialKeys.ColorEmissive))
+            if (material.HasProperty(MaterialKeysBase.ColorEmissive))
             {
-                effect.EmissiveColor = material.GetProperty(MaterialKeys.ColorEmissive);
+                effect.EmissiveColor = material.GetProperty(MaterialKeysBase.ColorEmissive);
             }
 
             if (material.HasProperty(MaterialKeys.DiffuseTexture))

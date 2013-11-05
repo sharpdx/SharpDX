@@ -21,6 +21,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
+
 using SharpDX.IO;
 using SharpDX.Multimedia;
 using SharpDX.Serialization;
@@ -121,7 +123,7 @@ namespace SharpDX.Toolkit.Graphics
 
         private static BinarySerializer GetSerializer(Stream stream, SerializerMode mode)
         {
-            var serializer = new BinarySerializer(stream, mode, Text.Encoding.ASCII);
+            var serializer = new BinarySerializer(stream, mode, Encoding.ASCII);
             return serializer;
         }
 

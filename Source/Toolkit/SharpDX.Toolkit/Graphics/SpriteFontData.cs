@@ -20,6 +20,8 @@
 
 using System;
 using System.IO;
+using System.Text;
+
 using SharpDX.IO;
 using SharpDX.Multimedia;
 using SharpDX.Serialization;
@@ -85,7 +87,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>An <see cref="SpriteFontData"/>. Null if the stream is not a serialized <see cref="SpriteFontData"/>.</returns>
         public static SpriteFontData Load(Stream stream, SpriteFontBitmapDataLoaderDelegate bitmapDataLoader = null)
         {
-            var serializer = new BinarySerializer(stream, SerializerMode.Read, Text.Encoding.ASCII) {ArrayLengthType = ArrayLengthType.Int};
+            var serializer = new BinarySerializer(stream, SerializerMode.Read, Encoding.ASCII) {ArrayLengthType = ArrayLengthType.Int};
 
             var data = new SpriteFontData();
 

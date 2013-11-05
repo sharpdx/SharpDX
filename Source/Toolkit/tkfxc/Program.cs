@@ -28,6 +28,8 @@ using SharpDX.IO;
 using SharpDX.Text;
 using SharpDX.Toolkit.Diagnostics;
 
+using Encoding = System.Text.Encoding;
+
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>

@@ -36,7 +36,7 @@ namespace SharpDX.Toolkit.Graphics
     {
         private DataPointer sharedPtr;
 
-        public ModelReader(GraphicsDevice graphicsDevice, Stream stream, ModelMaterialTextureLoaderDelegate textureLoader) : base(stream, SerializerMode.Read, ASCIIEncoding.ASCII)
+        public ModelReader(GraphicsDevice graphicsDevice, Stream stream, ModelMaterialTextureLoaderDelegate textureLoader) : base(stream, SerializerMode.Read, Encoding.ASCII)
         {
             if (graphicsDevice == null)
             {
@@ -341,12 +341,12 @@ namespace SharpDX.Toolkit.Graphics
                 MaterialTextureStack textureStack = null;
                 ReadList(ref textureStack, CreateMaterialTextureStack, CreateMaterialTexture, ReadMaterialTexture);
 
-                var key = MaterialKeys.FindKeyByName(keyName) ?? new PropertyKey(keyName);
+                var key = MaterialKeysBase.FindKeyByName(keyName) ?? new PropertyKey(keyName);
 
                 properties[key] = textureStack;
             }
 
-            ReadProperties(ref material.Properties, name => MaterialKeys.FindKeyByName(name) ?? new PropertyKey(name));
+            ReadProperties(ref material.Properties, name => MaterialKeysBase.FindKeyByName(name) ?? new PropertyKey(name));
         }
 
         private static Regex RegexMatchEmbeddedTexture = new Regex(@"^\*(\d+)$");

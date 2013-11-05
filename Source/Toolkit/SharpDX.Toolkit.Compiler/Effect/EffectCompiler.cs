@@ -24,6 +24,8 @@ using System.IO;
 using SharpDX.IO;
 using SharpDX.Text;
 
+using Encoding = System.Text.Encoding;
+
 namespace SharpDX.Toolkit.Graphics
 {
     using D3DCompiler;

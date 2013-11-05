@@ -127,7 +127,7 @@ namespace SharpDX.Serialization
         /// </summary>
         /// <param name="stream">The stream to read or write to.</param>
         /// <param name="mode">The read or write mode.</param>
-        public BinarySerializer(Stream stream, SerializerMode mode) : this(stream, mode, SharpDX.Text.Encoding.ASCII)
+        public BinarySerializer(Stream stream, SerializerMode mode) : this(stream, mode, Encoding.ASCII)
         {
         }
 
