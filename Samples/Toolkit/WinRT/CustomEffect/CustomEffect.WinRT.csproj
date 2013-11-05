@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>CustomEffect.WinRT_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>507B47DCE839DF8E9766AE85F628A331AB9984D5</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>ACCD26E2B24659C0FA94DDE75427E757EF75A9BE</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>

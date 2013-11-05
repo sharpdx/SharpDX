@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="0D546DC1-0A45-41E9-93B5-8A0E407B23A3" Publisher="CN=Home" Version="1.0.0.0" />
+  <Identity Name="0D546DC1-0A45-41E9-93B5-8A0E407B23A3" Publisher="CN=SharpDX Team" Version="1.0.0.0" />
   <Properties>
     <DisplayName>CustomEffect.WinRTXaml</DisplayName>
     <PublisherDisplayName>Home</PublisherDisplayName>

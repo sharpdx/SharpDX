@@ -21,7 +21,7 @@
 using System;
 using System.Reflection;
 using SharpDX.Toolkit.Content;
-using YamlDotNet.Serialization;
+using SharpYaml.Serialization;
 
 namespace SharpDX.Toolkit.Yaml
 {

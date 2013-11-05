@@ -12,8 +12,9 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>ForegroundSwapChains_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>ForegroundSwapChains.WinRT_TemporaryKey.pfx</PackageCertificateKeyFile>
     <SharpDXDirectXVersion>DirectX11_2</SharpDXDirectXVersion>
+    <PackageCertificateThumbprint>90891FFF895C693CA0102EF75CB643A872D747EB</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -112,7 +113,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="ForegroundSwapChains_TemporaryKey.pfx" />
+    <None Include="ForegroundSwapChains.WinRT_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Logo.png" />
