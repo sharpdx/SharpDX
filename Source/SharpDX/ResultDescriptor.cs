@@ -33,16 +33,22 @@ namespace SharpDX
 #endif
     public sealed class ResultDescriptor
     {
+        /// <summary>The lock descriptor.</summary>
         private static readonly object LockDescriptor = new object();
+
+        /// <summary>The registered descriptor provider.</summary>
         private static readonly List<Type> RegisteredDescriptorProvider = new List<Type>();
+
+        /// <summary>The descriptors.</summary>
         private static readonly Dictionary<Result, ResultDescriptor> Descriptors = new Dictionary<Result, ResultDescriptor>();
+
+        /// <summary>The unknown text.</summary>
         private const string UnknownText = "Unknown";
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ResultDescriptor"/> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="ResultDescriptor" /> class.</summary>
         /// <param name="code">The HRESULT error code.</param>
         /// <param name="module">The module (ex: SharpDX.Direct2D1).</param>
+        /// <param name="nativeApiCode">The native API code.</param>
         /// <param name="apiCode">The API code (ex: D2D1_ERR_...).</param>
         /// <param name="description">The description of the result code if any.</param>
         public ResultDescriptor(Result code, string module, string nativeApiCode, string apiCode, string description = null)
@@ -54,14 +60,11 @@ namespace SharpDX
             Description = description;
         }
 
-        /// <summary>
-        /// Gets the result.
-        /// </summary>
+        /// <summary>Gets the result.</summary>
+        /// <value>The result.</value>
         public Result Result { get; private set; }
 
-        /// <summary>
-        /// Gets the HRESULT error code.
-        /// </summary>
+        /// <summary>Gets the HRESULT error code.</summary>
         /// <value>The HRESULT error code.</value>
         public int Code
         {
@@ -71,33 +74,25 @@ namespace SharpDX
             }
         }
 
-        /// <summary>
-        /// Gets the module (ex: SharpDX.Direct2D1)
-        /// </summary>
+        /// <summary>Gets the module (ex: SharpDX.Direct2D1)</summary>
+        /// <value>The module.</value>
         public string Module { get; private set; }
 
-        /// <summary>
-        /// Gets the native API code (ex: D2D1_ERR_ ...)
-        /// </summary>
+        /// <summary>Gets the native API code (ex: D2D1_ERR_ ...)</summary>
+        /// <value>The native API code.</value>
         public string NativeApiCode { get; private set; }
 
-        /// <summary>
-        /// Gets the API code (ex: DemiceRemoved ...)
-        /// </summary>
+        /// <summary>Gets the API code (ex: DemiceRemoved ...)</summary>
+        /// <value>The API code.</value>
         public string ApiCode { get; private set; }
 
-        /// <summary>
-        /// Gets the description of the result code if any.
-        /// </summary>
+        /// <summary>Gets the description of the result code if any.</summary>
+        /// <value>The description.</value>
         public string Description { get; set; }
 
-        /// <summary>
-        /// Determines whether the specified <see cref="ResultDescriptor"/> is equal to this instance.
-        /// </summary>
-        /// <param name="other">The <see cref="ResultDescriptor"/> to compare with this instance.</param>
-        /// <returns>
-        ///   <c>true</c> if the specified <see cref="ResultDescriptor"/> is equal to this instance; otherwise, <c>false</c>.
-        /// </returns>
+        /// <summary>Determines whether the specified <see cref="ResultDescriptor" /> is equal to this instance.</summary>
+        /// <param name="other">The <see cref="ResultDescriptor" /> to compare with this instance.</param>
+        /// <returns><c>true</c> if the specified <see cref="ResultDescriptor" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public bool Equals(ResultDescriptor other)
         {
             if (ReferenceEquals(null, other))
@@ -107,13 +102,9 @@ namespace SharpDX
             return other.Result.Equals(this.Result);
         }
 
-        /// <summary>
-        /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
-        /// </summary>
-        /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
-        /// <returns>
-        ///   <c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
-        /// </returns>
+        /// <summary>Determines whether the specified <see cref="System.Object" /> is equal to this instance.</summary>
+        /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
+        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -125,33 +116,31 @@ namespace SharpDX
             return Equals((ResultDescriptor)obj);
         }
 
-        /// <inheritdoc/>
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             return this.Result.GetHashCode();
         }
 
-        /// <inheritdoc/>
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
+        /// <inheritdoc />
         public override string ToString()
         {
             return string.Format("HRESULT: [0x{0:X}], Module: [{1}], ApiCode: [{2}/{3}], Message: {4}", this.Result.Code, this.Module, this.NativeApiCode, this.ApiCode, this.Description);
         }
 
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="ResultDescriptor"/> to <see cref="SharpDX.Result"/>.
-        /// </summary>
+        /// <summary>Performs an implicit conversion from <see cref="ResultDescriptor" /> to <see cref="SharpDX.Result" />.</summary>
         /// <param name="result">The result.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
+        /// <returns>The result of the conversion.</returns>
         public static implicit operator Result(ResultDescriptor result)
         {
             return result.Result;
         }
 
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.ResultDescriptor"/> to <see cref="System.Int32"/>.
-        /// </summary>
+        /// <summary>Performs an implicit conversion from <see cref="SharpDX.ResultDescriptor" /> to <see cref="System.Int32" />.</summary>
         /// <param name="result">The result.</param>
         /// <returns>The result of the conversion.</returns>
         public static explicit operator int(ResultDescriptor result)
@@ -159,9 +148,7 @@ namespace SharpDX
             return result.Result.Code;
         }
 
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.ResultDescriptor"/> to <see cref="System.UInt32"/>.
-        /// </summary>
+        /// <summary>Performs an implicit conversion from <see cref="SharpDX.ResultDescriptor" /> to <see cref="System.UInt32" />.</summary>
         /// <param name="result">The result.</param>
         /// <returns>The result of the conversion.</returns>
         public static explicit operator uint(ResultDescriptor result)
@@ -169,9 +156,7 @@ namespace SharpDX
             return unchecked((uint)result.Result.Code);
         }
 
-        /// <summary>
-        /// Implements the operator ==.
-        /// </summary>
+        /// <summary>Implements the operator ==.</summary>
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
         /// <returns>The result of the operator.</returns>
@@ -182,9 +167,7 @@ namespace SharpDX
             return left.Result.Code == right.Code;
         }
 
-        /// <summary>
-        /// Implements the operator !=.
-        /// </summary>
+        /// <summary>Implements the operator !=.</summary>
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
         /// <returns>The result of the operator.</returns>
@@ -195,13 +178,9 @@ namespace SharpDX
             return left.Result.Code != right.Code;
         }
 
-        /// <summary>
-        /// Registers a <see cref="ResultDescriptor"/> provider.
-        /// </summary>
+        /// <summary>Registers a <see cref="ResultDescriptor" /> provider.</summary>
         /// <param name="descriptorsProviderType">Type of the descriptors provider.</param>
-        /// <remarks>
-        /// Providers are usually registered at module init when SharpDX assemblies are loaded.
-        /// </remarks>
+        /// <remarks>Providers are usually registered at module init when SharpDX assemblies are loaded.</remarks>
         public static void RegisterProvider(Type descriptorsProviderType)
         {
             lock (LockDescriptor)
@@ -211,9 +190,7 @@ namespace SharpDX
             }
         }
 
-        /// <summary>
-        /// Finds the specified result descriptor.
-        /// </summary>
+        /// <summary>Finds the specified result descriptor.</summary>
         /// <param name="result">The result code.</param>
         /// <returns>A descriptor for the specified result</returns>
         public static ResultDescriptor Find(Result result)
@@ -249,6 +226,8 @@ namespace SharpDX
             return descriptor;
         }
 
+        /// <summary>Adds the type of the descriptors from.</summary>
+        /// <param name="type">The type.</param>
         private static void AddDescriptorsFromType(Type type)
         {
 #if W8CORE
@@ -278,10 +257,15 @@ namespace SharpDX
 #endif
         }
 
+        /// <summary>Gets the description from result code.</summary>
+        /// <param name="resultCode">The result code.</param>
+        /// <returns>System.String.</returns>
         private static string GetDescriptionFromResultCode(int resultCode)
         {
             const int FORMAT_MESSAGE_ALLOCATE_BUFFER = 0x00000100;
+
             const int FORMAT_MESSAGE_IGNORE_INSERTS = 0x00000200;
+
             const int FORMAT_MESSAGE_FROM_SYSTEM = 0x00001000;
 
             IntPtr buffer = IntPtr.Zero;
@@ -300,6 +284,15 @@ namespace SharpDX
             get { return formatMessageW ?? (formatMessageW = (FormatMessageWDelegate) Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.FormatMessageW()), typeof (FormatMessageWDelegate))); }
         }
 #else
+        /// <summary>Formats the message forward.</summary>
+        /// <param name="dwFlags">The dw flags.</param>
+        /// <param name="lpSource">The lp source.</param>
+        /// <param name="dwMessageId">The dw message unique identifier.</param>
+        /// <param name="dwLanguageId">The dw language unique identifier.</param>
+        /// <param name="lpBuffer">The lp buffer.</param>
+        /// <param name="nSize">Size of the asynchronous.</param>
+        /// <param name="Arguments">The arguments.</param>
+        /// <returns>Result as System.UInt32.</returns>
         [DllImport("kernel32.dll", EntryPoint = "FormatMessageW")]
         private static extern uint FormatMessageW(int dwFlags, IntPtr lpSource, int dwMessageId, int dwLanguageId, ref IntPtr lpBuffer, int nSize, IntPtr Arguments);
 #endif

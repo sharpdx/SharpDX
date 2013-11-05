@@ -18,37 +18,82 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-
-using SharpDX.DXGI;
-using SharpDX.Direct3D;
-using SharpDX.Toolkit.Graphics;
-
 namespace SharpDX.Toolkit
 {
-    using Direct3D11;
+    using System;
+    using System.Collections.Generic;
 
+    using SharpDX.Direct3D;
+    using SharpDX.DXGI;
+    using SharpDX.Toolkit.Graphics;
+
+    /// <summary>The game platform class.</summary>
     internal abstract class GamePlatform : DisposeBase, IGraphicsDeviceFactory, IGamePlatform
     {
-        protected delegate void AddDeviceToListDelegate(GameGraphicsParameters prefferedParameters,
-                                                        GraphicsAdapter graphicsAdapter,
-                                                        GraphicsDeviceInformation deviceInfo,
-                                                        List<GraphicsDeviceInformation> graphicsDeviceInfos);
+        /// <summary>The services.</summary>
+        protected IServiceRegistry Services { get; private set; }
 
+        /// <summary>The game.</summary>
         protected readonly Game game;
 
-        protected readonly IServiceRegistry Services;
-
-        protected GameWindow gameWindow;
-
+        /// <summary>Initializes a new instance of the <see cref="GamePlatform"/> class.</summary>
+        /// <param name="game">The game.</param>
         protected GamePlatform(Game game)
         {
             this.game = game;
-            Services = game.Services;
-            Services.AddService(typeof(IGraphicsDeviceFactory), this);
+            this.Services = game.Services;
+            this.Services.AddService(typeof(IGraphicsDeviceFactory), this);
         }
 
+        /// <summary>The add device automatic list delegate delegate.</summary>
+        /// <param name="preferredParameters">The preferred parameters.</param>
+        /// <param name="graphicsAdapter">The graphics adapter.</param>
+        /// <param name="deviceInfo">The device information.</param>
+        /// <param name="graphicsDeviceInfos">The graphics device infos.</param>
+        protected delegate void AddDeviceToListDelegate(
+            GameGraphicsParameters preferredParameters,
+            GraphicsAdapter graphicsAdapter,
+            GraphicsDeviceInformation deviceInfo,
+            List<GraphicsDeviceInformation> graphicsDeviceInfos);
+
+        /// <summary>Occurs when [activated].</summary>
+        public event EventHandler<EventArgs> Activated;
+
+        /// <summary>Occurs when [deactivated].</summary>
+        public event EventHandler<EventArgs> Deactivated;
+
+        /// <summary>Occurs when [exiting].</summary>
+        public event EventHandler<EventArgs> Exiting;
+
+        /// <summary>Occurs when [idle].</summary>
+        public event EventHandler<EventArgs> Idle;
+
+        /// <summary>Occurs when [resume].</summary>
+        public event EventHandler<EventArgs> Resume;
+
+        /// <summary>Occurs when [suspend].</summary>
+        public event EventHandler<EventArgs> Suspend;
+
+        /// <summary>Occurs when [window created].</summary>
+        public event EventHandler<EventArgs> WindowCreated;
+        /// <summary>Gets the default app directory.</summary>
+        /// <value>The default app directory.</value>
+        public abstract string DefaultAppDirectory { get; }
+        /// <summary>Gets or sets a value indicating whether this instance is blocking run.</summary>
+        /// <value><see langword="true" /> if this instance is blocking run; otherwise, <see langword="false" />.</value>
+        public bool IsBlockingRun { get; protected set; }
+
+        /// <summary>Gets the main window.</summary>
+        /// <value>The main window.</value>
+        public GameWindow MainWindow { get; protected set; }
+
+        /// <summary>Gets or sets the window context.</summary>
+        /// <value>The window context.</value>
+        public object WindowContext { get; set; }
+
+        /// <summary>Creates the specified game.</summary>
+        /// <param name="game">The game.</param>
+        /// <returns>GamePlatform.</returns>
         public static GamePlatform Create(Game game)
         {
 #if WIN8METRO
@@ -60,45 +105,42 @@ namespace SharpDX.Toolkit
 #endif
         }
 
-        public abstract string DefaultAppDirectory { get; }
-
-        public object WindowContext { get; set; }
-
-        public event EventHandler<EventArgs> Activated;
-
-        public event EventHandler<EventArgs> Deactivated;
-
-        public event EventHandler<EventArgs> Exiting;
-
-        public event EventHandler<EventArgs> Idle;
-
-        public event EventHandler<EventArgs> Resume;
-
-        public event EventHandler<EventArgs> Suspend;
-
-        public event EventHandler<EventArgs> WindowCreated;
-
-        public GameWindow MainWindow
+        /// <summary>Creates the device.</summary>
+        /// <param name="deviceInformation">The device information.</param>
+        /// <returns>GraphicsDevice.</returns>
+        public virtual GraphicsDevice CreateDevice(GraphicsDeviceInformation deviceInformation)
         {
-            get
-            {
-                return gameWindow;
-            }
+            var device = GraphicsDevice.New(deviceInformation.Adapter, deviceInformation.DeviceCreationFlags, deviceInformation.GraphicsProfile);
+
+            var parameters = deviceInformation.PresentationParameters;
+
+            // Give a chance to gameWindow to create desired graphics presenter, otherwise - create our own.
+            var presenter = this.MainWindow.CreateGraphicsPresenter(device, parameters) ?? new SwapChainGraphicsPresenter(device, parameters);
+
+            device.Presenter = presenter;
+
+            // Force to resize the gameWindow
+            this.MainWindow.Resize(parameters.BackBufferWidth, parameters.BackBufferHeight);
+
+            return device;
         }
 
-        internal abstract GameWindow[] GetSupportedGameWindows();
-
+        /// <summary>Creates the a new <see cref="GameWindow" />. See remarks.</summary>
+        /// <param name="gameContext">The window context. See remarks.</param>
+        /// <returns>A new game window.</returns>
+        /// <exception cref="System.ArgumentException">Game Window context not supported on this platform</exception>
+        /// <remarks>This is currently only supported on Windows Desktop. The window context supported on windows is a subclass of System.Windows.Forms.Control (or null and a default RenderForm will be created).</remarks>
         public virtual GameWindow CreateWindow(GameContext gameContext)
         {
             gameContext = gameContext ?? new GameContext();
 
-            var windows = GetSupportedGameWindows();
+            var windows = this.GetSupportedGameWindows();
 
-            foreach (var gameWindowToTest in windows)
+            foreach(var gameWindowToTest in windows)
             {
-                if (gameWindowToTest.CanHandle(gameContext))
+                if(gameWindowToTest.CanHandle(gameContext))
                 {
-                    gameWindowToTest.Services = Services;
+                    gameWindowToTest.Services = this.Services;
                     gameWindowToTest.Initialize(gameContext);
                     return gameWindowToTest;
                 }
@@ -107,87 +149,75 @@ namespace SharpDX.Toolkit
             throw new ArgumentException("Game Window context not supported on this platform");
         }
 
-        public bool IsBlockingRun { get; protected set; }
-
-        public void Run(GameContext gameContext)
-        {
-            gameWindow = CreateWindow(gameContext);
-
-            // set the mouse visibility in case if it was set in the game constructor:
-            gameWindow.IsMouseVisible = game.IsMouseVisible;
-
-            // Register on Activated 
-            gameWindow.Activated += OnActivated;
-            gameWindow.Deactivated += OnDeactivated;
-            gameWindow.InitCallback = game.InitializeBeforeRun;
-            gameWindow.RunCallback = game.Tick;
-            gameWindow.ExitCallback = () => OnExiting(this, EventArgs.Empty);
-
-            var windowCreated = WindowCreated;
-            if (windowCreated != null)
-            {
-                windowCreated(this, EventArgs.Empty);
-            }
-
-            gameWindow.Run();
-        }
-
+        /// <summary>Exits this instance.</summary>
         public virtual void Exit()
         {
-            gameWindow.Exiting = true;
-            Activated = null;
-            Deactivated = null;
-            Exiting = null;
-            Idle = null;
-            Resume = null;
-            Suspend = null;
+            this.MainWindow.Exiting = true;
+            this.Activated = null;
+            this.Deactivated = null;
+            this.Exiting = null;
+            this.Idle = null;
+            this.Resume = null;
+            this.Suspend = null;
         }
 
-        protected void OnActivated(object source, EventArgs e)
+        /// <summary>Finds the best devices.</summary>
+        /// <param name="preferredParameters">The preferred parameters.</param>
+        /// <returns>List{GraphicsDeviceInformation}.</returns>
+        public virtual List<GraphicsDeviceInformation> FindBestDevices(GameGraphicsParameters preferredParameters)
         {
-            EventHandler<EventArgs> handler = Activated;
-            if (handler != null) handler(this, e);
+            var graphicsDeviceInfos = new List<GraphicsDeviceInformation>();
+
+            // Iterate on each adapter
+            foreach(var graphicsAdapter in GraphicsAdapter.Adapters) this.TryFindSupportedFeatureLevel(preferredParameters, graphicsAdapter, graphicsDeviceInfos, this.TryAddDeviceWithDisplayMode);
+
+            return graphicsDeviceInfos;
         }
 
-        protected void OnDeactivated(object source, EventArgs e)
+        /// <summary>Runs the specified game context.</summary>
+        /// <param name="gameContext">The game context.</param>
+        public void Run(GameContext gameContext)
         {
-            EventHandler<EventArgs> handler = Deactivated;
-            if (handler != null) handler(this, e);
+            this.MainWindow = this.CreateWindow(gameContext);
+
+            // set the mouse visibility in case if it was set in the game constructor:
+            this.MainWindow.IsMouseVisible = this.game.IsMouseVisible;
+
+            // Register on Activated 
+            this.MainWindow.Activated += this.OnActivated;
+            this.MainWindow.Deactivated += this.OnDeactivated;
+            this.MainWindow.InitCallback = this.game.InitializeBeforeRun;
+            this.MainWindow.RunCallback = this.game.Tick;
+            this.MainWindow.ExitCallback = () => this.OnExiting(this, EventArgs.Empty);
+
+            var windowCreated = this.WindowCreated;
+            if(windowCreated != null) windowCreated(this, EventArgs.Empty);
+
+            this.MainWindow.Run();
         }
 
-        protected void OnExiting(object source, EventArgs e)
-        {
-            EventHandler<EventArgs> handler = Exiting;
-            if (handler != null) handler(this, e);
-        }
+        /// <summary>Gets the supported game windows.</summary>
+        /// <returns>GameWindow[][].</returns>
+        internal abstract GameWindow[] GetSupportedGameWindows();
 
-        protected void OnIdle(object source, EventArgs e)
-        {
-            EventHandler<EventArgs> handler = Idle;
-            if (handler != null) handler(this, e);
-        }
-
-        protected void OnResume(object source, EventArgs e)
-        {
-            EventHandler<EventArgs> handler = Resume;
-            if (handler != null) handler(this, e);
-        }
-
-        protected void OnSuspend(object source, EventArgs e)
-        {
-            EventHandler<EventArgs> handler = Suspend;
-            if (handler != null) handler(this, e);
-        }
-
-        protected void AddDevice(DisplayMode mode, GraphicsDeviceInformation deviceBaseInfo, GameGraphicsParameters prefferedParameters, List<GraphicsDeviceInformation> graphicsDeviceInfos)
+        /// <summary>Adds the device.</summary>
+        /// <param name="mode">The mode.</param>
+        /// <param name="deviceBaseInfo">The device base information.</param>
+        /// <param name="preferredParameters">The preferred parameters.</param>
+        /// <param name="graphicsDeviceInfos">The graphics device infos.</param>
+        protected void AddDevice(
+            DisplayMode mode,
+            GraphicsDeviceInformation deviceBaseInfo,
+            GameGraphicsParameters preferredParameters,
+            List<GraphicsDeviceInformation> graphicsDeviceInfos)
         {
             var deviceInfo = deviceBaseInfo.Clone();
 
             deviceInfo.PresentationParameters.RefreshRate = mode.RefreshRate;
-            deviceInfo.PresentationParameters.PreferredFullScreenOutputIndex = prefferedParameters.PreferredFullScreenOutputIndex;
-            deviceBaseInfo.PresentationParameters.DepthBufferShaderResource = prefferedParameters.DepthBufferShaderResource;
+            deviceInfo.PresentationParameters.PreferredFullScreenOutputIndex = preferredParameters.PreferredFullScreenOutputIndex;
+            deviceBaseInfo.PresentationParameters.DepthBufferShaderResource = preferredParameters.DepthBufferShaderResource;
 
-            if (prefferedParameters.IsFullScreen)
+            if(preferredParameters.IsFullScreen)
             {
                 deviceInfo.PresentationParameters.BackBufferFormat = mode.Format;
                 deviceInfo.PresentationParameters.BackBufferWidth = mode.Width;
@@ -195,70 +225,128 @@ namespace SharpDX.Toolkit
             }
             else
             {
-                deviceInfo.PresentationParameters.BackBufferFormat = prefferedParameters.PreferredBackBufferFormat;
-                deviceInfo.PresentationParameters.BackBufferWidth = prefferedParameters.PreferredBackBufferWidth;
-                deviceInfo.PresentationParameters.BackBufferHeight = prefferedParameters.PreferredBackBufferHeight;
+                deviceInfo.PresentationParameters.BackBufferFormat = preferredParameters.PreferredBackBufferFormat;
+                deviceInfo.PresentationParameters.BackBufferWidth = preferredParameters.PreferredBackBufferWidth;
+                deviceInfo.PresentationParameters.BackBufferHeight = preferredParameters.PreferredBackBufferHeight;
             }
 
             // TODO: Handle multisampling / depthstencil format
-            deviceInfo.PresentationParameters.DepthStencilFormat = prefferedParameters.PreferredDepthStencilFormat;
+            deviceInfo.PresentationParameters.DepthStencilFormat = preferredParameters.PreferredDepthStencilFormat;
             deviceInfo.PresentationParameters.MultiSampleCount = MSAALevel.None;
 
-            if (!graphicsDeviceInfos.Contains(deviceInfo))
+            if(!graphicsDeviceInfos.Contains(deviceInfo)) graphicsDeviceInfos.Add(deviceInfo);
+        }
+
+        /// <summary>Adds the device with default display mode.</summary>
+        /// <param name="preferredParameters">The preferred parameters.</param>
+        /// <param name="graphicsAdapter">The graphics adapter.</param>
+        /// <param name="deviceInfo">The device information.</param>
+        /// <param name="graphicsDeviceInfos">The graphics device infos.</param>
+        protected void AddDeviceWithDefaultDisplayMode(
+            GameGraphicsParameters preferredParameters,
+            GraphicsAdapter graphicsAdapter,
+            GraphicsDeviceInformation deviceInfo,
+            List<GraphicsDeviceInformation> graphicsDeviceInfos)
+        {
+            var displayMode = new DisplayMode(
+                Format.B8G8R8A8_UNorm,
+                this.MainWindow.ClientBounds.Width,
+                this.MainWindow.ClientBounds.Height,
+                new Rational(60, 1));
+            this.AddDevice(displayMode, deviceInfo, preferredParameters, graphicsDeviceInfos);
+        }
+
+        /// <summary>Releases unmanaged and - optionally - managed resources</summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if(disposing)
             {
-                graphicsDeviceInfos.Add(deviceInfo);
+                if(this.MainWindow != null)
+                {
+                    this.MainWindow.Dispose();
+                    this.MainWindow = null;
+                }
             }
         }
 
-        public virtual List<GraphicsDeviceInformation> FindBestDevices(GameGraphicsParameters prefferedParameters)
+        /// <summary>Called when [activated].</summary>
+        /// <param name="source">The source.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        protected void OnActivated(object source, EventArgs e)
         {
-            var graphicsDeviceInfos = new List<GraphicsDeviceInformation>();
-
-            // Iterate on each adapter
-            foreach (var graphicsAdapter in GraphicsAdapter.Adapters)
-            {
-                TryFindSupportedFeatureLevel(prefferedParameters, graphicsAdapter, graphicsDeviceInfos, TryAddDeviceWithDisplayMode);
-            }
-
-            return graphicsDeviceInfos;
+            var handler = this.Activated;
+            if(handler != null) handler(this, e);
         }
 
-        public virtual GraphicsDevice CreateDevice(GraphicsDeviceInformation deviceInformation)
+        /// <summary>Called when [deactivated].</summary>
+        /// <param name="source">The source.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        protected void OnDeactivated(object source, EventArgs e)
         {
-            var device = GraphicsDevice.New(deviceInformation.Adapter, deviceInformation.DeviceCreationFlags, deviceInformation.GraphicsProfile);
-
-            var parameters = deviceInformation.PresentationParameters;
-
-            // Give a chance to gameWindow to create desired graphics presenter, otherwise - create our own.
-            var presenter = gameWindow.CreateGraphicsPresenter(device, parameters)
-                            ?? new SwapChainGraphicsPresenter(device, parameters);
-
-            device.Presenter = presenter;
-
-            // Force to resize the gameWindow
-            gameWindow.Resize(parameters.BackBufferWidth, parameters.BackBufferHeight);
-
-            return device;
+            var handler = this.Deactivated;
+            if(handler != null) handler(this, e);
         }
 
-        protected void TryFindSupportedFeatureLevel(GameGraphicsParameters prefferedParameters,
-                                                    GraphicsAdapter graphicsAdapter,
-                                                    List<GraphicsDeviceInformation> graphicsDeviceInfos,
-                                                    AddDeviceToListDelegate addDelegate)
+        /// <summary>Called when [exiting].</summary>
+        /// <param name="source">The source.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        protected void OnExiting(object source, EventArgs e)
         {
-            // Check if the adapter has an output with the preffered index
-            if (prefferedParameters.IsFullScreen && graphicsAdapter.OutputsCount <= prefferedParameters.PreferredFullScreenOutputIndex)
-                return;
+            var handler = this.Exiting;
+            if(handler != null) handler(this, e);
+        }
+
+        /// <summary>Called when [idle].</summary>
+        /// <param name="source">The source.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        protected void OnIdle(object source, EventArgs e)
+        {
+            var handler = this.Idle;
+            if(handler != null) handler(this, e);
+        }
+
+        /// <summary>Called when [resume].</summary>
+        /// <param name="source">The source.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        protected void OnResume(object source, EventArgs e)
+        {
+            var handler = this.Resume;
+            if(handler != null) handler(this, e);
+        }
+
+        /// <summary>Called when [suspend].</summary>
+        /// <param name="source">The source.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        protected void OnSuspend(object source, EventArgs e)
+        {
+            var handler = this.Suspend;
+            if(handler != null) handler(this, e);
+        }
+
+        /// <summary>Tries the find supported feature level.</summary>
+        /// <param name="preferredParameters">The preferred parameters.</param>
+        /// <param name="graphicsAdapter">The graphics adapter.</param>
+        /// <param name="graphicsDeviceInfos">The graphics device infos.</param>
+        /// <param name="addDelegate">The add delegate.</param>
+        protected void TryFindSupportedFeatureLevel(
+            GameGraphicsParameters preferredParameters,
+            GraphicsAdapter graphicsAdapter,
+            List<GraphicsDeviceInformation> graphicsDeviceInfos,
+            AddDeviceToListDelegate addDelegate)
+        {
+            // Check if the adapter has an output with the preferred index
+            if(preferredParameters.IsFullScreen && graphicsAdapter.OutputsCount <= preferredParameters.PreferredFullScreenOutputIndex) return;
 
             // Iterate on each preferred graphics profile
-            foreach (var featureLevel in prefferedParameters.PreferredGraphicsProfile)
+            foreach(var featureLevel in preferredParameters.PreferredGraphicsProfile)
             {
                 // Check if this profile is supported.
-                if (graphicsAdapter.IsProfileSupported(featureLevel))
+                if(graphicsAdapter.IsProfileSupported(featureLevel))
                 {
-                    var deviceInfo = CreateGraphicsDeviceInformation(prefferedParameters, graphicsAdapter, featureLevel);
+                    var deviceInfo = this.CreateGraphicsDeviceInformation(preferredParameters, graphicsAdapter, featureLevel);
 
-                    addDelegate(prefferedParameters, graphicsAdapter, deviceInfo, graphicsDeviceInfos);
+                    addDelegate(preferredParameters, graphicsAdapter, deviceInfo, graphicsDeviceInfos);
 
                     // If the profile is supported, we are just using the first best one
                     break;
@@ -266,9 +354,15 @@ namespace SharpDX.Toolkit
             }
         }
 
-        private GraphicsDeviceInformation CreateGraphicsDeviceInformation(GameGraphicsParameters prefferedParameters,
-                                                                          GraphicsAdapter graphicsAdapter,
-                                                                          FeatureLevel featureLevel)
+        /// <summary>Creates the graphics device information.</summary>
+        /// <param name="preferredParameters">The preferred parameters.</param>
+        /// <param name="graphicsAdapter">The graphics adapter.</param>
+        /// <param name="featureLevel">The feature level.</param>
+        /// <returns>GraphicsDeviceInformation.</returns>
+        private GraphicsDeviceInformation CreateGraphicsDeviceInformation(
+            GameGraphicsParameters preferredParameters,
+            GraphicsAdapter graphicsAdapter,
+            FeatureLevel featureLevel)
         {
             return new GraphicsDeviceInformation
                    {
@@ -277,72 +371,66 @@ namespace SharpDX.Toolkit
                        PresentationParameters =
                        {
                            MultiSampleCount = MSAALevel.None,
-                           IsFullScreen = prefferedParameters.IsFullScreen,
-                           PreferredFullScreenOutputIndex = prefferedParameters.PreferredFullScreenOutputIndex,
-                           DepthBufferShaderResource = prefferedParameters.DepthBufferShaderResource,
-                           PresentationInterval = prefferedParameters.SynchronizeWithVerticalRetrace ? PresentInterval.One : PresentInterval.Immediate,
-                           DeviceWindowHandle = MainWindow.NativeWindow,
+                           IsFullScreen = preferredParameters.IsFullScreen,
+                           PreferredFullScreenOutputIndex =
+                               preferredParameters.PreferredFullScreenOutputIndex,
+                           DepthBufferShaderResource = preferredParameters.DepthBufferShaderResource,
+                           PresentationInterval =
+                               preferredParameters.SynchronizeWithVerticalRetrace
+                                   ? PresentInterval.One
+                                   : PresentInterval.Immediate,
+                           DeviceWindowHandle = this.MainWindow.NativeWindow,
                            RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput
                        }
                    };
         }
 
-        private void TryAddDeviceWithDisplayMode(GameGraphicsParameters prefferedParameters,
-                                                 GraphicsAdapter graphicsAdapter,
-                                                 GraphicsDeviceInformation deviceInfo,
-                                                 List<GraphicsDeviceInformation> graphicsDeviceInfos)
+        /// <summary>Tries the add device from output.</summary>
+        /// <param name="preferredParameters">The preferred parameters.</param>
+        /// <param name="output">The output.</param>
+        /// <param name="deviceInfo">The device information.</param>
+        /// <param name="graphicsDeviceInfos">The graphics device infos.</param>
+        private void TryAddDeviceFromOutput(
+            GameGraphicsParameters preferredParameters,
+            GraphicsOutput output,
+            GraphicsDeviceInformation deviceInfo,
+            List<GraphicsDeviceInformation> graphicsDeviceInfos)
+        {
+            if(output.CurrentDisplayMode != null) this.AddDevice(output.CurrentDisplayMode, deviceInfo, preferredParameters, graphicsDeviceInfos);
+
+            if(preferredParameters.IsFullScreen)
+            {
+                // Get display mode for the particular width, height, pixel format
+                foreach(var displayMode in output.SupportedDisplayModes) this.AddDevice(displayMode, deviceInfo, preferredParameters, graphicsDeviceInfos);
+            }
+        }
+
+        /// <summary>Tries the add device with display mode.</summary>
+        /// <param name="preferredParameters">The preferred parameters.</param>
+        /// <param name="graphicsAdapter">The graphics adapter.</param>
+        /// <param name="deviceInfo">The device information.</param>
+        /// <param name="graphicsDeviceInfos">The graphics device infos.</param>
+        private void TryAddDeviceWithDisplayMode(
+            GameGraphicsParameters preferredParameters,
+            GraphicsAdapter graphicsAdapter,
+            GraphicsDeviceInformation deviceInfo,
+            List<GraphicsDeviceInformation> graphicsDeviceInfos)
         {
             // if we want to switch to fullscreen, try to find only needed output, otherwise check them all
-            if (prefferedParameters.IsFullScreen)
+            if(preferredParameters.IsFullScreen)
             {
-                if (prefferedParameters.PreferredFullScreenOutputIndex < graphicsAdapter.OutputsCount)
+                if(preferredParameters.PreferredFullScreenOutputIndex < graphicsAdapter.OutputsCount)
                 {
-                    var output = graphicsAdapter.GetOutputAt(prefferedParameters.PreferredFullScreenOutputIndex);
-                    TryAddDeviceFromOutput(prefferedParameters, output, deviceInfo, graphicsDeviceInfos);
+                    var output = graphicsAdapter.GetOutputAt(preferredParameters.PreferredFullScreenOutputIndex);
+                    this.TryAddDeviceFromOutput(preferredParameters, output, deviceInfo, graphicsDeviceInfos);
                 }
             }
             else
             {
-                for (var i = 0; i < graphicsAdapter.OutputsCount; i++)
+                for(var i = 0; i < graphicsAdapter.OutputsCount; i++)
                 {
                     var output = graphicsAdapter.GetOutputAt(i);
-                    TryAddDeviceFromOutput(prefferedParameters, output, deviceInfo, graphicsDeviceInfos);
-                }
-            }
-
-
-        }
-
-        private void TryAddDeviceFromOutput(GameGraphicsParameters prefferedParameters,
-                                            GraphicsOutput output,
-                                            GraphicsDeviceInformation deviceInfo,
-                                            List<GraphicsDeviceInformation> graphicsDeviceInfos)
-        {
-            if (output.CurrentDisplayMode != null)
-                AddDevice(output.CurrentDisplayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
-
-            if (prefferedParameters.IsFullScreen)
-            {
-                // Get display mode for the particular width, height, pixelformat
-                foreach (var displayMode in output.SupportedDisplayModes)
-                    AddDevice(displayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
-            }
-        }
-
-        protected void AddDeviceWithDefaultDisplayMode(GameGraphicsParameters prefferedParameters, GraphicsAdapter graphicsAdapter, GraphicsDeviceInformation deviceInfo, List<GraphicsDeviceInformation> graphicsDeviceInfos)
-        {
-            var displayMode = new DisplayMode(DXGI.Format.B8G8R8A8_UNorm, gameWindow.ClientBounds.Width, gameWindow.ClientBounds.Height, new Rational(60, 1));
-            AddDevice(displayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (gameWindow != null)
-                {
-                    gameWindow.Dispose();
-                    gameWindow = null;
+                    this.TryAddDeviceFromOutput(preferredParameters, output, deviceInfo, graphicsDeviceInfos);
                 }
             }
         }

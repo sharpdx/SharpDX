@@ -28,13 +28,18 @@ namespace SharpDX.Toolkit
     using DXGI;
     using Graphics;
 
+    /// <summary>The game platform desktop class.</summary>
     internal class GamePlatformDesktop : GamePlatform
     {
+        /// <summary>Initializes a new instance of the <see cref="GamePlatform" /> class.</summary>
+        /// <param name="game">The game.</param>
         public GamePlatformDesktop(Game game) : base(game)
         {
             IsBlockingRun = true;
         }
 
+        /// <summary>Gets the default app directory.</summary>
+        /// <value>The default app directory.</value>
         public override string DefaultAppDirectory
         {
             get
@@ -44,6 +49,8 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>Gets the supported game windows.</summary>
+        /// <returns>GameWindow[][].</returns>
         internal override GameWindow[] GetSupportedGameWindows()
         {
             return new GameWindow[] { new GameWindowDesktop()
@@ -53,16 +60,19 @@ namespace SharpDX.Toolkit
             };
         }
 
-        public override List<GraphicsDeviceInformation> FindBestDevices(GameGraphicsParameters prefferedParameters)
+        /// <summary>Finds the best devices.</summary>
+        /// <param name="preferredParameters">The preferred parameters.</param>
+        /// <returns>List{GraphicsDeviceInformation}.</returns>
+        public override List<GraphicsDeviceInformation> FindBestDevices(GameGraphicsParameters preferredParameters)
         {
-            var graphicsDeviceInfos = base.FindBestDevices(prefferedParameters);
+            var graphicsDeviceInfos = base.FindBestDevices(preferredParameters);
 
             // Special case where the default FindBestDevices is not working
             if (graphicsDeviceInfos.Count == 0)
             {
                 var graphicsAdapter = GraphicsAdapter.Adapters[0];
 
-                TryFindSupportedFeatureLevel(prefferedParameters, graphicsAdapter, graphicsDeviceInfos, AddDeviceWithDefaultDisplayMode);
+                TryFindSupportedFeatureLevel(preferredParameters, graphicsAdapter, graphicsDeviceInfos, AddDeviceWithDefaultDisplayMode);
             }
 
             return graphicsDeviceInfos;

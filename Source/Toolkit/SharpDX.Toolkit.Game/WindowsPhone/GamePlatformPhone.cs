@@ -50,13 +50,13 @@ namespace SharpDX.Toolkit
             return new GameWindow[] {new GameWindowPhoneBackgroundXaml(), new GameWindowPhoneXaml(), };
         }
 
-        public override List<GraphicsDeviceInformation> FindBestDevices(GameGraphicsParameters prefferedParameters)
+        public override List<GraphicsDeviceInformation> FindBestDevices(GameGraphicsParameters preferredParameters)
         {
             var gameWindowBackgroundXaml = gameWindow as GameWindowPhoneBackgroundXaml;
             if (gameWindowBackgroundXaml != null)
             {
                 // Make sure that we have the single graphics device created by the BackgroundXaml
-                gameWindowBackgroundXaml.RequestDepthFormat = prefferedParameters.PreferredDepthStencilFormat;
+                gameWindowBackgroundXaml.RequestDepthFormat = preferredParameters.PreferredDepthStencilFormat;
                 var graphicsDevice = gameWindowBackgroundXaml.EnsureDevice();
 
                 // Unlike Desktop and WinRT, the list of best devices are completely fixed in WP8 XAML
@@ -71,7 +71,7 @@ namespace SharpDX.Toolkit
                 return new List<GraphicsDeviceInformation>() { deviceInfo };
             }
 
-            return base.FindBestDevices(prefferedParameters);
+            return base.FindBestDevices(preferredParameters);
         }
 
         public override GraphicsDevice CreateDevice(GraphicsDeviceInformation deviceInformation)

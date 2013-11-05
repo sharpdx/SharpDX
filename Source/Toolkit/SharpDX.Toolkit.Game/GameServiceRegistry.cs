@@ -24,26 +24,25 @@ using System.Reflection; // THIS NAMESPACE MUST BE USED FOR 4.5 CORE PROFILE
 
 namespace SharpDX.Toolkit
 {
-    /// <summary>
-    /// Main service provider for <see cref="Game"/>.
-    /// </summary>
+    /// <summary>Main service provider for <see cref="Game" />.</summary>
     public class GameServiceRegistry : IServiceRegistry
     {
-        private readonly Dictionary<Type, object> registeredService = new Dictionary<Type, object>();
+        /// <summary>The registered service.</summary>
+        private readonly Dictionary<Type, object> registeredService;
 
-        /// <summary>
-        /// Occurs when a new service is added.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="GameServiceRegistry"/> class.</summary>
+        public GameServiceRegistry()
+        {
+            this.registeredService = new Dictionary<Type, object>();
+        }
+
+        /// <summary>Occurs when a new service is added.</summary>
         public event EventHandler<ServiceEventArgs> ServiceAdded;
 
-        /// <summary>
-        /// Occurs when when a service is removed.
-        /// </summary>
+        /// <summary>Occurs when when a service is removed.</summary>
         public event EventHandler<ServiceEventArgs> ServiceRemoved;
 
-        /// <summary>
-        /// Gets the instance service providing a specified service.
-        /// </summary>
+        /// <summary>Gets the instance service providing a specified service.</summary>
         /// <param name="type">The type of service.</param>
         /// <returns>The registered instance of this service.</returns>
         /// <exception cref="System.ArgumentNullException">type</exception>
@@ -61,13 +60,12 @@ namespace SharpDX.Toolkit
             return null;
         }
 
-        /// <summary>
-        /// Gets the service object of specified type. The service must be registered with the <typeparamref name="T"/> type key.
-        /// </summary>
-        /// <remarks>This method will thrown an exception if the service is not registered, it null value can be accepted - use the <see cref="IServiceProvider.GetService"/> method.</remarks>
+        /// <summary>Gets the service object of specified type. The service must be registered with the <typeparamref name="T" /> type key.</summary>
         /// <typeparam name="T">The type of the service to get.</typeparam>
         /// <returns>The service instance.</returns>
+        /// <exception cref="System.ArgumentException"></exception>
         /// <exception cref="ArgumentException">Is thrown when the corresponding service is not registered.</exception>
+        /// <remarks>This method will thrown an exception if the service is not registered, it null value can be accepted - use the <see cref="IServiceProvider.GetService" /> method.</remarks>
         public T GetService<T>()
         {
             var service = GetService(typeof(T));
@@ -78,9 +76,7 @@ namespace SharpDX.Toolkit
             return (T)service;
         }
 
-        /// <summary>
-        /// Adds a service to this <see cref="GameServiceRegistry"/>.
-        /// </summary>
+        /// <summary>Adds a service to this <see cref="GameServiceRegistry" />.</summary>
         /// <param name="type">The type of service to add.</param>
         /// <param name="provider">The service provider to add.</param>
         /// <exception cref="System.ArgumentNullException">type;Service type cannot be null</exception>
@@ -97,8 +93,14 @@ namespace SharpDX.Toolkit
             if (!type.GetTypeInfo().IsAssignableFrom(provider.GetType().GetTypeInfo()))
                 throw new ArgumentException(string.Format("Service [{0}] must be assignable to [{1}]", provider.GetType().FullName, type.GetType().FullName));
 #else
+#if true
+            if (!type.IsInstanceOfType(provider))
+#else
             if (!type.IsAssignableFrom(provider.GetType()))
-                throw new ArgumentException(string.Format("Service [{0}] must be assignable to [{1}]", provider.GetType().FullName, type.GetType().FullName));
+#endif
+            {
+                throw new ArgumentException(string.Format("Service [{0}] must be assignable to [{1}]", provider.GetType().FullName, type.FullName));
+            }
 #endif
 
             lock (registeredService)
@@ -110,9 +112,7 @@ namespace SharpDX.Toolkit
             OnServiceAdded(new ServiceEventArgs(type, provider));
         }
 
-        /// <summary>
-        /// Adds a service to this service provider.
-        /// </summary>
+        /// <summary>Adds a service to this service provider.</summary>
         /// <typeparam name="T">The type of the service to add.</typeparam>
         /// <param name="provider">The instance of the service provider to add.</param>
         /// <exception cref="System.ArgumentNullException">Service type cannot be null</exception>
@@ -124,6 +124,7 @@ namespace SharpDX.Toolkit
 
         /// <summary>Removes the object providing a specified service.</summary>
         /// <param name="type">The type of service.</param>
+        /// <exception cref="System.ArgumentNullException">type</exception>
         public void RemoveService(Type type)
         {
             if (type == null)
@@ -139,12 +140,16 @@ namespace SharpDX.Toolkit
                 OnServiceRemoved(new ServiceEventArgs(type, oldService));
         }
 
+        /// <summary>Raises the <see cref="ServiceAdded" /> event.</summary>
+        /// <param name="e">The <see cref="ServiceEventArgs"/> instance containing the event data.</param>
         private void OnServiceAdded(ServiceEventArgs e)
         {
             EventHandler<ServiceEventArgs> handler = ServiceAdded;
             if (handler != null) handler(this, e);
         }
 
+        /// <summary>Raises the <see cref="ServiceRemoved" /> event.</summary>
+        /// <param name="e">The <see cref="ServiceEventArgs"/> instance containing the event data.</param>
         private void OnServiceRemoved(ServiceEventArgs e)
         {
             EventHandler<ServiceEventArgs> handler = ServiceRemoved;

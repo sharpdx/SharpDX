@@ -54,7 +54,7 @@ namespace SharpDX.Tests
         }
 
         [Test]
-        public unsafe void Test()
+        public void Test()
         {
             var customEffect = new CustomEffect();
 

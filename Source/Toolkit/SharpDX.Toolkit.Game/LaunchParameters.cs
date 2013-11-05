@@ -18,19 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-
 namespace SharpDX.Toolkit
 {
-    /// <summary>
-    /// Parameters used when launching an application.
-    /// </summary>
+    using System;
+    using System.Collections.Generic;
+
+    /// <summary>Parameters used when launching an application.</summary>
     public class LaunchParameters : Dictionary<string, string>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LaunchParameters" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="LaunchParameters" /> class.</summary>
         public LaunchParameters()
         {
 #if !W8CORE

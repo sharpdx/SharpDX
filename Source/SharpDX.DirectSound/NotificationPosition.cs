@@ -38,18 +38,18 @@ namespace SharpDX.DirectSound
             public int Offset;
             public IntPtr EventNotifyHandlerPointer;
             // Method to free native struct
-            internal unsafe void __MarshalFree()
+            internal void __MarshalFree()
             {
             }
         }
 
-        internal unsafe void __MarshalFree(ref __Native @ref)
+        internal void __MarshalFree(ref __Native @ref)
         {
             @ref.__MarshalFree();
         }
 
         // Method to marshal from managed struct tot native
-        internal unsafe void __MarshalTo(ref __Native @ref)
+        internal void __MarshalTo(ref __Native @ref)
         {
             @ref.Offset = this.Offset;
             @ref.EventNotifyHandlerPointer = this.WaitHandle.SafeWaitHandle.DangerousGetHandle();

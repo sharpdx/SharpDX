@@ -794,7 +794,7 @@ namespace SharpDX.Toolkit.Graphics
                             int t2 = (*(sPtr + 1) << 8);
                             int t3 = *(sPtr + 2);
 
-                            *(dPtr++) = (int) (t1 | t2 | t3 | 0xff000000);
+                            *(dPtr++) = (int)((uint)t1 | (uint)t2 | (uint)t3 | 0xff000000);
                             sPtr += 3;
                         }
                     }
@@ -817,7 +817,7 @@ namespace SharpDX.Toolkit.Graphics
                                     int t2 = ((t & 0x1c) << 11) | ((t & 0x1c) << 8) | ((t & 0x18) << 5);
                                     int t3 = ((t & 0x03) << 22) | ((t & 0x03) << 20) | ((t & 0x03) << 18) | ((t & 0x03) << 16);
 
-                                    *(dPtr++) = (int) (t1 | t2 | t3 | 0xff000000);
+                                    *(dPtr++) = (int)((uint)t1 | (uint)t2 | (uint)t3 | 0xff000000);
                                 }
                             }
                             return true;
@@ -836,7 +836,7 @@ namespace SharpDX.Toolkit.Graphics
                                     var t2 = (short) (((t & 0x1c) << 6) | ((t & 0x1c) << 3));
                                     var t3 = (short) (((t & 0x03) << 3) | ((t & 0x03) << 1) | ((t & 0x02) >> 1));
 
-                                    *(dPtr++) = (short) (t1 | t2 | t3);
+                                    *(dPtr++) = (short)((ushort)t1 | (ushort)t2 | (ushort)t3);
                                 }
                             }
                             return true;
@@ -861,7 +861,7 @@ namespace SharpDX.Toolkit.Graphics
                             int t3 = ((t & 0x0003) << 22) | ((t & 0x0003) << 20) | ((t & 0x0003) << 18) | ((t & 0x0003) << 16);
                             uint ta = ((flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (uint) ((t & 0xff00) << 16));
 
-                            *(dPtr++) = (int) (t1 | t2 | t3 | ta);
+                            *(dPtr++) = (int)((uint)t1 | (uint)t2 | (uint)t3 | (uint)ta);
                         }
                     }
                     return true;
@@ -900,7 +900,7 @@ namespace SharpDX.Toolkit.Graphics
                             int t1 = pal8[t & 0xff];
                             uint ta = ((flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (uint) ((t & 0xff00) << 16));
 
-                            *(dPtr++) = (int) (t1 | ta);
+                            *(dPtr++) = (int)((uint)t1 | ta);
                         }
                     }
                     return true;
@@ -942,7 +942,7 @@ namespace SharpDX.Toolkit.Graphics
                                     int t1 = ((t & 0x0f) << 4) | (t & 0x0f);
                                     uint ta = ((flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (uint) (((t & 0xf0) << 24) | ((t & 0xf0) << 20)));
 
-                                    *(dPtr++) = (int) (t1 | (t1 << 8) | (t1 << 16) | ta);
+                                    *(dPtr++) = (int)((uint)t1 | ((uint)t1 << 8) | ((uint)t1 << 16) | ta);
                                 }
                             }
                             return true;
@@ -968,7 +968,7 @@ namespace SharpDX.Toolkit.Graphics
                             int t3 = ((t & 0x000f) << 20) | ((t & 0x000f) << 16);
                             uint ta = ((flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (uint) (((t & 0xf000) << 16) | ((t & 0xf000) << 12)));
 
-                            *(dPtr++) = (int) (t1 | t2 | t3 | ta);
+                            *(dPtr++) = (int)((uint)t1 | (uint)t2 | (uint)t3 | ta);
                         }
                     }
                     return true;

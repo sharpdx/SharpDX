@@ -27,30 +27,22 @@ namespace SharpDX
     /// </summary>
     public abstract class ComponentBase : IComponent, INotifyPropertyChanged
     {
-        /// <summary>
-        /// Occurs while this component is disposing and before it is disposed.
-        /// </summary>
+        /// <summary>Occurs while this component is disposing and before it is disposed.</summary>
         //internal event EventHandler<EventArgs> Disposing;
         private string name;
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the name of this instance is immutable.
-        /// </summary>
+        /// <summary>Gets or sets a value indicating whether the name of this instance is immutable.</summary>
         /// <value><c>true</c> if this instance is name immutable; otherwise, <c>false</c>.</value>
         private readonly bool isNameImmutable;
 
         private object tag;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ComponentBase" /> class with a mutable name.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="ComponentBase" /> class with a mutable name.</summary>
         protected ComponentBase()
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ComponentBase" /> class with an immutable name.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="ComponentBase" /> class with an immutable name.</summary>
         /// <param name="name">The name.</param>
         protected ComponentBase(string name)
         {
@@ -61,10 +53,9 @@ namespace SharpDX
             }
         }
 
-        /// <summary>
-        /// Gets the name of this component.
-        /// </summary>
+        /// <summary>Gets the name of this component.</summary>
         /// <value>The name.</value>
+        /// <exception cref="System.ArgumentException">Name property is immutable for this instance;value</exception>
         [DefaultValue(null)]
         public string Name
         {
@@ -79,9 +70,7 @@ namespace SharpDX
             }
         }
 
-        /// <summary>
-        /// Gets or sets the tag associated to this object.
-        /// </summary>
+        /// <summary>Gets or sets the tag associated to this object.</summary>
         /// <value>The tag.</value>
 #if !W8CORE
         [Browsable(false)]
@@ -101,11 +90,11 @@ namespace SharpDX
             }
         }
 
-        /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
+        /// <summary>Occurs when a property value changes.</summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>Called when property changed.</summary>
+        /// <param name="propertyName">Name of the property.</param>
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChangedEventHandler handler = PropertyChanged;

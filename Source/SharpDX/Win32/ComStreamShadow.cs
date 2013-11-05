@@ -60,7 +60,7 @@ namespace SharpDX.Win32
             /// <unmanaged>HRESULT IStream::Seek([In] LARGE_INTEGER dlibMove,[In] SHARPDX_SEEKORIGIN dwOrigin,[Out, Optional] ULARGE_INTEGER* plibNewPosition)</unmanaged>	
             /* public long Seek(long dlibMove, System.IO.SeekOrigin dwOrigin) */
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private unsafe delegate int SeekDelegate(IntPtr thisPtr, long offset, SeekOrigin origin, IntPtr newPosition);
+            private delegate int SeekDelegate(IntPtr thisPtr, long offset, SeekOrigin origin, IntPtr newPosition);
             private unsafe static int SeekImpl(IntPtr thisPtr, long offset, SeekOrigin origin, IntPtr newPosition)
             {
                 try

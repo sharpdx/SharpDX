@@ -190,7 +190,7 @@ namespace SharpDX
         /// The alpha channel is set to 255.</returns>
         public int ToRgba()
         {
-            uint a = 255;
+            const uint A = 255;
             uint r = (uint) (Red * 255.0f) & 255;
             uint g = (uint) (Green * 255.0f) & 255;
             uint b = (uint) (Blue * 255.0f) & 255;
@@ -198,7 +198,7 @@ namespace SharpDX
             uint value = r;
             value |= g << 8;
             value |= b << 16;
-            value |= a << 24;
+            value |= A << 24;
 
             return (int)value;
         }
@@ -210,7 +210,7 @@ namespace SharpDX
         /// The alpha channel is set to 255.</returns>
         public int ToBgra()
         {
-            uint a = 255;
+            const uint A = 255;
             uint r = (uint)(Red * 255.0f) & 255;
             uint g = (uint)(Green * 255.0f) & 255;
             uint b = (uint)(Blue * 255.0f) & 255;
@@ -218,7 +218,7 @@ namespace SharpDX
             uint value = b;
             value |= g << 8;
             value |= r << 16;
-            value |= a << 24;
+            value |= A << 24;
 
             return (int)value;
         }

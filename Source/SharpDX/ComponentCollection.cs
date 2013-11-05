@@ -29,25 +29,29 @@ namespace SharpDX
     /// <typeparam name="T">Type of the collection</typeparam>
     public abstract class ComponentCollection<T> : IEnumerable<T> where T : ComponentBase
     {
+        /// <summary>The items.</summary>
         internal protected readonly List<T> Items;
+        /// <summary>The map items.</summary>
         private readonly Dictionary<string, T> mapItems;
 
+        /// <summary>Initializes a new instance of the <see cref="ComponentCollection{T}"/> class.</summary>
         protected ComponentCollection()
         {
             Items = new List<T>();
             mapItems = new Dictionary<string, T>();
         }
 
+        /// <summary>Initializes a new instance of the <see cref="ComponentCollection{T}"/> class.</summary>
+        /// <param name="capacity">The capacity.</param>
         protected ComponentCollection(int capacity)
         {
             Items = new List<T>(capacity);
             mapItems = new Dictionary<string, T>(capacity);
         }
 
-        /// <summary>
-        /// Adds the specified item.
-        /// </summary>
+        /// <summary>Adds the specified item.</summary>
         /// <param name="item">The item.</param>
+        /// <returns>`0.</returns>
         internal protected T Add(T item)
         {
             Items.Add(item);
@@ -55,12 +59,15 @@ namespace SharpDX
             return item;
         }
 
+        /// <summary>Clears this instance.</summary>
         internal protected void Clear()
         {
             Items.Clear();
             mapItems.Clear();
         }
 
+        /// <summary>Gets or sets the capacity.</summary>
+        /// <value>The capacity.</value>
         protected int Capacity
         {
             get
@@ -73,9 +80,8 @@ namespace SharpDX
             }
         }
 
-        /// <summary>
-        /// Gets the number of objects in the collection.
-        /// </summary>
+        /// <summary>Gets the number of objects in the collection.</summary>
+        /// <value>The count.</value>
         public int Count
         {
             get
@@ -125,16 +131,23 @@ namespace SharpDX
 
         #region Implementation of IEnumerable
 
+        /// <summary>Returns an enumerator that iterates through the collection.</summary>
+        /// <returns>A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.</returns>
         public IEnumerator<T> GetEnumerator()
         {
             return Items.GetEnumerator();
         }
 
+        /// <summary>Returns an enumerator that iterates through a collection.</summary>
+        /// <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
 
+        /// <summary>Tries the automatic get configuration not found.</summary>
+        /// <param name="name">The name.</param>
+        /// <returns>`0.</returns>
         protected virtual T TryToGetOnNotFound(string name)
         {
             return null;

@@ -28,89 +28,72 @@ namespace SharpDX.Direct3D9
     {
         #region Constants and Fields
 
-        /// <summary>
-        /// Defines the behavior for caching strings. True by default.
-        /// </summary>
-        private const bool UseCacheStrings = true;
+        /// <summary>Defines the behavior for caching strings. True by default.</summary>
+        private static readonly bool useCacheStrings;
 
-        /// <summary>
-        /// Cache of allocated strings.
-        /// </summary>
-        private static readonly Dictionary<string, IntPtr> AllocatedStrings = new Dictionary<string, IntPtr>();
+        /// <summary>Cache of allocated strings.</summary>
+        private static readonly Dictionary<string, IntPtr> allocatedStrings;
 
-        /// <summary>
-        /// Pointer to the handle or the allocated string.
-        /// </summary>
+        /// <summary>Pointer to the handle or the allocated string.</summary>
         private IntPtr pointer;
 
-        /// <summary>
-        /// If the <see cref="pointer"/> is a custom string not cached that needs to be released by this instance.
-        /// </summary>
+        /// <summary>If the <see cref="pointer" /> is a custom string not cached that needs to be released by this instance.</summary>
         private bool isStringToRelease;
 
         #endregion
 
         #region Constructors and Destructors
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EffectHandle"/> class.
-        /// </summary>
+        static EffectHandle()
+        {
+            allocatedStrings = new Dictionary<string, IntPtr>();
+            useCacheStrings = true;
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="EffectHandle" /> class.</summary>
         public EffectHandle()
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EffectHandle"/> class.
-        /// </summary>
-        /// <param name="pointer">
-        /// The pointer.
-        /// </param>
+        /// <summary>Initializes a new instance of the <see cref="EffectHandle" /> class.</summary>
+        /// <param name="pointer">The pointer.</param>
         public EffectHandle(IntPtr pointer)
+            : this()
         {
             this.pointer = pointer;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EffectHandle"/> class.
-        /// </summary>
-        /// <param name="pointer">
-        /// The pointer.
-        /// </param>
+        /// <summary>Initializes a new instance of the <see cref="EffectHandle" /> class.</summary>
+        /// <param name="pointer">The pointer.</param>
         public unsafe EffectHandle(void* pointer)
+            : this()
         {
             this.pointer = new IntPtr(pointer);
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EffectHandle"/> class.
-        /// </summary>
-        /// <param name="name">
-        /// The name.
-        /// </param>
+        /// <summary>Initializes a new instance of the <see cref="EffectHandle" /> class.</summary>
+        /// <param name="name">The name.</param>
         public EffectHandle(string name)
+            : this()
         {
             pointer = AllocateString(name);
-            isStringToRelease = !UseCacheStrings;
+            isStringToRelease = !useCacheStrings;
         }
 
         #endregion
 
         #region Public Methods
 
-        /// <summary>
-        /// Clears the cache.
-        /// </summary>
-        /// <remarks>
-        /// By default, this class is caching all strings that are implicitly used as an effect handle.
-        /// Use this method in order to deallocate all strings that were previously cached.
-        /// </remarks>
+        /// <summary>Clears the cache.</summary>
+        /// <remarks>By default, this class is caching all strings that are implicitly used as an effect handle.
+        /// Use this method in order to deallocate all strings that were previously cached.</remarks>
         public static void ClearCache()
         {
-            lock (AllocatedStrings)
+            lock (allocatedStrings)
             {
-                foreach (var value in AllocatedStrings.Values)
+                foreach (var value in allocatedStrings.Values)
                     Marshal.FreeHGlobal(value);
-                AllocatedStrings.Clear();
+                allocatedStrings.Clear();
             }
         }
 
@@ -118,18 +101,14 @@ namespace SharpDX.Direct3D9
 
         #region Methods
 
-        /// <summary>
-        /// marshal free.
-        /// </summary>
+        /// <summary>marshal free.</summary>
         /// <param name="__from">The __from.</param>
         /// <param name="ref">The @ref.</param>
         internal static void __MarshalFree(ref EffectHandle __from, ref __Native @ref)
         {
         }
 
-        /// <summary>
-        /// Method to marshal from native to managed struct
-        /// </summary>
+        /// <summary>Method to marshal from native to managed struct</summary>
         /// <param name="__from">The __from.</param>
         /// <param name="ref">The @ref.</param>
         internal static void __MarshalFrom(ref EffectHandle __from, ref __Native @ref)
@@ -140,9 +119,7 @@ namespace SharpDX.Direct3D9
                 __from.pointer = @ref.Pointer;
         }
 
-        /// <summary>
-        /// Method to marshal from managed struct tot native
-        /// </summary>
+        /// <summary>Method to marshal from managed struct tot native</summary>
         /// <param name="__from">The __from.</param>
         /// <param name="ref">The @ref.</param>
         internal static void __MarshalTo(ref EffectHandle __from, ref __Native @ref)
@@ -153,7 +130,8 @@ namespace SharpDX.Direct3D9
                 @ref.Pointer = __from.pointer;
         }
 
-        /// <inheritdoc/>
+        /// <summary>Releases unmanaged and - optionally - managed resources</summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             if (isStringToRelease)
@@ -164,28 +142,22 @@ namespace SharpDX.Direct3D9
             }
         }
 
-        /// <summary>
-        /// Allocates a string.
-        /// </summary>
-        /// <param name="name">
-        /// The name.
-        /// </param>
-        /// <returns>
-        /// Pointer to the allocated string
-        /// </returns>
+        /// <summary>Allocates a string.</summary>
+        /// <param name="name">The name.</param>
+        /// <returns>Pointer to the allocated string</returns>
         private static IntPtr AllocateString(string name)
         {
             IntPtr value;
-            if (UseCacheStrings)
+            if (useCacheStrings)
             {
                 // internalize the string in order to have a faster comparison with the dictionary
                 name = string.Intern(name);
-                lock (AllocatedStrings)
+                lock (allocatedStrings)
                 {
-                    if (!AllocatedStrings.TryGetValue(name, out value))
+                    if (!allocatedStrings.TryGetValue(name, out value))
                     {
                         value = Marshal.StringToHGlobalAnsi(name);
-                        AllocatedStrings.Add(name, value);
+                        allocatedStrings.Add(name, value);
                     }
                 }
             }
@@ -201,61 +173,41 @@ namespace SharpDX.Direct3D9
 
         #region Operators
 
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Direct3D9.EffectHandle"/> to <see cref="System.IntPtr"/>.
-        /// </summary>
+        /// <summary>Performs an implicit conversion from <see cref="SharpDX.Direct3D9.EffectHandle" /> to <see cref="System.IntPtr" />.</summary>
         /// <param name="value">The value.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
+        /// <returns>The result of the conversion.</returns>
         public static implicit operator IntPtr(EffectHandle value)
         {
             return value.pointer;
         }
 
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="System.IntPtr"/> to <see cref="SharpDX.Direct3D9.EffectHandle"/>.
-        /// </summary>
+        /// <summary>Performs an implicit conversion from <see cref="System.IntPtr" /> to <see cref="SharpDX.Direct3D9.EffectHandle" />.</summary>
         /// <param name="value">The value.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
+        /// <returns>The result of the conversion.</returns>
         public static implicit operator EffectHandle(IntPtr value)
         {
             return new EffectHandle(value);
         }
 
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Direct3D9.EffectHandle"/> to <see cref="System.Void*"/>.
-        /// </summary>
+        /// <summary>Performs an implicit conversion from <see cref="SharpDX.Direct3D9.EffectHandle" /> to <see cref="System.Void*" />.</summary>
         /// <param name="value">The value.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
+        /// <returns>The result of the conversion.</returns>
         public static unsafe implicit operator void*(EffectHandle value)
         {
             return (void*)value.pointer;
         }
 
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="System.Void*"/> to <see cref="SharpDX.Direct3D9.EffectHandle"/>.
-        /// </summary>
+        /// <summary>Performs an implicit conversion from <see cref="System.Void*" /> to <see cref="SharpDX.Direct3D9.EffectHandle" />.</summary>
         /// <param name="value">The value.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
+        /// <returns>The result of the conversion.</returns>
         public static unsafe implicit operator EffectHandle(void* value)
         {
             return new EffectHandle(value);
         }
 
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="SharpDX.Direct3D9.EffectHandle"/>.
-        /// </summary>
+        /// <summary>Performs an implicit conversion from <see cref="System.String" /> to <see cref="SharpDX.Direct3D9.EffectHandle" />.</summary>
         /// <param name="name">The name.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
+        /// <returns>The result of the conversion.</returns>
         public static implicit operator EffectHandle(string name)
         {
             return new EffectHandle(name);
@@ -263,30 +215,45 @@ namespace SharpDX.Direct3D9
 
         #endregion
 
+        /// <summary>The __ native struct.</summary>
         [StructLayout(LayoutKind.Sequential)]
         internal struct __Native
         {
+            /// <summary>The pointer.</summary>
             public IntPtr Pointer;
 
+            /// <summary>__s the marshal free.</summary>
             internal void __MarshalFree()
             {
             }
 
+            /// <summary>Performs an implicit conversion from <see cref="__Native"/> to <see cref="IntPtr"/>.</summary>
+            /// <param name="value">The value.</param>
+            /// <returns>The result of the conversion.</returns>
             public static implicit operator IntPtr(__Native value)
             {
                 return value.Pointer;
             }
 
+            /// <summary>Performs an implicit conversion from <see cref="IntPtr"/> to <see cref="__Native"/>.</summary>
+            /// <param name="value">The value.</param>
+            /// <returns>The result of the conversion.</returns>
             public static implicit operator __Native(IntPtr value)
             {
                 return new __Native() { Pointer = value };
             }
 
+            /// <summary>Performs an implicit conversion from <see cref="__Native"/> to <see cref="System.Void"/>.</summary>
+            /// <param name="value">The value.</param>
+            /// <returns>The result of the conversion.</returns>
             public static unsafe implicit operator void*(__Native value)
             {
                 return (void*)value.Pointer;
             }
 
+            /// <summary>Performs an implicit conversion from <see cref="System.Void"/> to <see cref="__Native"/>.</summary>
+            /// <param name="value">The value.</param>
+            /// <returns>The result of the conversion.</returns>
             public static unsafe implicit operator __Native(void* value)
             {
                 return new __Native() { Pointer = (IntPtr)value };

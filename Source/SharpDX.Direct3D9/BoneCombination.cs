@@ -41,7 +41,7 @@ namespace SharpDX.Direct3D9
             public int VertexCount;
             public System.IntPtr BonedIdsPointer;
             // Method to free unmanaged allocation
-            internal unsafe void __MarshalFree()
+            internal void __MarshalFree()
             {
                 if (BonedIdsPointer != IntPtr.Zero)
                     Marshal.FreeHGlobal(BonedIdsPointer);
@@ -49,13 +49,13 @@ namespace SharpDX.Direct3D9
         }
 
         // Method to free unmanaged allocation
-        internal unsafe void __MarshalFree(ref __Native @ref)
+        internal void __MarshalFree(ref __Native @ref)
         {
             @ref.__MarshalFree();
         }
 
         // Method to marshal from native to managed struct
-        internal unsafe void __MarshalFrom(ref __Native @ref)
+        internal void __MarshalFrom(ref __Native @ref)
         {
             this.AttribId = @ref.AttribId;
             this.FaceStart = @ref.FaceStart;
@@ -65,7 +65,7 @@ namespace SharpDX.Direct3D9
             this.BonedIdsPointer = @ref.BonedIdsPointer;
         }
         // Method to marshal from managed struct tot native
-        internal unsafe void __MarshalTo(ref __Native @ref)
+        internal void __MarshalTo(ref __Native @ref)
         {
             @ref.AttribId = this.AttribId;
             @ref.FaceStart = this.FaceStart;

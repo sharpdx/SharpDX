@@ -103,7 +103,7 @@ namespace SharpDX.XACT3
         /// Initializes this instance from a settings file and a renderer index.
         /// </summary>
         /// <unmanaged>IXACT3Engine::Initialize</unmanaged>
-		private unsafe void PreInitialize(AudioEngineSettings runtimeParameters)
+		private void PreInitialize(AudioEngineSettings runtimeParameters)
 		{
             if (runtimeParameters.LookAheadTime == 0)
                 runtimeParameters.LookAheadTime = AudioEngineSettings.DefaultLookAhead;

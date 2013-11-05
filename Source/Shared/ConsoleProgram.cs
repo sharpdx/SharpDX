@@ -29,8 +29,7 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX
 {
-    /// <summary>
-    /// Reusable, reflection based helper for parsing command line options.
+    /// <summary>Reusable, reflection based helper for parsing command line options.
     /// Greetings to Shawn Hargreaves, original code http://blogs.msdn.com/b/shawnhar/archive/2012/04/20/a-reusable-reflection-based-command-line-parser.aspx
     /// This is a modified version of command line parser that adds:
     /// - .NET 2.0 compatible
@@ -40,43 +39,61 @@ namespace SharpDX
     /// - Add support for - and / starting options.
     /// - Remove usage of ":" to separate option from parsed option
     /// - Add "&lt;options&gt;" to the Usage when options are defined
-    /// - Add Console Color handling
-    /// </summary>
-    /// <remarks>
-    /// This single file is intended to be directly included in the project that needs to handle command line without requiring any SharpDX assembly dependencies.
-    /// </remarks>
+    /// - Add Console Color handling</summary>
+    /// <remarks>This single file is intended to be directly included in the project that needs to handle command line without requiring any SharpDX assembly dependencies.</remarks>
     class ConsoleProgram
     {
-        private const int STD_OUTPUT_HANDLE = -11;
-        private static int hConsoleHandle;
-        private static COORD ConsoleOutputLocation;
+        /// <summary>The constant d_ outpu t_ handle.</summary>
+        private const int StdOutputHandle = -11;
+        /// <summary>The authentication console handle.</summary>
+        private static readonly int hConsoleHandle;
+        /// <summary>The console output location.</summary>
+        //private static COORD ConsoleOutputLocation;
+        /// <summary>The console information.</summary>
         private static CONSOLE_SCREEN_BUFFER_INFO ConsoleInfo;
-        private static int OriginalColors;
-        private Dictionary<string, FieldInfo> optionalOptions = new Dictionary<string, FieldInfo>();
-        private List<string> optionalUsageHelp = new List<string>();
-        private object optionsObject;
-        private string[] optionNames;
+        /// <summary>The original colors.</summary>
+        private static readonly int OriginalColors;
+        /// <summary>The optional options.</summary>
+        private readonly Dictionary<string, FieldInfo> optionalOptions;
+        /// <summary>The optional usage help.</summary>
+        private readonly List<string> optionalUsageHelp;
+        /// <summary>The options object.</summary>
+        private readonly object optionsObject;
+        /// <summary>The option names.</summary>
+        private readonly string[] optionNames;
 
-        private Queue<FieldInfo> requiredOptions = new Queue<FieldInfo>();
+        /// <summary>The required options.</summary>
+        private readonly Queue<FieldInfo> requiredOptions;
 
-        private List<string> requiredUsageHelp = new List<string>();
+        /// <summary>The required usage help.</summary>
+        private readonly List<string> requiredUsageHelp;
 
+        /// <summary>Initializes static members of the <see cref="ConsoleProgram"/> class.</summary>
         static ConsoleProgram()
         {
             ConsoleInfo = new CONSOLE_SCREEN_BUFFER_INFO();
-            ConsoleOutputLocation = new COORD();
-            hConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+            //ConsoleOutputLocation = new COORD();
+            hConsoleHandle = GetStdHandle(StdOutputHandle);
             GetConsoleScreenBufferInfo(hConsoleHandle, ref ConsoleInfo);
             OriginalColors = ConsoleInfo.wAttributes;
         }
 
+        /// <summary>Initializes a new instance of the <see cref="ConsoleProgram"/> class.</summary>
+        /// <param name="padOptions">The pad options.</param>
         protected ConsoleProgram(int padOptions = 16) : this(null, padOptions)
         {
         }
 
         // Constructor.
+        /// <summary>Initializes a new instance of the <see cref="ConsoleProgram"/> class.</summary>
+        /// <param name="optionsObjectArg">The options object argument.</param>
+        /// <param name="padOptions">The pad options.</param>
         private ConsoleProgram(object optionsObjectArg, int padOptions = 16)
         {
+            this.requiredUsageHelp = new List<string>();
+            this.requiredOptions = new Queue<FieldInfo>();
+            this.optionalUsageHelp = new List<string>();
+            this.optionalOptions = new Dictionary<string, FieldInfo>();
             this.optionsObject = optionsObjectArg ?? this;
 
             // Reflect to find what command line options are available.
@@ -119,6 +136,7 @@ namespace SharpDX
             }
         }
 
+        /// <summary>Prints the header.</summary>
         public static void PrintHeader()
         {
             Console.WriteLine("{0} - {1}", GetAssemblyTitle(), Assembly.GetEntryAssembly().GetName().Version);
@@ -126,6 +144,11 @@ namespace SharpDX
             Console.WriteLine();            
         }
 
+        /// <summary>Parses the command line.</summary>
+        /// <param name="options">The options.</param>
+        /// <param name="args">The arguments.</param>
+        /// <param name="padOptions">The pad options.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         public static bool ParseCommandLine(object options, string[] args, int padOptions = 16)
         {
             PrintHeader();
@@ -134,6 +157,9 @@ namespace SharpDX
             return cmdParser.ParseCommandLine(args);
         }
 
+        /// <summary>Parses the command line.</summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         protected bool ParseCommandLine(string[] args)
         {
             // Parse each argument in turn.
@@ -166,6 +192,9 @@ namespace SharpDX
             return true;
         }
 
+        /// <summary>Parses the argument.</summary>
+        /// <param name="arg">The argument.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         private bool ParseArgument(string arg)
         {
             if (arg.StartsWith("/") || arg.StartsWith("-"))
@@ -221,6 +250,10 @@ namespace SharpDX
             }
         }
 
+        /// <summary>Sets the option.</summary>
+        /// <param name="field">The field.</param>
+        /// <param name="value">The value.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         private bool SetOption(FieldInfo field, string value)
         {
             try
@@ -246,6 +279,10 @@ namespace SharpDX
         }
 
 
+        /// <summary>Changes the type.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="type">The type.</param>
+        /// <returns>System.Object.</returns>
         private static object ChangeType(string value, Type type)
         {
             TypeConverter converter = TypeDescriptor.GetConverter(type);
@@ -254,18 +291,27 @@ namespace SharpDX
         }
 
 
+        /// <summary>Determines whether the specified field is list.</summary>
+        /// <param name="field">The field.</param>
+        /// <returns><see langword="true" /> if the specified field is list; otherwise, <see langword="false" />.</returns>
         private static bool IsList(FieldInfo field)
         {
             return typeof (IList).IsAssignableFrom(field.FieldType);
         }
 
 
+        /// <summary>Gets the list.</summary>
+        /// <param name="field">The field.</param>
+        /// <returns>IList.</returns>
         private IList GetList(FieldInfo field)
         {
             return (IList) field.GetValue(optionsObject);
         }
 
 
+        /// <summary>Lists the type of the element.</summary>
+        /// <param name="field">The field.</param>
+        /// <returns>Type.</returns>
         private static Type ListElementType(FieldInfo field)
         {
             foreach (var fieldInterface in field.FieldType.GetInterfaces())
@@ -279,11 +325,17 @@ namespace SharpDX
             return null;
         }
 
+        /// <summary>Gets the name of the option.</summary>
+        /// <param name="field">The field.</param>
+        /// <returns>OptionAttribute.</returns>
         private static OptionAttribute GetOptionName(FieldInfo field)
         {
             return GetAttribute<OptionAttribute>(field) ?? new OptionAttribute(field.Name);
         }
 
+        /// <summary>Shows the error.</summary>
+        /// <param name="message">The message.</param>
+        /// <param name="args">The arguments.</param>
         public void ShowError(string message, params object[] args)
         {
             string name = Path.GetFileNameWithoutExtension(Process.GetCurrentProcess().ProcessName);
@@ -306,6 +358,10 @@ namespace SharpDX
             }
         }
 
+        /// <summary>Gets the attribute.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="provider">The provider.</param>
+        /// <returns>The T.</returns>
         private static T GetAttribute<T>(ICustomAttributeProvider provider) where T : Attribute
         {
             var attributes = provider.GetCustomAttributes(typeof (T), false);

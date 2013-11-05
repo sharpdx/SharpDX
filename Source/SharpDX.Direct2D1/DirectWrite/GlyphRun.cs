@@ -58,7 +58,7 @@ namespace SharpDX.DirectWrite
             public Bool IsSideways;
             public int BidiLevel;
             // Method to free native struct
-            internal unsafe void __MarshalFree()
+            internal void __MarshalFree()
             {
                 if (GlyphIndices != IntPtr.Zero)
                     Marshal.FreeHGlobal(GlyphIndices);
@@ -69,13 +69,13 @@ namespace SharpDX.DirectWrite
             }
         }
 
-        internal unsafe void __MarshalFree(ref __Native @ref)
+        internal void __MarshalFree(ref __Native @ref)
         {
             @ref.__MarshalFree();
         }
 
         // Method to marshal from native to managed struct
-        internal unsafe void __MarshalFrom(ref __Native @ref)
+        internal void __MarshalFrom(ref __Native @ref)
         {
             this.FontFace = (@ref.FontFace == IntPtr.Zero) ? null : new FontFace(@ref.FontFace);
             // If FontFace != null, adds a reference to it

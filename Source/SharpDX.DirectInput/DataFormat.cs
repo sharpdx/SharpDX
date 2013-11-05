@@ -64,7 +64,7 @@ namespace SharpDX.DirectInput
             public int ObjectArrayCount;
             public System.IntPtr ObjectArrayPointer;
             // Method to free unmanaged allocation
-            internal unsafe void __MarshalFree()
+            internal void __MarshalFree()
             {
                 //if (ObjectArrayPointer != IntPtr.Zero)
                 //    GCHandle.FromIntPtr(ObjectArrayPointer).Free();
@@ -72,13 +72,13 @@ namespace SharpDX.DirectInput
         }
 
         // Method to free unmanaged allocation
-        internal unsafe void __MarshalFree(ref __Native @ref)
+        internal void __MarshalFree(ref __Native @ref)
         {
             @ref.__MarshalFree();
         }
 
         // Method to marshal from native to managed struct
-        internal unsafe void __MarshalFrom(ref __Native @ref)
+        internal void __MarshalFrom(ref __Native @ref)
         {
             this.Size = @ref.Size;
             this.ObjectSize = @ref.ObjectSize;
@@ -89,7 +89,7 @@ namespace SharpDX.DirectInput
         }
 
         // Method to marshal from managed struct tot native
-        internal unsafe void __MarshalTo(ref __Native @ref)
+        internal void __MarshalTo(ref __Native @ref)
         {
             @ref.Size = this.Size;
             @ref.ObjectSize = this.ObjectSize;

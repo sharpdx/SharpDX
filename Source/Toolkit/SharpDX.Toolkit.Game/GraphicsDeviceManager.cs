@@ -18,15 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-
-using SharpDX.Direct3D;
-using SharpDX.Direct3D11;
-using SharpDX.Toolkit.Graphics;
-
 namespace SharpDX.Toolkit
 {
+    using System;
+    using System.Collections.Generic;
+
+    using SharpDX.Direct3D;
+    using SharpDX.Direct3D11;
+    using SharpDX.Toolkit.Graphics;
+
     /// <summary>
     /// Manages the <see cref="GraphicsDevice"/> lifecycle.
     /// </summary>
@@ -34,71 +34,86 @@ namespace SharpDX.Toolkit
     {
         #region Fields
 
-        /// <summary>
-        /// Default width for the back buffer.
-        /// </summary>
+        /// <summary>Default width for the back buffer.</summary>
         public static readonly int DefaultBackBufferWidth = 800;
 
-        /// <summary>
-        /// Default height for the back buffer.
-        /// </summary>
+        /// <summary>Default height for the back buffer.</summary>
         public static readonly int DefaultBackBufferHeight = 480;
 
-        private Game game;
+        /// <summary>The game.</summary>
+        private readonly Game game;
 
+        /// <summary>The device settings changed.</summary>
         private bool deviceSettingsChanged;
 
-        private FeatureLevel preferredGraphicsProfile;
-
+        /// <summary>The is full screen.</summary>
         private bool isFullScreen;
 
+        /// <summary>The prefer multi sampling.</summary>
         private bool preferMultiSampling;
 
+        /// <summary>The preferred back buffer format.</summary>
         private PixelFormat preferredBackBufferFormat;
 
+        /// <summary>The preferred back buffer height.</summary>
         private int preferredBackBufferHeight;
 
+        /// <summary>The preferred back buffer width.</summary>
         private int preferredBackBufferWidth;
 
+        /// <summary>The preferred depth stencil format.</summary>
         private DepthFormat preferredDepthStencilFormat;
 
+        /// <summary>The preferred full screen output index.</summary>
         private int preferredFullScreenOutputIndex;
 
+        /// <summary>The depth buffer shader resource.</summary>
         private bool depthBufferShaderResource;
 
+        /// <summary>The supported orientations.</summary>
         private DisplayOrientation supportedOrientations;
 
+        /// <summary>The synchronize with vertical retrace.</summary>
         private bool synchronizeWithVerticalRetrace;
 
+        /// <summary>The is changing device.</summary>
         private bool isChangingDevice;
 
+        /// <summary>The resized back buffer width.</summary>
         private int resizedBackBufferWidth;
 
+        /// <summary>The resized back buffer height.</summary>
         private int resizedBackBufferHeight;
 
-        private bool isBackBufferToResize = false;
+        /// <summary>The is back buffer automatic resize.</summary>
+        private bool isBackBufferToResize;
 
+        /// <summary>The current window orientation.</summary>
         private DisplayOrientation currentWindowOrientation;
 
+        /// <summary>The begin draw ok.</summary>
         private bool beginDrawOk;
 
-        private IGraphicsDeviceFactory graphicsDeviceFactory;
+        /// <summary>The graphics device factory.</summary>
+        private readonly IGraphicsDeviceFactory graphicsDeviceFactory;
 
-        private bool isReallyFullScreen;
+        /// <summary>The is really full screen.</summary>
+        //private bool isReallyFullScreen;
 
+        /// <summary>The graphics device.</summary>
         private GraphicsDevice graphicsDevice;
 
         #endregion
 
         #region Constructors and Destructors
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GraphicsDeviceManager" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="GraphicsDeviceManager" /> class.</summary>
         /// <param name="game">The game.</param>
         /// <exception cref="System.ArgumentNullException">The game instance cannot be null.</exception>
+        /// <exception cref="System.InvalidOperationException">IGraphicsDeviceFactory is not registered as a service</exception>
         public GraphicsDeviceManager(Game game)
         {
+            this.isBackBufferToResize = false;
             this.game = game;
             if (this.game == null)
             {
@@ -128,7 +143,7 @@ namespace SharpDX.Toolkit
                     FeatureLevel.Level_10_0, 
                     FeatureLevel.Level_9_3, 
                     FeatureLevel.Level_9_2, 
-                    FeatureLevel.Level_9_1, 
+                    FeatureLevel.Level_9_1
 #endif
                 };
 
@@ -145,32 +160,43 @@ namespace SharpDX.Toolkit
             game.WindowCreated += GameOnWindowCreated;
         }
 
+        /// <summary>Games the configuration window created.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="eventArgs">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void GameOnWindowCreated(object sender, EventArgs eventArgs)
         {
-            game.Window.ClientSizeChanged += Window_ClientSizeChanged;
-            game.Window.OrientationChanged += Window_OrientationChanged;
+            game.Window.ClientSizeChanged += this.WindowClientSizeChanged;
+            game.Window.OrientationChanged += this.WindowOrientationChanged;
         }
 
         #endregion
 
         #region Public Events
 
+        /// <summary>Occurs when a device is created.</summary>
         public event EventHandler<EventArgs> DeviceCreated;
 
+        /// <summary>Occurs when a device is disposing.</summary>
         public event EventHandler<EventArgs> DeviceDisposing;
 
+        /// <summary>Occurs when a device is lost.</summary>
         public event EventHandler<EventArgs> DeviceLost;
 
+        /// <summary>Occurs right before device is about to change (recreate or resize)</summary>
         public event EventHandler<EventArgs> DeviceChangeBegin;
 
+        /// <summary>Occurs when device is changed (recreated or resized)</summary>
         public event EventHandler<EventArgs> DeviceChangeEnd;
 
+        /// <summary>Occurs when [preparing device settings].</summary>
         public event EventHandler<PreparingDeviceSettingsEventArgs> PreparingDeviceSettings;
 
         #endregion
 
         #region Public Properties
 
+        /// <summary>Gets the current graphics device.</summary>
+        /// <value>The graphics device.</value>
         public GraphicsDevice GraphicsDevice
         {
             get
@@ -183,34 +209,26 @@ namespace SharpDX.Toolkit
             }
         }
 
-        /// <summary>
-        /// Gets or sets the list of graphics profile to select from the best feature to the lower feature. See remarks.
-        /// </summary>
+        /// <summary>Gets or sets the list of graphics profile to select from the best feature to the lower feature. See remarks.</summary>
         /// <value>The graphics profile.</value>
-        /// <remarks>
-        /// By default, the PreferredGraphicsProfile is set to { <see cref="FeatureLevel.Level_11_1"/>, 
-        /// <see cref="FeatureLevel.Level_11_0"/>,
-        /// <see cref="FeatureLevel.Level_10_1"/>,
-        /// <see cref="FeatureLevel.Level_10_0"/>,
-        /// <see cref="FeatureLevel.Level_9_3"/>,
-        /// <see cref="FeatureLevel.Level_9_2"/>,
-        /// <see cref="FeatureLevel.Level_9_1"/>}
-        /// </remarks>
+        /// <remarks>By default, the PreferredGraphicsProfile is set to { <see cref="FeatureLevel" />.Level_11_1,
+        /// <see cref="FeatureLevel.Level_11_0" />,
+        /// <see cref="FeatureLevel.Level_10_1" />,
+        /// <see cref="FeatureLevel.Level_10_0" />,
+        /// <see cref="FeatureLevel.Level_9_3" />,
+        /// <see cref="FeatureLevel.Level_9_2" />,
+        /// <see cref="FeatureLevel.Level_9_1" />}</remarks>
         public FeatureLevel[] PreferredGraphicsProfile { get; set; }
 
-        /// <summary>
-        /// Sets the preferred graphics profile.
-        /// </summary>
+        /// <summary>Sets the preferred graphics profile.</summary>
         /// <param name="levels">The levels.</param>
-        /// <seealso cref="PreferredGraphicsProfile"/>
+        /// <seealso cref="PreferredGraphicsProfile" />
         public void SetPreferredGraphicsProfile(params FeatureLevel[] levels)
         {
             PreferredGraphicsProfile = levels;
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is full screen.
-        /// </summary>
+        /// <summary>Gets or sets a value indicating whether this instance is full screen.</summary>
         /// <value><c>true</c> if this instance is full screen; otherwise, <c>false</c>.</value>
         public bool IsFullScreen
         {
@@ -229,9 +247,7 @@ namespace SharpDX.Toolkit
             }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether [prefer multi sampling].
-        /// </summary>
+        /// <summary>Gets or sets a value indicating whether [prefer multi sampling].</summary>
         /// <value><c>true</c> if [prefer multi sampling]; otherwise, <c>false</c>.</value>
         public bool PreferMultiSampling
         {
@@ -250,15 +266,11 @@ namespace SharpDX.Toolkit
             }
         }
 
-        /// <summary>
-        /// Gets or sets the device creation flags that will be used to create the <see cref="GraphicsDevice"/>
-        /// </summary>
+        /// <summary>Gets or sets the device creation flags that will be used to create the <see cref="GraphicsDevice" /></summary>
         /// <value>The device creation flags.</value>
         public DeviceCreationFlags DeviceCreationFlags { get; set; }
 
-        /// <summary>
-        /// Gets or sets the preferred back buffer format.
-        /// </summary>
+        /// <summary>Gets or sets the preferred back buffer format.</summary>
         /// <value>The preferred back buffer format.</value>
         public PixelFormat PreferredBackBufferFormat
         {
@@ -277,9 +289,7 @@ namespace SharpDX.Toolkit
             }
         }
 
-        /// <summary>
-        /// Gets or sets the height of the preferred back buffer.
-        /// </summary>
+        /// <summary>Gets or sets the height of the preferred back buffer.</summary>
         /// <value>The height of the preferred back buffer.</value>
         public int PreferredBackBufferHeight
         {
@@ -299,9 +309,7 @@ namespace SharpDX.Toolkit
             }
         }
 
-        /// <summary>
-        /// Gets or sets the width of the preferred back buffer.
-        /// </summary>
+        /// <summary>Gets or sets the width of the preferred back buffer.</summary>
         /// <value>The width of the preferred back buffer.</value>
         public int PreferredBackBufferWidth
         {
@@ -321,9 +329,7 @@ namespace SharpDX.Toolkit
             }
         }
 
-        /// <summary>
-        /// Gets or sets the preferred depth stencil format.
-        /// </summary>
+        /// <summary>Gets or sets the preferred depth stencil format.</summary>
         /// <value>The preferred depth stencil format.</value>
         public DepthFormat PreferredDepthStencilFormat
         {
@@ -342,9 +348,8 @@ namespace SharpDX.Toolkit
             }
         }
 
-        /// <summary>
-        /// The output (monitor) index to use when switching to fullscreen mode. Doesn't have any effect when windowed mode is used.
-        /// </summary>
+        /// <summary>The output (monitor) index to use when switching to fullscreen mode. Doesn't have any effect when windowed mode is used.</summary>
+        /// <value>The index of the preferred full screen output.</value>
         public int PreferredFullScreenOutputIndex
         {
             get { return preferredFullScreenOutputIndex; }
@@ -359,9 +364,8 @@ namespace SharpDX.Toolkit
             }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the DepthBuffer should be created with the ShaderResource flag. Default is false.
-        /// </summary>
+        /// <summary>Gets or sets a value indicating whether the DepthBuffer should be created with the ShaderResource flag. Default is false.</summary>
+        /// <value><see langword="true" /> if [depth buffer shader resource]; otherwise, <see langword="false" />.</value>
         public bool DepthBufferShaderResource
         {
             get { return depthBufferShaderResource; }
@@ -375,9 +379,7 @@ namespace SharpDX.Toolkit
             }
         }
 
-        /// <summary>
-        /// Gets or sets the supported orientations.
-        /// </summary>
+        /// <summary>Gets or sets the supported orientations.</summary>
         /// <value>The supported orientations.</value>
         public DisplayOrientation SupportedOrientations
         {
@@ -396,9 +398,7 @@ namespace SharpDX.Toolkit
             }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether [synchronize with vertical retrace].
-        /// </summary>
+        /// <summary>Gets or sets a value indicating whether [synchronize with vertical retrace].</summary>
         /// <value><c>true</c> if [synchronize with vertical retrace]; otherwise, <c>false</c>.</value>
         public bool SynchronizeWithVerticalRetrace
         {
@@ -420,9 +420,7 @@ namespace SharpDX.Toolkit
 
         #region Public Methods and Operators
 
-        /// <summary>
-        /// Applies the changes from this instance and change or create the <see cref="GraphicsDevice"/> according to the new values.
-        /// </summary>
+        /// <summary>Applies the changes from this instance and change or create the <see cref="GraphicsDevice" /> according to the new values.</summary>
         public void ApplyChanges()
         {
             if (GraphicsDevice == null || deviceSettingsChanged)
@@ -431,6 +429,8 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>Starts the drawing of a frame.</summary>
+        /// <returns><c>true</c> if drawing OK, <c>false</c> otherwise</returns>
         bool IGraphicsDeviceManager.BeginDraw()
         {
             beginDrawOk = false;
@@ -472,12 +472,14 @@ namespace SharpDX.Toolkit
             return true;
         }
 
+        /// <summary>Called to ensure that the device manager has created a valid device.</summary>
         void IGraphicsDeviceManager.CreateDevice()
         {
             // Force the creation of the device
             ChangeOrCreateDevice(true);
         }
 
+        /// <summary>Called by the game at the end of drawing; presents the final rendering.</summary>
         void IGraphicsDeviceManager.EndDraw()
         {
             if (beginDrawOk && GraphicsDevice != null)
@@ -499,6 +501,12 @@ namespace SharpDX.Toolkit
 
         #endregion
 
+        /// <summary>Selects the orientation.</summary>
+        /// <param name="orientation">The orientation.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="allowLandscapeLeftAndRight">if set to <see langword="true" /> [allow landscape left and right].</param>
+        /// <returns>DisplayOrientation.</returns>
         protected static DisplayOrientation SelectOrientation(DisplayOrientation orientation, int width, int height, bool allowLandscapeLeftAndRight)
         {
             if (orientation != DisplayOrientation.Default)
@@ -519,6 +527,9 @@ namespace SharpDX.Toolkit
             return DisplayOrientation.LandscapeLeft;
         }
 
+        /// <summary>Disposes of object resources.</summary>
+        /// <param name="disposeManagedResources">If true, managed resources should be
+        /// disposed of in addition to unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
         {
             if (disposeManagedResources)
@@ -530,8 +541,8 @@ namespace SharpDX.Toolkit
                         game.Services.RemoveService(typeof(IGraphicsDeviceService));
                     }
 
-                    game.Window.ClientSizeChanged -= Window_ClientSizeChanged;
-                    game.Window.OrientationChanged -= Window_OrientationChanged;
+                    game.Window.ClientSizeChanged -= this.WindowClientSizeChanged;
+                    game.Window.OrientationChanged -= this.WindowOrientationChanged;
                 }
 
                 Utilities.Dispose(ref graphicsDevice);
@@ -540,22 +551,23 @@ namespace SharpDX.Toolkit
             base.Dispose(disposeManagedResources);
         }
 
-        /// <summary>
-        /// Determines whether this instance is compatible with the the specified new <see cref="GraphicsDeviceInformation"/>.
-        /// </summary>
+        /// <summary>Determines whether this instance is compatible with the the specified new <see cref="GraphicsDeviceInformation" />.</summary>
         /// <param name="newDeviceInfo">The new device info.</param>
-        /// <returns><c>true</c> if this instance this instance is compatible with the the specified new <see cref="GraphicsDeviceInformation"/>; otherwise, <c>false</c>.</returns>
+        /// <returns><c>true</c> if this instance this instance is compatible with the the specified new <see cref="GraphicsDeviceInformation" />; otherwise, <c>false</c>.</returns>
         protected virtual bool CanResetDevice(GraphicsDeviceInformation newDeviceInfo)
         {
             // By default, a reset is compatible when we stay under the same graphics profile.
             return GraphicsDevice.Features.Level == newDeviceInfo.GraphicsProfile;
         }
 
-        /// <summary>
-        /// Finds the best device that is compatible with the preferences defined in this instance.
-        /// </summary>
+        /// <summary>Finds the best device that is compatible with the preferences defined in this instance.</summary>
         /// <param name="anySuitableDevice">if set to <c>true</c> a device can be selected from any existing adapters, otherwise, it will select only from default adapter.</param>
         /// <returns>The graphics device information.</returns>
+        /// <exception cref="System.InvalidOperationException">
+        /// No screen modes found
+        /// or
+        /// No screen modes found after ranking
+        /// </exception>
         protected virtual GraphicsDeviceInformation FindBestDevice(bool anySuitableDevice)
         {
             // Setup preferred parameters before passing them to the factory
@@ -596,9 +608,7 @@ namespace SharpDX.Toolkit
             return devices[0];
         }
 
-        /// <summary>
-        /// Ranks a list of <see cref="GraphicsDeviceInformation"/> before creating a new device.
-        /// </summary>
+        /// <summary>Ranks a list of <see cref="GraphicsDeviceInformation" /> before creating a new device.</summary>
         /// <param name="foundDevices">The list of devices that can be reorder.</param>
         protected virtual void RankDevices(List<GraphicsDeviceInformation> foundDevices)
         {
@@ -705,6 +715,9 @@ namespace SharpDX.Toolkit
                 });
         }
 
+        /// <summary>Calculates the rank for format.</summary>
+        /// <param name="format">The format.</param>
+        /// <returns>System.Int32.</returns>
         private int CalculateRankForFormat(DXGI.Format format)
         {
             if (format == PreferredBackBufferFormat)
@@ -712,15 +725,13 @@ namespace SharpDX.Toolkit
                 return 0;
             }
 
-            if (CalculateFormatSize(format) == CalculateFormatSize(PreferredBackBufferFormat))
-            {
-                return 1;
-            }
-
-            return int.MaxValue;
+            return CalculateFormatSize(format) == CalculateFormatSize(this.PreferredBackBufferFormat) ? 1 : int.MaxValue;
         }
 
-        private int CalculateFormatSize(DXGI.Format format)
+        /// <summary>Calculates the size of the format.</summary>
+        /// <param name="format">The format.</param>
+        /// <returns>System.Int32.</returns>
+        private static int CalculateFormatSize(DXGI.Format format)
         {
             switch (format)
             {
@@ -739,44 +750,70 @@ namespace SharpDX.Toolkit
             return 0;
         }
 
+        /// <summary>Called when [device created].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected virtual void OnDeviceCreated(object sender, EventArgs args)
         {
             RaiseEvent(DeviceCreated, sender, args);
         }
 
+        /// <summary>Called when [device disposing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected virtual void OnDeviceDisposing(object sender, EventArgs args)
         {
             RaiseEvent(DeviceDisposing, sender, args);
         }
 
+        /// <summary>Called when [device lost].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected virtual void OnDeviceLost(object sender, EventArgs args)
         {
             RaiseEvent(DeviceLost, sender, args);
         }
 
+        /// <summary>Called when [device change begin].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected virtual void OnDeviceChangeBegin(object sender, EventArgs args)
         {
             RaiseEvent(DeviceChangeBegin, sender, args);
         }
 
+        /// <summary>Called when [device change end].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected virtual void OnDeviceChangeEnd(object sender, EventArgs args)
         {
             RaiseEvent(DeviceChangeEnd, sender, args);
         }
 
+        /// <summary>Called when [preparing device settings].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="PreparingDeviceSettingsEventArgs"/> instance containing the event data.</param>
         protected virtual void OnPreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs args)
         {
             RaiseEvent(PreparingDeviceSettings, sender, args);
         }
 
-        private void RaiseEvent<T>(EventHandler<T> handler, object sender, T args)
+        /// <summary>Raises the event.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="handler">The handler.</param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The arguments.</param>
+        private static void RaiseEvent<T>(EventHandler<T> handler, object sender, T args)
             where T : EventArgs
         {
             if (handler != null)
                 handler(sender, args);
         }
 
-        private void Window_ClientSizeChanged(object sender, EventArgs e)
+        /// <summary>Windows the client size changed.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void WindowClientSizeChanged(object sender, EventArgs e)
         {
             if (!isChangingDevice && ((game.Window.ClientBounds.Height != 0) || (game.Window.ClientBounds.Width != 0)))
             {
@@ -787,7 +824,10 @@ namespace SharpDX.Toolkit
             }
         }
 
-        private void Window_OrientationChanged(object sender, EventArgs e)
+        /// <summary>Windows the orientation changed.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void WindowOrientationChanged(object sender, EventArgs e)
         {
             if ((!isChangingDevice && ((game.Window.ClientBounds.Height != 0) || (game.Window.ClientBounds.Width != 0))) && (game.Window.CurrentOrientation != currentWindowOrientation))
             {
@@ -795,7 +835,10 @@ namespace SharpDX.Toolkit
             }
         }
 
-        private void GraphicsDevice_Disposing(object sender, EventArgs e)
+        /// <summary>Graphicses the device disposing.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void GraphicsDeviceDisposing(object sender, EventArgs e)
         {
             // Clears the GraphicsDevice
             GraphicsDevice = null;
@@ -803,6 +846,8 @@ namespace SharpDX.Toolkit
             OnDeviceDisposing(sender, e);
         }
 
+        /// <summary>Creates the device.</summary>
+        /// <param name="newInfo">The new information.</param>
         private void CreateDevice(GraphicsDeviceInformation newInfo)
         {
             Utilities.Dispose(ref graphicsDevice);
@@ -816,11 +861,13 @@ namespace SharpDX.Toolkit
             // this.ValidateGraphicsDeviceInformation(newInfo);
             GraphicsDevice = graphicsDeviceFactory.CreateDevice(newInfo);
 
-            GraphicsDevice.Disposing += GraphicsDevice_Disposing;
+            GraphicsDevice.Disposing += this.GraphicsDeviceDisposing;
 
             OnDeviceCreated(this, EventArgs.Empty);
         }
 
+        /// <summary>Changes the original create device.</summary>
+        /// <param name="forceCreate">if set to <see langword="true" /> [force create].</param>
         private void ChangeOrCreateDevice(bool forceCreate)
         {
             if (forceCreate)
@@ -884,21 +931,25 @@ namespace SharpDX.Toolkit
                     CreateDevice(graphicsDeviceInformation);
                 }
 
-                var presentationParameters = GraphicsDevice.Presenter.Description;
-                isReallyFullScreen = presentationParameters.IsFullScreen;
-                if (presentationParameters.BackBufferWidth != 0)
+                if(GraphicsDevice != null)
                 {
-                    width = presentationParameters.BackBufferWidth;
+                    var presentationParameters = GraphicsDevice.Presenter.Description;
+                    //isReallyFullScreen = presentationParameters.IsFullScreen;
+                    this.isFullScreen = presentationParameters.IsFullScreen;
+                    if(presentationParameters.BackBufferWidth != 0)
+                    {
+                        width = presentationParameters.BackBufferWidth;
+                    }
+
+                    if(presentationParameters.BackBufferHeight != 0)
+                    {
+                        height = presentationParameters.BackBufferHeight;
+                    }
+
+                    deviceSettingsChanged = false;
+
+                    OnDeviceChangeEnd(this, EventArgs.Empty);
                 }
-
-                if (presentationParameters.BackBufferHeight != 0)
-                {
-                    height = presentationParameters.BackBufferHeight;
-                }
-
-                deviceSettingsChanged = false;
-
-                OnDeviceChangeEnd(this, EventArgs.Empty);
             }
             finally
             {

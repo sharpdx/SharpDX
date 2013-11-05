@@ -42,8 +42,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="description">The description.</param>
         private RasterizerState(GraphicsDevice device, RasterizerStateDescription description) : base(device.MainDevice)
         {
-            Description = description;
-            Initialize(new Direct3D11.RasterizerState(GraphicsDevice, Description));
+            this.Description = description;
+            this.Initialize(new Direct3D11.RasterizerState(GraphicsDevice, Description));
         }
 
         /// <summary>
@@ -53,8 +53,17 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="nativeState">State of the native.</param>
         private RasterizerState(GraphicsDevice device, Direct3D11.RasterizerState nativeState) : base(device.MainDevice)
         {
-            Description = nativeState.Description;
-            Initialize(nativeState);
+            this.Description = nativeState.Description;
+            this.Initialize(nativeState);
+        }
+
+        /// <summary>
+        /// Initializes the specified device local.
+        /// </summary>
+        /// <param name="resource">The resource.</param>
+        protected override void Initialize(DeviceChild resource)
+        {
+            base.Initialize(resource);
         }
 
         /// <summary>	

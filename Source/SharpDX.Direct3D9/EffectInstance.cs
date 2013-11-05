@@ -35,7 +35,7 @@ namespace SharpDX.Direct3D9
             public int DefaultCount;
             public System.IntPtr DefaultPointer;
             // Method to free unmanaged allocation
-            internal unsafe void __MarshalFree()
+            internal void __MarshalFree()
             {
                 if (this.EffectFilename != IntPtr.Zero)
                     Marshal.FreeHGlobal(this.EffectFilename);
@@ -45,13 +45,13 @@ namespace SharpDX.Direct3D9
         }
 
         // Method to free unmanaged allocation
-        internal unsafe void __MarshalFree(ref __Native @ref)
+        internal void __MarshalFree(ref __Native @ref)
         {
             @ref.__MarshalFree();
         }
 
         // Method to marshal from native to managed struct
-        internal unsafe void __MarshalFrom(ref __Native @ref)
+        internal void __MarshalFrom(ref __Native @ref)
         {
             this.EffectFilename = (@ref.EffectFilename == IntPtr.Zero) ? null : Marshal.PtrToStringAnsi(@ref.EffectFilename);
             var defaultsNative = new EffectDefault.__Native[@ref.DefaultCount];

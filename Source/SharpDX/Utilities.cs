@@ -567,7 +567,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="s">A managed string to be copied.</param> 
         /// <returns>The address, in unmanaged memory, to where s was copied, or IntPtr.Zero if s is null.</returns>
-        public static unsafe IntPtr StringToHGlobalAnsi(string s)
+        public static IntPtr StringToHGlobalAnsi(string s)
         {
 #if WP8
             if (s == null)
@@ -597,7 +597,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="s">A managed string to be copied.</param> 
         /// <returns>The address, in unmanaged memory, to where s was copied, or IntPtr.Zero if s is null.</returns>
-        public static unsafe IntPtr StringToHGlobalUni(string s)
+        public static IntPtr StringToHGlobalUni(string s)
         {
 #if WP8
             if (s == null)
@@ -626,7 +626,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="s">A managed string to be copied.</param> 
         /// <returns>The address, in unmanaged memory, to where s was copied, or IntPtr.Zero if s is null.</returns>
-        public static unsafe IntPtr StringToCoTaskMemUni(string s)
+        public static IntPtr StringToCoTaskMemUni(string s)
         {
             if (s == null)
             {
@@ -1190,9 +1190,7 @@ namespace SharpDX
 #endif
         }
 
-        /// <summary>
-        /// Suspends the current thread of a <see cref="sleepTimeInMillis"/>.
-        /// </summary>
+        /// <summary>Suspends the current thread of a sleepTimeInMillis.</summary>
         /// <param name="sleepTimeInMillis">The duration to sleep in milliseconds.</param>
         public static void Sleep(TimeSpan sleepTimeInMillis)
         {
@@ -1252,29 +1250,51 @@ namespace SharpDX
             return null;
         }
 
+        /// <summary>The CLSCTX enumeration.</summary>
         [Flags]
         public enum CLSCTX : uint
         {
+            /// <summary>The CLSCTX inproc server.</summary>
             ClsctxInprocServer = 0x1,
+            /// <summary>The CLSCTX inproc handler.</summary>
             ClsctxInprocHandler = 0x2,
+            /// <summary>The CLSCTX local server.</summary>
             ClsctxLocalServer = 0x4,
+            /// <summary>The CLSCTX inproc server16.</summary>
             ClsctxInprocServer16 = 0x8,
+            /// <summary>The CLSCTX remote server.</summary>
             ClsctxRemoteServer = 0x10,
+            /// <summary>The CLSCTX inproc handler16.</summary>
             ClsctxInprocHandler16 = 0x20,
+            /// <summary>The CLSCTX reserved1.</summary>
             ClsctxReserved1 = 0x40,
+            /// <summary>The CLSCTX reserved2.</summary>
             ClsctxReserved2 = 0x80,
+            /// <summary>The CLSCTX reserved3.</summary>
             ClsctxReserved3 = 0x100,
+            /// <summary>The CLSCTX reserved4.</summary>
             ClsctxReserved4 = 0x200,
+            /// <summary>The CLSCTX no code download.</summary>
             ClsctxNoCodeDownload = 0x400,
+            /// <summary>The CLSCTX reserved5.</summary>
             ClsctxReserved5 = 0x800,
+            /// <summary>The CLSCTX no custom marshal.</summary>
             ClsctxNoCustomMarshal = 0x1000,
+            /// <summary>The CLSCTX enable code download.</summary>
             ClsctxEnableCodeDownload = 0x2000,
+            /// <summary>The CLSCTX no failure log.</summary>
             ClsctxNoFailureLog = 0x4000,
+            /// <summary>The CLSCTX disable aaa.</summary>
             ClsctxDisableAaa = 0x8000,
+            /// <summary>The CLSCTX enable aaa.</summary>
             ClsctxEnableAaa = 0x10000,
+            /// <summary>The CLSCTX from default context.</summary>
             ClsctxFromDefaultContext = 0x20000,
+            /// <summary>The CLSCTX inproc.</summary>
             ClsctxInproc = ClsctxInprocServer | ClsctxInprocHandler,
+            /// <summary>The CLSCTX server.</summary>
             ClsctxServer = ClsctxInprocServer | ClsctxLocalServer | ClsctxRemoteServer,
+            /// <summary>The CLSCTX all.</summary>
             ClsctxAll = ClsctxServer | ClsctxInprocHandler
         }
 

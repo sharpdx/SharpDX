@@ -24,17 +24,16 @@ using System.Collections.Generic;
 
 namespace SharpDX
 {
-    /// <summary>
-    /// A fast method to pass array of <see cref="ComObject"/> to SharpDX methods.
-    /// </summary>
+    /// <summary>A fast method to pass array of <see cref="ComObject" /> to SharpDX methods.</summary>
     public class ComArray : DisposeBase, IEnumerable
     {
+        /// <summary>The values.</summary>
         protected ComObject[] values;
+
+        /// <summary>The native buffer.</summary>
         private IntPtr nativeBuffer;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ComArray"/> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="ComArray" /> class.</summary>
         /// <param name="array">The array.</param>
         public ComArray(params ComObject[] array)
         {
@@ -50,9 +49,7 @@ namespace SharpDX
             }
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ComArray"/> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="ComArray" /> class.</summary>
         /// <param name="size">The size.</param>
         public ComArray(int size)
         {
@@ -60,9 +57,8 @@ namespace SharpDX
             nativeBuffer = Utilities.AllocateMemory(size * Utilities.SizeOf<IntPtr>());
         }
 
-        /// <summary>
-        /// Gets the pointer to the native array associated to this instance.
-        /// </summary>
+        /// <summary>Gets the pointer to the native array associated to this instance.</summary>
+        /// <value>The native pointer.</value>
         public IntPtr NativePointer
         {
             get
@@ -71,9 +67,8 @@ namespace SharpDX
             }
         }
 
-        /// <summary>
-        /// Gets the length.
-        /// </summary>
+        /// <summary>Gets the length.</summary>
+        /// <value>The length.</value>
         public int Length
         {
             get
@@ -82,16 +77,17 @@ namespace SharpDX
             }
         }
 
-        /// <summary>
-        /// Gets an object at the specified index.
-        /// </summary>
+        /// <summary>Gets an object at the specified index.</summary>
         /// <param name="index">The index.</param>
-        /// <returns>A <see cref="ComObject"/></returns>
+        /// <returns>A <see cref="ComObject" /></returns>
         public ComObject Get(int index)
         {
             return values[index];
         }
 
+        /// <summary>Sets from native.</summary>
+        /// <param name="index">The index.</param>
+        /// <param name="value">The value.</param>
         internal void SetFromNative(int index, ComObject value)
         {
             values[index] = value;
@@ -101,9 +97,7 @@ namespace SharpDX
             }
         }
 
-        /// <summary>
-        /// Sets an object at the specified index.
-        /// </summary>
+        /// <summary>Sets an object at the specified index.</summary>
         /// <param name="index">The index.</param>
         /// <param name="value">The value.</param>
         public void Set(int index, ComObject value)
@@ -115,6 +109,8 @@ namespace SharpDX
             }
         }
 
+        /// <summary>Releases unmanaged and - optionally - managed resources</summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -125,38 +121,33 @@ namespace SharpDX
             nativeBuffer = IntPtr.Zero;
         }
 
-        /// <inheritdoc/>
+        /// <summary>Returns an enumerator that iterates through a collection.</summary>
+        /// <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
         public IEnumerator GetEnumerator()
         {
             return values.GetEnumerator();
         }
     }
 
-    /// <summary>
-    /// A typed version of <see cref="ComArray"/>
-    /// </summary>
-    /// <typeparam name="T">Type of the <see cref="ComObject"/></typeparam>
+    /// <summary>A typed version of <see cref="ComArray" /></summary>
+    /// <typeparam name="T">Type of the <see cref="ComObject" /></typeparam>
     public class ComArray<T> : ComArray, IEnumerable<T> where T : ComObject
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ComArray&lt;T&gt;"/> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="ComArray&lt;T&gt;" /> class.</summary>
         /// <param name="array">The array.</param>
-        public ComArray(params T[] array) : base(array)
+        public ComArray(params ComObject[] array) : base(array)
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ComArray&lt;T&gt;"/> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="ComArray&lt;T&gt;" /> class.</summary>
         /// <param name="size">The size.</param>
         public ComArray(int size) : base(size)
         {
         }
 
-        /// <summary>
-        /// Gets or sets the <see cref="T"/> with the specified i.
-        /// </summary>
+        /// <summary>Gets or sets the type T with the specified i.</summary>
+        /// <param name="i">The attribute.</param>
+        /// <returns>The type T from index i.</returns>
         public T this[int i]
         {
             get
@@ -169,34 +160,47 @@ namespace SharpDX
             }
         }
 
+        /// <summary>Returns an enumerator that iterates through the collection.</summary>
+        /// <returns>A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.</returns>
         public new IEnumerator<T> GetEnumerator()
         {
             return new ArrayEnumerator<T>(values.GetEnumerator());
         }
 
+        /// <summary>The array enumerator struct.</summary>
+        /// <typeparam name="T1">The type of the t1.</typeparam>
         private struct ArrayEnumerator<T1> : IEnumerator<T1> where T1 : ComObject
         {
+            /// <summary>The enumerator.</summary>
             private readonly IEnumerator enumerator;
 
+            /// <summary>Initializes a new instance of the ArrayEnumerator struct.</summary>
+            /// <param name="enumerator">The enumerator.</param>
             public ArrayEnumerator(IEnumerator enumerator)
             {
                 this.enumerator = enumerator;
             }
 
+            /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
             public void Dispose()
             {
             }
 
+            /// <summary>Advances the enumerator to the next element of the collection.</summary>
+            /// <returns>true if the enumerator was successfully advanced to the next element; false if the enumerator has passed the end of the collection.</returns>
             public bool MoveNext()
             {
                 return enumerator.MoveNext();
             }
 
+            /// <summary>Sets the enumerator to its initial position, which is before the first element in the collection.</summary>
             public void Reset()
             {
                 enumerator.Reset();
             }
 
+            /// <summary>Gets the current.</summary>
+            /// <value>The current.</value>
             public T1 Current
             {
                 get
@@ -205,6 +209,8 @@ namespace SharpDX
                 }
             }
 
+            /// <summary>Gets the current.</summary>
+            /// <value>The current.</value>
             object IEnumerator.Current
             {
                 get

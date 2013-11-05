@@ -68,7 +68,7 @@ namespace SharpDX.Direct3D9
             base.NativePointerUpdated(oldNativePointer);
         }
 
-        protected override unsafe void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             if (disposing)
             {

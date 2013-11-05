@@ -30,24 +30,28 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public abstract class GraphicsResource : Component
     {
-        /// <summary>
-        /// GraphicsDevice used to create this instance.
-        /// </summary>
+        /// <summary>GraphicsDevice used to create this instance.</summary>
+        /// <value>The graphics device.</value>
         public GraphicsDevice GraphicsDevice { get; internal set; }
 
-        /// <summary>
-        /// The attached Direct3D11 resource to this instance.
-        /// </summary>
-        internal DeviceChild Resource;
+        /// <summary>The attached Direct3D11 resource to this instance.</summary>
+        internal DeviceChild Resource { get; set; }
 
+        /// <summary>Initializes a new instance of the <see cref="GraphicsResource" /> class.</summary>
         internal GraphicsResource()
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="GraphicsResource"/> class.</summary>
+        /// <param name="graphicsDevice">The graphics device.</param>
         protected GraphicsResource(GraphicsDevice graphicsDevice) : this(graphicsDevice, null)
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="GraphicsResource"/> class.</summary>
+        /// <param name="graphicsDevice">The graphics device.</param>
+        /// <param name="name">The name.</param>
+        /// <exception cref="System.ArgumentNullException">graphicsDevice</exception>
         protected GraphicsResource(GraphicsDevice graphicsDevice, string name) : base(name)
         {
             if (graphicsDevice == null)
@@ -56,9 +60,7 @@ namespace SharpDX.Toolkit.Graphics
             GraphicsDevice = graphicsDevice;
         }
 
-        /// <summary>
-        /// Initializes the specified device local.
-        /// </summary>
+        /// <summary>Initializes the specified device local.</summary>
         /// <param name="resource">The resource.</param>
         protected virtual void Initialize(DeviceChild resource)
         {
@@ -69,18 +71,15 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        /// <summary>
-        /// Implicit casting operator to <see cref="Direct3D11.Resource"/>
-        /// </summary>
+        /// <summary>Implicit casting operator to <see cref="Direct3D11.Resource" /></summary>
         /// <param name="from">The GraphicsResource to convert from.</param>
+        /// <returns>The result of the conversion.</returns>
         public static implicit operator Resource(GraphicsResource from)
         {
             return from == null ? null : (Resource)from.Resource;
         }
 
-        /// <summary>
-        /// Gets the CPU access flags from the <see cref="ResourceUsage"/>.
-        /// </summary>
+        /// <summary>Gets the CPU access flags from the <see cref="ResourceUsage" />.</summary>
         /// <param name="usage">The usage.</param>
         /// <returns>The CPU access flags</returns>
         protected static CpuAccessFlags GetCpuAccessFlagsFromUsage(ResourceUsage usage)
@@ -95,6 +94,9 @@ namespace SharpDX.Toolkit.Graphics
             return CpuAccessFlags.None;
         }
 
+        /// <summary>Disposes of object resources.</summary>
+        /// <param name="disposeManagedResources">If true, managed resources should be
+        /// disposed of in addition to unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
         {
             base.Dispose(disposeManagedResources);
@@ -102,9 +104,8 @@ namespace SharpDX.Toolkit.Graphics
                 Resource = null;
         }
 
-        /// <summary>
-        /// Called when name changed for this component.
-        /// </summary>
+        /// <summary>Called when name changed for this component.</summary>
+        /// <param name="propertyName">Name of the property.</param>
         protected override void OnPropertyChanged(string propertyName)
         {
             base.OnPropertyChanged(propertyName);
@@ -114,6 +115,8 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Functions the pin.</summary>
+        /// <param name="handles">The handles.</param>
         protected static void UnPin(GCHandle[] handles)
         {
             if (handles != null)

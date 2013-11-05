@@ -34,7 +34,7 @@ namespace SharpDX.DirectWrite
             public IntPtr ClusterMap;
             public int TextPosition;
             // Method to free native struct
-            internal unsafe void __MarshalFree()
+            internal void __MarshalFree()
             {
                 if (this.LocaleName != IntPtr.Zero)
                     Marshal.FreeHGlobal(this.LocaleName);
@@ -44,7 +44,7 @@ namespace SharpDX.DirectWrite
         }
 
         // Method to marshal from native to managed struct
-        internal unsafe void __MarshalFrom(ref __Native @ref)
+        internal void __MarshalFrom(ref __Native @ref)
         {
             this.LocaleName = (@ref.LocaleName == IntPtr.Zero) ? null : Marshal.PtrToStringUni(@ref.LocaleName);
             this.Text = (@ref.Text == IntPtr.Zero) ? null : Marshal.PtrToStringUni(@ref.Text, @ref.TextLength);
@@ -53,7 +53,7 @@ namespace SharpDX.DirectWrite
             this.TextPosition = @ref.TextPosition;
         }
         // Method to marshal from managed struct tot native
-        internal unsafe void __MarshalTo(ref __Native @ref)
+        internal void __MarshalTo(ref __Native @ref)
         {
             @ref.LocaleName = (this.LocaleName == null) ? IntPtr.Zero : Marshal.StringToHGlobalUni(this.LocaleName);
             @ref.Text = (this.Text == null) ? IntPtr.Zero : Marshal.StringToHGlobalUni(this.Text);
@@ -63,7 +63,7 @@ namespace SharpDX.DirectWrite
         }
 
         // Method to marshal from native to managed struct
-        internal unsafe void __MarshalFree(ref __Native @ref)
+        internal void __MarshalFree(ref __Native @ref)
         {
             @ref.__MarshalFree();
         }

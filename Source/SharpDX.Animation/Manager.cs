@@ -173,7 +173,7 @@ namespace SharpDX.Animation
             }
         }
 
-        private PriorityComparisonShadow concludePriorityComparisonShadow;
+        //private PriorityComparisonShadow concludePriorityComparisonShadow;
 
         /// <summary>
         /// Sets the conclude priority comparison.

@@ -592,12 +592,12 @@ namespace SharpDX.D3DCompiler
 
             unsafe
             {
+#if DIRECTX11_1
                 var resultCode = Result.Ok;
 
                 Blob blobForCode = null;
                 Blob blobForErrors = null;
 
-#if DIRECTX11_1
                 resultCode = D3D.CompileFromFile(
                     fileName,
                     PrepareMacros(defines),

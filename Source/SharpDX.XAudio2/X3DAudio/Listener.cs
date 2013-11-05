@@ -27,13 +27,13 @@ namespace SharpDX.X3DAudio
             public System.IntPtr ConePointer;
             public Cone.__Native Cone;
             // Method to free unmanaged allocation
-            internal unsafe void __MarshalFree()
+            internal void __MarshalFree()
             {
             }
         }
 
         // Method to free unmanaged allocation
-        internal unsafe void __MarshalFree(ref __Native @ref)
+        internal void __MarshalFree(ref __Native @ref)
         {
             @ref.__MarshalFree();
         }

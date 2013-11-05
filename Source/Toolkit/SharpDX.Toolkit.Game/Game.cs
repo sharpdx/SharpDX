@@ -18,19 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-
-using SharpDX.Collections;
-using SharpDX.Toolkit.Content;
-using SharpDX.Toolkit.Graphics;
-
 namespace SharpDX.Toolkit
 {
+    using System;
+    using System.Collections.Generic;
 
-    /// <summary>
-    /// The game.
-    /// </summary>
+    using SharpDX.Collections;
+    using SharpDX.Toolkit.Content;
+    using SharpDX.Toolkit.Graphics;
+
+    /// <summary>The game.</summary>
     public class Game : Component
     {
         #region Fields
@@ -56,14 +53,14 @@ namespace SharpDX.Toolkit
         private bool suppressDraw;
 
         private TimeSpan totalGameTime;
-        private TimeSpan inactiveSleepTime;
-        private TimeSpan maximumElapsedTime;
+        private readonly TimeSpan inactiveSleepTime;
+        private readonly TimeSpan maximumElapsedTime;
         private TimeSpan accumulatedElapsedGameTime;
         private TimeSpan lastFrameElapsedGameTime;
         private int nextLastUpdateCountIndex;
         private bool drawRunningSlowly;
         private bool forceElapsedTimeToZero;
-        private bool contentLoaded = false;
+        private bool contentLoaded;
 
         private readonly TimerTick timer;
 
@@ -73,11 +70,10 @@ namespace SharpDX.Toolkit
 
         #region Constructors and Destructors
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Game" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="Game" /> class.</summary>
         public Game()
         {
+            this.contentLoaded = false;
             // Internals
             drawableGameSystems = new List<IDrawable>();
             currentlyContentGameSystems  = new List<IContentable>();
@@ -92,9 +88,11 @@ namespace SharpDX.Toolkit
             timer = new TimerTick();
             IsFixedTimeStep = false;
             maximumElapsedTime = TimeSpan.FromMilliseconds(500.0);
-            TargetElapsedTime = TimeSpan.FromTicks(10000000 / 60); // target elapsed time is by default 60Hz
+            // target elapsed time is by default 60Hz
+            TargetElapsedTime = TimeSpan.FromTicks(10000000 / 60);
             lastUpdateCount = new int[4];
             nextLastUpdateCountIndex = 0;
+            inactiveSleepTime = TimeSpan.Zero;
 
             // Calculate the updateCountAverageSlowLimit (assuming moving average is >=3 )
             // Example for a moving average of 4:
@@ -111,9 +109,9 @@ namespace SharpDX.Toolkit
 
             // Create Platform
             gamePlatform = GamePlatform.Create(this);
-            gamePlatform.Activated += gamePlatform_Activated;
-            gamePlatform.Deactivated += gamePlatform_Deactivated;
-            gamePlatform.Exiting += gamePlatform_Exiting;
+            gamePlatform.Activated += this.GamePlatformActivated;
+            gamePlatform.Deactivated += this.GamePlatformDeactivated;
+            gamePlatform.Exiting += this.GamePlatformExiting;
             gamePlatform.WindowCreated += GamePlatformOnWindowCreated;
 
             // By default, add a FileResolver for the ContentManager
@@ -125,8 +123,8 @@ namespace SharpDX.Toolkit
             Services.AddService(typeof(IGamePlatform), gamePlatform);
 
             // Register events on GameSystems.
-            GameSystems.ItemAdded += GameSystems_ItemAdded;
-            GameSystems.ItemRemoved += GameSystems_ItemRemoved;
+            GameSystems.ItemAdded += this.GameSystemsItemAdded;
+            GameSystems.ItemRemoved += this.GameSystemsItemRemoved;
 
             IsActive = true;
         }
@@ -135,46 +133,33 @@ namespace SharpDX.Toolkit
 
         #region Public Events
 
-        /// <summary>
-        /// Occurs when [activated].
-        /// </summary>
+        /// <summary>Occurs when [activated].</summary>
         public event EventHandler<EventArgs> Activated;
 
-        /// <summary>
-        /// Occurs when [deactivated].
-        /// </summary>
+        /// <summary>Occurs when [deactivated].</summary>
         public event EventHandler<EventArgs> Deactivated;
 
-        /// <summary>
-        /// Occurs when [exiting].
-        /// </summary>
+        /// <summary>Occurs when [exiting].</summary>
         public event EventHandler<EventArgs> Exiting;
 
-        /// <summary>
-        /// Occurs when [window created].
-        /// </summary>
+        /// <summary>Occurs when [window created].</summary>
         public event EventHandler<EventArgs> WindowCreated;
 
         #endregion
 
         #region Public Properties
 
-        /// <summary>
-        /// Gets or sets the <see cref="ContentManager"/>.
-        /// </summary>
+        /// <summary>Gets or sets the <see cref="ContentManager" />.</summary>
         /// <value>The content manager.</value>
         public ContentManager Content { get; set; }
 
-        /// <summary>
-        /// Gets the game components registered by this game.
-        /// </summary>
+        /// <summary>Gets the game components registered by this game.</summary>
         /// <value>The game components.</value>
         public GameSystemCollection GameSystems { get; private set; }
 
-        /// <summary>
-        /// Gets the graphics device.
-        /// </summary>
+        /// <summary>Gets the graphics device.</summary>
         /// <value>The graphics device.</value>
+        /// <exception cref="System.InvalidOperationException">GraphicsDeviceService is not yet initialized</exception>
         public GraphicsDevice GraphicsDevice
         {
             get
@@ -188,27 +173,19 @@ namespace SharpDX.Toolkit
             }
         }
 
-        /// <summary>
-        /// Gets or sets the inactive sleep time.
-        /// </summary>
+        /// <summary>Gets or sets the inactive sleep time.</summary>
         /// <value>The inactive sleep time.</value>
         public TimeSpan InactiveSleepTime { get; set; }
 
-        /// <summary>
-        /// Gets a value indicating whether this instance is active.
-        /// </summary>
+        /// <summary>Gets a value indicating whether this instance is active.</summary>
         /// <value><c>true</c> if this instance is active; otherwise, <c>false</c>.</value>
         public bool IsActive { get; private set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is fixed time step.
-        /// </summary>
+        /// <summary>Gets or sets a value indicating whether this instance is fixed time step.</summary>
         /// <value><c>true</c> if this instance is fixed time step; otherwise, <c>false</c>.</value>
         public bool IsFixedTimeStep { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the mouse should be visible.
-        /// </summary>
+        /// <summary>Gets or sets a value indicating whether the mouse should be visible.</summary>
         /// <value><c>true</c> if the mouse should be visible; otherwise, <c>false</c>.</value>
         public bool IsMouseVisible
         {
@@ -227,32 +204,23 @@ namespace SharpDX.Toolkit
             }
         }
 
-        /// <summary>
-        /// Gets the launch parameters.
-        /// </summary>
+        /// <summary>Gets the launch parameters.</summary>
         /// <value>The launch parameters.</value>
         public LaunchParameters LaunchParameters { get; private set; }
 
-        /// <summary>
-        /// Gets a value indicating whether is running.
-        /// </summary>
+        /// <summary>Gets a value indicating whether is running.</summary>
+        /// <value><see langword="true" /> if this instance is running; otherwise, <see langword="false" />.</value>
         public bool IsRunning { get; private set; }
 
-        /// <summary>
-        /// Gets the service container.
-        /// </summary>
+        /// <summary>Gets the service container.</summary>
         /// <value>The service container.</value>
         public GameServiceRegistry Services { get; private set; }
 
-        /// <summary>
-        /// Gets or sets the target elapsed time.
-        /// </summary>
+        /// <summary>Gets or sets the target elapsed time.</summary>
         /// <value>The target elapsed time.</value>
         public TimeSpan TargetElapsedTime { get; set; }
 
-        /// <summary>
-        /// Gets the abstract window.
-        /// </summary>
+        /// <summary>Gets the abstract window.</summary>
         /// <value>The window.</value>
         public GameWindow Window
         {
@@ -270,9 +238,7 @@ namespace SharpDX.Toolkit
 
         #region Public Methods and Operators
 
-        /// <summary>
-        /// Exits the game.
-        /// </summary>
+        /// <summary>Exits the game.</summary>
         public void Exit()
         {
             isExiting = true;
@@ -284,9 +250,7 @@ namespace SharpDX.Toolkit
             }
         }
 
-        /// <summary>
-        /// Resets the elapsed time counter.
-        /// </summary>
+        /// <summary>Resets the elapsed time counter.</summary>
         public void ResetElapsedTime()
         {
             forceElapsedTimeToZero = true;
@@ -295,6 +259,12 @@ namespace SharpDX.Toolkit
             nextLastUpdateCountIndex = 0;
         }
 
+        /// <summary>Initializes the before run.</summary>
+        /// <exception cref="System.InvalidOperationException">
+        /// No GraphicsDeviceService found
+        /// or
+        /// No GraphicsDevice found
+        /// </exception>
         internal void InitializeBeforeRun()
         {
             // Make sure that the device is already created
@@ -372,7 +342,8 @@ namespace SharpDX.Toolkit
 
                 if (gamePlatform.IsBlockingRun)
                 {
-                    // If the previous call was blocking, then we can call Endrun
+                    // If the previous call was blocking,
+                    // then we can call end run
                     EndRun();
                 }
                 else
@@ -390,17 +361,13 @@ namespace SharpDX.Toolkit
             }
         }
 
-        /// <summary>
-        /// Prevents calls to Draw until the next Update.
-        /// </summary>
+        /// <summary>Prevents calls to Draw until the next Update.</summary>
         public void SuppressDraw()
         {
             suppressDraw = true;
         }
 
-        /// <summary>
-        /// Updates the game's clock and calls Update and Draw.
-        /// </summary>
+        /// <summary>Updates the game's clock and calls Update and Draw.</summary>
         public void Tick()
         {
             // If this instance is existing, then don't make any further update/draw
@@ -510,27 +477,21 @@ namespace SharpDX.Toolkit
 
         #region Methods
 
-        /// <summary>
-        /// Starts the drawing of a frame. This method is followed by calls to Draw and EndDraw.
-        /// </summary>
-        /// <returns><c>true</c> to continue drawing, false to not call <see cref="Draw"/> and <see cref="EndDraw"/></returns>
+        /// <summary>Starts the drawing of a frame. This method is followed by calls to Draw and EndDraw.</summary>
+        /// <returns><c>true</c> to continue drawing, false to not call <see cref="Draw" /> and <see cref="EndDraw" /></returns>
         protected virtual bool BeginDraw()
         {
-            if ((graphicsDeviceManager != null) && !graphicsDeviceManager.BeginDraw())
-            {
-                return false;
-            }
-
-            return true;
+            return (this.graphicsDeviceManager == null) || graphicsDeviceManager.BeginDraw();
         }
 
-        /// <summary>
-        /// Called after all components are initialized but before the first update in the game loop.
-        /// </summary>
+        /// <summary>Called after all components are initialized but before the first update in the game loop.</summary>
         protected virtual void BeginRun()
         {
         }
 
+        /// <summary>Disposes of object resources.</summary>
+        /// <param name="disposeManagedResources">If true, managed resources should be
+        /// disposed of in addition to unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
         {
             if (disposeManagedResources)
@@ -539,9 +500,9 @@ namespace SharpDX.Toolkit
                 {
                     var array = new IGameSystem[GameSystems.Count];
                     this.GameSystems.CopyTo(array, 0);
-                    for (int i = 0; i < array.Length; i++)
+                    foreach(IGameSystem gameSystem in array)
                     {
-                        var disposable = array[i] as IDisposable;
+                        var disposable = gameSystem as IDisposable;
                         if (disposable != null)
                         {
                             disposable.Dispose();
@@ -566,26 +527,21 @@ namespace SharpDX.Toolkit
             base.Dispose(disposeManagedResources);
         }
 
-        /// <summary>
-        /// Reference page contains code sample.
-        /// </summary>
-        /// <param name="gameTime">
-        /// Time passed since the last call to Draw.
-        /// </param>
+        /// <summary>Reference page contains code sample.</summary>
+        /// <param name="gameTime">Time passed since the last call to Draw.</param>
         protected virtual void Draw(GameTime gameTime)
         {
             // Just lock current drawable game systems to grab them in a temporary list.
             lock (drawableGameSystems)
             {
-                for (int i = 0; i < drawableGameSystems.Count; i++)
+                foreach(IDrawable drawable in this.drawableGameSystems)
                 {
-                    currentlyDrawingGameSystems.Add(drawableGameSystems[i]);
+                    this.currentlyDrawingGameSystems.Add(drawable);
                 }
             }
 
-            for (int i = 0; i < currentlyDrawingGameSystems.Count; i++)
+            foreach(var drawable in this.currentlyDrawingGameSystems)
             {
-                var drawable = currentlyDrawingGameSystems[i];
                 if (drawable.Visible)
                 {
                     if (drawable.BeginDraw())
@@ -622,6 +578,8 @@ namespace SharpDX.Toolkit
         }
 
 
+        /// <summary>Initializes the pending game systems.</summary>
+        /// <param name="loadContent">if set to <see langword="true" /> [load content].</param>
         private void InitializePendingGameSystems(bool loadContent = false)
         {
             // Add all game systems that were added to this game instance before the game started.
@@ -638,29 +596,24 @@ namespace SharpDX.Toolkit
             }
         }
 
-        /// <summary>
-        /// Adds an object to be disposed automatically when <see cref="UnloadContent"/> is called. See remarks.
-        /// </summary>
+        /// <summary>Adds an object to be disposed automatically when <see cref="UnloadContent" /> is called. See remarks.</summary>
         /// <typeparam name="T">Type of the object to dispose</typeparam>
         /// <param name="disposable">The disposable object.</param>
         /// <returns>The disposable object.</returns>
-        /// <remarks>
-        /// Use this method for any content that is not loaded through the <see cref="ContentManager"/>.
-        /// </remarks>
+        /// <remarks>Use this method for any content that is not loaded through the <see cref="ContentManager" />.</remarks>
         protected T ToDisposeContent<T>(T disposable) where T : IDisposable
         {
             return contentCollector.Collect(disposable);
         }
 
-        /// <summary>
-        /// Loads the content.
-        /// </summary>
+        /// <summary>Loads the content.</summary>
         protected virtual void LoadContent()
         {
             LoadContentSystems();
             contentLoaded = true;
         }
 
+        /// <summary>Loads the content systems.</summary>
         private void LoadContentSystems()
         {
             lock (contentableGameSystems)
@@ -679,9 +632,7 @@ namespace SharpDX.Toolkit
             currentlyContentGameSystems.Clear();
         }
 
-        /// <summary>
-        /// Raises the Activated event. Override this method to add code to handle when the game gains focus.
-        /// </summary>
+        /// <summary>Raises the Activated event. Override this method to add code to handle when the game gains focus.</summary>
         /// <param name="sender">The Game.</param>
         /// <param name="args">Arguments for the Activated event.</param>
         protected virtual void OnActivated(object sender, EventArgs args)
@@ -693,9 +644,7 @@ namespace SharpDX.Toolkit
             }
         }
 
-        /// <summary>
-        /// Raises the Deactivated event. Override this method to add code to handle when the game loses focus.
-        /// </summary>
+        /// <summary>Raises the Deactivated event. Override this method to add code to handle when the game loses focus.</summary>
         /// <param name="sender">The Game.</param>
         /// <param name="args">Arguments for the Deactivated event.</param>
         protected virtual void OnDeactivated(object sender, EventArgs args)
@@ -707,9 +656,7 @@ namespace SharpDX.Toolkit
             }
         }
 
-        /// <summary>
-        /// Raises an Exiting event. Override this method to add code to handle when the game is exiting.
-        /// </summary>
+        /// <summary>Raises an Exiting event. Override this method to add code to handle when the game is exiting.</summary>
         /// <param name="sender">The Game.</param>
         /// <param name="args">Arguments for the Exiting event.</param>
         protected virtual void OnExiting(object sender, EventArgs args)
@@ -721,6 +668,7 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>Called when [window created].</summary>
         protected virtual void OnWindowCreated()
         {
             EventHandler<EventArgs> handler = WindowCreated;
@@ -730,15 +678,16 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>Games the platform configuration window created.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="eventArgs">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void GamePlatformOnWindowCreated(object sender, EventArgs eventArgs)
         {
             OnWindowCreated();
         }
 
 
-        /// <summary>
-        /// This is used to display an error message if there is no suitable graphics device or sound card.
-        /// </summary>
+        /// <summary>This is used to display an error message if there is no suitable graphics device or sound card.</summary>
         /// <param name="exception">The exception to display.</param>
         /// <returns>The <see cref="bool" />.</returns>
         protected virtual bool ShowMissingRequirementMessage(Exception exception)
@@ -746,9 +695,7 @@ namespace SharpDX.Toolkit
             return true;
         }
 
-        /// <summary>
-        /// Called when graphics resources need to be unloaded. Override this method to unload any game-specific graphics resources.
-        /// </summary>
+        /// <summary>Called when graphics resources need to be unloaded. Override this method to unload any game-specific graphics resources.</summary>
         protected virtual void UnloadContent()
         {
             // Dispose all objects allocated from content
@@ -770,12 +717,8 @@ namespace SharpDX.Toolkit
             currentlyContentGameSystems.Clear();
         }
 
-        /// <summary>
-        /// Reference page contains links to related conceptual articles.
-        /// </summary>
-        /// <param name="gameTime">
-        /// Time passed since the last call to Update.
-        /// </param>
+        /// <summary>Reference page contains links to related conceptual articles.</summary>
+        /// <param name="gameTime">Time passed since the last call to Update.</param>
         protected virtual void Update(GameTime gameTime)
         {
             lock (updateableGameSystems)
@@ -798,7 +741,10 @@ namespace SharpDX.Toolkit
             isFirstUpdateDone = true;
         }
 
-        private void gamePlatform_Activated(object sender, EventArgs e)
+        /// <summary>Game platform is activated.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void GamePlatformActivated(object sender, EventArgs e)
         {
             if (!IsActive)
             {
@@ -807,7 +753,10 @@ namespace SharpDX.Toolkit
             }
         }
 
-        private void gamePlatform_Deactivated(object sender, EventArgs e)
+        /// <summary>Game platform is deactivated.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void GamePlatformDeactivated(object sender, EventArgs e)
         {
             if (IsActive)
             {
@@ -816,11 +765,22 @@ namespace SharpDX.Toolkit
             }
         }
 
-        private void gamePlatform_Exiting(object sender, EventArgs e)
+        /// <summary>Game platform is exiting.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void GamePlatformExiting(object sender, EventArgs e)
         {
             OnExiting(this, EventArgs.Empty);
         }
 
+        /// <summary>Adds the game system.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="gameSystem">The game system.</param>
+        /// <param name="gameSystems">The game systems.</param>
+        /// <param name="comparer">The comparer.</param>
+        /// <param name="orderComparer">The order comparer.</param>
+        /// <param name="removePreviousSystem">if set to <see langword="true" /> [remove previous system].</param>
+        /// <returns><c>true</c> if system was inserted, <c>false</c> it is already in the list.</returns>
         private static bool AddGameSystem<T>(T gameSystem, List<T> gameSystems, IComparer<T> comparer, Comparison<T> orderComparer, bool removePreviousSystem = false)
         {
             lock (gameSystems)
@@ -856,6 +816,7 @@ namespace SharpDX.Toolkit
             return false;
         }
 
+        /// <summary>Draws the frame.</summary>
         private void DrawFrame()
         {
             try
@@ -876,7 +837,10 @@ namespace SharpDX.Toolkit
             }
         }
 
-        private void GameSystems_ItemAdded(object sender, ObservableCollectionEventArgs<IGameSystem> e)
+        /// <summary>Games the systems item added.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The decimal.</param>
+        private void GameSystemsItemAdded(object sender, ObservableCollectionEventArgs<IGameSystem> e)
         {
             var gameSystem = e.Item;
 
@@ -914,29 +878,40 @@ namespace SharpDX.Toolkit
             var updateableGameSystem = gameSystem as IUpdateable;
             if (updateableGameSystem != null && AddGameSystem(updateableGameSystem, updateableGameSystems, UpdateableSearcher.Default, UpdateableComparison))
             {
-                updateableGameSystem.UpdateOrderChanged += updateableGameSystem_UpdateOrderChanged;
+                updateableGameSystem.UpdateOrderChanged += this.UpdateableGameSystemUpdateOrderChanged;
             }
 
             // Add a drawable system to the separate list
             var drawableGameSystem = gameSystem as IDrawable;
             if (drawableGameSystem != null && AddGameSystem(drawableGameSystem, drawableGameSystems, DrawableSearcher.Default, DrawableComparison))
             {
-                drawableGameSystem.DrawOrderChanged += drawableGameSystem_DrawOrderChanged;
+                drawableGameSystem.DrawOrderChanged += this.DrawableGameSystemDrawOrderChanged;
             }
 
         }
 
+        /// <summary>Updateable comparison.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>System.Int32.</returns>
         private static int UpdateableComparison(IUpdateable left, IUpdateable right)
         {
             return left.UpdateOrder.CompareTo(right.UpdateOrder);
         }
 
+        /// <summary>Drawable comparison.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>System.Int32.</returns>
         private static int DrawableComparison(IDrawable left, IDrawable right)
         {
             return left.DrawOrder.CompareTo(right.DrawOrder);
         }
 
-        private void GameSystems_ItemRemoved(object sender, ObservableCollectionEventArgs<IGameSystem> e)
+        /// <summary>Games the systems item removed.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The decimal.</param>
+        private void GameSystemsItemRemoved(object sender, ObservableCollectionEventArgs<IGameSystem> e)
         {
             var gameSystem = e.Item;
 
@@ -967,7 +942,7 @@ namespace SharpDX.Toolkit
                     updateableGameSystems.Remove(gameComponent);
                 }
 
-                gameComponent.UpdateOrderChanged -= updateableGameSystem_UpdateOrderChanged;
+                gameComponent.UpdateOrderChanged -= this.UpdateableGameSystemUpdateOrderChanged;
             }
 
             var item = gameSystem as IDrawable;
@@ -978,13 +953,19 @@ namespace SharpDX.Toolkit
                     drawableGameSystems.Remove(item);
                 }
 
-                item.DrawOrderChanged -= drawableGameSystem_DrawOrderChanged;
+                item.DrawOrderChanged -= this.DrawableGameSystemDrawOrderChanged;
             }
         }
 
+        /// <summary>Setups the graphics device events.</summary>
+        /// <exception cref="System.InvalidOperationException">
+        /// Unable to create find a IGraphicsDeviceService
+        /// or
+        /// Unable to find a GraphicsDevice instance
+        /// </exception>
         private void SetupGraphicsDeviceEvents()
         {
-            // Find the IGraphicsDeviceSerive.
+            // Find the IGraphicsDeviceService.
             graphicsDeviceService = Services.GetService(typeof(IGraphicsDeviceService)) as IGraphicsDeviceService;
 
             // If there is no graphics device service, don't go further as the whole Game would not work
@@ -998,30 +979,40 @@ namespace SharpDX.Toolkit
                 throw new InvalidOperationException("Unable to find a GraphicsDevice instance");
             }
 
-            graphicsDeviceService.DeviceCreated += graphicsDeviceService_DeviceCreated;
-            graphicsDeviceService.DeviceDisposing += graphicsDeviceService_DeviceDisposing;
+            graphicsDeviceService.DeviceCreated += this.GraphicsDeviceServiceDeviceCreated;
+            graphicsDeviceService.DeviceDisposing += this.GraphicsDeviceServiceDeviceDisposing;
         }
 
+        /// <summary>Disposes the graphics device events.</summary>
         private void DisposeGraphicsDeviceEvents()
         {
             if (graphicsDeviceService != null)
             {
-                graphicsDeviceService.DeviceCreated -= graphicsDeviceService_DeviceCreated;
-                graphicsDeviceService.DeviceDisposing -= graphicsDeviceService_DeviceDisposing;
+                graphicsDeviceService.DeviceCreated -= this.GraphicsDeviceServiceDeviceCreated;
+                graphicsDeviceService.DeviceDisposing -= this.GraphicsDeviceServiceDeviceDisposing;
             }
         }
 
-        private void drawableGameSystem_DrawOrderChanged(object sender, EventArgs e)
+        /// <summary>Drawable game system draw order changed.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void DrawableGameSystemDrawOrderChanged(object sender, EventArgs e)
         {
             AddGameSystem((IDrawable)sender, drawableGameSystems, DrawableSearcher.Default, DrawableComparison, true);
         }
 
-        private void graphicsDeviceService_DeviceCreated(object sender, EventArgs e)
+        /// <summary>Graphics device service device created.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void GraphicsDeviceServiceDeviceCreated(object sender, EventArgs e)
         {
             LoadContent();
         }
 
-        private void graphicsDeviceService_DeviceDisposing(object sender, EventArgs e)
+        /// <summary>Graphics device service device disposing.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void GraphicsDeviceServiceDeviceDisposing(object sender, EventArgs e)
         {
             Content.Unload();
 
@@ -1032,20 +1023,26 @@ namespace SharpDX.Toolkit
             }
         }
 
-        private void updateableGameSystem_UpdateOrderChanged(object sender, EventArgs e)
+        /// <summary>Updateable game system update order changed.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void UpdateableGameSystemUpdateOrderChanged(object sender, EventArgs e)
         {
             AddGameSystem((IUpdateable)sender, updateableGameSystems, UpdateableSearcher.Default, UpdateableComparison, true);
         }
 
         #endregion
 
-        /// <summary>
-        /// The comparer used to order <see cref="IDrawable"/> objects.
-        /// </summary>
+        /// <summary>This comparison used to order <see cref="IDrawable" /> objects.</summary>
         internal struct DrawableSearcher : IComparer<IDrawable>
         {
+            /// <summary>The default.</summary>
             public static readonly DrawableSearcher Default = new DrawableSearcher();
 
+            /// <summary>Compares the specified left.</summary>
+            /// <param name="left">The left.</param>
+            /// <param name="right">The right.</param>
+            /// <returns>System.Int32.</returns>
             public int Compare(IDrawable left, IDrawable right)
             {
                 if (Equals(left, right))
@@ -1067,13 +1064,16 @@ namespace SharpDX.Toolkit
             }
         }
 
-        /// <summary>
-        /// The comparer used to order <see cref="IUpdateable"/> objects.
-        /// </summary>
+        /// <summary>This comparison used to order <see cref="IUpdateable" /> objects.</summary>
         internal struct UpdateableSearcher : IComparer<IUpdateable>
         {
+            /// <summary>The default.</summary>
             public static readonly UpdateableSearcher Default = new UpdateableSearcher();
 
+            /// <summary>Compares the specified left.</summary>
+            /// <param name="left">The left.</param>
+            /// <param name="right">The right.</param>
+            /// <returns>System.Int32.</returns>
             public int Compare(IUpdateable left, IUpdateable right)
             {
                 if (Equals(left, right))

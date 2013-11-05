@@ -24,25 +24,32 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX.IO
 {
-    /// <summary>
-    /// Windows File Helper.
-    /// </summary>
+    /// <summary>Windows File Helper.</summary>
     public class NativeFileStream : Stream
     {
-        private bool canRead;
-        private bool canWrite;
-        private bool canSeek;
+        /// <summary>The can read.</summary>
+        private readonly bool canRead;
+
+        /// <summary>The can write.</summary>
+        private readonly bool canWrite;
+
+        /// <summary>The can seek.</summary>
+        private readonly bool canSeek;
+
+        /// <summary>The handle.</summary>
         private IntPtr handle;
+
+        /// <summary>The position.</summary>
         private long position;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NativeFileStream"/> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="NativeFileStream" /> class.</summary>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="fileMode">The file mode.</param>
         /// <param name="access">The access mode.</param>
         /// <param name="share">The share mode.</param>
-        public unsafe NativeFileStream(string fileName, NativeFileMode fileMode, NativeFileAccess access, NativeFileShare share = NativeFileShare.Read)
+        /// <exception cref="System.IO.FileNotFoundException">Unable to find file</exception>
+        /// <exception cref="System.IO.IOException">Unable to open file</exception>
+        public NativeFileStream(string fileName, NativeFileMode fileMode, NativeFileAccess access, NativeFileShare share = NativeFileShare.Read)
         {
 #if W8CORE
             //uint newAccess = 0;
@@ -92,11 +99,13 @@ namespace SharpDX.IO
             canRead = 0 != (access & NativeFileAccess.Read);
             canWrite = 0 != (access & NativeFileAccess.Write);
 
-            // TODO how setup correctly canSeek flags? 
+            // TODO how setup correctly canSeek flags?
             // Kernel32.GetFileType(SafeFileHandle handle); is not available on W8CORE
             canSeek = true;
 
         }
+        /// <summary>Marshals the get last win32 error.</summary>
+        /// <returns>System.Int32.</returns>
         private static int MarshalGetLastWin32Error()
         {
 #if WP8
@@ -106,14 +115,19 @@ namespace SharpDX.IO
 #endif
         }
 
-        /// <inheritdoc/>
+        /// <summary>When overridden in a derived class, clears all buffers for this stream and causes any buffered data to be written to the underlying device.</summary>
+        /// <exception cref="System.IO.IOException">Unable to flush stream</exception>
         public override void Flush()
         {
             if (!NativeFile.FlushFileBuffers(handle))
                 throw new IOException("Unable to flush stream", MarshalGetLastWin32Error());
         }
 
-        /// <inheritdoc/>
+        /// <summary>When overridden in a derived class, sets the position within the current stream.</summary>
+        /// <param name="offset">A byte offset relative to the <paramref name="origin" /> parameter.</param>
+        /// <param name="origin">A value of type <see cref="T:System.IO.SeekOrigin" /> indicating the reference point used to obtain the new position.</param>
+        /// <returns>The new position within the current stream.</returns>
+        /// <exception cref="System.IO.IOException">Unable to seek to this position</exception>
         public override long Seek(long offset, SeekOrigin origin)
         {
             long newPosition;
@@ -123,7 +137,13 @@ namespace SharpDX.IO
             return position;
         }
 
-        /// <inheritdoc/>
+        /// <summary>When overridden in a derived class, sets the length of the current stream.</summary>
+        /// <param name="value">The desired length of the current stream in bytes.</param>
+        /// <exception cref="System.IO.IOException">
+        /// Unable to seek to this position
+        /// or
+        /// Unable to set the new length
+        /// </exception>
         public override void SetLength(long value)
         {
             long newPosition;
@@ -142,7 +162,13 @@ namespace SharpDX.IO
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>When overridden in a derived class, reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.</summary>
+        /// <param name="buffer">An array of bytes. When this method returns, the buffer contains the specified byte array with the values between <paramref name="offset" /> and (<paramref name="offset" /> + <paramref name="count" /> - 1) replaced by the bytes read from the current source.</param>
+        /// <param name="offset">The zero-based byte offset in <paramref name="buffer" /> at which to begin storing the data read from the current stream.</param>
+        /// <param name="count">The maximum number of bytes to be read from the current stream.</param>
+        /// <returns>The total number of bytes read into the buffer. This can be less than the number of bytes requested if that many bytes are not currently available, or zero (0) if the end of the stream has been reached.</returns>
+        /// <exception cref="System.ArgumentNullException">buffer</exception>
+        /// <inheritdoc />
         public override int Read(byte[] buffer, int offset, int count)
         {
             if (buffer == null)
@@ -181,7 +207,12 @@ namespace SharpDX.IO
             return numberOfBytesRead;
         }
 
-        /// <inheritdoc/>
+        /// <summary>When overridden in a derived class, writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.</summary>
+        /// <param name="buffer">An array of bytes. This method copies <paramref name="count" /> bytes from <paramref name="buffer" /> to the current stream.</param>
+        /// <param name="offset">The zero-based byte offset in <paramref name="buffer" /> at which to begin copying bytes to the current stream.</param>
+        /// <param name="count">The number of bytes to be written to the current stream.</param>
+        /// <exception cref="System.ArgumentNullException">buffer</exception>
+        /// <inheritdoc />
         public override void Write(byte[] buffer, int offset, int count)
         {
             if (buffer == null)
@@ -194,21 +225,21 @@ namespace SharpDX.IO
             }
         }
 
-        /// <summary>
-        /// Writes a block of bytes to this stream using data from a buffer.
-        /// </summary>
+        /// <summary>Writes a block of bytes to this stream using data from a buffer.</summary>
         /// <param name="buffer">The buffer containing data to write to the stream.</param>
-        /// <param name="offset">The zero-based byte offset in buffer at which to begin copying bytes to the current stream. </param>
-        /// <param name="count">The number of bytes to be written to the current stream. </param>
+        /// <param name="offset">The zero-based byte offset in buffer at which to begin copying bytes to the current stream.</param>
+        /// <param name="count">The number of bytes to be written to the current stream.</param>
+        /// <exception cref="System.ArgumentNullException">buffer</exception>
+        /// <exception cref="System.IO.IOException">Unable to write to file</exception>
         public void Write(IntPtr buffer, int offset, int count)
         {
             if (buffer == IntPtr.Zero)
                 throw new ArgumentNullException("buffer");
 
-            int numberOfBytesWritten;
             unsafe
             {
                 void* pbuffer = (byte*) buffer + offset;
+                int numberOfBytesWritten;
                 {
                     if (!NativeFile.WriteFile(handle, (IntPtr)pbuffer, count, out numberOfBytesWritten, IntPtr.Zero))
                         throw new IOException("Unable to write to file", MarshalGetLastWin32Error());
@@ -217,7 +248,9 @@ namespace SharpDX.IO
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>When overridden in a derived class, gets a value indicating whether the current stream supports reading.</summary>
+        /// <value><see langword="true" /> if this instance can read; otherwise, <see langword="false" />.</value>
+        /// <inheritdoc />
         public override bool CanRead
         {
             get
@@ -226,7 +259,9 @@ namespace SharpDX.IO
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>When overridden in a derived class, gets a value indicating whether the current stream supports seeking.</summary>
+        /// <value><see langword="true" /> if this instance can seek; otherwise, <see langword="false" />.</value>
+        /// <inheritdoc />
         public override bool CanSeek
         {
             get
@@ -235,7 +270,9 @@ namespace SharpDX.IO
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>When overridden in a derived class, gets a value indicating whether the current stream supports writing.</summary>
+        /// <value><see langword="true" /> if this instance can write; otherwise, <see langword="false" />.</value>
+        /// <inheritdoc />
         public override bool CanWrite
         {
             get
@@ -244,7 +281,10 @@ namespace SharpDX.IO
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>When overridden in a derived class, gets the length in bytes of the stream.</summary>
+        /// <value>The length.</value>
+        /// <exception cref="System.IO.IOException">Unable to get file length</exception>
+        /// <inheritdoc />
         public override long Length
         {
             get
@@ -256,7 +296,9 @@ namespace SharpDX.IO
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>When overridden in a derived class, gets or sets the position within the current stream.</summary>
+        /// <value>The position.</value>
+        /// <inheritdoc />
         public override long Position
         {
             get
@@ -270,6 +312,8 @@ namespace SharpDX.IO
             }
         }
 
+        /// <summary>Releases the unmanaged resources used by the <see cref="T:System.IO.Stream" /> and optionally releases the managed resources.</summary>
+        /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             Utilities.CloseHandle(handle);

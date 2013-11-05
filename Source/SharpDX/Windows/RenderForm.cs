@@ -411,6 +411,9 @@ namespace SharpDX.Windows
             base.WndProc(ref m);
         }
 
+        /// <summary>Processes a dialog box key.</summary>
+        /// <param name="keyData">One of the <see cref="T:System.Windows.Forms.Keys" /> values that represents the key to process.</param>
+        /// <returns>true if the keystroke was processed and consumed by the control; otherwise, false to allow further processing.</returns>
         protected override bool ProcessDialogKey(Keys keyData)
         {
             if (keyData == (Keys.Menu | Keys.Alt) || keyData == Keys.F10)

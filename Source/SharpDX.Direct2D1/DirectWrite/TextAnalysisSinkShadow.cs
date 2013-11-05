@@ -73,8 +73,8 @@ namespace SharpDX.DirectWrite
 
             /// <unmanaged>HRESULT IDWriteTextAnalysisSink::SetLineBreakpoints([None] int textPosition,[None] int textLength,[In, Buffer] const DWRITE_LINE_BREAKPOINT* lineBreakpoints)</unmanaged>
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private unsafe delegate int SetLineBreakpointsDelegate(IntPtr thisPtr, int textPosition, int textLength, IntPtr pLineBreakpoints);
-            private static unsafe int SetLineBreakpointsImpl(IntPtr thisPtr, int textPosition, int textLength, IntPtr pLineBreakpoints)
+            private delegate int SetLineBreakpointsDelegate(IntPtr thisPtr, int textPosition, int textLength, IntPtr pLineBreakpoints);
+            private static int SetLineBreakpointsImpl(IntPtr thisPtr, int textPosition, int textLength, IntPtr pLineBreakpoints)
             {
                 try
                 {
@@ -111,8 +111,8 @@ namespace SharpDX.DirectWrite
 
             /// <unmanaged>HRESULT IDWriteTextAnalysisSink::SetNumberSubstitution([None] int textPosition,[None] int textLength,[None] IDWriteNumberSubstitution* numberSubstitution)</unmanaged>
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private unsafe delegate int SetNumberSubstitutionDelegate(IntPtr thisPtr, int textPosition, int textLength, IntPtr numberSubstitution);
-            private static unsafe int SetNumberSubstitutionImpl(IntPtr thisPtr, int textPosition, int textLength, IntPtr numberSubstitution)
+            private delegate int SetNumberSubstitutionDelegate(IntPtr thisPtr, int textPosition, int textLength, IntPtr numberSubstitution);
+            private static int SetNumberSubstitutionImpl(IntPtr thisPtr, int textPosition, int textLength, IntPtr numberSubstitution)
             {
                 try
                 {

@@ -52,7 +52,7 @@ namespace SharpDX.Direct3D11
             public SharpDX.Direct3D11.FilterFlags Filter;
             public SharpDX.Direct3D11.FilterFlags MipFilter;
             // Method to free native struct
-            internal unsafe void __MarshalFree()
+            internal void __MarshalFree()
             {
                 if (SourceRegionPointer != IntPtr.Zero)
                     Marshal.FreeHGlobal(SourceRegionPointer);
@@ -61,14 +61,14 @@ namespace SharpDX.Direct3D11
             }
         }
 
-        internal unsafe void __MarshalFree(ref __Native @ref)
+        internal void __MarshalFree(ref __Native @ref)
         {
             @ref.__MarshalFree();
         }
 
 
         // Method to marshal from native to managed struct
-        internal unsafe void __MarshalFrom(ref __Native @ref)
+        internal void __MarshalFrom(ref __Native @ref)
         {
             this.SourceRegionPointer = @ref.SourceRegionPointer;
             this.DestinationRegionPointer = @ref.DestinationRegionPointer;
@@ -88,7 +88,7 @@ namespace SharpDX.Direct3D11
                 Utilities.Read<ResourceRegion>(@ref.DestinationRegionPointer, ref this.DestinationRegion);
         }
         // Method to marshal from managed struct tot native
-        internal unsafe void __MarshalTo(ref __Native @ref)
+        internal void __MarshalTo(ref __Native @ref)
         {
             @ref.SourceRegionPointer = Marshal.AllocHGlobal(Utilities.SizeOf<ResourceRegion>());
             @ref.DestinationRegionPointer = Marshal.AllocHGlobal(Utilities.SizeOf<ResourceRegion>());

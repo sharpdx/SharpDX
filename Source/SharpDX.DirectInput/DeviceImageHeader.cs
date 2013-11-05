@@ -66,7 +66,7 @@ namespace SharpDX.DirectInput
         }
 
         // Method to free native struct
-        internal unsafe void __MarshalFree(ref __Native @ref)
+        internal void __MarshalFree(ref __Native @ref)
         {
         }
         
@@ -98,7 +98,7 @@ namespace SharpDX.DirectInput
         }
          
         // Method to marshal from managed struct tot native
-        internal unsafe void __MarshalTo(ref __Native @ref)
+        internal void __MarshalTo(ref __Native @ref)
         {
             @ref.Size = this.Size;
             @ref.SizeImageInfo = this.SizeImageInfo;

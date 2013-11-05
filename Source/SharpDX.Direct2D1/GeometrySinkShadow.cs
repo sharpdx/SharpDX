@@ -53,7 +53,7 @@ namespace SharpDX.Direct2D1
 
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
             private delegate void AddLineDelegate(IntPtr thisPtr, Vector2 point);
-            private static unsafe void AddLineImpl(IntPtr thisPtr, Vector2 point)
+            private static void AddLineImpl(IntPtr thisPtr, Vector2 point)
             {
                 var shadow = ToShadow<GeometrySinkShadow>(thisPtr);
                 var callback = (GeometrySink)shadow.Callback; 
@@ -80,7 +80,7 @@ namespace SharpDX.Direct2D1
 
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
             private delegate void AddQuadraticBeziersDelegate(IntPtr thisPtr, IntPtr beziers, int beziersCount);
-            private static unsafe void AddQuadraticBeziersImpl(IntPtr thisPtr, IntPtr beziers, int beziersCount)
+            private static void AddQuadraticBeziersImpl(IntPtr thisPtr, IntPtr beziers, int beziersCount)
             {
                 var shadow = ToShadow<GeometrySinkShadow>(thisPtr);
                 var callback = (GeometrySink)shadow.Callback;

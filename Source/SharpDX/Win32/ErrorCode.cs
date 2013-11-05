@@ -20,6 +20,7 @@
 
 namespace SharpDX.Win32
 {
+    /// <summary>The error code helper class.</summary>
     public partial class ErrorCodeHelper
     {
         /// <summary>

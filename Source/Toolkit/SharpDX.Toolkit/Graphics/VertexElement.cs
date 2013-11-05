@@ -571,7 +571,9 @@ namespace SharpDX.Toolkit.Graphics
 #endif
 
             var vertexElements = new List<VertexElement>();
+#if WP8
             var currentOffset = 0;
+#endif
 #if WIN8METRO
             foreach (var field in type.GetTypeInfo().DeclaredFields)
 #else

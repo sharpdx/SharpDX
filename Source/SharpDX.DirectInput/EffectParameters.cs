@@ -124,7 +124,7 @@ namespace SharpDX.DirectInput
             public System.IntPtr TypeSpecificParamPointer;
             public int StartDelay;
             // Method to free native struct
-            internal unsafe void __MarshalFree()
+            internal void __MarshalFree()
             {
                 if (AxePointer != IntPtr.Zero)
                     Marshal.FreeHGlobal(AxePointer);
@@ -138,7 +138,7 @@ namespace SharpDX.DirectInput
         }
 
         // Method to free native struct
-        internal unsafe void __MarshalFree(ref __Native @ref)
+        internal void __MarshalFree(ref __Native @ref)
         {
             if (Parameters != null && @ref.TypeSpecificParamPointer != IntPtr.Zero)
                 Parameters.MarshalFree(@ref.TypeSpecificParamPointer);

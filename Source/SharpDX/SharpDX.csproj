@@ -98,7 +98,6 @@
     <Compile Include="Collision.cs" />
     <Compile Include="Color3.cs" />
     <Compile Include="Color4.cs" />
-    <Compile Include="ComBaseStreamNative.cs" />
     <Compile Include="ComObject.cs" />
     <Compile Include="ComObjectCallback.cs" />
     <Compile Include="ComObjectShadow.cs" />
@@ -179,6 +178,7 @@
     <Compile Include="Vector3.cs" />
     <Compile Include="Vector4.cs" />
     <Compile Include="Win32\BitmapInfoHeader.cs" />
+    <Compile Include="Win32\ComBaseStreamNative.cs" />
     <Compile Include="Win32\ComStream.cs" />
     <Compile Include="Win32\ComStreamProxy.cs" />
     <Compile Include="Win32\ComStreamShadow.cs" />

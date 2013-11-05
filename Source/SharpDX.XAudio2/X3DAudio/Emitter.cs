@@ -53,7 +53,7 @@ namespace SharpDX.X3DAudio
             public Cone.__Native Cone;
 
             // Method to free unmanaged allocation
-            internal unsafe void __MarshalFree()
+            internal void __MarshalFree()
             {
                 // FreeHGlobal is crashing? Does X3DAudio perform deallocation?
 
@@ -75,7 +75,7 @@ namespace SharpDX.X3DAudio
         }
 
         // Method to free unmanaged allocation
-        internal unsafe void __MarshalFree(ref __Native @ref)
+        internal void __MarshalFree(ref __Native @ref)
         {
             @ref.__MarshalFree();
         }

@@ -19,9 +19,7 @@
 // THE SOFTWARE.
 namespace SharpDX.Toolkit
 {
-    /// <summary>
-    /// The <see cref="SharpDX.Toolkit"/> namespace provides a high level Game API.
-    /// </summary>
+    /// <summary>The <see cref="SharpDX.Toolkit" /> namespace provides a high level Game API.</summary>
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     class NamespaceDoc
     {

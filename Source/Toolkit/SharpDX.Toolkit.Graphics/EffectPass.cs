@@ -18,31 +18,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
-using SharpDX.Direct3D11;
-using SharpDX.Toolkit.Diagnostics;
-
 namespace SharpDX.Toolkit.Graphics
 {
-    /// <summary>
-    /// Contains rendering state for drawing with an effect; an effect can contain one or more passes. 
-    /// </summary>
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Runtime.InteropServices;
+    using SharpDX.Direct3D11;
+    using SharpDX.Toolkit.Diagnostics;
+
+    /// <summary>Contains rendering state for drawing with an effect; an effect can contain one or more passes.</summary>
     public sealed class EffectPass : ComponentBase
     {
+        /// <summary>The stage count.</summary>
         private const int StageCount = 6;
 
+        /// <summary>The maximum resource count per stage.</summary>
         internal const int MaximumResourceCountPerStage =
-            Direct3D11.CommonShaderStage.ConstantBufferApiSlotCount + // Constant buffer
-            Direct3D11.CommonShaderStage.InputResourceSlotCount + // ShaderResourceView 
-            Direct3D11.ComputeShaderStage.UnorderedAccessViewSlotCount + // UnorderedAccessView
-            Direct3D11.CommonShaderStage.SamplerSlotCount; // SamplerStates;
+            CommonShaderStage.ConstantBufferApiSlotCount +      // Constant buffer
+            CommonShaderStage.InputResourceSlotCount +          // ShaderResourceView 
+            ComputeShaderStage.UnorderedAccessViewSlotCount +   // UnorderedAccessView
+            CommonShaderStage.SamplerSlotCount;                 // SamplerStates;
 
-        /// <summary>
-        ///   Declared 128 UAV counters for SetUnordere
-        /// </summary>
+        /*
+        /// <summary>Declared 128 UAV counters for SetUnordere</summary>
         private static readonly int[] UnchangedUAVCounters =
             {
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
@@ -50,89 +49,101 @@ namespace SharpDX.Toolkit.Graphics
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
                 , -1, -1, -1,
             };
+        */
 
-        /// <summary>
-        ///   Gets the attributes associated with this pass.
-        /// </summary>
+        /// <summary>Gets the attributes associated with this pass.</summary>
         /// <value> The attributes. </value>
-        public readonly PropertyCollection Properties;
+        public PropertyCollection Properties { get; private set; }
 
-        /// <summary>
-        /// The parent effect of this pass.
-        /// </summary>
-        public readonly Effect Effect;
+        /// <summary>Gets the parent effect of this pass.</summary>
+        /// <value>The parent effect.</value>
+        public Effect Effect { get; private set; }
 
+        /// <summary>The pass.</summary>
         private readonly EffectData.Pass pass;
+        /// <summary>The graphics device.</summary>
         private readonly GraphicsDevice graphicsDevice;
 
-        private PipelineBlock pipeline;
+        /// <summary>The pipeline.</summary>
+        private readonly PipelineBlock pipeline;
 
+        /// <summary>The blend state.</summary>
         private BlendState blendState;
-        private bool hasBlendState = false;
+        /// <summary>The has blend state.</summary>
+        private bool hasBlendState;
+        /// <summary>The blend state color.</summary>
         private Color4 blendStateColor;
+        /// <summary>The has blend state color.</summary>
         private bool hasBlendStateColor;
-        private uint blendStateSampleMask;
 
+        /// <summary>The depth stencil state.</summary>
         private DepthStencilState depthStencilState;
-        private bool hasDepthStencilState = false;
+        /// <summary>The has depth stencil state.</summary>
+        private bool hasDepthStencilState;
+        /// <summary>The depth stencil reference.</summary>
         private int depthStencilReference;
-        private bool hasDepthStencilReference = false;
+        /// <summary>The has depth stencil reference.</summary>
+        private bool hasDepthStencilReference;
 
-        private bool hasRasterizerState = false;
+        /// <summary>The has rasterizer state.</summary>
+        private bool hasRasterizerState;
+        /// <summary>The rasterizer state.</summary>
         private RasterizerState rasterizerState;
 
+        /// <summary>The input signature manager.</summary>
         private InputSignatureManager inputSignatureManager;
+        /// <summary>The current input layout pair.</summary>
         private InputLayoutPair currentInputLayoutPair;
 
-        internal EffectTechnique Technique;
+        /// <summary>Gets or sets the technique.</summary>
+        /// <value>The technique.</value>
+        internal EffectTechnique Technique { get; set; }
 
-        private const bool EnableDebug = false;
-        internal TextWriter DebugLog = new StringWriter();
+        /// <summary>The is debug.</summary>
+        private readonly bool isDebug;
 
-        /// <summary>
-        ///   Initializes a new instance of the <see cref="EffectPass" /> class.
-        /// </summary>
+        /// <summary>Gets or sets the debug log.</summary>
+        /// <value>The debug log.</value>
+        internal TextWriter DebugLog { get; set; }
+
+        /// <summary>Initializes a new instance of the <see cref="EffectPass" /> class.</summary>
         /// <param name="logger">The logger used to log errors.</param>
-        /// <param name="effect"> The effect. </param>
-        /// <param name="technique">The technique. </param>
-        /// <param name="pass"> The pass. </param>
-        /// <param name="name"> The name. </param>
+        /// <param name="effect">The effect.</param>
+        /// <param name="technique">The technique.</param>
+        /// <param name="pass">The pass.</param>
+        /// <param name="name">The name.</param>
         internal EffectPass(Logger logger, Effect effect, EffectTechnique technique, EffectData.Pass pass, string name)
             : base(name)
         {
+            this.localInputLayoutCache = new Dictionary<VertexInputLayout, InputLayoutPair>();
+            this.DebugLog = new StringWriter();
+            this.hasRasterizerState = false;
+            this.hasDepthStencilReference = false;
+            this.hasDepthStencilState = false;
+            this.hasBlendState = false;
+            this.isDebug = false;
             this.Technique = technique;
             this.pass = pass;
             this.Effect = effect;
             this.graphicsDevice = effect.GraphicsDevice;
-            pipeline = new PipelineBlock()
-                           {
-                               Stages = new StageBlock[EffectPass.StageCount],
-                           };
-
+            pipeline = new PipelineBlock { Stages = new StageBlock[StageCount] };
             Properties = PrepareProperties(logger, pass.Properties);
             IsSubPass = pass.IsSubPass;
             // Don't create SubPasses collection for subpass.
-            if (!IsSubPass)
+            if(!IsSubPass)
+            {
                 SubPasses = new EffectPassCollection();
+            }
         }
 
-        /// <summary>
-        /// Gets the sub-pass attached to a global pass.
-        /// </summary>
-        /// <remarks>
-        /// As a subpass cannot have subpass, if this pass is already a subpass, this field is null.
-        /// </remarks>
-        public readonly EffectPassCollection SubPasses;
+        /// <summary>Gets the sub-pass attached to a global pass.</summary>
+        public EffectPassCollection SubPasses { get; private set; }
 
-        /// <summary>
-        /// Gets a boolean indicating if this pass is a subpass.
-        /// </summary>
-        public readonly bool IsSubPass;
+        /// <summary>Gets a boolean indicating if this pass is a subpass.</summary>
+        public bool IsSubPass { get; private set; }
 
-        /// <summary>
-        ///   Gets or sets the state of the blend.
-        /// </summary>
-        /// <value> The state of the blend. </value>
+        /// <summary>Gets or sets the state of the blend.</summary>
+        /// <value>The state of the blend.</value>
         public BlendState BlendState
         {
             get { return blendState; }
@@ -143,10 +154,8 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        /// <summary>
-        ///   Gets or sets the color of the blend state.
-        /// </summary>
-        /// <value> The color of the blend state. </value>
+        /// <summary>Gets or sets the color of the blend state.</summary>
+        /// <value>The color of the blend state.</value>
         public Color4 BlendStateColor
         {
             get { return blendStateColor; }
@@ -157,20 +166,12 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        /// <summary>
-        ///   Gets or sets the blend state sample mask.
-        /// </summary>
-        /// <value> The blend state sample mask. </value>
-        public uint BlendStateSampleMask
-        {
-            get { return blendStateSampleMask; }
-            set { blendStateSampleMask = value; }
-        }
+        /// <summary>Gets or sets the blend state sample mask.</summary>
+        /// <value>The blend state sample mask.</value>
+        public uint BlendStateSampleMask { get; set; }
 
-        /// <summary>
-        ///   Gets or sets the state of the depth stencil.
-        /// </summary>
-        /// <value> The state of the depth stencil. </value>
+        /// <summary>Gets or sets the state of the depth stencil.</summary>
+        /// <value>The state of the depth stencil.</value>
         public DepthStencilState DepthStencilState
         {
             get { return depthStencilState; }
@@ -181,10 +182,8 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        /// <summary>
-        ///   Gets or sets the depth stencil reference.
-        /// </summary>
-        /// <value> The depth stencil reference. </value>
+        /// <summary>Gets or sets the depth stencil reference.</summary>
+        /// <value>The depth stencil reference.</value>
         public int DepthStencilReference
         {
             get { return depthStencilReference; }
@@ -195,10 +194,8 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        /// <summary>
-        ///   Gets or sets the state of the rasterizer.
-        /// </summary>
-        /// <value> The state of the rasterizer. </value>
+        /// <summary>Gets or sets the state of the rasterizer.</summary>
+        /// <value>The state of the rasterizer.</value>
         public RasterizerState RasterizerState
         {
             get { return rasterizerState; }
@@ -208,17 +205,13 @@ namespace SharpDX.Toolkit.Graphics
                 hasRasterizerState = true;
             }
         }
-        /// <summary>
-        ///   Applies this pass to the device pipeline.
-        /// </summary>
-        /// <remarks>
-        ///   This method is responsible to:
-        ///   <ul>
-        ///     <li>Setup the shader on each stage.</li>
-        ///     <li>Upload constant buffers with dirty flag</li>
-        ///     <li>Set all input constant buffers, shader resource view, unordered access views and sampler states to the stage.</li>
-        ///   </ul>
-        /// </remarks>
+        /// <summary>Applies this pass to the device pipeline.</summary>
+        /// <remarks>This method is responsible to:
+        /// <ul>
+        /// <li>Setup the shader on each stage.</li>
+        /// <li>Upload constant buffers with dirty flag</li>
+        /// <li>Set all input constant buffers, shader resource view, unordered access views and sampler states to the stage.</li>
+        /// </ul></remarks>
         public void Apply()
         {
             // Give a chance to the effect callback to prepare this pass before it is actually applied (the OnApply can completely
@@ -252,9 +245,8 @@ namespace SharpDX.Toolkit.Graphics
             // ----------------------------------------------
             // Iterate on each stage to setup all inputs
             // ----------------------------------------------
-            for (int stageIndex = 0; stageIndex < pipeline.Stages.Length; stageIndex++)
+            foreach(var stageBlock in this.pipeline.Stages)
             {
-                var stageBlock = pipeline.Stages[stageIndex];
                 if (stageBlock == null)
                 {
                     continue;
@@ -276,7 +268,7 @@ namespace SharpDX.Toolkit.Graphics
                     continue;
                 }
 
-                var mergerStage = pipeline.OutputMergerStage;
+                var mergerStage = this.pipeline.OutputMergerStage;
 
                 // ----------------------------------------------
                 // Reset ShaderResourceView
@@ -285,7 +277,7 @@ namespace SharpDX.Toolkit.Graphics
                 SlotLink* pLinks = localLink.Links;
                 for (int i = 0; i < localLink.Count; i++)
                 {
-                    shaderStage.SetShaderResources(pLinks->SlotIndex, pLinks->SlotCount, graphicsDevice.ResetSlotsPointers);
+                    shaderStage.SetShaderResources(pLinks->SlotIndex, pLinks->SlotCount, this.graphicsDevice.ResetSlotsPointers);
                     pLinks++;
                 }
 
@@ -299,7 +291,7 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     for (int i = 0; i < localLink.Count; i++)
                     {
-                        shaderStage.SetUnorderedAccessViews(pLinks->SlotIndex, pLinks->SlotCount, graphicsDevice.ResetSlotsPointers, pLinks->UavInitialCount);
+                        shaderStage.SetUnorderedAccessViews(pLinks->SlotIndex, pLinks->SlotCount, this.graphicsDevice.ResetSlotsPointers, pLinks->UavInitialCount);
                         pLinks++;
                     }
                 }
@@ -308,7 +300,7 @@ namespace SharpDX.Toolkit.Graphics
                     // Otherwise, for OutputMergerStage.
                     for (int i = 0; i < localLink.Count; i++)
                     {
-                        mergerStage.SetUnorderedAccessViewsKeepRTV(pLinks->SlotIndex, pLinks->SlotCount, graphicsDevice.ResetSlotsPointers, pLinks->UavInitialCount);
+                        mergerStage.SetUnorderedAccessViewsKeepRTV(pLinks->SlotIndex, pLinks->SlotCount, this.graphicsDevice.ResetSlotsPointers, pLinks->UavInitialCount);
                         pLinks++;
                     }
                 }
@@ -322,7 +314,7 @@ namespace SharpDX.Toolkit.Graphics
                     pLinks = localLink.Links;
                     for (int i = 0; i < localLink.Count; i++)
                     {
-                        shaderStage.SetConstantBuffers(pLinks->SlotIndex, pLinks->SlotCount, graphicsDevice.ResetSlotsPointers);
+                        shaderStage.SetConstantBuffers(pLinks->SlotIndex, pLinks->SlotCount, this.graphicsDevice.ResetSlotsPointers);
                         pLinks++;
                     }
                 }
@@ -356,9 +348,7 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        /// <summary>
-        /// Internal apply.
-        /// </summary>
+        /// <summary>Internal apply.</summary>
         private unsafe void ApplyInternal()
         {
             // By default, we set the Current technique 
@@ -403,9 +393,8 @@ namespace SharpDX.Toolkit.Graphics
             // ----------------------------------------------
             // Iterate on each stage to setup all inputs
             // ----------------------------------------------
-            for (int stageIndex = 0; stageIndex < pipeline.Stages.Length; stageIndex++)
+            foreach(var stageBlock in this.pipeline.Stages)
             {
-                var stageBlock = pipeline.Stages[stageIndex];
                 if (stageBlock == null)
                 {
                     continue;
@@ -424,20 +413,19 @@ namespace SharpDX.Toolkit.Graphics
                     continue;
                 }
 
-                var mergerStage = pipeline.OutputMergerStage;
+                var mergerStage = this.pipeline.OutputMergerStage;
 
                 // ----------------------------------------------
                 // Setup Constant Buffers
                 // ----------------------------------------------
 
                 // Upload all constant buffers to the GPU they have been modified.
-                for (int i = 0; i < stageBlock.ConstantBufferLinks.Length; i++)
+                foreach(var constantBufferLink in stageBlock.ConstantBufferLinks)
                 {
-                    var constantBufferLink = stageBlock.ConstantBufferLinks[i];
                     var constantBuffer = constantBufferLink.ConstantBuffer;
                     if (constantBuffer.IsDirty)
                     {
-                        constantBuffers[constantBufferLink.ResourceIndex].SetData(Effect.GraphicsDevice, new DataPointer(constantBuffer.DataPointer, constantBuffer.Size));
+                        constantBuffers[constantBufferLink.ResourceIndex].SetData(this.Effect.GraphicsDevice, new DataPointer(constantBuffer.DataPointer, constantBuffer.Size));
                         constantBuffer.IsDirty = false;
                     }
                 }
@@ -500,16 +488,15 @@ namespace SharpDX.Toolkit.Graphics
             ApplyStates();
         }
 
+        /// <summary>Applies the states.</summary>
         private void ApplyStates()
         {
-            // ----------------------------------------------
-            // Set the blend state
-            // ----------------------------------------------
             if (hasBlendState)
             {
+                // Set the blend state
                 if (hasBlendStateColor)
                 {
-                    graphicsDevice.SetBlendState(blendState, BlendStateColor, blendStateSampleMask);
+                    graphicsDevice.SetBlendState(blendState, BlendStateColor, this.BlendStateSampleMask);
                 }
                 else
                 {
@@ -517,11 +504,9 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
-            // ----------------------------------------------
-            // Set the depth stencil state
-            // ----------------------------------------------
             if (hasDepthStencilState)
             {
+                // Set the depth stencil state
                 if (hasDepthStencilReference)
                 {
                     graphicsDevice.SetDepthStencilState(depthStencilState, DepthStencilReference);
@@ -532,26 +517,22 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
-            // ----------------------------------------------
-            // Set the rasterizer state
-            // ----------------------------------------------
             if (hasRasterizerState)
             {
+                // Set the rasterizer state
                 graphicsDevice.SetRasterizerState(rasterizerState);
             }
         }
 
-        /// <summary>
-        /// Initializes this pass.
-        /// </summary>
+        /// <summary>Initializes this pass.</summary>
         /// <param name="logger">The logger.</param>
         /// <exception cref="System.InvalidOperationException"></exception>
         internal void Initialize(Logger logger)
         {
             // Gets the output merger stage.
-            pipeline.OutputMergerStage = ((Direct3D11.DeviceContext) Effect.GraphicsDevice).OutputMerger;
+            pipeline.OutputMergerStage = ((DeviceContext) Effect.GraphicsDevice).OutputMerger;
 
-            for (int i = 0; i < StageCount; i++)
+            for (int i = 0; i < StageCount; ++i)
             {
                 var shaderType = (EffectShaderType) i;
                 var link = pass.Pipeline[shaderType];
@@ -571,16 +552,14 @@ namespace SharpDX.Toolkit.Graphics
                 stageBlock.StreamOutputElements = link.StreamOutputElements;
                 stageBlock.StreamOutputRasterizedStream = link.StreamOutputRasterizedStream;
 
-                InitStageBlock(stageBlock, logger);
+                this.InitializeStageBlock(stageBlock, logger);
             }
         }
 
-        /// <summary>
-        /// Initializes the stage block.
-        /// </summary>
+        /// <summary>Initializes the stage block.</summary>
         /// <param name="stageBlock">The stage block.</param>
         /// <param name="logger">The logger.</param>
-        private void InitStageBlock(StageBlock stageBlock, Logger logger)
+        private void InitializeStageBlock(StageBlock stageBlock, Logger logger)
         {
             // If null shader, then skip init
             var shaderIndex = stageBlock.Index;
@@ -613,15 +592,13 @@ namespace SharpDX.Toolkit.Graphics
                 inputSignatureManager = graphicsDevice.GetOrCreateInputSignatureManager(shaderRaw.InputSignature.Bytecode, shaderRaw.InputSignature.Hashcode);
             }
 
-            for (int i = 0; i < shaderRaw.ConstantBuffers.Count; i++)
+            foreach(var constantBufferRaw in shaderRaw.ConstantBuffers)
             {
-                var constantBufferRaw = shaderRaw.ConstantBuffers[i];
-
                 // Constant buffers with a null size are skipped
                 if (constantBufferRaw.Size == 0)
                     continue;
 
-                var constantBuffer = Effect.GetOrCreateConstantBuffer(Effect.GraphicsDevice, constantBufferRaw);
+                var constantBuffer = this.Effect.GetOrCreateConstantBuffer(this.Effect.GraphicsDevice, constantBufferRaw);
                 // IF constant buffer is null, it means that there is a conflict
                 if (constantBuffer == null)
                 {
@@ -630,19 +607,19 @@ namespace SharpDX.Toolkit.Graphics
                 }
                 
                 // Test if this constant buffer is not already part of the effect
-                if (Effect.ConstantBuffers[constantBufferRaw.Name] == null)
+                if (this.Effect.ConstantBuffers[constantBufferRaw.Name] == null)
                 {
                     // Add the declared constant buffer to the effect shader.
-                    Effect.ConstantBuffers.Add(constantBuffer);
+                    this.Effect.ConstantBuffers.Add(constantBuffer);
 
                     // Declare all parameter from constant buffer at the effect level.
                     foreach (var parameter in constantBuffer.Parameters)
                     {
-                        var previousParameter = Effect.Parameters[parameter.Name];
+                        var previousParameter = this.Effect.Parameters[parameter.Name];
                         if (previousParameter == null)
                         {
                             // Add an effect parameter linked to the appropriate constant buffer at the effect level.
-                            Effect.Parameters.Add(new EffectParameter((EffectData.ValueTypeParameter) parameter.ParameterDescription, constantBuffer));
+                            this.Effect.Parameters.Add(new EffectParameter((EffectData.ValueTypeParameter) parameter.ParameterDescription, constantBuffer));
                         }
                         else if (parameter.ParameterDescription != previousParameter.ParameterDescription || parameter.buffer != previousParameter.buffer)
                         {
@@ -667,7 +644,7 @@ namespace SharpDX.Toolkit.Graphics
                     continue;
                 }
 
-                int resourceIndex = Effect.ResourceLinker.Count;
+                //int resourceIndex = Effect.ResourceLinker.Count;
 
                 if (previousParameter == null)
                 {
@@ -703,9 +680,7 @@ namespace SharpDX.Toolkit.Graphics
             stageBlock.ConstantBufferLinks = constantBufferLinks.ToArray();
         }
 
-        /// <summary>
-        /// Optimizes the slot links.
-        /// </summary>
+        /// <summary>Optimizes the slot links.</summary>
         /// <param name="stageBlock">The stage block.</param>
         private void PrepareSlotLinks(ref StageBlock stageBlock)
         {
@@ -713,9 +688,9 @@ namespace SharpDX.Toolkit.Graphics
             stageBlock.Slots = new List<SlotLinkSet>[1 + (int)EffectResourceType.UnorderedAccessView];
 
             // Retrieve Constant buffer resource index as It has been updated by the reordering of resources
-            for (int i = 0; i < stageBlock.ConstantBufferLinks.Length; i++)
+            foreach(ConstantBufferLink constantBufferLink in stageBlock.ConstantBufferLinks)
             {
-                stageBlock.ConstantBufferLinks[i].ResourceIndex = stageBlock.ConstantBufferLinks[i].Parameter.Offset;
+                constantBufferLink.ResourceIndex = constantBufferLink.Parameter.Offset;
             }
 
             // Compute default slot links link
@@ -732,12 +707,12 @@ namespace SharpDX.Toolkit.Graphics
 
                 var parameterRaw = (EffectData.ResourceParameter)parameter.ParameterDescription;
 
-                var range = new SlotLinkSet() { SlotCount = parameterRaw.Count, SlotIndex = parameterBinding.Slot };
+                var range = new SlotLinkSet { SlotCount = parameterRaw.Count, SlotIndex = parameterBinding.Slot };
                 slots.Add(range);
                 range.Links.Add(new SlotLink(parameter.Offset, 0, parameterRaw.Count));
             }
 
-            if (EnableDebug)
+            if (this.isDebug)
             {
                 DebugLog.WriteLine("*** Before OptimizeSlotLinks ****");
                 PrintLinks(ref stageBlock);
@@ -789,16 +764,14 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
-            if (EnableDebug)
+            if (this.isDebug)
             {
                 DebugLog.WriteLine("*** After OptimizeSlotLinks ****");
                 PrintLinks(ref stageBlock);
             }
         }
 
-        /// <summary>
-        /// Computes the slot links.
-        /// </summary>
+        /// <summary>Computes the slot links.</summary>
         internal unsafe void ComputeSlotLinks()
         {
             // Total size allocated for the unmanaged buffers.
@@ -834,15 +807,14 @@ namespace SharpDX.Toolkit.Graphics
                 if (stageBlock == null || stageBlock.Slots == null)
                     continue;
 
-                for (int resourceType = 0; resourceType < stageBlock.Slots.Length; resourceType++)
+                foreach(var slotLinkSetList in stageBlock.Slots)
                 {
-                    var slotLinkSetList = stageBlock.Slots[resourceType];
                     if (slotLinkSetList == null)
                     {
                         continue;
                     }
 
-                    // Allocate memory for slotlinks per type
+                    // Allocate memory for slot links per type
                     singleSlotLinksOffset += slotLinkSetList.Count * Utilities.SizeOf<SlotLink>();
 
                     // Allocate memory for each single slot links
@@ -872,7 +844,7 @@ namespace SharpDX.Toolkit.Graphics
             // Clear this memory
             Utilities.ClearMemory(pipeline.GlobalSlotPointer, 0, slotTotalMemory);
 
-            // Calculate address of slotlinks
+            // Calculate address of slot links
             pipeline.CopySlotLinks.Links = (SlotLink*) ((byte*) pipeline.GlobalSlotPointer + singleSlotLinksOffset);
 
             // Calculate address of buffer pointers
@@ -885,7 +857,7 @@ namespace SharpDX.Toolkit.Graphics
                 pipeline.UAVBuffer[i] = -1;
             }
 
-            if (EnableDebug)
+            if (this.isDebug)
             {
                 DebugLog.WriteLine("Memory Layout for Effect [{0}] Pass [{1}]", Effect.Name, Name);
                 DebugLog.WriteLine("Global SlotLinks Native Buffer [0x{0:X} - 0x{1:X}] ({2} bytes)", pipeline.GlobalSlotPointer.ToInt64(), new IntPtr((byte*)pipeline.GlobalSlotPointer + slotTotalMemory).ToInt64(), slotTotalMemory);
@@ -994,6 +966,8 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Prints the links.</summary>
+        /// <param name="stageBlock">The stage block.</param>
         private void PrintLinks(ref StageBlock stageBlock)
         {
             DebugLog.WriteLine("  |- Stage [{0}]", stageBlock.Shader.GetType().Name);
@@ -1018,11 +992,19 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        private bool CompareResourceParameter(EffectData.ResourceParameter left, EffectData.ResourceParameter right)
+        /// <summary>Compares the resource parameter.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns><c>true</c> if left == right, <c>false</c> otherwise.</returns>
+        private static bool CompareResourceParameter(EffectData.ResourceParameter left, EffectData.ResourceParameter right)
         {
             return (left.Class != right.Class || left.Type != right.Type || left.Count != right.Count);
         }
 
+        /// <summary>Prepares the properties.</summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="properties">The properties.</param>
+        /// <returns>PropertyCollection.</returns>
         private PropertyCollection PrepareProperties(Logger logger, CommonData.PropertyCollection properties)
         {
             var passProperties = new PropertyCollection();
@@ -1066,9 +1048,12 @@ namespace SharpDX.Toolkit.Graphics
             return passProperties;
         }
 
+        /// <summary>The local input layout cache.</summary>
+        private readonly Dictionary<VertexInputLayout, InputLayoutPair> localInputLayoutCache;
 
-        private readonly Dictionary<VertexInputLayout, InputLayoutPair> LocalInputLayoutCache = new Dictionary<VertexInputLayout, InputLayoutPair>();
-
+        /// <summary>Gets the input layout.</summary>
+        /// <param name="layout">The layout.</param>
+        /// <returns>InputLayout.</returns>
         internal InputLayout GetInputLayout(VertexInputLayout layout)
         {
             if (layout == null)
@@ -1077,10 +1062,10 @@ namespace SharpDX.Toolkit.Graphics
             if (!ReferenceEquals(currentInputLayoutPair.VertexInputLayout, layout))
             {
                 // Use a local cache to speed up retrieval
-                if (!LocalInputLayoutCache.TryGetValue(layout, out currentInputLayoutPair))
+                if (!this.localInputLayoutCache.TryGetValue(layout, out currentInputLayoutPair))
                 {
                     inputSignatureManager.GetOrCreate(layout, out currentInputLayoutPair);
-                    LocalInputLayoutCache.Add(layout, currentInputLayoutPair);
+                    this.localInputLayoutCache.Add(layout, currentInputLayoutPair);
                 }
             }
             return currentInputLayoutPair.InputLayout;
@@ -1088,45 +1073,69 @@ namespace SharpDX.Toolkit.Graphics
 
         #region Nested type: PipelineBlock
 
-        private struct PipelineBlock
+        /// <summary>The pipeline block struct.</summary>
+        private sealed class PipelineBlock
         {
-            public IntPtr GlobalSlotPointer;
+            /// <summary>Gets or sets the global slot pointer.</summary>
+            /// <value>The global slot pointer.</value>
+            public IntPtr GlobalSlotPointer { get; set; }
 
-            public OutputMergerStage OutputMergerStage;
-            public unsafe IntPtr* PointersBuffer;
-            public unsafe int* UAVBuffer;
-            public RawSlotLinkSet CopySlotLinks;
-            public StageBlock[] Stages;
+            /// <summary>Gets or sets the output merger stage.</summary>
+            /// <value>The output merger stage.</value>
+            public OutputMergerStage OutputMergerStage { get; set; }
+
+            /// <summary>Gets or sets the pointers buffer.</summary>
+            /// <value>The pointers buffer.</value>
+            public unsafe IntPtr* PointersBuffer { get; set; }
+
+            /// <summary>Gets or sets the uav buffer.</summary>
+            /// <value>The uav buffer.</value>
+            public unsafe int* UAVBuffer { get; set; }
+
+            /// <summary>Gets or sets the copy slot links.</summary>
+            /// <value>The copy slot links.</value>
+            public RawSlotLinkSet CopySlotLinks { get; set; }
+
+            /// <summary>Gets or sets the stages.</summary>
+            /// <value>The stages.</value>
+            public StageBlock[] Stages { get; set; }
         }
 
-        private struct ParameterBinding
+        /// <summary>The parameter binding struct.</summary>
+        private sealed class ParameterBinding
         {
+            /// <summary>Initializes a new instance of the <see cref="ParameterBinding"/> struct.</summary>
+            /// <param name="parameter">The parameter.</param>
+            /// <param name="slot">The slot.</param>
             public ParameterBinding(EffectParameter parameter, int slot)
             {
                 Parameter = parameter;
                 Slot = slot;
             }
 
-            public readonly EffectParameter Parameter;
+            /// <summary>Gets the parameter.</summary>
+            /// <value>The parameter.</value>
+            public EffectParameter Parameter { get; private set; }
 
-            public readonly int Slot;
+            /// <summary>Gets the slot.</summary>
+            /// <value>The slot.</value>
+            public int Slot { get; private set; }
         }
 
         #endregion
 
         #region Nested type: RawSlotLinkSet
 
-        private struct RawSlotLinkSet
+        /// <summary>The raw slot link set struct.</summary>
+        private abstract class RawSlotLinkSet
         {
-            /// <summary>
-            ///   Number of SlotLinks.
-            /// </summary>
-            public int Count;
+            /// <summary>Gets or sets the count (number of slot links).</summary>
+            /// <value>The count.</value>
+            public int Count { get; set; }
 
-            /// <summary>
-            ///   SlotLink* ptr;
-            /// </summary>
-            public unsafe SlotLink* Links;
+            /// <summary>Gets or sets the slot links pointer (unsafe!).</summary>
+            /// <value>The links.</value>
+            public unsafe SlotLink* Links { get; set; }
         }
 
         #endregion
@@ -1135,9 +1144,14 @@ namespace SharpDX.Toolkit.Graphics
 
         // The CLR seems to have a bug when using an explicit layout and adding this object
         // to a list. The object is not correctly copied!
+        /// <summary>The slot link struct.</summary>
         [StructLayout(LayoutKind.Sequential)]
         private struct SlotLink
         {
+            /// <summary>Initializes a new instance of the <see cref="SlotLink"/> struct.</summary>
+            /// <param name="globalIndex">Index of the global.</param>
+            /// <param name="slotIndex">Index of the slot.</param>
+            /// <param name="slotCount">The slot count.</param>
             public SlotLink(int globalIndex, int slotIndex, int slotCount)
             {
                 Pointer = new IntPtr(globalIndex);
@@ -1146,14 +1160,20 @@ namespace SharpDX.Toolkit.Graphics
                 UavInitialCount = IntPtr.Zero;
             }
 
+            /// <summary>The pointer.</summary>
             public IntPtr Pointer;
 
+            /// <summary>The slot index.</summary>
             public int SlotIndex;
 
+            /// <summary>The slot count.</summary>
             public int SlotCount;
 
+            /// <summary>The uav initial count.</summary>
             public IntPtr UavInitialCount;
 
+            /// <summary>Gets the index of the global.</summary>
+            /// <value>The index of the global.</value>
             public int GlobalIndex
             {
                 get
@@ -1167,17 +1187,24 @@ namespace SharpDX.Toolkit.Graphics
 
         #region Nested type: SlotLinkSet
 
-        private class SlotLinkSet
+        /// <summary>The slot link set class.</summary>
+        private sealed class SlotLinkSet
         {
-            public List<SlotLink> Links;
-            public short SlotCount;
-            public int SlotIndex;
+            /// <summary>The links.</summary>
+            public List<SlotLink> Links { get; private set; }
+            /// <summary>The slot count.</summary>
+            public short SlotCount { get; set; }
+            /// <summary>The slot index.</summary>
+            public int SlotIndex { get; set; }
 
+            /// <summary>Initializes a new instance of the <see cref="SlotLinkSet"/> class.</summary>
             public SlotLinkSet()
             {
                 Links = new List<SlotLink>();
             }
 
+            /// <summary>Gets a value indicating whether this instance is direct slot.</summary>
+            /// <value><see langword="true" /> if this instance is direct slot; otherwise, <see langword="false" />.</value>
             public bool IsDirectSlot
             {
                 get { return Links.Count == 1; }
@@ -1188,36 +1215,75 @@ namespace SharpDX.Toolkit.Graphics
 
         #region Nested type: StageBlock
 
-        private class StageBlock
+        /// <summary>The stage block class.</summary>
+        private sealed class StageBlock
         {
-            public List<ParameterBinding> Parameters;
+            /// <summary>Gets or sets the parameters.</summary>
+            /// <value>The parameters.</value>
+            public List<ParameterBinding> Parameters { get; set; }
 
-            public RawSlotLinkSet ConstantBufferSlotLinks;
-            public ConstantBufferLink[] ConstantBufferLinks;
-            public int Index;
-            public RawSlotLinkSet SamplerStateSlotLinks;
+            /// <summary>Gets or sets the constant buffer slot links.</summary>
+            /// <value>The constant buffer slot links.</value>
+            public RawSlotLinkSet ConstantBufferSlotLinks { get; set; }
 
-            public DeviceChild Shader;
+            /// <summary>Gets or sets the constant buffer links.</summary>
+            /// <value>The constant buffer links.</value>
+            public ConstantBufferLink[] ConstantBufferLinks { get; set; }
 
-            public RawSlotLinkSet ShaderResourceViewSlotLinks;
+            /// <summary>Gets or sets the index.</summary>
+            /// <value>The index.</value>
+            public int Index { get; set; }
 
-            public CommonShaderStage ShaderStage;
-            public List<SlotLinkSet>[] Slots;
-            public EffectShaderType Type;
-            public RawSlotLinkSet UnorderedAccessViewSlotLinks;
+            /// <summary>Gets or sets the sampler state slot links.</summary>
+            /// <value>The sampler state slot links.</value>
+            public RawSlotLinkSet SamplerStateSlotLinks { get; set; }
 
-            public StreamOutputElement[] StreamOutputElements;
+            /// <summary>Gets or sets the shader.</summary>
+            /// <value>The shader.</value>
+            public DeviceChild Shader { get; set; }
 
-            public int StreamOutputRasterizedStream;
+            /// <summary>Gets or sets the shader resource view slot links.</summary>
+            /// <value>The shader resource view slot links.</value>
+            public RawSlotLinkSet ShaderResourceViewSlotLinks { get; set; }
 
+            /// <summary>Gets or sets the shader stage.</summary>
+            /// <value>The shader stage.</value>
+            public CommonShaderStage ShaderStage { get; set; }
+
+            /// <summary>Gets or sets the slots.</summary>
+            /// <value>The slots.</value>
+            public List<SlotLinkSet>[] Slots { get; set; }
+
+            /// <summary>Gets or sets the type.</summary>
+            /// <value>The type.</value>
+            public EffectShaderType Type { get; private set; }
+
+            /// <summary>Gets or sets the unordered access view slot links.</summary>
+            /// <value>The unordered access view slot links.</value>
+            public RawSlotLinkSet UnorderedAccessViewSlotLinks { get; set; }
+
+            /// <summary>Gets or sets the stream output elements.</summary>
+            /// <value>The stream output elements.</value>
+            public StreamOutputElement[] StreamOutputElements { get; set; }
+
+            /// <summary>Gets or sets the stream output rasterized stream.</summary>
+            /// <value>The stream output rasterized stream.</value>
+            public int StreamOutputRasterizedStream { get; set; }
+
+            /// <summary>Initializes a new instance of the <see cref="StageBlock"/> class.</summary>
+            /// <param name="type">The type.</param>
             public StageBlock(EffectShaderType type)
             {
                 Type = type;
             }
         }
 
-        private struct ConstantBufferLink
+        /// <summary>The constant buffer link struct.</summary>
+        private sealed class ConstantBufferLink
         {
+            /// <summary>Initializes a new instance of the <see cref="ConstantBufferLink"/> struct.</summary>
+            /// <param name="constantBuffer">The constant buffer.</param>
+            /// <param name="parameter">The parameter.</param>
             public ConstantBufferLink(EffectConstantBuffer constantBuffer, EffectParameter parameter)
             {
                 ConstantBuffer = constantBuffer;
@@ -1225,11 +1291,17 @@ namespace SharpDX.Toolkit.Graphics
                 ResourceIndex = 0;
             }
 
-            public readonly EffectConstantBuffer ConstantBuffer;
+            /// <summary>Gets or sets the constant buffer.</summary>
+            /// <value>The constant buffer.</value>
+            public EffectConstantBuffer ConstantBuffer { get; private set; }
 
-            public readonly EffectParameter Parameter;
+            /// <summary>Gets or sets the parameter.</summary>
+            /// <value>The parameter.</value>
+            public EffectParameter Parameter { get; private set; }
 
-            public int ResourceIndex;
+            /// <summary>Gets or sets the index of the resource.</summary>
+            /// <value>The index of the resource.</value>
+            public int ResourceIndex { get; set; }
         }
 
         #endregion

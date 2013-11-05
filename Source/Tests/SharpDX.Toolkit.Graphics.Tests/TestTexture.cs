@@ -33,20 +33,20 @@ namespace SharpDX.Toolkit.Graphics.Tests
     /// </summary>
     [TestFixture]
     [Description("Tests SharpDX.Toolkit.Graphics")]
-    public unsafe class TestTexture
+    public class TestTexture
     {
-        private string dxsdkDir;
+        private string directXsdkDirectory;
 
-        private GraphicsDevice GraphicsDevice;
+        private GraphicsDevice graphicsDevice;
         
         [TestFixtureSetUp]
         public void Initialize()
         {
-            GraphicsDevice = GraphicsDevice.New(DeviceCreationFlags.Debug);
+            this.graphicsDevice = GraphicsDevice.New(DeviceCreationFlags.Debug);
 
-            dxsdkDir = Environment.GetEnvironmentVariable("DXSDK_DIR");
+            this.directXsdkDirectory = Environment.GetEnvironmentVariable("DXSDK_DIR");
 
-            if (string.IsNullOrEmpty(dxsdkDir))
+            if (string.IsNullOrEmpty(this.directXsdkDirectory))
                 throw new NotSupportedException("Install DirectX SDK June 2010 to run this test (DXSDK_DIR environment variable is missing).");
         }
 
@@ -62,13 +62,13 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // -------------------------------------------------------
             
             // Create Texture1D
-            var texture = Texture1D.New(GraphicsDevice, textureData.Length, PixelFormat.R8.UNorm);
+            var texture = Texture1D.New(this.graphicsDevice, textureData.Length, PixelFormat.R8.UNorm);
 
             // Check description against native description
-            var d3d11Texture = (Direct3D11.Texture1D)texture;
-            var d3d11SRV = (Direct3D11.ShaderResourceView)texture;
+            var d3D11Texture = (Direct3D11.Texture1D)texture;
+            var d3D11ShaderResourceView = (Direct3D11.ShaderResourceView)texture;
 
-            Assert.AreEqual(d3d11Texture.Description, new Direct3D11.Texture1DDescription() {
+            Assert.AreEqual(d3D11Texture.Description, new Direct3D11.Texture1DDescription() {
                 Width = textureData.Length,
                 ArraySize = 1,
                 BindFlags = BindFlags.ShaderResource,
@@ -80,12 +80,12 @@ namespace SharpDX.Toolkit.Graphics.Tests
             });
 
             // Check shader resource view.
-            var srvDescription = d3d11SRV.Description;
+            var shaderResourceViewDescription = d3D11ShaderResourceView.Description;
             // Clear those fields that are garbage returned from ShaderResourceView.Description.
-            srvDescription.Texture2DArray.ArraySize = 0;
-            srvDescription.Texture2DArray.FirstArraySlice = 0;
+            shaderResourceViewDescription.Texture2DArray.ArraySize = 0;
+            shaderResourceViewDescription.Texture2DArray.FirstArraySlice = 0;
 
-            Assert.AreEqual(srvDescription, new Direct3D11.ShaderResourceViewDescription()
+            Assert.AreEqual(shaderResourceViewDescription, new Direct3D11.ShaderResourceViewDescription()
             {
                 Dimension = ShaderResourceViewDimension.Texture1D,
                 Format = DXGI.Format.R8_UNorm,
@@ -99,11 +99,11 @@ namespace SharpDX.Toolkit.Graphics.Tests
             Assert.AreEqual(mipmapDescription, refMipmapDescription);
 
             // Check that getting the default SRV is the same as getting the first mip/array
-            Assert.AreEqual(texture.ShaderResourceView[ViewType.Full, 0, 0].View, d3d11SRV);
+            Assert.AreEqual(texture.ShaderResourceView[ViewType.Full, 0, 0].View, d3D11ShaderResourceView);
 
             // Check GraphicsDevice.GetData/SetData data
             // Upload the textureData to the GPU
-            texture.SetData(GraphicsDevice, textureData);
+            texture.SetData(this.graphicsDevice, textureData);
 
             // Read back data from the GPU
             var readBackData = texture.GetData<byte>();
@@ -116,7 +116,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // -------------------------------------------------------
             using (var texture2 = texture.Clone<Texture1D>())
             {
-                GraphicsDevice.Copy(texture, texture2);
+                this.graphicsDevice.Copy(texture, texture2);
 
                 readBackData = texture2.GetData<byte>();
 
@@ -131,7 +131,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             var smallTextureDataRegion = new byte[] { 4, 3, 2, 1 };
 
             var region = new ResourceRegion(textureData.Length - 4, 0, 0, textureData.Length, 1, 1);
-            texture.SetData(GraphicsDevice, smallTextureDataRegion, 0, 0, region);
+            texture.SetData(this.graphicsDevice, smallTextureDataRegion, 0, 0, region);
 
             readBackData = texture.GetData<byte>();
 
@@ -153,7 +153,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // -----------------------------------------------------------------------------------------
             // Check for a Texture1D as an array of 6 texture with (8+1) mipmaps each, with UAV support
             // -----------------------------------------------------------------------------------------
-            var texture = Texture1D.New(GraphicsDevice, 256, true, PixelFormat.R8.UNorm, TextureFlags.UnorderedAccess, 6);
+            var texture = Texture1D.New(this.graphicsDevice, 256, true, PixelFormat.R8.UNorm, TextureFlags.UnorderedAccess, 6);
             var mipcount = (int)Math.Log(256, 2) + 1;
 
             // Check description against native description
@@ -240,7 +240,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // -------------------------------------------------------
             var textureData = new byte[] { 255 };
 
-            texture.SetData(GraphicsDevice, textureData, 1, 8);
+            texture.SetData(this.graphicsDevice, textureData, 1, 8);
 
             var readbackData = texture.GetData<byte>(1, 8);
 
@@ -260,7 +260,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             });
 
             // Set the value == 1
-            GraphicsDevice.Clear(uav, new Int4(1,0,0,0));
+            this.graphicsDevice.Clear(uav, new Int4(1,0,0,0));
             readbackData = texture.GetData<byte>(1, 8);
             Assert.AreEqual(readbackData.Length, 1);
 
@@ -281,9 +281,9 @@ namespace SharpDX.Toolkit.Graphics.Tests
         public void TestLoadSave()
         {
             var files = new List<string>();
-            files.AddRange(Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.dds", SearchOption.AllDirectories));
-            files.AddRange(Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.jpg", SearchOption.AllDirectories));
-            files.AddRange(Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.bmp", SearchOption.AllDirectories));
+            files.AddRange(Directory.EnumerateFiles(Path.Combine(this.directXsdkDirectory, @"Samples\Media"), "*.dds", SearchOption.AllDirectories));
+            files.AddRange(Directory.EnumerateFiles(Path.Combine(this.directXsdkDirectory, @"Samples\Media"), "*.jpg", SearchOption.AllDirectories));
+            files.AddRange(Directory.EnumerateFiles(Path.Combine(this.directXsdkDirectory, @"Samples\Media"), "*.bmp", SearchOption.AllDirectories));
 
             var excludeList = new List<string>()
                                   {
@@ -298,7 +298,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
                         continue;
 
                     // Load an image from a file and dispose it.
-                    var texture = Texture.Load(GraphicsDevice, file);
+                    var texture = Texture.Load(this.graphicsDevice, file);
 
                     var localPath = Path.GetFileName(file);
                     texture.Save(localPath, ImageFileType.Dds);

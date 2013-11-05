@@ -22,19 +22,41 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX.Win32
 {
+    /// <summary>The bitmap information header struct.</summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct BitmapInfoHeader
     {
+        /// <summary>The size information bytes.</summary>
         public int SizeInBytes;
+
+        /// <summary>The width.</summary>
         public int Width;
+
+        /// <summary>The height.</summary>
         public int Height;
+
+        /// <summary>The plane count.</summary>
         public short PlaneCount;
+
+        /// <summary>The bit count.</summary>
         public short BitCount;
+
+        /// <summary>The compression.</summary>
         public int Compression;
+
+        /// <summary>The size image.</summary>
         public int SizeImage;
+
+        /// <summary>The executable pixels per meter.</summary>
         public int XPixelsPerMeter;
+
+        /// <summary>The asynchronous pixels per meter.</summary>
         public int YPixelsPerMeter;
+
+        /// <summary>The color used count.</summary>
         public int ColorUsedCount;
+
+        /// <summary>The color important count.</summary>
         public int ColorImportantCount;
     }
 }

@@ -319,7 +319,7 @@ namespace SharpDX.DirectInput
             public byte _Name259;
             public byte _Name260;
             // Method to free native struct
-            internal unsafe void __MarshalFree()
+            internal void __MarshalFree()
             {
                 if (EffectParametersPointer != IntPtr.Zero)
                     Marshal.FreeHGlobal(EffectParametersPointer);

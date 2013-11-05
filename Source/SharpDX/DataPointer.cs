@@ -23,20 +23,14 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX
 {
-    /// <summary>
-    /// Pointer to a native buffer with a specific size.
-    /// </summary>
+    /// <summary>Pointer to a native buffer with a specific size.</summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct DataPointer : IEquatable<DataPointer>
     {
-        /// <summary>
-        /// Gets an Empty Data Pointer.
-        /// </summary>
+        /// <summary>Gets an Empty Data Pointer.</summary>
         public static readonly DataPointer Zero = new DataPointer(IntPtr.Zero, 0);
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DataPointer" /> struct.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="DataPointer" /> struct.</summary>
         /// <param name="pointer">The pointer.</param>
         /// <param name="size">The size.</param>
         public DataPointer(IntPtr pointer, int size)
@@ -45,9 +39,7 @@ namespace SharpDX
             Size = size;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DataPointer" /> struct.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="DataPointer" /> struct.</summary>
         /// <param name="pointer">The pointer.</param>
         /// <param name="size">The size.</param>
         public unsafe DataPointer(void* pointer, int size)
@@ -56,27 +48,31 @@ namespace SharpDX
             Size = size;
         }
 
-        /// <summary>
-        /// Pointer to the buffer.
-        /// </summary>
+        /// <summary>Pointer to the buffer.</summary>
         public IntPtr Pointer;
 
-        /// <summary>
-        /// Size in bytes of the buffer.
-        /// </summary>
+        /// <summary>Size in bytes of the buffer.</summary>
         public int Size;
 
+        /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
         public bool Equals(DataPointer other)
         {
             return Pointer.Equals(other.Pointer) && Size == other.Size;
         }
 
+        /// <summary>Determines whether the specified <see cref="System.Object" /> is equal to this instance.</summary>
+        /// <param name="obj">Another object to compare to.</param>
+        /// <returns><see langword="true" /> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <see langword="false" />.</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             return obj is DataPointer && Equals((DataPointer) obj);
         }
 
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             unchecked
@@ -85,9 +81,7 @@ namespace SharpDX
             }
         }
 
-        /// <summary>
-        /// Implements the ==.
-        /// </summary>
+        /// <summary>Implements the ==.</summary>
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
         /// <returns>The result of the operator.</returns>
@@ -96,9 +90,7 @@ namespace SharpDX
             return left.Equals(right);
         }
 
-        /// <summary>
-        /// Implements the !=.
-        /// </summary>
+        /// <summary>Implements the !=.</summary>
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
         /// <returns>The result of the operator.</returns>

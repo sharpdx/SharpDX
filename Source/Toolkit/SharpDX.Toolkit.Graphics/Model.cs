@@ -215,7 +215,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Calculates the bounds of this model.
         /// </summary>
         /// <returns>BoundingSphere.</returns>
-        public unsafe BoundingSphere CalculateBounds()
+        public BoundingSphere CalculateBounds()
         {
             return CalculateBounds(Matrix.Identity);
         }

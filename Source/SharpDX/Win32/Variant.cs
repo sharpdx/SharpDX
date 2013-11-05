@@ -20,29 +20,27 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using System.Reflection;
 
 namespace SharpDX.Win32
 {
-    /// <summary>
-    /// Variant COM.
-    /// </summary>
+    /// <summary>Variant COM.</summary>
     /// <unmanaged>PROPVARIANT</unmanaged>
     [StructLayout(LayoutKind.Sequential)]
     public struct Variant
     {
+        /// <summary>The vt.</summary>
         private ushort vt;
-        private ushort reserved1;
-        private ushort reserved2;
-        private ushort reserved3;
+        /// <summary>The reserved1.</summary>
+        private readonly ushort reserved1;
+        /// <summary>The reserved2.</summary>
+        private readonly ushort reserved2;
+        /// <summary>The reserved3.</summary>
+        private readonly ushort reserved3;
+        /// <summary>The variant value.</summary>
         private VariantValue variantValue;
 
-        /// <summary>
-        /// Gets the type of the element.
-        /// </summary>
-        /// <value>
-        /// The type of the element.
-        /// </value>
+        /// <summary>Gets the type of the element.</summary>
+        /// <value>The type of the element.</value>
         public VariantElementType ElementType
         {
             get
@@ -55,9 +53,8 @@ namespace SharpDX.Win32
             }
         }
 
-        /// <summary>
-        /// Gets the type.
-        /// </summary>
+        /// <summary>Gets the type.</summary>
+        /// <value>The type.</value>
         public VariantType Type
         {
             get
@@ -70,12 +67,11 @@ namespace SharpDX.Win32
             }
         }
 
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        /// <value>
-        /// The value.
-        /// </value>
+        /// <summary>Gets or sets the value.</summary>
+        /// <value>The value.</value>
+        /// <exception cref="System.NotSupportedException">
+        /// </exception>
+        /// <exception cref="System.ArgumentException"></exception>
         public unsafe object Value
         {
             get
@@ -358,57 +354,80 @@ namespace SharpDX.Win32
             }
         }
 
+        /// <summary>The variant value struct.</summary>
         [StructLayout(LayoutKind.Explicit)]
         private struct VariantValue
         {
+            /// <summary>The byte value.</summary>
             [FieldOffset(0)]
-            public byte byteValue;
+            public readonly byte byteValue;
+            /// <summary>The signed byte value.</summary>
             [FieldOffset(0)]
-            public sbyte signedByteValue;
+            public readonly sbyte signedByteValue;
+            /// <summary>The unsigned short value.</summary>
             [FieldOffset(0)]
             public ushort ushortValue;
+            /// <summary>The short value.</summary>
             [FieldOffset(0)]
             public short shortValue;
+            /// <summary>The unsigned int value.</summary>
             [FieldOffset(0)]
             public uint uintValue;
+            /// <summary>The int value.</summary>
             [FieldOffset(0)]
             public int intValue;
+            /// <summary>The unsigned long value.</summary>
             [FieldOffset(0)]
             public ulong ulongValue;
+            /// <summary>The long value.</summary>
             [FieldOffset(0)]
             public long longValue;
+            /// <summary>The float value.</summary>
             [FieldOffset(0)]
             public float floatValue;
+            /// <summary>The double value.</summary>
             [FieldOffset(0)]
             public double doubleValue;
+            /// <summary>The pointer value.</summary>
             [FieldOffset(0)]
             public IntPtr pointerValue;
+            /// <summary>The currency value.</summary>
             [FieldOffset(0)]
-            public CurrencyValue currencyValue;
+            private readonly CurrencyValue currencyValue;
+            /// <summary>The record value.</summary>
             [FieldOffset(0)]
             public RecordValue recordValue;
 
+            /// <summary>The currency low high struct.</summary>
             [StructLayout(LayoutKind.Sequential)]
-            public struct CurrencyLowHigh
+            private struct CurrencyLowHigh
             {
-                public uint LowValue;
-                public int HighValue;
+                /// <summary>The low value.</summary>
+                private readonly uint LowValue;
+                /// <summary>The high value.</summary>
+                private readonly int HighValue;
             }
 
+            /// <summary>The currency value struct.</summary>
             [StructLayout(LayoutKind.Explicit)]
-            public struct CurrencyValue
+            private struct CurrencyValue
             {
+                /// <summary>The low high.</summary>
                 [FieldOffset(0)]
-                public CurrencyLowHigh LowHigh;
+                private readonly CurrencyLowHigh LowHigh;
+                /// <summary>The long value.</summary>
                 [FieldOffset(0)]
-                public long longValue;
+                private readonly long longValue;
             }
 
+            /// <summary>The record value struct.</summary>
             [StructLayout(LayoutKind.Sequential)]
             public struct RecordValue
             {
-                public IntPtr RecordInfo;
-                public IntPtr RecordPointer;
+                /// <summary>The record information.</summary>
+                public readonly IntPtr RecordInfo;
+                /// <summary>The record pointer.</summary>
+                public readonly IntPtr RecordPointer;
             }
         };
     }

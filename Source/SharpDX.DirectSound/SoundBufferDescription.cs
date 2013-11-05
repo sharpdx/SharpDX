@@ -51,20 +51,20 @@ namespace SharpDX.DirectSound
             public Guid AlgorithmFor3D;
 
 		    // Method to free native struct
-            internal unsafe void __MarshalFree()
+            internal void __MarshalFree()
             {
                 if (pFormat != IntPtr.Zero)
                     Marshal.FreeHGlobal(pFormat);
             }
         }
 
-        internal unsafe void __MarshalFree(ref __Native @ref)
+        internal void __MarshalFree(ref __Native @ref)
         {
             @ref.__MarshalFree();
         }
 
         // Method to marshal from managed struct tot native
-        internal unsafe void __MarshalTo(ref __Native @ref)
+        internal void __MarshalTo(ref __Native @ref)
         {
             @ref.Size = this.Size;
             @ref.Flags = this.Flags;

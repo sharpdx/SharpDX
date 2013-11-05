@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,20 +20,19 @@
 
 using System;
 
-namespace SharpDX.Toolkit.Content
+namespace SharpDX.Win32
 {
-    /// <summary>This attributes is used by data that are providing a <see cref="IContentReader" /> for decoding data from a stream.</summary>
-    public class ContentReaderAttribute : Attribute
+    /// <summary>The COM base stream native class.</summary>
+    public partial class ComBaseStreamNative
     {
-        /// <summary>Initializes a new instance of the <see cref="ContentReaderAttribute" /> class.</summary>
-        /// <param name="contentReaderType">Type of the content reader.</param>
-        public ContentReaderAttribute(Type contentReaderType)
-        {
-            this.ContentReaderType = contentReaderType;
-        }
-
-        /// <summary>Gets the type of the content reader.</summary>
-        /// <value>The type of the content reader.</value>
-        public Type ContentReaderType { get; private set; }
+        /// <summary>
+        /// Gets or sets the unmanaged callback.
+        /// </summary>
+        /// <value>The unmanaged callback.</value>
+        /// <remarks>
+        /// This property is set whenever this instance has an unmanaged callback
+        /// registered. This callback must be disposed when disposing this instance. 
+        /// </remarks>
+        public IDisposable Callback { get; set; }
     }
 }

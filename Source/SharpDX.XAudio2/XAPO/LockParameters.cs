@@ -17,39 +17,45 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
-using System.Runtime.InteropServices;
-using SharpDX.Multimedia;
-
 namespace SharpDX.XAPO
 {
+    using System;
+    using System.Runtime.InteropServices;
+    using SharpDX.Multimedia;
 
+    /// <summary>The lock parameters struct.</summary>
     public partial struct LockParameters
     {
-        /// <summary>
-        /// Gets or sets the waveformat.
-        /// </summary>
+        /// <summary>Gets or sets the wave format.</summary>
         /// <value>The format.</value>
         public WaveFormat Format { get; set; }
 
         // Internal native struct used for marshalling
+        /// <summary>The __ native struct.</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 1 )]
-        internal partial struct __Native {	
+        internal struct __Native {
+            /// <summary>The format pointer.</summary>
             public IntPtr FormatPointer;
-            public int MaxFrameCount;        
-            internal unsafe void __MarshalFree()
+            /// <summary>The maximum frame count.</summary>
+            public int MaxFrameCount;
+            /// <summary>__s the marshal free.</summary>
+            internal void __MarshalFree()
             {
                 if (FormatPointer != IntPtr.Zero)
                     Marshal.FreeCoTaskMem(FormatPointer);
             }
         }
 
-        internal unsafe void __MarshalFree(ref __Native @ref)
+        /// <summary>__s the marshal free.</summary>
+        /// <param name="ref">The preference.</param>
+        internal void __MarshalFree(ref __Native @ref)
         {
             @ref.__MarshalFree();
         }
 
-        internal unsafe void __MarshalTo(ref __Native @ref)
+        /// <summary>__s the marshal automatic.</summary>
+        /// <param name="ref">The preference.</param>
+        internal void __MarshalTo(ref __Native @ref)
         {
             @ref.FormatPointer = IntPtr.Zero;
             if (Format != null)
@@ -61,17 +67,23 @@ namespace SharpDX.XAPO
             @ref.MaxFrameCount = this.MaxFrameCount;
         }
 
-        internal unsafe void __MarshalFrom(ref __Native @ref)
+        /// <summary>__s the marshal from.</summary>
+        /// <param name="ref">The preference.</param>
+        internal void __MarshalFrom(ref __Native @ref)
         {
             this.Format = null;
             this.FormatPointer = @ref.FormatPointer;
-            if (this.FormatPointer != IntPtr.Zero)
+            if(this.FormatPointer != IntPtr.Zero)
+            {
                 this.Format = WaveFormat.MarshalFrom(this.FormatPointer);
+            }
             this.MaxFrameCount = @ref.MaxFrameCount;
         }
 
 
         // Method to marshal from native to managed struct
+        /// <summary>__s the marshal from.</summary>
+        /// <param name="ref">The preference.</param>
         internal unsafe void __MarshalFrom(__Native* @ref)
         {
             this.Format = null;

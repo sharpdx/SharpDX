@@ -207,7 +207,7 @@ namespace SharpDX.MediaFoundation
         /// <msdn-id>ms704598</msdn-id>	
         /// <unmanaged>HRESULT IMFAttributes::GetItem([In] const GUID&amp; guidKey,[In] void* pValue)</unmanaged>	
         /// <unmanaged-short>IMFAttributes::GetItem</unmanaged-short>	
-        public unsafe T Get<T>(MediaAttributeKey<T> guidKey)
+        public T Get<T>(MediaAttributeKey<T> guidKey)
         {
             return Get<T>(guidKey.Guid);
         }
@@ -321,7 +321,7 @@ namespace SharpDX.MediaFoundation
         /// <msdn-id>bb970346</msdn-id>	
         /// <unmanaged>HRESULT IMFAttributes::SetItem([In] const GUID&amp; guidKey,[In] const PROPVARIANT&amp; Value)</unmanaged>	
         /// <unmanaged-short>IMFAttributes::SetItem</unmanaged-short>	
-        public unsafe void Set<T>(MediaAttributeKey<T> guidKey, T value)
+        public void Set<T>(MediaAttributeKey<T> guidKey, T value)
         {
             Set(guidKey.Guid, value);
         }

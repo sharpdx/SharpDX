@@ -98,6 +98,8 @@ namespace SharpDX.Multimedia
         /// </value>
         public short[] Coefficients2 { get; set; }
 
+        /// <summary>Marshals the automatic PTR.</summary>
+        /// <returns>The IntPtr.</returns>
         protected unsafe override IntPtr MarshalToPtr()
         {
             var result = Marshal.AllocHGlobal(Utilities.SizeOf<WaveFormat.__Native>() + sizeof(int) + sizeof(int) * Coefficients1.Length);
@@ -105,8 +107,9 @@ namespace SharpDX.Multimedia
             return result;
         }
 
+        /// <summary>The new __Native struct.</summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 2)]
-        internal unsafe new struct __Native
+        internal new struct __Native
         {
             public WaveFormat.__Native waveFormat;
             public ushort samplesPerBlock;
@@ -114,7 +117,7 @@ namespace SharpDX.Multimedia
             public short coefficients;
 
             // Method to free native struct
-            internal unsafe void __MarshalFree()
+            internal void __MarshalFree()
             {
                 waveFormat.__MarshalFree();
             }

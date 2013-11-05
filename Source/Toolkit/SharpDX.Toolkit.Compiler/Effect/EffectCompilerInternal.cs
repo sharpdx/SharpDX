@@ -72,7 +72,7 @@ namespace SharpDX.Toolkit.Graphics
         private EffectData.Technique technique;
         private int nextSubPassCount;
 
-        private StreamOutputElement[] currentStreamOutputElements;
+        //private StreamOutputElement[] currentStreamOutputElements;
 
         private FileDependencyList dependencyList;
 
@@ -240,8 +240,7 @@ namespace SharpDX.Toolkit.Graphics
             effectData = new EffectData
                          {
                              Shaders = new List<EffectData.Shader>(),
-                             Description = new EffectData.Effect()
-                                           {
+                             Description = new EffectData.Effect {
                                                Name = name,
                                                Techniques = new List<EffectData.Technique>(),
                                            }
@@ -741,9 +740,9 @@ namespace SharpDX.Toolkit.Graphics
                     {
                         value = Convert.ChangeType(value, typeof(T));
                     }
-                    catch (Exception ex)
+                    catch (Exception e)
                     {
-                        logger.Error("Invalid type for attribute [{0}]. Expecting [{1}]", expression.Value.Span, expression.Name.Text, typeof(T).Name);
+                        logger.Error("Invalid type for attribute [{0}]. Expecting [{1}]. " + e.Message, expression.Value.Span, expression.Name.Text, typeof(T).Name);
                     }
                 }
 
@@ -903,98 +902,111 @@ namespace SharpDX.Toolkit.Graphics
 #endif
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                 }
             }
 
             if (level == 0)
-                logger.Error("Unexpected assignement for [Profile] attribute: expecting only [identifier (fx_4_0, fx_4_1... etc.), or number (9.3, 10.0, 11.0... etc.)]", expression.Span);
+                logger.Error("Unexpected assignment for [Profile] attribute: expecting only [identifier (fx_4_0, fx_4_1... etc.), or number (9.3, 10.0, 11.0... etc.)]", expression.Span);
         }
 
         private string ExtractShaderName(EffectShaderType effectShaderType, Ast.Expression expression)
         {
             string shaderName = null;
 
-            if (expression is Ast.IdentifierExpression)
+            Ast.IdentifierExpression identifierExpression = expression as Ast.IdentifierExpression;
+            if (identifierExpression != null)
             {
-                shaderName = ((Ast.IdentifierExpression)expression).Name.Text;
+                shaderName = identifierExpression.Name.Text;
             }
-            else if (expression is Ast.LiteralExpression)
+            else
             {
-                var value = ((Ast.LiteralExpression)expression).Value.Value;
-                if (Equals(value, 0) || Equals(value, null))
+                Ast.LiteralExpression literalExpression = expression as Ast.LiteralExpression;
+                if (literalExpression != null)
                 {
-                    return null;
-                }
-            }
-            else if (expression is Ast.CompileExpression)
-            {
-                var compileExpression = (Ast.CompileExpression)expression;
-
-                var profileName = compileExpression.Profile.Text;
-
-                ProfileToFeatureLevel(StageTypeToString(effectShaderType) + "_", profileName, out level);
-
-                if (compileExpression.Method is Ast.MethodExpression)
-                {
-                    var shaderMethod = (Ast.MethodExpression)compileExpression.Method;
-
-                    if (shaderMethod.Arguments.Count > 0)
+                    var value = literalExpression.Value.Value;
+                    if (Equals(value, 0) || Equals(value, null))
                     {
-                        logger.Error("Default arguments for shader methods are not supported", shaderMethod.Span);
                         return null;
                     }
-
-                    shaderName = shaderMethod.Name.Text;
                 }
                 else
                 {
-                    logger.Error("Unsupported expression for compile. Excepting method", expression.Span);
-                    return null;
-                }
-            }
-            else if (expression is Ast.MethodExpression)
-            {
-                // CompileShader( vs_4_0, VS() )
-                var compileExpression = (Ast.MethodExpression)expression;
-
-                if (compileExpression.Name.Text == "CompileShader")
-                {
-                    if (compileExpression.Arguments.Count != 2)
+                    Ast.CompileExpression compileExpression1 = expression as Ast.CompileExpression;
+                    if (compileExpression1 != null)
                     {
-                        logger.Error("Unexpected number of arguments [{0}] instead of 2", expression.Span, compileExpression.Arguments.Count);
-                        return null;
+                        var compileExpression = compileExpression1;
+
+                        var profileName = compileExpression.Profile.Text;
+
+                        this.ProfileToFeatureLevel(StageTypeToString(effectShaderType) + "_", profileName, out this.level);
+
+                        if (compileExpression.Method is Ast.MethodExpression)
+                        {
+                            var shaderMethod = (Ast.MethodExpression)compileExpression.Method;
+
+                            if (shaderMethod.Arguments.Count > 0)
+                            {
+                                this.logger.Error("Default arguments for shader methods are not supported", shaderMethod.Span);
+                                return null;
+                            }
+
+                            shaderName = shaderMethod.Name.Text;
+                        }
+                        else
+                        {
+                            this.logger.Error("Unsupported expression for compile. Excepting method", compileExpression1.Span);
+                            return null;
+                        }
                     }
-
-                    // Extract level (11.0 10.0) from profile name (
-                    object profileName;
-                    if (!ExtractValue(compileExpression.Arguments[0], out profileName))
-                        return null;
-
-                    if (!(profileName is string))
+                    else
                     {
-                        logger.Error("Invalid profile [{0}]. Expecting identifier", compileExpression.Arguments[0].Span, profileName);
-                        return null;
+                        Ast.MethodExpression methodExpression = expression as Ast.MethodExpression;
+                        if (methodExpression != null)
+                        {
+                            // CompileShader( vs_4_0, VS() )
+                            var compileExpression = methodExpression;
+
+                            if (compileExpression.Name.Text == "CompileShader")
+                            {
+                                if (compileExpression.Arguments.Count != 2)
+                                {
+                                    this.logger.Error("Unexpected number of arguments [{0}] instead of 2", methodExpression.Span, compileExpression.Arguments.Count);
+                                    return null;
+                                }
+
+                                // Extract level (11.0 10.0) from profile name (
+                                object profileName;
+                                if (!this.ExtractValue(compileExpression.Arguments[0], out profileName))
+                                    return null;
+
+                                if (!(profileName is string))
+                                {
+                                    this.logger.Error("Invalid profile [{0}]. Expecting identifier", compileExpression.Arguments[0].Span, profileName);
+                                    return null;
+                                }
+
+                                this.ProfileToFeatureLevel(StageTypeToString(effectShaderType) + "_", (string)profileName, out this.level);
+
+
+                                var shaderMethod = compileExpression.Arguments[1] as Ast.MethodExpression;
+                                if (shaderMethod == null)
+                                {
+                                    this.logger.Error("Unexpected expression. Only method expression are supported", compileExpression.Arguments[1].Span);
+                                    return null;
+                                }
+
+                                if (shaderMethod.Arguments.Count > 0)
+                                {
+                                    this.logger.Error("Default arguments for shader methods are not supported", shaderMethod.Span);
+                                    return null;
+                                }
+
+                                shaderName = shaderMethod.Name.Text;
+                            }
+                        }
                     }
-
-                    ProfileToFeatureLevel(StageTypeToString(effectShaderType) + "_", (string)profileName, out level);
-
-
-                    var shaderMethod = compileExpression.Arguments[1] as Ast.MethodExpression;
-                    if (shaderMethod == null)
-                    {
-                        logger.Error("Unexpected expression. Only method expression are supported", compileExpression.Arguments[1].Span);
-                        return null;
-                    }
-
-                    if (shaderMethod.Arguments.Count > 0)
-                    {
-                        logger.Error("Default arguments for shader methods are not supported", shaderMethod.Span);
-                        return null;
-                    }
-
-                    shaderName = shaderMethod.Name.Text;
                 }
             }
 
@@ -1013,7 +1025,6 @@ namespace SharpDX.Toolkit.Graphics
 
         private void CompileShader(EffectShaderType type, string shaderName, SourceSpan span)
         {
-            var level = this.level;
             if (shaderName == null)
             {
                 pass.Pipeline[type] = EffectData.ShaderLink.NullShader;
@@ -1028,7 +1039,7 @@ namespace SharpDX.Toolkit.Graphics
             //}
 
             // If the level is not setup, return an error
-            if (level == 0)
+            if (this.level == 0)
             {
                 logger.Error("Expecting setup of [Profile = fx_4_0/fx_5_0...etc.] before compiling a shader.", span);
                 return;
@@ -1604,9 +1615,9 @@ namespace SharpDX.Toolkit.Graphics
             {
                 return Convert.ToSingle(value);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                compiler.logger.Error("Unable to convert [{0}] to float", new SourceSpan(), value);
+                compiler.logger.Error("Unable to convert [{0}] to float. " + e.Message, new SourceSpan(), value);
             }
             return null;
         }

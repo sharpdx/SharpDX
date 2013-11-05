@@ -44,16 +44,16 @@ namespace SharpDX.Toolkit
             return new GameWindow[] { new GameWindowWinRT(), new GameWindowWinRTXaml(),  };
         }
 
-        public override List<GraphicsDeviceInformation> FindBestDevices(GameGraphicsParameters prefferedParameters)
+        public override List<GraphicsDeviceInformation> FindBestDevices(GameGraphicsParameters preferredParameters)
         {
-            var graphicsDeviceInfos = base.FindBestDevices(prefferedParameters);
+            var graphicsDeviceInfos = base.FindBestDevices(preferredParameters);
 
             // Special case where the default FindBestDevices is not working
             if (graphicsDeviceInfos.Count == 0)
             {
                 var graphicsAdapter = GraphicsAdapter.Adapters[0];
 
-                TryFindSupportedFeatureLevel(prefferedParameters, graphicsAdapter, graphicsDeviceInfos, AddDeviceWithDefaultDisplayMode);
+                TryFindSupportedFeatureLevel(preferredParameters, graphicsAdapter, graphicsDeviceInfos, AddDeviceWithDefaultDisplayMode);
             }
 
             return graphicsDeviceInfos;

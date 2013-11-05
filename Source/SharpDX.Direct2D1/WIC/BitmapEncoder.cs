@@ -154,7 +154,7 @@ namespace SharpDX.WIC
             SetColorContexts(colorContextOut != null ? colorContextOut.Length : 0, colorContextOut);
         }
 
-        protected override unsafe void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
             if (disposing)

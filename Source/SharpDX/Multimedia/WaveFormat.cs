@@ -55,14 +55,17 @@ namespace SharpDX.Multimedia
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 2)]
         internal struct __Native : IDataSerializable
         {
+            /// <summary>The PCM wave format.</summary>
             public __PcmNative pcmWaveFormat;
             /// <summary>number of following bytes</summary>
             public short extraSize;
-            // Method to free native struct
-            internal unsafe void __MarshalFree()
+            /// <summary>Free native struct.</summary>
+            internal void __MarshalFree()
             {
             }
 
+            /// <summary>Reads or writes datas from/to the given binary serializer.</summary>
+            /// <param name="serializer">The binary serializer.</param>
             public void Serialize(BinarySerializer serializer)
             {
                 serializer.Serialize(ref pcmWaveFormat);
@@ -70,13 +73,15 @@ namespace SharpDX.Multimedia
             }
         }
 
-        internal unsafe void __MarshalFree(ref __Native @ref)
+        /// <summary>__s the marshal free.</summary>
+        /// <param name="ref">The preference.</param>
+        internal void __MarshalFree(ref __Native @ref)
         {
             @ref.__MarshalFree();
         }
 
         // Method to marshal from native to managed struct
-        internal unsafe void __MarshalFrom(ref __Native @ref)
+        internal void __MarshalFrom(ref __Native @ref)
         {
             this.waveFormatTag = @ref.pcmWaveFormat.waveFormatTag;
             this.channels = @ref.pcmWaveFormat.channels;
@@ -87,7 +92,7 @@ namespace SharpDX.Multimedia
             this.extraSize = @ref.extraSize;            
         }
         // Method to marshal from managed struct tot native
-        internal unsafe void __MarshalTo(ref __Native @ref)
+        internal void __MarshalTo(ref __Native @ref)
         {
             @ref.pcmWaveFormat.waveFormatTag = this.waveFormatTag;
             @ref.pcmWaveFormat.channels = this.channels;
@@ -98,6 +103,7 @@ namespace SharpDX.Multimedia
             @ref.extraSize = this.extraSize;  
         }
 
+        /// <summary>The __ PCM native struct.</summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 2)]
         internal struct __PcmNative : IDataSerializable
         {
@@ -115,10 +121,13 @@ namespace SharpDX.Multimedia
             public short bitsPerSample;
 
             // Method to free native struct
-            internal unsafe void __MarshalFree()
+            /// <summary>free native struct.</summary>
+            internal void __MarshalFree()
             {
             }
 
+            /// <summary>Reads or writes datas from/to the given binary serializer.</summary>
+            /// <param name="serializer">The binary serializer.</param>
             public void Serialize(BinarySerializer serializer)
             {
                 serializer.SerializeEnum(ref waveFormatTag);
@@ -130,13 +139,17 @@ namespace SharpDX.Multimedia
             }
         }
 
-        internal unsafe void __MarshalFree(ref __PcmNative @ref)
+        /// <summary>__s the marshal free.</summary>
+        /// <param name="ref">The preference.</param>
+        internal void __MarshalFree(ref __PcmNative @ref)
         {
             @ref.__MarshalFree();
         }
 
         // Method to marshal from native to managed struct
-        internal unsafe void __MarshalFrom(ref __PcmNative @ref)
+        /// <summary>__s the marshal from.</summary>
+        /// <param name="ref">The preference.</param>
+        internal void __MarshalFrom(ref __PcmNative @ref)
         {
             this.waveFormatTag = @ref.waveFormatTag;
             this.channels = @ref.channels;
@@ -147,7 +160,9 @@ namespace SharpDX.Multimedia
             this.extraSize = 0;
         }
         // Method to marshal from managed struct tot native
-        internal unsafe void __MarshalTo(ref __PcmNative @ref)
+        /// <summary>__s the marshal automatic.</summary>
+        /// <param name="ref">The preference.</param>
+        internal void __MarshalTo(ref __PcmNative @ref)
         {
             @ref.waveFormatTag = this.waveFormatTag;
             @ref.channels = this.channels;
@@ -158,19 +173,15 @@ namespace SharpDX.Multimedia
         }
 
 
-        /// <summary>
-        /// Creates a new PCM 44.1Khz stereo 16 bit format
-        /// </summary>
+        /// <summary>Creates a new PCM 44.1Khz stereo 16 bit format</summary>
         public WaveFormat()
             : this(44100, 16, 2)
         {
 
         }
 
-        /// <summary>
-        /// Creates a new 16 bit wave format with the specified sample
-        /// rate and channel count
-        /// </summary>
+        /// <summary>Creates a new 16 bit wave format with the specified sample
+        /// rate and channel count</summary>
         /// <param name="sampleRate">Sample Rate</param>
         /// <param name="channels">Number of channels</param>
         public WaveFormat(int sampleRate, int channels)
@@ -178,11 +189,9 @@ namespace SharpDX.Multimedia
         {
         }
 
-        /// <summary>
-        /// Gets the size of a wave buffer equivalent to the latency in milliseconds.
-        /// </summary>
+        /// <summary>Gets the size of a wave buffer equivalent to the latency in milliseconds.</summary>
         /// <param name="milliseconds">The milliseconds.</param>
-        /// <returns></returns>
+        /// <returns>The size of a wave buffer equivalent to the latency in milliseconds as System.Int32.</returns>
         public int ConvertLatencyToByteSize(int milliseconds)
         {
             int bytes = (int)((AverageBytesPerSecond / 1000.0) * milliseconds);
@@ -330,6 +339,8 @@ namespace SharpDX.Multimedia
             throw new InvalidOperationException(string.Format("Unsupported WaveFormat [{0}]", encoding));
         }
 
+        /// <summary>Marshals the automatic PTR.</summary>
+        /// <returns>IntPtr.</returns>
         protected unsafe virtual IntPtr MarshalToPtr()
         {
             var result = Marshal.AllocHGlobal(Utilities.SizeOf<WaveFormat.__Native>());

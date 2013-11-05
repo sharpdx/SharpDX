@@ -24,23 +24,17 @@ using SharpDX.Serialization;
 
 namespace SharpDX
 {
-    /// <summary>
-    /// Structure using the same layout than <see cref="System.Drawing.Point"/>.
-    /// </summary>
+    /// <summary>Structure using the same layout than <see cref="System.Drawing.Point" />.</summary>
 #if !W8CORE
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential)]
     public struct Point : IEquatable<Point>, IDataSerializable
     {
-        /// <summary>
-        /// A point with (0,0) coordinates.
-        /// </summary>
+        /// <summary>A point with (0,0) coordinates.</summary>
         public static readonly Point Zero = new Point(0, 0);
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Point"/> struct.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="Point" /> struct.</summary>
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         public Point(int x, int y)
@@ -49,29 +43,24 @@ namespace SharpDX
             Y = y;
         }
 
-        /// <summary>
-        /// Left coordinate.
-        /// </summary>
+        /// <summary>Left coordinate.</summary>
         public int X;
 
-        /// <summary>
-        /// Top coordinate.
-        /// </summary>
+        /// <summary>Top coordinate.</summary>
         public int Y;
 
-        /// <summary>
-        /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
-        /// </summary>
-        /// <param name="other">The <see cref="System.Object"/> to compare with this instance.</param>
-        /// <returns>
-        ///   <c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
-        /// </returns>
+        /// <summary>Determines whether the specified <see cref="System.Object" /> is equal to this instance.</summary>
+        /// <param name="other">The <see cref="System.Object" /> to compare with this instance.</param>
+        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public bool Equals(Point other)
         {
             return other.X == X && other.Y == Y;
         }
 
-        /// <inheritdoc/>
+        /// <summary>Determines whether the specified <see cref="System.Object" /> is equal to this instance.</summary>
+        /// <param name="obj">Another object to compare to.</param>
+        /// <returns><see langword="true" /> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <see langword="false" />.</returns>
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -79,7 +68,9 @@ namespace SharpDX
             return Equals((Point)obj);
         }
 
-        /// <inheritdoc/>
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             unchecked
@@ -88,40 +79,32 @@ namespace SharpDX
             }
         }
 
-        /// <summary>
-        /// Implements the operator ==.
-        /// </summary>
+        /// <summary>Implements the operator ==.</summary>
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
-        /// <returns>
-        /// The result of the operator.
-        /// </returns>
+        /// <returns>The result of the operator.</returns>
         public static bool operator ==(Point left, Point right)
         {
             return left.Equals(right);
         }
 
-        /// <summary>
-        /// Implements the operator !=.
-        /// </summary>
+        /// <summary>Implements the operator !=.</summary>
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
-        /// <returns>
-        /// The result of the operator.
-        /// </returns>
+        /// <returns>The result of the operator.</returns>
         public static bool operator !=(Point left, Point right)
         {
             return !left.Equals(right);
         }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format("({0},{1})", X, Y);
         }
 
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Vector2"/> to <see cref="Point"/>.
-        /// </summary>
+        /// <summary>Performs an implicit conversion from <see cref="SharpDX.Vector2" /> to <see cref="Point" />.</summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
         public static explicit operator Point(Vector2 value)
@@ -129,9 +112,7 @@ namespace SharpDX
             return new Point((int)value.X, (int)value.Y);
         }
 
-        /// <summary>
-        /// Performs an explicit conversion from <see cref="Point"/> to <see cref="SharpDX.Vector2"/>.
-        /// </summary>
+        /// <summary>Performs an explicit conversion from <see cref="Point" /> to <see cref="SharpDX.Vector2" />.</summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
         public static implicit operator Vector2(Point value)
@@ -139,7 +120,9 @@ namespace SharpDX
             return new Vector2(value.X, value.Y);
         }
 
-        /// <inheritdoc/>
+        /// <summary>Reads or writes datas from/to the given binary serializer.</summary>
+        /// <param name="serializer">The binary serializer.</param>
+        /// <inheritdoc />
         void IDataSerializable.Serialize(BinarySerializer serializer)
         {
             // Write optimized version without using Serialize methods

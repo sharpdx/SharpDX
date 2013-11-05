@@ -153,7 +153,7 @@ namespace SharpDX.WIC
             WriteSource(bitmapSourceRef, new IntPtr(&rectangleRef));
         }
 
-        protected override unsafe void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             if (disposing)
             {

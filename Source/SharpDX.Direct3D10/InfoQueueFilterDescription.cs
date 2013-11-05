@@ -61,7 +61,7 @@ namespace SharpDX.Direct3D10
             public int IDCount;
             public System.IntPtr PIDList;
             // Method to free unmanaged allocation
-            internal unsafe void __MarshalFree()
+            internal void __MarshalFree()
             {
                 if (PCategoryList != IntPtr.Zero)
                     Marshal.FreeHGlobal(PCategoryList);
@@ -72,12 +72,12 @@ namespace SharpDX.Direct3D10
             }
         }
 
-        internal unsafe void __MarshalFree(ref InfoQueueFilterDescription.__Native @ref)
+        internal void __MarshalFree(ref InfoQueueFilterDescription.__Native @ref)
         {
             @ref.__MarshalFree();
         }
 
-        internal unsafe void __MarshalFrom(ref InfoQueueFilterDescription.__Native @ref)
+        internal void __MarshalFrom(ref InfoQueueFilterDescription.__Native @ref)
         {
             this.Categories = new MessageCategory[@ref.CategorieCount];
             if (@ref.CategorieCount > 0)
@@ -92,7 +92,7 @@ namespace SharpDX.Direct3D10
                 Utilities.Read(@ref.PIDList, this.Ids, 0, @ref.IDCount);
         }
 
-        internal unsafe void __MarshalTo(ref InfoQueueFilterDescription.__Native @ref)
+        internal void __MarshalTo(ref InfoQueueFilterDescription.__Native @ref)
         {
             @ref.CategorieCount = this.Categories == null ? 0 : this.Categories.Length;
             if (@ref.CategorieCount > 0)

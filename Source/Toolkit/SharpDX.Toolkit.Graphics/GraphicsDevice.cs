@@ -31,97 +31,121 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public class GraphicsDevice : Component
     {
+        /// <summary>The shared data per device.</summary>
         private readonly Dictionary<object, object> sharedDataPerDevice;
-        private readonly Dictionary<object, object> sharedDataPerDeviceContext = new Dictionary<object, object>();
+        /// <summary>The shared data per device context.</summary>
+        private readonly Dictionary<object, object> sharedDataPerDeviceContext;
+        /// <summary>The device.</summary>
         internal Device Device;
+        /// <summary>The context.</summary>
         internal DeviceContext Context;
+        /// <summary>The shader stages.</summary>
         internal CommonShaderStage[] ShaderStages;
-        private readonly ViewportF[] viewports = new ViewportF[16];
+        /// <summary>The viewports.</summary>
+        private readonly ViewportF[] viewports;
+        /// <summary>Gets the reset slots pointers.</summary>
+        /// <value>The reset slots pointers.</value>
         internal IntPtr ResetSlotsPointers { get; private set; }
+        /// <summary>The maximum slot count for vertex buffer.</summary>
         private int maxSlotCountForVertexBuffer;
 
+        /// <summary>The simultaneous render target count.</summary>
         private const int SimultaneousRenderTargetCount = OutputMergerStage.SimultaneousRenderTargetCount;
-        private readonly RenderTargetView[] currentRenderTargetViews = new RenderTargetView[SimultaneousRenderTargetCount];
+        /// <summary>The current render target views.</summary>
+        private readonly RenderTargetView[] currentRenderTargetViews;
+        /// <summary>The current render target view.</summary>
         private RenderTargetView currentRenderTargetView;
+        /// <summary>The actual render target view count.</summary>
         private int actualRenderTargetViewCount;
+        /// <summary>The current depth stencil view.</summary>
         private DepthStencilView currentDepthStencilView;
 
+        /// <summary>The primitive quad.</summary>
         private readonly PrimitiveQuad primitiveQuad;
 
+        /// <summary>The current vertex input layout.</summary>
         private VertexInputLayout currentVertexInputLayout;
+        /// <summary>The current pass.</summary>
         internal EffectPass CurrentPass;
 
+        /// <summary>The input signature cache.</summary>
         private readonly Dictionary<InputSignatureKey, InputSignatureManager> inputSignatureCache;
 
-        /// <summary>
-        /// Gets the features supported by this <see cref="GraphicsDevice"/>.
-        /// </summary>
+        /// <summary>Gets the features supported by this <see cref="GraphicsDevice" />.</summary>
         public readonly GraphicsDeviceFeatures Features;
 
-        /// <summary>
-        /// Default effect pool shared between all deferred GraphicsDevice instances.
-        /// </summary>
+        /// <summary>Default effect pool shared between all deferred GraphicsDevice instances.</summary>
         public readonly EffectPool DefaultEffectPool;
 
-        /// <summary>
-        /// Gets the <see cref="GraphicsDevice"/> for immediate rendering.
-        /// </summary>
+        /// <summary>Gets the <see cref="GraphicsDevice" /> for immediate rendering.</summary>
         public readonly GraphicsDevice MainDevice;
 
-        /// <summary>
-        /// Gets whether this <see cref="GraphicsDevice"/> is running in debug.
-        /// </summary>
+        /// <summary>Gets whether this <see cref="GraphicsDevice" /> is running in debug.</summary>
         public readonly bool IsDebugMode;
 
-        /// <summary>
-        /// Gets whether this <see cref="GraphicsDevice"/> is a deferred context.
-        /// </summary>
+        /// <summary>Gets whether this <see cref="GraphicsDevice" /> is a deferred context.</summary>
         public readonly bool IsDeferred;
 
-        /// <summary>
-        /// Gets the registered <see cref="BlendState"/> for this graphics device.
-        /// </summary>
+        /// <summary>Gets the registered <see cref="BlendState" /> for this graphics device.</summary>
         public readonly BlendStateCollection BlendStates;
 
-        /// <summary>
-        /// Gets the registered <see cref="DepthStencilState"/> for this graphics device.
-        /// </summary>
+        /// <summary>Gets the registered <see cref="DepthStencilState" /> for this graphics device.</summary>
         public readonly DepthStencilStateCollection DepthStencilStates;
 
-        /// <summary>
-        /// Gets the registered <see cref="SamplerState"/> for this graphics device.
-        /// </summary>
+        /// <summary>Gets the registered <see cref="SamplerState" /> for this graphics device.</summary>
         public readonly SamplerStateCollection SamplerStates;
 
-        /// <summary>
-        /// Gets the registered <see cref="RasterizerState"/> for this graphics device.
-        /// </summary>
+        /// <summary>Gets the registered <see cref="RasterizerState" /> for this graphics device.</summary>
         public readonly RasterizerStateCollection RasterizerStates;
 
+        /// <summary>The input assembler stage.</summary>
         internal InputAssemblerStage InputAssemblerStage;
+        /// <summary>The vertex shader stage.</summary>
         internal VertexShaderStage VertexShaderStage;
+        /// <summary>The domain shader stage.</summary>
         internal DomainShaderStage DomainShaderStage;
+        /// <summary>The hull shader stage.</summary>
         internal HullShaderStage HullShaderStage;
+        /// <summary>The geometry shader stage.</summary>
         internal GeometryShaderStage GeometryShaderStage;
+        /// <summary>The rasterizer stage.</summary>
         internal RasterizerStage RasterizerStage;
+        /// <summary>The pixel shader stage.</summary>
         internal PixelShaderStage PixelShaderStage;
+        /// <summary>The output merger stage.</summary>
         internal OutputMergerStage OutputMergerStage;
+        /// <summary>The compute shader stage.</summary>
         internal ComputeShaderStage ComputeShaderStage;
 
+        /// <summary>The need work around for update sub resource.</summary>
         internal readonly bool needWorkAroundForUpdateSubResource;
 
+        /// <summary>Initializes a new instance of the <see cref="GraphicsDevice"/> class.</summary>
+        /// <param name="type">The type.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="featureLevels">The feature levels.</param>
         protected GraphicsDevice(DriverType type, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
             : this((featureLevels != null && featureLevels.Length > 0) ? new Device(type, flags, featureLevels) : new Device(type, flags))
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="GraphicsDevice"/> class.</summary>
+        /// <param name="adapter">The adapter.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="featureLevels">The feature levels.</param>
         protected GraphicsDevice(GraphicsAdapter adapter, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
             : this((featureLevels != null && featureLevels.Length > 0) ? new Device(adapter, flags, featureLevels) : new Device(adapter, flags), adapter)
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="GraphicsDevice"/> class.</summary>
+        /// <param name="existingDevice">The existing device.</param>
+        /// <param name="adapter">The adapter.</param>
         protected GraphicsDevice(SharpDX.Direct3D11.Device existingDevice, GraphicsAdapter adapter = null)
         {
+            this.sharedDataPerDeviceContext = new Dictionary<object, object>();
+            this.currentRenderTargetViews = new RenderTargetView[SimultaneousRenderTargetCount];
+            this.viewports = new ViewportF[16];
             Device = ToDispose(existingDevice);
             Adapter = adapter;
 
@@ -147,8 +171,9 @@ namespace SharpDX.Toolkit.Graphics
                         }
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
+                    // Skip.
                 }
             }
 
@@ -180,8 +205,14 @@ namespace SharpDX.Toolkit.Graphics
             primitiveQuad = ToDispose(new PrimitiveQuad(this));
         }
 
+        /// <summary>Initializes a new instance of the <see cref="GraphicsDevice"/> class.</summary>
+        /// <param name="mainDevice">The main device.</param>
+        /// <param name="deferredContext">The deferred context.</param>
         protected GraphicsDevice(GraphicsDevice mainDevice, DeviceContext deferredContext)
         {
+            this.sharedDataPerDeviceContext = new Dictionary<object, object>();
+            this.currentRenderTargetViews = new RenderTargetView[SimultaneousRenderTargetCount];
+            this.viewports = new ViewportF[16];
             Device = mainDevice.Device;
             Adapter = mainDevice.Adapter;
             IsDebugMode = (Device.CreationFlags & DeviceCreationFlags.Debug) != 0;
@@ -215,9 +246,7 @@ namespace SharpDX.Toolkit.Graphics
             primitiveQuad = ToDispose(new PrimitiveQuad(this));
         }
 
-        /// <summary>
-        /// Initializes this instance.
-        /// </summary>
+        /// <summary>Initializes this instance.</summary>
         private void Initialize()
         {
             // Default null VertexBuffers used to reset
@@ -251,9 +280,7 @@ namespace SharpDX.Toolkit.Graphics
             Performance = new GraphicsPerformance(this);
         }
 
-        /// <summary>
-        /// Check if a feature level is supported by a primary adapter.
-        /// </summary>
+        /// <summary>Check if a feature level is supported by a primary adapter.</summary>
         /// <param name="featureLevel">The feature level.</param>
         /// <returns><c>true</c> if the primary adapter is supporting this feature level; otherwise, <c>false</c>.</returns>
         public static bool IsProfileSupported(FeatureLevel featureLevel)
@@ -261,54 +288,41 @@ namespace SharpDX.Toolkit.Graphics
             return SharpDX.Direct3D11.Device.IsSupportedFeatureLevel(featureLevel);
         }
 
-        /// <summary>
-        /// Gets the adapter associated with this device.
-        /// </summary>
+        /// <summary>Gets the adapter associated with this device.</summary>
         public readonly GraphicsAdapter Adapter;
 
-        /// <summary>
-        /// Gets the effect pools.
-        /// </summary>
+        /// <summary>Gets the effect pools.</summary>
         /// <value>The effect pools.</value>
         public SharpDX.Collections.ObservableCollection<EffectPool> EffectPools { get; private set; }
 
-        /// <summary>
-        /// Gets the back buffer sets by the current <see cref="Presenter" /> setup on this device.
-        /// </summary>
-        /// <value>The back buffer. The returned value may be null if no <see cref="GraphicsPresenter"/> are setup on this device.</value>
+        /// <summary>Gets the back buffer sets by the current <see cref="Presenter" /> setup on this device.</summary>
+        /// <value>The back buffer. The returned value may be null if no <see cref="GraphicsPresenter" /> are setup on this device.</value>
         public RenderTarget2D BackBuffer
         {
             get { return Presenter != null ? Presenter.BackBuffer : null; }
         }
 
-        /// <summary>
-        /// Gets the depth stencil buffer sets by the current <see cref="Presenter" /> setup on this device.
-        /// </summary>
-        /// <value>The depth stencil buffer. The returned value may be null if no <see cref="GraphicsPresenter"/> are setup on this device or no depth buffer was allocated.</value>
+        /// <summary>Gets the depth stencil buffer sets by the current <see cref="Presenter" /> setup on this device.</summary>
+        /// <value>The depth stencil buffer. The returned value may be null if no <see cref="GraphicsPresenter" /> are setup on this device or no depth buffer was allocated.</value>
         public DepthStencilBuffer DepthStencilBuffer
         {
             get { return Presenter != null ? Presenter.DepthStencilBuffer : null; }
         }
 
-        /// <summary>
-        /// Gets or sets the current presenter use by the <see cref="Present"/> method.
-        /// </summary>
+        /// <summary>Gets or sets the current presenter use by the <see cref="Present" /> method.</summary>
         /// <value>The current presenter.</value>
         public GraphicsPresenter Presenter { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the viewport is automatically calculated and set when a render target is set. Default is true.
-        /// </summary>
+        /// <summary>Gets or sets a value indicating whether the viewport is automatically calculated and set when a render target is set. Default is true.</summary>
         /// <value><c>true</c> if the viewport is automatically calculated and set when a render target is set; otherwise, <c>false</c>.</value>
         public bool AutoViewportFromRenderTargets { get; set; }
 
-        /// <summary>
-        /// Gets the status of this device.
-        /// </summary>
-        /// <msdn-id>ff476526</msdn-id>	
-        /// <unmanaged>GetDeviceRemovedReason</unmanaged>	
-        /// <unmanaged-short>GetDeviceRemovedReason</unmanaged-short>	
-        /// <unmanaged>HRESULT ID3D11Device::GetDeviceRemovedReason()</unmanaged>
+        /// <summary>Gets the status of this device.</summary>
+        /// <value>The graphics device status.</value>
+        /// <msdn-id>ff476526</msdn-id>
+        ///   <unmanaged>GetDeviceRemovedReason</unmanaged>
+        ///   <unmanaged-short>GetDeviceRemovedReason</unmanaged-short>
+        ///   <unmanaged>HRESULT ID3D11Device::GetDeviceRemovedReason()</unmanaged>
         public GraphicsDeviceStatus GraphicsDeviceStatus
         {
             get
@@ -348,15 +362,11 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        /// <summary>
-        /// Gets the access to performance profiler.
-        /// </summary>
+        /// <summary>Gets the access to performance profiler.</summary>
         /// <value>The access to performance profiler.</value>
         public GraphicsPerformance Performance { get; private set; }
 
-        /// <summary>
-        /// Clears the default render target and depth stencil buffer attached to the current <see cref="Presenter"/>.
-        /// </summary>
+        /// <summary>Clears the default render target and depth stencil buffer attached to the current <see cref="Presenter" />.</summary>
         /// <param name="color">Set this color value in all buffers.</param>
         /// <exception cref="System.InvalidOperationException">Cannot clear without a Presenter set on this instance</exception>
         public void Clear(Color4 color)
@@ -378,13 +388,16 @@ namespace SharpDX.Toolkit.Graphics
             Clear(options, color, 1f, 0);
         }
 
-        /// <summary>
-        /// Clears the default render target and depth stencil buffer attached to the current <see cref="Presenter"/>.
-        /// </summary>
+        /// <summary>Clears the default render target and depth stencil buffer attached to the current <see cref="Presenter" />.</summary>
         /// <param name="options">Options for clearing a buffer.</param>
         /// <param name="color">Set this four-component color value in the buffer.</param>
         /// <param name="depth">Set this depth value in the buffer.</param>
         /// <param name="stencil">Set this stencil value in the buffer.</param>
+        /// <exception cref="System.InvalidOperationException">
+        /// No default render target view setup. Call SetRenderTargets before calling this method.
+        /// or
+        /// No default depth stencil view setup. Call SetRenderTargets before calling this method.
+        /// </exception>
         public void Clear(ClearOptions options, Color4 color, float depth, int stencil)
         {
             if ((options & ClearOptions.Target) != 0)
@@ -413,9 +426,7 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        /// <summary>
-        /// Clears the default render target and depth stencil buffer attached to the current <see cref="Presenter"/>.
-        /// </summary>
+        /// <summary>Clears the default render target and depth stencil buffer attached to the current <see cref="Presenter" />.</summary>
         /// <param name="options">Options for clearing a buffer.</param>
         /// <param name="color">Set this four-component color value in the buffer.</param>
         /// <param name="depth">Set this depth value in the buffer.</param>
@@ -425,109 +436,88 @@ namespace SharpDX.Toolkit.Graphics
             Clear(options, (Color4)color, depth, stencil);
         }
 
-        /// <summary>
-        /// Clears a render target view by setting all the elements in a render target to one value.
-        /// </summary>
+        /// <summary>Clears a render target view by setting all the elements in a render target to one value.</summary>
         /// <param name="renderTargetView">The render target view.</param>
         /// <param name="colorRGBA">A 4-component array that represents the color to fill the render target with.</param>
-        /// <remarks><p>Applications that wish to clear a render target to a specific integer value bit pattern should render a screen-aligned quad instead of using this method.  The reason for this is because this method accepts as input a floating point value, which may not have the same bit pattern as the original integer.</p><table> <tr><td> <p>Differences between Direct3D 9 and Direct3D 11/10:</p> <p>Unlike Direct3D 9, the full extent of the resource view is always cleared. Viewport and scissor settings are not applied.</p> </td></tr> </table><p>?</p></remarks>
         /// <msdn-id>ff476388</msdn-id>
-        /// <unmanaged>void ID3D11DeviceContext::ClearRenderTargetView([In] ID3D11RenderTargetView* pRenderTargetView,[In] const SHARPDX_COLOR4* ColorRGBA)</unmanaged>
-        /// <unmanaged-short>ID3D11DeviceContext::ClearRenderTargetView</unmanaged-short>
+        ///   <unmanaged>void ID3D11DeviceContext::ClearRenderTargetView([In] ID3D11RenderTargetView* pRenderTargetView,[In] const SHARPDX_COLOR4* ColorRGBA)</unmanaged>
+        ///   <unmanaged-short>ID3D11DeviceContext::ClearRenderTargetView</unmanaged-short>
+        /// <remarks><p>Applications that wish to clear a render target to a specific integer value bit pattern should render a screen-aligned quad instead of using this method.  The reason for this is because this method accepts as input a floating point value, which may not have the same bit pattern as the original integer.</p><table> <tr><td> <p>Differences between Direct3D 9 and Direct3D 11/10:</p> <p>Unlike Direct3D 9, the full extent of the resource view is always cleared. Viewport and scissor settings are not applied.</p> </td></tr> </table><p>?</p></remarks>
         public void Clear(SharpDX.Direct3D11.RenderTargetView renderTargetView, Color4 colorRGBA)
         {
             Context.ClearRenderTargetView(renderTargetView, colorRGBA);
         }
 
-        /// <summary>	
-        /// Clears the depth-stencil resource.
-        /// </summary>	
-        /// <param name="depthStencilView"><dd>  <p>Pointer to the depth stencil to be cleared.</p> </dd></param>	
-        /// <param name="clearFlags"><dd>  <p>Identify the type of data to clear (see <strong><see cref="SharpDX.Direct3D11.DepthStencilClearFlags"/></strong>).</p> </dd></param>	
-        /// <param name="depth"><dd>  <p>Clear the depth buffer with this value. This value will be clamped between 0 and 1.</p> </dd></param>	
-        /// <param name="stencil"><dd>  <p>Clear the stencil buffer with this value.</p> </dd></param>	
-        /// <remarks>	
-        /// <table> <tr><td> <p>Differences between Direct3D 9 and Direct3D 11/10:</p> <p>Unlike Direct3D 9, the full extent of the resource view is always cleared. Viewport and scissor settings are not applied.</p> </td></tr> </table><p>?</p>	
-        /// </remarks>	
-        /// <msdn-id>ff476387</msdn-id>	
-        /// <unmanaged>void ID3D11DeviceContext::ClearDepthStencilView([In] ID3D11DepthStencilView* pDepthStencilView,[In] D3D11_CLEAR_FLAG ClearFlags,[In] float Depth,[In] unsigned char Stencil)</unmanaged>	
-        /// <unmanaged-short>ID3D11DeviceContext::ClearDepthStencilView</unmanaged-short>	
+        /// <summary>Clears the depth-stencil resource.</summary>
+        /// <param name="depthStencilView"><dd>  <p>Pointer to the depth stencil to be cleared.</p> </dd></param>
+        /// <param name="clearFlags"><dd>  <p>Identify the type of data to clear (see <strong><see cref="SharpDX.Direct3D11.DepthStencilClearFlags" /></strong>).</p> </dd></param>
+        /// <param name="depth"><dd>  <p>Clear the depth buffer with this value. This value will be clamped between 0 and 1.</p> </dd></param>
+        /// <param name="stencil"><dd>  <p>Clear the stencil buffer with this value.</p> </dd></param>
+        /// <msdn-id>ff476387</msdn-id>
+        ///   <unmanaged>void ID3D11DeviceContext::ClearDepthStencilView([In] ID3D11DepthStencilView* pDepthStencilView,[In] D3D11_CLEAR_FLAG ClearFlags,[In] float Depth,[In] unsigned char Stencil)</unmanaged>
+        ///   <unmanaged-short>ID3D11DeviceContext::ClearDepthStencilView</unmanaged-short>
+        /// <remarks><table> <tr><td> <p>Differences between Direct3D 9 and Direct3D 11/10:</p> <p>Unlike Direct3D 9, the full extent of the resource view is always cleared. Viewport and scissor settings are not applied.</p> </td></tr> </table><p>?</p></remarks>
         public void Clear(SharpDX.Direct3D11.DepthStencilView depthStencilView, SharpDX.Direct3D11.DepthStencilClearFlags clearFlags, float depth, byte stencil)
         {
             Context.ClearDepthStencilView(depthStencilView, clearFlags, depth, stencil);
         }
 
-        /// <summary>	
-        /// Clears an unordered access resource with bit-precise values.	
-        /// </summary>	
-        /// <param name="view">The buffer to clear.</param>	
-        /// <param name="value">The value used to clear.</param>	
-        /// <remarks>	
-        /// <p>This API copies the lower ni bits from each array element i to the corresponding channel, where ni is the number of bits in the ith channel of the resource format (for example, R8G8B8_FLOAT has 8 bits for the first 3 channels). This works on any UAV with no format conversion.  For a raw or structured buffer view, only the first array element value is used.</p>	
-        /// </remarks>	
-        /// <msdn-id>ff476391</msdn-id>	
-        /// <unmanaged>void ID3D11DeviceContext::ClearUnorderedAccessViewUint([In] ID3D11UnorderedAccessView* pUnorderedAccessView,[In] const unsigned int* Values)</unmanaged>	
-        /// <unmanaged-short>ID3D11DeviceContext::ClearUnorderedAccessViewUint</unmanaged-short>	
+        /// <summary>Clears an unordered access resource with bit-precise values.</summary>
+        /// <param name="view">The buffer to clear.</param>
+        /// <param name="value">The value used to clear.</param>
+        /// <msdn-id>ff476391</msdn-id>
+        ///   <unmanaged>void ID3D11DeviceContext::ClearUnorderedAccessViewUint([In] ID3D11UnorderedAccessView* pUnorderedAccessView,[In] const unsigned int* Values)</unmanaged>
+        ///   <unmanaged-short>ID3D11DeviceContext::ClearUnorderedAccessViewUint</unmanaged-short>
+        /// <remarks><p>This API copies the lower ni bits from each array element i to the corresponding channel, where ni is the number of bits in the ith channel of the resource format (for example, R8G8B8_FLOAT has 8 bits for the first 3 channels). This works on any UAV with no format conversion.  For a raw or structured buffer view, only the first array element value is used.</p></remarks>
         public void Clear(UnorderedAccessView view, Int4 value)
         {
             Context.ClearUnorderedAccessView(view, value);
         }
 
-        /// <summary>	
-        /// Clears an unordered access resource with a float value.
-        /// </summary>	
-        /// <param name="view">The buffer to clear.</param>	
-        /// <param name="value">The value used to clear.</param>	
-        /// <remarks>	
-        /// <p>This API works on FLOAT, UNORM, and SNORM unordered access views (UAVs), with format conversion from FLOAT to *NORM where appropriate. On other UAVs, the operation is invalid and the call will not reach the driver.</p>	
-        /// </remarks>	
-        /// <msdn-id>ff476390</msdn-id>	
-        /// <unmanaged>void ID3D11DeviceContext::ClearUnorderedAccessViewFloat([In] ID3D11UnorderedAccessView* pUnorderedAccessView,[In] const float* Values)</unmanaged>	
-        /// <unmanaged-short>ID3D11DeviceContext::ClearUnorderedAccessViewFloat</unmanaged-short>	
+        /// <summary>Clears an unordered access resource with a float value.</summary>
+        /// <param name="view">The buffer to clear.</param>
+        /// <param name="value">The value used to clear.</param>
+        /// <msdn-id>ff476390</msdn-id>
+        ///   <unmanaged>void ID3D11DeviceContext::ClearUnorderedAccessViewFloat([In] ID3D11UnorderedAccessView* pUnorderedAccessView,[In] const float* Values)</unmanaged>
+        ///   <unmanaged-short>ID3D11DeviceContext::ClearUnorderedAccessViewFloat</unmanaged-short>
+        /// <remarks><p>This API works on FLOAT, UNORM, and SNORM unordered access views (UAVs), with format conversion from FLOAT to *NORM where appropriate. On other UAVs, the operation is invalid and the call will not reach the driver.</p></remarks>
         public void Clear(UnorderedAccessView view, Vector4 value)
         {
             Context.ClearUnorderedAccessView(view, value);
         }
 
-        /// <summary>
-        /// Copies the content of this resource to another <see cref="GraphicsResource" />.
-        /// </summary>
+        /// <summary>Copies the content of this resource to another <see cref="GraphicsResource" />.</summary>
         /// <param name="fromResource">The resource to copy from.</param>
         /// <param name="toResource">The resource to copy to.</param>
-        /// <remarks>See the unmanaged documentation for usage and restrictions.</remarks>
         /// <msdn-id>ff476392</msdn-id>
-        /// <unmanaged>void ID3D11DeviceContext::CopyResource([In] ID3D11Resource* pDstResource,[In] ID3D11Resource* pSrcResource)</unmanaged>
-        /// <unmanaged-short>ID3D11DeviceContext::CopyResource</unmanaged-short>
+        ///   <unmanaged>void ID3D11DeviceContext::CopyResource([In] ID3D11Resource* pDstResource,[In] ID3D11Resource* pSrcResource)</unmanaged>
+        ///   <unmanaged-short>ID3D11DeviceContext::CopyResource</unmanaged-short>
+        /// <remarks>See the unmanaged documentation for usage and restrictions.</remarks>
         public void Copy(Direct3D11.Resource fromResource, Direct3D11.Resource toResource)
         {
             Context.CopyResource(fromResource, toResource);
         }
 
-        /// <summary>	
-        /// Copy a region from a source resource to a destination resource.	
-        /// </summary>	
-        /// <remarks>	
-        /// The source box must be within the size of the source resource. The destination offsets, (x, y, and z) allow the source box to be offset when writing into the destination resource; however, the dimensions of the source box and the offsets must be within the size of the resource. If the resources are buffers, all coordinates are in bytes; if the resources are textures, all coordinates are in texels. {{D3D11CalcSubresource}} is a helper function for calculating subresource indexes. CopySubresourceRegion performs the copy on the GPU (similar to a memcpy by the CPU). As a consequence, the source and destination resources:  Must be different subresources (although they can be from the same resource). Must be the same type. Must have compatible DXGI formats (identical or from the same type group). For example, a DXGI_FORMAT_R32G32B32_FLOAT texture can be copied to an DXGI_FORMAT_R32G32B32_UINT texture since both of these formats are in the DXGI_FORMAT_R32G32B32_TYPELESS group. May not be currently mapped.  CopySubresourceRegion only supports copy; it does not support any stretch, color key, blend, or format conversions. An application that needs to copy an entire resource should use <see cref="SharpDX.Direct3D11.DeviceContext.CopyResource_"/> instead. CopySubresourceRegion is an asynchronous call which may be added to the command-buffer queue, this attempts to remove pipeline stalls that may occur when copying data. See performance considerations for more details. Note??If you use CopySubresourceRegion with a depth-stencil buffer or a multisampled resource, you must copy the whole subresource. In this situation, you must pass 0 to the DstX, DstY, and DstZ parameters and NULL to the pSrcBox parameter. In addition, source and destination resources, which are represented by the pSrcResource and pDstResource parameters, should have identical sample count values. Example The following code snippet copies a box (located at (120,100),(200,220)) from a source texture into a region (10,20),(90,140) in a destination texture. 	
-        /// <code> D3D11_BOX sourceRegion;	
-        /// sourceRegion.left = 120;	
-        /// sourceRegion.right = 200;	
-        /// sourceRegion.top = 100;	
-        /// sourceRegion.bottom = 220;	
-        /// sourceRegion.front = 0;	
-        /// sourceRegion.back = 1; pd3dDeviceContext-&gt;CopySubresourceRegion( pDestTexture, 0, 10, 20, 0, pSourceTexture, 0, &amp;sourceRegion ); </code>	
-        /// 	
-        ///  Notice, that for a 2D texture, front and back are set to 0 and 1 respectively. 	
-        /// </remarks>	
-        /// <param name="source">A reference to the source resource (see <see cref="SharpDX.Direct3D11.Resource"/>). </param>
-        /// <param name="sourceSubresource">Source subresource index. </param>
-        /// <param name="destination">A reference to the destination resource (see <see cref="SharpDX.Direct3D11.Resource"/>). </param>
-        /// <param name="destinationSubResource">Destination subresource index. </param>
-        /// <param name="dstX">The x-coordinate of the upper left corner of the destination region. </param>
-        /// <param name="dstY">The y-coordinate of the upper left corner of the destination region. For a 1D subresource, this must be zero. </param>
-        /// <param name="dstZ">The z-coordinate of the upper left corner of the destination region. For a 1D or 2D subresource, this must be zero. </param>
-        /// <msdn-id>ff476394</msdn-id>	
-        /// <unmanaged>void ID3D11DeviceContext::CopySubresourceRegion([In] ID3D11Resource* pDstResource,[In] unsigned int DstSubresource,[In] unsigned int DstX,[In] unsigned int DstY,[In] unsigned int DstZ,[In] ID3D11Resource* pSrcResource,[In] unsigned int SrcSubresource,[In, Optional] const D3D11_BOX* pSrcBox)</unmanaged>	
-        /// <unmanaged-short>ID3D11DeviceContext::CopySubresourceRegion</unmanaged-short>	
+        /// <summary>Copy a region from a source resource to a destination resource.</summary>
+        /// <param name="source">A reference to the source resource (see <see cref="SharpDX.Direct3D11.Resource" />).</param>
+        /// <param name="sourceSubresource">Source subresource index.</param>
+        /// <param name="destination">A reference to the destination resource (see <see cref="SharpDX.Direct3D11.Resource" />).</param>
+        /// <param name="destinationSubResource">Destination subresource index.</param>
+        /// <param name="dstX">The x-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="dstY">The y-coordinate of the upper left corner of the destination region. For a 1D subresource, this must be zero.</param>
+        /// <param name="dstZ">The z-coordinate of the upper left corner of the destination region. For a 1D or 2D subresource, this must be zero.</param>
+        /// <msdn-id>ff476394</msdn-id>
+        ///   <unmanaged>void ID3D11DeviceContext::CopySubresourceRegion([In] ID3D11Resource* pDstResource,[In] unsigned int DstSubresource,[In] unsigned int DstX,[In] unsigned int DstY,[In] unsigned int DstZ,[In] ID3D11Resource* pSrcResource,[In] unsigned int SrcSubresource,[In, Optional] const D3D11_BOX* pSrcBox)</unmanaged>
+        ///   <unmanaged-short>ID3D11DeviceContext::CopySubresourceRegion</unmanaged-short>
+        /// <remarks>The source box must be within the size of the source resource. The destination offsets, (x, y, and z) allow the source box to be offset when writing into the destination resource; however, the dimensions of the source box and the offsets must be within the size of the resource. If the resources are buffers, all coordinates are in bytes; if the resources are textures, all coordinates are in texels. {{D3D11CalcSubresource}} is a helper function for calculating subresource indexes. CopySubresourceRegion performs the copy on the GPU (similar to a memcpy by the CPU). As a consequence, the source and destination resources:  Must be different subresources (although they can be from the same resource). Must be the same type. Must have compatible DXGI formats (identical or from the same type group). For example, a DXGI_FORMAT_R32G32B32_FLOAT texture can be copied to an DXGI_FORMAT_R32G32B32_UINT texture since both of these formats are in the DXGI_FORMAT_R32G32B32_TYPELESS group. May not be currently mapped.  CopySubresourceRegion only supports copy; it does not support any stretch, color key, blend, or format conversions. An application that needs to copy an entire resource should use <see cref="SharpDX.Direct3D11.DeviceContext.CopyResource_" /> instead. CopySubresourceRegion is an asynchronous call which may be added to the command-buffer queue, this attempts to remove pipeline stalls that may occur when copying data. See performance considerations for more details. Note??If you use CopySubresourceRegion with a depth-stencil buffer or a multisampled resource, you must copy the whole subresource. In this situation, you must pass 0 to the DstX, DstY, and DstZ parameters and NULL to the pSrcBox parameter. In addition, source and destination resources, which are represented by the pSrcResource and pDstResource parameters, should have identical sample count values. Example The following code snippet copies a box (located at (120,100),(200,220)) from a source texture into a region (10,20),(90,140) in a destination texture.
+        /// <code> D3D11_BOX sourceRegion;
+        /// sourceRegion.left = 120;
+        /// sourceRegion.right = 200;
+        /// sourceRegion.top = 100;
+        /// sourceRegion.bottom = 220;
+        /// sourceRegion.front = 0;
+        /// sourceRegion.back = 1; pd3dDeviceContext-&gt;CopySubresourceRegion( pDestTexture, 0, 10, 20, 0, pSourceTexture, 0, &amp;sourceRegion ); </code>
+        /// Notice, that for a 2D texture, front and back are set to 0 and 1 respectively.</remarks>
         public void Copy(SharpDX.Direct3D11.Resource source, int sourceSubresource, SharpDX.Direct3D11.Resource destination, int destinationSubResource, int dstX = 0, int dstY = 0, int dstZ = 0)
         {
             Context.CopySubresourceRegion(source, sourceSubresource, null, destination, destinationSubResource, dstX, dstY, dstZ);
@@ -609,6 +599,8 @@ namespace SharpDX.Toolkit.Graphics
             Context.ClearState();
         }
 
+        /// <summary>Sets the type of the primitive.</summary>
+        /// <value>The type of the primitive.</value>
         private PrimitiveTopology PrimitiveType
         {
             set
@@ -1333,7 +1325,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476484</msdn-id>
         /// <unmanaged>void ID3D11DeviceContext::SOSetTargets([In] unsigned int NumBuffers,[In, Buffer, Optional] const ID3D11Buffer** ppSOTargets,[In, Buffer, Optional] const unsigned int* pOffsets)</unmanaged>
         /// <unmanaged-short>ID3D11DeviceContext::SOSetTargets</unmanaged-short>
-        public unsafe void SetStreamOutputTarget(Buffer buffer, int offsets = -1)
+        public void SetStreamOutputTarget(Buffer buffer, int offsets = -1)
         {
             Context.StreamOutput.SetTarget(buffer, offsets);
         }
@@ -1470,15 +1462,12 @@ namespace SharpDX.Toolkit.Graphics
             maxSlotCountForVertexBuffer = 0;
         }
 
-        /// <summary>
-        /// Presents the Backbuffer to the screen.
-        /// </summary>
-        /// <remarks>
-        /// This method is only working if a <see cref="GraphicsPresenter"/> is set on this device using <see cref="Presenter"/> property.
-        /// </remarks>
-        /// <msdn-id>bb174576</msdn-id>	
-        /// <unmanaged>HRESULT IDXGISwapChain::Present([In] unsigned int SyncInterval,[In] DXGI_PRESENT_FLAGS Flags)</unmanaged>	
-        /// <unmanaged-short>IDXGISwapChain::Present</unmanaged-short>	
+        /// <summary>Presents the Backbuffer to the screen.</summary>
+        /// <exception cref="System.InvalidOperationException">Cannot use Present on a deferred context</exception>
+        /// <msdn-id>bb174576</msdn-id>
+        ///   <unmanaged>HRESULT IDXGISwapChain::Present([In] unsigned int SyncInterval,[In] DXGI_PRESENT_FLAGS Flags)</unmanaged>
+        ///   <unmanaged-short>IDXGISwapChain::Present</unmanaged-short>
+        /// <remarks>This method is only working if a <see cref="GraphicsPresenter" /> is set on this device using <see cref="Presenter" /> property.</remarks>
         public void Present()
         {
             if (IsDeferred)
@@ -1502,9 +1491,7 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        /// <summary>
-        /// Remove all shaders bounded to each stage.
-        /// </summary>
+        /// <summary>Remove all shaders bounded to each stage.</summary>
         public void ResetShaderStages()
         {
             foreach (var commonShaderStage in ShaderStages)
@@ -1513,16 +1500,24 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Performs an implicit conversion from <see cref="GraphicsDevice"/> to <see cref="Device"/>.</summary>
+        /// <param name="from">From.</param>
+        /// <returns>The result of the conversion.</returns>
         public static implicit operator Device(GraphicsDevice from)
         {
             return from == null ? null : from.Device;
         }
 
+        /// <summary>Performs an implicit conversion from <see cref="GraphicsDevice"/> to <see cref="DeviceContext"/>.</summary>
+        /// <param name="from">From.</param>
+        /// <returns>The result of the conversion.</returns>
         public static implicit operator DeviceContext(GraphicsDevice from)
         {
             return from == null ? null : from.Context;
         }
 
+        /// <summary>Setups the input layout.</summary>
+        /// <exception cref="System.InvalidOperationException">Cannot perform a Draw/Dispatch operation without an EffectPass applied.</exception>
         private void SetupInputLayout()
         {
             if (CurrentPass == null)
@@ -1532,24 +1527,18 @@ namespace SharpDX.Toolkit.Graphics
             InputAssemblerStage.SetInputLayout(inputLayout);
         }
 
-        /// <summary>
-        /// A delegate called to create shareable data. See remarks.
-        /// </summary>
+        /// <summary>A delegate called to create shareable data. See remarks.</summary>
         /// <typeparam name="T">Type of the data to create.</typeparam>
         /// <returns>A new instance of the data to share.</returns>
-        /// <remarks>
-        /// Because this method is being called from a lock region, this method should not be time consuming.
-        /// </remarks>
+        /// <remarks>Because this method is being called from a lock region, this method should not be time consuming.</remarks>
         public delegate T CreateSharedData<out T>() where T : IDisposable;
 
-        /// <summary>
-        /// Gets a shared data for this device context with a delegate to create the shared data if it is not present.
-        /// </summary>
+        /// <summary>Gets a shared data for this device context with a delegate to create the shared data if it is not present.</summary>
         /// <typeparam name="T">Type of the shared data to get/create.</typeparam>
         /// <param name="type">Type of the data to share.</param>
         /// <param name="key">The key of the shared data.</param>
         /// <param name="sharedDataCreator">The shared data creator.</param>
-        /// <returns>An instance of the shared data. The shared data will be disposed by this <see cref="GraphicsDevice"/> instance.</returns>
+        /// <returns>An instance of the shared data. The shared data will be disposed by this <see cref="GraphicsDevice" /> instance.</returns>
         public T GetOrCreateSharedData<T>(SharedDataType type, object key, CreateSharedData<T> sharedDataCreator) where T : IDisposable
         {
             var dictionary = (type == SharedDataType.PerDevice) ? sharedDataPerDevice : sharedDataPerDeviceContext;
@@ -1566,6 +1555,9 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Disposes of object resources.</summary>
+        /// <param name="disposeManagedResources">If true, managed resources should be
+        /// disposed of in addition to unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
         {
             if (disposeManagedResources)
@@ -1596,12 +1588,10 @@ namespace SharpDX.Toolkit.Graphics
         }
 
 
-        /// <summary>
-        /// Gets or create an input signature manager for a particular signature.
-        /// </summary>
+        /// <summary>Gets or create an input signature manager for a particular signature.</summary>
         /// <param name="signatureBytecode">The signature bytecode.</param>
         /// <param name="signatureHashcode">The signature hashcode.</param>
-        /// <returns></returns>
+        /// <returns>InputSignatureManager.</returns>
         internal InputSignatureManager GetOrCreateInputSignatureManager(byte[] signatureBytecode, int signatureHashcode)
         {
             var key = new InputSignatureKey(signatureBytecode, signatureHashcode);
@@ -1621,6 +1611,8 @@ namespace SharpDX.Toolkit.Graphics
             return signatureManager;
         }
 
+        /// <summary>Commons the set render targets.</summary>
+        /// <param name="rtv">The RTV.</param>
         private void CommonSetRenderTargets(RenderTargetView rtv)
         {
             currentRenderTargetViews[0] = rtv;
@@ -1629,7 +1621,7 @@ namespace SharpDX.Toolkit.Graphics
             actualRenderTargetViewCount = 1;
             currentRenderTargetView = rtv;
 
-            // Setup the viewport from the rendertarget view
+            // Setup the viewport from the render target view
             TextureView textureView;
             if (AutoViewportFromRenderTargets && rtv != null && (textureView = rtv.Tag as TextureView) != null)
             {
@@ -1637,6 +1629,8 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Commons the set render targets.</summary>
+        /// <param name="rtvs">The RTVS.</param>
         private void CommonSetRenderTargets(RenderTargetView[] rtvs)
         {
             var rtv0 = rtvs.Length > 0 ? rtvs[0] : null;
@@ -1647,7 +1641,7 @@ namespace SharpDX.Toolkit.Graphics
             actualRenderTargetViewCount = rtvs.Length;
             currentRenderTargetView = rtv0;
 
-            // Setup the viewport from the rendertarget view
+            // Setup the viewport from the render target view
             TextureView textureView;
             if (AutoViewportFromRenderTargets && rtv0 != null && (textureView = rtv0.Tag as TextureView) != null)
             {

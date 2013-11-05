@@ -18,242 +18,237 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-
-using SharpDX.Toolkit.Graphics;
-
 namespace SharpDX.Toolkit
 {
-    /// <summary>
-    /// A GameSystem that allows to draw to another window or control. Currently only valid on desktop with Windows.Forms.
-    /// </summary>
+    using System;
+
+    using SharpDX.DXGI;
+    using SharpDX.Toolkit.Graphics;
+
+    /// <summary>A GameSystem that allows to draw to another window or control. Currently only valid on desktop with Windows.Forms.</summary>
     public class GameWindowRenderer : GameSystem
     {
-        private PixelFormat preferredBackBufferFormat;
-        private int preferredBackBufferHeight;
-        private int preferredBackBufferWidth;
-        private DepthFormat preferredDepthStencilFormat;
-        private bool isBackBufferToResize;
-        private GraphicsPresenter savedPresenter;
-        private ViewportF savedViewport;
+        /// <summary>The begin draw ok.</summary>
         private bool beginDrawOk;
+
+        /// <summary>The is back buffer automatic resize.</summary>
+        private bool isBackBufferToResize;
+
+        /// <summary>The preferred back buffer format.</summary>
+        private PixelFormat preferredBackBufferFormat;
+
+        /// <summary>The preferred back buffer height.</summary>
+        private int preferredBackBufferHeight;
+
+        /// <summary>The preferred back buffer width.</summary>
+        private int preferredBackBufferWidth;
+
+        /// <summary>The saved presenter.</summary>
+        private GraphicsPresenter savedPresenter;
+
+        /// <summary>The saved viewport.</summary>
+        private ViewportF savedViewport;
+
+        /// <summary>The window user resized.</summary>
         private bool windowUserResized;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GameWindowRenderer" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="GameWindowRenderer" /> class.</summary>
         /// <param name="registry">The registry.</param>
         /// <param name="gameContext">The window context.</param>
         public GameWindowRenderer(IServiceRegistry registry, GameContext gameContext = null)
             : base(registry)
         {
-            GameContext = gameContext ?? new GameContext();
+            this.GameContext = gameContext ?? new GameContext();
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GameWindowRenderer" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="GameWindowRenderer" /> class.</summary>
         /// <param name="game">The game.</param>
         /// <param name="gameContext">The window context.</param>
         public GameWindowRenderer(Game game, GameContext gameContext = null)
             : base(game)
         {
-            GameContext = gameContext ?? new GameContext();
+            this.GameContext = gameContext ?? new GameContext();
         }
 
-        /// <summary>
-        /// Gets the underlying native window.
-        /// </summary>
+        /// <summary>Gets the underlying native window.</summary>
         /// <value>The underlying native window.</value>
         public GameContext GameContext { get; private set; }
 
-        /// <summary>
-        /// Gets the window.
-        /// </summary>
-        /// <value>The window.</value>
-        public GameWindow Window { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the presenter.
-        /// </summary>
-        /// <value>The presenter.</value>
-        public GraphicsPresenter Presenter { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the preferred back buffer format.
-        /// </summary>
+        /// <summary>Gets or sets the preferred back buffer format.</summary>
         /// <value>The preferred back buffer format.</value>
         public PixelFormat PreferredBackBufferFormat
         {
             get
             {
-                return preferredBackBufferFormat;
+                return this.preferredBackBufferFormat;
             }
 
             set
             {
-                if (preferredBackBufferFormat != value)
+                if(this.preferredBackBufferFormat != value)
                 {
-                    preferredBackBufferFormat = value;
-                    isBackBufferToResize = true;
+                    this.preferredBackBufferFormat = value;
+                    this.isBackBufferToResize = true;
                 }
             }
         }
 
-        /// <summary>
-        /// Gets or sets the height of the preferred back buffer.
-        /// </summary>
+        /// <summary>Gets or sets the height of the preferred back buffer.</summary>
         /// <value>The height of the preferred back buffer.</value>
         public int PreferredBackBufferHeight
         {
             get
             {
-                return preferredBackBufferHeight;
+                return this.preferredBackBufferHeight;
             }
 
             set
             {
-                if (preferredBackBufferHeight != value)
+                if(this.preferredBackBufferHeight != value)
                 {
-                    preferredBackBufferHeight = value;
-                    isBackBufferToResize = true;
+                    this.preferredBackBufferHeight = value;
+                    this.isBackBufferToResize = true;
                 }
             }
         }
 
-        /// <summary>
-        /// Gets or sets the width of the preferred back buffer.
-        /// </summary>
+        /// <summary>Gets or sets the width of the preferred back buffer.</summary>
         /// <value>The width of the preferred back buffer.</value>
         public int PreferredBackBufferWidth
         {
             get
             {
-                return preferredBackBufferWidth;
+                return this.preferredBackBufferWidth;
             }
 
             set
             {
-                if (preferredBackBufferWidth != value)
+                if(this.preferredBackBufferWidth != value)
                 {
-                    preferredBackBufferWidth = value;
-                    isBackBufferToResize = true;
+                    this.preferredBackBufferWidth = value;
+                    this.isBackBufferToResize = true;
                 }
             }
         }
 
-        /// <summary>
-        /// Gets or sets the preferred depth stencil format.
-        /// </summary>
+        /// <summary>Gets or sets the preferred depth stencil format.</summary>
         /// <value>The preferred depth stencil format.</value>
-        public DepthFormat PreferredDepthStencilFormat
+        public DepthFormat PreferredDepthStencilFormat { get; set; }
+
+        /// <summary>Gets or sets the presenter.</summary>
+        /// <value>The presenter.</value>
+        public GraphicsPresenter Presenter { get; protected set; }
+
+        /// <summary>Gets the window.</summary>
+        /// <value>The window.</value>
+        public GameWindow Window { get; private set; }
+
+        /// <summary>Begins the draw.</summary>
+        /// <returns><c>true</c> if begin draw is OK, <c>false</c> otherwise.</returns>
+        public override bool BeginDraw()
         {
-            get
+            if(this.GraphicsDevice != null && this.Window.Visible)
             {
-                return preferredDepthStencilFormat;
+                this.savedPresenter = this.GraphicsDevice.Presenter;
+                this.savedViewport = this.GraphicsDevice.Viewport;
+
+                this.CreateOrUpdatePresenter();
+
+                if(this.isBackBufferToResize || this.windowUserResized)
+                {
+                    PixelFormat resizeFormat;
+                    var size = this.GetRequestedSize(out resizeFormat);
+                    this.Presenter.Resize(size.Width, size.Height, resizeFormat);
+
+                    this.isBackBufferToResize = false;
+                    this.windowUserResized = false;
+                }
+
+                this.GraphicsDevice.Presenter = this.Presenter;
+                this.GraphicsDevice.SetViewport(this.Presenter.DefaultViewport);
+                this.GraphicsDevice.SetRenderTargets(this.Presenter.DepthStencilBuffer, this.Presenter.BackBuffer);
+
+                this.beginDrawOk = true;
+                return true;
             }
 
-            set
+            this.beginDrawOk = false;
+            return false;
+        }
+
+        /// <summary>Ends the draw.</summary>
+        public override void EndDraw()
+        {
+            if(this.beginDrawOk && this.GraphicsDevice != null)
             {
-                preferredDepthStencilFormat = value;
+                try
+                {
+                    this.Presenter.Present();
+                }
+                catch(SharpDXException ex)
+                {
+                    // If this is not a DeviceRemoved or DeviceReset, than throw an exception
+                    if(ex.ResultCode != ResultCode.DeviceRemoved && ex.ResultCode != ResultCode.DeviceReset) throw;
+                }
+
+                if(this.savedPresenter != null)
+                {
+                    this.GraphicsDevice.Presenter = this.savedPresenter;
+                    this.GraphicsDevice.SetRenderTargets(this.savedPresenter.DepthStencilBuffer, this.savedPresenter.BackBuffer);
+                    this.GraphicsDevice.SetViewport(this.savedViewport);
+                }
             }
         }
 
+        /// <summary>Initializes this instance.</summary>
         public override void Initialize()
         {
             var gamePlatform = (IGamePlatform)this.Services.GetService(typeof(IGamePlatform));
-            GameContext.RequestedWidth = PreferredBackBufferWidth;
-            GameContext.RequestedHeight = PreferredBackBufferHeight;
-            Window = gamePlatform.CreateWindow(GameContext);
-            Window.Visible = true;
+            this.GameContext.RequestedWidth = this.PreferredBackBufferWidth;
+            this.GameContext.RequestedHeight = this.PreferredBackBufferHeight;
+            this.Window = gamePlatform.CreateWindow(this.GameContext);
+            this.Window.Visible = true;
 
-            Window.ClientSizeChanged += WindowOnClientSizeChanged;
+            this.Window.ClientSizeChanged += this.WindowOnClientSizeChanged;
 
             base.Initialize();
         }
 
-        private Size2 GetRequestedSize(out PixelFormat format)
-        {
-            var bounds = Window.ClientBounds;
-            format = PreferredBackBufferFormat == PixelFormat.Unknown ? PixelFormat.R8G8B8A8.UNorm : PreferredBackBufferFormat;
-            return new Size2(
-                PreferredBackBufferWidth == 0 || windowUserResized ? bounds.Width : PreferredBackBufferWidth,
-                PreferredBackBufferHeight == 0 || windowUserResized ? bounds.Height : PreferredBackBufferHeight);
-        }
-
+        /// <summary>Creates the original update presenter.</summary>
         protected virtual void CreateOrUpdatePresenter()
         {
-            if (Presenter == null)
+            if(this.Presenter == null)
             {
                 PixelFormat resizeFormat;
-                var size = GetRequestedSize(out resizeFormat);
-                var presentationParameters = new PresentationParameters(size.Width, size.Height, Window.NativeWindow, resizeFormat) { DepthStencilFormat = PreferredDepthStencilFormat };
-                presentationParameters.PresentationInterval = PresentInterval.Immediate;
-                Presenter = new SwapChainGraphicsPresenter(GraphicsDevice, presentationParameters);
-                isBackBufferToResize = false;
+                var size = this.GetRequestedSize(out resizeFormat);
+                var presentationParameters = new PresentationParameters(size.Width, size.Height, this.Window.NativeWindow, resizeFormat)
+                                             {
+                                                 DepthStencilFormat = this.PreferredDepthStencilFormat,
+                                                 PresentationInterval = PresentInterval.Immediate
+                                             };
+                this.Presenter = new SwapChainGraphicsPresenter(this.GraphicsDevice, presentationParameters);
+                this.isBackBufferToResize = false;
             }
         }
 
-        public override bool BeginDraw()
+        /// <summary>Gets the size of the requested.</summary>
+        /// <param name="format">The format.</param>
+        /// <returns>Size2.</returns>
+        private Size2 GetRequestedSize(out PixelFormat format)
         {
-            if (GraphicsDevice != null && Window.Visible)
-            {
-                savedPresenter = GraphicsDevice.Presenter;
-                savedViewport = GraphicsDevice.Viewport;
-
-                CreateOrUpdatePresenter();
-
-                if (isBackBufferToResize || windowUserResized)
-                {
-                    PixelFormat resizeFormat;
-                    var size = GetRequestedSize(out resizeFormat);
-                    Presenter.Resize(size.Width, size.Height, resizeFormat);
-
-                    isBackBufferToResize = false;
-                    windowUserResized = false;
-                }
-
-                GraphicsDevice.Presenter = Presenter;
-                GraphicsDevice.SetViewport(Presenter.DefaultViewport);
-                GraphicsDevice.SetRenderTargets(Presenter.DepthStencilBuffer, Presenter.BackBuffer);
-
-                beginDrawOk = true;
-                return true;
-            }
-
-            beginDrawOk = false;
-            return false;
+            var bounds = this.Window.ClientBounds;
+            format = this.PreferredBackBufferFormat == PixelFormat.Unknown ? PixelFormat.R8G8B8A8.UNorm : this.PreferredBackBufferFormat;
+            return new Size2(
+                this.PreferredBackBufferWidth == 0 || this.windowUserResized ? bounds.Width : this.PreferredBackBufferWidth,
+                this.PreferredBackBufferHeight == 0 || this.windowUserResized ? bounds.Height : this.PreferredBackBufferHeight);
         }
 
-        public override void EndDraw()
-        {
-            if (beginDrawOk && GraphicsDevice != null)
-            {
-                try
-                {
-                    Presenter.Present();
-                }
-                catch (SharpDXException ex)
-                {
-                    // If this is not a DeviceRemoved or DeviceReset, than throw an exception
-                    if (ex.ResultCode != DXGI.ResultCode.DeviceRemoved && ex.ResultCode != DXGI.ResultCode.DeviceReset)
-                    {
-                        throw;
-                    }
-                }
-
-                if (savedPresenter != null)
-                {
-                    GraphicsDevice.Presenter = savedPresenter;
-                    GraphicsDevice.SetRenderTargets(savedPresenter.DepthStencilBuffer, savedPresenter.BackBuffer);
-                    GraphicsDevice.SetViewport(savedViewport);
-                }
-            }
-        }
-
+        /// <summary>Windows the configuration client size changed.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="eventArgs">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void WindowOnClientSizeChanged(object sender, EventArgs eventArgs)
         {
-            windowUserResized = true;
+            this.windowUserResized = true;
         }
     }
 }

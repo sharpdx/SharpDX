@@ -38,13 +38,13 @@ namespace SharpDX.XACT3
             public short NumTracks;
             public SharpDX.XACT3.TrackProperties TrackPropertiesPointer;
             // Method to free unmanaged allocation
-            internal unsafe void __MarshalFree()
+            internal void __MarshalFree()
             {
             }
         }
 
         // Method to free unmanaged allocation
-        internal unsafe void __MarshalFree(ref __Native @ref)
+        internal void __MarshalFree(ref __Native @ref)
         {
             @ref.__MarshalFree();
         }
@@ -61,7 +61,7 @@ namespace SharpDX.XACT3
                 Utilities.Read((IntPtr) ptr, this.TrackProperties, 0, @ref.NumTracks);
         }
         // Method to marshal from managed struct tot native
-        internal unsafe void __MarshalTo(ref __Native @ref)
+        internal void __MarshalTo(ref __Native @ref)
         {
             throw new NotImplementedException();
         }        

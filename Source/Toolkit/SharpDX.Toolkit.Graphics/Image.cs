@@ -148,7 +148,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="handle">The handle (optional).</param>
         /// <param name="bufferIsDisposable">if set to <c>true</c> [buffer is disposable].</param>
         /// <exception cref="System.InvalidOperationException">If the format is invalid, or width/height/depth/arraysize is invalid with respect to the dimension.</exception>
-        internal unsafe Image(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable, PitchFlags pitchFlags = PitchFlags.None)
+        internal Image(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable, PitchFlags pitchFlags = PitchFlags.None)
         {
             Initialize(description, dataPointer, offset, handle, bufferIsDisposable, pitchFlags);
         }

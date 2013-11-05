@@ -427,10 +427,9 @@ namespace SharpDX
             float g = (float)G / 255.0f;
             float b = (float)B / 255.0f;
 
-            float max, min;
-            float l, s = 0;
-
-            max = r; min = r;
+            float s = 0;
+            float max = r;
+            float min = r;
 
             if (g > max) max = g;
             if (b > max) max = b;
@@ -441,9 +440,9 @@ namespace SharpDX
             // if max == min, then there is no color and
             // the saturation is zero.
             //
-            if (max != min)
+            if (Math.Abs(max - min) > float.Epsilon)
             {
-                l = (max + min) / 2;
+                float l = (max + min) / 2;
 
                 if (l <= .5)
                 {

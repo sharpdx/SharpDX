@@ -23,39 +23,49 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using SharpDX.Collections;
-using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.Toolkit.Diagnostics;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    /// <summary>
-    /// This class manages a pool of <see cref="Effect"/>.
-    /// </summary>
-    /// <remarks>
-    /// This class is responsible to store all EffectData, create shareable constant buffers between effects and reuse shader EffectData instances.
-    /// </remarks>
+    /// <summary>This class manages a pool of <see cref="Effect" />.</summary>
+    /// <remarks>This class is responsible to store all EffectData, create shareable constant buffers between effects and reuse shader EffectData instances.</remarks>
     public sealed class EffectPool : Component
     {
         #region Delegates
 
+        /// <summary>The constant buffer allocator delegate delegate.</summary>
+        /// <param name="device">The device.</param>
+        /// <param name="pool">The pool.</param>
+        /// <param name="constantBuffer">The constant buffer.</param>
+        /// <returns>Buffer.</returns>
         public delegate Buffer ConstantBufferAllocatorDelegate(GraphicsDevice device, EffectPool pool, EffectConstantBuffer constantBuffer);
 
         #endregion
 
-
+        /// <summary>The registered shaders.</summary>
         internal readonly List<EffectData.Shader> RegisteredShaders;
-        private readonly List<SharpDX.Direct3D11.DeviceChild>[] compiledShadersGroup;
+        /// <summary>The compiled shaders group.</summary>
+        private readonly List<DeviceChild>[] compiledShadersGroup;
+        /// <summary>The graphics device.</summary>
         private readonly GraphicsDevice graphicsDevice;
+        /// <summary>The effects.</summary>
         private readonly List<Effect> effects;
 
         // GraphicsDevice => (ConstantBufferName => (EffectConstantBufferKey => EffectConstantBuffer))
+        /// <summary>The map name automatic constant buffer.</summary>
         private readonly Dictionary<GraphicsDevice, Dictionary<string, Dictionary<EffectConstantBufferKey, EffectConstantBuffer>>> mapNameToConstantBuffer;
+        /// <summary>The registered.</summary>
         private readonly Dictionary<EffectData, EffectData.Effect> registered;
+        /// <summary>The asynchronous.</summary>
         private readonly object sync = new object();
+        /// <summary>The constant buffer allocator.</summary>
         private ConstantBufferAllocatorDelegate constantBufferAllocator;
 
 
+        /// <summary>Initializes a new instance of the <see cref="EffectPool"/> class.</summary>
+        /// <param name="device">The device.</param>
+        /// <param name="name">The name.</param>
         private EffectPool(GraphicsDevice device, string name = null) : base(name)
         {
             RegisteredShaders = new List<EffectData.Shader>();
@@ -136,6 +146,8 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Caches the input signature.</summary>
+        /// <param name="effectData">The effect data.</param>
         private void CacheInputSignature(EffectData effectData)
         {
             // Iterate on all vertex shaders and make unique the bytecode
@@ -150,12 +162,17 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        public readonly System.Collections.ObjectModel.ReadOnlyCollection<Effect> RegisteredEffects;
+        /// <summary>The registered effects.</summary>
+        public readonly ReadOnlyCollection<Effect> RegisteredEffects;
 
+        /// <summary>Occurs when [effect added].</summary>
         public event EventHandler<ObservableCollectionEventArgs<Effect>> EffectAdded;
 
+        /// <summary>Occurs when [effect removed].</summary>
         public event EventHandler<ObservableCollectionEventArgs<Effect>> EffectRemoved;
 
+        /// <summary>Adds the effect.</summary>
+        /// <param name="effect">The effect.</param>
         internal void AddEffect(Effect effect)
         {
             lock (effects)
@@ -165,6 +182,8 @@ namespace SharpDX.Toolkit.Graphics
             OnEffectAdded(new ObservableCollectionEventArgs<Effect>(effect));
         }
 
+        /// <summary>Removes the effect.</summary>
+        /// <param name="effect">The effect.</param>
         internal void RemoveEffect(Effect effect)
         {
             lock (effects)
@@ -174,9 +193,16 @@ namespace SharpDX.Toolkit.Graphics
             OnEffectRemoved(new ObservableCollectionEventArgs<Effect>(effect));
         }
 
+        /// <summary>Gets the original compile shader.</summary>
+        /// <param name="shaderType">Type of the shader.</param>
+        /// <param name="index">The index.</param>
+        /// <param name="soRasterizedStream">The so rasterized stream.</param>
+        /// <param name="soElements">The so elements.</param>
+        /// <param name="profileError">The profile error.</param>
+        /// <returns>DeviceChild.</returns>
         internal DeviceChild GetOrCompileShader(EffectShaderType shaderType, int index, int soRasterizedStream, StreamOutputElement[] soElements, out string profileError)
         {
-            DeviceChild shader = null;
+            DeviceChild shader;
             profileError = null;
             lock (sync)
             {
@@ -235,6 +261,10 @@ namespace SharpDX.Toolkit.Graphics
             return shader;
         }
 
+        /// <summary>Gets the original create constant buffer.</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="bufferRaw">The buffer raw.</param>
+        /// <returns>EffectConstantBuffer.</returns>
         internal EffectConstantBuffer GetOrCreateConstantBuffer(GraphicsDevice context, EffectData.ConstantBuffer bufferRaw)
         {
             // Only lock the constant buffer object
@@ -279,9 +309,7 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        /// <summary>
-        /// Creates a new effect pool from a specified list of <see cref="EffectData" />.
-        /// </summary>
+        /// <summary>Creates a new effect pool from a specified list of <see cref="EffectData" />.</summary>
         /// <param name="device">The device.</param>
         /// <returns>An instance of <see cref="EffectPool" />.</returns>
         public static EffectPool New(GraphicsDevice device)
@@ -289,23 +317,25 @@ namespace SharpDX.Toolkit.Graphics
             return new EffectPool(device);
         }
 
-        /// <summary>
-        /// Creates a new named effect pool from a specified list of <see cref="EffectData" />.
-        /// </summary>
+        /// <summary>Creates a new named effect pool from a specified list of <see cref="EffectData" />.</summary>
         /// <param name="device">The device.</param>
         /// <param name="name">The name of this effect pool.</param>
-        /// <param name="effectData">The effect data.</param>
         /// <returns>An instance of <see cref="EffectPool" />.</returns>
         public static EffectPool New(GraphicsDevice device, string name)
         {
             return new EffectPool(device);
         }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format("EffectPool [{0}]", Name);
         }
 
+        /// <summary>Disposes of object resources.</summary>
+        /// <param name="disposeManagedResources">If true, managed resources should be
+        /// disposed of in addition to unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
         {
             base.Dispose(disposeManagedResources);
@@ -314,18 +344,16 @@ namespace SharpDX.Toolkit.Graphics
                 graphicsDevice.EffectPools.Remove(this);
         }
 
-        /// <summary>
-        /// Merges an existing <see cref="EffectData" /> into this instance.
-        /// </summary>
+        /// <summary>Merges an existing <see cref="EffectData" /> into this instance.</summary>
         /// <param name="source">The EffectData to merge.</param>
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise</returns>
+        /// <exception cref="System.InvalidOperationException"></exception>
         /// <remarks>This method is useful to build an archive of several effects.</remarks>
         private EffectData.Effect RegisterInternal(EffectData source)
         {
             var effect = source.Description;
 
-            var effectRuntime = new EffectData.Effect()
-                                    {
+            var effectRuntime = new EffectData.Effect {
                                         Name = effect.Name,
                                         Arguments = effect.Arguments,
                                         ShareConstantBuffers = effect.ShareConstantBuffers,
@@ -413,6 +441,9 @@ namespace SharpDX.Toolkit.Graphics
             return effectRuntime;
         }
 
+        /// <summary>Finds the similar shader.</summary>
+        /// <param name="shader">The shader.</param>
+        /// <returns>System.Int32.</returns>
         private int FindSimilarShader(EffectData.Shader shader)
         {
             for (int i = 0; i < RegisteredShaders.Count; i++)
@@ -423,6 +454,9 @@ namespace SharpDX.Toolkit.Graphics
             return -1;
         }
 
+        /// <summary>Finds the name of the shader by.</summary>
+        /// <param name="name">The name.</param>
+        /// <returns>System.Int32.</returns>
         private int FindShaderByName(string name)
         {
             for (int i = 0; i < RegisteredShaders.Count; i++)
@@ -434,11 +468,18 @@ namespace SharpDX.Toolkit.Graphics
 
         }
 
+        /// <summary>Defaults the constant buffer allocator.</summary>
+        /// <param name="device">The device.</param>
+        /// <param name="pool">The pool.</param>
+        /// <param name="constantBuffer">The constant buffer.</param>
+        /// <returns>Buffer.</returns>
         private static Buffer DefaultConstantBufferAllocator(GraphicsDevice device, EffectPool pool, EffectConstantBuffer constantBuffer)
         {
             return Buffer.Constant.New(device, constantBuffer.Size);
         }
 
+        /// <summary>Called when [effect added].</summary>
+        /// <param name="e">The decimal.</param>
         private void OnEffectAdded(ObservableCollectionEventArgs<Effect> e)
         {
             EventHandler<ObservableCollectionEventArgs<Effect>> handler = EffectAdded;
@@ -448,6 +489,8 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Called when [effect removed].</summary>
+        /// <param name="e">The decimal.</param>
         private void OnEffectRemoved(ObservableCollectionEventArgs<Effect> e)
         {
             EventHandler<ObservableCollectionEventArgs<Effect>> handler = EffectRemoved;
@@ -457,12 +500,13 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-
+        /*
         private class CompileShader
         {
             public SharpDX.Direct3D11.DeviceChild Shader;
 
             public SharpDX.Direct3D11.DeviceChild GeometryShader;
         }
+        */
     }
 }

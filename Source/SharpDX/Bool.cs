@@ -24,9 +24,7 @@ using SharpDX.Serialization;
 
 namespace SharpDX
 {
-    /// <summary>
-    /// A boolean value stored on 4 bytes (instead of 1 in .NET).
-    /// </summary>
+    /// <summary>A boolean value stored on 4 bytes (instead of 1 in .NET).</summary>
 #if !W8CORE
     [Serializable]
 #endif
@@ -55,6 +53,9 @@ namespace SharpDX
             return this.boolValue == other.boolValue;
         }
 
+        /// <summary>Determines whether the specified <see cref="System.Object" /> is equal to this instance.</summary>
+        /// <param name="obj">Another object to compare to.</param>
+        /// <returns><see langword="true" /> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <see langword="false" />.</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -62,6 +63,8 @@ namespace SharpDX
             return obj is Bool && Equals((Bool)obj);
         }
 
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             return this.boolValue;
@@ -109,12 +112,16 @@ namespace SharpDX
             return new Bool(boolValue);
         }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format("{0}", boolValue != 0);
         }
 
-        /// <inheritdoc/>
+        /// <summary>Reads or writes datas from/to the given binary serializer.</summary>
+        /// <param name="serializer">The binary serializer.</param>
+        /// <inheritdoc />
         void IDataSerializable.Serialize(BinarySerializer serializer)
         {
             // Write optimized version without using Serialize methods

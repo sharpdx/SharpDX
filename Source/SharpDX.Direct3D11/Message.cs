@@ -36,7 +36,7 @@ namespace SharpDX.Direct3D11
         }
 
         // Method to marshal from native to managed struct
-        internal unsafe void __MarshalFrom(ref __Native @ref)
+        internal void __MarshalFrom(ref __Native @ref)
         {
             this.Category = @ref.Category;
             this.Severity = @ref.Severity;

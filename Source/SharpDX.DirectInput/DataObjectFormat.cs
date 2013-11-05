@@ -86,7 +86,7 @@ namespace SharpDX.DirectInput
             public int Type;
             public SharpDX.DirectInput.ObjectDataFormatFlags Flags;
             // Method to free unmanaged allocation
-            internal unsafe void __MarshalFree()
+            internal void __MarshalFree()
             {
                 //if (GuidPointer != IntPtr.Zero)
                 //{
@@ -97,13 +97,13 @@ namespace SharpDX.DirectInput
         }
 
         // Method to free unmanaged allocation
-        internal unsafe void __MarshalFree(ref __Native @ref)
+        internal void __MarshalFree(ref __Native @ref)
         {
             @ref.__MarshalFree();
         }
 
         // Method to marshal from native to managed struct
-        internal unsafe void __MarshalFrom(ref __Native @ref)
+        internal void __MarshalFrom(ref __Native @ref)
         {
             this.Offset = @ref.Offset;
             this.TypeFlags = (DeviceObjectTypeFlags )@ref.Type;
@@ -116,7 +116,7 @@ namespace SharpDX.DirectInput
         }
 
         // Method to marshal from managed struct tot native
-        internal unsafe void __MarshalTo(ref __Native @ref)
+        internal void __MarshalTo(ref __Native @ref)
         {
             @ref.Offset = this.Offset;
             @ref.Type = ((int)this.TypeFlags) | (((this.TypeFlags & DeviceObjectTypeFlags.AnyInstance) == DeviceObjectTypeFlags.AnyInstance?0:InstanceNumber)<<8) ;

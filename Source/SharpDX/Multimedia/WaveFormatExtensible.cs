@@ -74,6 +74,8 @@ namespace SharpDX.Multimedia
             GuidSubFormat = bits == 32 ? new Guid("00000003-0000-0010-8000-00aa00389b71") : new Guid("00000001-0000-0010-8000-00aa00389b71");
         }
 
+        /// <summary>Marshals the automatic PTR.</summary>
+        /// <returns>IntPtr.</returns>
         protected unsafe override IntPtr MarshalToPtr()
         {
             var result = Marshal.AllocHGlobal(Utilities.SizeOf<WaveFormatExtensible.__Native>());
@@ -81,30 +83,37 @@ namespace SharpDX.Multimedia
             return result;
         }
 
+        /// <summary>The __ native struct.</summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 2)]
         internal new struct __Native
         {
+            /// <summary>The wave format.</summary>
             public WaveFormat.__Native waveFormat;
-            public short wValidBitsPerSample; // bits of precision, or is wSamplesPerBlock if wBitsPerSample==0
-            public Speakers dwChannelMask; // which channels are present in stream
+            /// <summary>The forward valid bits per sample. Bits of precision, or is wSamplesPerBlock if wBitsPerSample==0</summary>
+            public short wValidBitsPerSample;
+            /// <summary>The dw channel mask. Which channels are present in stream.</summary>
+            public Speakers dwChannelMask;
+            /// <summary>The sub format.</summary>
             public Guid subFormat;
 
-            // Method to free native struct
-            internal unsafe void __MarshalFree()
+            /// <summary>Free native struct.</summary>
+            internal void __MarshalFree()
             {
                 waveFormat.__MarshalFree();
             }
         }
-        // Method to marshal from native to managed struct
-        internal unsafe void __MarshalFrom(ref __Native @ref)
+        /// <summary>Marshal from native to managed struct.</summary>
+        /// <param name="ref">The preference.</param>
+        internal void __MarshalFrom(ref __Native @ref)
         {
             this.__MarshalFrom(ref @ref.waveFormat);
             this.wValidBitsPerSample = @ref.wValidBitsPerSample;
             this.ChannelMask = @ref.dwChannelMask;
             this.GuidSubFormat = @ref.subFormat;
         }
-        // Method to marshal from managed struct tot native
-        internal unsafe void __MarshalTo(ref __Native @ref)
+        /// <summary>Marshal from managed struct to native.</summary>
+        /// <param name="ref">The preference.</param>
+        internal void __MarshalTo(ref __Native @ref)
         {
             this.__MarshalTo(ref @ref.waveFormat);
             @ref.wValidBitsPerSample = this.wValidBitsPerSample;
@@ -112,6 +121,8 @@ namespace SharpDX.Multimedia
             @ref.subFormat = this.GuidSubFormat;
         }
 
+        /// <summary>Returns a new native.</summary>
+        /// <returns>__Native.</returns>
         internal static __Native __NewNative()
         {
             unsafe
@@ -122,9 +133,8 @@ namespace SharpDX.Multimedia
             }
         }
 
-        /// <summary>
-        /// String representation
-        /// </summary>
+        /// <summary>String representation</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return String.Format(CultureInfo.InvariantCulture, "{0} wBitsPerSample:{1} ChannelMask:{2} SubFormat:{3} extraSize:{4}",

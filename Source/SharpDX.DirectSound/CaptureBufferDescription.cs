@@ -72,7 +72,7 @@ namespace SharpDX.DirectSound
             public int EffectCount;
             public IntPtr EffectDescriptionPointer;
             // Method to free native struct
-            internal unsafe void __MarshalFree()
+            internal void __MarshalFree()
             {
                 if (FormatPointer != IntPtr.Zero)
                     Marshal.FreeHGlobal(FormatPointer);
@@ -81,13 +81,13 @@ namespace SharpDX.DirectSound
             }
         }
 
-        internal unsafe void __MarshalFree(ref __Native @ref)
+        internal void __MarshalFree(ref __Native @ref)
         {
             @ref.__MarshalFree();
         }
 
         // Method to marshal from native to managed struct
-        internal unsafe void __MarshalFrom(ref __Native @ref)
+        internal void __MarshalFrom(ref __Native @ref)
         {
             this.Size = @ref.Size;
             this.Flags = @ref.Flags;
@@ -110,7 +110,7 @@ namespace SharpDX.DirectSound
         }
 
         // Method to marshal from managed struct tot native
-        internal unsafe void __MarshalTo(ref __Native @ref)
+        internal void __MarshalTo(ref __Native @ref)
         {
             @ref.Size = this.Size;
             @ref.Flags = this.Flags;

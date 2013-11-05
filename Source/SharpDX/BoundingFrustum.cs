@@ -127,6 +127,8 @@ namespace SharpDX
             GetPlanesFromMatrix(ref pMatrix, out pNear, out pFar, out pLeft, out pRight, out pTop, out pBottom);
         }
 
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             return pMatrix.GetHashCode();
@@ -494,19 +496,17 @@ namespace SharpDX
                 n.Z = box.Minimum.Z;
         }
 
-        /// <summary>
-        /// Determines the intersection relationship between the frustum and a bounding box.
-        /// </summary>
+        /// <summary>Determines the intersection relationship between the frustum and a bounding box.</summary>
         /// <param name="box">The box.</param>
         /// <returns>Type of the containment</returns>
         public ContainmentType Contains(ref BoundingBox box)
         {
-            Vector3 p, n;
-            Plane plane;
             var result = ContainmentType.Contains;
             for (int i = 0; i < 6; i++)
             {
-                plane = GetPlane(i);
+                Plane plane = GetPlane(i);
+                Vector3 p;
+                Vector3 n;
                 GetBoxToPlanePVertexNVertex(ref box, ref plane.Normal, out p, out n);
                 if (Collision.PlaneIntersectsPoint(ref plane, ref p) == PlaneIntersectionType.Back)
                     return ContainmentType.Disjoint;
@@ -517,9 +517,7 @@ namespace SharpDX
             return result;
         }
 
-        /// <summary>
-        /// Determines the intersection relationship between the frustum and a bounding box.
-        /// </summary>
+        /// <summary>Determines the intersection relationship between the frustum and a bounding box.</summary>
         /// <param name="box">The box.</param>
         /// <returns>Type of the containment</returns>
         public ContainmentType Contains(BoundingBox box)
@@ -527,18 +525,14 @@ namespace SharpDX
             return Contains(ref box);
         }
 
-        /// <summary>
-        /// Determines the intersection relationship between the frustum and a bounding box.
-        /// </summary>
+        /// <summary>Determines the intersection relationship between the frustum and a bounding box.</summary>
         /// <param name="box">The box.</param>
         /// <param name="result">Type of the containment.</param>
         public void Contains(ref BoundingBox box, out ContainmentType result)
         {
             result = Contains(ref box);
         }
-        /// <summary>
-        /// Determines the intersection relationship between the frustum and a bounding sphere.
-        /// </summary>
+        /// <summary>Determines the intersection relationship between the frustum and a bounding sphere.</summary>
         /// <param name="sphere">The sphere.</param>
         /// <returns>Type of the containment</returns>
         public ContainmentType Contains(ref BoundingSphere sphere)
@@ -572,9 +566,7 @@ namespace SharpDX
             }
         }
 
-        /// <summary>
-        /// Determines the intersection relationship between the frustum and a bounding sphere.
-        /// </summary>
+        /// <summary>Determines the intersection relationship between the frustum and a bounding sphere.</summary>
         /// <param name="sphere">The sphere.</param>
         /// <returns>Type of the containment</returns>
         public ContainmentType Contains(BoundingSphere sphere)
@@ -582,18 +574,14 @@ namespace SharpDX
             return Contains(ref sphere);
         }
 
-        /// <summary>
-        /// Determines the intersection relationship between the frustum and a bounding sphere.
-        /// </summary>
+        /// <summary>Determines the intersection relationship between the frustum and a bounding sphere.</summary>
         /// <param name="sphere">The sphere.</param>
         /// <param name="result">Type of the containment.</param>
         public void Contains(ref BoundingSphere sphere, out ContainmentType result)
         {
             result = Contains(ref sphere);
         }
-        /// <summary>
-        /// Determines the intersection relationship between the frustum and another bounding frustum.
-        /// </summary>
+        /// <summary>Determines the intersection relationship between the frustum and another bounding frustum.</summary>
         /// <param name="frustum">The frustum.</param>
         /// <returns>Type of the containment</returns>
         public bool Contains(ref BoundingFrustum frustum)
@@ -601,9 +589,7 @@ namespace SharpDX
             return Contains(frustum.GetCorners()) != ContainmentType.Disjoint;
         }
 
-        /// <summary>
-        /// Determines the intersection relationship between the frustum and another bounding frustum.
-        /// </summary>
+        /// <summary>Determines the intersection relationship between the frustum and another bounding frustum.</summary>
         /// <param name="frustum">The frustum.</param>
         /// <returns>Type of the containment</returns>
         public bool Contains(BoundingFrustum frustum)
@@ -611,9 +597,7 @@ namespace SharpDX
             return Contains(ref frustum);
         }
 
-        /// <summary>
-        /// Determines the intersection relationship between the frustum and another bounding frustum.
-        /// </summary>
+        /// <summary>Determines the intersection relationship between the frustum and another bounding frustum.</summary>
         /// <param name="frustum">The frustum.</param>
         /// <param name="result">Type of the containment.</param>
         public void Contains(ref BoundingFrustum frustum, out bool result)
@@ -621,36 +605,28 @@ namespace SharpDX
             result = Contains(frustum.GetCorners()) != ContainmentType.Disjoint;
         }
 
-        /// <summary>
-        /// Checks whether the current BoundingFrustum intersects a BoundingSphere.
-        /// </summary>
+        /// <summary>Checks whether the current BoundingFrustum intersects a BoundingSphere.</summary>
         /// <param name="sphere">The sphere.</param>
         /// <returns>Type of the containment</returns>
         public bool Intersects(ref BoundingSphere sphere)
         {
             return Contains(ref sphere) != ContainmentType.Disjoint;
         }
-        /// <summary>
-        /// Checks whether the current BoundingFrustum intersects a BoundingSphere.
-        /// </summary>
+        /// <summary>Checks whether the current BoundingFrustum intersects a BoundingSphere.</summary>
         /// <param name="sphere">The sphere.</param>
         /// <param name="result">Set to <c>true</c> if the current BoundingFrustum intersects a BoundingSphere.</param>
         public void Intersects(ref BoundingSphere sphere, out bool result)
         {
             result = Contains(ref sphere) != ContainmentType.Disjoint;
         }
-        /// <summary>
-        /// Checks whether the current BoundingFrustum intersects a BoundingBox.
-        /// </summary>
+        /// <summary>Checks whether the current BoundingFrustum intersects a BoundingBox.</summary>
         /// <param name="box">The box.</param>
         /// <returns><c>true</c> if the current BoundingFrustum intersects a BoundingSphere.</returns>
         public bool Intersects(ref BoundingBox box)
         {
             return Contains(ref box) != ContainmentType.Disjoint;
         }
-        /// <summary>
-        /// Checks whether the current BoundingFrustum intersects a BoundingBox.
-        /// </summary>
+        /// <summary>Checks whether the current BoundingFrustum intersects a BoundingBox.</summary>
         /// <param name="box">The box.</param>
         /// <param name="result"><c>true</c> if the current BoundingFrustum intersects a BoundingSphere.</param>
         public void Intersects(ref BoundingBox box, out bool result)
@@ -658,7 +634,11 @@ namespace SharpDX
             result = Contains(ref box) != ContainmentType.Disjoint;
         }
 
-        private PlaneIntersectionType PlaneIntersectsPoints(ref Plane plane, Vector3[] points)
+        /// <summary>Planes the intersects points.</summary>
+        /// <param name="plane">The plane.</param>
+        /// <param name="points">The points.</param>
+        /// <returns>PlaneIntersectionType.</returns>
+        private static PlaneIntersectionType PlaneIntersectsPoints(ref Plane plane, Vector3[] points)
         {
             var result = Collision.PlaneIntersectsPoint(ref plane, ref points[0]);
             for (int i = 1; i < points.Length; i++)
@@ -667,18 +647,14 @@ namespace SharpDX
             return result;
         }
 
-        /// <summary>
-        /// Checks whether the current BoundingFrustum intersects the specified Plane.
-        /// </summary>
+        /// <summary>Checks whether the current BoundingFrustum intersects the specified Plane.</summary>
         /// <param name="plane">The plane.</param>
         /// <returns>Plane intersection type.</returns>
         public PlaneIntersectionType Intersects(ref Plane plane)
         {
             return PlaneIntersectsPoints(ref plane, GetCorners());
         }
-        /// <summary>
-        /// Checks whether the current BoundingFrustum intersects the specified Plane.
-        /// </summary>
+        /// <summary>Checks whether the current BoundingFrustum intersects the specified Plane.</summary>
         /// <param name="plane">The plane.</param>
         /// <param name="result">Plane intersection type.</param>
         public void Intersects(ref Plane plane, out PlaneIntersectionType result)
@@ -686,9 +662,7 @@ namespace SharpDX
             result = PlaneIntersectsPoints(ref plane, GetCorners());
         }
 
-        /// <summary>
-        /// Get the width of the frustum at specified depth.
-        /// </summary>
+        /// <summary>Get the width of the frustum at specified depth.</summary>
         /// <param name="depth">the depth at which to calculate frustum width.</param>
         /// <returns>With of the frustum at the specified depth</returns>
         public float GetWidthAtDepth(float depth)
@@ -697,9 +671,7 @@ namespace SharpDX
             return (float)(Math.Tan(hAngle) * depth * 2);
         }
 
-        /// <summary>
-        /// Get the height of the frustum at specified depth.
-        /// </summary>
+        /// <summary>Get the height of the frustum at specified depth.</summary>
         /// <param name="depth">the depth at which to calculate frustum height.</param>
         /// <returns>Height of the frustum at the specified depth</returns>
         public float GetHeightAtDepth(float depth)
@@ -708,6 +680,8 @@ namespace SharpDX
             return (float)(Math.Tan(vAngle) * depth * 2);
         }
 
+        /// <summary>Gets the inside out clone.</summary>
+        /// <returns>BoundingFrustum.</returns>
         private BoundingFrustum GetInsideOutClone()
         {
             var frustum = this;
@@ -720,9 +694,7 @@ namespace SharpDX
             return frustum;
         }
 
-        /// <summary>
-        /// Checks whether the current BoundingFrustum intersects the specified Ray.
-        /// </summary>
+        /// <summary>Checks whether the current BoundingFrustum intersects the specified Ray.</summary>
         /// <param name="ray">The ray.</param>
         /// <returns><c>true</c> if the current BoundingFrustum intersects the specified Ray.</returns>
         public bool Intersects(ref Ray ray)
@@ -730,9 +702,7 @@ namespace SharpDX
             float? inDist, outDist;
             return Intersects(ref ray, out inDist, out outDist);
         }
-        /// <summary>
-        /// Checks whether the current BoundingFrustum intersects the specified Ray.
-        /// </summary>
+        /// <summary>Checks whether the current BoundingFrustum intersects the specified Ray.</summary>
         /// <param name="ray">The Ray to check for intersection with.</param>
         /// <param name="inDistance">The distance at which the ray enters the frustum if there is an intersection and the ray starts outside the frustum.</param>
         /// <param name="outDistance">The distance at which the ray exits the frustum if there is an intersection.</param>
@@ -756,48 +726,41 @@ namespace SharpDX
                 outDistance = null;
                 return true;
             }
-            else
+            //We will find the two points at which the ray enters and exists the frustum
+            //These two points make a line which center inside the frustum if the ray intersects it
+            //Or outside the frustum if the ray intersects frustum planes outside it.
+            float minDist = float.MaxValue;
+            float maxDist = float.MinValue;
+            for (int i = 0; i < 6; i++)
             {
-                //We will find the two points at which the ray enters and exists the frustum
-                //These two points make a line which center inside the frustum if the ray intersects it
-                //Or outside the frustum if the ray intersects frustum planes outside it.
-                float minDist = float.MaxValue;
-                float maxDist = float.MinValue;
-                for (int i = 0; i < 6; i++)
+                var plane = this.GetPlane(i);
+                float distance;
+                if (Collision.RayIntersectsPlane(ref ray, ref plane, out distance))
                 {
-                    var plane = GetPlane(i);
-                    float distance;
-                    if (Collision.RayIntersectsPlane(ref ray, ref plane, out distance))
-                    {
-                        minDist = Math.Min(minDist, distance);
-                        maxDist = Math.Max(maxDist, distance);
-                    }
-                }
-
-                Vector3 minPoint = ray.Position + ray.Direction * minDist;
-                Vector3 maxPoint = ray.Position + ray.Direction * maxDist;
-                Vector3 center = (minPoint + maxPoint) / 2f;
-                if (Contains(ref center) != ContainmentType.Disjoint)
-                {
-                    inDistance = minDist;
-                    outDistance = maxDist;
-                    return true;
-                }
-                else
-                {
-                    inDistance = null;
-                    outDistance = null;
-                    return false;
+                    minDist = Math.Min(minDist, distance);
+                    maxDist = Math.Max(maxDist, distance);
                 }
             }
+
+            Vector3 minPoint = ray.Position + ray.Direction * minDist;
+            Vector3 maxPoint = ray.Position + ray.Direction * maxDist;
+            Vector3 center = (minPoint + maxPoint) / 2f;
+            if (this.Contains(ref center) != ContainmentType.Disjoint)
+            {
+                inDistance = minDist;
+                outDistance = maxDist;
+                return true;
+            }
+
+            inDistance = null;
+            outDistance = null;
+            return false;
         }
 
-        /// <summary>
-        /// Get the distance which when added to camera position along the lookat direction will do the effect of zoom to extents (zoom to fit) operation,
+        /// <summary>Get the distance which when added to camera position along the lookat direction will do the effect of zoom to extents (zoom to fit) operation,
         /// so all the passed points will fit in the current view.
         /// if the returned value is positive, the camera will move toward the lookat direction (ZoomIn).
-        /// if the returned value is negative, the camera will move in the reverse direction of the lookat direction (ZoomOut).
-        /// </summary>
+        /// if the returned value is negative, the camera will move in the reverse direction of the lookat direction (ZoomOut).</summary>
         /// <param name="points">The points.</param>
         /// <returns>The zoom to fit distance</returns>
         public float GetZoomToExtentsShiftDistance(Vector3[] points)
@@ -836,20 +799,16 @@ namespace SharpDX
             return GetZoomToExtentsShiftDistance(boundingBox.GetCorners());
         }
 
-        /// <summary>
-        /// Get the vector shift which when added to camera position will do the effect of zoom to extents (zoom to fit) operation,
-        /// so all the passed points will fit in the current view.
-        /// </summary>
+        /// <summary>Get the vector shift which when added to camera position will do the effect of zoom to extents (zoom to fit) operation,
+        /// so all the passed points will fit in the current view.</summary>
         /// <param name="points">The points.</param>
         /// <returns>The zoom to fit vector</returns>
         public Vector3 GetZoomToExtentsShiftVector(Vector3[] points)
         {
             return GetZoomToExtentsShiftDistance(points) * pNear.Normal;
         }
-        /// <summary>
-        /// Get the vector shift which when added to camera position will do the effect of zoom to extents (zoom to fit) operation,
-        /// so all the passed points will fit in the current view.
-        /// </summary>
+        /// <summary>Get the vector shift which when added to camera position will do the effect of zoom to extents (zoom to fit) operation,
+        /// so all the passed points will fit in the current view.</summary>
         /// <param name="boundingBox">The bounding box.</param>
         /// <returns>The zoom to fit vector</returns>
         public Vector3 GetZoomToExtentsShiftVector(ref BoundingBox boundingBox)
@@ -857,12 +816,8 @@ namespace SharpDX
             return GetZoomToExtentsShiftDistance(boundingBox.GetCorners()) * pNear.Normal;
         }
 
-        /// <summary>
-        /// Indicate whether the current BoundingFrustrum is Orthographic.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if the current BoundingFrustrum is Orthographic; otherwise, <c>false</c>.
-        /// </value>
+        /// <summary>Indicate whether the current BoundingFrustrum is Orthographic.</summary>
+        /// <value><c>true</c> if the current BoundingFrustrum is Orthographic; otherwise, <c>false</c>.</value>
         public bool IsOrthographic
         {
             get
@@ -871,7 +826,8 @@ namespace SharpDX
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>Reads or writes datas from/to the given binary serializer.</summary>
+        /// <param name="serializer">The binary serializer.</param>
         void IDataSerializable.Serialize(BinarySerializer serializer)
         {
             serializer.Serialize(ref pMatrix);

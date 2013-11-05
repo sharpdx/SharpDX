@@ -29,7 +29,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
     /// </summary>
     [TestFixture]
     [Description("Tests SharpDX.Toolkit.Graphics.Buffer")]
-    public unsafe class TestBuffer
+    public class TestBuffer
     {
         private GraphicsDevice device;
 

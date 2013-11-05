@@ -53,7 +53,7 @@ namespace SharpDX.X3DAudio
         }
 
         // Method to marshal from native to managed struct
-        internal unsafe void __MarshalFrom(ref __Native @ref)
+        internal void __MarshalFrom(ref __Native @ref)
         {
             this.LpfDirectCoefficient = @ref.LPFDirectCoefficient;
             this.LpfReverbCoefficient = @ref.LPFReverbCoefficient;

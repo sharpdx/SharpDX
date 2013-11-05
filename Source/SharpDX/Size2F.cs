@@ -119,12 +119,16 @@ namespace SharpDX
             return !left.Equals(right);
         }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format("({0},{1})", Width, Height);
         }
 
-        /// <inheritdoc/>
+        /// <summary>Reads or writes datas from/to the given binary serializer.</summary>
+        /// <param name="serializer">The binary serializer.</param>
+        /// <inheritdoc />
         void IDataSerializable.Serialize(BinarySerializer serializer)
         {
             // Write optimized version without using Serialize methods

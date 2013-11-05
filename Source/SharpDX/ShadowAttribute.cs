@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Reflection;
 
 namespace SharpDX
 {
@@ -28,18 +27,10 @@ namespace SharpDX
     [AttributeUsage(AttributeTargets.Interface)]
     internal class ShadowAttribute : Attribute
     {
-        private Type type;
-
         /// <summary>
         /// Gets the value.
         /// </summary>
-        public Type Type
-        {
-            get
-            {
-                return type;
-            }
-        }
+        public Type Type { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of <see cref="ShadowAttribute"/> class.
@@ -47,7 +38,7 @@ namespace SharpDX
         /// <param name="typeOfTheAssociatedShadow">Type of the associated shadow</param>
         public ShadowAttribute(Type typeOfTheAssociatedShadow)
         {
-            type = typeOfTheAssociatedShadow;
+            this.Type = typeOfTheAssociatedShadow;
         }
 
         /// <summary>

@@ -224,7 +224,7 @@ namespace SharpDX
         public static Result GetResultFromWin32Error(int win32Error)
         {
             const int FACILITY_WIN32 = 7;
-            return win32Error <= 0 ? win32Error : (int)((win32Error & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000);
+            return win32Error <= 0 ? win32Error : (int)((win32Error & (uint)0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000);
         } 
 
         /// <summary>

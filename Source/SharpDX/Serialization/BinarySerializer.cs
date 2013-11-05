@@ -23,13 +23,10 @@ using System.IO;
 using System.Text;
 using SharpDX.IO;
 using SharpDX.Multimedia;
-using System.Reflection;
 
 namespace SharpDX.Serialization
 {
-    /// <summary>
-    /// Serializer action.
-    /// </summary>
+    /// <summary>Serializer action.</summary>
     /// <param name="value">The value to read or write.</param>
     /// <param name="serializer">The serializer.</param>
     public delegate void SerializerAction(ref object value, BinarySerializer serializer);
@@ -54,7 +51,7 @@ namespace SharpDX.Serialization
     {
         private int chunkCount;
         private Chunk[] chunks;
-        private Chunk currentChunk;
+
         private readonly Dictionary<FourCC, Dynamic> dynamicMapToType;
         private readonly Dictionary<Type, Dynamic> dynamicMapToFourCC;
         private readonly Dictionary<object, int> objectToPosition;
@@ -63,22 +60,34 @@ namespace SharpDX.Serialization
         private int allowIdentityReferenceCount;
 
         // Fields used to serialize strings
-        private System.Text.Encoding encoding;
-        private System.Text.Encoder encoder;
-        private System.Text.Decoder decoder;
+        private Encoding encoding;
+        private Encoder encoder;
+        private Decoder decoder;
         private const int LargeByteBufferSize = 1024;
         private byte[] largeByteBuffer;
         private int maxChars;   // max # of chars we can put in _largeByteBuffer
         private char[] largeCharBuffer;
         private int maxCharSize;  // From LargeByteBufferSize & Encoding
 
+        /// <summary>The serializer primitive action delegate.</summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value">The value.</param>
         public delegate void SerializerPrimitiveAction<T>(ref T value);
 
+        /// <summary>The serializer type action delegate.</summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         public delegate void SerializerTypeAction<T>(ref T value, BinarySerializer serializer);
 
-
+        /// <summary>The read preference delegate.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         public delegate object ReadRef(BinarySerializer serializer);
 
+        /// <summary>The write preference delegate.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         public delegate void WriteRef(object value, BinarySerializer serializer);
 
 
@@ -117,17 +126,19 @@ namespace SharpDX.Serialization
         /// </summary>
         public BinaryWriter Writer { get; private set; }
 
+        /// <summary>Gets or sets the type of the array length.</summary>
+        /// <value>The type of the array length.</value>
         public ArrayLengthType ArrayLengthType { get; set; }
 
+        /// <summary>The mode.</summary>
         private SerializerMode mode;
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BinarySerializer" /> class.
         /// </summary>
         /// <param name="stream">The stream to read or write to.</param>
         /// <param name="mode">The read or write mode.</param>
-        public BinarySerializer(Stream stream, SerializerMode mode) : this(stream, mode, SharpDX.Text.Encoding.ASCII)
+        public BinarySerializer(Stream stream, SerializerMode mode) : this(stream, mode, Encoding.ASCII)
         {
         }
 
@@ -136,8 +147,8 @@ namespace SharpDX.Serialization
         /// </summary>
         /// <param name="stream">The stream to read or write to.</param>
         /// <param name="mode">The read or write mode.</param>
-        /// <param name="encoding">Default encoding used for strings. This parameter can be overriden later using Encoding property.</param>
-        public BinarySerializer(Stream stream, SerializerMode mode, System.Text.Encoding encoding)
+        /// <param name="encoding">Default encoding used for strings. This parameter can be overridden later using Encoding property.</param>
+        public BinarySerializer(Stream stream, SerializerMode mode, Encoding encoding)
         {
             // Setup the encoding used for strings.
             Encoding = encoding;
@@ -174,9 +185,7 @@ namespace SharpDX.Serialization
             RegisterDynamic<Vector2>();
         }
 
-        /// <summary>
-        /// Gets a tag value with the specified key.
-        /// </summary>
+        /// <summary>Gets a tag value with the specified key.</summary>
         /// <param name="key">The tag key.</param>
         /// <returns>A tag value associated to a key</returns>
         public object GetTag(object key)
@@ -188,9 +197,7 @@ namespace SharpDX.Serialization
             return value;
         }
 
-        /// <summary>
-        /// Determines whether a tag with a specified key is already stored.
-        /// </summary>
+        /// <summary>Determines whether a tag with a specified key is already stored.</summary>
         /// <param name="key">The key.</param>
         /// <returns><c>true</c> if a tag with a specified key is already stored; otherwise, <c>false</c>.</returns>
         public bool HasTag(object key)
@@ -200,9 +207,7 @@ namespace SharpDX.Serialization
             return mapTag.ContainsKey(key);
         }
 
-        /// <summary>
-        /// Removes a tag with the specified key.
-        /// </summary>
+        /// <summary>Removes a tag with the specified key.</summary>
         /// <param name="key">The key.</param>
         public void RemoveTag(object key)
         {
@@ -211,12 +216,9 @@ namespace SharpDX.Serialization
             mapTag.Remove(key);
         }
 
-        /// <summary>
-        /// Sets a tag value with the specified key.
-        /// </summary>
+        /// <summary>Sets a tag value with the specified key.</summary>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
-        /// <returns></returns>
         public void SetTag(object key, object value)
         {
             if (mapTag == null)
@@ -226,9 +228,7 @@ namespace SharpDX.Serialization
             mapTag.Add(key, value);
         }
 
-        /// <summary>
-        /// Gets or sets the serialization mode.
-        /// </summary>
+        /// <summary>Gets or sets the serialization mode.</summary>
         /// <value>The serialization mode.</value>
         public SerializerMode Mode
         {
@@ -248,12 +248,10 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Gets or sets the encoding used to serialized strings.
-        /// </summary>
+        /// <summary>Gets or sets the encoding used to serialized strings.</summary>
         /// <value>The encoding.</value>
         /// <exception cref="System.ArgumentNullException">When setting a null encoding</exception>
-        public System.Text.Encoding Encoding
+        public Encoding Encoding
         {
             get { return encoding; }
             set {
@@ -270,9 +268,7 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Enables to serialize an object only once using object reference. Default is <strong>false</strong>.
-        /// </summary>
+        /// <summary>Enables to serialize an object only once using object reference. Default is <strong>false</strong>.</summary>
         /// <value><c>true</c> if [allow null]; otherwise, <c>false</c>.</value>
         /// <exception cref="System.InvalidOperationException">If an invalid matching pair of true/false is detected.</exception>
         public bool AllowIdentity
@@ -286,10 +282,9 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Register a dynamic serializer for a particular type implementing the <see cref="IDataSerializable"/> interface and having the <see cref="DynamicSerializerAttribute"/>.
-        /// </summary>
+        /// <summary>Register a dynamic serializer for a particular type implementing the <see cref="IDataSerializable" /> interface and having the <see cref="DynamicSerializerAttribute" />.</summary>
         /// <typeparam name="T">Type of the element to serialize.</typeparam>
+        /// <exception cref="System.ArgumentException">Type T doesn't have DynamicSerializerAttribute;T</exception>
         public void RegisterDynamic<T>() where T : IDataSerializable, new()
         {
 #if W8CORE
@@ -303,9 +298,7 @@ namespace SharpDX.Serialization
             RegisterDynamic<T>(attribute.Id);
         }
 
-        /// <summary>
-        /// Register a dynamic serializer for a particular type implementing the <see cref="IDataSerializable"/> interface.
-        /// </summary>
+        /// <summary>Register a dynamic serializer for a particular type implementing the <see cref="IDataSerializable" /> interface.</summary>
         /// <typeparam name="T">Type of the element to serialize.</typeparam>
         /// <param name="id">The id to use for serializing T.</param>
         public void RegisterDynamic<T>(FourCC id) where T : IDataSerializable, new()
@@ -313,9 +306,7 @@ namespace SharpDX.Serialization
             RegisterDynamic(GetDynamic<T>(id));
         }
 
-        /// <summary>
-        /// Register a dynamic array serializer for a particular type implementing the <see cref="IDataSerializable"/> interface.
-        /// </summary>
+        /// <summary>Register a dynamic array serializer for a particular type implementing the <see cref="IDataSerializable" /> interface.</summary>
         /// <typeparam name="T">Type of the element in the array.</typeparam>
         /// <param name="id">The id to use for serializing T[].</param>
         public void RegisterDynamicArray<T>(FourCC id) where T : IDataSerializable, new()
@@ -323,19 +314,15 @@ namespace SharpDX.Serialization
             RegisterDynamic(GetDynamicArray<T>(id));
         }
 
-        /// <summary>
-        /// Register a dynamic List&lt;T&gt; serializer for a particular type implementing the <see cref="IDataSerializable"/> interface.
-        /// </summary>
+        /// <summary>Register a dynamic List&lt;T&gt; serializer for a particular type implementing the <see cref="IDataSerializable" /> interface.</summary>
         /// <typeparam name="T">Type of the element in the List&lt;T&gt;.</typeparam>
         /// <param name="id">The id to use for serializing List&lt;T&gt;.</param>
         public void RegisterDynamicList<T>(FourCC id) where T : IDataSerializable, new()
         {
             RegisterDynamic(GetDynamicList<T>(id));
         }
-        
-        /// <summary>
-        /// Register a dynamic serializer using an external action.
-        /// </summary>
+
+        /// <summary>Register a dynamic serializer using an external action.</summary>
         /// <typeparam name="T">Type of the element to serialize.</typeparam>
         /// <param name="id">The id to use for serializing T.</param>
         /// <param name="serializer">The serializer.</param>
@@ -347,16 +334,13 @@ namespace SharpDX.Serialization
             RegisterDynamic(dynamicSerializer);
         }
 
-        /// <summary>
-        /// Begin to serialize a a new chunk.
-        /// </summary>
+        /// <summary>Begin to serialize a a new chunk.</summary>
         /// <param name="chunkId">The chunk id.</param>
+        /// <exception cref="InvalidChunkException"></exception>
         /// <exception cref="SharpDX.Serialization.InvalidChunkException">If the chuck to read is not the expecting chunk.</exception>
-        /// <remarks>
-        /// A Chunk is an identifiable portion of data that will serialized. Chunk are useful to encapsulate a variable 
-        /// data (and check for the presence of the chunk Id). Chunk are storing a 4 bytes identifier and the length of 
-        /// the chunk before reading/writing actual data.
-        /// </remarks>
+        /// <remarks>A Chunk is an identifiable portion of data that will serialized. Chunk are useful to encapsulate a variable
+        /// data (and check for the presence of the chunk Id). Chunk are storing a 4 bytes identifier and the length of
+        /// the chunk before reading/writing actual data.</remarks>
         public void BeginChunk(FourCC chunkId)
         {
             // Allocate new Chunk
@@ -400,17 +384,16 @@ namespace SharpDX.Serialization
                 if (chunkIdRead != chunkId)
                     throw new InvalidChunkException(chunkIdRead, chunkId);
 
-                uint sizeOfChunk = (uint)Reader.ReadUInt32();
+                uint sizeOfChunk = this.Reader.ReadUInt32();
                 CurrentChunk.ChunkIndexEnd = Stream.Position + sizeOfChunk;
             }
         }
 
 
-        /// <summary>
-        /// Ends a chunk.
-        /// </summary>
+        /// <summary>Ends a chunk.</summary>
         /// <exception cref="System.InvalidOperationException">If there EndChunk is called without a previous BeginChunk.</exception>
-        /// <exception cref="System.IO.InvalidDataException">If the size of data read from the chunk is different from chunk size.</exception>
+        /// <exception cref="System.IO.IOException"></exception>
+        /// <exception cref="System.IO.InvalidDataException">If there EndChunk is called without a previous BeginChunk.</exception>
         public void EndChunk()
         {
             if (chunkCount <= 1)
@@ -436,9 +419,7 @@ namespace SharpDX.Serialization
         }
 
 
-        /// <summary>
-        /// Deserialize a data from the underlying stream.
-        /// </summary>
+        /// <summary>Deserialize a data from the underlying stream.</summary>
         /// <typeparam name="T">Type of the data to load.</typeparam>
         /// <returns>An instance of the loaded data.</returns>
         public T Load<T>() where T : IDataSerializable, new()
@@ -451,9 +432,7 @@ namespace SharpDX.Serialization
             return value;
         }
 
-        /// <summary>
-        /// Serializes the specified value to the underlying stream.
-        /// </summary>
+        /// <summary>Serializes the specified value to the underlying stream.</summary>
         /// <typeparam name="T">Type of the data to save.</typeparam>
         /// <param name="value">The value to save.</param>
         public void Save<T>(T value) where T : IDataSerializable, new()
@@ -465,17 +444,13 @@ namespace SharpDX.Serialization
             Flush();
         }
 
-        /// <summary>
-        /// Flush the underlying <see cref="System.IO.Stream"/>
-        /// </summary>
+        /// <summary>Flush the underlying <see cref="System.IO.Stream" /></summary>
         public void Flush()
         {
             Writer.Flush();
         }
 
-        /// <summary>
-        /// Serializes a dynamic value that can be nullable.
-        /// </summary>
+        /// <summary>Serializes a dynamic value that can be nullable.</summary>
         /// <typeparam name="T">Known type of the value to serialize. The known type is not the runtime type that will be actually serialized.</typeparam>
         /// <param name="value">The value to serialize based on its runtime type.</param>
         public void SerializeDynamic<T>(ref T value)
@@ -483,12 +458,10 @@ namespace SharpDX.Serialization
             SerializeDynamic(ref value, SerializeFlags.Dynamic | SerializeFlags.Nullable);
         }
 
-        /// <summary>
-        /// Serializes a dynamic value.
-        /// </summary>
+        /// <summary>Serializes a dynamic value.</summary>
         /// <typeparam name="T">Known type of the value to serialize. The known type is not the runtime type that will be actually serialized.</typeparam>
         /// <param name="value">The value to serialize based on its runtime type.</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
         public void SerializeDynamic<T>(ref T value, SerializeFlags serializeFlags)
         {
             int storeObjectRef;
@@ -498,15 +471,11 @@ namespace SharpDX.Serialization
             SerializeRawDynamic(ref value);
         }
 
-        /// <summary>
-        /// Serializes a static value implementing the <see cref="IDataSerializable"/> interface.
-        /// </summary>
+        /// <summary>Serializes a static value implementing the <see cref="IDataSerializable" /> interface.</summary>
         /// <typeparam name="T">Type of the data to serialize.</typeparam>
         /// <param name="value">The value to serialize</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// </remarks>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.</remarks>
         public void Serialize<T>(ref T value, SerializeFlags serializeFlags = SerializeFlags.Normal) where T : IDataSerializable, new()
         {
             int storeObjectRef;
@@ -522,16 +491,12 @@ namespace SharpDX.Serialization
             value.Serialize(this);
         }
 
-        /// <summary>
-        /// Serializes a static value implementing the <see cref="IDataSerializable"/> interface. Unlike <see cref="Serialize{T}(ref T)"/>, 
-        /// this method doesn't allocate a new instance when reading but use the reference value.
-        /// </summary>
+        /// <summary>Serializes a static value implementing the <see cref="IDataSerializable" /> interface. Unlike Serialize{T}(ref T),
+        /// this method doesn't allocate a new instance when reading but use the reference value.</summary>
         /// <typeparam name="T">Type of the data to serialize.</typeparam>
         /// <param name="value">The value to serialize</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// </remarks>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.</remarks>
         public void SerializeWithNoInstance<T>(ref T value, SerializeFlags serializeFlags = SerializeFlags.Normal) where T : IDataSerializable
         {
             int storeObjectRef;
@@ -544,15 +509,12 @@ namespace SharpDX.Serialization
             value.Serialize(this);
         }
 
-        /// <summary>
-        /// Serializes an enum value.
-        /// </summary>
+        /// <summary>Serializes an enum value.</summary>
         /// <typeparam name="T">Type of the enum to serialize.</typeparam>
         /// <param name="value">The value to serialize</param>
+        /// <exception cref="System.ArgumentException">T generic parameter must be a valid enum;value</exception>
         /// <exception cref="ArgumentException">If type T is not an enum.</exception>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// </remarks>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.</remarks>
         public unsafe void SerializeEnum<T>(ref T value) where T : struct, IComparable, IFormattable
         {
             if (!Utilities.IsEnum(typeof(T)))
@@ -585,16 +547,12 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes an array of primitives using serialization methods implemented by this instance for each item in the array.
-        /// </summary>
+        /// <summary>Serializes an array of primitives using serialization methods implemented by this instance for each item in the array.</summary>
         /// <typeparam name="T">Type of the primitive data to serialize.</typeparam>
         /// <param name="valueArray">An array of primitive value to serialize</param>
         /// <param name="serializer">The serializer to user to serialize the T values.</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// </remarks>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.</remarks>
         public void Serialize<T>(ref T[] valueArray, SerializerPrimitiveAction<T> serializer, SerializeFlags serializeFlags = SerializeFlags.Normal)
         {
             int storeObjectRef;
@@ -606,7 +564,7 @@ namespace SharpDX.Serialization
                 // Store ObjectRef
                 if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
 
-                WriteArrayLength((int)valueArray.Length);
+                WriteArrayLength(valueArray.Length);
                 for (int i = 0; i < valueArray.Length; i++)
                     serializer(ref valueArray[i]);
             }
@@ -623,19 +581,15 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes count elements in an array of primitives using serialization methods implemented by this instance for each item in the array. 
-        /// </summary>
+        /// <summary>Serializes count elements in an array of primitives using serialization methods implemented by this instance for each item in the array.</summary>
         /// <typeparam name="T">Type of the primitive data to serialize.</typeparam>
         /// <param name="valueArray">An array of primitive value to serialize</param>
         /// <param name="count">Count elements to serialize. See remarks.</param>
         /// <param name="serializer">The serializer to user to serialize the T values.</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.<br/>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.<br />
         /// <strong>Caution</strong>: Also unlike the plain array version, the count is not serialized. This method is useful
-        /// when we want to serialize the count of an array separately from the array.
-        /// </remarks>
+        /// when we want to serialize the count of an array separately from the array.</remarks>
         public void Serialize<T>(ref T[] valueArray, int count, SerializerPrimitiveAction<T> serializer, SerializeFlags serializeFlags = SerializeFlags.Normal)
         {
             int storeObjectRef;
@@ -661,16 +615,12 @@ namespace SharpDX.Serialization
                     serializer(ref valueArray[index]);
             }
         }
-        
-        /// <summary>
-        /// Serializes an array of static values that are implementing the <see cref="IDataSerializable"/> interface.
-        /// </summary>
+
+        /// <summary>Serializes an array of static values that are implementing the <see cref="IDataSerializable" /> interface.</summary>
         /// <typeparam name="T">Type of the data to serialize.</typeparam>
         /// <param name="valueArray">An array of value to serialize</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// </remarks>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.</remarks>
         public void Serialize<T>(ref T[] valueArray, SerializeFlags serializeFlags = SerializeFlags.Normal) where T : IDataSerializable, new()
         {
             int storeObjectRef;
@@ -699,15 +649,11 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes an array of static values that are implementing the <see cref="IDataSerializable"/> interface.
-        /// </summary>
+        /// <summary>Serializes an array of static values that are implementing the <see cref="IDataSerializable" /> interface.</summary>
         /// <typeparam name="T">Type of the data to serialize.</typeparam>
         /// <param name="valueArray">An array of value to serialize</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// </remarks>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.</remarks>
         public void SerializeWithNoInstance<T>(ref T[] valueArray, SerializeFlags serializeFlags = SerializeFlags.Normal) where T : IDataSerializable
         {
             int storeObjectRef;
@@ -736,18 +682,14 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes count elements in an array of static values that are implementing the <see cref="IDataSerializable"/> interface.
-        /// </summary>
+        /// <summary>Serializes count elements in an array of static values that are implementing the <see cref="IDataSerializable" /> interface.</summary>
         /// <typeparam name="T">Type of the data to serialize.</typeparam>
         /// <param name="valueArray">An array of value to serialize</param>
         /// <param name="count">Count elements to serialize. See remarks.</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.<br/>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.<br />
         /// <strong>Caution</strong>: Also unlike the plain array version, the count is not serialized. This method is useful
-        /// when we want to serialize the count of an array separately from the array.
-        /// </remarks>
+        /// when we want to serialize the count of an array separately from the array.</remarks>
         public void Serialize<T>(ref T[] valueArray, int count, SerializeFlags serializeFlags = SerializeFlags.Normal) where T : IDataSerializable, new()
         {
             int storeObjectRef;
@@ -774,14 +716,10 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes an array of bytes.
-        /// </summary>
+        /// <summary>Serializes an array of bytes.</summary>
         /// <param name="valueArray">An array of bytes to serialize</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// </remarks>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.</remarks>
         public void Serialize(ref byte[] valueArray, SerializeFlags serializeFlags = SerializeFlags.Normal)
         {
             int storeObjectRef;
@@ -808,17 +746,13 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes an array of bytes.
-        /// </summary>
+        /// <summary>Serializes an array of bytes.</summary>
         /// <param name="valueArray">An array of bytes to serialize</param>
         /// <param name="count">Count elements to serialize. See remarks.</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.<br/>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.<br />
         /// <strong>Caution</strong>: Also unlike the plain array version, the count is not serialized. This method is useful
-        /// when we want to serialize the count of an array separately from the array.
-        /// </remarks>
+        /// when we want to serialize the count of an array separately from the array.</remarks>
         public void Serialize(ref byte[] valueArray, int count, SerializeFlags serializeFlags = SerializeFlags.Normal)
         {
             int storeObjectRef;
@@ -843,15 +777,11 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes a list of static values that are implementing the <see cref="IDataSerializable"/> interface.
-        /// </summary>
+        /// <summary>Serializes a list of static values that are implementing the <see cref="IDataSerializable" /> interface.</summary>
         /// <typeparam name="T">Type of the data to serialize.</typeparam>
         /// <param name="valueList">A list of value to serialize</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// </remarks>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.</remarks>
         public void Serialize<T>(ref List<T> valueList, SerializeFlags serializeFlags = SerializeFlags.Normal) where T : IDataSerializable, new()
         {
             int storeObjectRef;
@@ -887,15 +817,11 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes a list of static values that are implementing the <see cref="IDataSerializable"/> interface.
-        /// </summary>
+        /// <summary>Serializes a list of static values that are implementing the <see cref="IDataSerializable" /> interface.</summary>
         /// <typeparam name="T">Type of the data to serialize.</typeparam>
         /// <param name="valueList">A list of value to serialize</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// </remarks>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.</remarks>
         public void SerializeThis<T>(List<T> valueList, SerializeFlags serializeFlags = SerializeFlags.Normal) where T : IDataSerializable, new()
         {
             if (Mode == SerializerMode.Write)
@@ -919,16 +845,12 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes a list of primitive values using a specific serializer method from this instance.
-        /// </summary>
+        /// <summary>Serializes a list of primitive values using a specific serializer method from this instance.</summary>
         /// <typeparam name="T">Type of the data to serialize.</typeparam>
         /// <param name="valueList">A list of value to serialize</param>
         /// <param name="serializerMethod">A method of this instance to serialize the primitive T type</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// </remarks>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.</remarks>
         public void Serialize<T>(ref List<T> valueList, SerializerPrimitiveAction<T> serializerMethod, SerializeFlags serializeFlags = SerializeFlags.Normal)
         {
             int storeObjectRef;
@@ -964,18 +886,14 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes count elements from a list of static values that are implementing the <see cref="IDataSerializable"/> interface.
-        /// </summary>
+        /// <summary>Serializes count elements from a list of static values that are implementing the <see cref="IDataSerializable" /> interface.</summary>
         /// <typeparam name="T">Type of the data to serialize.</typeparam>
         /// <param name="valueList">A list of value to serialize</param>
         /// <param name="count">Count elements to serialize. See remarks.</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.<br/>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.<br />
         /// <strong>Caution</strong>: Also unlike the plain array version, the count is not serialized. This method is useful
-        /// when we want to serialize the count of an array separately from the array.
-        /// </remarks>
+        /// when we want to serialize the count of an array separately from the array.</remarks>
         public void Serialize<T>(ref List<T> valueList, int count, SerializeFlags serializeFlags = SerializeFlags.Normal) where T : IDataSerializable, new()
         {
             int storeObjectRef;
@@ -1009,19 +927,15 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes count  elements from a list of primitive values using a specific serializer method from this instance.
-        /// </summary>
+        /// <summary>Serializes count  elements from a list of primitive values using a specific serializer method from this instance.</summary>
         /// <typeparam name="T">Type of the data to serialize.</typeparam>
         /// <param name="valueList">A list of value to serialize</param>
-        /// <param name="serializerMethod">A method of this instance to serialize the primitive T type</param>
         /// <param name="count">Count elements to serialize. See remarks.</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.<br/>
+        /// <param name="serializerMethod">A method of this instance to serialize the primitive T type</param>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.<br />
         /// <strong>Caution</strong>: Also unlike the plain array version, the count is not serialized. This method is useful
-        /// when we want to serialize the count of an array separately from the array.
-        /// </remarks>
+        /// when we want to serialize the count of an array separately from the array.</remarks>
         public void Serialize<T>(ref List<T> valueList, int count, SerializerPrimitiveAction<T> serializerMethod, SerializeFlags serializeFlags = SerializeFlags.Normal)
         {
             int storeObjectRef;
@@ -1055,6 +969,10 @@ namespace SharpDX.Serialization
             }
         }
 
+        /// <summary>Ensures the list.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="valueList">The value list.</param>
+        /// <param name="count">The count.</param>
         private void EnsureList<T>(ref List<T> valueList, int count)
         {
             // If there is a list provided, use it in place instead of allocating a new one
@@ -1072,16 +990,12 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes a dictionary of key/values that are both implementing the <see cref="IDataSerializable"/> interface.
-        /// </summary>
+        /// <summary>Serializes a dictionary of key/values that are both implementing the <see cref="IDataSerializable" /> interface.</summary>
         /// <typeparam name="TKey">Type of key to serialize.</typeparam>
         /// <typeparam name="TValue">Type of value to serialize.</typeparam>
         /// <param name="dictionary">A dictionary to serialize</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// </remarks>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.</remarks>
         public void Serialize<TKey, TValue>(ref Dictionary<TKey, TValue> dictionary, SerializeFlags serializeFlags = SerializeFlags.Normal)
             where TKey : IDataSerializable, new()
             where TValue : IDataSerializable, new()
@@ -1122,17 +1036,13 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes a dictionary of key/values.
-        /// </summary>
-        /// <typeparam name="TKey">Type of key to serialize that is implementing the <see cref="IDataSerializable"/> interface.</typeparam>
+        /// <summary>Serializes a dictionary of key/values.</summary>
+        /// <typeparam name="TKey">Type of key to serialize that is implementing the <see cref="IDataSerializable" /> interface.</typeparam>
         /// <typeparam name="TValue">Type of primitive value with its associated serializer.</typeparam>
         /// <param name="dictionary">A dictionary to serialize</param>
         /// <param name="valueSerializer">Serializer used for the TValue.</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// </remarks>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.</remarks>
         public void Serialize<TKey, TValue>(ref Dictionary<TKey, TValue> dictionary, SerializerPrimitiveAction<TValue> valueSerializer, SerializeFlags serializeFlags = SerializeFlags.Normal) where TKey : IDataSerializable, new()
         {
             int storeObjectRef;
@@ -1171,17 +1081,13 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes a dictionary of key/values.
-        /// </summary>
+        /// <summary>Serializes a dictionary of key/values.</summary>
         /// <typeparam name="TKey">Type of primitive value with its associated serializer.</typeparam>
-        /// <typeparam name="TValue">Type of value to serialize that is implementing the <see cref="IDataSerializable"/> interface.</typeparam>
+        /// <typeparam name="TValue">Type of value to serialize that is implementing the <see cref="IDataSerializable" /> interface.</typeparam>
         /// <param name="dictionary">A dictionary to serialize</param>
         /// <param name="keySerializer">Serializer used for the TKey.</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// </remarks>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.</remarks>
         public void Serialize<TKey, TValue>(ref Dictionary<TKey, TValue> dictionary, SerializerPrimitiveAction<TKey> keySerializer, SerializeFlags serializeFlags = SerializeFlags.Normal) where TValue : IDataSerializable, new()
         {
             int storeObjectRef;
@@ -1220,18 +1126,14 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes a dictionary of key/values.
-        /// </summary>
+        /// <summary>Serializes a dictionary of key/values.</summary>
         /// <typeparam name="TKey">Type of primitive key with its associated serializer.</typeparam>
         /// <typeparam name="TValue">Type of primitive value with its associated serializer.</typeparam>
         /// <param name="dictionary">A dictionary to serialize</param>
         /// <param name="keySerializer">Serializer used for the TKey.</param>
         /// <param name="valueSerializer">Serializer used for the TValue.</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// </remarks>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.</remarks>
         public void Serialize<TKey, TValue>(ref Dictionary<TKey, TValue> dictionary, SerializerPrimitiveAction<TKey> keySerializer, SerializerPrimitiveAction<TValue> valueSerializer, SerializeFlags serializeFlags = SerializeFlags.Normal)
         {
             int storeObjectRef;
@@ -1270,43 +1172,31 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes a single <strong>string</strong> value.
-        /// </summary>
+        /// <summary>Serializes a single <strong>string</strong> value.</summary>
         /// <param name="value">The value to serialize</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// This string is serialized with the current <see cref="Encoding"/> set on this instance.
-        /// </remarks>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.
+        /// This string is serialized with the current <see cref="Encoding" /> set on this instance.</remarks>
         public void Serialize(ref string value)
         {
             Serialize(ref value, false);
         }
 
-        /// <summary>
-        /// Serializes a single <strong>string</strong> value.
-        /// </summary>
+        /// <summary>Serializes a single <strong>string</strong> value.</summary>
         /// <param name="value">The value to serialize</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// This string is serialized with the current <see cref="Encoding"/> set on this instance.
-        /// </remarks>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.
+        /// This string is serialized with the current <see cref="Encoding" /> set on this instance.</remarks>
         public void Serialize(ref string value, SerializeFlags serializeFlags)
         {
             Serialize(ref value, false, serializeFlags);
         }
 
-        /// <summary>
-        /// Serializes a single <strong>string</strong> value.
-        /// </summary>
+        /// <summary>Serializes a single <strong>string</strong> value.</summary>
         /// <param name="value">The value to serialize</param>
         /// <param name="writeNullTerminatedString">Write a null byte at the end of the string.</param>
-        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// This string is serialized with the current <see cref="Encoding"/> set on this instance.
-        /// </remarks>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags" />.</param>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.
+        /// This string is serialized with the current <see cref="Encoding" /> set on this instance.</remarks>
         public void Serialize(ref string value, bool writeNullTerminatedString, SerializeFlags serializeFlags = SerializeFlags.Normal)
         {
             int storeObjectRef = -1;
@@ -1324,18 +1214,17 @@ namespace SharpDX.Serialization
             }
 
             // Store ObjectRef
-            if (storeObjectRef >= 0) StoreObjectRef(value, storeObjectRef);
+            if(storeObjectRef >= 0)
+            {
+                StoreObjectRef(value, storeObjectRef);
+            }
         }
 
-        /// <summary>
-        /// Serializes a single fixed length <strong>string</strong> value.
-        /// </summary>
+        /// <summary>Serializes a single fixed length <strong>string</strong> value.</summary>
         /// <param name="value">The value to serialize</param>
         /// <param name="len">Read/write a specific number of characters.</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// This string is serialized with the current <see cref="Encoding"/> set on this instance.
-        /// </remarks>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.
+        /// This string is serialized with the current <see cref="Encoding" /> set on this instance.</remarks>
         public void Serialize(ref string value, int len)
         {
             if (Mode == SerializerMode.Write)
@@ -1348,13 +1237,9 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes a single <strong>boolean</strong> value.
-        /// </summary>
+        /// <summary>Serializes a single <strong>boolean</strong> value.</summary>
         /// <param name="value">The value to serialize</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// </remarks>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.</remarks>
         public void Serialize(ref bool value)
         {
             if (Mode == SerializerMode.Write)
@@ -1367,13 +1252,9 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes a single <strong>byte</strong> value.
-        /// </summary>
+        /// <summary>Serializes a single <strong>byte</strong> value.</summary>
         /// <param name="value">The value to serialize</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// </remarks>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.</remarks>
         public void Serialize(ref byte value)
         {
             if (Mode == SerializerMode.Write)
@@ -1386,13 +1267,9 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes a single <strong>sbyte</strong> value.
-        /// </summary>
+        /// <summary>Serializes a single <strong>sbyte</strong> value.</summary>
         /// <param name="value">The value to serialize</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// </remarks>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.</remarks>
         public void Serialize(ref sbyte value)
         {
             if (Mode == SerializerMode.Write)
@@ -1405,13 +1282,9 @@ namespace SharpDX.Serialization
             }
         }
 
-        /// <summary>
-        /// Serializes a single <strong>short</strong> value.
-        /// </summary>
+        /// <summary>Serializes a single <strong>short</strong> value.</summary>
         /// <param name="value">The value to serialize</param>
-        /// <remarks>
-        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
-        /// </remarks>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.</remarks>
         public void Serialize(ref short value)
         {
             if (Mode == SerializerMode.Write)
@@ -1531,13 +1404,13 @@ namespace SharpDX.Serialization
             }
             else
             {
-                const int internalBufferSize = 32768;
+                const int InternalBufferSize = 32768;
 
                 if (largeByteBuffer == null)
-                    largeByteBuffer = new byte[internalBufferSize];
+                    largeByteBuffer = new byte[InternalBufferSize];
 
-                if (largeByteBuffer.Length < internalBufferSize)
-                    largeByteBuffer = new byte[internalBufferSize];
+                if (largeByteBuffer.Length < InternalBufferSize)
+                    largeByteBuffer = new byte[InternalBufferSize];
 
                 if (Mode == SerializerMode.Write)
                 {
@@ -1755,43 +1628,40 @@ namespace SharpDX.Serialization
 
                     return isNullValue;
                 }
-                else
+                // Handle read
+                value = default(T);
+                int objectPosition = (int)this.Stream.Position;
+                int objectReferenceHeader = this.Reader.ReadByte();
+                switch (objectReferenceHeader)
                 {
-                    // Handle read
-                    value = default(T);
-                    int objectPosition = (int)Stream.Position;
-                    int objectReferenceHeader = Reader.ReadByte();
-                    switch (objectReferenceHeader)
-                    {
-                        case 1:
-                            {
-                                if (allowIdentityReferenceCount > 0 && (flags & SerializeFlags.Dynamic) == 0)
-                                    storeObjectReference = objectPosition;
-                            }
-                            break;
-
-                        case 2:
-                            {
-                                if (allowIdentityReferenceCount == 0)
-                                    throw new InvalidOperationException("Can't read serialized reference when SerializeReference is off");
-
-                                // Read object position from stream
-                                objectPosition = Read7BitEncodedInt();
-                                object localValue;
-                                if (!positionToObject.TryGetValue(objectPosition, out localValue))
-                                    throw new InvalidOperationException(string.Format("Can't find serialized reference at position [{0}]", objectPosition));
-
-                                // Set Object Reference
-                                value = (T) localValue;
-
-                                // Set it as null
-                                objectReferenceHeader = 0;
-                            }
-                            break;
-                    }
-
-                    return objectReferenceHeader == 0;
+                case 1:
+                {
+                    if (this.allowIdentityReferenceCount > 0 && (flags & SerializeFlags.Dynamic) == 0)
+                        storeObjectReference = objectPosition;
                 }
+                    break;
+
+                case 2:
+                {
+                    if (this.allowIdentityReferenceCount == 0)
+                        throw new InvalidOperationException("Can't read serialized reference when SerializeReference is off");
+
+                    // Read object position from stream
+                    objectPosition = this.Read7BitEncodedInt();
+                    object localValue;
+                    if (!this.positionToObject.TryGetValue(objectPosition, out localValue))
+                        throw new InvalidOperationException(string.Format("Can't find serialized reference at position [{0}]", objectPosition));
+
+                    // Set Object Reference
+                    value = (T) localValue;
+
+                    // Set it as null
+                    objectReferenceHeader = 0;
+                }
+                    break;
+                }
+
+                return objectReferenceHeader == 0;
             }
 
             // Null is not allowed
@@ -1849,6 +1719,9 @@ namespace SharpDX.Serialization
 
         #region Primitive Array Readers
 
+        /// <summary>Readers the int array.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderIntArray(BinarySerializer serializer)
         {
             int[] value = null;
@@ -1856,6 +1729,9 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        /// <summary>Readers the authentication int array.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderUIntArray(BinarySerializer serializer)
         {
             uint[] value = null;
@@ -1863,6 +1739,9 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        /// <summary>Readers the short array.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderShortArray(BinarySerializer serializer)
         {
             short[] value = null;
@@ -1870,6 +1749,9 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        /// <summary>Readers the authentication short array.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderUShortArray(BinarySerializer serializer)
         {
             ushort[] value = null;
@@ -1877,6 +1759,9 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        /// <summary>Readers the long array.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderLongArray(BinarySerializer serializer)
         {
             long[] value = null;
@@ -1884,6 +1769,9 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        /// <summary>Readers the authentication long array.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderULongArray(BinarySerializer serializer)
         {
             ulong[] value = null;
@@ -1891,6 +1779,9 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        /// <summary>Readers the bool array.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderBoolArray(BinarySerializer serializer)
         {
             bool[] value = null;
@@ -1898,6 +1789,9 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        /// <summary>Readers the float array.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderFloatArray(BinarySerializer serializer)
         {
             float[] value = null;
@@ -1905,6 +1799,9 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        /// <summary>Readers the double array.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderDoubleArray(BinarySerializer serializer)
         {
             double[] value = null;
@@ -1912,6 +1809,9 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        /// <summary>Readers the date time array.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderDateTimeArray(BinarySerializer serializer)
         {
             DateTime[] value = null;
@@ -1919,6 +1819,9 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        /// <summary>Readers the unique identifier array.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderGuidArray(BinarySerializer serializer)
         {
             Guid[] value = null;
@@ -1926,6 +1829,9 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        /// <summary>Readers the object array.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderObjectArray(BinarySerializer serializer)
         {
             object[] value = null;
@@ -1933,6 +1839,9 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        /// <summary>Readers the character array.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderCharArray(BinarySerializer serializer)
         {
             char[] value = null;
@@ -1940,6 +1849,9 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        /// <summary>Readers the string array.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderStringArray(BinarySerializer serializer)
         {
             string[] value = null;
@@ -1947,6 +1859,9 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        /// <summary>Readers the byte array.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderByteArray(BinarySerializer serializer)
         {
             byte[] value = null;
@@ -1954,6 +1869,9 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        /// <summary>Readers the arguments byte array.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderSByteArray(BinarySerializer serializer)
         {
             sbyte[] values = null;
@@ -2281,51 +2199,81 @@ namespace SharpDX.Serialization
 
         #region Primitive Readers
 
+        /// <summary>Readers the int.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderInt(BinarySerializer serializer)
         {
             return serializer.Reader.ReadInt32();
         }
 
+        /// <summary>Readers the authentication int.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderUInt(BinarySerializer serializer)
         {
             return serializer.Reader.ReadUInt32();
         }
 
+        /// <summary>Readers the short.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderShort(BinarySerializer serializer)
         {
             return serializer.Reader.ReadInt16();
         }
 
+        /// <summary>Readers the authentication short.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderUShort(BinarySerializer serializer)
         {
             return serializer.Reader.ReadUInt16();
         }
 
+        /// <summary>Readers the long.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderLong(BinarySerializer serializer)
         {
             return serializer.Reader.ReadInt64();
         }
 
+        /// <summary>Readers the authentication long.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderULong(BinarySerializer serializer)
         {
             return serializer.Reader.ReadUInt64();
         }
 
+        /// <summary>Readers the bool.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderBool(BinarySerializer serializer)
         {
             return serializer.Reader.ReadBoolean();
         }
 
+        /// <summary>Readers the byte.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderByte(BinarySerializer serializer)
         {
             return serializer.Reader.ReadByte();
         }
 
+        /// <summary>Readers the arguments byte.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderSByte(BinarySerializer serializer)
         {
             return serializer.Reader.ReadSByte();
         }
 
+        /// <summary>Readers the string.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderString(BinarySerializer serializer)
         {
             var value = (string) null;
@@ -2333,26 +2281,41 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        /// <summary>Readers the float.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderFloat(BinarySerializer serializer)
         {
             return serializer.Reader.ReadSingle();
         }
 
+        /// <summary>Readers the double.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderDouble(BinarySerializer serializer)
         {
             return serializer.Reader.ReadDouble();
         }
 
+        /// <summary>Readers the character.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderChar(BinarySerializer serializer)
         {
             return serializer.Reader.ReadChar();
         }
 
+        /// <summary>Readers the date time.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderDateTime(BinarySerializer serializer)
         {
             return new DateTime(serializer.Reader.ReadInt64());
         }
 
+        /// <summary>Readers the unique identifier.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderGuid(BinarySerializer serializer)
         {
             return new Guid(serializer.Reader.ReadBytes(16));
@@ -2362,77 +2325,122 @@ namespace SharpDX.Serialization
 
         #region Primitive Writers
 
+        /// <summary>Writers the int.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         private static void WriterInt(object value, BinarySerializer serializer)
         {
             serializer.Writer.Write((int) value);
         }
 
+        /// <summary>Writers the authentication int.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         private static void WriterUInt(object value, BinarySerializer serializer)
         {
             serializer.Writer.Write((uint) value);
         }
 
+        /// <summary>Writers the short.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         private static void WriterShort(object value, BinarySerializer serializer)
         {
             serializer.Writer.Write((short) value);
         }
 
+        /// <summary>Writers the authentication short.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         private static void WriterUShort(object value, BinarySerializer serializer)
         {
             serializer.Writer.Write((ushort) value);
         }
 
+        /// <summary>Writers the long.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         private static void WriterLong(object value, BinarySerializer serializer)
         {
             serializer.Writer.Write((long) value);
         }
 
+        /// <summary>Writers the authentication long.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         private static void WriterULong(object value, BinarySerializer serializer)
         {
             serializer.Writer.Write((ulong) value);
         }
 
+        /// <summary>Writers the byte.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         private static void WriterByte(object value, BinarySerializer serializer)
         {
             serializer.Writer.Write((byte) value);
         }
 
+        /// <summary>Writers the arguments byte.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         private static void WriterSByte(object value, BinarySerializer serializer)
         {
             serializer.Writer.Write((sbyte) value);
         }
 
+        /// <summary>Writers the string.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         private static void WriterString(object value, BinarySerializer serializer)
         {
             var str = (string) value;
             serializer.Serialize(ref str);
         }
 
+        /// <summary>Writers the character.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         private static void WriterChar(object value, BinarySerializer serializer)
         {
             serializer.Writer.Write((char) value);
         }
 
+        /// <summary>Writers the bool.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         private static void WriterBool(object value, BinarySerializer serializer)
         {
             serializer.Writer.Write((bool) value);
         }
 
+        /// <summary>Writers the float.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         private static void WriterFloat(object value, BinarySerializer serializer)
         {
             serializer.Writer.Write((float) value);
         }
 
+        /// <summary>Writers the double.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         private static void WriterDouble(object value, BinarySerializer serializer)
         {
             serializer.Writer.Write((double) value);
         }
 
+        /// <summary>Writers the date time.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         private static void WriterDateTime(object value, BinarySerializer serializer)
         {
             serializer.Writer.Write(((DateTime) value).ToBinary());
         }
 
+        /// <summary>Writers the unique identifier.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         private static void WriterGuid(object value, BinarySerializer serializer)
         {
             serializer.Writer.Write(((Guid) value).ToByteArray());
@@ -2442,6 +2450,10 @@ namespace SharpDX.Serialization
 
         #region IDataSerializable Reader and Writer (+ Array and List)
 
+        /// <summary>Readers the data serializer.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderDataSerializer<T>(BinarySerializer serializer) where T : IDataSerializable, new()
         {
             var value = default(T);
@@ -2449,12 +2461,20 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        /// <summary>Writers the data serializer.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         private static void WriterDataSerializer<T>(object value, BinarySerializer serializer) where T : IDataSerializable, new()
         {
             var valueTyped = (T)value;
             serializer.Serialize(ref valueTyped);
         }
 
+        /// <summary>Readers the data serializer array.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderDataSerializerArray<T>(BinarySerializer serializer) where T : IDataSerializable, new()
         {
             var value = (T[]) null;
@@ -2462,12 +2482,20 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        /// <summary>Writers the data serializer array.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         private static void WriterDataSerializerArray<T>(object value, BinarySerializer serializer) where T : IDataSerializable, new()
         {
             var valueList = (T[]) value;
             serializer.Serialize(ref valueList);
         }
 
+        /// <summary>Readers the data serializer list.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         private static object ReaderDataSerializerList<T>(BinarySerializer serializer) where T : IDataSerializable, new()
         {
             var value = (List<T>) null;
@@ -2475,6 +2503,10 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        /// <summary>Writers the data serializer list.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         private static void WriterDataSerializerList<T>(object value, BinarySerializer serializer) where T : IDataSerializable, new()
         {
             var valueList = (List<T>) value;
@@ -2483,6 +2515,7 @@ namespace SharpDX.Serialization
 
         #endregion
 
+        /// <summary>The default dynamics.</summary>
         private static readonly List<Dynamic> DefaultDynamics = new List<Dynamic>() 
             {
                 new Dynamic {Id = 0, Type = typeof (int), Reader = ReaderInt, Writer = WriterInt},
@@ -2536,25 +2569,31 @@ namespace SharpDX.Serialization
                 new Dynamic {Id = 75, Type = typeof (List<object>), Reader = ReaderObjectList, Writer = WriterObjectList},
             };
 
-        private Chunk CurrentChunk
-        {
-            get { return currentChunk; }
-            set { currentChunk = value; }
-        }
+        /// <summary>Gets or sets the current chunk.</summary>
+        /// <value>The current chunk.</value>
+        private Chunk CurrentChunk { get; set; }
 
-        private class Chunk
+        /// <summary>The chunk class.</summary>
+        private sealed class Chunk
         {
+            /// <summary>The unique identifier.</summary>
             public FourCC Id;
+            /// <summary>The chunk index start.</summary>
             public long ChunkIndexStart;
+            /// <summary>The chunk index end.</summary>
             public long ChunkIndexEnd;
         }
 
+        /// <summary>Stores the object preference.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="position">The position.</param>
         private void StoreObjectRef(object value, int position)
         {
             objectToPosition.Add(value, position);
             positionToObject.Add(position, value);
         }
 
+        /// <summary>Resets the stored reference.</summary>
         private void ResetStoredReference()
         {
             positionToObject.Clear();
@@ -2562,12 +2601,15 @@ namespace SharpDX.Serialization
         }
 
 
+        /// <summary>Reads the string.</summary>
+        /// <param name="readNullTerminatedString">if set to <see langword="true" /> [read null terminated string].</param>
+        /// <param name="stringLength">Length of the string.</param>
+        /// <returns>String.</returns>
+        /// <exception cref="System.IO.IOException"></exception>
+        /// <exception cref="System.IO.EndOfStreamException"></exception>
         private String ReadString(bool readNullTerminatedString, int stringLength)
         {
             int currPos = 0;
-            int n;
-            int readLength;
-            int charsRead;
 
             if (largeByteBuffer == null)
                 largeByteBuffer = new byte[LargeByteBufferSize];
@@ -2617,13 +2659,13 @@ namespace SharpDX.Serialization
                     StringBuilder sb = null;
                     do
                     {
-                        readLength = ((stringLength - currPos) > LargeByteBufferSize) ? LargeByteBufferSize : (stringLength - currPos);
+                        int readLength = ((stringLength - currPos) > LargeByteBufferSize) ? LargeByteBufferSize : (stringLength - currPos);
 
-                        n = Stream.Read(largeByteBuffer, 0, readLength);
+                        int n = Stream.Read(largeByteBuffer, 0, readLength);
                         if (n == 0)
                             throw new EndOfStreamException();
 
-                        charsRead = decoder.GetChars(largeByteBuffer, 0, n, largeCharBuffer, 0);
+                        int charsRead = decoder.GetChars(largeByteBuffer, 0, n, largeCharBuffer, 0);
 
                         if (currPos == 0 && n == stringLength)
                             return new String(largeCharBuffer, 0, charsRead);
@@ -2642,6 +2684,12 @@ namespace SharpDX.Serialization
             return result;
         }
 
+        /// <summary>Writes the string.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="writeNullTerminated">if set to <see langword="true" /> [write null terminated].</param>
+        /// <param name="len">The length.</param>
+        /// <exception cref="System.ArgumentNullException">value</exception>
+        /// <exception cref="System.ArgumentException">Cannot use null terminated string and fixed length</exception>
         private unsafe void WriteString(String value, bool writeNullTerminated, int len)
         {
             if (value == null)
@@ -2716,6 +2764,8 @@ namespace SharpDX.Serialization
                 Stream.WriteByte(0);
         }
 
+        /// <summary>Reads the length of the array.</summary>
+        /// <returns>System.Int32.</returns>
         protected int ReadArrayLength()
         {
             switch (ArrayLengthType)
@@ -2730,6 +2780,10 @@ namespace SharpDX.Serialization
             return Reader.ReadInt32();
         }
 
+        /// <summary>Writes the length of the array.</summary>
+        /// <param name="value">The value.</param>
+        /// <exception cref="System.NotSupportedException">
+        /// </exception>
         protected void WriteArrayLength(int value)
         {
             switch (ArrayLengthType)
@@ -2752,6 +2806,9 @@ namespace SharpDX.Serialization
             }
         }
 
+        /// <summary>Read 7 bit encoded int.</summary>
+        /// <returns>System.Int32.</returns>
+        /// <exception cref="System.FormatException">Bad string length. 7bit Int32 format</exception>
         protected int Read7BitEncodedInt()
         {
             // Read out an Int32 7 bits at a time.  The high bit 
@@ -2774,6 +2831,8 @@ namespace SharpDX.Serialization
             return count;
         }
 
+        /// <summary>Write 7 bit encoded int.</summary>
+        /// <param name="value">The value.</param>
         protected void Write7BitEncodedInt(int value)
         {
             // Write out an int 7 bits at a time.  The high bit of the byte, 
@@ -2787,33 +2846,55 @@ namespace SharpDX.Serialization
             Writer.Write((byte)v);
         }
 
+        /// <summary>Gets the dynamic.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="id">The unique identifier.</param>
+        /// <returns>Dynamic.</returns>
         private static Dynamic GetDynamic<T>(FourCC id) where T : IDataSerializable, new()
         {
             return new Dynamic { Id = id, Type = typeof(T), Reader = ReaderDataSerializer<T>, Writer = WriterDataSerializer<T> };
         }
 
+        /// <summary>Gets the dynamic array.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="id">The unique identifier.</param>
+        /// <returns>Dynamic.</returns>
         private static Dynamic GetDynamicArray<T>(FourCC id) where T : IDataSerializable, new()
         {
             return new Dynamic { Id = id, Type = typeof(T[]), Reader = ReaderDataSerializerArray<T>, Writer = WriterDataSerializerArray<T> };
         }
 
+        /// <summary>Gets the dynamic list.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="id">The unique identifier.</param>
+        /// <returns>Dynamic.</returns>
         private static Dynamic GetDynamicList<T>(FourCC id) where T : IDataSerializable, new()
         {
             return new Dynamic { Id = id, Type = typeof(List<T>), Reader = ReaderDataSerializerList<T>, Writer = WriterDataSerializerList<T> };
         }
 
+        /// <summary>The dynamic class.</summary>
         private class Dynamic
         {
+            /// <summary>The unique identifier.</summary>
             public FourCC Id;
 
+            /// <summary>The type.</summary>
             public Type Type;
 
+            /// <summary>The reader.</summary>
             public ReadRef Reader;
 
+            /// <summary>The writer.</summary>
             public WriteRef Writer;
 
+            /// <summary>The dynamic serializer.</summary>
             public SerializerAction DynamicSerializer;
 
+            /// <summary>Dynamics the reader.</summary>
+            /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+            /// <param name="serializer">The serializer.</param>
+            /// <returns>System.Object.</returns>
             public object DynamicReader<T>(BinarySerializer serializer) where T : new()
             {
                 object value = new T();
@@ -2821,12 +2902,17 @@ namespace SharpDX.Serialization
                 return value;
             }
 
+            /// <summary>Dynamics the writer.</summary>
+            /// <param name="value">The value.</param>
+            /// <param name="serializer">The serializer.</param>
             public void DynamicWriter(object value, BinarySerializer serializer)
             {
                 DynamicSerializer(ref value, serializer);
             }
         }
 
+        /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
+        /// <param name="disposing"><see langword="true" /> to release both managed and unmanaged resources; <see langword="false" /> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
         }

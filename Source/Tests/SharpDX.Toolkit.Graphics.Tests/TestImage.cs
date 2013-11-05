@@ -32,7 +32,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
     /// </summary>
     [TestFixture]
     [Description("Tests SharpDX.Toolkit.Graphics.Image")]
-    public unsafe class TestImage
+    public class TestImage
     {
         private string dxsdkDir;
 

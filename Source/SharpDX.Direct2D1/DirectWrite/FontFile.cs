@@ -23,6 +23,7 @@ namespace SharpDX.DirectWrite
 {
     public partial class FontFile
     {
+        /// <summary>The font loader shadow.</summary>
         private FontFileLoaderShadow fontLoaderShadow;
 
         /// <summary>	

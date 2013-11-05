@@ -20,7 +20,7 @@
 namespace SharpDX.Direct3D
 {
     /// <summary>
-    /// The <see cref="SharpDX.Direct3D"/> namespace contains enumerations and structures shared by <see cref="A:SharpDX.D3DCompiler"/>, <see cref="A:SharpDX.Direct3D10"/> and <see cref="A:SharpDX.Direct3D11"/> assemblies.
+    /// The <see cref="SharpDX.Direct3D"/> namespace contains enumerations and structures shared by <see cref="SharpDX.D3DCompiler"/>, <see cref="SharpDX.Direct3D10"/> and <see cref="SharpDX.Direct3D11"/> assemblies.
     /// </summary>
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     class NamespaceDoc

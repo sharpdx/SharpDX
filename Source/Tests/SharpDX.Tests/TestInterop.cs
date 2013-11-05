@@ -32,7 +32,7 @@ namespace SharpDX.Tests
     public class TestInterop
     {
         [Test]
-        public unsafe void TestSizeOf()
+        public void TestSizeOf()
         {
             Assert.AreEqual(Utilities.SizeOf<Matrix>(), 64);
             Assert.AreEqual(Utilities.SizeOf<Vector4>(), 16);
@@ -106,7 +106,7 @@ namespace SharpDX.Tests
         }
 
         [Test]
-        public unsafe void TestCastArray()
+        public void TestCastArray()
         {
             var fromMatrices = new RawMatrix[] { new RawMatrix
             {

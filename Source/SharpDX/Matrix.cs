@@ -1497,12 +1497,12 @@ namespace SharpDX
             //Adapted from the row echelon code.
             result = value;
             int lead = 0;
-            int rowcount = 4;
-            int columncount = 4;
+            const int Rowcount = 4;
+            const int Columncount = 4;
 
-            for (int r = 0; r < rowcount; ++r)
+            for (int r = 0; r < Rowcount; ++r)
             {
-                if (columncount <= lead)
+                if (Columncount <= lead)
                     return;
 
                 int i = r;
@@ -1511,12 +1511,12 @@ namespace SharpDX
                 {
                     i++;
 
-                    if (i == rowcount)
+                    if (i == Rowcount)
                     {
                         i = r;
                         lead++;
 
-                        if (lead == columncount)
+                        if (lead == Columncount)
                             return;
                     }
                 }
@@ -1528,7 +1528,7 @@ namespace SharpDX
 
                 float multiplier = 1f / result[r, lead];
 
-                for (; i < rowcount; ++i)
+                for (; i < Rowcount; ++i)
                 {
                     if (i != r)
                     {
@@ -1579,12 +1579,12 @@ namespace SharpDX
             Matrix.Transpose(ref temp, out result);
 
             int lead = 0;
-            int rowcount = 4;
-            int columncount = 4;
+            const int Rowcount = 4;
+            const int Columncount = 4;
 
-            for (int r = 0; r < rowcount; ++r)
+            for (int r = 0; r < Rowcount; ++r)
             {
-                if (columncount <= lead)
+                if (Columncount <= lead)
                     return;
 
                 int i = r;
@@ -1593,12 +1593,12 @@ namespace SharpDX
                 {
                     i++;
 
-                    if (i == rowcount)
+                    if (i == Rowcount)
                     {
                         i = r;
                         lead++;
 
-                        if (lead == columncount)
+                        if (lead == Columncount)
                             return;
                     }
                 }
@@ -1610,7 +1610,7 @@ namespace SharpDX
 
                 float multiplier = 1f / result[r, lead];
 
-                for (; i < rowcount; ++i)
+                for (; i < Rowcount; ++i)
                 {
                     if (i != r)
                     {
@@ -1657,12 +1657,12 @@ namespace SharpDX
 
             result = value;
             int lead = 0;
-            int rowcount = 4;
-            int columncount = 4;
+            const int Rowcount = 4;
+            const int Columncount = 4;
 
-            for (int r = 0; r < rowcount; ++r)
+            for (int r = 0; r < Rowcount; ++r)
             {
-                if (columncount <= lead)
+                if (Columncount <= lead)
                     return;
 
                 int i = r;
@@ -1671,12 +1671,12 @@ namespace SharpDX
                 {
                     i++;
 
-                    if (i == rowcount)
+                    if (i == Rowcount)
                     {
                         i = r;
                         lead++;
 
-                        if (lead == columncount)
+                        if (lead == Columncount)
                             return;
                     }
                 }
@@ -1692,7 +1692,7 @@ namespace SharpDX
                 result[r, 2] *= multiplier;
                 result[r, 3] *= multiplier;
 
-                for (; i < rowcount; ++i)
+                for (; i < Rowcount; ++i)
                 {
                     if (i != r)
                     {
@@ -1768,12 +1768,12 @@ namespace SharpDX
             matrix[3, 4] = augment[3];
 
             int lead = 0;
-            int rowcount = 4;
-            int columncount = 5;
+            const int Rowcount = 4;
+            const int Columncount = 5;
 
-            for (int r = 0; r < rowcount; r++)
+            for (int r = 0; r < Rowcount; r++)
             {
-                if (columncount <= lead)
+                if (Columncount <= lead)
                     break;
 
                 int i = r;
@@ -1782,17 +1782,17 @@ namespace SharpDX
                 {
                     i++;
 
-                    if (i == rowcount)
+                    if (i == Rowcount)
                     {
                         i = r;
                         lead++;
 
-                        if (columncount == lead)
+                        if (Columncount == lead)
                             break;
                     }
                 }
 
-                for (int j = 0; j < columncount; j++)
+                for (int j = 0; j < Columncount; j++)
                 {
                     float temp = matrix[r, j];
                     matrix[r, j] = matrix[i, j];
@@ -1801,17 +1801,17 @@ namespace SharpDX
 
                 float div = matrix[r, lead];
 
-                for (int j = 0; j < columncount; j++)
+                for (int j = 0; j < Columncount; j++)
                 {
                     matrix[r, j] /= div;
                 }
 
-                for (int j = 0; j < rowcount; j++)
+                for (int j = 0; j < Rowcount; j++)
                 {
                     if (j != r)
                     {
                         float sub = matrix[j, lead];
-                        for (int k = 0; k < columncount; k++) matrix[j, k] -= (sub * matrix[r, k]);
+                        for (int k = 0; k < Columncount; k++) matrix[j, k] -= (sub * matrix[r, k]);
                     }
                 }
 
@@ -2756,7 +2756,7 @@ namespace SharpDX
         public static void Skew(float angle, ref Vector3 rotationVec, ref Vector3 transVec, out Matrix matrix)
         {
             //http://elckerlyc.ewi.utwente.nl/browser/Elckerlyc/Hmi/HmiMath/src/hmi/math/Mat3f.java
-            float MINIMAL_SKEW_ANGLE = 0.000001f;
+            const float MinimalSkewAngle = 0.000001f;
 
             Vector3 e0 = rotationVec;
             Vector3 e1 = Vector3.Normalize(transVec);
@@ -2771,7 +2771,7 @@ namespace SharpDX
             float rr0 = rv0 * cosa - rv1 * sina;
             float rr1 = rv0 * sina + rv1 * cosa;
 
-            if (rr0 < MINIMAL_SKEW_ANGLE)
+            if (rr0 < MinimalSkewAngle)
                 throw new ArgumentException("illegal skew angle");
 
             float d = (rr1 / rr0) - (rv1 / rv0);
