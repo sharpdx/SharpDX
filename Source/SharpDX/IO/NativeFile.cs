@@ -275,17 +275,17 @@ namespace SharpDX.IO
             GetFileAttributesEx = (GetFileAttributesExDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.GetFileAttributesExW()), typeof(GetFileAttributesExDelegate));
         }
 #else
-    /// <summary>
-    /// Reads to a file.
-    /// </summary>
-    /// <param name="fileHandle">The file handle.</param>
-    /// <param name="buffer">The buffer.</param>
-    /// <param name="numberOfBytesToRead">The number of bytes to read.</param>
-    /// <param name="numberOfBytesRead">The number of bytes read.</param>
-    /// <param name="overlapped">The overlapped.</param>
-    /// <returns>A Result</returns>
-    /// <unmanaged>ReadFile</unmanaged>
-        [DllImport("kernel32.dll", EntryPoint = "ReadFile", SetLastError = true, CharSet = CharSet.Ansi)]
+        /// <summary>
+        /// Reads to a file.
+        /// </summary>
+        /// <param name="fileHandle">The file handle.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="numberOfBytesToRead">The number of bytes to read.</param>
+        /// <param name="numberOfBytesRead">The number of bytes read.</param>
+        /// <param name="overlapped">The overlapped.</param>
+        /// <returns>A Result</returns>
+        /// <unmanaged>ReadFile</unmanaged>
+        [DllImport("kernel32.dll", EntryPoint = "ReadFile", SetLastError = true, CharSet = CharSet.Unicode)]
         internal static extern bool ReadFile(IntPtr fileHandle, IntPtr buffer, int numberOfBytesToRead, out int numberOfBytesRead, IntPtr overlapped);
 
 
@@ -302,7 +302,7 @@ namespace SharpDX.IO
         /// <param name="overlapped">The overlapped.</param>
         /// <returns>A Result</returns>
         /// <unmanaged>WriteFile</unmanaged>
-        [DllImport("kernel32.dll", EntryPoint = "WriteFile", SetLastError = true, CharSet = CharSet.Ansi)]
+        [DllImport("kernel32.dll", EntryPoint = "WriteFile", SetLastError = true, CharSet = CharSet.Unicode)]
         internal static extern bool WriteFile(IntPtr fileHandle, IntPtr buffer, int numberOfBytesToRead, out int numberOfBytesRead, IntPtr overlapped);
 
         /// <summary>
@@ -314,7 +314,7 @@ namespace SharpDX.IO
         /// <param name="seekOrigin">The seek origin.</param>
         /// <returns></returns>
         /// <unmanaged>SetFilePointerEx</unmanaged>
-        [DllImport("kernel32.dll", EntryPoint = "SetFilePointerEx", SetLastError = true, CharSet = CharSet.Ansi)]
+        [DllImport("kernel32.dll", EntryPoint = "SetFilePointerEx", SetLastError = true, CharSet = CharSet.Unicode)]
         internal static extern bool SetFilePointerEx(IntPtr handle, long distanceToMove, out long distanceToMoveHigh, SeekOrigin seekOrigin);
 
         /// <summary>
@@ -323,7 +323,7 @@ namespace SharpDX.IO
         /// <param name="handle">The handle.</param>
         /// <returns></returns>
         /// <unmanaged>SetEndOfFile</unmanaged>
-        [DllImport("kernel32.dll", EntryPoint = "SetEndOfFile", SetLastError = true, CharSet = CharSet.Ansi)]
+        [DllImport("kernel32.dll", EntryPoint = "SetEndOfFile", SetLastError = true, CharSet = CharSet.Unicode)]
         internal static extern bool SetEndOfFile(IntPtr handle);
 
         [DllImport("kernel32.dll", EntryPoint="GetFileAttributesExW", CharSet = CharSet.Unicode, SetLastError = true)]
@@ -365,7 +365,7 @@ namespace SharpDX.IO
         /// <param name="templateFile">The template file.</param>
         /// <returns>A handle to the created file. IntPtr.Zero if failed.</returns>
         /// <unmanaged>CreateFile</unmanaged>
-        [DllImport("kernel32.dll", EntryPoint = "CreateFile", SetLastError = true, CharSet = CharSet.Ansi)]
+        [DllImport("kernel32.dll", EntryPoint = "CreateFile", SetLastError = true, CharSet = CharSet.Unicode)]
         internal static extern IntPtr Create(
             string fileName,
             NativeFileAccess desiredAccess,
@@ -382,7 +382,7 @@ namespace SharpDX.IO
         /// <param name="fileSize">Size of the file.</param>
         /// <returns></returns>
         /// <unmanaged>GetFileSizeEx</unmanaged>
-        [DllImport("kernel32.dll", EntryPoint = "GetFileSizeEx", SetLastError = true, CharSet = CharSet.Ansi)]
+        [DllImport("kernel32.dll", EntryPoint = "GetFileSizeEx", SetLastError = true, CharSet = CharSet.Unicode)]
         internal static extern bool GetFileSizeEx(IntPtr handle, out long fileSize);
 
 #endif
