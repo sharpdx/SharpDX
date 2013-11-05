@@ -25,6 +25,7 @@
     <Compile Include="Generated\Interfaces.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="IncludeShadow.cs" />
+    <Compile Include="LibraryReflection.cs" />
     <Compile Include="Linker.cs" />
     <Compile Include="LocalInterop.cs" />
     <Compile Include="Module.cs" />
