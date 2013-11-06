@@ -52,7 +52,7 @@ namespace SharpDX.Multimedia
         /// <summary>number of following bytes</summary>
         protected short extraSize;
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 2)]
+        [StructLayout(LayoutKind.Sequential, Pack = 2)]
         internal struct __Native : IDataSerializable
         {
             public __PcmNative pcmWaveFormat;
@@ -98,7 +98,7 @@ namespace SharpDX.Multimedia
             @ref.extraSize = this.extraSize;  
         }
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 2)]
+        [StructLayout(LayoutKind.Sequential, Pack = 2)]
         internal struct __PcmNative : IDataSerializable
         {
             /// <summary>format type</summary>
