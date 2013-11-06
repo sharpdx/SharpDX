@@ -22,8 +22,15 @@ using SharpDX.Toolkit.Graphics;
 
 namespace SharpDX.Toolkit
 {
+    /// <summary>The font compiler task class.</summary>
     public class FontCompilerTask : ContentCompilerTask
     {
+        /// <summary>Processes the file and get log results.</summary>
+        /// <param name="inputFilePath">The input file path.</param>
+        /// <param name="outputFilePath">The output file path.</param>
+        /// <param name="dependencyFilePath">The dependency file path.</param>
+        /// <param name="item">The item.</param>
+        /// <returns>Diagnostics.Logger.</returns>
         protected override Diagnostics.Logger ProcessFileAndGetLogResults(string inputFilePath, string outputFilePath, string dependencyFilePath, TkItem item)
         {
             var compilerResult = FontCompiler.CompileAndSave(inputFilePath, outputFilePath, dependencyFilePath);

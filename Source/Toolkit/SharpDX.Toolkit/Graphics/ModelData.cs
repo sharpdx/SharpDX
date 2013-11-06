@@ -33,8 +33,10 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public sealed partial class ModelData : CommonData, IDataSerializable
     {
+        /// <summary>The magic code.</summary>
         public const string MagicCode = "TKMD";
 
+        /// <summary>The version.</summary>
         public const int Version = 0x100;
 
         /// <summary>

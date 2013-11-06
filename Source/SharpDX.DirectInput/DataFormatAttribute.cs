@@ -27,6 +27,8 @@ namespace SharpDX.DirectInput
     [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Class)]
     public sealed class DataFormatAttribute : Attribute
     {
+        /// <summary>Initializes a new instance of the <see cref="DataFormatAttribute"/> class.</summary>
+        /// <param name="flags">The flags.</param>
         public DataFormatAttribute(DataFormatFlag flags)
         {
             Flags = flags;

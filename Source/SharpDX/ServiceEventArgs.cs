@@ -21,16 +21,24 @@ using System;
 
 namespace SharpDX
 {
+    /// <summary>The service event arguments class.</summary>
     public class ServiceEventArgs : EventArgs
     {
+        /// <summary>Initializes a new instance of the <see cref="ServiceEventArgs"/> class.</summary>
+        /// <param name="serviceType">Type of the service.</param>
+        /// <param name="serviceInstance">The service instance.</param>
         public ServiceEventArgs(Type serviceType, object serviceInstance)
         {
             ServiceType = serviceType;
             Instance = serviceInstance;
         }
 
+        /// <summary>Gets the type of the service.</summary>
+        /// <value>The type of the service.</value>
         public Type ServiceType { get; private set; }
 
+        /// <summary>Gets the instance.</summary>
+        /// <value>The instance.</value>
         public object Instance { get; private set; }
     }
 }

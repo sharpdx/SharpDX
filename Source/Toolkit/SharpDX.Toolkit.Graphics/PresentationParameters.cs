@@ -175,6 +175,8 @@ namespace SharpDX.Toolkit.Graphics
 
         #region Methods
 
+        /// <summary>Clones this instance.</summary>
+        /// <returns>PresentationParameters.</returns>
         public PresentationParameters Clone()
         {
             return (PresentationParameters)MemberwiseClone();

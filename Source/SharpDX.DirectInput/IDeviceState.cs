@@ -21,10 +21,17 @@ using System;
 
 namespace SharpDX.DirectInput
 {
+    /// <summary>The attribute device state interface.</summary>
+    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="TUpdate">The type of the attribute update.</typeparam>
     public interface IDeviceState<T, in TUpdate> where T : struct where TUpdate : struct, IStateUpdate
     {
+        /// <summary>Updates the specified update.</summary>
+        /// <param name="update">The update.</param>
         void Update(TUpdate update);
 
+        /// <summary>Marshals from.</summary>
+        /// <param name="value">The value.</param>
         void MarshalFrom(ref T value);
     }
 }

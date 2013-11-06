@@ -31,8 +31,10 @@ namespace SharpDX.Toolkit
     {
         #region Fields
 
+        /// <summary>The title.</summary>
         private string title;
 
+        /// <summary>The game context.</summary>
         internal GameContext GameContext;
 
         #endregion
@@ -133,13 +135,19 @@ namespace SharpDX.Toolkit
 
         #region Public Methods and Operators
 
+        /// <summary>Begins the screen device change.</summary>
+        /// <param name="willBeFullScreen">if set to <see langword="true" /> [will be full screen].</param>
         public abstract void BeginScreenDeviceChange(bool willBeFullScreen);
 
+        /// <summary>Ends the screen device change.</summary>
         public void EndScreenDeviceChange()
         {
             EndScreenDeviceChange(ClientBounds.Width, ClientBounds.Height);
         }
 
+        /// <summary>Ends the screen device change.</summary>
+        /// <param name="clientWidth">Width of the client.</param>
+        /// <param name="clientHeight">Height of the client.</param>
         public abstract void EndScreenDeviceChange(int clientWidth, int clientHeight);
 
         #endregion
@@ -152,18 +160,28 @@ namespace SharpDX.Toolkit
         /// <param name="gameContext">The window context.</param>
         internal abstract bool CanHandle(GameContext gameContext);
 
+        /// <summary>Initializes the specified game context.</summary>
+        /// <param name="gameContext">The game context.</param>
         internal abstract void Initialize(GameContext gameContext);
 
+        /// <summary>The exiting.</summary>
         internal bool Exiting;
 
+        /// <summary>The initialize callback.</summary>
         internal Action InitCallback;
 
+        /// <summary>The run callback.</summary>
         internal Action RunCallback;
 
+        /// <summary>The exit callback.</summary>
         internal Action ExitCallback;
 
+        /// <summary>Runs this instance.</summary>
         internal abstract void Run();
 
+        /// <summary>Resizes the specified width.</summary>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
         internal abstract void Resize(int width, int height);
 
         /// <summary>
@@ -174,10 +192,17 @@ namespace SharpDX.Toolkit
         /// <returns>Default implementation returns null</returns>
         internal virtual GraphicsPresenter CreateGraphicsPresenter(GraphicsDevice device, PresentationParameters parameters) { return null; }
 
+        /// <summary>Gets or sets the services.</summary>
+        /// <value>The services.</value>
         internal IServiceRegistry Services { get; set; }
 
+        /// <summary>Sets the supported orientations.</summary>
+        /// <param name="orientations">The orientations.</param>
         protected internal abstract void SetSupportedOrientations(DisplayOrientation orientations);
 
+        /// <summary>Called when [activated].</summary>
+        /// <param name="source">The source.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected void OnActivated(object source, EventArgs e)
         {
             EventHandler<EventArgs> handler = Activated;
@@ -187,6 +212,9 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>Called when [client size changed].</summary>
+        /// <param name="source">The source.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected void OnClientSizeChanged(object source, EventArgs e)
         {
             EventHandler<EventArgs> handler = ClientSizeChanged;
@@ -196,6 +224,9 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>Called when [deactivated].</summary>
+        /// <param name="source">The source.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected void OnDeactivated(object source, EventArgs e)
         {
             EventHandler<EventArgs> handler = Deactivated;
@@ -205,6 +236,9 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>Called when [orientation changed].</summary>
+        /// <param name="source">The source.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected void OnOrientationChanged(object source, EventArgs e)
         {
             EventHandler<EventArgs> handler = OrientationChanged;
@@ -214,6 +248,8 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>Sets the title.</summary>
+        /// <param name="title">The title.</param>
         protected abstract void SetTitle(string title);
 
         #endregion

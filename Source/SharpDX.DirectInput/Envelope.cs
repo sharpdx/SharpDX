@@ -21,8 +21,10 @@ using System;
 
 namespace SharpDX.DirectInput
 {
+    /// <summary>The envelope class.</summary>
     public partial class Envelope
     {
+        /// <summary>Initializes a new instance of the <see cref="Envelope"/> class.</summary>
         public Envelope()
         {
             unsafe
@@ -31,6 +33,8 @@ namespace SharpDX.DirectInput
             }
         }
 
+        /// <summary>Returns the new native.</summary>
+        /// <returns>__Native.</returns>
         internal static __Native __NewNative()
         {
             unsafe

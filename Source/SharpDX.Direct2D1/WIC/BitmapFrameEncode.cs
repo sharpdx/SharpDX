@@ -153,6 +153,11 @@ namespace SharpDX.WIC
             WriteSource(bitmapSourceRef, new IntPtr(&rectangleRef));
         }
 
+        /// <summary>Releases unmanaged and - optionally - managed resources</summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        /// <msdn-id>ms682317</msdn-id>
+        ///   <unmanaged>IUnknown::Release</unmanaged>
+        ///   <unmanaged-short>IUnknown::Release</unmanaged-short>
         protected override unsafe void Dispose(bool disposing)
         {
             if (disposing)

@@ -55,6 +55,10 @@ namespace SharpDX.Toolkit.Graphics
             return new BasicEffect(GraphicsDevice);
         }
 
+        /// <summary>Implements this method to process a <see cref="ModelMeshPart" />.</summary>
+        /// <param name="model">The model.</param>
+        /// <param name="meshPart">The mesh part.</param>
+        /// <returns>Effect to be associated to the <see cref="ModelMeshPart" />.</returns>
         protected override Effect Process(Model model, ModelMeshPart meshPart)
         {
             var effect = CreateBasicEffect();

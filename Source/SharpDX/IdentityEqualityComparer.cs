@@ -33,11 +33,18 @@ namespace SharpDX
     public class IdentityEqualityComparer<T> : IEqualityComparer<T>
         where T : class
     {
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <param name="value">The value.</param>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public int GetHashCode(T value)
         {
             return RuntimeHelpers.GetHashCode(value);
         }
 
+        /// <summary>Returns <c>true</c> if both are identical, <c>false</c> otherwise.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns><c>true</c> if both are identical, <c>false</c> otherwise.</returns>
         public bool Equals(T left, T right)
         {
             return left == right; // Reference identity comparison

@@ -390,6 +390,9 @@ namespace SharpDX.Toolkit.Content
             return result;
         }
 
+        /// <summary>Disposes of object resources.</summary>
+        /// <param name="disposeManagedResources">If true, managed resources should be
+        /// disposed of in addition to unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
         {
             if (disposeManagedResources)

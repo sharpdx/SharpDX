@@ -27,8 +27,10 @@ namespace SharpDX.Toolkit
     /// </summary>
     public class PropertyKey : IEquatable<PropertyKey>
     {
+        /// <summary>The name.</summary>
         private readonly string name;
 
+        /// <summary>The hashcode.</summary>
         private readonly int hashcode;
 
         /// <summary>
@@ -58,6 +60,9 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
         public bool Equals(PropertyKey other)
         {
             if (ReferenceEquals(null, other))
@@ -71,6 +76,9 @@ namespace SharpDX.Toolkit
             return string.Equals(name, other.name);
         }
 
+        /// <summary>Determines whether the specified <see cref="System.Object" /> is equal to this instance.</summary>
+        /// <param name="obj">The <see cref="T:System.Object" /> to compare with the current <see cref="T:System.Object" />.</param>
+        /// <returns><see langword="true" /> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <see langword="false" />.</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -89,29 +97,45 @@ namespace SharpDX.Toolkit
             return Equals(materialKey);
         }
 
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             return hashcode;
         }
 
+        /// <summary>Implements the ==.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
         public static bool operator ==(PropertyKey left, PropertyKey right)
         {
             return Equals(left, right);
         }
 
+        /// <summary>Implements the !=.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
         public static bool operator !=(PropertyKey left, PropertyKey right)
         {
             return !Equals(left, right);
         }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format("{0}", name);
         }
     }
 
+    /// <summary>The property key class.</summary>
+    /// <typeparam name="T"></typeparam>
     public class PropertyKey<T> : PropertyKey
     {
+        /// <summary>Initializes a new instance of the <see cref="PropertyKey" /> class.</summary>
+        /// <param name="name">The Name.</param>
         public PropertyKey(string name) : base(name)
         {
         }

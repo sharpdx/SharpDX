@@ -27,13 +27,18 @@ using Microsoft.Build.Framework;
 
 namespace SharpDX.Toolkit
 {
+    /// <summary>The content compiler task class.</summary>
     public abstract class ContentCompilerTask : CompilerDependencyTask
     {
         private static readonly Regex parseMessage = new Regex(@"(.*)\s*\(\s*(\d+)\s*,\s*([^ \)]+)\)\s*:\s*(\w+)\s+(\w+)\s*:\s*(.*)");
         private static readonly Regex matchNumberRange = new Regex(@"(\d+)-(\d+)");
 
+        /// <summary>The parse log messages.</summary>
         protected bool parseLogMessages;
 
+        /// <summary>Processes the item.</summary>
+        /// <param name="item">The item.</param>
+        /// <returns><c>true</c> if no error occurred, <c>false</c> otherwise.</returns>
         protected sealed override bool ProcessItem(TkItem item)
         {
             var hasErrors = false;
@@ -79,8 +84,16 @@ namespace SharpDX.Toolkit
             return !hasErrors;
         }
 
+        /// <summary>Processes the file and get log results.</summary>
+        /// <param name="inputFilePath">The input file path.</param>
+        /// <param name="outputFilePath">The output file path.</param>
+        /// <param name="dependencyFilePath">The dependency file path.</param>
+        /// <param name="item">The item.</param>
+        /// <returns>Diagnostics.Logger.</returns>
         protected abstract Diagnostics.Logger ProcessFileAndGetLogResults(string inputFilePath, string outputFilePath, string dependencyFilePath, TkItem item);
 
+        /// <summary>Creates the directory difference not exists.</summary>
+        /// <param name="filePath">The file path.</param>
         protected void CreateDirectoryIfNotExists(string filePath)
         {
             var dependencyDirectoryPath = Path.GetDirectoryName(filePath);

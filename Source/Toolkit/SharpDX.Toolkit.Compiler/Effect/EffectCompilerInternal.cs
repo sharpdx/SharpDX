@@ -1302,10 +1302,9 @@ namespace SharpDX.Toolkit.Graphics
                 );
         }
 
-        /// <summary>
-        ///   Builds the parameters for a particular shader.
-        /// </summary>
-        /// <param name="shader"> The shader to build parameters. </param>
+        /// <summary>Builds the parameters for a particular shader.</summary>
+        /// <param name="shader">The shader to build parameters.</param>
+        /// <param name="reflect">The reflect.</param>
         private void BuildParameters(EffectData.Shader shader, ShaderReflection reflect)
         {
             var description = reflect.Description;

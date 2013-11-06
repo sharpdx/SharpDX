@@ -27,10 +27,10 @@ namespace SharpDX.Direct3D9
         /// <summary>
         /// A user-implemented method for opening and reading the contents of a shader #include file.
         /// </summary>
-        /// <param name="type">A <see cref="SharpDX.D3DCompiler.IncludeType"/>-typed value that indicates the location of the #include file.</param>
+        /// <param name="type">A SharpDX.D3DCompiler.IncludeType-typed value that indicates the location of the #include file.</param>
         /// <param name="fileName">Name of the #include file.</param>
         /// <param name="parentStream">Pointer to the container that includes the #include file.</param>
-        /// <returns>Stream that is associated with fileName to be read. This reference remains valid until <see cref="SharpDX.D3DCompiler.Include.Close"/> is called.</returns>
+        /// <returns>Stream that is associated with fileName to be read. This reference remains valid until SharpDX.D3DCompiler.Include.Close is called.</returns>
         /// <unmanaged>HRESULT Open([None] D3D_INCLUDE_TYPE IncludeType,[None] const char* pFileName,[None] LPCVOID pParentData,[None] LPCVOID* ppData,[None] UINT* pBytes)</unmanaged>
         //SharpDX.Result Open(SharpDX.D3DCompiler.IncludeType includeType, string fileNameRef, IntPtr pParentData, IntPtr dataRef, IntPtr bytesRef);
         Stream Open(IncludeType type, string fileName, Stream parentStream);
@@ -39,9 +39,9 @@ namespace SharpDX.Direct3D9
         /// A user-implemented method for closing a shader #include file.	
         /// </summary>	
         /// <remarks>	
-        /// If <see cref="SharpDX.D3DCompiler.Include.Open"/> was successful, Close is guaranteed to be called before the API using the <see cref="SharpDX.D3DCompiler.Include"/> interface returns.	
+        /// If SharpDX.D3DCompiler.Include.Open was successful, Close is guaranteed to be called before the API using the SharpDX.D3DCompiler.Include interface returns.	
         /// </remarks>	
-        /// <param name="stream">This is a reference that was returned by the corresponding <see cref="SharpDX.D3DCompiler.Include.Open"/> call.</param>
+        /// <param name="stream">This is a reference that was returned by the corresponding SharpDX.D3DCompiler.Include.Open call.</param>
         /// <unmanaged>HRESULT Close([None] LPCVOID pData)</unmanaged>
         void Close(Stream stream);
     }

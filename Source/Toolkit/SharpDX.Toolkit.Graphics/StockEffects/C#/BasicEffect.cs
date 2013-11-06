@@ -460,6 +460,7 @@ namespace SharpDX.Toolkit.Graphics
             SpecularPower = 16;
         }
 
+        /// <summary>Initializes this instance.</summary>
         protected override void Initialize()
         {
             textureParam = Parameters["Texture"];

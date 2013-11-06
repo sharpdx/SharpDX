@@ -27,8 +27,11 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public sealed class ContentCompilerResult
     {
+        /// <summary>Gets or sets a value indicating whether this instance is content generated.</summary>
+        /// <value><see langword="true" /> if this instance is content generated; otherwise, <see langword="false" />.</value>
         public bool IsContentGenerated { get; set; }
 
+        /// <summary>The model data.</summary>
         public ModelData ModelData;
 
         /// <summary>

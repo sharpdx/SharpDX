@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 namespace SharpDX.Direct3D11
 {
+    /// <summary>The render target blend description struct.</summary>
     public partial struct RenderTargetBlendDescription
     {
         /// <summary>
@@ -44,6 +45,8 @@ namespace SharpDX.Direct3D11
             RenderTargetWriteMask = renderTargetWriteMask;
         }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format("IsBlendEnabled: {0}, SourceBlend: {1}, DestinationBlend: {2}, BlendOperation: {3}, SourceAlphaBlend: {4}, DestinationAlphaBlend: {5}, AlphaBlendOperation: {6}, RenderTargetWriteMask: {7}", IsBlendEnabled, SourceBlend, DestinationBlend, BlendOperation, SourceAlphaBlend, DestinationAlphaBlend, AlphaBlendOperation, RenderTargetWriteMask);

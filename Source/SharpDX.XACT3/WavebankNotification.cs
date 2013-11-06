@@ -26,12 +26,16 @@ namespace SharpDX.XACT3
     /// <unmanaged>XACT_NOTIFICATION_WAVEBANK</unmanaged>
     public class WaveBankNotification : Notification
     {
+        /// <summary>Initializes a new instance of the <see cref="Notification" /> class.</summary>
+        /// <param name="rawNotification">The raw notification.</param>
         internal unsafe WaveBankNotification(RawNotification* rawNotification)
             : base(rawNotification)
         {
             WaveBank = CppObject.FromPointer<WaveBank>(rawNotification->Data.WaveBank.WaveBankPointer);
         }
 
+        /// <summary>Gets or sets the wave bank.</summary>
+        /// <value>The wave bank.</value>
         public WaveBank WaveBank { get; set; }
     }
 }

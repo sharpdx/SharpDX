@@ -30,8 +30,13 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public partial class CommonData
     {
+        /// <summary>The property collection class.</summary>
         public class PropertyCollection : Dictionary<string, object>, IDataSerializable
         {
+            /// <summary>Sets the property.</summary>
+            /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+            /// <param name="key">The key.</param>
+            /// <param name="value">The value.</param>
             public void SetProperty<T>(PropertyKey<T> key, T value)
             {
                 if (Utilities.IsEnum(typeof(T)))
@@ -45,11 +50,15 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
+            /// <summary>Clones this instance.</summary>
+            /// <returns>PropertyCollection.</returns>
             public PropertyCollection Clone()
             {
                 return (PropertyCollection)MemberwiseClone();
             }
 
+            /// <summary>Reads or writes datas from/to the given binary serializer.</summary>
+            /// <param name="serializer">The binary serializer.</param>
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
                 if (serializer.Mode == SerializerMode.Write)

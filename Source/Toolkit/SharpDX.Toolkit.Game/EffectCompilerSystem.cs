@@ -108,11 +108,14 @@ namespace SharpDX.Toolkit
 
         #region Public Methods and Operators
 
+        /// <summary>Initializes this instance.</summary>
         public override void Initialize()
         {
             base.Initialize();
         }
 
+        /// <summary>Updates the specified game time.</summary>
+        /// <param name="gameTime">The game time.</param>
         public override void Update(GameTime gameTime)
         {
             if (compiler == null)
@@ -148,6 +151,9 @@ namespace SharpDX.Toolkit
 
         #region Methods
 
+        /// <summary>Disposes of object resources.</summary>
+        /// <param name="disposeManagedResources">If true, managed resources should be
+        /// disposed of in addition to unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
         {
             if (isThreadRunning)
@@ -159,6 +165,7 @@ namespace SharpDX.Toolkit
             base.Dispose(disposeManagedResources);
         }
 
+        /// <summary>Loads the content.</summary>
         protected override void LoadContent()
         {
             if (compiler == null)
@@ -179,6 +186,8 @@ namespace SharpDX.Toolkit
             TaskUtil.Run(ThreadCompiler);
         }
 
+        /// <summary>Raises the <see cref="CompilationEnded" /> event.</summary>
+        /// <param name="e">The <see cref="EffectCompilerEventArgs"/> instance containing the event data.</param>
         protected virtual void OnCompilationEnded(EffectCompilerEventArgs e)
         {
             EventHandler<EffectCompilerEventArgs> handler = CompilationEnded;
@@ -188,6 +197,8 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>Raises the <see cref="CompilationError" /> event.</summary>
+        /// <param name="e">The <see cref="EffectCompilerEventArgs"/> instance containing the event data.</param>
         protected virtual void OnCompilationError(EffectCompilerEventArgs e)
         {
             EventHandler<EffectCompilerEventArgs> handler = CompilationError;
@@ -197,6 +208,8 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>Raises the <see cref="CompilationStarted" /> event.</summary>
+        /// <param name="e">The <see cref="EffectCompilerEventArgs"/> instance containing the event data.</param>
         protected virtual void OnCompilationStarted(EffectCompilerEventArgs e)
         {
             EventHandler<EffectCompilerEventArgs> handler = CompilationStarted;
@@ -206,6 +219,7 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>Unloads the content.</summary>
         protected override void UnloadContent()
         {
             if (compiler == null)
@@ -394,14 +408,19 @@ namespace SharpDX.Toolkit
         {
             #region Fields
 
+            /// <summary>The effect.</summary>
             public readonly Effect Effect;
 
+            /// <summary>The effect data.</summary>
             public readonly EffectData EffectData;
 
             #endregion
 
             #region Constructors and Destructors
 
+            /// <summary>Initializes a new instance of the <see cref="EffectToRebind"/> struct.</summary>
+            /// <param name="effect">The effect.</param>
+            /// <param name="effectData">The effect data.</param>
             public EffectToRebind(Effect effect, EffectData effectData)
             {
                 Effect = effect;

@@ -72,13 +72,26 @@ namespace SharpDX.Serialization
         private char[] largeCharBuffer;
         private int maxCharSize;  // From LargeByteBufferSize & Encoding
 
+        /// <summary>The serializer primitive action delegate.</summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value">The value.</param>
         public delegate void SerializerPrimitiveAction<T>(ref T value);
 
+        /// <summary>The serializer type action delegate.</summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         public delegate void SerializerTypeAction<T>(ref T value, BinarySerializer serializer);
 
 
+        /// <summary>The read preference delegate.</summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>System.Object.</returns>
         public delegate object ReadRef(BinarySerializer serializer);
 
+        /// <summary>The write preference delegate.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         public delegate void WriteRef(object value, BinarySerializer serializer);
 
 
@@ -117,8 +130,11 @@ namespace SharpDX.Serialization
         /// </summary>
         public BinaryWriter Writer { get; private set; }
 
+        /// <summary>Gets or sets the type of the array length.</summary>
+        /// <value>The type of the array length.</value>
         public ArrayLengthType ArrayLengthType { get; set; }
 
+        /// <summary>The mode.</summary>
         private SerializerMode mode;
 
 
@@ -523,7 +539,7 @@ namespace SharpDX.Serialization
         }
 
         /// <summary>
-        /// Serializes a static value implementing the <see cref="IDataSerializable"/> interface. Unlike <see cref="Serialize{T}(ref T)"/>, 
+        /// Serializes a static value implementing the <see cref="IDataSerializable"/> interface. Unlike Serialize{T}(ref T), 
         /// this method doesn't allocate a new instance when reading but use the reference value.
         /// </summary>
         /// <typeparam name="T">Type of the data to serialize.</typeparam>
@@ -2716,6 +2732,8 @@ namespace SharpDX.Serialization
                 Stream.WriteByte(0);
         }
 
+        /// <summary>Reads the length of the array.</summary>
+        /// <returns>The length as System.Int32.</returns>
         protected int ReadArrayLength()
         {
             switch (ArrayLengthType)
@@ -2730,6 +2748,9 @@ namespace SharpDX.Serialization
             return Reader.ReadInt32();
         }
 
+        /// <summary>Writes the length of the array.</summary>
+        /// <param name="value">The value.</param>
+        /// <exception cref="System.NotSupportedException">Cannot serialize array length, larger then ArrayLengthType.</exception>
         protected void WriteArrayLength(int value)
         {
             switch (ArrayLengthType)
@@ -2752,6 +2773,9 @@ namespace SharpDX.Serialization
             }
         }
 
+        /// <summary>Read 7bits encoded int.</summary>
+        /// <returns>System.Int32.</returns>
+        /// <exception cref="System.FormatException">Bad string length. 7bit Int32 format</exception>
         protected int Read7BitEncodedInt()
         {
             // Read out an Int32 7 bits at a time.  The high bit 
@@ -2774,6 +2798,8 @@ namespace SharpDX.Serialization
             return count;
         }
 
+        /// <summary>Write 7bits encoded int.</summary>
+        /// <param name="value">The value.</param>
         protected void Write7BitEncodedInt(int value)
         {
             // Write out an int 7 bits at a time.  The high bit of the byte, 
@@ -2827,6 +2853,8 @@ namespace SharpDX.Serialization
             }
         }
 
+        /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
+        /// <param name="disposing"><see langword="true" /> to release both managed and unmanaged resources; <see langword="false" /> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
         }

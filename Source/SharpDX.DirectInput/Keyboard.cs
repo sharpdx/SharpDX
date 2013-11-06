@@ -21,13 +21,18 @@ using System;
 
 namespace SharpDX.DirectInput
 {
+    /// <summary>The keyboard class.</summary>
     public class Keyboard : CustomDevice<KeyboardState, RawKeyboardState, KeyboardUpdate>
     {
+        /// <summary>Initializes a new instance of the <see cref="Keyboard"/> class.</summary>
+        /// <param name="nativePtr">The native PTR.</param>
         public Keyboard(IntPtr nativePtr)
             : base(nativePtr)
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="Keyboard"/> class.</summary>
+        /// <param name="directInput">The direct input.</param>
         public Keyboard(DirectInput directInput)
             : base(directInput, DeviceGuid.SysKeyboard)
         {

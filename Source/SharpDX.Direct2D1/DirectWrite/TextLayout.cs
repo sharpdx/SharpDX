@@ -146,7 +146,7 @@ namespace SharpDX.DirectWrite
         /// Sets the application-defined drawing effect. 	
         /// </summary>	
         /// <remarks>	
-        /// An <see cref="SharpDX.Direct2D1.Brush"/>, such as a color or gradient brush, can be set as a drawing effect if you are using the <see cref="RenderTarget.DrawTextLayout(System.Drawing.PointF,SharpDX.DirectWrite.TextLayout,SharpDX.Direct2D1.Brush,SharpDX.Direct2D1.DrawTextOptions)"/> to draw text and that brush will be used to draw the specified range of text.  This drawing effect is associated with the specified range and will be passed back to the application by way of the callback when the range is drawn at drawing time.  	
+        /// An <see cref="SharpDX.Direct2D1.Brush"/>, such as a color or gradient brush, can be set as a drawing effect if you are using the RenderTarget.DrawTextLayout(System.Drawing.PointF,SharpDX.DirectWrite.TextLayout,SharpDX.Direct2D1.Brush,SharpDX.Direct2D1.DrawTextOptions) to draw text and that brush will be used to draw the specified range of text.  This drawing effect is associated with the specified range and will be passed back to the application by way of the callback when the range is drawn at drawing time.  	
         /// </remarks>	
         /// <param name="drawingEffect">Application-defined drawing effects that apply to the range. This data object will be passed back to the application's drawing callbacks for final rendering. </param>
         /// <param name="textRange">The text range to which this change applies. </param>

@@ -370,10 +370,23 @@ namespace SharpDX.Direct3D11
             SetConstantBuffers(startSlot, numBuffers, constantBuffers.NativePointer);
         }
 
+        /// <summary>Sets the constant buffers.</summary>
+        /// <param name="startSlot">The start slot.</param>
+        /// <param name="numBuffers">The number buffers.</param>
+        /// <param name="constantBuffersRef">The constant buffers preference.</param>
         internal abstract void SetConstantBuffers(int startSlot, int numBuffers, IntPtr constantBuffersRef);
 
+        /// <summary>Sets the shader.</summary>
+        /// <param name="shader">The shader.</param>
+        /// <param name="classInstancesOut">The class instances out.</param>
+        /// <param name="numClassInstances">The number class instances.</param>
         public abstract void SetShader(DeviceChild shader, SharpDX.Direct3D11.ClassInstance[] classInstancesOut, int numClassInstances);
 
+        /// <summary>Sets the unordered access views.</summary>
+        /// <param name="startSlot">The start slot.</param>
+        /// <param name="numBuffers">The number buffers.</param>
+        /// <param name="unorderedAccessBuffer">The unordered access buffer.</param>
+        /// <param name="uavCount">The uav count.</param>
         internal abstract void SetUnorderedAccessViews(int startSlot, int numBuffers, IntPtr unorderedAccessBuffer, IntPtr uavCount);
     }
 
@@ -447,20 +460,42 @@ namespace SharpDX.Direct3D11
             SetShader(shader, classInstances, classInstances == null ? 0 : classInstances.Length);
         }
 
+        /// <summary>Sets the shader.</summary>
+        /// <param name="shader">The shader.</param>
+        /// <param name="classInstancesOut">The class instances out.</param>
+        /// <param name="numClassInstances">The number class instances.</param>
         public override void SetShader(DeviceChild shader, SharpDX.Direct3D11.ClassInstance[] classInstancesOut, int numClassInstances)
         {
             SetShader((T)shader, classInstancesOut, numClassInstances);
         }
 
+        /// <summary>Sets the unordered access views.</summary>
+        /// <param name="startSlot">The start slot.</param>
+        /// <param name="numBuffers">The number buffers.</param>
+        /// <param name="unorderedAccessBuffer">The unordered access buffer.</param>
+        /// <param name="uavCount">The uav count.</param>
+        /// <exception cref="System.NotSupportedException"></exception>
         internal override void SetUnorderedAccessViews(int startSlot, int numBuffers, IntPtr unorderedAccessBuffer, IntPtr uavCount)
         {
             throw new NotSupportedException();
         }
 
+        /// <summary>Sets the shader.</summary>
+        /// <param name="shaderRef">The shader preference.</param>
+        /// <param name="classInstancesRef">The class instances preference.</param>
+        /// <param name="numClassInstances">The number class instances.</param>
         internal abstract void SetShader(T shaderRef, SharpDX.Direct3D11.ClassInstance[] classInstancesRef, int numClassInstances);
 
+        /// <summary>Sets the shader.</summary>
+        /// <param name="shaderRef">The shader preference.</param>
+        /// <param name="classInstancesRef">The class instances preference.</param>
+        /// <param name="numClassInstances">The number class instances.</param>
         internal abstract void SetShader(T shaderRef, SharpDX.ComArray<SharpDX.Direct3D11.ClassInstance> classInstancesRef, int numClassInstances);
 
+        /// <summary>Gets the shader.</summary>
+        /// <param name="pixelShaderRef">The pixel shader preference.</param>
+        /// <param name="classInstancesRef">The class instances preference.</param>
+        /// <param name="numClassInstancesRef">The number class instances preference.</param>
         internal abstract void GetShader(
             out T pixelShaderRef,
             SharpDX.Direct3D11.ClassInstance[] classInstancesRef,

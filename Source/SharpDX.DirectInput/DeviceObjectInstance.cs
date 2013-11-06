@@ -21,8 +21,10 @@ using System;
 
 namespace SharpDX.DirectInput
 {
+    /// <summary>The device object instance class.</summary>
     public partial class DeviceObjectInstance
     {
+        /// <summary>Initializes a new instance of the <see cref="DeviceObjectInstance"/> class.</summary>
         public DeviceObjectInstance()
         {
             unsafe
@@ -31,6 +33,8 @@ namespace SharpDX.DirectInput
             }
         }
 
+        /// <summary>Returns the new native.</summary>
+        /// <returns>__Native.</returns>
         internal static __Native __NewNative()
         {
             unsafe

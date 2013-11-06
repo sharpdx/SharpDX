@@ -21,23 +21,31 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX.DirectInput
 {
+    /// <summary>The raw keyboard state struct.</summary>
     [StructLayout(LayoutKind.Sequential, Pack = 0 )]
     public unsafe partial struct RawKeyboardState : IDataFormatProvider
     {
+        /// <summary>The keys.</summary>
         public fixed byte Keys [256];
 
+        /// <summary>Gets the flags.</summary>
+        /// <value>The flags.</value>
         DataFormatFlag IDataFormatProvider.Flags
         {
             get { return DataFormatFlag.RelativeAxis; }
         }
 
+        /// <summary>Gets the objects format.</summary>
+        /// <value>The objects format.</value>
         DataObjectFormat[] IDataFormatProvider.ObjectsFormat
         {
             get { return _objectsFormat; }
         }
 
+        /// <summary>The _objects format.</summary>
         private static DataObjectFormat[] _objectsFormat;
 
+        /// <summary>Initializes static members of the <see cref="RawKeyboardState"/> struct.</summary>
         static RawKeyboardState()
         {
             _objectsFormat = new DataObjectFormat[256];

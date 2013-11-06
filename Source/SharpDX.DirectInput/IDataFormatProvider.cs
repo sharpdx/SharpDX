@@ -21,6 +21,7 @@ using System;
 
 namespace SharpDX.DirectInput
 {
+    /// <summary>The attribute data format provider interface.</summary>
     public interface IDataFormatProvider
     {
         /// <summary>

@@ -134,39 +134,61 @@ namespace SharpDX.Toolkit.Graphics
             if (controlPoints < 1 || controlPoints > 32)
                 throw new ArgumentException("Value must be in between 1 and 32", "controlPoints");
             return new PrimitiveType((PrimitiveTopology) ((int) PrimitiveTopology.PatchListWith1ControlPoints - 1 + controlPoints));
-        }  
+        }
 
+        /// <summary>Performs an implicit conversion from <see cref="PrimitiveType"/> to <see cref="PrimitiveTopology"/>.</summary>
+        /// <param name="from">From.</param>
+        /// <returns>The result of the conversion.</returns>
         public static implicit operator PrimitiveTopology(PrimitiveType from)
         {
             return from.Value;
         }
 
+        /// <summary>Performs an implicit conversion from <see cref="PrimitiveTopology"/> to <see cref="PrimitiveType"/>.</summary>
+        /// <param name="from">From.</param>
+        /// <returns>The result of the conversion.</returns>
         public static implicit operator PrimitiveType(PrimitiveTopology from)
         {
             return new PrimitiveType(from);
         }
 
+        /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
         public bool Equals(PrimitiveType other)
         {
             return Value.Equals(other.Value);
         }
 
+        /// <summary>Determines whether the specified <see cref="System.Object" /> is equal to this instance.</summary>
+        /// <param name="obj">Another object to compare to.</param>
+        /// <returns><see langword="true" /> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <see langword="false" />.</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             return obj is PrimitiveType && Equals((PrimitiveType) obj);
         }
 
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             return Value.GetHashCode();
         }
 
+        /// <summary>Implements the ==.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
         public static bool operator ==(PrimitiveType left, PrimitiveType right)
         {
             return left.Equals(right);
         }
 
+        /// <summary>Implements the !=.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
         public static bool operator !=(PrimitiveType left, PrimitiveType right)
         {
             return !left.Equals(right);

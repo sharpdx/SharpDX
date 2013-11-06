@@ -24,6 +24,7 @@ using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The model data class.</summary>
     public sealed partial class ModelData
     {
         /// <summary>
@@ -31,6 +32,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public class Bone : IDataSerializable
         {
+            /// <summary>The index.</summary>
             public int Index;
 
             /// <summary>
@@ -53,6 +55,8 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             public List<int> Children;
 
+            /// <summary>Reads or writes datas from/to the given binary serializer.</summary>
+            /// <param name="serializer">The binary serializer.</param>
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
                 serializer.Serialize(ref Index);

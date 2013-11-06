@@ -25,8 +25,10 @@ using SharpDX.Multimedia;
 
 namespace SharpDX.XAudio2
 {
+    /// <summary>The source voice class.</summary>
     public partial class SourceVoice
     {
+        /// <summary>The voice callback implementation.</summary>
         private VoiceCallbackImpl voiceCallbackImpl;
 
         /// <summary>	
@@ -186,11 +188,14 @@ namespace SharpDX.XAudio2
             this.Start(0, operationSet);
         }
 
+        /// <summary>Stops this instance.</summary>
         public void Stop()
         {
             this.Stop(PlayFlags.None, 0);
         }
 
+        /// <summary>Stops the specified operation set.</summary>
+        /// <param name="operationSet">The operation set.</param>
         public void Stop(int operationSet)
         {
             this.Stop(PlayFlags.None, operationSet);
@@ -225,6 +230,8 @@ namespace SharpDX.XAudio2
             }
         }
 
+        /// <summary>Releases unmanaged and - optionally - managed resources</summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -242,6 +249,7 @@ namespace SharpDX.XAudio2
         /// </remarks>
         public event Action<int> ProcessingPassStart;
 
+        /// <summary>The void action delegate.</summary>
         public delegate void VoidAction();
 
         /// <summary>
@@ -284,16 +292,21 @@ namespace SharpDX.XAudio2
         /// </remarks>
         public event Action<IntPtr> LoopEnd;
 
-
+        /// <summary>The voice error arguments struct.</summary>
         public struct VoiceErrorArgs
         {
+            /// <summary>Initializes a new instance of the <see cref="VoiceErrorArgs"/> struct.</summary>
+            /// <param name="pointer">The pointer.</param>
+            /// <param name="result">The result.</param>
             public VoiceErrorArgs(IntPtr pointer, Result result)
             {
                 this.Pointer = pointer;
                 this.Result = result;
             }
 
+            /// <summary>The pointer.</summary>
             public IntPtr Pointer;
+            /// <summary>The result.</summary>
             public Result Result;
         }
 
@@ -305,45 +318,63 @@ namespace SharpDX.XAudio2
         /// </remarks>
         public event Action<VoiceErrorArgs> VoiceError;
 
+        /// <summary>The voice callback implementation class.</summary>
         private class VoiceCallbackImpl : CallbackBase, VoiceCallback
         {
+            /// <summary>Gets or sets the voice.</summary>
+            /// <value>The voice.</value>
             private SourceVoice Voice { get; set; }
 
+            /// <summary>Initializes a new instance of the <see cref="VoiceCallbackImpl"/> class.</summary>
+            /// <param name="voice">The voice.</param>
             public VoiceCallbackImpl(SourceVoice voice)
             {
                 Voice = voice;
             }
 
+            /// <summary>Called when [voice processing pass start].</summary>
+            /// <param name="bytesRequired">The bytes required.</param>
             void VoiceCallback.OnVoiceProcessingPassStart(int bytesRequired)
             {
                 if (Voice.ProcessingPassStart != null) Voice.ProcessingPassStart(bytesRequired);
             }
 
+            /// <summary>Called when [voice processing pass end].</summary>
             void VoiceCallback.OnVoiceProcessingPassEnd()
             {
                 if (Voice.ProcessingPassEnd != null) Voice.ProcessingPassEnd();
             }
 
+            /// <summary>Called when [stream end].</summary>
             void VoiceCallback.OnStreamEnd()
             {
                 if (Voice.StreamEnd != null) Voice.StreamEnd();
             }
 
+            /// <summary>Called when [buffer start].</summary>
+            /// <param name="context">The context.</param>
             void VoiceCallback.OnBufferStart(IntPtr context)
             {
                 if (Voice.BufferStart != null) Voice.BufferStart(context);
             }
 
+            /// <summary>Called when [buffer end].</summary>
+            /// <param name="context">The context.</param>
             void VoiceCallback.OnBufferEnd(IntPtr context)
             {
                 if (Voice.BufferEnd != null) Voice.BufferEnd(context);
             }
 
+            /// <summary>Called when [loop end].</summary>
+            /// <param name="context">The context.</param>
             void VoiceCallback.OnLoopEnd(IntPtr context)
             {
                 if (Voice.LoopEnd != null) Voice.LoopEnd(context);
             }
 
+            /// <summary>Called when [voice error].</summary>
+            /// <param name="context">The context.</param>
+            /// <param name="error">The error.</param>
             void VoiceCallback.OnVoiceError(IntPtr context, Result error)
             {
                 if (Voice.VoiceError != null) Voice.VoiceError(new VoiceErrorArgs(context, error));

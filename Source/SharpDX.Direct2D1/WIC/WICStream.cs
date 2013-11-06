@@ -26,8 +26,10 @@ using SharpDX.Win32;
 
 namespace SharpDX.WIC
 {
+    /// <summary>The wic stream class.</summary>
     public partial class WICStream
     {
+        /// <summary>The stream proxy.</summary>
         private ComStreamProxy streamProxy;
 
         /// <summary>
@@ -77,6 +79,11 @@ namespace SharpDX.WIC
             InitializeFromMemory(dataStream.Pointer, dataStream.Size);
         }
 
+        /// <summary>Releases unmanaged and - optionally - managed resources</summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        /// <msdn-id>ms682317</msdn-id>
+        ///   <unmanaged>IUnknown::Release</unmanaged>
+        ///   <unmanaged-short>IUnknown::Release</unmanaged-short>
         protected override void Dispose(bool disposing)
         {
             if (streamProxy != null)

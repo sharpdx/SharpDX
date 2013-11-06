@@ -78,9 +78,13 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public enum FontTextureFormat
     {
+        /// <summary>The automatic.</summary>
         Auto,
+        /// <summary>The rgba32.</summary>
         Rgba32,
+        /// <summary>The bgra4444.</summary>
         Bgra4444,
+        /// <summary>The compressed mono.</summary>
         CompressedMono,
     }
 }

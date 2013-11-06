@@ -23,71 +23,41 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX.DirectInput
 {
+    /// <summary>The keyboard update struct.</summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct KeyboardUpdate : IStateUpdate
     {
-        internal int rawOffset;
+        /// <summary>Gets or sets the raw offset.</summary>
+        /// <value>The raw offset.</value>
+        public int RawOffset { get; set; }
 
-        internal int value;
+        /// <summary>Gets or sets the value.</summary>
+        /// <value>The value.</value>
+        public int Value { get; set; }
 
-        private int timestamp;
+        /// <summary>Gets or sets the timestamp.</summary>
+        /// <value>The timestamp.</value>
+        public int Timestamp { get; set; }
 
-        private int sequence;
+        /// <summary>Gets or sets the sequence.</summary>
+        /// <value>The sequence.</value>
+        public int Sequence { get; set; }
 
-        public int RawOffset
-        {
-            get
-            {
-                return rawOffset;
-            }
-            set
-            {
-                rawOffset = value;
-            }
-        }
+        /// <summary>Gets the key.</summary>
+        /// <value>The key.</value>
+        public Key Key { get { return ConvertRawKey(this.RawOffset); } }
 
-        public int Value
-        {
-            get
-            {
-                return value;
-            }
-            set
-            {
-                this.value = value;
-            }
-        }
+        /// <summary>Gets a value indicating whether this instance is pressed.</summary>
+        /// <value><see langword="true" /> if this instance is pressed; otherwise, <see langword="false" />.</value>
+        public bool IsPressed { get { return (this.Value & 0x80) != 0; } }
 
-        public int Timestamp
-        {
-            get
-            {
-                return timestamp;
-            }
-            set
-            {
-                timestamp = value;
-            }
-        }
-
-        public int Sequence
-        {
-            get
-            {
-                return sequence;
-            }
-            set
-            {
-                sequence = value;
-            }
-        }
-
-        public Key Key { get { return ConvertRawKey(rawOffset); } }
-
-        public bool IsPressed { get { return (value & 0x80) != 0; } }
-
+        /// <summary>Gets a value indicating whether this instance is released.</summary>
+        /// <value><see langword="true" /> if this instance is released; otherwise, <see langword="false" />.</value>
         public bool IsReleased { get { return !IsPressed; } }
 
+        /// <summary>Converts the raw key.</summary>
+        /// <param name="rawKey">The raw key.</param>
+        /// <returns>Key.</returns>
         private static Key ConvertRawKey(int rawKey)
         {
             if (Enum.IsDefined(typeof(Key), rawKey))
@@ -95,9 +65,11 @@ namespace SharpDX.DirectInput
             return Key.Unknown;
         }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
-            return String.Format("Key: {0}, IsPressed: {1} Timestamp: {2} Sequence: {3}", Key, IsPressed, timestamp, sequence);
+            return String.Format("Key: {0}, IsPressed: {1} Timestamp: {2} Sequence: {3}", Key, IsPressed, this.Timestamp, this.Sequence);
         }
     }
 }

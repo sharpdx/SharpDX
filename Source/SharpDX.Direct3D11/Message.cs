@@ -22,20 +22,27 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX.Direct3D11
 {
+    /// <summary>The message struct.</summary>
     public partial struct Message
     {
-        // Internal native struct used for marshalling
+        /// <summary>Internal native struct used for marshalling.</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 0)]
         internal partial struct __Native
         {
+            /// <summary>The category.</summary>
             public SharpDX.Direct3D11.MessageCategory Category;
+            /// <summary>The severity.</summary>
             public SharpDX.Direct3D11.MessageSeverity Severity;
+            /// <summary>The unique identifier.</summary>
             public SharpDX.Direct3D11.MessageId Id;
+            /// <summary>The application description.</summary>
             public System.IntPtr PDescription;
+            /// <summary>The description byte length.</summary>
             public SharpDX.PointerSize DescriptionByteLength;
         }
 
-        // Method to marshal from native to managed struct
+        /// <summary>Marshal from native to managed struct.</summary>
+        /// <param name="ref">The preference.</param>
         internal unsafe void __MarshalFrom(ref __Native @ref)
         {
             this.Category = @ref.Category;
@@ -45,6 +52,8 @@ namespace SharpDX.Direct3D11
             this.DescriptionByteLength = @ref.DescriptionByteLength;
         }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format("[{0}] [{1}] [{2}] : {3}", Id, Severity, Category, Description);

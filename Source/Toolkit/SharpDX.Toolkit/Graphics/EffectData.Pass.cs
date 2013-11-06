@@ -69,6 +69,8 @@ namespace SharpDX.Toolkit.Graphics
                 return pass;
             }
 
+            /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+            /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
             public override string ToString()
             {
                 return string.Format("Pass: [{0}], SubPass: {1}, Attributes({2})", Name, IsSubPass, Properties.Count);

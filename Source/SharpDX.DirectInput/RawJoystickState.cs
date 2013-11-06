@@ -22,6 +22,7 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX.DirectInput
 {
+    /// <summary>The raw joystick state struct.</summary>
     [StructLayout(LayoutKind.Sequential, Pack = 0 )]
     [DataFormat(DataFormatFlag.AbsoluteAxis)]
     public unsafe partial struct RawJoystickState
@@ -30,84 +31,114 @@ namespace SharpDX.DirectInput
         private const DeviceObjectTypeFlags TypePovOpt = DeviceObjectTypeFlags.PointOfViewController | DeviceObjectTypeFlags.AnyInstance | DeviceObjectTypeFlags.Optional;
         private const DeviceObjectTypeFlags TypeButtonOpt = DeviceObjectTypeFlags.PushButton | DeviceObjectTypeFlags.ToggleButton | DeviceObjectTypeFlags.AnyInstance | DeviceObjectTypeFlags.Optional;
 
+        /// <summary>The position X.</summary>
         [DataObjectFormat(ObjectGuid.XAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Position)]
         public int X;
 
+        /// <summary>The position Y.</summary>
         [DataObjectFormat(ObjectGuid.YAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Position)]
         public int Y;
 
+        /// <summary>The position Z.</summary>
         [DataObjectFormat(ObjectGuid.ZAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Position)]
         public int Z;
 
+        /// <summary>The rotation X.</summary>
         [DataObjectFormat(ObjectGuid.RxAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Position)]
         public int RotationX;
 
+        /// <summary>The rotation Y.</summary>
         [DataObjectFormat(ObjectGuid.RyAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Position)]
         public int RotationY;
 
+        /// <summary>The rotation Z.</summary>
         [DataObjectFormat(ObjectGuid.RzAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Position)]
         public int RotationZ;
 
+        /// <summary>The sliders.</summary>
         [DataObjectFormat(ObjectGuid.SliderStr, 2, TypeRelativeAxisOpt, ObjectDataFormatFlags.Position)]
         public fixed int Sliders[2];
 
+        /// <summary>The point of view controllers.</summary>
         [DataObjectFormat(ObjectGuid.PovControllerStr, 4, TypePovOpt)]
         public fixed int PointOfViewControllers[4];
 
+        /// <summary>The buttons.</summary>
         [DataObjectFormat(128, TypeButtonOpt)]
         public fixed byte Buttons[128];
 
+        /// <summary>The velocity X.</summary>
         [DataObjectFormat(ObjectGuid.XAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Velocity)]
         public int VelocityX;
+        /// <summary>The velocity Y.</summary>
         [DataObjectFormat(ObjectGuid.YAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Velocity)]
         public int VelocityY;
+        /// <summary>The velocity Z.</summary>
         [DataObjectFormat(ObjectGuid.ZAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Velocity)]
         public int VelocityZ;
+        /// <summary>The angular velocity X.</summary>
         [DataObjectFormat(ObjectGuid.RxAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Velocity)]
         public int AngularVelocityX;
+        /// <summary>The angular velocity Y.</summary>
         [DataObjectFormat(ObjectGuid.RyAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Velocity)]
         public int AngularVelocityY;
+        /// <summary>The angular velocity Z.</summary>
         [DataObjectFormat(ObjectGuid.RzAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Velocity)]
         public int AngularVelocityZ;
 
+        /// <summary>The velocity sliders.</summary>
         [DataObjectFormat(ObjectGuid.SliderStr, 2, TypeRelativeAxisOpt, ObjectDataFormatFlags.Velocity)]
         public fixed int VelocitySliders[2];
 
+        /// <summary>The acceleration X.</summary>
         [DataObjectFormat(ObjectGuid.XAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Acceleration)]
         public int AccelerationX;
 
+        /// <summary>The acceleration Y.</summary>
         [DataObjectFormat(ObjectGuid.YAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Acceleration)]
         public int AccelerationY;
 
+        /// <summary>The acceleration Z.</summary>
         [DataObjectFormat(ObjectGuid.ZAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Acceleration)]
         public int AccelerationZ;
 
+        /// <summary>The angular acceleration X.</summary>
         [DataObjectFormat(ObjectGuid.RxAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Acceleration)]
         public int AngularAccelerationX;
 
+        /// <summary>The angular acceleration Y.</summary>
         [DataObjectFormat(ObjectGuid.RyAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Acceleration)]
         public int AngularAccelerationY;
 
+        /// <summary>The angular acceleration Z.</summary>
         [DataObjectFormat(ObjectGuid.RzAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Acceleration)]
         public int AngularAccelerationZ;
 
+        /// <summary>The acceleration sliders.</summary>
         [DataObjectFormat(ObjectGuid.SliderStr, 2, TypeRelativeAxisOpt, ObjectDataFormatFlags.Acceleration)]
         public fixed int AccelerationSliders[2];
 
+        /// <summary>The force X.</summary>
         [DataObjectFormat(ObjectGuid.XAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Force)]
         public int ForceX;
+        /// <summary>The force Y.</summary>
         [DataObjectFormat(ObjectGuid.YAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Force)]
         public int ForceY;
+        /// <summary>The force Z.</summary>
         [DataObjectFormat(ObjectGuid.ZAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Force)]
         public int ForceZ;
 
+        /// <summary>The torque X.</summary>
         [DataObjectFormat(ObjectGuid.RxAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Force)]
         public int TorqueX;
+        /// <summary>The torque Y.</summary>
         [DataObjectFormat(ObjectGuid.RyAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Force)]
         public int TorqueY;
+        /// <summary>The torque Z.</summary>
         [DataObjectFormat(ObjectGuid.RzAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Force)]
         public int TorqueZ;
 
+        /// <summary>The force sliders.</summary>
         [DataObjectFormat(ObjectGuid.SliderStr, 2, TypeRelativeAxisOpt, ObjectDataFormatFlags.Force)]
         public fixed int ForceSliders[2];
 

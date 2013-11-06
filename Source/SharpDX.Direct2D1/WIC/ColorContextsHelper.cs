@@ -22,10 +22,21 @@ using System.Diagnostics;
 
 namespace SharpDX.WIC
 {
+    /// <summary>The color contexts provider delegate.</summary>
+    /// <param name="count">The count.</param>
+    /// <param name="colorContexts">The color contexts.</param>
+    /// <param name="actualCountRef">The actual count preference.</param>
+    /// <returns>Result.</returns>
     internal delegate Result ColorContextsProvider(int count, ColorContext[] colorContexts, out int actualCountRef);
 
+    /// <summary>The color contexts helper class.</summary>
     public static class ColorContextsHelper
     {
+        /// <summary>Tries the get color contexts.</summary>
+        /// <param name="getColorContexts">The get color contexts.</param>
+        /// <param name="imagingFactory">The imaging factory.</param>
+        /// <param name="colorContexts">The color contexts.</param>
+        /// <returns>Result.</returns>
         internal static Result TryGetColorContexts(ColorContextsProvider getColorContexts, ImagingFactory imagingFactory, out ColorContext[] colorContexts)
         {
             colorContexts = null;
@@ -54,6 +65,10 @@ namespace SharpDX.WIC
             return result;
         }
 
+        /// <summary>Tries the get color contexts.</summary>
+        /// <param name="getColorContexts">The get color contexts.</param>
+        /// <param name="imagingFactory">The imaging factory.</param>
+        /// <returns>ColorContext[][].</returns>
         internal static ColorContext[] TryGetColorContexts(ColorContextsProvider getColorContexts, ImagingFactory imagingFactory)
         {
             ColorContext[] colorContexts;
@@ -65,6 +80,10 @@ namespace SharpDX.WIC
             return colorContexts;
         }
 
+        /// <summary>Gets the color contexts.</summary>
+        /// <param name="getColorContexts">The get color contexts.</param>
+        /// <param name="imagingFactory">The imaging factory.</param>
+        /// <returns>ColorContext[][].</returns>
         internal static ColorContext[] GetColorContexts(ColorContextsProvider getColorContexts, ImagingFactory imagingFactory)
         {
             ColorContext[] colorContexts;

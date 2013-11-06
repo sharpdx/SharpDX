@@ -333,6 +333,7 @@ namespace SharpDX.Toolkit.Graphics
         {
         }
 
+        /// <summary>Initializes this instance.</summary>
         protected override void Initialize()
         {
             textureParam = Parameters["Texture"];

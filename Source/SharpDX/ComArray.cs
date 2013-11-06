@@ -29,7 +29,10 @@ namespace SharpDX
     /// </summary>
     public class ComArray : DisposeBase, IEnumerable
     {
+        /// <summary>The values.</summary>
         protected ComObject[] values;
+
+        /// <summary>The native buffer.</summary>
         private IntPtr nativeBuffer;
 
         /// <summary>
@@ -92,6 +95,9 @@ namespace SharpDX
             return values[index];
         }
 
+        /// <summary>Sets from native.</summary>
+        /// <param name="index">The index.</param>
+        /// <param name="value">The value.</param>
         internal void SetFromNative(int index, ComObject value)
         {
             values[index] = value;
@@ -115,6 +121,8 @@ namespace SharpDX
             }
         }
 
+        /// <summary>Releases unmanaged and - optionally - managed resources</summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -155,7 +163,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="T"/> with the specified i.
+        /// Gets or sets the type T with the specified index i.
         /// </summary>
         public T this[int i]
         {
@@ -169,34 +177,47 @@ namespace SharpDX
             }
         }
 
+        /// <summary>Returns an enumerator that iterates through the collection.</summary>
+        /// <returns>A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.</returns>
         public new IEnumerator<T> GetEnumerator()
         {
             return new ArrayEnumerator<T>(values.GetEnumerator());
         }
 
+        /// <summary>The array enumerator struct.</summary>
+        /// <typeparam name="T1">The type of the t1.</typeparam>
         private struct ArrayEnumerator<T1> : IEnumerator<T1> where T1 : ComObject
         {
+            /// <summary>The enumerator.</summary>
             private readonly IEnumerator enumerator;
 
+            /// <summary>Initializes a new instance of the ArrayEnumerator struct.</summary>
+            /// <param name="enumerator">The enumerator.</param>
             public ArrayEnumerator(IEnumerator enumerator)
             {
                 this.enumerator = enumerator;
             }
 
+            /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
             public void Dispose()
             {
             }
 
+            /// <summary>Advances the enumerator to the next element of the collection.</summary>
+            /// <returns>true if the enumerator was successfully advanced to the next element; false if the enumerator has passed the end of the collection.</returns>
             public bool MoveNext()
             {
                 return enumerator.MoveNext();
             }
 
+            /// <summary>Sets the enumerator to its initial position, which is before the first element in the collection.</summary>
             public void Reset()
             {
                 enumerator.Reset();
             }
 
+            /// <summary>Gets the current.</summary>
+            /// <value>The current.</value>
             public T1 Current
             {
                 get
@@ -205,6 +226,8 @@ namespace SharpDX
                 }
             }
 
+            /// <summary>Gets the current.</summary>
+            /// <value>The current.</value>
             object IEnumerator.Current
             {
                 get

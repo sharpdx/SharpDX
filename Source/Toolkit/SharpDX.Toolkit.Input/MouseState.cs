@@ -112,6 +112,9 @@ namespace SharpDX.Toolkit.Input
             return left == other.left && middle == other.middle && right == other.right && xButton1 == other.xButton1 && xButton2 == other.xButton2 && MathUtil.NearEqual(x, other.x) && MathUtil.NearEqual(y, other.y) && wheelDelta == other.wheelDelta;
         }
 
+        /// <summary>Determines whether the specified <see cref="System.Object" /> is equal to this instance.</summary>
+        /// <param name="obj">Another object to compare to.</param>
+        /// <returns><see langword="true" /> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <see langword="false" />.</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -121,6 +124,8 @@ namespace SharpDX.Toolkit.Input
             return obj is MouseState && Equals((MouseState)obj);
         }
 
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             unchecked

@@ -75,6 +75,7 @@ using System.Collections.Generic;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The geometric primitive class.</summary>
     public partial class GeometricPrimitive
     {
         /// <summary>
@@ -89,13 +90,19 @@ namespace SharpDX.Toolkit.Graphics
             // are stored as integer indices into the TeapotControlPoints array.
             private struct TeapotPatch
             {
+                /// <summary>Initializes a new instance of the <see cref="TeapotPatch"/> struct.</summary>
+                /// <param name="mirrorZ">if set to <see langword="true" /> [mirror z].</param>
+                /// <param name="indices">The indices.</param>
                 public TeapotPatch(bool mirrorZ, params int[] indices)
                 {
                     this.mirrorZ = mirrorZ;
                     this.indices = indices;
                 }
 
+                /// <summary>The mirror z.</summary>
                 public bool mirrorZ;
+
+                /// <summary>The indices.</summary>
                 public int[] indices;
             }
 
@@ -258,8 +265,13 @@ namespace SharpDX.Toolkit.Graphics
                     new Vector3(-0.375f, -0.31125f, -0.21f),
                 };
 
-
-            // Tessellates the specified bezier patch.
+            /// <summary>Tessellates the specified bezier patch.</summary>
+            /// <param name="vertices">The vertices.</param>
+            /// <param name="indices">The indices.</param>
+            /// <param name="patch">The patch.</param>
+            /// <param name="tessellation">The tessellation.</param>
+            /// <param name="scale">The scale.</param>
+            /// <param name="isMirrored">if set to <see langword="true" /> [is mirrored].</param>
             private static void TessellatePatch(List<VertexPositionNormalTexture> vertices, List<int> indices, ref TeapotPatch patch, int tessellation, Vector3 scale,
                                                 bool isMirrored)
             {
@@ -323,10 +335,13 @@ namespace SharpDX.Toolkit.Graphics
                 return new GeometricPrimitive(device, vertices.ToArray(), indices.ToArray()) { Name = "Teapot" };
             }
 
-            // Performs a cubic bezier interpolation between four control points,
-            // returning the value at the specified time (t ranges 0 to 1).
-            // This template implementation can be used to interpolate Vector3,
-            // float, or any other types that define suitable * and + operators.
+            /// <summary>Performs a cubic bezier interpolation between four control points, returning the value at the specified time (t ranges 0 to 1). This template implementation can be used to interpolate Vector3, float, or any other types that define suitable * and + operators.</summary>
+            /// <param name="p1">The p1.</param>
+            /// <param name="p2">The p2.</param>
+            /// <param name="p3">The p3.</param>
+            /// <param name="p4">The p4.</param>
+            /// <param name="t">The attribute.</param>
+            /// <returns>Vector3.</returns>
             public static Vector3 CubicInterpolate(ref Vector3 p1, ref Vector3 p2, ref Vector3 p3, ref Vector3 p4, float t)
             {
                 var t2 = t*t;
@@ -338,8 +353,13 @@ namespace SharpDX.Toolkit.Graphics
             }
 
 
-            // Computes the tangent of a cubic bezier curve at the specified time.
-            // Template supports Vector3, float, or any other types with * and + operators.
+            /// <summary>Computes the tangent of a cubic bezier curve at the specified time. Template supports Vector3, float, or any other types with * and + operators.</summary>
+            /// <param name="p1">The p1.</param>
+            /// <param name="p2">The p2.</param>
+            /// <param name="p3">The p3.</param>
+            /// <param name="p4">The p4.</param>
+            /// <param name="t">The attribute.</param>
+            /// <returns>Vector3.</returns>
             private static Vector3 CubicTangent(ref Vector3 p1, ref Vector3 p2, ref Vector3 p3, ref Vector3 p4, float t)
             {
                 var t2 = t*t;
@@ -349,9 +369,11 @@ namespace SharpDX.Toolkit.Graphics
                        p4*(t2);
             }
 
-            // Creates vertices for a patch that is tessellated at the specified level.
-            // Calls the specified outputVertex function for each generated vertex,
-            // passing the position, normal, and texture coordinate as parameters.
+            /// <summary>Creates vertices for a patch that is tessellated at the specified level. Calls the specified outputVertex function for each generated vertex, passing the position, normal, and texture coordinate as parameters.</summary>
+            /// <param name="patch">The patch.</param>
+            /// <param name="tessellation">The tessellation.</param>
+            /// <param name="isMirrored">if set to <see langword="true" /> [is mirrored].</param>
+            /// <param name="outputList">The output list.</param>
             private static void CreatePatchVertices(Vector3[] patch, int tessellation, bool isMirrored, List<VertexPositionNormalTexture> outputList)
             {
                 for (int i = 0; i <= tessellation; i++)
@@ -426,8 +448,11 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
-            // Creates indices for a patch that is tessellated at the specified level.
-            // Calls the specified outputIndex function for each generated index value.
+            /// <summary>Creates indices for a patch that is tessellated at the specified level. Calls the specified outputIndex function for each generated index value.</summary>
+            /// <param name="tessellation">The tessellation.</param>
+            /// <param name="isMirrored">if set to <see langword="true" /> [is mirrored].</param>
+            /// <param name="baseIndex">Index of the base.</param>
+            /// <returns>IEnumerable{System.Int32}.</returns>
             private static IEnumerable<int> CreatePatchIndices(int tessellation, bool isMirrored, int baseIndex)
             {
                 int stride = tessellation + 1;

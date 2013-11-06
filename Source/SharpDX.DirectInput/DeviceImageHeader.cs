@@ -36,6 +36,8 @@ namespace SharpDX.DirectInput
             }
         }
 
+        /// <summary>Gets the images.</summary>
+        /// <value>The images.</value>
         public DeviceImage[] Images { get; private set; }
 
         internal static __Native __NewNative()

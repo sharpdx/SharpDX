@@ -53,6 +53,9 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public string FieldName = "effectByteCode";
 
+        /// <summary>Writes the specified effect data.</summary>
+        /// <param name="effectData">The effect data.</param>
+        /// <param name="writer">The writer.</param>
         public void Write(EffectData effectData, TextWriter writer)
         {
             const string codeTemplate = @"//------------------------------------------------------------------------------

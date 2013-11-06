@@ -42,8 +42,10 @@ namespace SharpDX.Toolkit.Graphics
     /// <unmanaged-short>D3D11_INPUT_ELEMENT_DESC</unmanaged-short>	
     public sealed class VertexInputLayout : IEquatable<VertexInputLayout>
     {
+        /// <summary>The vertex buffer binding cache.</summary>
         private static readonly Dictionary<ReadOnlyArray<VertexBufferLayout>, VertexInputLayout> VertexBufferBindingCache = new Dictionary<ReadOnlyArray<VertexBufferLayout>, VertexInputLayout>();
 
+        /// <summary>The input elements.</summary>
         internal readonly InputElement[] InputElements;
 
         /// <summary>
@@ -68,6 +70,9 @@ namespace SharpDX.Toolkit.Graphics
             InputElements = ComputeInputElements();
         }
 
+        /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
         public bool Equals(VertexInputLayout other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -75,6 +80,9 @@ namespace SharpDX.Toolkit.Graphics
             return Id == other.Id;
         }
 
+        /// <summary>Determines whether the specified <see cref="System.Object" /> is equal to this instance.</summary>
+        /// <param name="obj">The <see cref="T:System.Object" /> to compare with the current <see cref="T:System.Object" />.</param>
+        /// <returns><see langword="true" /> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <see langword="false" />.</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -82,11 +90,15 @@ namespace SharpDX.Toolkit.Graphics
             return obj is VertexInputLayout && Equals((VertexInputLayout) obj);
         }
 
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             return Id;
         }
 
+        /// <summary>Computes the input elements.</summary>
+        /// <returns>InputElement[][].</returns>
         private InputElement[] ComputeInputElements()
         {
             var inputElements = new List<InputElement>();

@@ -22,6 +22,7 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX.Direct3D9
 {
+    /// <summary>The texture requirements struct.</summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct TextureRequirements
     {

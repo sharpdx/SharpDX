@@ -23,8 +23,10 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX.XACT3
 {
+    /// <summary>The sound properties class.</summary>
     public partial class SoundProperties
     {
+        /// <summary>The track properties.</summary>
         public TrackProperties[] TrackProperties;
 
         // Internal native struct used for marshalling

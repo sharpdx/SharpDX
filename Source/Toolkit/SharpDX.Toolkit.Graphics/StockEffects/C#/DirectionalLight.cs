@@ -20,6 +20,7 @@
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The directional light class.</summary>
     public sealed class DirectionalLight
     {
         internal readonly EffectParameter directionParameter;
@@ -30,6 +31,11 @@ namespace SharpDX.Toolkit.Graphics
         private Vector3 specularColor;
         private bool enabled;
 
+        /// <summary>Initializes a new instance of the <see cref="DirectionalLight"/> class.</summary>
+        /// <param name="directionParameter">The direction parameter.</param>
+        /// <param name="diffuseColorParameter">The diffuse color parameter.</param>
+        /// <param name="specularColorParameter">The specular color parameter.</param>
+        /// <param name="cloneSource">The clone source.</param>
         public DirectionalLight(EffectParameter directionParameter, EffectParameter diffuseColorParameter, EffectParameter specularColorParameter, DirectionalLight cloneSource)
         {
             this.diffuseColorParameter = diffuseColorParameter;
@@ -50,6 +56,8 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Gets or sets the color of the diffuse.</summary>
+        /// <value>The color of the diffuse.</value>
         public Vector3 DiffuseColor
         {
             get
@@ -64,6 +72,8 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Gets or sets the direction.</summary>
+        /// <value>The direction.</value>
         public Vector3 Direction
         {
             get
@@ -78,6 +88,8 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Gets or sets the color of the specular.</summary>
+        /// <value>The color of the specular.</value>
         public Vector3 SpecularColor
         {
             get
@@ -91,6 +103,9 @@ namespace SharpDX.Toolkit.Graphics
                     specularColorParameter.SetValue(specularColor);
             }
         }
+        
+        /// <summary>Gets or sets a value indicating whether this <see cref="DirectionalLight"/> is enabled.</summary>
+        /// <value><see langword="true" /> if enabled; otherwise, <see langword="false" />.</value>
         public bool Enabled
         {
             get { return enabled; }

@@ -21,19 +21,32 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX.DirectInput
 {
+    /// <summary>The joystick update struct.</summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct JoystickUpdate : IStateUpdate
     {
+        /// <summary>Gets or sets the raw offset.</summary>
+        /// <value>The raw offset.</value>
         public int RawOffset { get; set; }
 
+        /// <summary>Gets or sets the value.</summary>
+        /// <value>The value.</value>
         public int Value { get; set; }
 
+        /// <summary>Gets or sets the timestamp.</summary>
+        /// <value>The timestamp.</value>
         public int Timestamp { get; set; }
 
+        /// <summary>Gets or sets the sequence.</summary>
+        /// <value>The sequence.</value>
         public int Sequence { get; set; }
 
-        public JoystickOffset Offset { get { return (JoystickOffset)RawOffset; } } 
+        /// <summary>Gets the offset.</summary>
+        /// <value>The offset.</value>
+        public JoystickOffset Offset { get { return (JoystickOffset)RawOffset; } }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format(System.Globalization.CultureInfo.InvariantCulture, "Offset: {0}, Value: {1} Timestamp: {2} Sequence: {3}", Offset, Value, Timestamp, Sequence);

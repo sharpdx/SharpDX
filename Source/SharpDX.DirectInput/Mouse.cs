@@ -21,12 +21,17 @@ using System;
 
 namespace SharpDX.DirectInput
 {
+    /// <summary>The mouse class.</summary>
     public class Mouse : CustomDevice<MouseState, RawMouseState, MouseUpdate>
     {
+        /// <summary>Initializes a new instance of the <see cref="Mouse"/> class.</summary>
+        /// <param name="nativePtr">The native PTR.</param>
         public Mouse(IntPtr nativePtr) : base(nativePtr)
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="Mouse"/> class.</summary>
+        /// <param name="directInput">The direct input.</param>
         public Mouse(DirectInput directInput) : base(directInput, DeviceGuid.SysMouse)
         {
         }

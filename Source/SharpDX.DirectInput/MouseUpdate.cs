@@ -22,21 +22,36 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX.DirectInput
 {
+    /// <summary>The mouse update struct.</summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct MouseUpdate : IStateUpdate
     {
+        /// <summary>Gets or sets the raw offset.</summary>
+        /// <value>The raw offset.</value>
         public int RawOffset { get; set; }
 
+        /// <summary>Gets or sets the value.</summary>
+        /// <value>The value.</value>
         public int Value { get; set; }
 
+        /// <summary>Gets or sets the timestamp.</summary>
+        /// <value>The timestamp.</value>
         public int Timestamp { get; set; }
 
+        /// <summary>Gets or sets the sequence.</summary>
+        /// <value>The sequence.</value>
         public int Sequence { get; set; }
 
+        /// <summary>Gets the offset.</summary>
+        /// <value>The offset.</value>
         public MouseOffset Offset { get { return (MouseOffset)RawOffset; } }
 
+        /// <summary>Gets a value indicating whether this instance is button.</summary>
+        /// <value><see langword="true" /> if this instance is button; otherwise, <see langword="false" />.</value>
         public bool IsButton { get { return Offset >= MouseOffset.Buttons0 && Offset <= MouseOffset.Buttons7;  } }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             object value;

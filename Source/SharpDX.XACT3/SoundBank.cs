@@ -23,6 +23,7 @@ using System.IO;
 
 namespace SharpDX.XACT3
 {
+    /// <summary>The sound bank class.</summary>
     public partial class SoundBank
     {
         private DataStream soundBankSourceStream;
@@ -65,11 +66,18 @@ namespace SharpDX.XACT3
         }
 
 
+        /// <summary>Plays the specified cue index.</summary>
+        /// <param name="cueIndex">Index of the cue.</param>
+        /// <returns>SharpDX.XACT3.Cue.</returns>
         public SharpDX.XACT3.Cue Play(short cueIndex)
         {
             return Play(cueIndex, 0);
         }
 
+        /// <summary>Plays the specified cue index.</summary>
+        /// <param name="cueIndex">Index of the cue.</param>
+        /// <param name="timeOffset">The time offset.</param>
+        /// <returns>SharpDX.XACT3.Cue.</returns>
         public SharpDX.XACT3.Cue Play(short cueIndex, int timeOffset)
         {
             var cue = Play(cueIndex, 0, timeOffset);
@@ -78,11 +86,18 @@ namespace SharpDX.XACT3
             return cue;
         }
 
+        /// <summary>Prepares the specified cue index.</summary>
+        /// <param name="cueIndex">Index of the cue.</param>
+        /// <returns>SharpDX.XACT3.Cue.</returns>
         public SharpDX.XACT3.Cue Prepare(short cueIndex)
         {
             return Prepare(cueIndex, 0);
         }
 
+        /// <summary>Prepares the specified cue index.</summary>
+        /// <param name="cueIndex">Index of the cue.</param>
+        /// <param name="timeOffset">The time offset.</param>
+        /// <returns>SharpDX.XACT3.Cue.</returns>
         public SharpDX.XACT3.Cue Prepare(short cueIndex, int timeOffset)
         {
             var cue = Prepare(cueIndex, 0, timeOffset);
@@ -139,6 +154,8 @@ namespace SharpDX.XACT3
         }
 
 
+        /// <summary>Releases unmanaged and - optionally - managed resources</summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

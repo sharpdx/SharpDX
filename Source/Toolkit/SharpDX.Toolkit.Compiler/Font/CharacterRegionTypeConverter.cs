@@ -78,14 +78,26 @@ using System.Globalization;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The character region type converter class.</summary>
     public class CharacterRegionTypeConverter : TypeConverter
     {
+        /// <summary>Returns whether this converter can convert an object of the given type to the type of this converter, using the specified context.</summary>
+        /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext" /> that provides a format context.</param>
+        /// <param name="sourceType">A <see cref="T:System.Type" /> that represents the type you want to convert from.</param>
+        /// <returns>true if this converter can perform the conversion; otherwise, false.</returns>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             return sourceType == typeof(string);
         }
 
 
+        /// <summary>Converts the given object to the type of this converter, using the specified context and culture information.</summary>
+        /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext" /> that provides a format context.</param>
+        /// <param name="culture">The <see cref="T:System.Globalization.CultureInfo" /> to use as the current culture.</param>
+        /// <param name="value">The <see cref="T:System.Object" /> to convert.</param>
+        /// <returns>An <see cref="T:System.Object" /> that represents the converted value.</returns>
+        /// <exception cref="System.ArgumentException">
+        /// </exception>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             // Input must be a string.
@@ -125,6 +137,9 @@ namespace SharpDX.Toolkit.Graphics
         }
 
 
+        /// <summary>Converts the character.</summary>
+        /// <param name="value">The value.</param>
+        /// <returns>System.Char.</returns>
         static char ConvertCharacter(string value)
         {
             if (value.Length == 1)
@@ -140,6 +155,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
 
+        /// <summary>The int converter.</summary>
         static TypeConverter intConverter = TypeDescriptor.GetConverter(typeof(int));
     }
 }

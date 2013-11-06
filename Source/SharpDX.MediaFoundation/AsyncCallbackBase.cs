@@ -25,16 +25,22 @@ namespace SharpDX.MediaFoundation
     /// </summary>
     public abstract class AsyncCallbackBase : CallbackBase, IAsyncCallback
     {
+        /// <summary>Gets the flags.</summary>
+        /// <value>The flags.</value>
         public virtual AsyncCallbackFlags Flags
         {
             get { return AsyncCallbackFlags.None; }
         }
 
+        /// <summary>Gets the work queue unique identifier.</summary>
+        /// <value>The work queue unique identifier.</value>
         public virtual WorkQueueId WorkQueueId
         {
             get { return WorkQueueId.Standard; }
         }
 
+        /// <summary>Invokes the specified asynchronous result.</summary>
+        /// <param name="asyncResult">The asynchronous result.</param>
         public abstract void Invoke(AsyncResult asyncResult);
     }
 }

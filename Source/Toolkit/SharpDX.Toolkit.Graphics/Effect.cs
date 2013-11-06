@@ -37,6 +37,9 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public event EventHandler<EventArgs> Initialized;
 
+        /// <summary>The configuration apply delegate delegate.</summary>
+        /// <param name="pass">The pass.</param>
+        /// <returns>EffectPass.</returns>
         public delegate EffectPass OnApplyDelegate(EffectPass pass);
 
         private Dictionary<EffectConstantBufferKey, EffectConstantBuffer> effectConstantBuffersCache;
@@ -334,6 +337,7 @@ namespace SharpDX.Toolkit.Graphics
             OnInitialized();
         }
 
+        /// <summary>Initializes this instance.</summary>
         protected virtual void Initialize()
         {
         }
@@ -357,12 +361,17 @@ namespace SharpDX.Toolkit.Graphics
             return effect;
         }
 
+        /// <summary>Gets or sets the disposables.</summary>
+        /// <value>The disposables.</value>
         internal new DisposeCollector DisposeCollector
         {
             get { return base.DisposeCollector; }
             private set { base.DisposeCollector = value; }
         }
 
+        /// <summary>Called when [apply].</summary>
+        /// <param name="pass">The pass.</param>
+        /// <returns>EffectPass.</returns>
         protected internal virtual EffectPass OnApply(EffectPass pass)
         {
             var handler = OnApplyCallback;
@@ -371,6 +380,8 @@ namespace SharpDX.Toolkit.Graphics
             return pass;
         }
 
+        /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
+        /// <param name="disposeManagedResources"><see langword="true" /> to release both managed and unmanaged resources; <see langword="false" /> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
         {
             // Remove this instance from the pool
@@ -379,6 +390,10 @@ namespace SharpDX.Toolkit.Graphics
             base.Dispose(disposeManagedResources);
         }
 
+        /// <summary>Gets the original create constant buffer.</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="bufferRaw">The buffer raw.</param>
+        /// <returns>EffectConstantBuffer.</returns>
         internal EffectConstantBuffer GetOrCreateConstantBuffer(GraphicsDevice context, EffectData.ConstantBuffer bufferRaw)
         {
             EffectConstantBuffer constantBuffer;
@@ -406,6 +421,7 @@ namespace SharpDX.Toolkit.Graphics
             return constantBuffer;
         }
 
+        /// <summary>Called when [initialized].</summary>
         protected virtual void OnInitialized()
         {
             EventHandler<EventArgs> handler = Initialized;

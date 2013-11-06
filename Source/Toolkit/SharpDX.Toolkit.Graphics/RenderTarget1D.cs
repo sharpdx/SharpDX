@@ -34,11 +34,23 @@ namespace SharpDX.Toolkit.Graphics
     /// </remarks>
     public class RenderTarget1D : Texture1DBase
     {
+        /// <summary>Initializes a new instance of the <see cref="Texture1DBase" /> class.</summary>
+        /// <param name="device">The <see cref="GraphicsDevice" />.</param>
+        /// <param name="description1D">The description.</param>
+        /// <msdn-id>ff476520</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>
+        ///   <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>
         internal RenderTarget1D(GraphicsDevice device, Texture1DDescription description1D)
             : base(device, description1D)
         {
         }
 
+        /// <summary>Specialised constructor for use only by derived classes.</summary>
+        /// <param name="device">The device.</param>
+        /// <param name="texture">The texture.</param>
+        /// <msdn-id>ff476520</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>
+        ///   <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>
         internal RenderTarget1D(GraphicsDevice device, Direct3D11.Texture1D texture)
             : base(device, texture)
         {
@@ -53,6 +65,7 @@ namespace SharpDX.Toolkit.Graphics
             return from == null ? null : from.renderTargetViews != null ? from.renderTargetViews[0] : null;
         }
 
+        /// <summary>Initializes the views.</summary>
         protected override void InitializeViews()
         {
             // Perform default initialization
@@ -65,6 +78,12 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Gets the render target view.</summary>
+        /// <param name="viewType">Type of the view.</param>
+        /// <param name="arrayOrDepthSlice">The array original depth slice.</param>
+        /// <param name="mipIndex">Index of the mip.</param>
+        /// <returns>TextureView.</returns>
+        /// <exception cref="System.NotSupportedException">ViewSlice.MipBand is not supported for render targets</exception>
         internal override TextureView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipIndex)
         {
             if ((this.Description.BindFlags & BindFlags.RenderTarget) == 0)
@@ -110,6 +129,9 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Makes a copy of this texture.</summary>
+        /// <returns>A copy of this texture.</returns>
+        /// <remarks>This method doesn't copy the content of the texture.</remarks>
         public override Texture Clone()
         {
             return new RenderTarget1D(GraphicsDevice, this.Description);
@@ -182,6 +204,13 @@ namespace SharpDX.Toolkit.Graphics
             return new RenderTarget1D(device, NewRenderTargetDescription(width, format, flags | TextureFlags.RenderTarget, mipCount, arraySize));
         }
 
+        /// <summary>News the render target description.</summary>
+        /// <param name="width">The width.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="textureFlags">The texture flags.</param>
+        /// <param name="mipCount">The mip count.</param>
+        /// <param name="arraySize">Size of the array.</param>
+        /// <returns>Texture1DDescription.</returns>
         protected static Texture1DDescription NewRenderTargetDescription(int width, PixelFormat format, TextureFlags textureFlags,int mipCount, int arraySize)
         {
             var desc = Texture1DBase.NewDescription(width, format, textureFlags, mipCount, arraySize, ResourceUsage.Default);

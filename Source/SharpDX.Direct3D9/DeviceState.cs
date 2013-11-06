@@ -20,20 +20,28 @@
 
 namespace SharpDX.Direct3D9
 {
+    /// <summary>The device state enumeration.</summary>
     public enum DeviceState
     {
+        /// <summary>The device hung.</summary>
         DeviceHung = -2005530508,
 
+        /// <summary>The device lost.</summary>
         DeviceLost = -2005530520,
 
+        /// <summary>The device removed.</summary>
         DeviceRemoved = -2005530512,
 
+        /// <summary>The ok.</summary>
         Ok = 0,
 
+        /// <summary>The out of video memory.</summary>
         OutOfVideoMemory = -2005532292,
 
+        /// <summary>The present mode changed.</summary>
         PresentModeChanged = 0x8760877,
 
+        /// <summary>The present occluded.</summary>
         PresentOccluded = 0x8760878
     }
 }

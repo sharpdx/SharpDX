@@ -169,6 +169,10 @@ namespace SharpDX
             }
         }
 
+        /// <summary>Return as unsafe.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="iunknownPtr">The i unknown pointer.</param>
+        /// <returns>The T.</returns>
         internal static T AsUnsafe<T>(IntPtr iunknownPtr)
         {
             using (var tempObject = new ComObject(iunknownPtr))
@@ -253,17 +257,27 @@ namespace SharpDX
             NativePointer = parentPtr;
         }
 
+        /// <summary>Queries the supported COM interface on this instance.</summary>
+        /// <param name="guid">The guid of the interface.</param>
+        /// <param name="comObject">The output COM object reference.</param>
+        /// <returns>If successful, <see cref="Result.Ok" /></returns>
         Result IUnknown.QueryInterface(ref Guid guid, out IntPtr comObject)
         {
             return Marshal.QueryInterface(NativePointer, ref guid, out comObject);              
         }
 
+        /// <summary>Increments the reference count for an interface on this instance.</summary>
+        /// <returns>The method returns the new reference count.</returns>
+        /// <exception cref="System.InvalidOperationException">COM Object pointer is null</exception>
         int IUnknown.AddReference()
         {
             if (NativePointer == IntPtr.Zero) throw new InvalidOperationException("COM Object pointer is null");
             return Marshal.AddRef(NativePointer);            
         }
 
+        /// <summary>Decrements the reference count for an interface on this instance.</summary>
+        /// <returns>The method returns the new reference count.</returns>
+        /// <exception cref="System.InvalidOperationException">COM Object pointer is null</exception>
         int IUnknown.Release()
         {
             if (NativePointer == IntPtr.Zero) throw new InvalidOperationException("COM Object pointer is null");
@@ -295,12 +309,15 @@ namespace SharpDX
             base.Dispose(disposing);
         }
 
+        /// <summary>Method called when NativePointer is going to be update.</summary>
         protected override void NativePointerUpdating()
         {
             if (Configuration.EnableObjectTracking)
                 ObjectTracker.UnTrack(this);
         }
 
+        /// <summary>Method called when the NativePointer is updated.</summary>
+        /// <param name="oldNativePointer">The old native pointer.</param>
         protected override void NativePointerUpdated(IntPtr oldNativePointer)
         {
             if (Configuration.EnableObjectTracking)

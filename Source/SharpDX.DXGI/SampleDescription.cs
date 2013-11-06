@@ -19,19 +19,20 @@
 // THE SOFTWARE.
 namespace SharpDX.DXGI
 {
+    /// <summary>The sample description struct.</summary>
     public partial struct SampleDescription
     {
-        /// <summary>
-        ///   Initializes a new instance of the <see cref = "T:SharpDX.DXGI.SampleDescription" /> structure.
-        /// </summary>
-        /// <param name = "count">The sample count.</param>
-        /// <param name = "quality">The sample quality.</param>
+        /// <summary>Initializes a new instance of the <see cref="SampleDescription"/> struct.</summary>
+        /// <param name="count">The count.</param>
+        /// <param name="quality">The quality.</param>
         public SampleDescription(int count, int quality)
         {
             this.Count = count;
             this.Quality = quality;
         }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format("{{{0}, {1}}}", this.Count, this.Quality);

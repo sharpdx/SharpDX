@@ -62,12 +62,19 @@ namespace SharpDX.Direct3D9
             }
         }
 
+        /// <summary>Method called when the NativePointer is updated.</summary>
+        /// <param name="oldNativePointer">The old native pointer.</param>
         protected override void NativePointerUpdated(IntPtr oldNativePointer)
         {
             DisposeDevice();
             base.NativePointerUpdated(oldNativePointer);
         }
 
+        /// <summary>Releases unmanaged and - optionally - managed resources</summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        /// <msdn-id>ms682317</msdn-id>
+        ///   <unmanaged>IUnknown::Release</unmanaged>
+        ///   <unmanaged-short>IUnknown::Release</unmanaged-short>
         protected override unsafe void Dispose(bool disposing)
         {
             if (disposing)

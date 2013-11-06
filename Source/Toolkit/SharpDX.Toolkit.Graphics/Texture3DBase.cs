@@ -28,6 +28,7 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public abstract class Texture3DBase : Texture
     {
+        /// <summary>The resource.</summary>
         protected readonly new Direct3D11.Texture3D Resource;
 
         /// <summary>
@@ -156,6 +157,7 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Initializes the views provided by this texture.</summary>
         protected override void InitializeViews()
         {
             // Creates the shader resource view
@@ -178,6 +180,15 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>News the description.</summary>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="depth">The depth.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="textureFlags">The texture flags.</param>
+        /// <param name="mipCount">The mip count.</param>
+        /// <param name="usage">The usage.</param>
+        /// <returns>Texture3DDescription.</returns>
         protected static Texture3DDescription NewDescription(int width, int height, int depth, PixelFormat format, TextureFlags textureFlags, int mipCount, ResourceUsage usage)
         {
             if ((textureFlags & TextureFlags.UnorderedAccess) != 0)

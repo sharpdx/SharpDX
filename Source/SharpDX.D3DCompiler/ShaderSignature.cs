@@ -168,6 +168,7 @@ namespace SharpDX.D3DCompiler
             return (shaderSignature != null) ? shaderSignature.Data : null;
         }
 
+        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         public void Dispose()
         {
             // Obsolete, just here for backward compatibility

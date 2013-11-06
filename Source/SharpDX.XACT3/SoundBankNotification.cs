@@ -25,12 +25,16 @@ namespace SharpDX.XACT3
     /// <unmanaged>XACT_NOTIFICATION_SOUNDBANK</unmanaged>	
     public class SoundBankNotification : Notification
     {
+        /// <summary>Initializes a new instance of the <see cref="Notification" /> class.</summary>
+        /// <param name="rawNotification">The raw notification.</param>
         internal unsafe SoundBankNotification(RawNotification* rawNotification)
             : base(rawNotification)
         {
             SoundBank = CppObject.FromPointer<SoundBank>(rawNotification->Data.SoundBank.SoundBankPointer);
         }
 
+        /// <summary>Gets or sets the sound bank.</summary>
+        /// <value>The sound bank.</value>
         public SoundBank SoundBank { get; set; }
     }
 }

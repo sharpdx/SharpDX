@@ -20,18 +20,30 @@
 
 namespace SharpDX.DirectInput
 {
+    /// <summary>The mouse offset enumeration.</summary>
     public enum MouseOffset
     {
+        /// <summary>The X offset.</summary>
         X = 0,
+        /// <summary>The Y offset.</summary>
         Y = 4,
+        /// <summary>The Z offset.</summary>
         Z = 8,
+        /// <summary>The button 0.</summary>
         Buttons0 = 12,
+        /// <summary>The button 1.</summary>
         Buttons1 = 13,
+        /// <summary>The button 2.</summary>
         Buttons2 = 14,
+        /// <summary>The button 3.</summary>
         Buttons3 = 15,
+        /// <summary>The button 4.</summary>
         Buttons4 = 16,
+        /// <summary>The button 5.</summary>
         Buttons5 = 17,
+        /// <summary>The button 6.</summary>
         Buttons6 = 18,
+        /// <summary>The button 7.</summary>
         Buttons7 = 19,
     }
 }

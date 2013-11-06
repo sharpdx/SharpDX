@@ -44,6 +44,9 @@ namespace SharpDX.Toolkit.Graphics
 
         private int bufferCount;
 
+        /// <summary>Initializes a new instance of the <see cref="GraphicsPresenter" /> class.</summary>
+        /// <param name="device">The device.</param>
+        /// <param name="presentationParameters">The presentation parameters.</param>
         public SwapChainGraphicsPresenter(GraphicsDevice device, PresentationParameters presentationParameters)
             : base(device, presentationParameters)
         {
@@ -55,6 +58,8 @@ namespace SharpDX.Toolkit.Graphics
             backBuffer = ToDispose(RenderTarget2D.New(device, swapChain.GetBackBuffer<Direct3D11.Texture2D>(0)));
         }
 
+        /// <summary>Gets the default back buffer for this presenter.</summary>
+        /// <value>The back buffer.</value>
         public override RenderTarget2D BackBuffer
         {
             get
@@ -63,6 +68,8 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Gets the underlying native presenter (can be a <see cref="SharpDX.DXGI.SwapChain" /> or <see cref="SharpDX.DXGI.SwapChain1" /> or null, depending on the platform).</summary>
+        /// <value>The native presenter.</value>
         public override object NativePresenter
         {
             get
@@ -71,6 +78,12 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Gets or sets fullscreen mode for this presenter.</summary>
+        /// <value><c>true</c> if this instance is full screen; otherwise, <c>false</c>.</value>
+        /// <msdn-id>bb174579</msdn-id>
+        ///   <unmanaged>HRESULT IDXGISwapChain::SetFullscreenState([In] BOOL Fullscreen,[In, Optional] IDXGIOutput* pTarget)</unmanaged>
+        ///   <unmanaged-short>IDXGISwapChain::SetFullscreenState</unmanaged-short>
+        /// <remarks>This method is only valid on Windows Desktop and has no effect on Windows Metro.</remarks>
         public override bool IsFullScreen
         {
             get
@@ -133,6 +146,10 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Presents the Backbuffer to the screen.</summary>
+        /// <msdn-id>bb174576</msdn-id>
+        ///   <unmanaged>HRESULT IDXGISwapChain::Present([In] unsigned int SyncInterval,[In] DXGI_PRESENT_FLAGS Flags)</unmanaged>
+        ///   <unmanaged-short>IDXGISwapChain::Present</unmanaged-short>
         public override void Present()
         {
             swapChain.Present((int)PresentInterval, PresentFlags.None);
@@ -153,6 +170,11 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Resizes the current presenter, by resizing the back buffer and the depth stencil buffer.</summary>
+        /// <param name="width">New backbuffer width</param>
+        /// <param name="height">New backbuffer height</param>
+        /// <param name="format">Backbuffer display format.</param>
+        /// <returns><c>true</c> if the presenter was resized, <c>false</c> otherwise</returns>
         public override bool Resize(int width, int height, Format format)
         {
             if (!base.Resize(width, height, format)) return false;

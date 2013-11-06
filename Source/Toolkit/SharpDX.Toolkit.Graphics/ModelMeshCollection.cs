@@ -24,17 +24,23 @@ using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The model mesh collection class.</summary>
     public class ModelMeshCollection : List<ModelMesh>
     {
+        /// <summary>Initializes a new instance of the <see cref="ModelMeshCollection"/> class.</summary>
         public ModelMeshCollection()
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="T:System.Collections.Generic.List`1" /> class that is empty and has the specified initial capacity.</summary>
+        /// <param name="capacity">The number of elements that the new list can initially store.</param>
         public ModelMeshCollection(int capacity)
             : base(capacity)
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="ModelMeshCollection"/> class.</summary>
+        /// <param name="collection">The collection.</param>
         public ModelMeshCollection(IEnumerable<ModelMesh> collection)
             : base(collection)
         {

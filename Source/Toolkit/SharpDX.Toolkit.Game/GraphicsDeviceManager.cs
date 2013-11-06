@@ -155,22 +155,30 @@ namespace SharpDX.Toolkit
 
         #region Public Events
 
+        /// <summary>Occurs when a device is created.</summary>
         public event EventHandler<EventArgs> DeviceCreated;
 
+        /// <summary>Occurs when a device is disposing.</summary>
         public event EventHandler<EventArgs> DeviceDisposing;
 
+        /// <summary>Occurs when a device is lost.</summary>
         public event EventHandler<EventArgs> DeviceLost;
 
+        /// <summary>Occurs right before device is about to change (recreate or resize)</summary>
         public event EventHandler<EventArgs> DeviceChangeBegin;
 
+        /// <summary>Occurs when device is changed (recreated or resized)</summary>
         public event EventHandler<EventArgs> DeviceChangeEnd;
 
+        /// <summary>Occurs when [preparing device settings].</summary>
         public event EventHandler<PreparingDeviceSettingsEventArgs> PreparingDeviceSettings;
 
         #endregion
 
         #region Public Properties
 
+        /// <summary>Gets the current graphics device.</summary>
+        /// <value>The graphics device.</value>
         public GraphicsDevice GraphicsDevice
         {
             get
@@ -431,6 +439,8 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>Starts the drawing of a frame.</summary>
+        /// <returns><c>true</c> if OK, <c>false</c> otherwise</returns>
         bool IGraphicsDeviceManager.BeginDraw()
         {
             beginDrawOk = false;
@@ -472,12 +482,14 @@ namespace SharpDX.Toolkit
             return true;
         }
 
+        /// <summary>Called to ensure that the device manager has created a valid device.</summary>
         void IGraphicsDeviceManager.CreateDevice()
         {
             // Force the creation of the device
             ChangeOrCreateDevice(true);
         }
 
+        /// <summary>Called by the game at the end of drawing; presents the final rendering.</summary>
         void IGraphicsDeviceManager.EndDraw()
         {
             if (beginDrawOk && GraphicsDevice != null)
@@ -499,6 +511,12 @@ namespace SharpDX.Toolkit
 
         #endregion
 
+        /// <summary>Selects the orientation.</summary>
+        /// <param name="orientation">The orientation.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="allowLandscapeLeftAndRight">if set to <see langword="true" /> [allow landscape left and right].</param>
+        /// <returns>DisplayOrientation.</returns>
         protected static DisplayOrientation SelectOrientation(DisplayOrientation orientation, int width, int height, bool allowLandscapeLeftAndRight)
         {
             if (orientation != DisplayOrientation.Default)
@@ -519,6 +537,9 @@ namespace SharpDX.Toolkit
             return DisplayOrientation.LandscapeLeft;
         }
 
+        /// <summary>Disposes of object resources.</summary>
+        /// <param name="disposeManagedResources">If true, managed resources should be
+        /// disposed of in addition to unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
         {
             if (disposeManagedResources)
@@ -705,6 +726,9 @@ namespace SharpDX.Toolkit
                 });
         }
 
+        /// <summary>Calculates the rank for format.</summary>
+        /// <param name="format">The format.</param>
+        /// <returns>System.Int32.</returns>
         private int CalculateRankForFormat(DXGI.Format format)
         {
             if (format == PreferredBackBufferFormat)
@@ -720,6 +744,9 @@ namespace SharpDX.Toolkit
             return int.MaxValue;
         }
 
+        /// <summary>Calculates the size of the format.</summary>
+        /// <param name="format">The format.</param>
+        /// <returns>System.Int32.</returns>
         private int CalculateFormatSize(DXGI.Format format)
         {
             switch (format)
@@ -739,36 +766,59 @@ namespace SharpDX.Toolkit
             return 0;
         }
 
+        /// <summary>Called when [device created].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected virtual void OnDeviceCreated(object sender, EventArgs args)
         {
             RaiseEvent(DeviceCreated, sender, args);
         }
 
+        /// <summary>Called when [device disposing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected virtual void OnDeviceDisposing(object sender, EventArgs args)
         {
             RaiseEvent(DeviceDisposing, sender, args);
         }
 
+        /// <summary>Called when [device lost].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected virtual void OnDeviceLost(object sender, EventArgs args)
         {
             RaiseEvent(DeviceLost, sender, args);
         }
 
+        /// <summary>Called when [device change begin].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected virtual void OnDeviceChangeBegin(object sender, EventArgs args)
         {
             RaiseEvent(DeviceChangeBegin, sender, args);
         }
 
+        /// <summary>Called when [device change end].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected virtual void OnDeviceChangeEnd(object sender, EventArgs args)
         {
             RaiseEvent(DeviceChangeEnd, sender, args);
         }
 
+        /// <summary>Called when [preparing device settings].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="PreparingDeviceSettingsEventArgs"/> instance containing the event data.</param>
         protected virtual void OnPreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs args)
         {
             RaiseEvent(PreparingDeviceSettings, sender, args);
         }
 
+        /// <summary>Raises the event.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="handler">The handler.</param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The arguments.</param>
         private void RaiseEvent<T>(EventHandler<T> handler, object sender, T args)
             where T : EventArgs
         {

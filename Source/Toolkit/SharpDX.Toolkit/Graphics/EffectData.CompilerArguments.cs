@@ -25,6 +25,7 @@ namespace SharpDX.Toolkit.Graphics
 {
     public partial class EffectData
     {
+        /// <summary>The compiler arguments class.</summary>
         public class CompilerArguments : IDataSerializable
         {
             /// <summary>
@@ -61,6 +62,8 @@ namespace SharpDX.Toolkit.Graphics
                 serializer.Serialize(ref IncludeDirectoryList, serializer.Serialize, SerializeFlags.Nullable);
             }
 
+            /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+            /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
             public override string ToString()
             {
                 return string.Format("FilePath: {0}, CompilerFlags: {1}", FilePath, CompilerFlags);

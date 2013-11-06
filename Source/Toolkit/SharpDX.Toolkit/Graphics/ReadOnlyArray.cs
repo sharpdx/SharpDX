@@ -29,7 +29,9 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public class ReadOnlyArray<T> : IEnumerable<T>, IEquatable<ReadOnlyArray<T>>
     {
+        /// <summary>The hash code.</summary>
         private readonly int hashCode;
+        /// <summary>The elements.</summary>
         internal T[] Elements;
 
         /// <summary>
@@ -70,17 +72,24 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Returns an enumerator that iterates through the collection.</summary>
+        /// <returns>A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.</returns>
         public IEnumerator<T> GetEnumerator()
         {
             for (int i = 0; i < Elements.Length; i++)
                 yield return Elements[i];
         }
 
+        /// <summary>Returns an enumerator that iterates through a collection.</summary>
+        /// <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
 
+        /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
         public bool Equals(ReadOnlyArray<T> other)
         {
             if (hashCode != other.hashCode)
@@ -101,6 +110,9 @@ namespace SharpDX.Toolkit.Graphics
             return true;
         }
 
+        /// <summary>Determines whether the specified <see cref="System.Object" /> is equal to this instance.</summary>
+        /// <param name="obj">The <see cref="T:System.Object" /> to compare with the current <see cref="T:System.Object" />.</param>
+        /// <returns><see langword="true" /> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <see langword="false" />.</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -109,6 +121,8 @@ namespace SharpDX.Toolkit.Graphics
             return Equals((ReadOnlyArray<T>)obj);
         }
 
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             return hashCode;

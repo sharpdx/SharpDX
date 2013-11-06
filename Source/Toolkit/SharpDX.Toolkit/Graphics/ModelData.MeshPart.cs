@@ -25,8 +25,10 @@ using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The model data class.</summary>
     public sealed partial class ModelData
     {
+        /// <summary>The mesh part class.</summary>
         public sealed class MeshPart : CommonData, IDataSerializable
         {
             /// <summary>
@@ -62,6 +64,8 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             public PropertyCollection Properties;
 
+            /// <summary>Reads or writes datas from/to the given binary serializer.</summary>
+            /// <param name="serializer">The binary serializer.</param>
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
                 serializer.Serialize(ref MaterialIndex);
@@ -71,15 +75,21 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>The buffer range struct.</summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct BufferRange : IDataSerializable
         {
+            /// <summary>The slot.</summary>
             public int Slot;
 
+            /// <summary>The start.</summary>
             public int Start;
 
+            /// <summary>The count.</summary>
             public int Count;
 
+            /// <summary>Reads or writes datas from/to the given binary serializer.</summary>
+            /// <param name="serializer">The binary serializer.</param>
             public void Serialize(BinarySerializer serializer)
             {
                 if (serializer.Mode == SerializerMode.Read)

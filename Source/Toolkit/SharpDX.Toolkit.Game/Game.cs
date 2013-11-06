@@ -531,6 +531,9 @@ namespace SharpDX.Toolkit
         {
         }
 
+        /// <summary>Disposes of object resources.</summary>
+        /// <param name="disposeManagedResources">If true, managed resources should be
+        /// disposed of in addition to unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
         {
             if (disposeManagedResources)
@@ -721,6 +724,7 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>Called when [window created].</summary>
         protected virtual void OnWindowCreated()
         {
             EventHandler<EventArgs> handler = WindowCreated;
@@ -1044,8 +1048,13 @@ namespace SharpDX.Toolkit
         /// </summary>
         internal struct DrawableSearcher : IComparer<IDrawable>
         {
+            /// <summary>The default DrawableSearcher.</summary>
             public static readonly DrawableSearcher Default = new DrawableSearcher();
 
+            /// <summary>Compares the specified left.</summary>
+            /// <param name="left">The left.</param>
+            /// <param name="right">The right.</param>
+            /// <returns>System.Int32.</returns>
             public int Compare(IDrawable left, IDrawable right)
             {
                 if (Equals(left, right))
@@ -1072,8 +1081,13 @@ namespace SharpDX.Toolkit
         /// </summary>
         internal struct UpdateableSearcher : IComparer<IUpdateable>
         {
+            /// <summary>The default UpdateableSearcher.</summary>
             public static readonly UpdateableSearcher Default = new UpdateableSearcher();
 
+            /// <summary>Compares the specified left.</summary>
+            /// <param name="left">The left.</param>
+            /// <param name="right">The right.</param>
+            /// <returns>System.Int32.</returns>
             public int Compare(IUpdateable left, IUpdateable right)
             {
                 if (Equals(left, right))

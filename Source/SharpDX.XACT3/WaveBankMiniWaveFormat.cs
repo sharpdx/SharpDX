@@ -20,8 +20,11 @@
 
 namespace SharpDX.XACT3
 {
+    /// <summary>The wave bank mini wave format struct.</summary>
     public partial struct WaveBankMiniWaveFormat
     {
+        /// <summary>Gets or sets the format tag.</summary>
+        /// <value>The format tag.</value>
         public WaveBankMiniFormatTag FormatTag
         {
             get { return (WaveBankMiniFormatTag)RawFormatTag; }

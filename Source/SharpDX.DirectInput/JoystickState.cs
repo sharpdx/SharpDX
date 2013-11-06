@@ -8,6 +8,7 @@ namespace SharpDX.DirectInput
     /// <unmanaged>DIJOYSTATE2</unmanaged>
     public class JoystickState : IDeviceState<RawJoystickState, JoystickUpdate>
     {
+        /// <summary>Initializes a new instance of the <see cref="JoystickState"/> class.</summary>
         public JoystickState()
         {
             Sliders = new int[2];
@@ -200,6 +201,8 @@ namespace SharpDX.DirectInput
 
         // Internal native struct used for marshalling
 
+        /// <summary>Updates the specified joystick update.</summary>
+        /// <param name="update">The update.</param>
         public void Update(JoystickUpdate update)
         {
             int value = update.Value;
@@ -321,6 +324,8 @@ namespace SharpDX.DirectInput
             }            
         }
 
+        /// <summary>Marshals from.</summary>
+        /// <param name="value">The value.</param>
         public void MarshalFrom(ref RawJoystickState value)
         {
             unsafe
@@ -382,6 +387,8 @@ namespace SharpDX.DirectInput
             }
         }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format(System.Globalization.CultureInfo.InvariantCulture, "X: {0}, Y: {1}, Z: {2}, RotationX: {3}, RotationY: {4}, RotationZ: {5}, Sliders: {6}, PointOfViewControllers: {7}, Buttons: {8}, VelocityX: {9}, VelocityY: {10}, VelocityZ: {11}, AngularVelocityX: {12}, AngularVelocityY: {13}, AngularVelocityZ: {14}, VelocitySliders: {15}, AccelerationX: {16}, AccelerationY: {17}, AccelerationZ: {18}, AngularAccelerationX: {19}, AngularAccelerationY: {20}, AngularAccelerationZ: {21}, AccelerationSliders: {22}, ForceX: {23}, ForceY: {24}, ForceZ: {25}, TorqueX: {26}, TorqueY: {27}, TorqueZ: {28}, ForceSliders: {29}", X, Y, Z, RotationX, RotationY, RotationZ, Utilities.Join(";",Sliders), Utilities.Join(";",PointOfViewControllers), Utilities.Join(";",Buttons), VelocityX, VelocityY, VelocityZ, AngularVelocityX, AngularVelocityY, AngularVelocityZ, Utilities.Join(";",VelocitySliders), AccelerationX, AccelerationY, AccelerationZ, AngularAccelerationX, AngularAccelerationY, AngularAccelerationZ, Utilities.Join(";",AccelerationSliders), ForceX, ForceY, ForceZ, TorqueX, TorqueY, TorqueZ, Utilities.Join(";",ForceSliders));

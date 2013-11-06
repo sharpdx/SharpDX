@@ -21,12 +21,18 @@ using System;
 
 namespace SharpDX.DirectInput
 {
+    /// <summary>The joystick class.</summary>
     public class Joystick : CustomDevice<JoystickState, RawJoystickState, JoystickUpdate>
     {
+        /// <summary>Initializes a new instance of the <see cref="Joystick"/> class.</summary>
+        /// <param name="directInput">The direct input.</param>
+        /// <param name="deviceGuid">The device unique identifier.</param>
         public Joystick(DirectInput directInput, Guid deviceGuid) : base(directInput, deviceGuid)
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="Joystick"/> class.</summary>
+        /// <param name="nativePtr">The native PTR.</param>
         public Joystick(IntPtr nativePtr) : base(nativePtr)
         {
         }

@@ -224,6 +224,8 @@ namespace SharpDX.Toolkit
             Height = height;
         }
 
+        /// <summary>Called when [render].</summary>
+        /// <param name="drawingContext">The drawing context.</param>
         protected override void OnRender(System.Windows.Media.DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
@@ -232,11 +234,17 @@ namespace SharpDX.Toolkit
                 drawingContext.DrawImage(image, new Rect(new System.Windows.Point(), RenderSize));
         }
 
+        /// <summary>Handles the unloaded.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
         private void HandleUnloaded(object sender, RoutedEventArgs e)
         {
             Dispose();
         }
 
+        /// <summary>Handles the resize delay timer tick.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void HandleResizeDelayTimerTick(object sender, EventArgs e)
         {
             resizeDelayTimer.Stop();
@@ -245,12 +253,17 @@ namespace SharpDX.Toolkit
                 RaiseResizeCompleted(ResizeCompleted);
         }
 
+        /// <summary>Handles the size changed.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.Windows.SizeChangedEventArgs"/> instance containing the event data.</param>
         private void HandleSizeChanged(object sender, SizeChangedEventArgs e)
         {
             resizeDelayTimer.Stop();
             resizeDelayTimer.Start();
         }
 
+        /// <summary>Tries the set backbuffer pointer.</summary>
+        /// <param name="ptr">The PTR.</param>
         private void TrySetBackbufferPointer(IntPtr ptr)
         {
             // TODO: use TryLock and check multithreading scenarios
@@ -265,6 +278,7 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>Disposes the d3 d9 backbuffer.</summary>
         private void DisposeD3D9Backbuffer()
         {
             if (texture != null)
@@ -276,6 +290,8 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>Raises the resize completed.</summary>
+        /// <param name="handler">The handler.</param>
         private void RaiseResizeCompleted(EventHandler handler)
         {
             if (handler != null)

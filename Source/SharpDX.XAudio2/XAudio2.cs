@@ -21,6 +21,7 @@ using System;
 
 namespace SharpDX.XAudio2
 {
+    /// <summary>The X Audio2 class.</summary>
     public partial class XAudio2
     {
         private EngineCallbackImpl engineCallbackImpl;
@@ -180,6 +181,11 @@ namespace SharpDX.XAudio2
             this.CommitChanges(0);
         }
 
+        /// <summary>Releases unmanaged and - optionally - managed resources</summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        /// <msdn-id>ms682317</msdn-id>
+        ///   <unmanaged>IUnknown::Release</unmanaged>
+        ///   <unmanaged-short>IUnknown::Release</unmanaged-short>
         protected override void Dispose(bool disposing)
         {
             if (engineShadowPtr != IntPtr.Zero)
@@ -193,6 +199,7 @@ namespace SharpDX.XAudio2
             base.Dispose(disposing);
         }
 
+        /// <summary>The engine callback implementation class.</summary>
         private class EngineCallbackImpl : CallbackBase, EngineCallback
         {
             XAudio2 XAudio2 { get; set; }

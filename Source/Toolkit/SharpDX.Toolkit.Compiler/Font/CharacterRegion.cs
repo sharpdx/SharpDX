@@ -77,13 +77,16 @@ using System.Collections.Generic;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    // Describes a range of consecutive characters that should be included in the font.
+    /// <summary>The character region struct. Describes a range of consecutive characters that should be included in the font.</summary>
 #if !W8CORE
     [TypeConverter(typeof(CharacterRegionTypeConverter))]
 #endif
     public struct CharacterRegion
     {
-        // Constructor.
+        /// <summary>Initializes a new instance of the <see cref="CharacterRegion"/> struct.</summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <exception cref="System.ArgumentException"></exception>
         public CharacterRegion(char start, char end)
         {
             if (start > end)
@@ -94,13 +97,15 @@ namespace SharpDX.Toolkit.Graphics
         }
 
 
-        // Fields.
+        /// <summary>The start.</summary>
         public char Start;
 
+        /// <summary>The end.</summary>
         public char End;
 
 
-        // Enumerates all characters within the region.
+        /// <summary>Gets the enumeration of all characters within the region.</summary>
+        /// <value>The characters.</value>
         public IEnumerable<Char> Characters
         {
             get
@@ -112,7 +117,9 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        // Flattens a list of character regions into a combined list of individual characters.
+        /// <summary>Flattens a list of character regions into a combined list of individual characters.</summary>
+        /// <param name="regions">The regions.</param>
+        /// <returns>IEnumerable{Char}.</returns>
         public static IEnumerable<Char> Flatten(IEnumerable<CharacterRegion> regions)
         {
             if (Utilities.Any(regions))
@@ -127,7 +134,7 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        // Default to just the base ASCII character set.
+        /// <summary>The default to just the base ASCII character set.</summary>
         public static CharacterRegion Default = new CharacterRegion(' ', '~');
     }
 }

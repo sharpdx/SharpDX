@@ -39,6 +39,11 @@ namespace SharpDX.Toolkit.Graphics
 
         private Rational refreshRate;
 
+        /// <summary>Initializes a new instance of the <see cref="DisplayMode"/> class.</summary>
+        /// <param name="pixelFormat">The pixel format.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="refreshRate">The refresh rate.</param>
         public DisplayMode(Format pixelFormat, int width, int height, Rational refreshRate)
         {
             this.pixelFormat = pixelFormat;

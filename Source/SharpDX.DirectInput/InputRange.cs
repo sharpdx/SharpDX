@@ -28,16 +28,23 @@ namespace SharpDX.DirectInput
     [StructLayout(LayoutKind.Sequential, Pack = 0)]
     public struct InputRange
     {
+        /// <summary>Initializes a new instance of the <see cref="InputRange"/> struct.</summary>
+        /// <param name="range">The range.</param>
         internal InputRange(PropertyRange range) :this(range.Min, range.Max)
         {            
         }
 
+        /// <summary>Initializes a new instance of the <see cref="InputRange"/> struct.</summary>
+        /// <param name="minimum">The minimum.</param>
+        /// <param name="maximum">The maximum.</param>
         public InputRange(int minimum, int maximum) : this()
         {
             Minimum = minimum;
             Maximum = maximum;
         }
 
+        /// <summary>Copies the automatic.</summary>
+        /// <param name="range">The range.</param>
         internal void CopyTo(ref PropertyRange range)
         {
             range.Min = Minimum;
@@ -54,8 +61,10 @@ namespace SharpDX.DirectInput
         /// </summary>
         public int Maximum;
 
+        /// <summary>The no minimum.</summary>
         public const int NoMinimum = int.MinValue;
 
+        /// <summary>The no maximum.</summary>
         public const int NoMaximum = int.MaxValue;
     }
 }

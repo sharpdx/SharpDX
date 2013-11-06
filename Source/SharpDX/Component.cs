@@ -63,6 +63,8 @@ namespace SharpDX
         /// </value>
         protected internal bool IsDisposed { get; private set; }
 
+        /// <summary>Gets a value indicating whether this instance is disposing.</summary>
+        /// <value><see langword="true" /> if this instance is disposing; otherwise, <see langword="false" />.</value>
         protected internal bool IsDisposing { get; private set; }
 
         /// <summary>

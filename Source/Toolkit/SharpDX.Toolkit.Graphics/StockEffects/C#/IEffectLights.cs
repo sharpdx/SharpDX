@@ -72,14 +72,26 @@
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The attribute effect lights interface.</summary>
     public interface IEffectLights
     {
+        /// <summary>Gets or sets the color of the ambient light.</summary>
+        /// <value>The color of the ambient light.</value>
         Vector3 AmbientLightColor { get; set; }
+        /// <summary>Gets the directional light0.</summary>
+        /// <value>The directional light0.</value>
         DirectionalLight DirectionalLight0 { get; }
+        /// <summary>Gets the directional light1.</summary>
+        /// <value>The directional light1.</value>
         DirectionalLight DirectionalLight1 { get; }
+        /// <summary>Gets the directional light2.</summary>
+        /// <value>The directional light2.</value>
         DirectionalLight DirectionalLight2 { get; }
+        /// <summary>Gets or sets a value indicating whether [lighting enabled].</summary>
+        /// <value><see langword="true" /> if [lighting enabled]; otherwise, <see langword="false" />.</value>
         bool LightingEnabled { get; set; }
 
+        /// <summary>Enables the default lighting.</summary>
         void EnableDefaultLighting();
     }
 }

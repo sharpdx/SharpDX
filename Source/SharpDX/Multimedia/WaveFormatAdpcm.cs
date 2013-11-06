@@ -98,6 +98,8 @@ namespace SharpDX.Multimedia
         /// </value>
         public short[] Coefficients2 { get; set; }
 
+        /// <summary>Marshals to pointer.</summary>
+        /// <returns>The IntPtr pointer.</returns>
         protected unsafe override IntPtr MarshalToPtr()
         {
             var result = Marshal.AllocHGlobal(Utilities.SizeOf<WaveFormat.__Native>() + sizeof(int) + sizeof(int) * Coefficients1.Length);

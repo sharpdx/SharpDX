@@ -238,6 +238,13 @@ namespace SharpDX.Toolkit.Graphics
                 return Load(device, stream, flags | TextureFlags.ShaderResource, usage);
         }
 
+        /// <summary>News the texture cube description.</summary>
+        /// <param name="size">The size.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="mipCount">The mip count.</param>
+        /// <param name="usage">The usage.</param>
+        /// <returns>Texture2DDescription.</returns>
         protected static Texture2DDescription NewTextureCubeDescription(int size, PixelFormat format, TextureFlags flags, int mipCount, ResourceUsage usage)
         {
             var desc = NewDescription(size, size, format, flags, mipCount, 6, usage);

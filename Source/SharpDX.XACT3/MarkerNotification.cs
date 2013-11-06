@@ -26,6 +26,8 @@ namespace SharpDX.XACT3
     /// <unmanaged>XACT_NOTIFICATION_MARKER</unmanaged>
     public class MarkerNotification : Notification
     {
+        /// <summary>Initializes a new instance of the <see cref="MarkerNotification"/> class.</summary>
+        /// <param name="rawNotification">The raw notification.</param>
         internal unsafe MarkerNotification(RawNotification* rawNotification)
             : base(rawNotification)
         {
@@ -35,12 +37,19 @@ namespace SharpDX.XACT3
             Marker = rawNotification->Data.Marker.Marker;
         }
 
+        /// <summary>Gets or sets the index of the cue.</summary>
+        /// <value>The index of the cue.</value>
         public int CueIndex { get; set; }
 
+        /// <summary>Gets or sets the sound bank.</summary>
+        /// <value>The sound bank.</value>
         public SoundBank SoundBank { get; set; }
 
+        /// <summary>Gets or sets the cue.</summary>
+        /// <value>The cue.</value>
         public Cue Cue { get; set; }
 
+        /// <summary>The marker.</summary>
         public int Marker;
     }
 }

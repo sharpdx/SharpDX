@@ -24,24 +24,37 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX.DirectInput
 {
+    /// <summary>The custom device class.</summary>
+    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="TRaw">The type of the attribute raw.</typeparam>
+    /// <typeparam name="TUpdate">The type of the attribute update.</typeparam>
     public abstract class CustomDevice<T, TRaw, TUpdate> : Device
         where T : class, IDeviceState<TRaw, TUpdate>, new()
         where TRaw : struct
         where TUpdate : struct, IStateUpdate
     {
+        /// <summary>The data format.</summary>
         private DataFormat _dataFormat;
+
+        /// <summary>The map name automatic object format.</summary>
         private readonly Dictionary<string, DataObjectFormat> _mapNameToObjectFormat = new Dictionary<string, DataObjectFormat>();
 
+        /// <summary>Initializes a new instance of the <see cref="CustomDevice{T, TRaw, TUpdate}"/> class.</summary>
+        /// <param name="nativePtr">The native PTR.</param>
         protected CustomDevice(IntPtr nativePtr) : base(nativePtr)
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="Device" /> class based on a given globally unique identifier (Guid).</summary>
+        /// <param name="directInput">The direct input.</param>
+        /// <param name="deviceGuid">The device GUID.</param>
         protected CustomDevice(DirectInput directInput, Guid deviceGuid) : base(directInput, deviceGuid)
         {
             var dataFormat = GetDataFormat();
             SetDataFormat(dataFormat);
         }
 
+        /// <summary>The singleton empty array.</summary>
         private static readonly TUpdate[] singletonEmptyArray = new TUpdate[0];
 
         /// <summary>
@@ -82,6 +95,8 @@ namespace SharpDX.DirectInput
             return updates;
         }
 
+        /// <summary>Gets the state of the current.</summary>
+        /// <returns>`0.</returns>
         public T GetCurrentState()
         {
             var value = new T();
@@ -89,6 +104,8 @@ namespace SharpDX.DirectInput
             return value;
         }
 
+        /// <summary>Gets the state of the current.</summary>
+        /// <param name="data">The data.</param>
         public void GetCurrentState(ref T data)
         {
             unsafe
@@ -102,16 +119,26 @@ namespace SharpDX.DirectInput
             }
         }
 
+        /// <summary>Gets the name of the object information by.</summary>
+        /// <param name="name">The name.</param>
+        /// <returns>DeviceObjectInstance.</returns>
         public DeviceObjectInstance GetObjectInfoByName(string name)
         {
             return GetObjectInfo(GetFromName(name).Offset, PropertyHowType.Byoffset);
         }
 
+        /// <summary>Gets the name of the object properties by.</summary>
+        /// <param name="name">The name.</param>
+        /// <returns>ObjectProperties.</returns>
         public ObjectProperties GetObjectPropertiesByName(string name)
         {
             return new ObjectProperties(this, GetFromName(name).Offset, PropertyHowType.Byoffset);
         }
 
+        /// <summary>Gets from name.</summary>
+        /// <param name="name">The name.</param>
+        /// <returns>DataObjectFormat.</returns>
+        /// <exception cref="System.ArgumentException"></exception>
         private DataObjectFormat GetFromName(string name)
         {
             DataObjectFormat objectFormat;
@@ -119,7 +146,11 @@ namespace SharpDX.DirectInput
                 throw new ArgumentException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Invalid name [{0}]. Must be in [{1}]", name, Utilities.Join(";", _mapNameToObjectFormat.Keys)));
             return objectFormat;
         }
-        
+
+        /// <summary>Gets the data format.</summary>
+        /// <returns>DataFormat.</returns>
+        /// <exception cref="System.InvalidOperationException">
+        /// </exception>
         private DataFormat GetDataFormat()
         {
             if (_dataFormat == null)

@@ -20,12 +20,17 @@
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The model buffer range struct.</summary>
+    /// <typeparam name="T">The type T.</typeparam>
     public struct ModelBufferRange<T>
     {
+        /// <summary>The resource.</summary>
         public T Resource;
 
+        /// <summary>The start.</summary>
         public int Start;
 
+        /// <summary>The count.</summary>
         public int Count;
     }
 }

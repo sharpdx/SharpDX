@@ -21,6 +21,7 @@ using System;
 
 namespace SharpDX.Win32
 {
+    /// <summary>The COM base stream native class.</summary>
     public partial class ComBaseStreamNative
     {
         /// <summary>

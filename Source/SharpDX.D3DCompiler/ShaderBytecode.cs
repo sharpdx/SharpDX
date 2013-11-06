@@ -1210,19 +1210,15 @@ namespace SharpDX.D3DCompiler
             return macroArray;
         }
 
+        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         public void Dispose()
         {
             // Just to keep backward compatibility
         }
 
-        /// <summary>
-        /// Gets the shader type and version string from the provided bytecode.
-        /// </summary>
-        /// <param name="shaderBytecode">The shader bytecode data.</param>
-        /// <returns>The type and version string of the provided shader bytecode.</returns>
-        /// <exception cref="ArgumentNullException">Is thrown when <paramref name="shaderBytecode"/> is null.</exception>
-        /// <exception cref="ArgumentException">Is thrown when bytecode contains invalid data or the version could not be read.</exception>
-        /// <exception cref="IndexOutOfRangeException">Is thrown when bytecode contains invalid data.</exception>
+        /// <summary>Gets the shader profile version.</summary>
+        /// <returns>ShaderProfile.</returns>
+        /// <exception cref="System.ArgumentException">Cannot find the chunk with version in provided byte code.</exception>
         public ShaderProfile GetVersion()
         {
             // the offset where chunks count is stored

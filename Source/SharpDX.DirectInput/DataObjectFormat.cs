@@ -22,16 +22,29 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX.DirectInput
 {
+    /// <summary>The data object format class.</summary>
     public partial class DataObjectFormat
     {
+        /// <summary>Initializes a new instance of the <see cref="DataObjectFormat"/> class.</summary>
         public DataObjectFormat()
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="DataObjectFormat"/> class.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="typeFlags">The type flags.</param>
+        /// <param name="flags">The flags.</param>
         public DataObjectFormat(Guid guid, int offset, DeviceObjectTypeFlags typeFlags, ObjectDataFormatFlags flags) : this(guid, offset, typeFlags, flags, 0)
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="DataObjectFormat"/> class.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="typeFlags">The type flags.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="instanceNumber">The instance number.</param>
         public DataObjectFormat(Guid guid, int offset, DeviceObjectTypeFlags typeFlags, ObjectDataFormatFlags flags, int instanceNumber)
         {
             Guid = guid;
@@ -76,14 +89,17 @@ namespace SharpDX.DirectInput
         /// <value>The flags.</value>
         public ObjectDataFormatFlags Flags { get; set; }
 
-
-        // Internal native struct used for marshalling
+        /// <summary>Internal native struct used for marshalling.</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 0)]
         internal partial struct __Native
         {
+            /// <summary>The unique identifier pointer.</summary>
             public System.IntPtr GuidPointer;
+            /// <summary>The offset.</summary>
             public int Offset;
+            /// <summary>The type.</summary>
             public int Type;
+            /// <summary>The flags.</summary>
             public SharpDX.DirectInput.ObjectDataFormatFlags Flags;
             // Method to free unmanaged allocation
             internal unsafe void __MarshalFree()

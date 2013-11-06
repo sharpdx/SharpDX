@@ -78,6 +78,7 @@ namespace SharpDX.Toolkit.Graphics
             HasReadOnlyView = InitializeViewsDelayed(out ReadOnlyView);
         }
 
+        /// <summary>Initializes the views.</summary>
         protected override void InitializeViews()
         {
             // Override this, because we need the DepthFormat setup in order to initialize this class
@@ -85,6 +86,9 @@ namespace SharpDX.Toolkit.Graphics
             // TODO: Fix this problem
         }
 
+        /// <summary>Initializes the views delayed.</summary>
+        /// <param name="readOnlyView">The read only view.</param>
+        /// <returns><c>true</c> if it has readonly view, <c>false</c> otherwise.</returns>
         protected bool InitializeViewsDelayed(out DepthStencilView readOnlyView)
         {
             bool hasReadOnlyView = false;
@@ -125,6 +129,8 @@ namespace SharpDX.Toolkit.Graphics
             return hasReadOnlyView;
         }
 
+        /// <summary>Gets the default view format.</summary>
+        /// <returns>Format.</returns>
         protected override Format GetDefaultViewFormat()
         {
             return DefaultViewFormat;
@@ -144,6 +150,9 @@ namespace SharpDX.Toolkit.Graphics
             throw new NotSupportedException();
         }
 
+        /// <summary>Makes a copy of this texture.</summary>
+        /// <returns>A copy of this texture.</returns>
+        /// <remarks>This method doesn't copy the content of the texture.</remarks>
         public override Texture Clone()
         {
             return new DepthStencilBuffer(GraphicsDevice, this.Description, DepthFormat);
@@ -218,6 +227,16 @@ namespace SharpDX.Toolkit.Graphics
             return new DepthStencilBuffer(device, NewDepthStencilBufferDescription(device.MainDevice, width, height, format, multiSampleCount, arraySize, shaderResource), format);
         }
 
+        /// <summary>Creates a new depth stencil buffer description.</summary>
+        /// <param name="device">The device.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="multiSampleCount">The multi sample count.</param>
+        /// <param name="arraySize">Size of the array.</param>
+        /// <param name="shaderResource">if set to <see langword="true" /> [shader resource].</param>
+        /// <returns>Texture2DDescription.</returns>
+        /// <exception cref="System.InvalidOperationException"></exception>
         protected static Texture2DDescription NewDepthStencilBufferDescription(GraphicsDevice device, int width, int height, DepthFormat format, MSAALevel multiSampleCount, int arraySize, bool shaderResource)
         {
             var desc = Texture2DBase.NewDescription(width, height, DXGI.Format.Unknown, TextureFlags.None, 1, arraySize, ResourceUsage.Default);

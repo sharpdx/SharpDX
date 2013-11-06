@@ -41,6 +41,9 @@ namespace SharpDX.Toolkit.Graphics
             Initialize(view);
         }
 
+        /// <summary>Initializes the specified view.</summary>
+        /// <param name="view">The view.</param>
+        /// <exception cref="System.ArgumentException">Expecting argument to be a ShaderResourceView or RenderTargetView;view</exception>
         protected override void Initialize(DeviceChild view)
         {
             // The initialize method will override the view.Tag, so we are setting it back

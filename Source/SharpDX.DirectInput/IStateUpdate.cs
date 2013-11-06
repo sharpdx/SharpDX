@@ -20,14 +20,23 @@
 
 namespace SharpDX.DirectInput
 {
+    /// <summary>The attribute state update interface.</summary>
     public interface IStateUpdate
     {
+        /// <summary>Gets or sets the raw offset.</summary>
+        /// <value>The raw offset.</value>
         int RawOffset { get; set; }
 
+        /// <summary>Gets or sets the value.</summary>
+        /// <value>The value.</value>
         int Value { get; set; }
 
+        /// <summary>Gets or sets the timestamp.</summary>
+        /// <value>The timestamp.</value>
         int Timestamp { get; set; }
 
+        /// <summary>Gets or sets the sequence.</summary>
+        /// <value>The sequence.</value>
         int Sequence { get; set; }
     }
 }

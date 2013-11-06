@@ -20,6 +20,7 @@
 
 namespace SharpDX.MediaFoundation
 {
+    /// <summary>The media manager class.</summary>
     public static partial class MediaManager
     {
         private static bool isStartup;

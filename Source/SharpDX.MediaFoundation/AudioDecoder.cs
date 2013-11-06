@@ -218,6 +218,7 @@ namespace SharpDX.MediaFoundation
             currentSample = null;
         }
 
+        /// <summary>Cleanups the and dispose.</summary>
         private void CleanupAndDispose()
         {
             if (currentBuffer != null)
@@ -234,6 +235,12 @@ namespace SharpDX.MediaFoundation
             }
         }
 
+        /// <summary>Checks the difference disposed.</summary>
+        /// <exception cref="System.InvalidOperationException">
+        /// This instance is being disposed while enumerating the samples.
+        /// or
+        /// This instance is disposed while enumerating the samples.
+        /// </exception>
         private void CheckIfDisposed()
         {
             if (IsDisposing)
@@ -242,6 +249,9 @@ namespace SharpDX.MediaFoundation
                 throw new InvalidOperationException("This instance is disposed while enumerating the samples.");
         }
 
+        /// <summary>Disposes of object resources.</summary>
+        /// <param name="disposeManagedResources">If true, managed resources should be
+        /// disposed of in addition to unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
         {
             base.Dispose(disposeManagedResources);
@@ -261,6 +271,9 @@ namespace SharpDX.MediaFoundation
             }
         }
 
+        /// <summary>Initializes the specified reader.</summary>
+        /// <param name="reader">The reader.</param>
+        /// <exception cref="System.InvalidOperationException">Input stream doesn't contain an audio stream.</exception>
         private void Initialize(SourceReader reader)
         {
             // Invalidate selection for all streams

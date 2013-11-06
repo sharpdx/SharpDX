@@ -28,36 +28,52 @@ using Microsoft.Build.Utilities;
 namespace SharpDX.Toolkit
 {
     /// <summary>
+    /// The compiler dependency task class.
     /// TODO: COMMENT THIS CODE
     /// </summary>
     public class CompilerDependencyTask : Task
     {
+        /// <summary>The task item class.</summary>
         protected class TkItem
         {
+            /// <summary>The name.</summary>
             public string Name;
 
+            /// <summary>The dynamic compiling.</summary>
             public bool DynamicCompiling;
 
+            /// <summary>The link name.</summary>
             public string LinkName;
 
+            /// <summary>The input file path.</summary>
             public string InputFilePath;
 
+            /// <summary>The output file path.</summary>
             public string OutputFilePath;
 
+            /// <summary>The output link.</summary>
             public string OutputLink;
 
+            /// <summary>The output cs.</summary>
             public bool OutputCs;
 
+            /// <summary>The output cs file.</summary>
             public string OutputCsFile;
 
+            /// <summary>The output namespace.</summary>
             public string OutputNamespace;
 
+            /// <summary>The output class name.</summary>
             public string OutputClassName;
 
+            /// <summary>The output field name.</summary>
             public string OutputFieldName;
 
+            /// <summary>The parent task item.</summary>
             public ITaskItem ParentTaskItem;
 
+            /// <summary>Automatics the task item.</summary>
+            /// <returns>TaskItem.</returns>
             public TaskItem ToTaskItem()
             {
                 var item = new TaskItem(OutputFilePath);
@@ -71,35 +87,57 @@ namespace SharpDX.Toolkit
                 return item;
             }
 
+            /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+            /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
             public override string ToString()
             {
                 return string.Format("Name: {0}, DynamicCompiling: {1}, LinkName: {2}, InputFilePath: {3}, OutputFilePath: {4}, OutputCsFile: {5}, OutputNamespace: {6}, OutputClassName: {7}, OutputFieldName: {8}, OutputCs: {9}", Name, DynamicCompiling, LinkName, InputFilePath, OutputFilePath, OutputCsFile, OutputNamespace, OutputClassName, OutputFieldName, OutputCs);
             }
         }
 
+        /// <summary>Gets or sets the project directory.</summary>
+        /// <value>The project directory.</value>
         [Required]
         public ITaskItem ProjectDirectory { get; set; }
 
+        /// <summary>Gets or sets the intermediate directory.</summary>
+        /// <value>The intermediate directory.</value>
         [Required]
         public ITaskItem IntermediateDirectory { get; set; }
 
+        /// <summary>Gets or sets the files.</summary>
+        /// <value>The files.</value>
         [Required]
         public ITaskItem[] Files { get; set; }
 
+        /// <summary>Gets or sets the content files.</summary>
+        /// <value>The content files.</value>
         [Output]
         public ITaskItem[] ContentFiles { get; set; }
 
+        /// <summary>Gets or sets the compile files.</summary>
+        /// <value>The compile files.</value>
         [Output]
         public ITaskItem[] CompileFiles { get; set; }
 
+        /// <summary>Gets or sets a value indicating whether [dynamic compiling].</summary>
+        /// <value><see langword="true" /> if [dynamic compiling]; otherwise, <see langword="false" />.</value>
         public bool DynamicCompiling { get; set; }
 
+        /// <summary>Gets or sets a value indicating whether this <see cref="CompilerDependencyTask"/> is debug.</summary>
+        /// <value><see langword="true" /> if debug; otherwise, <see langword="false" />.</value>
         public bool Debug { get; set; }
 
+        /// <summary>Gets or sets the root namespace.</summary>
+        /// <value>The root namespace.</value>
         public string RootNamespace { get; set; }
 
+        /// <summary>Gets or sets the compiler flags.</summary>
+        /// <value>The compiler flags.</value>
         public string CompilerFlags { get; set; }
 
+        /// <summary>When overridden in a derived class, executes the task.</summary>
+        /// <returns>true if the task successfully executed; otherwise, false.</returns>
         public sealed override bool Execute()
         {
             var hasErrors = false;
@@ -146,6 +184,7 @@ namespace SharpDX.Toolkit
             return !hasErrors;
         }
 
+        /// <summary>Initializes this instance.</summary>
         protected virtual void Initialize() { }
 
         private TkItem GetTkItem(ITaskItem item)
@@ -193,6 +232,9 @@ namespace SharpDX.Toolkit
             return data;
         }
 
+        /// <summary>Processes the item.</summary>
+        /// <param name="item">The item.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         protected virtual bool ProcessItem(TkItem item)
         {
             return true;

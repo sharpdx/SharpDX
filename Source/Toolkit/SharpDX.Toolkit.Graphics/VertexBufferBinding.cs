@@ -20,10 +20,13 @@
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The vertex buffer binding struct.</summary>
     public struct VertexBufferBinding
     {
+        /// <summary>The buffer.</summary>
         public Buffer Buffer;
 
+        /// <summary>The layout.</summary>
         public VertexInputLayout Layout;
     }
 }

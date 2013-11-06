@@ -26,6 +26,7 @@ using SharpDX.Toolkit.Graphics;
 
 namespace SharpDX.Toolkit
 {
+    /// <summary>The graphics device information class.</summary>
     public class  GraphicsDeviceInformation
     {
         #region Fields
@@ -150,6 +151,7 @@ namespace SharpDX.Toolkit
         }
 
         /// <summary>Gets the hash code for this object.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             return graphicsProfile.GetHashCode()

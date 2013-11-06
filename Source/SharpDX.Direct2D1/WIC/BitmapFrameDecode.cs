@@ -52,6 +52,8 @@ namespace SharpDX.WIC
             return ColorContextsHelper.TryGetColorContexts(GetColorContexts, imagingFactory);
         }
 
+        /// <summary>Gets the color contexts.</summary>
+        /// <value>The color contexts.</value>
         [Obsolete("Use TryGetColorContexts instead")]
         public ColorContext[] ColorContexts
         {

@@ -27,6 +27,9 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public static class PixelData
     {
+        /// <summary>float to byte conversion.</summary>
+        /// <param name="component">The component.</param>
+        /// <returns>A System.Byte.</returns>
         internal static byte ToByte(float component)
         {
             var value = (int) (component*255.0f);
@@ -39,30 +42,41 @@ namespace SharpDX.Toolkit.Graphics
         [StructLayout(LayoutKind.Sequential, Size = 1)]
         public struct R8 : IPixelData
         {
+            /// <summary>The R.</summary>
             public byte R;
 
+            /// <summary>Initializes a new instance of the <see cref="R8"/> struct.</summary>
+            /// <param name="r">The argument.</param>
             public R8(byte r)
             {
                 this.R = r;
             }
 
+            /// <summary>Gets the format.</summary>
+            /// <value>The format.</value>
             public PixelFormat Format
             {
                 get { return PixelFormat.R8.UNorm; }
             }
 
+            /// <summary>Gets or sets the value.</summary>
+            /// <value>The value.</value>
             public Color4 Value
             {
                 get { return new Color4(R/255.0f, 0, 0, 1.0f); }
                 set { R = ToByte(value.Red); }
             }
 
+            /// <summary>Gets or sets the value32 BPP.</summary>
+            /// <value>The value32 BPP.</value>
             public Color Value32Bpp
             {
                 get { return new Color(R, 0, 0, 255); }
                 set { R = value.R; }
             }
 
+            /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+            /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
             public override string ToString()
             {
                 return string.Format("R:{0}", R);
@@ -75,13 +89,21 @@ namespace SharpDX.Toolkit.Graphics
         [StructLayout(LayoutKind.Sequential, Size = 2)]
         public struct R8G8 : IPixelData
         {
-            public byte R, G;
+            /// <summary>The R.</summary>
+            public byte R;
 
+            /// <summary>The G.</summary>
+            public byte G;
+
+            /// <summary>Gets the format.</summary>
+            /// <value>The format.</value>
             public PixelFormat Format
             {
                 get { return PixelFormat.R8G8.UNorm; }
             }
 
+            /// <summary>Gets or sets the value.</summary>
+            /// <value>The value.</value>
             public Color4 Value
             {
                 get { return new Color4(R / 255.0f, G / 255.0f, 0, 1.0f); }
@@ -92,6 +114,8 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
+            /// <summary>Gets or sets the value32 BPP.</summary>
+            /// <value>The value32 BPP.</value>
             public Color Value32Bpp
             {
                 get { return new Color(R, G, 0, 255); }
@@ -102,6 +126,8 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
+            /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+            /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
             public override string ToString()
             {
                 return string.Format("R:{0}, G:{1}", R, G);
@@ -114,13 +140,27 @@ namespace SharpDX.Toolkit.Graphics
         [StructLayout(LayoutKind.Sequential, Size = 4)]
         public struct R8G8B8A8 : IPixelData
         {
-            public byte R, G, B, A;
+            /// <summary>The R.</summary>
+            public byte R;
 
+            /// <summary>The G.</summary>
+            public byte G;
+
+            /// <summary>The B.</summary>
+            public byte B;
+
+            /// <summary>The A.</summary>
+            public byte A;
+
+            /// <summary>Gets the format.</summary>
+            /// <value>The format.</value>
             public PixelFormat Format
             {
                 get { return PixelFormat.R8G8B8A8.UNorm; }
             }
 
+            /// <summary>Gets or sets the value.</summary>
+            /// <value>The value.</value>
             public Color4 Value
             {
                 get { return new Color4(R / 255.0f, G / 255.0f, B / 255.0f, A / 255.0f); }
@@ -133,6 +173,8 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
+            /// <summary>Gets or sets the value32 BPP.</summary>
+            /// <value>The value32 BPP.</value>
             public Color Value32Bpp
             {
                 get { return new Color(R, G, B, A); }
@@ -145,37 +187,46 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
+            /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+            /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
             public override string ToString()
             {
                 return string.Format("R:{0}, G:{1}, B:{2}, A:{3}", R, G, B, A);
             }
         }
 
-        /// <summary>
-        /// Pixel format associated to <see cref="PixelFormat.R16.UNorm"/>.
-        /// </summary>
+        /// <summary>Pixel format associated to <see cref="PixelFormat.R16.UNorm" />.</summary>
         [StructLayout(LayoutKind.Sequential, Size = 1)]
         public struct R16 : IPixelData
         {
+            /// <summary>The R.</summary>
             public Half R;
 
+            /// <summary>Gets the format.</summary>
+            /// <value>The format.</value>
             public PixelFormat Format
             {
                 get { return PixelFormat.R16.UNorm; }
             }
 
+            /// <summary>Gets or sets the value.</summary>
+            /// <value>The value.</value>
             public Color4 Value
             {
                 get { return new Color4(R / 255.0f, 0, 0, 1.0f); }
                 set { R = new Half(value.Red); }
             }
 
+            /// <summary>Gets or sets the value32 BPP.</summary>
+            /// <value>The value32 BPP.</value>
             public Color Value32Bpp
             {
                 get { return new Color(R, 0, 0, 1); }
                 set { R = new Half(value.R / 255.0f); }
             }
 
+            /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+            /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
             public override string ToString()
             {
                 return string.Format("R:{0}", R);
@@ -188,13 +239,21 @@ namespace SharpDX.Toolkit.Graphics
         [StructLayout(LayoutKind.Sequential, Size = 2)]
         public struct R16G16 : IPixelData
         {
-            public Half R, G;
+            /// <summary>The R.</summary>
+            public Half R;
 
+            /// <summary>The G.</summary>
+            public Half G;
+
+            /// <summary>Gets the format.</summary>
+            /// <value>The format.</value>
             public PixelFormat Format
             {
                 get { return PixelFormat.R16G16.UNorm; }
             }
 
+            /// <summary>Gets or sets the value.</summary>
+            /// <value>The value.</value>
             public Color4 Value
             {
                 get { return new Color4(R / 255.0f, G / 255.0f, 0, 1.0f); }
@@ -206,6 +265,8 @@ namespace SharpDX.Toolkit.Graphics
 
             }
 
+            /// <summary>Gets or sets the value32 BPP.</summary>
+            /// <value>The value32 BPP.</value>
             public Color Value32Bpp
             {
                 get { return new Color(R, G, 0, 1); }
@@ -216,6 +277,8 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
+            /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+            /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
             public override string ToString()
             {
                 return string.Format("R:{0}, G:{1}", R, G);
@@ -228,13 +291,27 @@ namespace SharpDX.Toolkit.Graphics
         [StructLayout(LayoutKind.Sequential, Size = 4)]
         public struct R16G16B16A16 : IPixelData
         {
-            public Half R, G, B, A;
+            /// <summary>The R.</summary>
+            public Half R;
 
+            /// <summary>The G.</summary>
+            public Half G;
+
+            /// <summary>The B.</summary>
+            public Half B;
+
+            /// <summary>The A.</summary>
+            public Half A;
+
+            /// <summary>Gets the format.</summary>
+            /// <value>The format.</value>
             public PixelFormat Format
             {
                 get { return PixelFormat.R16G16B16A16.UNorm; }
             }
 
+            /// <summary>Gets or sets the value.</summary>
+            /// <value>The value.</value>
             public Color4 Value
             {
                 get { return new Color4(R / 255.0f, G / 255.0f, B / 255.0f, A / 255.0f); }
@@ -248,6 +325,8 @@ namespace SharpDX.Toolkit.Graphics
 
             }
 
+            /// <summary>Gets or sets the value32 BPP.</summary>
+            /// <value>The value32 BPP.</value>
             public Color Value32Bpp
             {
                 get { return new Color(R, G, B, A); }
@@ -260,6 +339,8 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
+            /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+            /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
             public override string ToString()
             {
                 return string.Format("R:{0}, G:{1}, B:{2}, A:{3}", R, G, B, A);

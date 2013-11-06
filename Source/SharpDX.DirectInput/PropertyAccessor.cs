@@ -22,9 +22,7 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX.DirectInput
 {
-    /// <summary>
-    /// 
-    /// </summary>
+    /// <summary>The property accessor class.</summary>
     public abstract class PropertyAccessor
     {
         /// <summary>
@@ -72,6 +70,9 @@ namespace SharpDX.DirectInput
 	    }
 
 
+        /// <summary>Gets the object.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <returns>System.Object.</returns>
         protected unsafe object GetObject(IntPtr guid)
         {
             // NOT WORKING with APPDATA
@@ -91,6 +92,9 @@ namespace SharpDX.DirectInput
             return handle.Target;
         }
 
+        /// <summary>Sets the object.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <param name="value">The value.</param>
         protected unsafe void SetObject(IntPtr guid, object value)
         {
             // NOT WORKING with APPDATA
@@ -116,11 +120,18 @@ namespace SharpDX.DirectInput
             Device.SetProperty(guid, new IntPtr(&prop));
         }
 
+        /// <summary>Gets the int.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <returns>System.Int32.</returns>
         protected int GetInt(IntPtr guid)
         {
             return GetInt(guid, ObjectCode);
         }
 
+        /// <summary>Gets the int.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <param name="objCode">The object code.</param>
+        /// <returns>System.Int32.</returns>
         protected unsafe int GetInt(IntPtr guid, int objCode)
         {
             var prop = new PropertyInt();
@@ -130,6 +141,9 @@ namespace SharpDX.DirectInput
             return prop.Data;
         }
 
+        /// <summary>Sets the specified unique identifier.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <param name="value">The value.</param>
         protected unsafe void Set(IntPtr guid, int value)
         {
             var prop = new PropertyInt();
@@ -138,6 +152,9 @@ namespace SharpDX.DirectInput
             Device.SetProperty(guid, new IntPtr(&prop));
         }
 
+        /// <summary>Gets the unique identifier.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <returns>Guid.</returns>
         protected unsafe Guid GetGuid(IntPtr guid)
         {
             var propNative = new PropertyGuidAndPath.__Native();
@@ -146,6 +163,9 @@ namespace SharpDX.DirectInput
             return propNative.GuidClass;
         }
 
+        /// <summary>Gets the path.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <returns>System.String.</returns>
         protected unsafe string GetPath(IntPtr guid)
         {
             var prop = new PropertyGuidAndPath();
@@ -156,11 +176,18 @@ namespace SharpDX.DirectInput
             return prop.Path;
         }
 
+        /// <summary>Gets the string.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <returns>System.String.</returns>
         protected string GetString(IntPtr guid)
         {
             return GetString(guid, ObjectCode);
         }
 
+        /// <summary>Gets the string.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <param name="objectCode">The object code.</param>
+        /// <returns>System.String.</returns>
         protected unsafe string GetString(IntPtr guid, int objectCode)
         {
             var prop = new PropertyString();
@@ -172,6 +199,9 @@ namespace SharpDX.DirectInput
             return prop.Text;
         }
 
+        /// <summary>Sets the specified unique identifier.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <param name="value">The value.</param>
         protected unsafe void Set(IntPtr guid, string value)
         {
             var prop = new PropertyString {Text = value};
@@ -181,6 +211,9 @@ namespace SharpDX.DirectInput
             Device.SetProperty(guid, new IntPtr(&propNative));
         }
 
+        /// <summary>Gets the range.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <returns>InputRange.</returns>
         protected unsafe InputRange GetRange(IntPtr guid)
         {
             var prop = new PropertyRange();
@@ -188,7 +221,10 @@ namespace SharpDX.DirectInput
             Device.GetProperty(guid, new IntPtr(&prop));
             return new InputRange(prop);
         }
-        
+
+        /// <summary>Sets the specified unique identifier.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <param name="value">The value.</param>
         protected unsafe void Set(IntPtr guid, InputRange value)
         {
             var prop = new PropertyRange();
@@ -197,6 +233,9 @@ namespace SharpDX.DirectInput
             Device.SetProperty(guid, new IntPtr(&prop));
         }
 
+        /// <summary>Initializes the header.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="header">The header.</param>
         internal unsafe void InitHeader<T>(ref PropertyHeader header) where T : struct
         {
             header.Size = Utilities.SizeOf<T>();

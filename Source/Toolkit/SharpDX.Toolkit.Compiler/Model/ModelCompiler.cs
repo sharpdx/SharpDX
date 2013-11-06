@@ -33,6 +33,7 @@ using SharpDX.Toolkit.Diagnostics;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The model compiler class.</summary>
     public sealed class ModelCompiler
     {
         private Assimp.Scene scene;
@@ -65,6 +66,18 @@ namespace SharpDX.Toolkit.Graphics
         {
         }
 
+        /// <summary>Compiles the and save.</summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="outputFile">The output file.</param>
+        /// <param name="compilerOptions">The compiler options.</param>
+        /// <returns>ContentCompilerResult.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// fileName
+        /// or
+        /// outputFile
+        /// or
+        /// compilerOptions
+        /// </exception>
         public static ContentCompilerResult CompileAndSave(string fileName, string outputFile, ModelCompilerOptions compilerOptions)
         {
             if (fileName == null)
@@ -142,6 +155,10 @@ namespace SharpDX.Toolkit.Graphics
         private string modelFilePath;
         private string modelDirectory;
 
+        /// <summary>Compiles from file.</summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="compilerOptions">The compiler options.</param>
+        /// <returns>ContentCompilerResult.</returns>
         public static ContentCompilerResult CompileFromFile(string fileName, ModelCompilerOptions compilerOptions)
         {
             var modelCompiler = new ModelCompiler();

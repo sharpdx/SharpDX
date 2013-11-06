@@ -24,8 +24,10 @@ using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The model data class.</summary>
     public sealed partial class ModelData
     {
+        /// <summary>The index buffer class.</summary>
         public sealed class IndexBuffer : IDataSerializable
         {
             /// <summary>
@@ -38,6 +40,8 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             public byte[] Buffer;
 
+            /// <summary>Reads or writes datas from/to the given binary serializer.</summary>
+            /// <param name="serializer">The binary serializer.</param>
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
                 serializer.Serialize(ref Count);

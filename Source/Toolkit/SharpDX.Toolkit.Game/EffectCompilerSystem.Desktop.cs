@@ -27,6 +27,7 @@ using System.Collections.Generic;
 
 namespace SharpDX.Toolkit
 {
+    /// <summary>The effect compiler system class.</summary>
     public partial class EffectCompilerSystem
     {
         #region Fields
@@ -39,6 +40,8 @@ namespace SharpDX.Toolkit
 
         #region Methods
 
+        /// <summary>Tracks the effect.</summary>
+        /// <param name="effect">The effect.</param>
         protected virtual void TrackEffect(Effect effect)
         {
             var fileList = compiler.LoadDependency(effect.RawEffectData.Arguments.DependencyFilePath);
@@ -99,6 +102,8 @@ namespace SharpDX.Toolkit
             watchers.AddRange(currentWatchers);
         }
 
+        /// <summary>Un-tracks the effect.</summary>
+        /// <param name="effect">The effect.</param>
         protected virtual void UnTrackEffect(Effect effect)
         {
             var watchersPerEffect = effectsToWatcher[effect];

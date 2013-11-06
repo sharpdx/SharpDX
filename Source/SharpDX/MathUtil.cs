@@ -46,6 +46,7 @@ using System;
 
 namespace SharpDX
 {
+    /// <summary>The math utility class.</summary>
     public static class MathUtil
     {
         /// <summary>

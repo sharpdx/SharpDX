@@ -159,6 +159,8 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>This method is called when the component is added to the game.</summary>
+        /// <remarks>This method can be used for tasks like querying for services the component needs and setting up non-graphics resources.</remarks>
         public override void Initialize()
         {
             var gamePlatform = (IGamePlatform)this.Services.GetService(typeof(IGamePlatform));
@@ -172,6 +174,9 @@ namespace SharpDX.Toolkit
             base.Initialize();
         }
 
+        /// <summary>Gets the size of the requested.</summary>
+        /// <param name="format">The format.</param>
+        /// <returns>Size2.</returns>
         private Size2 GetRequestedSize(out PixelFormat format)
         {
             var bounds = Window.ClientBounds;
@@ -181,6 +186,7 @@ namespace SharpDX.Toolkit
                 PreferredBackBufferHeight == 0 || windowUserResized ? bounds.Height : PreferredBackBufferHeight);
         }
 
+        /// <summary>Creates the original update presenter.</summary>
         protected virtual void CreateOrUpdatePresenter()
         {
             if (Presenter == null)
@@ -194,6 +200,8 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>Starts the drawing of a frame. This method is followed by calls to Draw and EndDraw.</summary>
+        /// <returns><c>true</c> if Draw should occur, <c>false</c> otherwise</returns>
         public override bool BeginDraw()
         {
             if (GraphicsDevice != null && Window.Visible)
@@ -225,6 +233,7 @@ namespace SharpDX.Toolkit
             return false;
         }
 
+        /// <summary>Ends the drawing of a frame. This method is preceded by calls to Draw and BeginDraw.</summary>
         public override void EndDraw()
         {
             if (beginDrawOk && GraphicsDevice != null)

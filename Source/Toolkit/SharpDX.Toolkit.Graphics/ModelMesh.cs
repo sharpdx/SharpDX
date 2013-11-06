@@ -22,25 +22,35 @@ using System;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The model mesh class.</summary>
     public class ModelMesh : ComponentBase
     {
+        /// <summary>The parent bone.</summary>
         public ModelBone ParentBone;
 
+        /// <summary>The bounding sphere.</summary>
         public BoundingSphere BoundingSphere;
 
+        /// <summary>The vertex buffers.</summary>
         internal VertexBufferBindingCollection VertexBuffers;
 
+        /// <summary>The index buffers.</summary>
         internal BufferCollection IndexBuffers;
 
+        /// <summary>The mesh parts.</summary>
         public ModelMeshPartCollection MeshParts;
 
+        /// <summary>The properties.</summary>
         public PropertyCollection Properties;
 
+        /// <summary>Initializes a new instance of the <see cref="ModelMesh"/> class.</summary>
         public ModelMesh()
         {
             Effects = new ModelEffectCollection();
         }
 
+        /// <summary>Gets the effects.</summary>
+        /// <value>The effects.</value>
         public ModelEffectCollection Effects { get; private set; }
 
         /// <summary>

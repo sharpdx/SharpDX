@@ -23,6 +23,7 @@ using System.Collections.Generic;
 
 namespace SharpDX.Toolkit
 {
+    /// <summary>The property collection class.</summary>
     public class PropertyCollection : Dictionary<PropertyKey, object>
     {
         /// <summary>
@@ -50,6 +51,10 @@ namespace SharpDX.Toolkit
         {
         }
 
+        /// <summary>Sets the property.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
         public void SetProperty<T>(PropertyKey<T> key, T value)
         {
             if (Utilities.IsEnum(typeof(T)))
@@ -63,17 +68,27 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>Determines whether the specified key contains key.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="key">The key.</param>
+        /// <returns><see langword="true" /> if the specified key contains key; otherwise, <see langword="false" />.</returns>
         public bool ContainsKey<T>(PropertyKey<T> key)
         {
             return base.ContainsKey(key);
         }
 
+        /// <summary>Gets the property.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="key">The key.</param>
+        /// <returns>The T.</returns>
         public T GetProperty<T>(PropertyKey<T> key)
         {
             object value;
             return TryGetValue(key, out value) ? Utilities.IsEnum(typeof(T)) ? (T)Enum.ToObject(typeof(T), (int)value) : (T)value : default(T);
         }
 
+        /// <summary>Clones this instance.</summary>
+        /// <returns>PropertyCollection.</returns>
         public virtual PropertyCollection Clone()
         {
             return (PropertyCollection)MemberwiseClone();

@@ -23,18 +23,24 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX.Direct3D9
 {
+    /// <summary>The effect instance class.</summary>
     public partial class EffectInstance
     {
+        /// <summary>Gets or sets the defaults.</summary>
+        /// <value>The defaults.</value>
         public EffectDefault[] Defaults { get; set; }
 
-        // Internal native struct used for marshalling
+        /// <summary>Internal native struct used for marshalling.</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 0)]
         internal partial struct __Native
         {
+            /// <summary>The effect filename.</summary>
             public System.IntPtr EffectFilename;
+            /// <summary>The default count.</summary>
             public int DefaultCount;
+            /// <summary>The default pointer.</summary>
             public System.IntPtr DefaultPointer;
-            // Method to free unmanaged allocation
+            /// <summary>Free unmanaged allocation.</summary>
             internal unsafe void __MarshalFree()
             {
                 if (this.EffectFilename != IntPtr.Zero)
@@ -44,13 +50,15 @@ namespace SharpDX.Direct3D9
             }
         }
 
-        // Method to free unmanaged allocation
+        /// <summary>Free unmanaged allocation.</summary>
+        /// <param name="ref">The preference.</param>
         internal unsafe void __MarshalFree(ref __Native @ref)
         {
             @ref.__MarshalFree();
         }
 
-        // Method to marshal from native to managed struct
+        /// <summary>Marshal from native to managed struct.</summary>
+        /// <param name="ref">The preference.</param>
         internal unsafe void __MarshalFrom(ref __Native @ref)
         {
             this.EffectFilename = (@ref.EffectFilename == IntPtr.Zero) ? null : Marshal.PtrToStringAnsi(@ref.EffectFilename);
@@ -63,7 +71,9 @@ namespace SharpDX.Direct3D9
                 Defaults[i].__MarshalFrom(ref defaultsNative[i]);
             }
         }
-        // Method to marshal from managed struct tot native
+
+        /// <summary>Marshal from managed struct tot native.</summary>
+        /// <param name="ref">The preference.</param>
         internal unsafe void __MarshalTo(ref __Native @ref)
         {
             @ref.EffectFilename = (this.EffectFilename == null) ? IntPtr.Zero : Marshal.StringToHGlobalAnsi(this.EffectFilename);

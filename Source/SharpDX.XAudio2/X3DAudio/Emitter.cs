@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace SharpDX.X3DAudio
 {
     /// <summary>	
-    /// No documentation.	
+    /// The emitter class.	
     /// </summary>	
     /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='X3DAUDIO_EMITTER']/*"/>	
     /// <unmanaged>X3DAUDIO_EMITTER</unmanaged>	
@@ -16,16 +16,22 @@ namespace SharpDX.X3DAudio
         /// <unmanaged>X3DAUDIO_CONE* pCone</unmanaged>	
         public Cone Cone;
 
+        /// <summary>The channel azimuths.</summary>
         public float[] ChannelAzimuths;
 
+        /// <summary>The volume curve.</summary>
         public CurvePoint[] VolumeCurve;
 
+        /// <summary>The lfe curve.</summary>
         public CurvePoint[] LfeCurve;
 
+        /// <summary>The LPF direct curve.</summary>
         public CurvePoint[] LpfDirectCurve;
 
+        /// <summary>The LPF reverb curve.</summary>
         public CurvePoint[] LpfReverbCurve;
 
+        /// <summary>The reverb curve.</summary>
         public CurvePoint[] ReverbCurve;
 
         // Internal native struct used for marshalling

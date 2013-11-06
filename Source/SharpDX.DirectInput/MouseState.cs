@@ -2,25 +2,34 @@
 
 namespace SharpDX.DirectInput
 {
-    /// <summary>	
-    /// No documentation.	
-    /// </summary>	
+    /// <summary>The mouse state class.</summary>
     /// <unmanaged>DIMOUSESTATE2</unmanaged>
-    public class MouseState : IDeviceState<RawMouseState, MouseUpdate> {	
-        
+    public class MouseState : IDeviceState<RawMouseState, MouseUpdate> {
+
+        /// <summary>Initializes a new instance of the <see cref="MouseState"/> class.</summary>
         public MouseState()
         {
             Buttons = new bool[8];
         }
 
+        /// <summary>Gets or sets the X position.</summary>
+        /// <value>The executable.</value>
         public int X { get; set; }
 
+        /// <summary>Gets or sets the Y position.</summary>
+        /// <value>The asynchronous.</value>
         public int Y { get; set; }
 
+        /// <summary>Gets or sets the Z position.</summary>
+        /// <value>The z.</value>
         public int Z { get; set; }
 
+        /// <summary>Gets the buttons.</summary>
+        /// <value>The buttons.</value>
         public bool[] Buttons { get; private set; }
 
+        /// <summary>Updates the specified update.</summary>
+        /// <param name="update">The update.</param>
         public void Update(MouseUpdate update)
         {
             int value = update.Value;
@@ -43,6 +52,8 @@ namespace SharpDX.DirectInput
             }
         }
 
+        /// <summary>Marshals from.</summary>
+        /// <param name="value">The value.</param>
         public void MarshalFrom(ref RawMouseState value)
         {
             unsafe
@@ -56,6 +67,8 @@ namespace SharpDX.DirectInput
             }
         }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format(System.Globalization.CultureInfo.InvariantCulture, "X: {0}, Y: {1}, Z: {2}, Buttons: {3}", X, Y, Z, Utilities.Join(";",Buttons));

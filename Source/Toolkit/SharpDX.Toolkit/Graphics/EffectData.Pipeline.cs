@@ -24,6 +24,7 @@ using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The effect data class.</summary>
     public partial class EffectData 
     {
         /// <summary>
@@ -31,6 +32,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public sealed class Pipeline : IDataSerializable, IEnumerable<ShaderLink>
         {
+            /// <summary>The links.</summary>
             public ShaderLink[] Links;
 
             /// <summary>
@@ -81,12 +83,16 @@ namespace SharpDX.Toolkit.Graphics
                 serializer.Serialize(ref Links, SerializeFlags.Nullable);
             }
 
+            /// <summary>Returns an enumerator that iterates through the collection.</summary>
+            /// <returns>A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.</returns>
             public IEnumerator<ShaderLink> GetEnumerator()
             {
                 foreach (var shaderLink in Links)
                     yield return shaderLink;
             }
 
+            /// <summary>Returns an enumerator that iterates through a collection.</summary>
+            /// <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
             IEnumerator IEnumerable.GetEnumerator()
             {
                 return GetEnumerator();

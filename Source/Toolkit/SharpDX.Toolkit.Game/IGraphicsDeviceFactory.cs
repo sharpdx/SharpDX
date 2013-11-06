@@ -24,10 +24,17 @@ using SharpDX.Toolkit.Graphics;
 
 namespace SharpDX.Toolkit
 {
+    /// <summary>The attribute graphics device factory interface.</summary>
     public interface IGraphicsDeviceFactory
     {
+        /// <summary>Finds the best devices.</summary>
+        /// <param name="graphicsParameters">The graphics parameters.</param>
+        /// <returns>List{GraphicsDeviceInformation}.</returns>
         List<GraphicsDeviceInformation> FindBestDevices(GameGraphicsParameters graphicsParameters);
 
+        /// <summary>Creates the device.</summary>
+        /// <param name="deviceInformation">The device information.</param>
+        /// <returns>GraphicsDevice.</returns>
         GraphicsDevice CreateDevice(GraphicsDeviceInformation deviceInformation);
     }
 }

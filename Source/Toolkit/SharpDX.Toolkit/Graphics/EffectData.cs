@@ -41,10 +41,13 @@ namespace SharpDX.Toolkit.Graphics
     [ContentReader(typeof(EffectDataContentReader))]
     public sealed partial class EffectData : IDataSerializable
     {
+        /// <summary>The magic code.</summary>
         public const string MagicCode = "TKFX";
 
+        /// <summary>The version.</summary>
         public const int Version = 0x101;
 
+        /// <summary>Initializes a new instance of the <see cref="EffectData"/> class.</summary>
         public EffectData()
         {
         }
@@ -54,6 +57,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public List<Shader> Shaders;
 
+        /// <summary>The description.</summary>
         public Effect Description;
 
         /// <summary>

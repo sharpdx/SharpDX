@@ -89,6 +89,9 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public readonly int MipmapSize;
 
+        /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
         public bool Equals(MipMapDescription other)
         {
             if (ReferenceEquals(null, other))
@@ -98,6 +101,9 @@ namespace SharpDX.Toolkit.Graphics
             return this.Width == other.Width && this.Height == other.Height && this.WidthPacked == other.WidthPacked && this.HeightPacked == other.HeightPacked && this.Depth == other.Depth && this.RowStride == other.RowStride && this.MipmapSize == other.MipmapSize && this.DepthStride == other.DepthStride;
         }
 
+        /// <summary>Determines whether the specified <see cref="System.Object" /> is equal to this instance.</summary>
+        /// <param name="obj">The <see cref="T:System.Object" /> to compare with the current <see cref="T:System.Object" />.</param>
+        /// <returns><see langword="true" /> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <see langword="false" />.</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -109,6 +115,8 @@ namespace SharpDX.Toolkit.Graphics
             return Equals((MipMapDescription)obj);
         }
 
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             unchecked

@@ -74,6 +74,8 @@ namespace SharpDX.Multimedia
             GuidSubFormat = bits == 32 ? new Guid("00000003-0000-0010-8000-00aa00389b71") : new Guid("00000001-0000-0010-8000-00aa00389b71");
         }
 
+        /// <summary>Marshals to pointer.</summary>
+        /// <returns>The IntPtr pointer.</returns>
         protected unsafe override IntPtr MarshalToPtr()
         {
             var result = Marshal.AllocHGlobal(Utilities.SizeOf<WaveFormatExtensible.__Native>());

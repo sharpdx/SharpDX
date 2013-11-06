@@ -25,20 +25,28 @@ using SharpDX.Toolkit.Content;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The model material texture loader delegate delegate.</summary>
+    /// <param name="name">The name.</param>
+    /// <returns>Texture.</returns>
     public delegate Texture ModelMaterialTextureLoaderDelegate(string name);
 
+    /// <summary>The model class.</summary>
     [ContentReader(typeof(ModelContentReader))]
     public class Model : Component
     {
+        /// <summary>The materials.</summary>
         public MaterialCollection Materials;
 
+        /// <summary>The bones.</summary>
         public ModelBoneCollection Bones;
 
         //// DISABLE_SKINNED_BONES
         //public ModelBoneCollection SkinnedBones;
 
+        /// <summary>The meshes.</summary>
         public ModelMeshCollection Meshes;
 
+        /// <summary>The properties.</summary>
         public PropertyCollection Properties;
 
         /// <summary>
@@ -273,12 +281,19 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Clones this instance.</summary>
+        /// <returns>The cloned Model.</returns>
         public virtual Model Clone()
         {
             var model = (Model)MemberwiseClone();
             throw new NotImplementedException();
         }
 
+        /// <summary>Loads the specified graphics device.</summary>
+        /// <param name="graphicsDevice">The graphics device.</param>
+        /// <param name="stream">The stream.</param>
+        /// <param name="textureLoader">The texture loader.</param>
+        /// <returns>Model.</returns>
         public static Model Load(GraphicsDevice graphicsDevice, Stream stream, ModelMaterialTextureLoaderDelegate textureLoader)
         {
             using (var serializer = new ModelReader(graphicsDevice, stream, textureLoader))
@@ -287,6 +302,8 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format("{0} {1}", this.GetType().Name, Name);

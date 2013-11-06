@@ -226,7 +226,7 @@ namespace SharpDX.Direct3D9
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Direct3D9.EffectHandle"/> to <see cref="System.Void*"/>.
+        /// Performs an implicit conversion from <see cref="SharpDX.Direct3D9.EffectHandle"/> to <see cref="System.Void"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>
@@ -238,7 +238,7 @@ namespace SharpDX.Direct3D9
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="System.Void*"/> to <see cref="SharpDX.Direct3D9.EffectHandle"/>.
+        /// Performs an implicit conversion from <see cref="System.Void"/> to <see cref="SharpDX.Direct3D9.EffectHandle"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>

@@ -20,14 +20,19 @@
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The model bone class.</summary>
     public class ModelBone : ComponentBase
     {
+        /// <summary>The index.</summary>
         public int Index;
 
+        /// <summary>The children.</summary>
         public ModelBoneCollection Children;
 
+        /// <summary>The parent.</summary>
         public ModelBone Parent;
 
+        /// <summary>The transform.</summary>
         public Matrix Transform;
     }
 }

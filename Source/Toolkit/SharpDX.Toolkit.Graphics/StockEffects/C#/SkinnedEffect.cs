@@ -85,6 +85,7 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public partial class SkinnedEffect : Effect, IEffectMatrices, IEffectLights, IEffectFog
     {
+        /// <summary>The maximum number of bones.</summary>
         public const int MaxBones = 72;
         
         #region Effect Parameters
@@ -470,6 +471,7 @@ namespace SharpDX.Toolkit.Graphics
             SetBoneTransforms(identityBones);
         }
 
+        /// <summary>Initializes this instance.</summary>
         protected override void Initialize()
         {
             textureParam = Parameters["Texture"];

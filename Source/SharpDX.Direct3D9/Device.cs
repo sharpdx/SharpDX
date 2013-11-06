@@ -132,11 +132,9 @@ namespace SharpDX.Direct3D9
             this.ColorFill(surfaceRef, null, color);
         }
 
-        /// <summary>
-        /// Draws the indexed user primitives.
-        /// </summary>
-        /// <typeparam name="S"></typeparam>
-        /// <typeparam name="T"></typeparam>
+        /// <summary>Draws the indexed user primitives.</summary>
+        /// <typeparam name="S">The <see langword="Type" /> of arguments.</typeparam>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
         /// <param name="primitiveType">Type of the primitive.</param>
         /// <param name="minimumVertexIndex">Minimum index of the vertex.</param>
         /// <param name="vertexCount">The vertex count.</param>
@@ -144,7 +142,6 @@ namespace SharpDX.Direct3D9
         /// <param name="indexData">The index data.</param>
         /// <param name="indexDataFormat">The index data format.</param>
         /// <param name="vertexData">The vertex data.</param>
-        /// <param name="vertexStride">The vertex stride.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         public void DrawIndexedUserPrimitives<S, T>(PrimitiveType primitiveType, int minimumVertexIndex, int vertexCount, int primitiveCount, S[] indexData, Format indexDataFormat, T[] vertexData)
             where S : struct

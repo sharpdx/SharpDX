@@ -72,11 +72,20 @@
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The attribute effect fog interface.</summary>
     public interface IEffectFog
     {
+        /// <summary>Gets or sets the color of the fog.</summary>
+        /// <value>The color of the fog.</value>
         Vector3 FogColor { get; set; }
+        /// <summary>Gets or sets a value indicating whether [fog enabled].</summary>
+        /// <value><see langword="true" /> if [fog enabled]; otherwise, <see langword="false" />.</value>
         bool FogEnabled { get; set; }
+        /// <summary>Gets or sets the fog end.</summary>
+        /// <value>The fog end.</value>
         float FogEnd { get; set; }
+        /// <summary>Gets or sets the fog start.</summary>
+        /// <value>The fog start.</value>
         float FogStart { get; set; }
     }
 }

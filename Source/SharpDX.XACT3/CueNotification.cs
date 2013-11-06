@@ -25,10 +25,13 @@ namespace SharpDX.XACT3
     /// <unmanaged>XACT_NOTIFICATION_CUE</unmanaged>	
     public class CueNotification : Notification
     {
+        /// <summary>Initializes a new instance of the <see cref="CueNotification"/> class.</summary>
         public CueNotification()
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="CueNotification"/> class.</summary>
+        /// <param name="rawNotification">The raw notification.</param>
         internal unsafe CueNotification(RawNotification* rawNotification) : base(rawNotification)
         {
             CueIndex = rawNotification->Data.Cue.CueIndex;
@@ -36,10 +39,16 @@ namespace SharpDX.XACT3
             SoundBank = CppObject.FromPointer<SoundBank>(rawNotification->Data.Cue.SoundBankPointer);
         }
 
+        /// <summary>Gets or sets the index of the cue.</summary>
+        /// <value>The index of the cue.</value>
         public int CueIndex { get; set; }
 
+        /// <summary>Gets or sets the cue.</summary>
+        /// <value>The cue.</value>
         public Cue Cue { get; set; }
 
+        /// <summary>Gets or sets the sound bank.</summary>
+        /// <value>The sound bank.</value>
         public SoundBank SoundBank { get; set; }
     }
 }

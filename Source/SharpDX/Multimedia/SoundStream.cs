@@ -120,6 +120,9 @@ namespace SharpDX.Multimedia
             input.Position = startPositionOfData;
         }
 
+        /// <summary>Throws the invalid file format.</summary>
+        /// <param name="nestedException">The nested exception.</param>
+        /// <exception cref="System.InvalidOperationException">Invalid  + FileFormatName +  file format</exception>
         protected void ThrowInvalidFileFormat(Exception nestedException = null)
         {
             throw new InvalidOperationException("Invalid " + FileFormatName + " file format", nestedException);
@@ -222,6 +225,8 @@ namespace SharpDX.Multimedia
             }
         }
 
+        /// <summary>Releases the unmanaged resources used by the <see cref="T:System.IO.Stream" /> and optionally releases the managed resources.</summary>
+        /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             if (input != null)
@@ -232,6 +237,11 @@ namespace SharpDX.Multimedia
             base.Dispose(disposing);
         }
 
+        /// <summary>Chunks the specified chunks.</summary>
+        /// <param name="chunks">The chunks.</param>
+        /// <param name="id">The unique identifier.</param>
+        /// <returns>RiffChunk.</returns>
+        /// <exception cref="System.InvalidOperationException">Invalid  + FileFormatName +  file format</exception>
         protected RiffChunk Chunk(IEnumerable<RiffChunk> chunks, string id)
         {
             RiffChunk chunk = null;
@@ -248,6 +258,8 @@ namespace SharpDX.Multimedia
             return chunk;
         }
 
+        /// <summary>Gets or sets the name of the file format.</summary>
+        /// <value>The name of the file format.</value>
         private string FileFormatName { get; set; }
 
         /// <summary>

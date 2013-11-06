@@ -25,6 +25,7 @@ using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The model bone collection class.</summary>
     public class ModelBoneCollection : List<ModelBone>
     {
         /// <summary>
@@ -52,6 +53,7 @@ namespace SharpDX.Toolkit.Graphics
         {
         }
 
+        /// <summary>The child indices.</summary>
         internal List<int> ChildIndices;
     }
 }

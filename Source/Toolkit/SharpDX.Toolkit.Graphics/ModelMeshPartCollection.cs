@@ -22,17 +22,23 @@ using System.Collections.Generic;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The model mesh part collection class.</summary>
     public class ModelMeshPartCollection : List<ModelMeshPart>
     {
+        /// <summary>Initializes a new instance of the <see cref="ModelMeshPartCollection"/> class.</summary>
         public ModelMeshPartCollection()
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="T:System.Collections.Generic.List`1" /> class that is empty and has the specified initial capacity.</summary>
+        /// <param name="capacity">The number of elements that the new list can initially store.</param>
         public ModelMeshPartCollection(int capacity)
             : base(capacity)
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="ModelMeshPartCollection"/> class.</summary>
+        /// <param name="collection">The collection.</param>
         public ModelMeshPartCollection(IEnumerable<ModelMeshPart> collection)
             : base(collection)
         {

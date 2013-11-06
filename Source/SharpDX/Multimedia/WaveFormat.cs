@@ -330,6 +330,8 @@ namespace SharpDX.Multimedia
             throw new InvalidOperationException(string.Format("Unsupported WaveFormat [{0}]", encoding));
         }
 
+        /// <summary>Marshals to pointer.</summary>
+        /// <returns>The IntPtr pointer.</returns>
         protected unsafe virtual IntPtr MarshalToPtr()
         {
             var result = Marshal.AllocHGlobal(Utilities.SizeOf<WaveFormat.__Native>());

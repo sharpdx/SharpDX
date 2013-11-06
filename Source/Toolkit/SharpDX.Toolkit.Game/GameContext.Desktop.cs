@@ -24,9 +24,7 @@ using SharpDX.Windows;
 
 namespace SharpDX.Toolkit
 {
-    /// <summary>
-    /// A <see cref="GameContext"/> to use for rendering to an existing WinForm <see cref="Control"/>.
-    /// </summary>
+    /// <summary>A <see cref="GameContext" /> to use for rendering to an existing WinForm <see cref="Control" />.</summary>
     public partial class GameContext
     {
         /// <summary>
@@ -66,6 +64,12 @@ namespace SharpDX.Toolkit
         }
 
 #if !W8CORE && NET35Plus && !DIRECTX11_1
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GameContext" /> class.
+        /// </summary>
+        /// <param name="control">The parent control.</param>
+        /// <param name="requestedWidth">Width of the requested.</param>
+        /// <param name="requestedHeight">Height of the requested.</param>
         protected GameContext(object control, int requestedWidth = 0, int requestedHeight = 0)
         {
             Control = control;

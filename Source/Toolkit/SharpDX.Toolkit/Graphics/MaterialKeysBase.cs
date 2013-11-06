@@ -2,6 +2,7 @@
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The material keys base class.</summary>
     public class MaterialKeysBase
     {
         private static readonly Dictionary<string, PropertyKey> registeredKeys = new Dictionary<string, PropertyKey>(64);

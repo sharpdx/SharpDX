@@ -25,6 +25,8 @@ namespace SharpDX.XACT3
     /// <unmanaged>XACT_NOTIFICATION_VARIABLE</unmanaged>
     public class VariableNotification : Notification
     {
+        /// <summary>Initializes a new instance of the <see cref="Notification" /> class.</summary>
+        /// <param name="rawNotification">The raw notification.</param>
         internal unsafe VariableNotification(RawNotification* rawNotification)
             : base(rawNotification)
         {
@@ -36,16 +38,28 @@ namespace SharpDX.XACT3
             IsLocal = rawNotification->Data.Variable.Local;
         }
 
+        /// <summary>Gets or sets the index of the cue.</summary>
+        /// <value>The index of the cue.</value>
         public int CueIndex { get;set; }
 
+        /// <summary>Gets or sets the sound bank.</summary>
+        /// <value>The sound bank.</value>
         public SoundBank SoundBank { get; set; }
 
+        /// <summary>Gets or sets the cue.</summary>
+        /// <value>The cue.</value>
         public Cue Cue { get; set; }
 
+        /// <summary>Gets or sets the index of the variable.</summary>
+        /// <value>The index of the variable.</value>
         public int VariableIndex { get; set; }
 
+        /// <summary>Gets or sets the variable value.</summary>
+        /// <value>The variable value.</value>
         public float VariableValue { get; set; }
 
+        /// <summary>Gets or sets a value indicating whether this instance is local.</summary>
+        /// <value><see langword="true" /> if this instance is local; otherwise, <see langword="false" />.</value>
         public bool IsLocal { get; set; }
     }
 }

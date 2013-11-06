@@ -39,6 +39,11 @@ namespace SharpDX.Toolkit.Graphics
     {
         #region Delegates
 
+        /// <summary>The constant buffer allocator delegate delegate.</summary>
+        /// <param name="device">The device.</param>
+        /// <param name="pool">The pool.</param>
+        /// <param name="constantBuffer">The constant buffer.</param>
+        /// <returns>Buffer.</returns>
         public delegate Buffer ConstantBufferAllocatorDelegate(GraphicsDevice device, EffectPool pool, EffectConstantBuffer constantBuffer);
 
         #endregion
@@ -150,12 +155,17 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>The registered effects.</summary>
         public readonly System.Collections.ObjectModel.ReadOnlyCollection<Effect> RegisteredEffects;
 
+        /// <summary>Occurs when [effect added].</summary>
         public event EventHandler<ObservableCollectionEventArgs<Effect>> EffectAdded;
 
+        /// <summary>Occurs when [effect removed].</summary>
         public event EventHandler<ObservableCollectionEventArgs<Effect>> EffectRemoved;
 
+        /// <summary>Adds the effect.</summary>
+        /// <param name="effect">The effect.</param>
         internal void AddEffect(Effect effect)
         {
             lock (effects)
@@ -165,6 +175,8 @@ namespace SharpDX.Toolkit.Graphics
             OnEffectAdded(new ObservableCollectionEventArgs<Effect>(effect));
         }
 
+        /// <summary>Removes the effect.</summary>
+        /// <param name="effect">The effect.</param>
         internal void RemoveEffect(Effect effect)
         {
             lock (effects)
@@ -174,6 +186,13 @@ namespace SharpDX.Toolkit.Graphics
             OnEffectRemoved(new ObservableCollectionEventArgs<Effect>(effect));
         }
 
+        /// <summary>Gets the original compile shader.</summary>
+        /// <param name="shaderType">Type of the shader.</param>
+        /// <param name="index">The index.</param>
+        /// <param name="soRasterizedStream">The so rasterized stream.</param>
+        /// <param name="soElements">The so elements.</param>
+        /// <param name="profileError">The profile error.</param>
+        /// <returns>DeviceChild.</returns>
         internal DeviceChild GetOrCompileShader(EffectShaderType shaderType, int index, int soRasterizedStream, StreamOutputElement[] soElements, out string profileError)
         {
             DeviceChild shader = null;
@@ -235,6 +254,10 @@ namespace SharpDX.Toolkit.Graphics
             return shader;
         }
 
+        /// <summary>Gets the original create constant buffer.</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="bufferRaw">The buffer raw.</param>
+        /// <returns>EffectConstantBuffer.</returns>
         internal EffectConstantBuffer GetOrCreateConstantBuffer(GraphicsDevice context, EffectData.ConstantBuffer bufferRaw)
         {
             // Only lock the constant buffer object
@@ -301,11 +324,16 @@ namespace SharpDX.Toolkit.Graphics
             return new EffectPool(device);
         }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format("EffectPool [{0}]", Name);
         }
 
+        /// <summary>Disposes of object resources.</summary>
+        /// <param name="disposeManagedResources">If true, managed resources should be
+        /// disposed of in addition to unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
         {
             base.Dispose(disposeManagedResources);

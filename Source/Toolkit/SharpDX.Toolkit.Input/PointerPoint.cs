@@ -169,6 +169,9 @@ namespace SharpDX.Toolkit.Input
             return EventType == other.EventType && DeviceType == other.DeviceType && PointerId == other.PointerId && Position.Equals(other.Position) && Timestamp == other.Timestamp && KeyModifiers == other.KeyModifiers && ContactRect.Equals(other.ContactRect) && IsBarrelButtonPressed.Equals(other.IsBarrelButtonPressed) && IsCanceled.Equals(other.IsCanceled) && IsEraser.Equals(other.IsEraser) && IsHorizontalMouseWheel.Equals(other.IsHorizontalMouseWheel) && IsInRange.Equals(other.IsInRange) && IsInverted.Equals(other.IsInverted) && IsLeftButtonPressed.Equals(other.IsLeftButtonPressed) && IsMiddleButtonPressed.Equals(other.IsMiddleButtonPressed) && IsRightButtonPressed.Equals(other.IsRightButtonPressed) && IsXButton1Pressed.Equals(other.IsXButton1Pressed) && IsXButton2Pressed.Equals(other.IsXButton2Pressed) && IsPrimary.Equals(other.IsPrimary) && MouseWheelDelta == other.MouseWheelDelta && Orientation.Equals(other.Orientation) && TouchConfidence.Equals(other.TouchConfidence) && Twist.Equals(other.Twist) && XTilt.Equals(other.XTilt) && YTilt.Equals(other.YTilt) && PointerUpdateKind == other.PointerUpdateKind;
         }
 
+        /// <summary>Determines whether the specified <see cref="System.Object" /> is equal to this instance.</summary>
+        /// <param name="obj">Another object to compare to.</param>
+        /// <returns><see langword="true" /> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <see langword="false" />.</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -178,6 +181,8 @@ namespace SharpDX.Toolkit.Input
             return obj is PointerPoint && Equals((PointerPoint)obj);
         }
 
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             unchecked

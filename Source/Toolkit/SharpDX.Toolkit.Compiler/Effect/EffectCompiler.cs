@@ -30,6 +30,10 @@ namespace SharpDX.Toolkit.Graphics
 {
     using D3DCompiler;
 
+    /// <summary>The include file delegate delegate.</summary>
+    /// <param name="isSystemInclude">if set to <see langword="true" /> [is system include].</param>
+    /// <param name="file">The file.</param>
+    /// <returns>Stream.</returns>
     public delegate Stream IncludeFileDelegate(bool isSystemInclude, string file);
 
     /// <summary>
@@ -37,11 +41,17 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public class EffectCompiler : IEffectCompiler
     {
+        /// <summary>Gets the dependency filename from the (fx) effect path.</summary>
+        /// <param name="pathToFxFile">The (fx) effect path.</param>
+        /// <returns>A dependency filename.</returns>
         public string GetDependencyFileNameFromSourcePath(string pathToFxFile)
         {
             return FileDependencyList.GetDependencyFileNameFromSourcePath(pathToFxFile);
         }
 
+        /// <summary>Loads a dependency file.</summary>
+        /// <param name="dependencyFilePath">The dependency file path.</param>
+        /// <returns>A list of file path.</returns>
         public List<string> LoadDependency(string dependencyFilePath)
         {
             return FileDependencyList.FromFileRaw(dependencyFilePath);

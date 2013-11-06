@@ -33,6 +33,8 @@ namespace SharpDX.Direct3D9
             }
         }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format("Width: {0}, Height: {1}, RefreshRate: {2}, Format: {3}", Width, Height, RefreshRate, Format);

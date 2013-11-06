@@ -27,6 +27,7 @@ namespace SharpDX.DirectInput
     [AttributeUsage(AttributeTargets.Field)]
     public sealed class DataObjectFormatAttribute : Attribute
     {
+        /// <summary>Initializes a new instance of the <see cref="DataObjectFormatAttribute"/> class.</summary>
         public DataObjectFormatAttribute()
         {
             Flags = ObjectDataFormatFlags.None;
@@ -35,6 +36,9 @@ namespace SharpDX.DirectInput
             TypeFlags = DeviceObjectTypeFlags.All;
         }
 
+        /// <summary>Initializes a new instance of the <see cref="DataObjectFormatAttribute"/> class.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <param name="typeFlags">The type flags.</param>
         public DataObjectFormatAttribute(string guid, DeviceObjectTypeFlags typeFlags)
         {
             Guid = guid;
@@ -44,6 +48,10 @@ namespace SharpDX.DirectInput
             ArrayCount = 0;
         }
 
+        /// <summary>Initializes a new instance of the <see cref="DataObjectFormatAttribute"/> class.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <param name="typeFlags">The type flags.</param>
+        /// <param name="flags">The flags.</param>
         public DataObjectFormatAttribute(string guid, DeviceObjectTypeFlags typeFlags, ObjectDataFormatFlags flags)
         {
             Guid = guid;
@@ -51,6 +59,11 @@ namespace SharpDX.DirectInput
             Flags = flags;
         }
 
+        /// <summary>Initializes a new instance of the <see cref="DataObjectFormatAttribute"/> class.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <param name="typeFlags">The type flags.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="instanceNumber">The instance number.</param>
         public DataObjectFormatAttribute(string guid, DeviceObjectTypeFlags typeFlags, ObjectDataFormatFlags flags, int instanceNumber)
         {
             Guid = guid;
@@ -59,6 +72,11 @@ namespace SharpDX.DirectInput
             InstanceNumber = instanceNumber;
         }
 
+        /// <summary>Initializes a new instance of the <see cref="DataObjectFormatAttribute"/> class.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <param name="arrayCount">The array count.</param>
+        /// <param name="typeFlags">The type flags.</param>
+        /// <param name="flags">The flags.</param>
         public DataObjectFormatAttribute(string guid, int arrayCount, DeviceObjectTypeFlags typeFlags, ObjectDataFormatFlags flags)
         {
             Guid = guid;
@@ -67,6 +85,10 @@ namespace SharpDX.DirectInput
             Flags = flags;
         }
 
+        /// <summary>Initializes a new instance of the <see cref="DataObjectFormatAttribute"/> class.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <param name="arrayCount">The array count.</param>
+        /// <param name="typeFlags">The type flags.</param>
         public DataObjectFormatAttribute(string guid, int arrayCount, DeviceObjectTypeFlags typeFlags)
         {
             Guid = guid;
@@ -75,6 +97,8 @@ namespace SharpDX.DirectInput
             Flags = ObjectDataFormatFlags.None;
         }
 
+        /// <summary>Initializes a new instance of the <see cref="DataObjectFormatAttribute"/> class.</summary>
+        /// <param name="typeFlags">The type flags.</param>
         public DataObjectFormatAttribute(DeviceObjectTypeFlags typeFlags)
         {
             TypeFlags = typeFlags;
@@ -83,12 +107,19 @@ namespace SharpDX.DirectInput
             ArrayCount = 0;
         }
 
+        /// <summary>Initializes a new instance of the <see cref="DataObjectFormatAttribute"/> class.</summary>
+        /// <param name="typeFlags">The type flags.</param>
+        /// <param name="flags">The flags.</param>
         public DataObjectFormatAttribute(DeviceObjectTypeFlags typeFlags, ObjectDataFormatFlags flags)
         {
             TypeFlags = typeFlags;
             Flags = flags;
         }
 
+        /// <summary>Initializes a new instance of the <see cref="DataObjectFormatAttribute"/> class.</summary>
+        /// <param name="typeFlags">The type flags.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="instanceNumber">The instance number.</param>
         public DataObjectFormatAttribute(DeviceObjectTypeFlags typeFlags, ObjectDataFormatFlags flags, int instanceNumber)
         {
             TypeFlags = typeFlags;
@@ -96,6 +127,9 @@ namespace SharpDX.DirectInput
             InstanceNumber = instanceNumber;
         }
 
+        /// <summary>Initializes a new instance of the <see cref="DataObjectFormatAttribute"/> class.</summary>
+        /// <param name="arrayCount">The array count.</param>
+        /// <param name="typeFlags">The type flags.</param>
         public DataObjectFormatAttribute(int arrayCount, DeviceObjectTypeFlags typeFlags)
         {
             ArrayCount = arrayCount;
@@ -103,6 +137,10 @@ namespace SharpDX.DirectInput
             Flags = ObjectDataFormatFlags.None;
         }
 
+        /// <summary>Initializes a new instance of the <see cref="DataObjectFormatAttribute"/> class.</summary>
+        /// <param name="arrayCount">The array count.</param>
+        /// <param name="typeFlags">The type flags.</param>
+        /// <param name="flags">The flags.</param>
         public DataObjectFormatAttribute(int arrayCount, DeviceObjectTypeFlags typeFlags, ObjectDataFormatFlags flags)
         {
             ArrayCount = arrayCount;
@@ -110,6 +148,11 @@ namespace SharpDX.DirectInput
             Flags = flags;
         }
 
+        /// <summary>Initializes a new instance of the <see cref="DataObjectFormatAttribute"/> class.</summary>
+        /// <param name="arrayCount">The array count.</param>
+        /// <param name="typeFlags">The type flags.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="instanceNumber">The instance number.</param>
         public DataObjectFormatAttribute(int arrayCount, DeviceObjectTypeFlags typeFlags, ObjectDataFormatFlags flags, int instanceNumber)
         {
             ArrayCount = arrayCount;
@@ -119,6 +162,10 @@ namespace SharpDX.DirectInput
         }
 
 
+        /// <summary>Initializes a new instance of the <see cref="DataObjectFormatAttribute"/> class.</summary>
+        /// <param name="arrayCount">The array count.</param>
+        /// <param name="typeFlags">The type flags.</param>
+        /// <param name="instanceNumber">The instance number.</param>
         public DataObjectFormatAttribute(int arrayCount, DeviceObjectTypeFlags typeFlags, int instanceNumber)
         {
             ArrayCount = arrayCount;

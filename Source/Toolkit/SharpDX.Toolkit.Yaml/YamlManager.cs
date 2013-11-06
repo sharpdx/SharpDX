@@ -60,6 +60,9 @@ namespace SharpDX.Toolkit.Yaml
             serializer = new Serializer(yamlSettings);
         }
 
+        /// <summary>This method is called when the component is added to the game.</summary>
+        /// <exception cref="System.InvalidOperationException">Unable to initialize YamlManager. Expecting IContentManager to be an instance of ContentManager</exception>
+        /// <remarks>This method can be used for tasks like querying for services the component needs and setting up non-graphics resources.</remarks>
         public override void Initialize()
         {
             base.Initialize();

@@ -38,11 +38,10 @@ namespace SharpDX
         private static readonly Dictionary<Result, ResultDescriptor> Descriptors = new Dictionary<Result, ResultDescriptor>();
         private const string UnknownText = "Unknown";
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ResultDescriptor"/> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="ResultDescriptor" /> class.</summary>
         /// <param name="code">The HRESULT error code.</param>
         /// <param name="module">The module (ex: SharpDX.Direct2D1).</param>
+        /// <param name="nativeApiCode">The native API code.</param>
         /// <param name="apiCode">The API code (ex: D2D1_ERR_...).</param>
         /// <param name="description">The description of the result code if any.</param>
         public ResultDescriptor(Result code, string module, string nativeApiCode, string apiCode, string description = null)

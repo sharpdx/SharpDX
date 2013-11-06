@@ -29,6 +29,7 @@ using SharpDX.Win32;
 
 namespace SharpDX.XACT3
 {
+    /// <summary>The wave bank class.</summary>
     public partial class WaveBank
     {
         private AudioEngine audioEngine;
@@ -190,6 +191,8 @@ namespace SharpDX.XACT3
             return wave;
         }
 
+        /// <summary>Releases unmanaged and - optionally - managed resources</summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             if (FileStreamHandle != null && !FileStreamHandle.IsInvalid)

@@ -20,10 +20,13 @@
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The material blend mode enumeration.</summary>
     public enum MaterialBlendMode
     {
+        /// <summary>The default blend mode.</summary>
         Default,
 
+        /// <summary>The additive blend mode.</summary>
         Additive,
     }
 }

@@ -23,6 +23,7 @@ using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The effect data class.</summary>
     public partial class EffectData
     {
         /// <summary>
@@ -45,6 +46,9 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             public EffectParameterType Type;
 
+            /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            /// <param name="other">An object to compare with this object.</param>
+            /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
             public bool Equals(Parameter other)
             {
                 if (ReferenceEquals(null, other)) return false;
@@ -52,6 +56,9 @@ namespace SharpDX.Toolkit.Graphics
                 return string.Equals(Name, other.Name) && Class == other.Class && Type == other.Type;
             }
 
+            /// <summary>Determines whether the specified <see cref="System.Object" /> is equal to this instance.</summary>
+            /// <param name="obj">The <see cref="T:System.Object" /> to compare with the current <see cref="T:System.Object" />.</param>
+            /// <returns><see langword="true" /> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <see langword="false" />.</returns>
             public override bool Equals(object obj)
             {
                 if (ReferenceEquals(null, obj)) return false;
@@ -60,6 +67,8 @@ namespace SharpDX.Toolkit.Graphics
                 return Equals((Parameter) obj);
             }
 
+            /// <summary>Returns a hash code for this instance.</summary>
+            /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
             public override int GetHashCode()
             {
                 unchecked
@@ -71,11 +80,19 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
+            /// <summary>Implements the ==.</summary>
+            /// <param name="left">The left.</param>
+            /// <param name="right">The right.</param>
+            /// <returns>The result of the operator.</returns>
             public static bool operator ==(Parameter left, Parameter right)
             {
                 return Equals(left, right);
             }
 
+            /// <summary>Implements the !=.</summary>
+            /// <param name="left">The left.</param>
+            /// <param name="right">The right.</param>
+            /// <returns>The result of the operator.</returns>
             public static bool operator !=(Parameter left, Parameter right)
             {
                 return !Equals(left, right);
@@ -98,6 +115,8 @@ namespace SharpDX.Toolkit.Graphics
                 serializer.SerializeEnum(ref Type);
             }
 
+            /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+            /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
             public override string ToString()
             {
                 return string.Format("Name: {0}, Class: {1}, Type: {2}", Name, Class, Type);

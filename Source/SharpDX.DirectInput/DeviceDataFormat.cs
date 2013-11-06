@@ -26,8 +26,13 @@ namespace SharpDX.DirectInput
     /// </summary>
     public enum DeviceDataFormat
     {
+        /// <summary>The keyboard.</summary>
         Keyboard,
+        
+        /// <summary>The mouse.</summary>
         Mouse,
+        
+        /// <summary>The joystick.</summary>
         Joystick
     }
 }

@@ -243,6 +243,9 @@ namespace SharpDX.Toolkit.Input
             return data0 == other.data0 && data1 == other.data1 && data2 == other.data2 && data3 == other.data3 && data4 == other.data4 && data5 == other.data5 && data6 == other.data6 && data7 == other.data7;
         }
 
+        /// <summary>Determines whether the specified <see cref="System.Object" /> is equal to this instance.</summary>
+        /// <param name="obj">Another object to compare to.</param>
+        /// <returns><see langword="true" /> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <see langword="false" />.</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -252,6 +255,8 @@ namespace SharpDX.Toolkit.Input
             return obj is KeyboardState && Equals((KeyboardState)obj);
         }
 
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             unchecked

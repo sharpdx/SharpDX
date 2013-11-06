@@ -84,6 +84,8 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             public List<ResourceParameter> ResourceParameters;
 
+            /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+            /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
             public override string ToString()
             {
                 return string.Format("{0}Type: {1} {2}", Name == null ? string.Empty : string.Format("Name: {0},", Name), Type, Level);

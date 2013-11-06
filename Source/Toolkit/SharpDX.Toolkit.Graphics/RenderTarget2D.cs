@@ -37,12 +37,23 @@ namespace SharpDX.Toolkit.Graphics
         private bool pureRenderTarget;
         private RenderTargetView customRenderTargetView;
 
+        /// <summary>Initializes a new instance of the <see cref="Texture2DBase" /> class.</summary>
+        /// <param name="device">The <see cref="GraphicsDevice" />.</param>
+        /// <param name="description2D">The description.</param>
+        /// <msdn-id>ff476521</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
+        ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         internal RenderTarget2D(GraphicsDevice device, Texture2DDescription description2D)
             : base(device.MainDevice, description2D)
         {
             Initialize(Resource);
         }
 
+        /// <summary>Initializes a new instance of the <see cref="RenderTarget2D"/> class.</summary>
+        /// <param name="device">The device.</param>
+        /// <param name="texture">The texture.</param>
+        /// <param name="renderTargetView">The render target view.</param>
+        /// <param name="pureRenderTarget">if set to <see langword="true" /> [pure render target].</param>
         internal RenderTarget2D(GraphicsDevice device, Direct3D11.Texture2D texture, RenderTargetView renderTargetView = null, bool pureRenderTarget = false)
             : base(device.MainDevice, texture)
         {
@@ -60,6 +71,7 @@ namespace SharpDX.Toolkit.Graphics
             return from == null ? null : from.renderTargetViews != null ? from.renderTargetViews[0] : null;
         }
 
+        /// <summary>Initializes the views.</summary>
         protected override void InitializeViews()
         {
             if ((this.Description.BindFlags & BindFlags.RenderTarget) != 0)
@@ -83,6 +95,12 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Gets the render target view.</summary>
+        /// <param name="viewType">Type of the view.</param>
+        /// <param name="arrayOrDepthSlice">The array original depth slice.</param>
+        /// <param name="mipIndex">Index of the mip.</param>
+        /// <returns>TextureView.</returns>
+        /// <exception cref="System.NotSupportedException">ViewSlice.MipBand is not supported for render targets</exception>
         internal override TextureView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipIndex)
         {
             if ((this.Description.BindFlags & BindFlags.RenderTarget) == 0)
@@ -137,6 +155,9 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Makes a copy of this texture.</summary>
+        /// <returns>A copy of this texture.</returns>
+        /// <remarks>This method doesn't copy the content of the texture.</remarks>
         public override Texture Clone()
         {
             return new RenderTarget2D(GraphicsDevice, this.Description);
@@ -323,6 +344,16 @@ namespace SharpDX.Toolkit.Graphics
             return from == null ? null : from.Resource;
         }
 
+        /// <summary>Creates the description.</summary>
+        /// <param name="device">The device.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="textureFlags">The texture flags.</param>
+        /// <param name="mipCount">The mip count.</param>
+        /// <param name="arraySize">Size of the array.</param>
+        /// <param name="multiSampleCount">The multi sample count.</param>
+        /// <returns>Texture2DDescription.</returns>
         internal static Texture2DDescription CreateDescription(GraphicsDevice device, int width, int height, PixelFormat format, TextureFlags textureFlags, int mipCount, int arraySize, MSAALevel multiSampleCount)
         {
             // Make sure that the texture to create is a render target

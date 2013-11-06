@@ -20,19 +20,26 @@
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The model real time quality enumeration.</summary>
     public enum ModelRealTimeQuality
     {
+        /// <summary>The low.</summary>
         Low,
 
+        /// <summary>The default.</summary>
         Default,
 
+        /// <summary>The maximum.</summary>
         Maximum,
     }
 
+    /// <summary>The model compiler options class.</summary>
     public class ModelCompilerOptions
     {
+        /// <summary>The quality.</summary>
         public ModelRealTimeQuality Quality;
 
+        /// <summary>The dependency file.</summary>
         public string DependencyFile;
     }
 }

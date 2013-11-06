@@ -110,16 +110,27 @@ namespace SharpDX.Toolkit.Graphics
 
         internal readonly bool needWorkAroundForUpdateSubResource;
 
+        /// <summary>Initializes a new instance of the <see cref="GraphicsDevice"/> class.</summary>
+        /// <param name="type">The type.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="featureLevels">The feature levels.</param>
         protected GraphicsDevice(DriverType type, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
             : this((featureLevels != null && featureLevels.Length > 0) ? new Device(type, flags, featureLevels) : new Device(type, flags))
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="GraphicsDevice"/> class.</summary>
+        /// <param name="adapter">The adapter.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="featureLevels">The feature levels.</param>
         protected GraphicsDevice(GraphicsAdapter adapter, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
             : this((featureLevels != null && featureLevels.Length > 0) ? new Device(adapter, flags, featureLevels) : new Device(adapter, flags), adapter)
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="GraphicsDevice"/> class.</summary>
+        /// <param name="existingDevice">The existing device.</param>
+        /// <param name="adapter">The adapter.</param>
         protected GraphicsDevice(SharpDX.Direct3D11.Device existingDevice, GraphicsAdapter adapter = null)
         {
             Device = ToDispose(existingDevice);
@@ -180,6 +191,9 @@ namespace SharpDX.Toolkit.Graphics
             primitiveQuad = ToDispose(new PrimitiveQuad(this));
         }
 
+        /// <summary>Initializes a new instance of the <see cref="GraphicsDevice"/> class.</summary>
+        /// <param name="mainDevice">The main device.</param>
+        /// <param name="deferredContext">The deferred context.</param>
         protected GraphicsDevice(GraphicsDevice mainDevice, DeviceContext deferredContext)
         {
             Device = mainDevice.Device;
@@ -1513,11 +1527,17 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Performs an implicit conversion from <see cref="GraphicsDevice"/> to <see cref="Device"/>.</summary>
+        /// <param name="from">From.</param>
+        /// <returns>The result of the conversion.</returns>
         public static implicit operator Device(GraphicsDevice from)
         {
             return from == null ? null : from.Device;
         }
 
+        /// <summary>Performs an implicit conversion from <see cref="GraphicsDevice"/> to <see cref="DeviceContext"/>.</summary>
+        /// <param name="from">From.</param>
+        /// <returns>The result of the conversion.</returns>
         public static implicit operator DeviceContext(GraphicsDevice from)
         {
             return from == null ? null : from.Context;
@@ -1566,6 +1586,9 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Disposes of object resources.</summary>
+        /// <param name="disposeManagedResources">If true, managed resources should be
+        /// disposed of in addition to unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
         {
             if (disposeManagedResources)

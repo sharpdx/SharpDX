@@ -52,12 +52,18 @@ namespace SharpDX.Toolkit.Diagnostics
         }
     }
 
+    /// <summary>The log message raw class.</summary>
     public class LogMessageRaw : LogMessage
     {
+        /// <summary>Initializes a new instance of the <see cref="LogMessage" /> class.</summary>
+        /// <param name="type">The type.</param>
+        /// <param name="text">The text.</param>
         public LogMessageRaw(LogMessageType type, string text) : base(type, text)
         {
         }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return Text;

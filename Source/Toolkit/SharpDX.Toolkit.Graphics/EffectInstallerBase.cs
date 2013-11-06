@@ -88,6 +88,9 @@ namespace SharpDX.Toolkit.Graphics
         /// </remarls>
         protected IServiceRegistry Services { get; private set; }
 
+        /// <summary>Applies this installer to a model.</summary>
+        /// <param name="model">The model to be processed by this installer.</param>
+        /// <exception cref="System.ArgumentNullException">model</exception>
         public void Apply(Model model)
         {
             if (model == null)

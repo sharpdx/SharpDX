@@ -116,6 +116,9 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
         public bool Equals(EffectConstantBuffer other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -125,6 +128,9 @@ namespace SharpDX.Toolkit.Graphics
             return hashCode == other.hashCode && Description.Equals(other.Description);
         }
 
+        /// <summary>Determines whether the specified <see cref="System.Object" /> is equal to this instance.</summary>
+        /// <param name="obj">The <see cref="T:System.Object" /> to compare with the current <see cref="T:System.Object" />.</param>
+        /// <returns><see langword="true" /> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <see langword="false" />.</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -133,27 +139,43 @@ namespace SharpDX.Toolkit.Graphics
             return Equals((EffectConstantBuffer) obj);
         }
 
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             // Return precalculated hashcode
             return hashCode;
         }
 
+        /// <summary>Implements the ==.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
         public static bool operator ==(EffectConstantBuffer left, EffectConstantBuffer right)
         {
             return Equals(left, right);
         }
 
+        /// <summary>Implements the !=.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
         public static bool operator !=(EffectConstantBuffer left, EffectConstantBuffer right)
         {
             return !Equals(left, right);
         }
 
+        /// <summary>Performs an implicit conversion from <see cref="EffectConstantBuffer"/> to <see cref="SharpDX.Direct3D11.Buffer"/>.</summary>
+        /// <param name="from">From.</param>
+        /// <returns>The result of the conversion.</returns>
         public static implicit operator SharpDX.Direct3D11.Buffer(EffectConstantBuffer from)
         {
             return from.nativeBuffer;
         }
 
+        /// <summary>Performs an implicit conversion from <see cref="EffectConstantBuffer"/> to <see cref="Buffer"/>.</summary>
+        /// <param name="from">From.</param>
+        /// <returns>The result of the conversion.</returns>
         public static implicit operator Buffer(EffectConstantBuffer from)
         {
             return from.nativeBuffer;

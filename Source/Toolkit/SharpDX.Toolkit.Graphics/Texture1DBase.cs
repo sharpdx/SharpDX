@@ -28,6 +28,7 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public abstract class Texture1DBase : Texture
     {
+        /// <summary>The resource.</summary>
         protected readonly new Direct3D11.Texture1D Resource;
         private DXGI.Surface dxgiSurface;
 
@@ -182,6 +183,7 @@ namespace SharpDX.Toolkit.Graphics
             return from == null ? null : from.dxgiSurface ?? (from.dxgiSurface = from.ToDispose(from.Resource.QueryInterface<DXGI.Surface>()));
         }
 
+        /// <summary>Initializes the views provided by this texture.</summary>
         protected override void InitializeViews()
         {
             // Creates the shader resource view
@@ -204,6 +206,14 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>News the description.</summary>
+        /// <param name="width">The width.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="textureFlags">The texture flags.</param>
+        /// <param name="mipCount">The mip count.</param>
+        /// <param name="arraySize">Size of the array.</param>
+        /// <param name="usage">The usage.</param>
+        /// <returns>Texture1DDescription.</returns>
         protected static Texture1DDescription NewDescription(int width, PixelFormat format, TextureFlags textureFlags, int mipCount, int arraySize, ResourceUsage usage)
         {
             if ((textureFlags & TextureFlags.UnorderedAccess) != 0)

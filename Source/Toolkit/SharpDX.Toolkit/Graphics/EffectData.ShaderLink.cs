@@ -27,11 +27,10 @@ namespace SharpDX.Toolkit.Graphics
 {
     public partial class EffectData 
     {
-        /// <summary>
-        /// A link to a compiled shader.
-        /// </summary>
+        /// <summary>A link to a compiled shader.</summary>
         public sealed class ShaderLink : IDataSerializable, IEquatable<ShaderLink>
         {
+            /// <summary>The null shader.</summary>
             public static readonly ShaderLink NullShader = new ShaderLink();
 
             private int index;
@@ -103,11 +102,16 @@ namespace SharpDX.Toolkit.Graphics
                 get { return index < 0; }
             }
 
+            /// <summary>Clones this instance.</summary>
+            /// <returns>ShaderLink.</returns>
             public ShaderLink Clone()
             {
                 return (ShaderLink)MemberwiseClone();
             }
 
+            /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            /// <param name="other">An object to compare with this object.</param>
+            /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
             public bool Equals(ShaderLink other)
             {
                 if (ReferenceEquals(null, other))
@@ -117,6 +121,9 @@ namespace SharpDX.Toolkit.Graphics
                 return this.index == other.index && string.Equals(this.importName, other.importName);
             }
 
+            /// <summary>Determines whether the specified <see cref="System.Object" /> is equal to this instance.</summary>
+            /// <param name="obj">The <see cref="T:System.Object" /> to compare with the current <see cref="T:System.Object" />.</param>
+            /// <returns><see langword="true" /> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <see langword="false" />.</returns>
             public override bool Equals(object obj)
             {
                 if (ReferenceEquals(null, obj))
@@ -126,6 +133,8 @@ namespace SharpDX.Toolkit.Graphics
                 return obj is ShaderLink && Equals((ShaderLink)obj);
             }
 
+            /// <summary>Returns a hash code for this instance.</summary>
+            /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
             public override int GetHashCode()
             {
                 unchecked
@@ -134,11 +143,19 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
+            /// <summary>Implements the ==.</summary>
+            /// <param name="left">The left.</param>
+            /// <param name="right">The right.</param>
+            /// <returns>The result of the operator.</returns>
             public static bool operator ==(ShaderLink left, ShaderLink right)
             {
                 return Equals(left, right);
             }
 
+            /// <summary>Implements the !=.</summary>
+            /// <param name="left">The left.</param>
+            /// <param name="right">The right.</param>
+            /// <returns>The result of the operator.</returns>
             public static bool operator !=(ShaderLink left, ShaderLink right)
             {
                 return !Equals(left, right);

@@ -28,6 +28,7 @@ using SharpDX.Toolkit.Graphics;
 
 namespace SharpDX.Toolkit
 {
+    /// <summary>The effect compiler task class.</summary>
     public class EffectCompilerTask : ContentCompilerTask
     {
         private static void SetupD3DCompilerPath()
@@ -47,6 +48,7 @@ namespace SharpDX.Toolkit
 
         private EffectCompiler compiler;
 
+        /// <summary>Initializes this instance.</summary>
         protected override void Initialize()
         {
             SetupD3DCompilerPath();
@@ -57,6 +59,12 @@ namespace SharpDX.Toolkit
             base.Initialize();
         }
 
+        /// <summary>Processes the file and get log results.</summary>
+        /// <param name="inputFilePath">The input file path.</param>
+        /// <param name="outputFilePath">The output file path.</param>
+        /// <param name="dependencyFilePath">The dependency file path.</param>
+        /// <param name="item">The item.</param>
+        /// <returns>Diagnostics.Logger.</returns>
         protected override Diagnostics.Logger ProcessFileAndGetLogResults(string inputFilePath, string outputFilePath, string dependencyFilePath, TkItem item)
         {
             var compilerFlags = Debug ? EffectCompilerFlags.Debug : EffectCompilerFlags.None;

@@ -55,6 +55,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public StateAllocatorDelegate StateAllocatorCallback;
 
+        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         void IDisposable.Dispose()
         {
             for(int i = Items.Count - 1; i >= 0; i--)
@@ -76,6 +77,9 @@ namespace SharpDX.Toolkit.Graphics
             Add(state);
         }
 
+        /// <summary>Tries the automatic get configuration not found.</summary>
+        /// <param name="name">The name.</param>
+        /// <returns>`0.</returns>
         protected override T TryToGetOnNotFound(string name)
         {
             var handler = StateAllocatorCallback;

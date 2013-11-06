@@ -32,7 +32,7 @@ namespace SharpDX.DXGI
         /// <param name="device">A reference to the Direct3D device interface. If this parameter is NULL, only modes whose format matches that of pModeToMatch will  be returned; otherwise, only those formats that are supported for scan-out by the device are returned. </param>
         /// <param name="modeToMatch">The desired display mode (see <see cref="SharpDX.DXGI.ModeDescription"/>). Members of DXGI_MODE_DESC can be unspecified indicating no preference for  that member.  A value of 0 for Width or Height indicates the value is unspecified.  If either Width or  Height are 0 both must be 0.  A numerator and denominator of 0 in RefreshRate indicate it is unspecified. Other members  of DXGI_MODE_DESC have enumeration values indicating the member is unspecified.  If pConnectedDevice is NULL Format cannot be DXGI_FORMAT_UNKNOWN. </param>
         /// <param name="closestMatch">The mode that most closely matches pModeToMatch. </param>
-        /// <returns>Returns one of the following <see cref="SharpDX.DXGI.DXGIError"/>. </returns>
+        /// <returns>Returns one of the following SharpDX.DXGI.DXGIError. </returns>
         /// <unmanaged>HRESULT IDXGIOutput::FindClosestMatchingMode([In] const DXGI_MODE_DESC* pModeToMatch,[Out] DXGI_MODE_DESC* pClosestMatch,[In, Optional] IUnknown* pConcernedDevice)</unmanaged>
         public void GetClosestMatchingMode(SharpDX.ComObject device, SharpDX.DXGI.ModeDescription modeToMatch, out SharpDX.DXGI.ModeDescription closestMatch)
         {

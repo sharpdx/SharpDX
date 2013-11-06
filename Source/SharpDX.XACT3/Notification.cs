@@ -22,33 +22,29 @@ using System;
 
 namespace SharpDX.XACT3
 {
-    /// <summary>
-    /// Generic notification event.
-    /// </summary>
+    /// <summary>Generic notification event.</summary>
     public abstract class Notification : EventArgs
     {
+        /// <summary>Initializes a new instance of the <see cref="Notification"/> class.</summary>
         protected Notification()
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="Notification"/> class.</summary>
+        /// <param name="rawNotification">The raw notification.</param>
         internal unsafe Notification(RawNotification* rawNotification)
         {
             Type = rawNotification->Type;
             TimeStamp= rawNotification->TimeStamp;
         }
 
-        /// <summary>
-        /// Gets or sets the type.
-        /// </summary>
-        /// <value>
-        /// The type.
-        /// </value>
+        /// <summary>Gets or sets the type.</summary>
+        /// <value>The type.</value>
         public NotificationType Type { get; set; }
 
-        /// <summary>	
-        /// Timestamp of notification, in milliseconds.
-        /// </summary>	
-        /// <unmanaged>int timeStamp</unmanaged>	
+        /// <summary>Timestamp of notification, in milliseconds.</summary>
+        /// <value>The time stamp.</value>
+        /// <unmanaged>int timeStamp</unmanaged>
         public int TimeStamp { get; set; }
     }
 }

@@ -25,8 +25,15 @@ using SharpDX.Toolkit.Graphics;
 
 namespace SharpDX.Toolkit
 {
+    /// <summary>The texture compiler task class.</summary>
     public class TextureCompilerTask : ContentCompilerTask
     {
+        /// <summary>Processes the file and get log results.</summary>
+        /// <param name="inputFilePath">The input file path.</param>
+        /// <param name="outputFilePath">The output file path.</param>
+        /// <param name="dependencyFilePath">The dependency file path.</param>
+        /// <param name="item">The item.</param>
+        /// <returns>Diagnostics.Logger.</returns>
         protected override Diagnostics.Logger ProcessFileAndGetLogResults(string inputFilePath, string outputFilePath, string dependencyFilePath, TkItem item)
         {
             // the textures can be in a subdirectory - make sure it exists before copying there:

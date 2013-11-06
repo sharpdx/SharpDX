@@ -77,6 +77,9 @@ namespace SharpDX.Toolkit.Graphics
         internal UnorderedAccessView[] unorderedAccessViews;
         private MipMapDescription[] mipmapDescriptions;
 
+        /// <summary>Initializes a new instance of the <see cref="Texture"/> class.</summary>
+        /// <param name="device">The device.</param>
+        /// <param name="description">The description.</param>
         protected Texture(GraphicsDevice device, TextureDescription description) : base(device.MainDevice)
         {
             Description = description;
@@ -131,6 +134,8 @@ namespace SharpDX.Toolkit.Graphics
             get { return Description.Format; }
         }
 
+        /// <summary>Initializes the specified device local.</summary>
+        /// <param name="resource">The resource.</param>
         protected override void Initialize(DeviceChild resource)
         {
             // Be sure that we are storing only the main device (which contains the immediate context).
@@ -266,6 +271,10 @@ namespace SharpDX.Toolkit.Graphics
             return mipLevels;
         }
 
+        /// <summary>Calculates the size of the mip.</summary>
+        /// <param name="width">The width.</param>
+        /// <param name="mipLevel">The mip level.</param>
+        /// <returns>System.Int32.</returns>
         public static int CalculateMipSize(int width, int mipLevel)
         {
             mipLevel = Math.Min(mipLevel, CountMips(width));
@@ -1010,6 +1019,17 @@ namespace SharpDX.Toolkit.Graphics
             return requestedLevel  == 0 ? maxMipMap : Math.Min(requestedLevel, maxMipMap);
         }
 
+        /// <summary>Gets the data box.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="format">The format.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="depth">The depth.</param>
+        /// <param name="textureData">The texture data.</param>
+        /// <param name="fixedPointer">The fixed pointer.</param>
+        /// <returns>DataBox.</returns>
+        /// <exception cref="System.ArgumentNullException">textureData</exception>
+        /// <exception cref="System.ArgumentException">Invalid size for TextureData</exception>
         protected static DataBox GetDataBox<T>(Format format, int width, int height, int depth, T[] textureData, IntPtr fixedPointer) where T : struct
         {
             // Check that the textureData size is correct
@@ -1180,6 +1200,9 @@ namespace SharpDX.Toolkit.Graphics
             return mipLevels;
         }
 
+        /// <summary>Compares the given texture with this instance.</summary>
+        /// <param name="obj">The object.</param>
+        /// <returns>System.Int32.</returns>
         public int CompareTo(Texture obj)
         {
             return textureId.CompareTo(obj.textureId);

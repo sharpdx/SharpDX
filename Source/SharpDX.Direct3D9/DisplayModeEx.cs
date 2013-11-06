@@ -41,11 +41,15 @@ namespace SharpDX.Direct3D9
             }
         }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format("Width: {0}, Height: {1}, RefreshRate: {2}, Format: {3}", Width, Height, RefreshRate, Format);
         }
 
+        /// <summary>Returns the new native.</summary>
+        /// <returns>A new __Native.</returns>
         internal static __Native __NewNative()
         {
             return new __Native { Size = Utilities.SizeOf<__Native>() };

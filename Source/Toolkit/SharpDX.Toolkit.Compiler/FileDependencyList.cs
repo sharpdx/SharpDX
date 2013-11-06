@@ -28,8 +28,10 @@ using SharpDX.IO;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The file dependency list class.</summary>
     public class FileDependencyList : Dictionary<string, DateTime>
     {
+        /// <summary>The match line.</summary>
         private static Regex MatchLine = new Regex(@"^(.*)\s(\d+)$");
 
         /// <summary>
@@ -39,6 +41,7 @@ namespace SharpDX.Toolkit.Graphics
         {
         }
 
+        /// <summary>Adds the default dependencies.</summary>
         public void AddDefaultDependencies()
         {
             // Add reference to this assembly
@@ -48,6 +51,9 @@ namespace SharpDX.Toolkit.Graphics
             AddDependencyPath(typeof(SpriteFontData).Assembly.Location);
         }
 
+        /// <summary>Gets file dependency list from the text reader.</summary>
+        /// <param name="textReader">The text reader.</param>
+        /// <returns>The file dependency list.</returns>
         public static FileDependencyList FromReader(TextReader textReader)
         {
             var effectDependency = new FileDependencyList();
@@ -64,23 +70,34 @@ namespace SharpDX.Toolkit.Graphics
             return effectDependency;
         }
 
+        /// <summary>Gets file dependency list from the text stream.</summary>
+        /// <param name="textStream">The text stream.</param>
+        /// <returns>The file dependency list.</returns>
         public static FileDependencyList FromStream(Stream textStream)
         {
             var reader = new StreamReader(textStream);
             return FromReader(reader);
         }
 
+        /// <summary>Adds the dependency path.</summary>
+        /// <param name="filePath">The file path.</param>
         public void AddDependencyPath(string filePath)
         {
             if (!ContainsKey(filePath))
                 Add(filePath, NativeFile.GetLastWriteTime(filePath));
         }
 
+        /// <summary>Gets file dependency list from the file.</summary>
+        /// <param name="file">The file.</param>
+        /// <returns>The file dependency list..</returns>
         public static FileDependencyList FromFile(string file)
         {
             using (var stream = new NativeFileStream(file, NativeFileMode.Open, NativeFileAccess.Read, NativeFileShare.ReadWrite)) return FromStream(stream);
         }
 
+        /// <summary>Gets the dependency file name from source path.</summary>
+        /// <param name="pathToFxFile">The path automatic fx file.</param>
+        /// <returns>System.String.</returns>
         public static string GetDependencyFileNameFromSourcePath(string pathToFxFile)
         {
             pathToFxFile = pathToFxFile.Replace("\\", "___");
@@ -88,6 +105,9 @@ namespace SharpDX.Toolkit.Graphics
             return pathToFxFile;
         }
 
+        /// <summary>Gets a list files from the dependency file path.</summary>
+        /// <param name="dependencyFilePath">The dependency file path.</param>
+        /// <returns>The List{System.String}.</returns>
         public static List<string> FromFileRaw(string dependencyFilePath)
         {
             // If the file does not exist, than return true as it is a new dependency to generate
@@ -98,6 +118,9 @@ namespace SharpDX.Toolkit.Graphics
             return new List<string>(FromFile(dependencyFilePath).Keys);
         }
 
+        /// <summary>Checks for changes.</summary>
+        /// <param name="dependencyFilePath">The dependency file path.</param>
+        /// <returns><c>true</c> if no files were changed, <c>false</c> otherwise.</returns>
         public static bool CheckForChanges(string dependencyFilePath)
         {
             // If the file does not exist, than return true as it is a new dependency to generate
@@ -109,6 +132,8 @@ namespace SharpDX.Toolkit.Graphics
             return FromFile(dependencyFilePath).CheckForChanges();
         }
 
+        /// <summary>Saves the specified writer.</summary>
+        /// <param name="writer">The writer.</param>
         public void Save(TextWriter writer)
         {
             foreach (var value in this)
@@ -118,12 +143,16 @@ namespace SharpDX.Toolkit.Graphics
             writer.Flush();
         }
 
+        /// <summary>Saves the specified stream.</summary>
+        /// <param name="stream">The stream.</param>
         public void Save(Stream stream)
         {
             var writer = new StreamWriter(stream);
             Save(writer);            
         }
 
+        /// <summary>Saves the specified file.</summary>
+        /// <param name="file">The file.</param>
         public void Save(string file)
         {
             var dirPath = Path.GetDirectoryName(file);

@@ -824,6 +824,8 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
+        /// <param name="disposeManagedResources"><see langword="true" /> to release both managed and unmanaged resources; <see langword="false" /> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
         {
             base.Dispose(disposeManagedResources);
@@ -1097,6 +1099,10 @@ namespace SharpDX.Toolkit.Graphics
 
         private struct ShaderResourceKey : IEquatable<ShaderResourceKey>
         {
+            /// <summary>Initializes a new instance of the <see cref="ShaderResourceKey"/> struct.</summary>
+            /// <param name="viewFormat">The view format.</param>
+            /// <param name="offset">The offset.</param>
+            /// <param name="count">The count.</param>
             public ShaderResourceKey(Format viewFormat, int offset, int count)
             {
                 this.ViewFormat = viewFormat;
@@ -1104,17 +1110,26 @@ namespace SharpDX.Toolkit.Graphics
                 this.Count = count;
             }
 
+            /// <summary>The view format.</summary>
             public DXGI.Format ViewFormat;
 
+            /// <summary>The offset.</summary>
             public int Offset;
 
+            /// <summary>The count.</summary>
             public int Count;
 
+            /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            /// <param name="other">An object to compare with this object.</param>
+            /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
             public bool Equals(ShaderResourceKey other)
             {
                 return this.ViewFormat.Equals(other.ViewFormat) && this.Offset == other.Offset && this.Count == other.Count;
             }
 
+            /// <summary>Determines whether the specified <see cref="System.Object" /> is equal to this instance.</summary>
+            /// <param name="obj">Another object to compare to.</param>
+            /// <returns><see langword="true" /> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <see langword="false" />.</returns>
             public override bool Equals(object obj)
             {
                 if (ReferenceEquals(null, obj))
@@ -1122,6 +1137,8 @@ namespace SharpDX.Toolkit.Graphics
                 return obj is ShaderResourceKey && Equals((ShaderResourceKey)obj);
             }
 
+            /// <summary>Returns a hash code for this instance.</summary>
+            /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
             public override int GetHashCode()
             {
                 unchecked
@@ -1133,11 +1150,19 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
+            /// <summary>Implements the ==.</summary>
+            /// <param name="left">The left.</param>
+            /// <param name="right">The right.</param>
+            /// <returns>The result of the operator.</returns>
             public static bool operator ==(ShaderResourceKey left, ShaderResourceKey right)
             {
                 return left.Equals(right);
             }
 
+            /// <summary>Implements the !=.</summary>
+            /// <param name="left">The left.</param>
+            /// <param name="right">The right.</param>
+            /// <returns>The result of the operator.</returns>
             public static bool operator !=(ShaderResourceKey left, ShaderResourceKey right)
             {
                 return !left.Equals(right);
@@ -1151,10 +1176,21 @@ namespace SharpDX.Toolkit.Graphics
     /// <typeparam name="T">Type of an element of this buffer.</typeparam>
     public class Buffer<T> : Buffer where T : struct
     {
+        /// <summary>Initializes a new instance of the <see cref="Buffer{T}"/> class.</summary>
+        /// <param name="device">The device.</param>
+        /// <param name="description">The description.</param>
+        /// <param name="bufferFlags">The buffer flags.</param>
+        /// <param name="viewFormat">The view format.</param>
+        /// <param name="dataPointer">The data pointer.</param>
         protected internal Buffer(GraphicsDevice device, BufferDescription description, BufferFlags bufferFlags, PixelFormat viewFormat, IntPtr dataPointer) : base(device, description, bufferFlags, viewFormat, dataPointer)
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="Buffer{T}"/> class.</summary>
+        /// <param name="device">The device.</param>
+        /// <param name="nativeBuffer">The native buffer.</param>
+        /// <param name="bufferFlags">The buffer flags.</param>
+        /// <param name="viewFormat">The view format.</param>
         protected internal Buffer(GraphicsDevice device, Direct3D11.Buffer nativeBuffer, BufferFlags bufferFlags, PixelFormat viewFormat)
             : base(device, nativeBuffer, bufferFlags, viewFormat)
         {

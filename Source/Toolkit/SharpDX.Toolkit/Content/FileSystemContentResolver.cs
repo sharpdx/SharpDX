@@ -48,11 +48,17 @@ namespace SharpDX.Toolkit.Content
         /// <value>The root directory.</value>
         public string RootDirectory { get; private set; }
 
+        /// <summary>Checks if the specified asset name exists.</summary>
+        /// <param name="assetName">Name of the asset.</param>
+        /// <returns><c>true</c> if the specified asset name exists, <c>false</c> otherwise</returns>
         public bool Exists(string assetName)
         {
             return NativeFile.Exists(GetAssetPath(assetName));
         }
 
+        /// <summary>Resolves the specified asset name to a stream.</summary>
+        /// <param name="assetName">Name of the asset.</param>
+        /// <returns>A Stream of the asset. This value can be null if this resolver was not able to locate the asset.</returns>
         public Stream Resolve(string assetName)
         {
             try

@@ -423,6 +423,7 @@ namespace SharpDX.Toolkit.Graphics
             FresnelFactor = 1;
         }
 
+        /// <summary>Initializes this instance.</summary>
         protected override void Initialize()
         {
             Pool.RegisterBytecode(effectBytecode);

@@ -53,6 +53,8 @@ namespace SharpDX.MediaFoundation
             session.BeginGetEvent(this, null);
         }
 
+        /// <summary>Invokes the specified asynchronous result.</summary>
+        /// <param name="asyncResult">The asynchronous result.</param>
         public override void Invoke(AsyncResult asyncResult)
         {
             // EndGetEvent mandatory

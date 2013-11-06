@@ -38,6 +38,7 @@ namespace SharpDX.Toolkit.Graphics
     /// </remarks>
     public sealed partial class EffectData : IDataSerializable
     {
+        /// <summary>The effect class.</summary>
         public sealed class Effect : IDataSerializable
         {
             /// <summary>

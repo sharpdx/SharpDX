@@ -155,6 +155,9 @@ namespace SharpDX.Toolkit.Graphics
             return vertexElements;
         }
 
+        /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
         public bool Equals(VertexBufferLayout other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -162,6 +165,9 @@ namespace SharpDX.Toolkit.Graphics
             return hashCode == other.hashCode && VertexElements.Equals(other.VertexElements) && InstanceCount == other.InstanceCount;
         }
 
+        /// <summary>Determines whether the specified <see cref="System.Object" /> is equal to this instance.</summary>
+        /// <param name="obj">The <see cref="T:System.Object" /> to compare with the current <see cref="T:System.Object" />.</param>
+        /// <returns><see langword="true" /> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <see langword="false" />.</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -170,11 +176,14 @@ namespace SharpDX.Toolkit.Graphics
             return Equals((VertexBufferLayout) obj);
         }
 
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             return hashCode;
         }
 
+        /// <summary>Computes the hashcode.</summary>
         private void ComputeHashcode()
         {
             // precalculate the hashcode for this instance
@@ -182,11 +191,19 @@ namespace SharpDX.Toolkit.Graphics
             hashCode = (hashCode * 397) ^ VertexElements.GetHashCode();
         }
 
+        /// <summary>Implements the ==.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
         public static bool operator ==(VertexBufferLayout left, VertexBufferLayout right)
         {
             return Equals(left, right);
         }
 
+        /// <summary>Implements the !=.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
         public static bool operator !=(VertexBufferLayout left, VertexBufferLayout right)
         {
             return !Equals(left, right);

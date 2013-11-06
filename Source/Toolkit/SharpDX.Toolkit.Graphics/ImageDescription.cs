@@ -102,17 +102,25 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>DXGI_FORMAT Format</unmanaged-short>	
         public DXGI.Format Format;
 
+        /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
         public bool Equals(ImageDescription other)
         {
             return Dimension.Equals(other.Dimension) && Width == other.Width && Height == other.Height && Depth == other.Depth && ArraySize == other.ArraySize && MipLevels == other.MipLevels && Format.Equals(other.Format);
         }
 
+        /// <summary>Determines whether the specified <see cref="System.Object" /> is equal to this instance.</summary>
+        /// <param name="obj">Another object to compare to.</param>
+        /// <returns><see langword="true" /> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <see langword="false" />.</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             return obj is ImageDescription && Equals((ImageDescription) obj);
         }
 
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             unchecked
@@ -128,6 +136,8 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Reads or writes datas from/to the given binary serializer.</summary>
+        /// <param name="serializer">The binary serializer.</param>
         void IDataSerializable.Serialize(BinarySerializer serializer)
         {
             serializer.SerializeEnum(ref Dimension);
@@ -139,16 +149,26 @@ namespace SharpDX.Toolkit.Graphics
             serializer.SerializeEnum(ref Format);
         }
 
+        /// <summary>Implements the ==.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
         public static bool operator ==(ImageDescription left, ImageDescription right)
         {
             return left.Equals(right);
         }
 
+        /// <summary>Implements the !=.</summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
         public static bool operator !=(ImageDescription left, ImageDescription right)
         {
             return !left.Equals(right);
         }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format("Dimension: {0}, Width: {1}, Height: {2}, Depth: {3}, Format: {4}, ArraySize: {5}, MipLevels: {6}", Dimension, Width, Height, Depth, Format, ArraySize, MipLevels);

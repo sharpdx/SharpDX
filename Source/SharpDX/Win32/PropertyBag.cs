@@ -40,6 +40,8 @@ namespace SharpDX.Win32
         {
         }
 
+        /// <summary>Method called when the NativePointer is updated.</summary>
+        /// <param name="oldNativePointer">The old native pointer.</param>
         protected override void NativePointerUpdated(IntPtr oldNativePointer)
         {
             base.NativePointerUpdated(oldNativePointer);
@@ -49,6 +51,8 @@ namespace SharpDX.Win32
                 nativePropertyBag = null;
         }
 
+        /// <summary>Checks the difference initialized.</summary>
+        /// <exception cref="System.InvalidOperationException">This instance is not bound to an unmanaged IPropertyBag2</exception>
         private void CheckIfInitialized()
         {
             if (nativePropertyBag == null)
@@ -153,16 +157,25 @@ namespace SharpDX.Win32
             Set(propertyKey.Name, value);
         }
 
+        /// <summary>The propba g2 struct.</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         private struct PROPBAG2 : IDisposable
         {
+            /// <summary>The type.</summary>
             internal uint type;
+            /// <summary>The vt.</summary>
             internal ushort vt;
+            /// <summary>The cf type.</summary>
             internal ushort cfType;
+            /// <summary>The dw hint.</summary>
             internal IntPtr dwHint;
+            /// <summary>The PSTR name.</summary>
             internal IntPtr pstrName;
+            /// <summary>The CLSID.</summary>
             internal Guid clsid;
 
+            /// <summary>Gets or sets the name.</summary>
+            /// <value>The name.</value>
             public string Name
             {
                 get
@@ -178,6 +191,7 @@ namespace SharpDX.Win32
                 }
             }
 
+            /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
             public void Dispose()
             {
                 if (pstrName != IntPtr.Zero)
@@ -187,7 +201,8 @@ namespace SharpDX.Win32
                 }
             }
         }
-        
+
+        /// <summary>The attribute property bag2 interface.</summary>
         [ComImport, InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("22F55882-280B-11D0-A8A9-00A0C90C2004")]
         private interface IPropertyBag2
         {

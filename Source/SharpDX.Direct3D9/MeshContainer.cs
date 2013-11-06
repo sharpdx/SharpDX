@@ -23,6 +23,7 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX.Direct3D9
 {
+    /// <summary>The mesh container class.</summary>
     public partial class MeshContainer : DisposeBase
     {
         /// <summary>
@@ -65,11 +66,14 @@ namespace SharpDX.Direct3D9
             }
         }
 
+        /// <summary>Releases unmanaged and - optionally - managed resources</summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             DisposeMaterials();
         }
 
+        /// <summary>Disposes the materials.</summary>
         private unsafe void DisposeMaterials()
         {
             if (MaterialPointer != IntPtr.Zero)

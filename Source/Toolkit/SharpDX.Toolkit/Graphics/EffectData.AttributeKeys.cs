@@ -22,18 +22,25 @@ namespace SharpDX.Toolkit.Graphics
 {
     public partial class EffectData 
     {
+        /// <summary>The property keys class.</summary>
         public sealed class PropertyKeys
         {
+            /// <summary>The blending.</summary>
             public const string Blending = "Blending";
 
+            /// <summary>The blending color.</summary>
             public const string BlendingColor = "BlendingColor";
 
+            /// <summary>The blending sample mask.</summary>
             public const string BlendingSampleMask = "BlendingSampleMask";
 
+            /// <summary>The depth stencil.</summary>
             public const string DepthStencil = "DepthStencil";
 
+            /// <summary>The depth stencil reference.</summary>
             public const string DepthStencilReference = "DepthStencilReference";
 
+            /// <summary>The rasterizer.</summary>
             public const string Rasterizer = "Rasterizer";
         }
     }

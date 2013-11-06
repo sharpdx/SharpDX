@@ -23,33 +23,46 @@ using System.Collections.Generic;
 
 namespace SharpDX.DirectInput
 {
+    /// <summary>The keyboard state class.</summary>
     public class KeyboardState : IDeviceState<RawKeyboardState, KeyboardUpdate>
     {
+        /// <summary>The list of all keys.</summary>
         private static readonly List<Key> _allKeys = new List<Key>(256);
 
+        /// <summary>Initializes static members of the <see cref="KeyboardState"/> class.</summary>
         static KeyboardState()
         {
             foreach(var key in Enum.GetValues(typeof(Key)))
                 _allKeys.Add((Key)key);
         }
 
+        /// <summary>Initializes a new instance of the <see cref="KeyboardState"/> class.</summary>
         public KeyboardState()
         {
             PressedKeys = new List<Key>(16);
         }
 
+        /// <summary>Gets all keys.</summary>
+        /// <value>All keys.</value>
         public List<Key> AllKeys
         {
             get { return _allKeys; }
         }
 
+        /// <summary>Gets the pressed keys.</summary>
+        /// <value>The pressed keys.</value>
         public List<Key> PressedKeys { get; private set; }
-        
+
+        /// <summary>Determines whether the specified key is pressed.</summary>
+        /// <param name="key">The key.</param>
+        /// <returns><see langword="true" /> if the specified key is pressed; otherwise, <see langword="false" />.</returns>
         public bool IsPressed(Key key)
         {
             return PressedKeys.Contains(key);
         }
 
+        /// <summary>Updates the specified update.</summary>
+        /// <param name="update">The update.</param>
         public void Update(KeyboardUpdate update)
         {
             if (update.Key == Key.Unknown)
@@ -62,6 +75,8 @@ namespace SharpDX.DirectInput
                 PressedKeys.Remove(update.Key);
         }
 
+        /// <summary>Marshals from.</summary>
+        /// <param name="value">The value.</param>
         public void MarshalFrom(ref RawKeyboardState value)
         {
             PressedKeys.Clear();
@@ -73,8 +88,8 @@ namespace SharpDX.DirectInput
                 fixed (byte* pRawKeys = value.Keys)
                     for (int i = 0; i < 256; i++)
                     {
-                        update.rawOffset = i;
-                        update.value = pRawKeys[i];
+                        update.RawOffset = i;
+                        update.Value = pRawKeys[i];
                         //if (update.Key == Key.Unknown)
                         //    continue;
                         
@@ -84,6 +99,8 @@ namespace SharpDX.DirectInput
             }
         }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format(System.Globalization.CultureInfo.InvariantCulture, "PressedKeys: {0}", Utilities.Join(",", PressedKeys));

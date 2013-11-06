@@ -29,10 +29,15 @@ namespace SharpDX.IO
     /// </summary>
     public class NativeFileStream : Stream
     {
+        /// <summary>The can read flag.</summary>
         private bool canRead;
+        /// <summary>The can write flag.</summary>
         private bool canWrite;
+        /// <summary>The can seek. flag</summary>
         private bool canSeek;
+        /// <summary>The file handle.</summary>
         private IntPtr handle;
+        /// <summary>The file seek position.</summary>
         private long position;
 
         /// <summary>
@@ -97,6 +102,8 @@ namespace SharpDX.IO
             canSeek = true;
 
         }
+        /// <summary>Get the last win32 error.</summary>
+        /// <returns>last win 32 error as System.Int32.</returns>
         private static int MarshalGetLastWin32Error()
         {
 #if WP8
@@ -270,6 +277,8 @@ namespace SharpDX.IO
             }
         }
 
+        /// <summary>Releases the unmanaged resources used by the <see cref="T:System.IO.Stream" /> and optionally releases the managed resources.</summary>
+        /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             Utilities.CloseHandle(handle);

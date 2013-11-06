@@ -96,6 +96,7 @@ namespace SharpDX.Toolkit.Graphics
 
 
     // Options telling the tool what to do.
+    /// <summary>The font description class.</summary>
     [XmlRoot("TkFont")]
     public class FontDescription
     {
@@ -151,6 +152,9 @@ namespace SharpDX.Toolkit.Graphics
         public bool NoPremultiply = false;
 
 
+        /// <summary>Loads the specified file name.</summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns>FontDescription.</returns>
         public static FontDescription Load(string fileName)
         {
             using (var stream = new NativeFileStream(fileName, NativeFileMode.Open, NativeFileAccess.Read)) return Load(stream);
@@ -158,16 +162,23 @@ namespace SharpDX.Toolkit.Graphics
 
         private static XmlSerializer serializer = new XmlSerializer(typeof(FontDescription));
 
+        /// <summary>Loads the specified stream.</summary>
+        /// <param name="stream">The stream.</param>
+        /// <returns>FontDescription.</returns>
         public static FontDescription Load(Stream stream)
         {
             return (FontDescription)serializer.Deserialize(stream);
         }
 
+        /// <summary>Saves the specified file name.</summary>
+        /// <param name="fileName">Name of the file.</param>
         public void Save(string fileName)
         {
             using (var stream = new NativeFileStream(fileName, NativeFileMode.Create, NativeFileAccess.Write)) Save(stream);
         }
 
+        /// <summary>Saves the specified stream.</summary>
+        /// <param name="stream">The stream.</param>
         public void Save(Stream stream)
         {
             var settings = new XmlWriterSettings { Indent = true };

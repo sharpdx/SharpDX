@@ -128,6 +128,8 @@ namespace SharpDX
         {
         }
 
+        /// <summary>Releases unmanaged and - optionally - managed resources</summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {            
         }
@@ -143,6 +145,10 @@ namespace SharpDX
             return (comObjectPtr == IntPtr.Zero) ? null : (T) Activator.CreateInstance(typeof (T), comObjectPtr);
         }
 
+        /// <summary>Instantiate a ComObject from a native pointer unsafe.</summary>
+        /// <typeparam name="T">The <see langword="Type" /> of attribute.</typeparam>
+        /// <param name="comObjectPtr">The native pointer to a com object.</param>
+        /// <returns>The type T.</returns>
         internal static T FromPointerUnsafe<T>(IntPtr comObjectPtr)
         {
             return (comObjectPtr == IntPtr.Zero) ? (T)(object)null : (T)Activator.CreateInstance(typeof(T), comObjectPtr);

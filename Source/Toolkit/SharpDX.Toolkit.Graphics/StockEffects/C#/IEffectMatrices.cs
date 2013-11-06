@@ -72,10 +72,17 @@
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>The attribute effect matrices interface.</summary>
     public interface IEffectMatrices
     {
+        /// <summary>Gets or sets the projection.</summary>
+        /// <value>The projection.</value>
         Matrix Projection { get; set; }
+        /// <summary>Gets or sets the view.</summary>
+        /// <value>The view.</value>
         Matrix View { get; set; }
+        /// <summary>Gets or sets the world.</summary>
+        /// <value>The world.</value>
         Matrix World { get; set; }
     }
 }

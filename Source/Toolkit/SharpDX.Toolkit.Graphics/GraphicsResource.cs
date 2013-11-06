@@ -40,14 +40,21 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         internal DeviceChild Resource;
 
+        /// <summary>Initializes a new instance of the <see cref="GraphicsResource"/> class.</summary>
         internal GraphicsResource()
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="GraphicsResource"/> class.</summary>
+        /// <param name="graphicsDevice">The graphics device.</param>
         protected GraphicsResource(GraphicsDevice graphicsDevice) : this(graphicsDevice, null)
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="GraphicsResource"/> class.</summary>
+        /// <param name="graphicsDevice">The graphics device.</param>
+        /// <param name="name">The name.</param>
+        /// <exception cref="System.ArgumentNullException">graphicsDevice</exception>
         protected GraphicsResource(GraphicsDevice graphicsDevice, string name) : base(name)
         {
             if (graphicsDevice == null)
@@ -95,6 +102,9 @@ namespace SharpDX.Toolkit.Graphics
             return CpuAccessFlags.None;
         }
 
+        /// <summary>Disposes of object resources.</summary>
+        /// <param name="disposeManagedResources">If true, managed resources should be
+        /// disposed of in addition to unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
         {
             base.Dispose(disposeManagedResources);
@@ -114,6 +124,8 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Functions the pin.</summary>
+        /// <param name="handles">The handles.</param>
         protected static void UnPin(GCHandle[] handles)
         {
             if (handles != null)

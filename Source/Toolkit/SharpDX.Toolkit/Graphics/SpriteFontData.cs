@@ -45,8 +45,10 @@ namespace SharpDX.Toolkit.Graphics
     [ContentReader(typeof(SpriteFontDataContentReader))]
     public partial class SpriteFontData : IDataSerializable
     {
+        /// <summary>The font magic code.</summary>
         public const string FontMagicCode = "TKFT";
 
+        /// <summary>The version.</summary>
         public const int Version = 0x100;
 
         /// <summary>

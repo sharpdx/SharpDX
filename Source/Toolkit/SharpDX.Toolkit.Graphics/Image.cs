@@ -86,7 +86,19 @@ namespace SharpDX.Toolkit.Graphics
     [ContentReader(typeof(ImageContentReader))]
     public sealed class Image : Component
     {
+        /// <summary>The image load delegate delegate.</summary>
+        /// <param name="dataPointer">The data pointer.</param>
+        /// <param name="dataSize">Size of the data.</param>
+        /// <param name="makeACopy">if set to <see langword="true" /> [make aggregate copy].</param>
+        /// <param name="handle">The handle.</param>
+        /// <returns>Image.</returns>
         public delegate Image ImageLoadDelegate(IntPtr dataPointer, int dataSize, bool makeACopy, GCHandle? handle);
+        
+        /// <summary>The image save delegate delegate.</summary>
+        /// <param name="pixelBuffers">The pixel buffers.</param>
+        /// <param name="count">The count.</param>
+        /// <param name="description">The description.</param>
+        /// <param name="imageStream">The image stream.</param>
         public delegate void ImageSaveDelegate(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream);
 
         private const string MagicCodeTKTX = "TKTX";
@@ -153,6 +165,9 @@ namespace SharpDX.Toolkit.Graphics
             Initialize(description, dataPointer, offset, handle, bufferIsDisposable, pitchFlags);
         }
 
+        /// <summary>Disposes of object resources.</summary>
+        /// <param name="disposeManagedResources">If true, managed resources should be
+        /// disposed of in addition to unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
         {
             if (handle.HasValue)

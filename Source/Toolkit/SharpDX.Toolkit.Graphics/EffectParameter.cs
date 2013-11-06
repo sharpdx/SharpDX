@@ -527,6 +527,8 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format("[{0}] {1} Class: {2}, Resource: {3}, Type: {4}, IsValue: {5}, RowCount: {6}, ColumnCount: {7}, ElementCount: {8} Offset: {9}", Index, Name, ParameterClass, ResourceType, ParameterType, IsValueType, RowCount, ColumnCount, ElementCount, Offset);

@@ -225,6 +225,10 @@ namespace SharpDX.Toolkit.Graphics
         {
         }
 
+        /// <summary>Reverses the winding.</summary>
+        /// <typeparam name="TIndex">The <see langword="Type" /> of the attribute index.</typeparam>
+        /// <param name="vertices">The vertices.</param>
+        /// <param name="indices">The indices.</param>
         protected override void ReverseWinding<TIndex>(VertexPositionNormalTexture[] vertices, TIndex[] indices)
         {
             base.ReverseWinding(vertices, indices);

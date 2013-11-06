@@ -25,6 +25,7 @@ using SharpDX.Serialization;
 namespace SharpDX.Toolkit.Graphics
 {
 
+    /// <summary>The model data class.</summary>
     public partial class ModelData
     {
         /// <summary>
@@ -32,6 +33,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public sealed class Material : CommonData, IDataSerializable
         {
+            /// <summary>Initializes a new instance of the <see cref="Material"/> class.</summary>
             public Material()
             {
                 Textures = new Dictionary<string, List<MaterialTexture>>();
@@ -48,6 +50,8 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             public PropertyCollection Properties;
 
+            /// <summary>Reads or writes datas from/to the given binary serializer.</summary>
+            /// <param name="serializer">The binary serializer.</param>
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
                 if (serializer.Mode == SerializerMode.Write)

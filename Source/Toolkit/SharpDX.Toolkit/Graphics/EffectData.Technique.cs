@@ -43,6 +43,8 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             public List<Pass> Passes;
 
+            /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+            /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
             public override string ToString()
             {
                 return string.Format("Technique: [{0}], Passes({1})", Name, Passes.Count);

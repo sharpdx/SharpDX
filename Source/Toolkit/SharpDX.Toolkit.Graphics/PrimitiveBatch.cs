@@ -110,6 +110,7 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>Begin a batch of primitive drawing operations.</summary>
         public override void Begin()
         {
             base.Begin();

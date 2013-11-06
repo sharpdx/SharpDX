@@ -22,11 +22,14 @@ using System;
 
 namespace SharpDX.XACT3
 {
+    /// <summary>The wave bank state enumeration.</summary>
     [Flags]
     public enum WaveBankState
     {
+        /// <summary>The is in use state.</summary>
         InUse = WaveState.InUse,
 
+        /// <summary>The is prepared state.</summary>
         Prepared = WaveState.Prepared
     }
 }

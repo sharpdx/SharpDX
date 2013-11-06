@@ -26,10 +26,13 @@ namespace SharpDX.RawInput
     /// </summary>
     public abstract class RawInputEventArgs : EventArgs
     {
+        /// <summary>Initializes a new instance of the <see cref="RawInputEventArgs"/> class.</summary>
         protected RawInputEventArgs()
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="RawInputEventArgs"/> class.</summary>
+        /// <param name="rawInput">The raw input.</param>
         internal RawInputEventArgs(ref RawInput rawInput)
         {
             Device = rawInput.Header.Device;
