@@ -40,8 +40,6 @@ namespace SharpDX.Toolkit
         private RenderForm gameForm;
         private RenderLoop renderLoop;
 
-        private System.Action startRenderLoopAction;
-
         internal GameWindowDesktop()
         {
         }
