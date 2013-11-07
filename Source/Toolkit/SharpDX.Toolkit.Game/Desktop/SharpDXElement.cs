@@ -243,6 +243,9 @@ namespace SharpDX.Toolkit
                 drawingContext.DrawImage(image, new Rect(new System.Windows.Point(), RenderSize));
         }
 
+        /// <summary>
+        /// Throws <see cref="ObjectDisposedException"/> if the current instance is already disposed.
+        /// </summary>
         private void DisposedGuard()
         {
             if (isDisposed)
