@@ -23,31 +23,31 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// Default keys optionally stored in <see cref="Material.Properties"/>.
     /// </summary>
-    public class MaterialKeys : MaterialKeysBase
+    public static class TextureKeys
     {
         /// <summary>
         /// The texture is combined with the result of the diffuse
         /// lighting equation.
         /// </summary>
-        public static readonly PropertyKey<MaterialTextureStack> DiffuseTexture = RegisterKey(new PropertyKey<MaterialTextureStack>("DiffuseTexture"));
+        public static readonly PropertyKey<MaterialTextureStack> DiffuseTexture = MaterialKeys.RegisterKey(new PropertyKey<MaterialTextureStack>("DiffuseTexture"));
 
         /// <summary>
         /// The texture is combined with the result of the specular
         /// lighting equation.
         /// </summary>
-        public static readonly PropertyKey<MaterialTextureStack> SpecularTexture = RegisterKey(new PropertyKey<MaterialTextureStack>("SpecularTexture"));
+        public static readonly PropertyKey<MaterialTextureStack> SpecularTexture = MaterialKeys.RegisterKey(new PropertyKey<MaterialTextureStack>("SpecularTexture"));
 
         /// <summary>
         /// The texture is combined with the result of the ambient
         /// lighting equation.
         /// </summary>
-        public static readonly PropertyKey<MaterialTextureStack> AmbientTexture = RegisterKey(new PropertyKey<MaterialTextureStack>("AmbientTexture"));
+        public static readonly PropertyKey<MaterialTextureStack> AmbientTexture = MaterialKeys.RegisterKey(new PropertyKey<MaterialTextureStack>("AmbientTexture"));
 
         /// <summary>
         /// The texture is added to the result of the lighting
         /// calculation. It isn't influenced by incoming light.
         /// </summary>
-        public static readonly PropertyKey<MaterialTextureStack> EmissiveTexture = RegisterKey(new PropertyKey<MaterialTextureStack>("EmissiveTexture"));
+        public static readonly PropertyKey<MaterialTextureStack> EmissiveTexture = MaterialKeys.RegisterKey(new PropertyKey<MaterialTextureStack>("EmissiveTexture"));
 
         /// <summary>
         /// The texture is a height map.
@@ -56,7 +56,7 @@ namespace SharpDX.Toolkit.Graphics
         /// By convention, higher gray-scale values stand for
         /// higher elevations from the base height.
         /// </remarks>
-        public static readonly PropertyKey<MaterialTextureStack> HeightTexture = RegisterKey(new PropertyKey<MaterialTextureStack>("HeightTexture"));
+        public static readonly PropertyKey<MaterialTextureStack> HeightTexture = MaterialKeys.RegisterKey(new PropertyKey<MaterialTextureStack>("HeightTexture"));
 
         /// <summary>
         /// The texture is a (tangent space) normal-map.
@@ -66,7 +66,7 @@ namespace SharpDX.Toolkit.Graphics
         /// normal maps. Assimp does (intentionally) not 
         /// distinguish here.
         /// </remarks>
-        public static readonly PropertyKey<MaterialTextureStack> NormalsTexture = RegisterKey(new PropertyKey<MaterialTextureStack>("NormalsTexture"));
+        public static readonly PropertyKey<MaterialTextureStack> NormalsTexture = MaterialKeys.RegisterKey(new PropertyKey<MaterialTextureStack>("NormalsTexture"));
 
         /// <summary>
         /// The texture defines the glossiness of the material.
@@ -77,7 +77,7 @@ namespace SharpDX.Toolkit.Graphics
         /// function defined to map the linear color values in the
         /// texture to a suitable exponent. Have fun.
         /// </remarks>
-        public static readonly PropertyKey<MaterialTextureStack> ShininessTexture = RegisterKey(new PropertyKey<MaterialTextureStack>("ShininessTexture"));
+        public static readonly PropertyKey<MaterialTextureStack> ShininessTexture = MaterialKeys.RegisterKey(new PropertyKey<MaterialTextureStack>("ShininessTexture"));
 
         /// <summary>
         /// The texture defines per-pixel opacity.
@@ -86,7 +86,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Usually 'white' means opaque and 'black' means 
         /// 'transparency'. Or quite the opposite. Have fun.
         /// </remarks>
-        public static readonly PropertyKey<MaterialTextureStack> OpacityTexture = RegisterKey(new PropertyKey<MaterialTextureStack>("OpacityTexture"));
+        public static readonly PropertyKey<MaterialTextureStack> OpacityTexture = MaterialKeys.RegisterKey(new PropertyKey<MaterialTextureStack>("OpacityTexture"));
 
         /// <summary>
         /// Displacement texture
@@ -95,7 +95,7 @@ namespace SharpDX.Toolkit.Graphics
         /// The exact purpose and format is application-dependent.
         /// Higher color values stand for higher vertex displacements.
         /// </remarks>
-        public static readonly PropertyKey<MaterialTextureStack> DisplacementTexture = RegisterKey(new PropertyKey<MaterialTextureStack>("DisplacementTexture"));
+        public static readonly PropertyKey<MaterialTextureStack> DisplacementTexture = MaterialKeys.RegisterKey(new PropertyKey<MaterialTextureStack>("DisplacementTexture"));
 
         /// <summary>
         /// Lightmap texture (aka Ambient Occlusion)
@@ -106,7 +106,7 @@ namespace SharpDX.Toolkit.Graphics
         /// scaling value for the final color value of a pixel. Its
         /// intensity is not affected by incoming light.
         /// </remarks>
-        public static readonly PropertyKey<MaterialTextureStack> LightmapTexture = RegisterKey(new PropertyKey<MaterialTextureStack>("LightmapTexture"));
+        public static readonly PropertyKey<MaterialTextureStack> LightmapTexture = MaterialKeys.RegisterKey(new PropertyKey<MaterialTextureStack>("LightmapTexture"));
 
         /// <summary>
         /// Reflection texture
@@ -115,7 +115,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Contains the color of a perfect mirror reflection.
         /// Rarely used, almost never for real-time applications.
         /// </remarks>
-        public static readonly PropertyKey<MaterialTextureStack> ReflectionTexture = RegisterKey(new PropertyKey<MaterialTextureStack>("ReflectionTexture"));
+        public static readonly PropertyKey<MaterialTextureStack> ReflectionTexture = MaterialKeys.RegisterKey(new PropertyKey<MaterialTextureStack>("ReflectionTexture"));
 
         /// <summary>
         /// Unknown texture
@@ -125,6 +125,6 @@ namespace SharpDX.Toolkit.Graphics
         /// above is considered to be 'unknown'. It is still imported,
         /// but is excluded from any further post processing.
         /// </remarks>
-        public static readonly PropertyKey<MaterialTextureStack> UnknownTexture = RegisterKey(new PropertyKey<MaterialTextureStack>("UnknownTexture"));
+        public static readonly PropertyKey<MaterialTextureStack> UnknownTexture = MaterialKeys.RegisterKey(new PropertyKey<MaterialTextureStack>("UnknownTexture"));
     }
 }

@@ -2,7 +2,10 @@
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public class MaterialKeysBase
+    /// <summary>
+    /// Default keys optionally stored in <see cref="ModelData.Material.Properties"/>.
+    /// </summary>
+    public static class MaterialKeys
     {
         private static readonly Dictionary<string, PropertyKey> registeredKeys = new Dictionary<string, PropertyKey>(64);
 
@@ -119,8 +122,8 @@ namespace SharpDX.Toolkit.Graphics
         /// Registers the specified key.
         /// </summary>
         /// <typeparam name="T">Type of the property</typeparam>
-        /// <param name="key">The key.</param>
-        /// <returns>The key.</returns>
+        /// <param name="key">The property key.</param>
+        /// <returns>The registered property key.</returns>
         public static PropertyKey<T> RegisterKey<T>(PropertyKey<T> key)
         {
             registeredKeys[key.Name] = key;

@@ -58,14 +58,14 @@ namespace SharpDX.Toolkit.Graphics
 
                 int vertexCount = 0;
                 int indexCount = 0;
-                var normal = -Vector3.UnitZ;
+                var normal = Vector3.UnitZ;
 
                 // Create vertices
                 for (int y = 0; y < (tessellation+1); y++)
                 {
                     for (int x = 0; x < (tessellation+1); x++)
                     {
-                        var position = new Vector3(-sizeX + deltaX * x, -sizeY + deltaY * y, 0);
+                        var position = new Vector3(-sizeX + deltaX * x, sizeY - deltaY * y, 0);
                         var texCoord = new Vector2(1.0f * x / tessellation, 1.0f * y / tessellation);
                         vertices[vertexCount++] = new VertexPositionNormalTexture(position, normal, texCoord);
                     }

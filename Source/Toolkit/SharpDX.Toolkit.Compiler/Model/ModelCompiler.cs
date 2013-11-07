@@ -266,22 +266,22 @@ namespace SharpDX.Toolkit.Graphics
             var properties = material.Properties;
 
             // Setup all default properties for this material
-            if (rawMaterial.HasBlendMode) properties.SetProperty(MaterialKeysBase.BlendMode, (MaterialBlendMode)rawMaterial.BlendMode);
-            if (rawMaterial.HasBumpScaling) properties.SetProperty(MaterialKeysBase.BumpScaling, rawMaterial.BumpScaling);
-            if (rawMaterial.HasColorAmbient) properties.SetProperty(MaterialKeysBase.ColorAmbient, ConvertColor(rawMaterial.ColorAmbient));
-            if (rawMaterial.HasColorDiffuse) properties.SetProperty(MaterialKeysBase.ColorDiffuse, ConvertColor(rawMaterial.ColorDiffuse));
-            if (rawMaterial.HasColorEmissive) properties.SetProperty(MaterialKeysBase.ColorEmissive, (Color3)ConvertColor(rawMaterial.ColorEmissive));
-            if (rawMaterial.HasColorReflective) properties.SetProperty(MaterialKeysBase.ColorReflective, ConvertColor(rawMaterial.ColorReflective));
-            if (rawMaterial.HasColorSpecular) properties.SetProperty(MaterialKeysBase.ColorSpecular, (Color3)ConvertColor(rawMaterial.ColorSpecular));
-            if (rawMaterial.HasColorTransparent) properties.SetProperty(MaterialKeysBase.ColorTransparent, ConvertColor(rawMaterial.ColorTransparent));
-            if (rawMaterial.HasName) properties.SetProperty(MaterialKeysBase.Name, rawMaterial.Name);
-            if (rawMaterial.HasOpacity) properties.SetProperty(MaterialKeysBase.Opacity, rawMaterial.Opacity);
-            if (rawMaterial.HasReflectivity) properties.SetProperty(MaterialKeysBase.Reflectivity, rawMaterial.Reflectivity);
-            if (rawMaterial.HasShininess) properties.SetProperty(MaterialKeysBase.Shininess, rawMaterial.Shininess);
-            if (rawMaterial.HasShininessStrength) properties.SetProperty(MaterialKeysBase.ShininessStrength, rawMaterial.ShininessStrength);
-            if (rawMaterial.HasShadingMode) properties.SetProperty(MaterialKeysBase.ShadingMode, (MaterialShadingMode)rawMaterial.ShadingMode);
-            if (rawMaterial.HasTwoSided) properties.SetProperty(MaterialKeysBase.TwoSided, rawMaterial.IsTwoSided);
-            if (rawMaterial.HasWireFrame) properties.SetProperty(MaterialKeysBase.Wireframe, rawMaterial.IsWireFrameEnabled);
+            if (rawMaterial.HasBlendMode) properties.SetProperty(MaterialKeys.BlendMode, (MaterialBlendMode)rawMaterial.BlendMode);
+            if (rawMaterial.HasBumpScaling) properties.SetProperty(MaterialKeys.BumpScaling, rawMaterial.BumpScaling);
+            if (rawMaterial.HasColorAmbient) properties.SetProperty(MaterialKeys.ColorAmbient, ConvertColor(rawMaterial.ColorAmbient));
+            if (rawMaterial.HasColorDiffuse) properties.SetProperty(MaterialKeys.ColorDiffuse, ConvertColor(rawMaterial.ColorDiffuse));
+            if (rawMaterial.HasColorEmissive) properties.SetProperty(MaterialKeys.ColorEmissive, (Color3)ConvertColor(rawMaterial.ColorEmissive));
+            if (rawMaterial.HasColorReflective) properties.SetProperty(MaterialKeys.ColorReflective, ConvertColor(rawMaterial.ColorReflective));
+            if (rawMaterial.HasColorSpecular) properties.SetProperty(MaterialKeys.ColorSpecular, (Color3)ConvertColor(rawMaterial.ColorSpecular));
+            if (rawMaterial.HasColorTransparent) properties.SetProperty(MaterialKeys.ColorTransparent, ConvertColor(rawMaterial.ColorTransparent));
+            if (rawMaterial.HasName) properties.SetProperty(MaterialKeys.Name, rawMaterial.Name);
+            if (rawMaterial.HasOpacity) properties.SetProperty(MaterialKeys.Opacity, rawMaterial.Opacity);
+            if (rawMaterial.HasReflectivity) properties.SetProperty(MaterialKeys.Reflectivity, rawMaterial.Reflectivity);
+            if (rawMaterial.HasShininess) properties.SetProperty(MaterialKeys.Shininess, rawMaterial.Shininess);
+            if (rawMaterial.HasShininessStrength) properties.SetProperty(MaterialKeys.ShininessStrength, rawMaterial.ShininessStrength);
+            if (rawMaterial.HasShadingMode) properties.SetProperty(MaterialKeys.ShadingMode, (MaterialShadingMode)rawMaterial.ShadingMode);
+            if (rawMaterial.HasTwoSided) properties.SetProperty(MaterialKeys.TwoSided, rawMaterial.IsTwoSided);
+            if (rawMaterial.HasWireFrame) properties.SetProperty(MaterialKeys.Wireframe, rawMaterial.IsWireFrameEnabled);
 
             // Iterate on other properties
             foreach (var rawProperty in rawMaterial.GetAllProperties())

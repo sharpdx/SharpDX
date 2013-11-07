@@ -38,7 +38,7 @@
     <Compile Include="GraphicsPerformance.cs" />
     <Compile Include="IEffectInstaller.cs" />
     <Compile Include="ModelContentReader.cs" />
-    <Compile Include="MaterialKeys.cs" />
+    <Compile Include="TextureKeys.cs" />
     <Compile Include="MaterialTexture.cs" />
     <Compile Include="MaterialTextureStack.cs" />
     <Compile Include="Model.cs" />
