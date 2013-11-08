@@ -18,7 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#if (!W8CORE || DEBUG) && !WP8
+// currently it is working correctly only on Desktop platform
+#if !W8CORE && !WP8
 
 using System;
 using System.Runtime.InteropServices;
