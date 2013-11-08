@@ -34,6 +34,7 @@
     <Compile Include="Collections\ObservableDictionaryEventArgs.cs" />
     <Compile Include="ComponentCollection.cs" />
     <Compile Include="Design\Matrix3x3Converter.cs" />
+    <Compile Include="Diagnostics\VSGraphicsDebugger.cs" />
     <Compile Include="Matrix3x3.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="OrientedBoundingBox.cs" />
