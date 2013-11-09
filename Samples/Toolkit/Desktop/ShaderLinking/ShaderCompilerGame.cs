@@ -39,8 +39,8 @@
             _data.IsDirty = true;
 
             // initialize transformation matrices
-            _view = Matrix.LookAtLH(new Vector3(0, 1.2f, 3f), new Vector3(0, 0, 0), new Vector3(0f, 1f, 0f));
-            _projection = Matrix.PerspectiveFovLH(35f * MathUtil.Pi / 180f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, 10.0f);
+            _view = Matrix.LookAtRH(new Vector3(0, 1.2f, 3f), new Vector3(0, 0, 0), new Vector3(0f, 1f, 0f));
+            _projection = Matrix.PerspectiveFovRH(35f * MathUtil.Pi / 180f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, 10.0f);
             _world = Matrix.RotationY(45f * MathUtil.Pi / 180f);
 
             // load geometry

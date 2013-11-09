@@ -286,7 +286,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="toLeftHanded">if set to <c>true</c> vertices and indices will be transformed to left handed. Default is true.</param>
             /// <returns>GeometricPrimitive.</returns>
             /// <exception cref="System.ArgumentOutOfRangeException">tessellation;tessellation must be > 0</exception>
-            public static GeometricPrimitive New(GraphicsDevice device, float size = 1.0f, int tessellation = 8, bool toLeftHanded = true)
+            public static GeometricPrimitive New(GraphicsDevice device, float size = 1.0f, int tessellation = 8, bool toLeftHanded = false)
             {
                 var vertices = new List<VertexPositionNormalTexture>();
                 var indices = new List<int>();

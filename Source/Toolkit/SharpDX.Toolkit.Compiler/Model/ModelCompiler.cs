@@ -165,8 +165,8 @@ namespace SharpDX.Toolkit.Graphics
             var importer = new AssimpImporter();
             //importer.SetConfig(new NormalSmoothingAngleConfig(66.0f));
 
-            // Steps for Direct3D, should we make this configurable?
-            var steps = PostProcessSteps.FlipUVs | PostProcessSteps.FlipWindingOrder | PostProcessSteps.MakeLeftHanded;
+            // Steps for Direct3D Right-Handed, should we make this configurable?
+            var steps = PostProcessSteps.FlipUVs | PostProcessSteps.FlipWindingOrder;
 
             // Setup quality
             switch (compilerOptions.Quality)

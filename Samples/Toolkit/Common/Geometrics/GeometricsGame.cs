@@ -69,8 +69,8 @@ namespace Geometrics
             // Creates a basic effect
             basicEffect = ToDisposeContent(new BasicEffect(GraphicsDevice)
                 {
-                    View = Matrix.LookAtLH(new Vector3(0, 0, -5), new Vector3(0, 0, 0), Vector3.UnitY),
-                    Projection = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, 100.0f),
+                    View = Matrix.LookAtRH(new Vector3(0, 0, 5), new Vector3(0, 0, 0), Vector3.UnitY),
+                    Projection = Matrix.PerspectiveFovRH((float)Math.PI / 4.0f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, 100.0f),
                     World = Matrix.Identity
                 });
 
@@ -148,7 +148,7 @@ namespace Geometrics
 
                 // Setup the World matrice for this primitive
                 basicEffect.World = Matrix.Scaling((float)Math.Sin(time*1.5f) * 0.2f + 1.0f) * Matrix.RotationX(time) * Matrix.RotationY(time * 2.0f) * Matrix.RotationZ(time * .7f) * Matrix.Translation(x, y, 0);
-
+                
                 // Render the name of the primitive
                 spriteBatch.DrawString(arial16BMFont, primitive.Name, new Vector2(GraphicsDevice.BackBuffer.Width * (0.08f + dx / 4.0f), GraphicsDevice.BackBuffer.Height * (0.47f + dy / 2.2f)), Color.White);
 
