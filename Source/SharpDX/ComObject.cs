@@ -282,8 +282,20 @@ namespace SharpDX
             // Only dispose non-zero object
             if (NativePointer != IntPtr.Zero)
             {
+                // If object is disposed by the finalizer, emits a warning
+                if(!disposing && Configuration.EnableTrackingReleaseOnFinalizer)
+                {
+                    var objectReference = ObjectTracker.Find(this);
+                    var additionalMessage = Configuration.EnableReleaseOnFinalizer
+                                                ? "will be released automatically"
+                                                : "memory leak detected";
+
+                    System.Diagnostics.Debug.WriteLine(string.Format("Warning: Live ComObject, {0}: {1}", additionalMessage, objectReference));
+                }
+
                 // Release the object
-                ((IUnknown)this).Release();
+                if (disposing || Configuration.EnableReleaseOnFinalizer)
+                    ((IUnknown)this).Release();
 
                 // Untrack the object
                 if (Configuration.EnableObjectTracking)
@@ -292,6 +304,7 @@ namespace SharpDX
                 // Set pointer to null (using protected members in order to avoid NativePointerUpdat* callbacks.
                 _nativePointer = (void*)0;
             }
+
             base.Dispose(disposing);
         }
 
