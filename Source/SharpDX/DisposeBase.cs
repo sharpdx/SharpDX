@@ -56,10 +56,8 @@ namespace SharpDX
 					disposingHandlers(this, EventArgs.Empty);
 
                 Dispose(disposing);
-#if !W8CORE
-                if (disposing)
-                    GC.SuppressFinalize(this);
-#endif
+                GC.SuppressFinalize(this);
+
                 IsDisposed = true;
 
 	            EventHandler<EventArgs> disposedHandlers = Disposed;
