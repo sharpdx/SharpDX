@@ -1210,57 +1210,181 @@
             </summary>
             <value>The style.</value>
         </member>
-        <member name="T:SharpYaml.Serialization.IDynamicStyleFormat">
+        <member name="T:SharpYaml.Serialization.ChainedEventEmitter">
             <summary>
-            An interface to plug custom <see cref="T:SharpYaml.YamlStyle"/> to specifics objects instances while
-            serializing. Use <see cref="P:SharpYaml.Serialization.SerializerSettings.DynamicStyleFormat"/>.
+            Provided the base implementation for an IEventEmitter that is a
+            decorator for another IEventEmitter.
             </summary>
         </member>
-        <member name="M:SharpYaml.Serialization.IDynamicStyleFormat.GetStyle(SharpYaml.Serialization.SerializerContext,System.Object,SharpYaml.Serialization.ITypeDescriptor)">
+        <member name="T:SharpYaml.Serialization.IEventEmitter">
             <summary>
-            Gets the style for a specific instance/type. Return <see cref="F:SharpYaml.YamlStyle.Any"/> if unspecified.
+            Interface used to write YAML events.
             </summary>
-            <param name="context">The context.</param>
-            <param name="value">The value.</param>
+        </member>
+        <member name="T:SharpYaml.Serialization.ObjectContext">
+            <summary>
+            The object context used when serializing/deserializing an object instance. See remarks.
+            </summary>
+            <remarks>
+            <para>When serializing, this struct contains the <see cref="F:SharpYaml.Serialization.ObjectContext.Instance"/> of the object to serialize, the type, the tag to use
+            and the style, as well as providing access to the <see cref="F:SharpYaml.Serialization.ObjectContext.SerializerContext"/>.</para>
+            <para>When deserializing, this struct will contain the expected type to deserialize and if not null, the instance of an object
+            that will recieve deserialization of its members (in case the instance cannot be created).</para>
+            </remarks>
+        </member>
+        <member name="M:SharpYaml.Serialization.ObjectContext.#ctor(SharpYaml.Serialization.SerializerContext,System.Object,SharpYaml.Serialization.ITypeDescriptor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SharpYaml.Serialization.ObjectContext"/> struct.
+            </summary>
+            <param name="serializerContext">The serializer context.</param>
+            <param name="instance">The instance.</param>
             <param name="descriptor">The descriptor.</param>
-            <returns>The style to apply ot <see cref="F:SharpYaml.YamlStyle.Any"/> if unspecified.</returns>
         </member>
-        <member name="T:SharpYaml.Serialization.IMappingKeyTransform">
+        <member name="F:SharpYaml.Serialization.ObjectContext.SerializerContext">
             <summary>
-            Interface used to hook the encoding and decoding of key in Yaml mapping.
+            The serializer context associated to this object context.
             </summary>
         </member>
-        <member name="M:SharpYaml.Serialization.IMappingKeyTransform.Encode(SharpYaml.Serialization.SerializerContext,System.Object,SharpYaml.Serialization.ITypeDescriptor,System.Object,System.String)">
+        <member name="F:SharpYaml.Serialization.ObjectContext.Instance">
             <summary>
-            Encodes the specified key.
+            The instance link to this context.
             </summary>
-            <param name="context">The context.</param>
-            <param name="thisObject">The this object.</param>
-            <param name="descriptor">The descriptor.</param>
-            <param name="key">The object key.</param>
-            <param name="keyText">The key representation in text.</param>
-            <returns>A new key representation that will be serialized as-is.</returns>
         </member>
-        <member name="M:SharpYaml.Serialization.IMappingKeyTransform.DecodePre(SharpYaml.Serialization.SerializerContext,System.Object,SharpYaml.Serialization.ITypeDescriptor,System.String,System.String@)">
+        <member name="F:SharpYaml.Serialization.ObjectContext.Descriptor">
             <summary>
-            Decodes the specified key from text, this method is called method instantiating the actual key object.
+            The expected type descriptor.
             </summary>
-            <param name="context">The context.</param>
-            <param name="thisObject">The this object.</param>
-            <param name="descriptor">The descriptor.</param>
-            <param name="keyIn">The key being read from the input stream.</param>
-            <param name="keyOut">The key decoded or same as keyIn if not handled.</param>
-            <returns><c>true</c> if key was decoded, <c>false</c> otherwise.</returns>
         </member>
-        <member name="M:SharpYaml.Serialization.IMappingKeyTransform.DecodePost(SharpYaml.Serialization.SerializerContext,System.Object,SharpYaml.Serialization.ITypeDescriptor,System.Object,System.String)">
+        <member name="F:SharpYaml.Serialization.ObjectContext.Tag">
             <summary>
-            Decodes the specified key from text, this method is called after the key has been decoded.
+            The tag used when serializing.
             </summary>
-            <param name="context">The context.</param>
-            <param name="thisObject">The this object.</param>
-            <param name="descriptor">The descriptor.</param>
-            <param name="key">The key object (will be a <see cref="T:SharpYaml.Serialization.IMemberDescriptor"/> for an object or the key object of a dictionary).</param>
-            <param name="keyIn">The same keyIn from a previous call to <see cref="M:SharpYaml.Serialization.IMappingKeyTransform.DecodePre(SharpYaml.Serialization.SerializerContext,System.Object,SharpYaml.Serialization.ITypeDescriptor,System.String,System.String@)"/>.</param>
+        </member>
+        <member name="F:SharpYaml.Serialization.ObjectContext.Anchor">
+            <summary>
+            The anchor used when serializing.
+            </summary>
+        </member>
+        <member name="F:SharpYaml.Serialization.ObjectContext.Style">
+            <summary>
+            The style used when serializing.
+            </summary>
+        </member>
+        <member name="P:SharpYaml.Serialization.ObjectContext.Reader">
+            <summary>
+            Gets the current YAML reader. Equivalent to calling directly <see cref="P:SharpYaml.Serialization.SerializerContext.Reader"/>.
+            </summary>
+            <value>The current YAML reader.</value>
+        </member>
+        <member name="P:SharpYaml.Serialization.ObjectContext.Writer">
+            <summary>
+            Gets the writer used while deserializing. Equivalent to calling directly <see cref="P:SharpYaml.Serialization.SerializerContext.Writer"/>.
+            </summary>
+            <value>The writer.</value>
+        </member>
+        <member name="P:SharpYaml.Serialization.ObjectContext.Settings">
+            <summary>
+            Gets the settings. Equivalent to calling directly <see cref="P:SharpYaml.Serialization.SerializerContext.Settings"/>.
+            </summary>
+            <value>The settings.</value>
+        </member>
+        <member name="P:SharpYaml.Serialization.ObjectContext.ObjectSerializerBackend">
+            <summary>
+            Gets the object serializer backend.
+            </summary>
+            <value>The object serializer backend.</value>
+        </member>
+        <member name="T:SharpYaml.Serialization.Serializers.DefaultObjectSerializerBackend">
+            <summary>
+            Default implementation for <see cref="T:SharpYaml.Serialization.IObjectSerializerBackend"/>
+            </summary>
+        </member>
+        <member name="T:SharpYaml.Serialization.IObjectSerializerBackend">
+            <summary>
+            This interface is used by <see cref="T:SharpYaml.Serialization.Serializers.ObjectSerializer"/>, <see cref="T:SharpYaml.Serialization.Serializers.DictionarySerializer"/> and <see cref="T:SharpYaml.Serialization.Serializers.CollectionSerializer"/>
+            as a backend interface for serializing/deserializing member name, member values, collection and dictionary items. The default
+            implementation is <see cref="T:SharpYaml.Serialization.Serializers.DefaultObjectSerializerBackend"/> that can be subclassed to provide aditionnal behavior.
+            </summary>
+            <remarks>
+            TODO: Explain why this interface is used and how it can be extended for specific scenarios.
+            </remarks>
+        </member>
+        <member name="M:SharpYaml.Serialization.IObjectSerializerBackend.GetStyle(SharpYaml.Serialization.ObjectContext@)">
+            <summary>
+            Gets the style that will be used to serialize the object provided by <see cref="F:SharpYaml.Serialization.ObjectContext.Instance"/>.
+            </summary>
+            <param name="objectContext">The object context which contains the object instance to serialize.</param>
+            <returns>The <see cref="T:SharpYaml.YamlStyle"/> to use when serializing the object instance.</returns>
+        </member>
+        <member name="M:SharpYaml.Serialization.IObjectSerializerBackend.ReadMemberName(SharpYaml.Serialization.ObjectContext@,System.String)">
+            <summary>
+            Allows to transform the name of the member while reading for the specified object context.
+            </summary>
+            <param name="objectContext">The object context to which the member name.</param>
+            <param name="memberName">Name of the member read from the current yaml stream.</param>
+            <returns>The name that will be used to get the <see cref="T:SharpYaml.Serialization.IMemberDescriptor"/> from the current object context.</returns>
+        </member>
+        <member name="M:SharpYaml.Serialization.IObjectSerializerBackend.ReadMemberValue(SharpYaml.Serialization.ObjectContext@,SharpYaml.Serialization.IMemberDescriptor,System.Object,System.Type)">
+            <summary>
+            Reads the value for the specified member from the current YAML stream.
+            </summary>
+            <param name="objectContext">The object context.</param>
+            <param name="member">The member.</param>
+            <param name="memberValue">The member value. See remarks</param>
+            <param name="memberType">Type of the member.</param>
+            <returns>The value read from YAML stream.</returns>
+            <remarks>
+            TODO: Explain memberValue when can be not null
+            </remarks>
+        </member>
+        <member name="M:SharpYaml.Serialization.IObjectSerializerBackend.ReadCollectionItem(SharpYaml.Serialization.ObjectContext@,System.Type)">
+            <summary>
+            Reads the collection item from the current YAML stream.
+            </summary>
+            <param name="objectContext">The object context.</param>
+            <param name="itemType">Type of the item.</param>
+            <returns>The collection item read from YAML stream.</returns>
+        </member>
+        <member name="M:SharpYaml.Serialization.IObjectSerializerBackend.ReadDictionaryItem(SharpYaml.Serialization.ObjectContext@,System.Collections.Generic.KeyValuePair{System.Type,System.Type})">
+            <summary>
+            Reads the dictionary item from the current YAML stream.
+            </summary>
+            <param name="objectContext">The object context.</param>
+            <param name="keyValueType">Type of the key value.</param>
+            <returns>The dictionary item (key,value) read from YAML stream.</returns>
+        </member>
+        <member name="M:SharpYaml.Serialization.IObjectSerializerBackend.WriteMemberName(SharpYaml.Serialization.ObjectContext@,SharpYaml.Serialization.IMemberDescriptor,System.String)">
+            <summary>
+            Writes the name of the member.
+            </summary>
+            <param name="objectContext">The object context.</param>
+            <param name="member">The member.</param>
+            <param name="memberName">Name of the member.</param>
+        </member>
+        <member name="M:SharpYaml.Serialization.IObjectSerializerBackend.WriteMemberValue(SharpYaml.Serialization.ObjectContext@,SharpYaml.Serialization.IMemberDescriptor,System.Object,System.Type)">
+            <summary>
+            Writes the member value.
+            </summary>
+            <param name="objectContext">The object context.</param>
+            <param name="member">The member.</param>
+            <param name="memberValue">The member value.</param>
+            <param name="memberType">Type of the member.</param>
+        </member>
+        <member name="M:SharpYaml.Serialization.IObjectSerializerBackend.WriteCollectionItem(SharpYaml.Serialization.ObjectContext@,System.Object,System.Type)">
+            <summary>
+            Writes the collection item.
+            </summary>
+            <param name="objectContext">The object context.</param>
+            <param name="item">The item.</param>
+            <param name="itemType">Type of the item.</param>
+        </member>
+        <member name="M:SharpYaml.Serialization.IObjectSerializerBackend.WriteDictionaryItem(SharpYaml.Serialization.ObjectContext@,System.Collections.Generic.KeyValuePair{System.Object,System.Object},System.Collections.Generic.KeyValuePair{System.Type,System.Type})">
+            <summary>
+            Writes the dictionary item.
+            </summary>
+            <param name="objectContext">The object context.</param>
+            <param name="keyValue">The key value.</param>
+            <param name="types">The types.</param>
         </member>
         <member name="T:SharpYaml.YamlStyle">
             <summary>
@@ -2431,17 +2555,6 @@
             <param name="message">The message.</param>
             <param name="inner">The inner.</param>
         </member>
-        <member name="T:SharpYaml.Serialization.ChainedEventEmitter">
-            <summary>
-            Provided the base implementation for an IEventEmitter that is a
-            decorator for another IEventEmitter.
-            </summary>
-        </member>
-        <member name="T:SharpYaml.Serialization.IEventEmitter">
-            <summary>
-            Interface used to write YAML events.
-            </summary>
-        </member>
         <member name="T:SharpYaml.Serialization.AnchorNotFoundException">
             <summary>
             The exception that is thrown when an alias references an anchor that does not exist.
@@ -3179,22 +3292,18 @@
             Allows an object to customize how it is serialized and deserialized.
             </summary>
         </member>
-        <member name="M:SharpYaml.Serialization.IYamlSerializable.ReadYaml(SharpYaml.Serialization.SerializerContext,System.Object,SharpYaml.Serialization.ITypeDescriptor)">
+        <member name="M:SharpYaml.Serialization.IYamlSerializable.ReadYaml(SharpYaml.Serialization.ObjectContext@)">
             <summary>
             Reads this object's state from a YAML parser.
             </summary>
-            <param name="context">The context.</param>
-            <param name="value">The value.</param>
-            <param name="typeDescriptor">The type descriptor.</param>
+            <param name="objectContext"></param>
             <returns>A instance of the object deserialized from Yaml.</returns>
         </member>
-        <member name="M:SharpYaml.Serialization.IYamlSerializable.WriteYaml(SharpYaml.Serialization.SerializerContext,SharpYaml.Serialization.ValueInput,SharpYaml.Serialization.ITypeDescriptor)">
+        <member name="M:SharpYaml.Serialization.IYamlSerializable.WriteYaml(SharpYaml.Serialization.ObjectContext@)">
             <summary>
-            Writes this object's state to a YAML emitter.
+            Writes the specified object context to a YAML emitter.
             </summary>
-            <param name="context">The context.</param>
-            <param name="value">The value.</param>
-            <param name="typeDescriptor"></param>
+            <param name="objectContext">The object context.</param>
         </member>
         <member name="T:SharpYaml.Serialization.IYamlSerializableFactory">
             <summary>
@@ -3209,6 +3318,11 @@
             <param name="typeDescriptor">The typeDescriptor.</param>
             <returns>If supported, return an instance of <see cref="T:SharpYaml.Serialization.IYamlSerializable"/> else return <c>null</c>.</returns>
         </member>
+        <member name="T:SharpYaml.Serialization.Serializers.CollectionSerializer">
+            <summary>
+            Class for serializing a <see cref="T:System.Collections.Generic.ICollection`1"/> or <see cref="T:System.Collections.ICollection"/>
+            </summary>
+        </member>
         <member name="T:SharpYaml.Serialization.Serializers.ObjectSerializer">
             <summary>
             Base class for serializing an object that can be a Yaml !!map or !!seq.
@@ -3219,69 +3333,152 @@
             Initializes a new instance of the <see cref="T:SharpYaml.Serialization.Serializers.ObjectSerializer"/> class.
             </summary>
         </member>
-        <member name="M:SharpYaml.Serialization.Serializers.ObjectSerializer.CheckIsSequence(SharpYaml.Serialization.ITypeDescriptor)">
+        <member name="M:SharpYaml.Serialization.Serializers.ObjectSerializer.TryCreate(SharpYaml.Serialization.SerializerContext,SharpYaml.Serialization.ITypeDescriptor)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpYaml.Serialization.Serializers.ObjectSerializer.CheckIsSequence(SharpYaml.Serialization.ObjectContext@)">
             <summary>
             Checks if a type is a sequence.
             </summary>
-            <param name="typeDescriptor">The type descriptor.</param>
+            <param name="objectContext"></param>
             <returns><c>true</c> if a type is a sequence, <c>false</c> otherwise.</returns>
         </member>
-        <member name="M:SharpYaml.Serialization.Serializers.ObjectSerializer.CreateOrTransformObject(SharpYaml.Serialization.SerializerContext,System.Object,SharpYaml.Serialization.ITypeDescriptor)">
+        <member name="M:SharpYaml.Serialization.Serializers.ObjectSerializer.GetStyle(SharpYaml.Serialization.ObjectContext@)">
+            <summary>
+            Gets the style that will be used to serialized the object.
+            </summary>
+            <param name="objectContext"></param>
+            <returns>The <see cref="T:SharpYaml.YamlStyle"/> to use. Default is <see cref="P:SharpYaml.Serialization.ITypeDescriptor.Style"/>.</returns>
+        </member>
+        <member name="M:SharpYaml.Serialization.Serializers.ObjectSerializer.CreateOrTransformObject(SharpYaml.Serialization.ObjectContext@)">
             <summary>
             Overrides this method when deserializing/serializing an object that needs a special instantiation or transformation. By default, this is calling
-            <see cref="M:SharpYaml.Serialization.IObjectFactory.Create(System.Type)"/> if the <see cref="!:currentObject"/> is null or returning <see cref="!:currentObject"/>.
+            <see cref="M:SharpYaml.Serialization.IObjectFactory.Create(System.Type)"/> if the <see cref="F:SharpYaml.Serialization.ObjectContext.Instance"/> is null or returning <see cref="F:SharpYaml.Serialization.ObjectContext.Instance"/>.
             </summary>
-            <param name="context">The context.</param>
-            <param name="currentObject">The current object, may be null. (in case the object is an instance in a member that is not settable).</param>
-            <param name="typeDescriptor">The type descriptor of the object to create.</param>
-            <returns>A new instance of the object or <see cref="!:currentObject"/> if not null</returns>
+            <param name="objectContext">The object context.</param>
+            <returns>A new instance of the object or <see cref="F:SharpYaml.Serialization.ObjectContext.Instance"/> if not null</returns>
         </member>
-        <member name="M:SharpYaml.Serialization.Serializers.ObjectSerializer.TransformObjectAfterRead(SharpYaml.Serialization.SerializerContext,System.Object,SharpYaml.Serialization.ITypeDescriptor)">
+        <member name="M:SharpYaml.Serialization.Serializers.ObjectSerializer.TransformObjectAfterRead(SharpYaml.Serialization.ObjectContext@)">
             <summary>
             Transforms the object after it has been read. This method is called after an object has been read and before returning the object to
             the deserialization process. See remarks for usage.
             </summary>
-            <param name="context">The context.</param>
-            <param name="currentObject">The current object that has been deserialized..</param>
-            <param name="typeDescriptor">The type descriptor.</param>
-            <returns>The actual object deserialized. By default same as <see cref="!:currentObject"/>.</returns>
+            <param name="objectContext"></param>
+            <returns>The actual object deserialized. By default same as <see cref="F:SharpYaml.Serialization.ObjectContext.Instance"/>.</returns>
             <remarks>
-            This method is usefull in conjunction with <see cref="M:SharpYaml.Serialization.Serializers.ObjectSerializer.CreateOrTransformObject(SharpYaml.Serialization.SerializerContext,System.Object,SharpYaml.Serialization.ITypeDescriptor)"/>.
+            This method is usefull in conjunction with <see cref="M:SharpYaml.Serialization.Serializers.ObjectSerializer.CreateOrTransformObject(SharpYaml.Serialization.ObjectContext@)"/>.
             For example, in the case of deserializing to an immutable member, where we need to call the constructor of a type instead of setting each of 
-            its member, we can instantiate a mutable object in <see cref="M:SharpYaml.Serialization.Serializers.ObjectSerializer.CreateOrTransformObject(SharpYaml.Serialization.SerializerContext,System.Object,SharpYaml.Serialization.ITypeDescriptor)"/>, receive the mutable object filled in 
-            <see cref="M:SharpYaml.Serialization.Serializers.ObjectSerializer.TransformObjectAfterRead(SharpYaml.Serialization.SerializerContext,System.Object,SharpYaml.Serialization.ITypeDescriptor)"/> and transform it back to an immutable object.
+            its member, we can instantiate a mutable object in <see cref="M:SharpYaml.Serialization.Serializers.ObjectSerializer.CreateOrTransformObject(SharpYaml.Serialization.ObjectContext@)"/>, receive the mutable object filled in 
+            <see cref="M:SharpYaml.Serialization.Serializers.ObjectSerializer.TransformObjectAfterRead(SharpYaml.Serialization.ObjectContext@)"/> and transform it back to an immutable object.
             </remarks>
         </member>
-        <member name="M:SharpYaml.Serialization.Serializers.ObjectSerializer.ReadItems``2(SharpYaml.Serialization.SerializerContext,System.Object,SharpYaml.Serialization.ITypeDescriptor)">
+        <member name="M:SharpYaml.Serialization.Serializers.ObjectSerializer.ReadMembers``2(SharpYaml.Serialization.ObjectContext@)">
             <summary>
             Reads the members from the current stream.
             </summary>
             <typeparam name="TStart">The type of the t start.</typeparam>
             <typeparam name="TEnd">The type of the t end.</typeparam>
-            <param name="context">The context.</param>
-            <param name="thisObject">The this object.</param>
-            <param name="typeDescriptor">The type descriptor.</param>
+            <param name="objectContext"></param>
             <returns>Return the object being read, by default thisObject passed by argument.</returns>
         </member>
-        <member name="M:SharpYaml.Serialization.Serializers.ObjectSerializer.ReadItem(SharpYaml.Serialization.SerializerContext,System.Object,SharpYaml.Serialization.ITypeDescriptor)">
+        <member name="M:SharpYaml.Serialization.Serializers.ObjectSerializer.ReadMember(SharpYaml.Serialization.ObjectContext@)">
             <summary>
             Reads an item of the object from the YAML flow (either a sequence item or mapping key/value item).
             </summary>
-            <param name="context">The context.</param>
-            <param name="thisObject">The this object.</param>
-            <param name="typeDescriptor">The type descriptor.</param>
+            <param name="objectContext"></param>
             <exception cref="T:SharpYaml.YamlException">Unable to deserialize property [{0}] not found in type [{1}].DoFormat(propertyName, typeDescriptor)</exception>
         </member>
-        <member name="M:SharpYaml.Serialization.Serializers.ObjectSerializer.ReadMemberByName(SharpYaml.Serialization.SerializerContext,System.Object,System.String,SharpYaml.Serialization.IMemberDescriptor,SharpYaml.Serialization.ITypeDescriptor)">
+        <member name="M:SharpYaml.Serialization.Serializers.ObjectSerializer.WriteYaml(SharpYaml.Serialization.ObjectContext@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpYaml.Serialization.Serializers.ObjectSerializer.WriteMembers(SharpYaml.Serialization.ObjectContext@)">
             <summary>
-            Reads a member by its name.
+            Writes the members of the object to serialize. By default this method is iterating on the <see cref="P:SharpYaml.Serialization.ITypeDescriptor.Members"/> and
+            calling <see cref="M:SharpYaml.Serialization.Serializers.ObjectSerializer.WriteMember(SharpYaml.Serialization.ObjectContext@,SharpYaml.Serialization.IMemberDescriptor)"/> on each member.
             </summary>
-            <param name="context">The context.</param>
-            <param name="thisObject">The this object where the member to read applies.</param>
-            <param name="memberName">Name of the member.</param>
-            <param name="memberAccessor">The member accessor. May be null if member acecssor was not found</param>
-            <param name="typeDescriptor">The type descriptor of the this object.</param>
-            <returns><c>true</c> if reading the member was successfull, <c>false</c> otherwise.</returns>
+            <param name="objectContext"></param>
+        </member>
+        <member name="M:SharpYaml.Serialization.Serializers.ObjectSerializer.WriteMember(SharpYaml.Serialization.ObjectContext@,SharpYaml.Serialization.IMemberDescriptor)">
+            <summary>
+            Writes a member.
+            </summary>
+            <param name="objectContext"></param>
+            <param name="member">The member.</param>
+        </member>
+        <member name="M:SharpYaml.Serialization.Serializers.CollectionSerializer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SharpYaml.Serialization.Serializers.CollectionSerializer"/> class.
+            </summary>
+        </member>
+        <member name="M:SharpYaml.Serialization.Serializers.CollectionSerializer.ReadCollectionItems(SharpYaml.Serialization.ObjectContext@)">
+            <summary>
+            Reads the collection items.
+            </summary>
+            <param name="objectContext">The object context.</param>
+            <exception cref="T:System.InvalidOperationException">Cannot deserialize list to type [{0}]. No Add method found.DoFormat(thisObject.GetType())
+            or
+            Cannot deserialize list to readonly collection type [{0}]..DoFormat(thisObject.GetType())</exception>
+        </member>
+        <member name="M:SharpYaml.Serialization.Serializers.CollectionSerializer.ReadCollectionItem(SharpYaml.Serialization.ObjectContext@,System.Type)">
+            <summary>
+            Reads a collection item.
+            </summary>
+            <param name="objectContext">The object context.</param>
+            <param name="itemType">Type of the item.</param>
+            <returns>The item to add to the current collection.</returns>
+        </member>
+        <member name="M:SharpYaml.Serialization.Serializers.CollectionSerializer.WriteCollectionItems(SharpYaml.Serialization.ObjectContext@)">
+            <summary>
+            Writes the collection items.
+            </summary>
+            <param name="objectContext">The object context.</param>
+        </member>
+        <member name="M:SharpYaml.Serialization.Serializers.CollectionSerializer.WriteCollectionItem(SharpYaml.Serialization.ObjectContext@,System.Object,System.Type)">
+            <summary>
+            Writes the collection item.
+            </summary>
+            <param name="objectContext">The object context.</param>
+            <param name="item">The item.</param>
+            <param name="itemType">Type of the item.</param>
+        </member>
+        <member name="T:SharpYaml.Serialization.Serializers.DictionarySerializer">
+            <summary>
+            Class for serializing a <see cref="T:System.Collections.Generic.IDictionary`2"/> or <see cref="T:System.Collections.IDictionary"/>
+            </summary>
+        </member>
+        <member name="M:SharpYaml.Serialization.Serializers.DictionarySerializer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SharpYaml.Serialization.Serializers.DictionarySerializer"/> class.
+            </summary>
+        </member>
+        <member name="M:SharpYaml.Serialization.Serializers.DictionarySerializer.TryCreate(SharpYaml.Serialization.SerializerContext,SharpYaml.Serialization.ITypeDescriptor)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpYaml.Serialization.Serializers.DictionarySerializer.ReadDictionaryItems(SharpYaml.Serialization.ObjectContext@)">
+            <summary>
+            Reads the dictionary items key-values.
+            </summary>
+            <param name="objectContext"></param>
+        </member>
+        <member name="M:SharpYaml.Serialization.Serializers.DictionarySerializer.ReadDictionaryItem(SharpYaml.Serialization.ObjectContext@,System.Collections.Generic.KeyValuePair{System.Type,System.Type})">
+            <summary>
+            Reads a dictionary item key-value.
+            </summary>
+            <param name="objectContext">The object context.</param>
+            <returns>KeyValuePair{System.ObjectSystem.Object}.</returns>
+        </member>
+        <member name="M:SharpYaml.Serialization.Serializers.DictionarySerializer.WriteDictionaryItems(SharpYaml.Serialization.ObjectContext@)">
+            <summary>
+            Writes the dictionary items keys-values.
+            </summary>
+            <param name="objectContext">The object context.</param>
+        </member>
+        <member name="M:SharpYaml.Serialization.Serializers.DictionarySerializer.WriteDictionaryItem(SharpYaml.Serialization.ObjectContext@,System.Collections.Generic.KeyValuePair{System.Object,System.Object},System.Collections.Generic.KeyValuePair{System.Type,System.Type})">
+            <summary>
+            Writes the dictionary item key-value.
+            </summary>
+            <param name="objectContext">The object context.</param>
+            <param name="keyValue">The key value.</param>
         </member>
         <member name="T:SharpYaml.Serialization.Serializers.RoutingSerializer">
             <summary>
@@ -3307,7 +3504,7 @@
             <param name="expectedType">The expected type.</param>
             <returns>System.Object.</returns>
         </member>
-        <member name="M:SharpYaml.Serialization.SerializerContext.WriteYaml(System.Object,System.Type)">
+        <member name="M:SharpYaml.Serialization.SerializerContext.WriteYaml(System.Object,System.Type,SharpYaml.YamlStyle)">
             <summary>
             The default function to write an object to Yaml
             </summary>
@@ -3349,35 +3546,6 @@
             <param name="value">The value extracted from a scalar.</param>
             <returns>System.String.</returns>
         </member>
-        <member name="M:SharpYaml.Serialization.SerializerContext.GetAliasValue(SharpYaml.Events.AnchorAlias)">
-            <summary>
-            Gets the alias value.
-            </summary>
-            <param name="alias">The alias.</param>
-            <returns>System.Object.</returns>
-            <exception cref="T:System.ArgumentNullException">alias</exception>
-            <exception cref="T:SharpYaml.Serialization.AnchorNotFoundException">Alias [{0}] not found.DoFormat(alias.Value)</exception>
-        </member>
-        <member name="M:SharpYaml.Serialization.SerializerContext.AddAliasBinding(SharpYaml.Events.AnchorAlias,System.Action{System.Object})">
-            <summary>
-            Adds the late binding.
-            </summary>
-            <param name="alias">The alias.</param>
-            <param name="setter">The setter.</param>
-            <exception cref="T:System.ArgumentException">No alias found in the ValueOutput;valueResult</exception>
-        </member>
-        <member name="M:SharpYaml.Serialization.SerializerContext.PushStyle(SharpYaml.YamlStyle)">
-            <summary>
-            Pushes a style for the next element to be emitted.
-            </summary>
-            <param name="style">The style.</param>
-        </member>
-        <member name="M:SharpYaml.Serialization.SerializerContext.PopStyle">
-            <summary>
-            Pops the current style.
-            </summary>
-            <returns>The current style.</returns>
-        </member>
         <member name="P:SharpYaml.Serialization.SerializerContext.IsSerializing">
             <summary>
             Gets a value indicating whether we are in the context of serializing.
@@ -3407,6 +3575,12 @@
             Gets the reader used while deserializing.
             </summary>
             <value>The reader.</value>
+        </member>
+        <member name="P:SharpYaml.Serialization.SerializerContext.ObjectSerializerBackend">
+            <summary>
+            Gets the object serializer backend.
+            </summary>
+            <value>The object serializer backend.</value>
         </member>
         <member name="P:SharpYaml.Serialization.SerializerContext.ObjectFactory">
             <summary>
@@ -3470,85 +3644,6 @@
             Gets or sets a value indicating whether [use short type name].
             </summary>
             <value><c>true</c> if [use short type name]; otherwise, <c>false</c>.</value>
-        </member>
-        <member name="T:SharpYaml.Serialization.ValueInput">
-            <summary>
-            A value to serialize.
-            </summary>
-        </member>
-        <member name="M:SharpYaml.Serialization.ValueInput.#ctor(System.Object)">
-            <summary>
-            Initializes a new instance of the <see cref="T:SharpYaml.Serialization.ValueInput"/> struct that contains a value.
-            </summary>
-            <param name="value">The value.</param>
-        </member>
-        <member name="M:SharpYaml.Serialization.ValueInput.#ctor(System.Object,System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:SharpYaml.Serialization.ValueInput"/> struct with its value and associated tag.
-            </summary>
-            <param name="value">The value.</param>
-            <param name="tag">The tag.</param>
-        </member>
-        <member name="M:SharpYaml.Serialization.ValueInput.ToString">
-            <summary>
-            Returns a <see cref="T:System.String"/> that represents this instance.
-            </summary>
-            <returns>A <see cref="T:System.String"/> that represents this instance.</returns>
-        </member>
-        <member name="P:SharpYaml.Serialization.ValueInput.Value">
-            <summary>
-            The returned value or null if no value.
-            </summary>
-        </member>
-        <member name="P:SharpYaml.Serialization.ValueInput.Tag">
-            <summary>
-            Gets the tag attached to this value.
-            </summary>
-            <value>The tag.</value>
-        </member>
-        <member name="T:SharpYaml.Serialization.ValueOutput">
-            <summary>
-            A deserialized value used by <see cref="M:SharpYaml.Serialization.IYamlSerializable.ReadYaml(SharpYaml.Serialization.SerializerContext,System.Object,SharpYaml.Serialization.ITypeDescriptor)"/> that
-            can be a direct value or an alias. This is used to handle for forward alias.
-            If an alias is found in a <see cref="T:SharpYaml.Serialization.ValueOutput"/>, the caller usually
-            register a late binding instruction through <see cref="M:SharpYaml.Serialization.SerializerContext.AddAliasBinding(SharpYaml.Events.AnchorAlias,System.Action{System.Object})"/>
-            that will be called once the whole document has been parsed, in order to 
-            resolve all remaining aliases.
-            </summary>
-        </member>
-        <member name="M:SharpYaml.Serialization.ValueOutput.#ctor(System.Object)">
-            <summary>
-            Initializes a new instance of the <see cref="T:SharpYaml.Serialization.ValueOutput"/> struct that contains a value.
-            </summary>
-            <param name="value">The value.</param>
-        </member>
-        <member name="M:SharpYaml.Serialization.ValueOutput.#ctor(SharpYaml.Events.AnchorAlias)">
-            <summary>
-            Initializes a new instance of the <see cref="T:SharpYaml.Serialization.ValueOutput"/> struct that contains an <see cref="T:SharpYaml.Events.AnchorAlias"/>.
-            </summary>
-            <param name="value">The value.</param>
-        </member>
-        <member name="F:SharpYaml.Serialization.ValueOutput.Value">
-            <summary>
-            The returned value or null if no value.
-            </summary>
-        </member>
-        <member name="M:SharpYaml.Serialization.ValueOutput.ToString">
-            <summary>
-            Returns a <see cref="T:System.String"/> that represents this instance.
-            </summary>
-            <returns>A <see cref="T:System.String"/> that represents this instance.</returns>
-        </member>
-        <member name="P:SharpYaml.Serialization.ValueOutput.IsAlias">
-            <summary>
-            True if this value result is an alias.
-            </summary>
-        </member>
-        <member name="P:SharpYaml.Serialization.ValueOutput.Alias">
-            <summary>
-            Gets the alias, only valid if <see cref="P:SharpYaml.Serialization.ValueOutput.IsAlias"/> is true, null otherwise.
-            </summary>
-            <value>The alias.</value>
         </member>
         <member name="T:SharpYaml.Serialization.YamlAliasNode">
             <summary>
@@ -4577,26 +4672,9 @@
         </member>
         <member name="P:SharpYaml.Serialization.SerializerSettings.DefaultStyle">
             <summary>
-            Gets or sets the default <see cref="T:SharpYaml.YamlStyle"/>. Default is <see cref="F:SharpYaml.YamlStyle.Block"/>. See <see cref="P:SharpYaml.Serialization.SerializerSettings.DynamicStyleFormat"/> to understand the resolution of styles.
+            Gets or sets the default <see cref="T:SharpYaml.YamlStyle"/>. Default is <see cref="F:SharpYaml.YamlStyle.Block"/>. See <see cref="!:DynamicStyleFormat"/> to understand the resolution of styles.
             </summary>
             <value>The default style.</value>
-        </member>
-        <member name="P:SharpYaml.Serialization.SerializerSettings.DynamicStyleFormat">
-            <summary>
-            Gets or sets a <see cref="T:SharpYaml.Serialization.IDynamicStyleFormat"/> to allow switching <see cref="T:SharpYaml.YamlStyle"/> dynamically based
-            on the element being serialized. See remarks.
-            </summary>
-            <value>The dynamic style format.</value>
-            <remarks>
-            The order to resolve a style is:
-            <ul>
-            <li>First try to get a style from <see cref="P:SharpYaml.Serialization.SerializerSettings.DynamicStyleFormat"/>, if null or returns <see cref="F:SharpYaml.YamlStyle.Any"/></li>
-            <li>Second try to resolve the style from the property/field being serialized with the attribute <see cref="T:SharpYaml.Serialization.YamlStyleAttribute"/>, if it is different from <see cref="F:SharpYaml.YamlStyle.Any"/> </li>
-            <li>Third  try to resolve the style from the type being serialized with the attribute <see cref="T:SharpYaml.Serialization.YamlStyleAttribute"/>, if it is different from <see cref="F:SharpYaml.YamlStyle.Any"/> </li>
-            <li>If <see cref="P:SharpYaml.Serialization.SerializerSettings.LimitPrimitiveFlowSequence"/> is &gt; 0, use flow sequence for list/array of primitives less that the value defined in <see cref="P:SharpYaml.Serialization.SerializerSettings.LimitPrimitiveFlowSequence"/> </li>
-            <li>Else use the default style <see cref="P:SharpYaml.Serialization.SerializerSettings.DefaultStyle"/></li>
-            </ul>
-            </remarks>
         </member>
         <member name="P:SharpYaml.Serialization.SerializerSettings.SpecialCollectionMember">
             <summary>
@@ -4613,17 +4691,17 @@
             special fielx (e.g. "~Items") that contains the actual items of the collection (either a mapping for dictionary or a sequence for collections).
             The <see cref="P:SharpYaml.Serialization.SerializerSettings.SpecialCollectionMember"/> is this special key that is used when serializing items of a non-pure collection.</remarks>
         </member>
-        <member name="P:SharpYaml.Serialization.SerializerSettings.KeyTransform">
-            <summary>
-            Gets or sets the key transform.
-            </summary>
-            <value>The key transform.</value>
-        </member>
         <member name="P:SharpYaml.Serialization.SerializerSettings.Attributes">
             <summary>
             Gets the attribute registry.
             </summary>
             <value>The attribute registry.</value>
+        </member>
+        <member name="P:SharpYaml.Serialization.SerializerSettings.ObjectSerializerBackend">
+            <summary>
+            Gets or sets the ObjectSerializerBackend. Default implementation is <see cref="T:SharpYaml.Serialization.Serializers.DefaultObjectSerializerBackend"/>
+            </summary>
+            <value>The ObjectSerializerBackend.</value>
         </member>
         <member name="P:SharpYaml.Serialization.SerializerSettings.ObjectFactory">
             <summary>
