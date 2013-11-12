@@ -50,28 +50,6 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   
-  <!--.NET 4.0 - DirectX11.1 - Windows 8 Desktop-->
-  <PropertyGroup Condition=" '$(Configuration)' == 'DIRECTX11_1Debug' Or '$(Configuration)' == 'DIRECTX11_1Release'">
-    <SharpDXAssemblyType>DirectX11_1</SharpDXAssemblyType>
-    <SharpDXPlatform>net40</SharpDXPlatform>
-    <DirectX11_1>true</DirectX11_1>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
-  </PropertyGroup>
-  
-  <!--.NET 4.5 - DirectX11.1 - Windows 8 Metro-->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Win8Debug' Or '$(Configuration)' == 'Win8Release'  ">
-    <SharpDXAssemblyType>DirectX11_1</SharpDXAssemblyType>
-    <SharpDXPlatform>winrt</SharpDXPlatform>
-    <SharpDXWin8>true</SharpDXWin8>
-    <SharpDXWin8Core>true</SharpDXWin8Core>
-    <DirectX11_1>true</DirectX11_1>
-<!--<ImplicitlyExpandTargetFramework>false</ImplicitlyExpandTargetFramework>
-    <TargetFrameworkIdentifier>.NETCore</TargetFrameworkIdentifier>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <TargetPlatformVersion>8.0</TargetPlatformVersion>-->
-  </PropertyGroup>
-  
   <!--.NET Windows Phone - DirectX11.1 - Windows Phone 8-->
   <PropertyGroup Condition=" '$(Configuration)' == 'WP8Debug' Or '$(Configuration)' == 'WP8Release'  ">
     <SharpDXAssemblyType>DirectX11_1</SharpDXAssemblyType>
@@ -163,69 +141,6 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
-  <!--.NET 4.0 - DirectX11.1 - Windows 8 Desktop-->
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DIRECTX11_1Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>false</Optimize>
-    <DefineConstants>TRACE;DEBUG;DIRECTX11_1;WinFormsInterop;NET35Plus</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DIRECTX11_1Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <DefineConstants>TRACE;DIRECTX11_1;WinFormsInterop;NET35Plus</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <DocumentationFile>bin\DIRECTX11_1Release\$(AssemblyName).xml</DocumentationFile>
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
-
-  <!--.NET 4.5 - DirectX11.1 - Windows 8 Metro-->
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-   <DefineConstants>TRACE;DEBUG;WIN8METRO;W8CORE;NETFX_CORE;DIRECTX11_1;NET35Plus</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>
-    </DocumentationFile>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>TRACE;WIN8METRO;W8CORE;NET35Plus;DIRECTX11_1;NET35Plus</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-  </PropertyGroup>
-
-  <!--.NET Windows Phone - DirectX11.1 - Windows Phone 8-->
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>TRACE;DEBUG;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE;NET35Plus</DefineConstants>
-    <NoStdLib>true</NoStdLib>
-    <NoConfig>true</NoConfig>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>
-    </DocumentationFile>
-    <DebugType>pdbonly</DebugType>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-  </PropertyGroup>
-
   <!--.NET 4.0 - DirectX11.2 - Windows 8 Desktop-->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DIRECTX11_2Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -252,7 +167,7 @@
   <!--.NET 4.5 - DirectX11.2 - Windows 8 Metro-->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8DX11_2Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-   <DefineConstants>TRACE;DEBUG;WIN8METRO;W8CORE;NETFX_CORE;DIRECTX11_1;DIRECTX11_2;NET35Plus</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WIN8METRO;W8CORE;NETFX_CORE;DIRECTX11_1;DIRECTX11_2;NET35Plus</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>
     </DocumentationFile>
@@ -269,6 +184,21 @@
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+
+  <!--.NET Windows Phone - DirectX11.1 - Windows Phone 8-->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>TRACE;DEBUG;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE;NET35Plus</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugType>pdbonly</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
@@ -323,18 +253,6 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Net40Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
     <DefineConstants>TRACE;WinFormsInterop;NET35Plus;SHARPDX_SIGNED</DefineConstants>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
-    <DelaySign>true</DelaySign>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
-    <DefineConstants>TRACE;WIN8METRO;W8CORE;NET35Plus;DIRECTX11_1;SHARPDX_SIGNED</DefineConstants>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
-    <DelaySign>true</DelaySign>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DIRECTX11_1Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
-    <DefineConstants>TRACE;DIRECTX11_1;WinFormsInterop;NET35Plus;SHARPDX_SIGNED</DefineConstants>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
     <DelaySign>true</DelaySign>

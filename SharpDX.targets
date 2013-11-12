@@ -44,9 +44,9 @@ It compiles all files of type ToolkitFxc/ToolkitFont
   <PropertyGroup>
     <!--Detect SharpDX Platform based on .NETFramework version-->
 
-    <!--By default DX11 is used for Desktop platform and DX11.1 for WinRT-->
+    <!--By default DX11 is used for Desktop platform and DX11.2 for WinRT-->
     <SharpDXDirectXVersion Condition="'$(SharpDXDirectXVersion)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework'">DirectX11</SharpDXDirectXVersion>
-    <SharpDXDirectXVersion Condition="'$(SharpDXDirectXVersion)' == '' and '$(TargetFrameworkIdentifier)' == '.NETCore'">DirectX11_1</SharpDXDirectXVersion>
+    <SharpDXDirectXVersion Condition="'$(SharpDXDirectXVersion)' == '' and '$(TargetFrameworkIdentifier)' == '.NETCore'">DirectX11_2</SharpDXDirectXVersion>
 
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework' and ('$(TargetFrameworkVersion)' == 'v2.0' or '$(TargetFrameworkVersion)' == 'v3.5') ">DirectX11-net20</SharpDXPlatform>
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework' and $(TargetFrameworkVersion.Contains('v4'))">$(SharpDXDirectXVersion)-net40</SharpDXPlatform>
