@@ -1893,14 +1893,14 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a spherical billboard that rotates around a specified object position.
+        /// Creates a left-handed spherical billboard that rotates around a specified object position.
         /// </summary>
         /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
         /// <param name="cameraPosition">The position of the camera.</param>
         /// <param name="cameraUpVector">The up vector of the camera.</param>
         /// <param name="cameraForwardVector">The forward vector of the camera.</param>
         /// <param name="result">When the method completes, contains the created billboard matrix.</param>
-        public static void Billboard(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Matrix result)
+        public static void BillboardLH(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Matrix result)
         {
             Vector3 crossed;
             Vector3 final;
@@ -1935,17 +1935,72 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a spherical billboard that rotates around a specified object position.
+        /// Creates a left-handed spherical billboard that rotates around a specified object position.
         /// </summary>
         /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
         /// <param name="cameraPosition">The position of the camera.</param>
         /// <param name="cameraUpVector">The up vector of the camera.</param>
         /// <param name="cameraForwardVector">The forward vector of the camera.</param>
         /// <returns>The created billboard matrix.</returns>
-        public static Matrix Billboard(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector)
+        public static Matrix BillboardLH(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector)
         {
             Matrix result;
-            Billboard(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
+            BillboardLH(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a right-handed spherical billboard that rotates around a specified object position.
+        /// </summary>
+        /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
+        /// <param name="cameraPosition">The position of the camera.</param>
+        /// <param name="cameraUpVector">The up vector of the camera.</param>
+        /// <param name="cameraForwardVector">The forward vector of the camera.</param>
+        /// <param name="result">When the method completes, contains the created billboard matrix.</param>
+        public static void BillboardRH(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Matrix result) {
+            Vector3 crossed;
+            Vector3 final;
+            Vector3 difference = cameraPosition - objectPosition;
+
+            float lengthSq = difference.LengthSquared();
+            if (MathUtil.IsZero(lengthSq))
+                difference = -cameraForwardVector;
+            else
+                difference *= (float)(1.0 / Math.Sqrt(lengthSq));
+
+            Vector3.Cross(ref cameraUpVector, ref difference, out crossed);
+            crossed.Normalize();
+            Vector3.Cross(ref difference, ref crossed, out final);
+
+            result.M11 = crossed.X;
+            result.M12 = crossed.Y;
+            result.M13 = crossed.Z;
+            result.M14 = 0.0f;
+            result.M21 = final.X;
+            result.M22 = final.Y;
+            result.M23 = final.Z;
+            result.M24 = 0.0f;
+            result.M31 = difference.X;
+            result.M32 = difference.Y;
+            result.M33 = difference.Z;
+            result.M34 = 0.0f;
+            result.M41 = objectPosition.X;
+            result.M42 = objectPosition.Y;
+            result.M43 = objectPosition.Z;
+            result.M44 = 1.0f;
+        }
+
+        /// <summary>
+        /// Creates a right-handed spherical billboard that rotates around a specified object position.
+        /// </summary>
+        /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
+        /// <param name="cameraPosition">The position of the camera.</param>
+        /// <param name="cameraUpVector">The up vector of the camera.</param>
+        /// <param name="cameraForwardVector">The forward vector of the camera.</param>
+        /// <returns>The created billboard matrix.</returns>
+        public static Matrix BillboardRH(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector) {
+            Matrix result;
+            BillboardRH(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
             return result;
         }
 
