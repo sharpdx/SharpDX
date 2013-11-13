@@ -49,9 +49,9 @@
     <None Include="SharpDX.Toolkit.Yaml.nuspec" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="SharpYaml, Version=1.0.2.31337, Culture=neutral, PublicKeyToken=1ced8108e942bc02, processorArchitecture=MSIL">
+    <Reference Include="SharpYaml, Version=1.1.0.42833, Culture=neutral, PublicKeyToken=1ced8108e942bc02, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\SharpYaml.1.0.2\lib\SharpYaml.dll</HintPath>
+      <HintPath>..\..\..\packages\SharpYaml.1.1.0\lib\SharpYaml.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
