@@ -127,7 +127,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8DX11_2Debug|AnyCPU'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Win8DX11_2Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;WIN8METRO;DIRECTX11_1;DIRECTX11_2</DefineConstants>
@@ -139,7 +139,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8DX11_2Release|AnyCPU'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU' ">
     <OutputPath>bin\Win8DX11_2Release\</OutputPath>
     <DefineConstants>TRACE;WIN8METRO;DIRECTX11_1;DIRECTX11_2</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

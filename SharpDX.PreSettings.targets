@@ -74,7 +74,7 @@
   </PropertyGroup>
   
   <!--.NET 4.5 - DirectX11.2 - Windows 8 Metro-->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Win8DX11_2Debug' Or '$(Configuration)' == 'Win8DX11_2Release'  ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Win8DDebug' Or '$(Configuration)' == 'Win8Release'  ">
     <SharpDXAssemblyType>DirectX11_2</SharpDXAssemblyType>
     <SharpDXPlatform>winrt</SharpDXPlatform>
     <SharpDXWin8>true</SharpDXWin8>
@@ -165,7 +165,7 @@
   </PropertyGroup>
 
   <!--.NET 4.5 - DirectX11.2 - Windows 8 Metro-->
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8DX11_2Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <DefineConstants>TRACE;DEBUG;WIN8METRO;W8CORE;NETFX_CORE;DIRECTX11_1;DIRECTX11_2;NET35Plus</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -177,7 +177,7 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8DX11_2Release|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <DefineConstants>TRACE;WIN8METRO;W8CORE;NET35Plus;DIRECTX11_1;DIRECTX11_2;NET35Plus</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -269,7 +269,7 @@
     <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
     <DelaySign>true</DelaySign>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Win8DX11_2Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
     <DefineConstants>TRACE;WIN8METRO;W8CORE;NET35Plus;DIRECTX11_1;DIRECTX11_2;SHARPDX_SIGNED</DefineConstants>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
