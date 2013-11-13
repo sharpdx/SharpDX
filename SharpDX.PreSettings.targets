@@ -74,7 +74,7 @@
   </PropertyGroup>
   
   <!--.NET 4.5 - DirectX11.2 - Windows 8 Metro-->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Win8DDebug' Or '$(Configuration)' == 'Win8Release'  ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Win8Debug' Or '$(Configuration)' == 'Win8Release'  ">
     <SharpDXAssemblyType>DirectX11_2</SharpDXAssemblyType>
     <SharpDXPlatform>winrt</SharpDXPlatform>
     <SharpDXWin8>true</SharpDXWin8>
