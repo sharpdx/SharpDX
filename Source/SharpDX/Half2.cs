@@ -151,7 +151,10 @@ namespace SharpDX
         /// <returns>A 32-bit signed integer hash code.</returns>
         public override int GetHashCode()
         {
-            return (this.Y.GetHashCode() + this.X.GetHashCode());
+            unchecked
+            {
+                return (X.GetHashCode() * 397) ^ Y.GetHashCode();
+            }
         }
 
         /// <inheritdoc/>

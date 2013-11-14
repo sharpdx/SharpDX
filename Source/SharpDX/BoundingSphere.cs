@@ -476,7 +476,10 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return Center.GetHashCode() + Radius.GetHashCode();
+            unchecked
+            {
+                return (Center.GetHashCode() * 397) ^ Radius.GetHashCode();
+            }
         }
 
         /// <summary>

@@ -309,10 +309,15 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return iX.GetHashCode() + iY.GetHashCode() + iZ.GetHashCode() + iW.GetHashCode();
+            unchecked
+            {
+                var hashCode = iX;
+                hashCode = (hashCode * 397) ^ iY;
+                hashCode = (hashCode * 397) ^ iZ;
+                hashCode = (hashCode * 397) ^ iW;
+                return hashCode;
+            }
         }
-
-
 
         /// <summary>
         /// Determines whether the specified <see cref = "Bool4" /> is equal to this instance.

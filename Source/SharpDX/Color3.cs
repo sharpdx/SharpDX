@@ -768,7 +768,13 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return Red.GetHashCode() + Green.GetHashCode() + Blue.GetHashCode();
+            unchecked
+            {
+                var hashCode = Red.GetHashCode();
+                hashCode = (hashCode * 397) ^ Green.GetHashCode();
+                hashCode = (hashCode * 397) ^ Blue.GetHashCode();
+                return hashCode;
+            }
         }
 
         /// <summary>

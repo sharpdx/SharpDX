@@ -1076,9 +1076,16 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return M11.GetHashCode() + M12.GetHashCode() + 
-               M21.GetHashCode() + M22.GetHashCode() +
-               M31.GetHashCode() + M32.GetHashCode();
+            unchecked
+            {
+                var hashCode = M11.GetHashCode();
+                hashCode = (hashCode * 397) ^ M12.GetHashCode();
+                hashCode = (hashCode * 397) ^ M21.GetHashCode();
+                hashCode = (hashCode * 397) ^ M22.GetHashCode();
+                hashCode = (hashCode * 397) ^ M31.GetHashCode();
+                hashCode = (hashCode * 397) ^ M32.GetHashCode();
+                return hashCode;
+            }
         }
 
         /// <inheritdoc/>
