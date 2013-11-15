@@ -58,10 +58,7 @@
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Net20Release;Platform=Any CPU"/>
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Net40Release;Platform=Any CPU"/>
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Win8Release;Platform=Any CPU"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Win8DX11_2Release;Platform=Any CPU"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=DIRECTX11_1Release;Platform=Any CPU"/>
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=DIRECTX11_2Release;Platform=Any CPU"/>
-
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolutionWP8)" Properties="Configuration=WP8Release;Platform=x86"/>
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolutionWP8)" Properties="Configuration=WP8Release;Platform=ARM"/>
 
@@ -79,8 +76,6 @@
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Net20Release;Platform=Any CPU;SharpDXSign=true"/>
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Net40Release;Platform=Any CPU;SharpDXSign=true"/>
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Win8Release;Platform=Any CPU;SharpDXSign=true"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Win8DX11_2Release;Platform=Any CPU;SharpDXSign=true"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=DIRECTX11_1Release;Platform=Any CPU;SharpDXSign=true"/>
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=DIRECTX11_2Release;Platform=Any CPU;SharpDXSign=true"/>
   </Target>
 
