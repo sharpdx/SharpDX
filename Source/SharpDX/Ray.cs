@@ -383,7 +383,10 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return Position.GetHashCode() + Direction.GetHashCode();
+            unchecked
+            {
+                return (Position.GetHashCode() * 397) ^ Direction.GetHashCode();
+            }
         }
 
         /// <summary>

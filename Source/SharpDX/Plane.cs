@@ -704,7 +704,10 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return Normal.GetHashCode() + D.GetHashCode();
+            unchecked
+            {
+                return (Normal.GetHashCode() * 397) ^ D.GetHashCode();
+            }
         }
 
         /// <summary>

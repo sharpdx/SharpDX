@@ -462,7 +462,10 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return Minimum.GetHashCode() + Maximum.GetHashCode();
+            unchecked
+            {
+                return (Minimum.GetHashCode() * 397) ^ Maximum.GetHashCode();
+            }
         }
 
         /// <summary>
