@@ -48,6 +48,7 @@
     <Compile Include="DirectWrite\NamespaceDoc.cs" />
     <Compile Include="Effects\NamespaceDoc.cs" />
     <Compile Include="Effects\OpacityMetadata.cs" />
+    <Compile Include="Effects\PerspectiveTransform3D.cs" />
     <Compile Include="Effects\YCbCr.cs" />
     <Compile Include="Factory2.cs" />
     <Compile Include="NamespaceDoc.cs" />
