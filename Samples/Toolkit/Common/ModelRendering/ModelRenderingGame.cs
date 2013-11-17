@@ -80,7 +80,7 @@ namespace ModelRendering
             foreach (var modelName in new[] { "Dude", "Duck", "Car", "Happy", "Knot", "Skull", "Sphere", "Teapot" })
             {
                 model = Content.Load<Model>(modelName);
-                
+
                 // Enable default lighting  on model.
                 BasicEffect.EnableDefaultLighting(model, true);
 
@@ -125,7 +125,9 @@ namespace ModelRendering
         protected override void Draw(GameTime gameTime)
         {
             // Clears the screen with the Color.CornflowerBlue
-            GraphicsDevice.Clear(Color.CornflowerBlue);            
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            GraphicsDevice.SetRasterizerState(GraphicsDevice.RasterizerStates.CullFront);
 
             // Draw the model
             model.Draw(GraphicsDevice, world, view, projection);
