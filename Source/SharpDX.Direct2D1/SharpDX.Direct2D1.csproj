@@ -241,6 +241,7 @@
     <Compile Include="WIC\ColorContextsHelper.cs" />
     <Compile Include="WIC\ColorTransform.cs" />
     <Compile Include="WIC\ComponentInfo.cs" />
+    <Compile Include="WIC\DdsFrameDecode.cs" />
     <Compile Include="WIC\ImageEncoder.cs" />
     <Compile Include="WIC\ImageParameters.cs" />
     <Compile Include="WIC\ImagingFactory2.cs" />

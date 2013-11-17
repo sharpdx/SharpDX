@@ -313,7 +313,10 @@
 
     <map method="IWICBitmapFrameEncode::WriteSource" visibility="internal"/>
     <map param="IWICBitmapFrameEncode::WriteSource::prc" type="void" attribute="in"/>
-    
+
+    <map method="IWICDdsFrameDecode::GetSizeInBlocks" visibility="internal" />
+    <map method="IWICDdsFrameDecode::CopyBlocks" visibility="internal" />
+
     <!--
     // *****************************************************************
     // WIC Functions
