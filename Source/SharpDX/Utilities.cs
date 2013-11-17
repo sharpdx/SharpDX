@@ -1446,15 +1446,18 @@ namespace SharpDX
         }
 
 #if WP8
+        // http://msdn.microsoft.com/en-us/library/windows/desktop/ms683212%28v=vs.85%29.aspx
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate IntPtr GetProcAddressDelegate(IntPtr hModule, [MarshalAs(UnmanagedType.LPWStr)] string procName);
+        private delegate IntPtr GetProcAddressDelegate(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string procName);
         private static GetProcAddressDelegate getProcAddress_;
         private static GetProcAddressDelegate GetProcAddress_
         {
             get { return getProcAddress_ ?? (getProcAddress_ = (GetProcAddressDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.GetProcAddress()), typeof(GetProcAddressDelegate))); }
         }
 #else
-        [DllImport("kernel32", EntryPoint = "GetProcAddress", CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = true)]
+        // http://www.pinvoke.net/default.aspx/kernel32.getprocaddress
+        // http://stackoverflow.com/questions/3754264/c-sharp-getprocaddress-returns-zero
+        [DllImport("kernel32", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
         static extern IntPtr GetProcAddress_(IntPtr hModule, string procName);
 #endif
 
