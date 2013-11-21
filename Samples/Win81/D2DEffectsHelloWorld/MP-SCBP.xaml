@@ -1,0 +1,20 @@
+﻿<SwapChainBackgroundPanel
+    x:Class="D2DEffectsHelloWorld.MPSCBP"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"    
+    x:Name="rootSCBP"
+    >
+
+
+    <TextBlock Text="Blur" Foreground="White" Margin="121,55,0,0" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Top" />
+    <Slider HorizontalAlignment="Left" Height="39" Margin="165,45,0,0" VerticalAlignment="Top" Width="461" ValueChanged="BlurDeviationChanged" Maximum="10" LargeChange="1"/>
+
+    <TextBlock Text="Scale" Foreground="White" Margin="121,129,0,0" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Top" />
+    <Slider HorizontalAlignment="Left" Height="39" Margin="165,119,0,0" VerticalAlignment="Top" Width="461" ValueChanged="ScaleChanged"  Maximum="1.2" Minimum="0.6" Value="0.7" SmallChange="0.02" LargeChange="0.02" StepFrequency="0.01"/>
+
+
+
+</SwapChainBackgroundPanel>

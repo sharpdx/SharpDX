@@ -1,0 +1,26 @@
+﻿<Page
+    x:Class="MiniCubeBrushXaml.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MiniCubeBrushXaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+        <Canvas x:Name="d3dCanvas" HorizontalAlignment="Left" Height="401.27" Margin="207.611,85.365,0,0" VerticalAlignment="Top" Width="398.778" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+        	<Canvas.RenderTransform>
+        		<CompositeTransform Rotation="30"/>
+        	</Canvas.RenderTransform>
+        	<TextBlock x:Name="textBlock" Text="SharpDX&#xa;Direct3D11-XAML&#xa;Brush Interop!" FontFamily="Verdana" FontSize="26.667" FontStyle="Italic" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Height="109.088" Width="332" Canvas.Left="33.342" Canvas.Top="10"/>
+        	<Rectangle x:Name="d3dRectangle"  Height="267.182" Canvas.Left="33.342" Stroke="Black" Canvas.Top="124.088" Width="332"/>
+        </Canvas>
+        <Canvas x:Name="d2dCanvas" HorizontalAlignment="Left" Height="401.27" Margin="734.111,194.865,0,0" VerticalAlignment="Top" Width="398.778" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+            <Canvas.RenderTransform>
+                <CompositeTransform Rotation="30"/>
+            </Canvas.RenderTransform>
+            <TextBlock x:Name="textBlock1" Text="SharpDX&#xa;Direct2D-XAML&#xa;Brush Interop!" FontFamily="Verdana" FontSize="26.667" FontStyle="Italic" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Height="109.088" Width="332" Canvas.Left="33.342" Canvas.Top="10"/>
+            <Rectangle x:Name="d2dRectangle" Height="267.182" Canvas.Left="33.342" Stroke="Black" Canvas.Top="124.088" Width="332"/>
+        </Canvas>
+    </Grid>
+</Page>
