@@ -183,34 +183,34 @@ namespace D2DLightingEffects
             var d2dContext = _deviceManager.ContextDirect2D;
 
             // Effect 1 : BitmapSource - take decoded image data and get a BitmapSource from it
-            SharpDX.Direct2D1.Effects.BitmapSourceEffect bitmapSourceEffect = new SharpDX.Direct2D1.Effects.BitmapSourceEffect(d2dContext);
-            bitmapSourceEffect.ScaleSource = scale;
-            bitmapSourceEffect.WicBitmapSource = formatConverter;
-            //bitmapSourceEffect.Cached = true; // Because the image will not be changing, we should cache the effect for performance reasons.
+            SharpDX.Direct2D1.Effects.BitmapSource bitmapSource = new SharpDX.Direct2D1.Effects.BitmapSource(d2dContext);
+            bitmapSource.ScaleSource = scale;
+            bitmapSource.WicBitmapSource = formatConverter;
+            //bitmapSource.Cached = true; // Because the image will not be changing, we should cache the effect for performance reasons.
 
             // Effect 2 : PointSpecular
             _pointSpecularEffect = new SharpDX.Direct2D1.Effects.PointSpecular(d2dContext);
-            _pointSpecularEffect.SetInput(0, bitmapSourceEffect.Output, true);
+            _pointSpecularEffect.SetInput(0, bitmapSource.Output, true);
 
             // Effect 3 : SpotSpecular
             _spotSpecularEffect = new SharpDX.Direct2D1.Effects.SpotSpecular(d2dContext);
-            _spotSpecularEffect.SetInput(0, bitmapSourceEffect.Output, true);
+            _spotSpecularEffect.SetInput(0, bitmapSource.Output, true);
 
             // Effect 4 : DistantSpecular
             _distantSpecularEffect = new SharpDX.Direct2D1.Effects.DistantSpecular(d2dContext);
-            _distantSpecularEffect.SetInput(0, bitmapSourceEffect.Output, true);
+            _distantSpecularEffect.SetInput(0, bitmapSource.Output, true);
 
             // Effect 5 : PointDiffuse
             _pointDiffuseEffect = new SharpDX.Direct2D1.Effects.PointDiffuse(d2dContext);
-            _pointDiffuseEffect.SetInput(0, bitmapSourceEffect.Output, true);
+            _pointDiffuseEffect.SetInput(0, bitmapSource.Output, true);
 
             // Effect 6 : SpotDiffuse
             _spotDiffuseEffect = new SharpDX.Direct2D1.Effects.SpotDiffuse(d2dContext);
-            _spotDiffuseEffect.SetInput(0, bitmapSourceEffect.Output, true);
+            _spotDiffuseEffect.SetInput(0, bitmapSource.Output, true);
 
             // Effect 7 : DistantDiffuse
             _distantDiffuseEffect = new SharpDX.Direct2D1.Effects.DistantDiffuse(d2dContext);
-            _distantDiffuseEffect.SetInput(0, bitmapSourceEffect.Output, true);
+            _distantDiffuseEffect.SetInput(0, bitmapSource.Output, true);
 
 
             return _pointSpecularEffect;

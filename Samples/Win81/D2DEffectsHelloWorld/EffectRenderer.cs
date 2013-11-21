@@ -125,13 +125,13 @@ namespace D2DEffectsHelloWorld
             var d2dContext = _deviceManager.ContextDirect2D;
 
             // Effect 1 : BitmapSource - take decoded image data and get a BitmapSource from it
-            SharpDX.Direct2D1.Effects.BitmapSourceEffect bitmapSourceEffect = new SharpDX.Direct2D1.Effects.BitmapSourceEffect(d2dContext);
-            bitmapSourceEffect.ScaleSource = scale;
-            bitmapSourceEffect.WicBitmapSource = formatConverter;
+            SharpDX.Direct2D1.Effects.BitmapSource bitmapSource = new SharpDX.Direct2D1.Effects.BitmapSource(d2dContext);
+            bitmapSource.ScaleSource = scale;
+            bitmapSource.WicBitmapSource = formatConverter;
 
             // Effect 2 : GaussianBlur - give the bitmapsource a gaussian blurred effect
             SharpDX.Direct2D1.Effects.GaussianBlur gaussianBlurEffect = new SharpDX.Direct2D1.Effects.GaussianBlur(d2dContext);
-            gaussianBlurEffect.SetInput(0, bitmapSourceEffect.Output, true);
+            gaussianBlurEffect.SetInput(0, bitmapSource.Output, true);
             gaussianBlurEffect.StandardDeviation = blurDeviation;
 
             return gaussianBlurEffect;

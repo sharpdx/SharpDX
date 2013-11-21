@@ -38,7 +38,7 @@ namespace D2DCustomPixelShaderEffect
 
         private Brush sceneColorBrush;
         private SharpDX.Direct2D1.Effect _rippleEffect;
-        private SharpDX.Direct2D1.Effects.BitmapSourceEffect bitmapSourceEffect;
+        private SharpDX.Direct2D1.Effects.BitmapSource bitmapSource;
 
         private Windows.UI.Xaml.UIElement _root;
         private Windows.UI.Xaml.DependencyObject _rootParent;
@@ -102,7 +102,7 @@ namespace D2DCustomPixelShaderEffect
             if (localSize != screenSize)
             {
                 screenSize = localSize;
-                bitmapSourceEffect.ScaleSource = new Vector2((float)screenSize.Width / imageSize.Width, (float)screenSize.Height / imageSize.Height);
+                bitmapSource.ScaleSource = new Vector2((float)screenSize.Width / imageSize.Width, (float)screenSize.Height / imageSize.Height);
             }
         }
 
@@ -167,14 +167,14 @@ namespace D2DCustomPixelShaderEffect
             var d2dContext = _deviceManager.ContextDirect2D;
 
             // Effect 1 : BitmapSource - take decoded image data and get a BitmapSource from it
-            bitmapSourceEffect = new SharpDX.Direct2D1.Effects.BitmapSourceEffect(d2dContext);
-            bitmapSourceEffect.WicBitmapSource = formatConverter;
-            bitmapSourceEffect.Cached = true; // Because the image will not be changing, we should cache the effect for performance reasons.
+            bitmapSource = new SharpDX.Direct2D1.Effects.BitmapSource(d2dContext);
+            bitmapSource.WicBitmapSource = formatConverter;
+            bitmapSource.Cached = true; // Because the image will not be changing, we should cache the effect for performance reasons.
             
             // Effect 2 : PointSpecular
             _deviceManager.FactoryDirect2D.RegisterEffect<RippleEffect>();
             _rippleEffect = new Effect<RippleEffect>(_deviceManager.ContextDirect2D);
-            _rippleEffect.SetInputEffect(0, bitmapSourceEffect);
+            _rippleEffect.SetInputEffect(0, bitmapSource);
         }
 
         private void UpdateEffectGraph()
