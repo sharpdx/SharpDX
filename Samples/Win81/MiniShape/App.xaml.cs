@@ -45,7 +45,7 @@ namespace MiniShape
     sealed partial class App : Application
     {
         DeviceManager deviceManager;
-        SwapChainBackgroundPanelTarget target;
+        SwapChainPanelTarget target;
         ShapeRenderer renderer;
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace MiniShape
             var fpsRenderer = new FpsRenderer();
 
             // Use CoreWindowTarget as the rendering target (Initialize SwapChain, RenderTargetView, DepthStencilView, BitmapTarget)
-            target = new SwapChainBackgroundPanelTarget(swapChainPanel);
+            target = new SwapChainPanelTarget(swapChainPanel);
 
             // Add Initializer to device manager
             deviceManager.OnInitialize += target.Initialize;

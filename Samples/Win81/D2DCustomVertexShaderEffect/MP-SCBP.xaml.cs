@@ -43,10 +43,10 @@ namespace D2DCustomVertexShaderEffect
 {
 
 
-    public sealed partial class MPSCBP : SwapChainBackgroundPanel
+    public sealed partial class MPSCBP : SwapChainPanel
     {
         private DeviceManager deviceManager;
-        private SwapChainBackgroundPanelTarget d2dTarget;
+        private SwapChainPanelTarget d2dTarget;
         private EffectRenderer effectRenderer;
 
         public MPSCBP()
@@ -57,7 +57,7 @@ namespace D2DCustomVertexShaderEffect
             effectRenderer = new EffectRenderer(root, root);
             var fpsRenderer = new FpsRenderer();
 
-            d2dTarget = new SwapChainBackgroundPanelTarget(root);
+            d2dTarget = new SwapChainPanelTarget(root);
             d2dTarget.OnRender += effectRenderer.Render;
             d2dTarget.OnRender += fpsRenderer.Render;
 

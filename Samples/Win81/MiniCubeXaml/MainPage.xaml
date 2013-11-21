@@ -1,4 +1,4 @@
-﻿<SwapChainBackgroundPanel
+﻿<SwapChainPanel
     x:Class="MiniCubeXaml.DirectXPanelXaml"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -13,4 +13,4 @@
     <CheckBox x:Name="checkBoxDirect2D" Content="Show Direct2D Overlay" HorizontalAlignment="Left" Height="39" Margin="630,5,0,0" VerticalAlignment="Top" Width="223" Checked="checkBoxDirect2D_Checked" Unchecked="checkBoxDirect2D_Unchecked"/>
 
 
-</SwapChainBackgroundPanel>
+</SwapChainPanel>

@@ -43,11 +43,11 @@ namespace D2DCustomPixelShaderEffect
 {
 
 
-    public sealed partial class MPSCBP : SwapChainBackgroundPanel
+    public sealed partial class MPSCBP : SwapChainPanel
     {
         private DeviceManager deviceManager;
 
-        private SwapChainBackgroundPanelTarget d2dTarget;
+        private SwapChainPanelTarget d2dTarget;
 
 
         private EffectRenderer effectRenderer;
@@ -60,7 +60,7 @@ namespace D2DCustomPixelShaderEffect
             effectRenderer = new EffectRenderer(root, root);
             var fpsRenderer = new FpsRenderer();
 
-            d2dTarget = new SwapChainBackgroundPanelTarget(root);
+            d2dTarget = new SwapChainPanelTarget(root);
             d2dTarget.OnRender += effectRenderer.Render;
             d2dTarget.OnRender += fpsRenderer.Render;
 

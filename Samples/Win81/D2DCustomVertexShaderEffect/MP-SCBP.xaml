@@ -1,4 +1,4 @@
-﻿<SwapChainBackgroundPanel
+﻿<SwapChainPanel
     x:Class="D2DCustomVertexShaderEffect.MPSCBP"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,4 +10,4 @@
     >
 
 
-</SwapChainBackgroundPanel>
+</SwapChainPanel>

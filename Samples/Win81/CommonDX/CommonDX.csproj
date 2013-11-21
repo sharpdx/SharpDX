@@ -58,7 +58,7 @@
     <Compile Include="FpsRenderer.cs" />
     <Compile Include="MediaPlayer.cs" />
     <Compile Include="SurfaceImageSourceTarget.cs" />
-    <Compile Include="SwapChainBackgroundPanelTarget.cs" />
+    <Compile Include="SwapChainPanelTarget.cs" />
     <Compile Include="TargetBase.cs" />
     <Compile Include="SwapChainTargetBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

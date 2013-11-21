@@ -37,7 +37,7 @@
         </Grid>
 
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Margin="0,-100,0,0" >
-            <Button x:Name="butSwapChainBackgroundPanel" Content="SwapChainBackgroundPanel" HorizontalAlignment="Left" Height="78"  Width="441" Click="butSwapChainBackgroundPanel_Click" />
+            <Button x:Name="butSwapChainPanel" Content="SwapChainPanel" HorizontalAlignment="Left" Height="78"  Width="441" Click="butSwapChainPanel_Click" />
             <Button x:Name="butSurfaceImageSource" Content="SurfaceImageSource" HorizontalAlignment="Left" Height="78" Width="441" Margin="0,20,0,0" Click="butSurfaceImageSource_Click" />
 
         </StackPanel>

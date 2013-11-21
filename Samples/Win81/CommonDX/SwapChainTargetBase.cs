@@ -32,7 +32,7 @@ namespace CommonDX
     /// </summary>
     /// <remarks>
     /// This class is the base class for <see cref="CoreWindowTarget"/>
-    /// and <see cref="SwapChainBackgroundPanelTarget"/>.
+    /// and <see cref="SwapChainPanelTarget"/>.
     /// </remarks>
     public abstract class SwapChainTargetBase : TargetBase
     {

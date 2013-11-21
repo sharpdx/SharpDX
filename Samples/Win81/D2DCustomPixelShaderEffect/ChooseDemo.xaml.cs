@@ -37,7 +37,7 @@ namespace D2DCustomPixelShaderEffect
 
  
 
-        private void butSwapChainBackgroundPanel_Click(object sender, RoutedEventArgs e)
+        private void butSwapChainPanel_Click(object sender, RoutedEventArgs e)
         {
 
             // Place the frame in the current Window and ensure that it is active

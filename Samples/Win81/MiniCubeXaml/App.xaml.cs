@@ -47,7 +47,7 @@ namespace MiniCubeXaml
     sealed partial class App : Application
     {
         DeviceManager deviceManager;
-        SwapChainBackgroundPanelTarget target;
+        SwapChainPanelTarget target;
         CubeRenderer cubeRenderer;
         ShapeRenderer shapeRenderer;
 
@@ -91,7 +91,7 @@ namespace MiniCubeXaml
             Window.Current.Activate();
 
             // Use CoreWindowTarget as the rendering target (Initialize SwapChain, RenderTargetView, DepthStencilView, BitmapTarget)
-            target = new SwapChainBackgroundPanelTarget(swapchainPanel);
+            target = new SwapChainPanelTarget(swapchainPanel);
 
             // Add Initializer to device manager
             deviceManager.OnInitialize += target.Initialize;

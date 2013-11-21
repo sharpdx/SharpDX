@@ -31,26 +31,26 @@ using Windows.UI.Xaml.Controls;
 namespace CommonDX
 {
     /// <summary>
-    /// Target to render to a <see cref="SwapChainBackgroundPanel"/>.
+    /// Target to render to a <see cref="SwapChainPanel"/>.
     /// </summary>
     /// <remarks>
     /// This class should be use when efficient DirectX-XAML interop is required.
     /// </remarks>
-    public class SwapChainBackgroundPanelTarget : SwapChainTargetBase
+    public class SwapChainPanelTarget : SwapChainTargetBase
     {
-        private SwapChainBackgroundPanel panel;
-        private ISwapChainBackgroundPanelNative nativePanel;
+        private SwapChainPanel panel;
+        private ISwapChainPanelNative nativePanel;
 
         /// <summary>
-        /// Initializes a new <see cref="SwapChainBackgroundPanelTarget"/> instance
+        /// Initializes a new <see cref="SwapChainPanelTarget"/> instance
         /// </summary>
-        /// <param name="panel">The <see cref="SwapChainBackgroundPanel"/> to render to</param>
-        public SwapChainBackgroundPanelTarget(SwapChainBackgroundPanel panel)
+        /// <param name="panel">The <see cref="SwapChainPanel"/> to render to</param>
+        public SwapChainPanelTarget(SwapChainPanel panel)
         {
             this.panel = panel;
 
             // Gets the native panel
-            nativePanel = ComObject.As<ISwapChainBackgroundPanelNative>(panel);
+            nativePanel = ComObject.As<ISwapChainPanelNative>(panel);
 
             // Register event on Window Size Changed
             // So that resources dependent size can be resized
@@ -104,7 +104,7 @@ namespace CommonDX
             // Creates the swap chain for XAML composition
             var swapChain = new SwapChain1(factory, device, ref desc);
 
-            // Associate the SwapChainBackgroundPanel with the swap chain
+            // Associate the SwapChainPanel with the swap chain
             nativePanel.SwapChain = swapChain;
 
             // Returns the new swap chain

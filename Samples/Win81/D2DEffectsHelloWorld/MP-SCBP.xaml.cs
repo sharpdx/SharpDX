@@ -43,12 +43,12 @@ namespace D2DEffectsHelloWorld
 {
 
 
-    public sealed partial class MPSCBP : SwapChainBackgroundPanel
+    public sealed partial class MPSCBP : SwapChainPanel
     {
         private DeviceManager deviceManager;
 
         private ImageBrush d2dBrush;
-        private SwapChainBackgroundPanelTarget d2dTarget;
+        private SwapChainPanelTarget d2dTarget;
 
 
         private EffectRenderer effectRenderer;
@@ -62,7 +62,7 @@ namespace D2DEffectsHelloWorld
             effectRenderer = new EffectRenderer();
             var fpsRenderer = new FpsRenderer();
 
-            d2dTarget = new SwapChainBackgroundPanelTarget(rootSCBP);
+            d2dTarget = new SwapChainPanelTarget(rootSCBP);
             d2dTarget.OnRender += effectRenderer.Render;
             d2dTarget.OnRender += fpsRenderer.Render;
 
