@@ -171,6 +171,7 @@
     <map enum="D2D1_TABLETRANSFER_PROP" name="TableTransferProperties"/>
     <map enum="D2D1_TILE_PROP" name="TileProperties"/>
     <map enum="D2D1_TURBULENCE_PROP" name="TurbulenceProperties"/>
+    <map enum="D2D1_OPACITYMETADATA_PROP" name="OpacityMetadataProperties"/>
     <map enum="D2D1_YCBCR_PROP" name="YCbCrProperties"/>
 
     <map enum="D2D1_.*_OPTIONS1?" flags="true"/>

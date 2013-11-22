@@ -28,27 +28,27 @@ namespace SharpDX.Direct2D1.Effects
     /// <summary>
     /// Built in BitmapSource effect.
     /// </summary>
-    public class BitmapSourceEffect : Effect
+    public class BitmapSource : Effect
     {
-        private BitmapSource wicBitmapSource;
+        private WIC.BitmapSource wicBitmapSource;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="BitmapSourceEffect"/> effect.
+        /// Initializes a new instance of <see cref="BitmapSource"/> effect.
         /// </summary>
         /// <param name="context"></param>
-        public BitmapSourceEffect(DeviceContext context) : base(context, Effect.BitmapSource)
+        public BitmapSource(DeviceContext context) : base(context, Effect.BitmapSource)
         {
         }
 
         /// <summary>
-        /// The <see cref="BitmapSource"/> containing the image data to be loaded.
+        /// The <see cref="WIC.BitmapSource"/> containing the image data to be loaded.
         /// </summary>
-        public BitmapSource WicBitmapSource
+        public WIC.BitmapSource WicBitmapSource
         {
             get
             {
                 if (wicBitmapSource == null)
-                    wicBitmapSource = GetComObjectValue<BitmapSource>((int)BitmapSourceProperties.WicBitmapSource);
+                    wicBitmapSource = GetComObjectValue<WIC.BitmapSource>((int)BitmapSourceProperties.WicBitmapSource);
                 return wicBitmapSource;
             }
             set

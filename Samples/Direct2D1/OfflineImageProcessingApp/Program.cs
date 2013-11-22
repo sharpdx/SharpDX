@@ -84,7 +84,7 @@
             // EFFECT SETUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
             // Effect 1 : BitmapSource - take decoded image data and get a BitmapSource from it
-            var bitmapSourceEffect = new d2.Effects.BitmapSourceEffect(d2dContext);
+            var bitmapSourceEffect = new d2.Effects.BitmapSource(d2dContext);
             bitmapSourceEffect.WicBitmapSource = formatConverter;
 
             // Effect 2 : GaussianBlur - give the bitmapsource a gaussian blurred effect

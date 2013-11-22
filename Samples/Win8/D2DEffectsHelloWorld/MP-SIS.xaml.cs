@@ -20,6 +20,8 @@ using Windows.UI.Xaml.Navigation;
 
 namespace D2DEffectsHelloWorld
 {
+    using Windows.UI.Core;
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
@@ -53,28 +55,43 @@ namespace D2DEffectsHelloWorld
             effectRenderer = new EffectRenderer();
 
             deviceManager = new DeviceManager();
-            
+
             int pixelWidth = (int)(d2dRectangle.Width * DisplayProperties.LogicalDpi / 96.0);
             int pixelHeight = (int)(d2dRectangle.Height * DisplayProperties.LogicalDpi / 96.0);
 
             d2dTarget = new SurfaceImageSourceTarget(pixelWidth, pixelHeight);
             d2dBrush.ImageSource = d2dTarget.ImageSource;
             d2dTarget.OnRender += effectRenderer.Render;
-            
+
             deviceManager.OnInitialize += d2dTarget.Initialize;
             deviceManager.OnInitialize += effectRenderer.Initialize;
             deviceManager.Initialize(DisplayProperties.LogicalDpi);
 
+            var window = CoreWindow.GetForCurrentThread();
+            if (window.Visible)
+                BindRenderingEvents();
 
-            // Setup rendering callback
+            window.VisibilityChanged += (_, args) =>
+                                        {
+                                            if (args.Visible)
+                                                BindRenderingEvents();
+                                            else
+                                                UnbindRenderingEvents();
+                                        };
+        }
+
+        private void BindRenderingEvents()
+        {
             CompositionTarget.Rendering += CompositionTarget_Rendering;
         }
 
-
+        private void UnbindRenderingEvents()
+        {
+            CompositionTarget.Rendering -= CompositionTarget_Rendering;
+        }
 
         void CompositionTarget_Rendering(object sender, object e)
         {
-            
             d2dTarget.RenderAll();
         }
 
@@ -85,8 +102,7 @@ namespace D2DEffectsHelloWorld
 
         private void ScaleChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            if(effectRenderer!=null) effectRenderer.UpdateScaleDeviation((float)e.NewValue);
+            if (effectRenderer != null) effectRenderer.UpdateScaleDeviation((float)e.NewValue);
         }
-
     }
 }

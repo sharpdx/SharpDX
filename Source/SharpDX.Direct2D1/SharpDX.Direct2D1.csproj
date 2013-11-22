@@ -47,6 +47,8 @@
     <Compile Include="DirectWrite\TextAnalysisSink1.cs" />
     <Compile Include="DirectWrite\NamespaceDoc.cs" />
     <Compile Include="Effects\NamespaceDoc.cs" />
+    <Compile Include="Effects\OpacityMetadata.cs" />
+    <Compile Include="Effects\PerspectiveTransform3D.cs" />
     <Compile Include="Effects\YCbCr.cs" />
     <Compile Include="Factory2.cs" />
     <Compile Include="NamespaceDoc.cs" />
@@ -90,7 +92,7 @@
     <Compile Include="Effects\AffineTransform2D.cs" />
     <Compile Include="Effects\ArithmeticComposite.cs" />
     <Compile Include="Effects\Atlas.cs" />
-    <Compile Include="Effects\BitmapSourceEffect.cs" />
+    <Compile Include="Effects\BitmapSource.cs" />
     <Compile Include="Effects\Blend.cs" />
     <Compile Include="Effects\Border.cs" />
     <Compile Include="Effects\Brightness.cs" />
@@ -241,6 +243,7 @@
     <Compile Include="WIC\ColorContextsHelper.cs" />
     <Compile Include="WIC\ColorTransform.cs" />
     <Compile Include="WIC\ComponentInfo.cs" />
+    <Compile Include="WIC\DdsFrameDecode.cs" />
     <Compile Include="WIC\ImageEncoder.cs" />
     <Compile Include="WIC\ImageParameters.cs" />
     <Compile Include="WIC\ImagingFactory2.cs" />
