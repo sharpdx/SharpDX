@@ -91,8 +91,8 @@ namespace SharpDX.Toolkit.Graphics
             readOnlyView = null;
 
             // Perform default initialization
-            base.InitializeViews();         
-   
+            base.InitializeViews();
+
             if ((Description.BindFlags & BindFlags.DepthStencil) == 0)
                 return hasReadOnlyView;
 
@@ -101,9 +101,27 @@ namespace SharpDX.Toolkit.Graphics
                                                   {
                                                       Format = (Format)DepthFormat,
                                                       Flags = SharpDX.Direct3D11.DepthStencilViewFlags.None,
-                                                      Dimension = SharpDX.Direct3D11.DepthStencilViewDimension.Texture2D,
-                                                      Texture2D = { MipSlice = 0 }
                                                   };
+
+            if (Description.ArraySize <= 1)
+            {
+                depthStencilViewDescription.Dimension = DepthStencilViewDimension.Texture2D;
+                depthStencilViewDescription.Texture2D = new DepthStencilViewDescription.Texture2DResource
+                                                      {
+                                                          MipSlice = 0
+                                                      };
+            }
+            else
+            {
+                depthStencilViewDescription.Dimension = DepthStencilViewDimension.Texture2DArray;
+                depthStencilViewDescription.Texture2DArray = new DepthStencilViewDescription.Texture2DArrayResource
+                                                             {
+                                                                 MipSlice = 0,
+                                                                 FirstArraySlice = 0,
+                                                                 ArraySize = Description.ArraySize
+                                                             };
+            }
+
             if (Description.SampleDescription.Count > 1)
                 depthStencilViewDescription.Dimension = DepthStencilViewDimension.Texture2DMultisampled;
 
