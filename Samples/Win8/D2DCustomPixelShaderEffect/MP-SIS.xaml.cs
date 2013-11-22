@@ -39,6 +39,8 @@ using Windows.UI.Xaml.Navigation;
 
 namespace D2DCustomPixelShaderEffect
 {
+    using Windows.UI.Core;
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
@@ -84,20 +86,32 @@ namespace D2DCustomPixelShaderEffect
             deviceManager.OnInitialize += effectRenderer.Initialize;
             deviceManager.Initialize(DisplayProperties.LogicalDpi);
 
+            var window = CoreWindow.GetForCurrentThread();
+            if (window.Visible)
+                BindRenderingEvents();
 
-            // Setup rendering callback
+            window.VisibilityChanged += (_, args) =>
+                                        {
+                                            if(args.Visible)
+                                                BindRenderingEvents();
+                                            else
+                                                UnbindRenderingEvents();
+                                        };
+        }
+
+        private void BindRenderingEvents()
+        {
             CompositionTarget.Rendering += CompositionTarget_Rendering;
         }
 
-
+        private void UnbindRenderingEvents()
+        {
+            CompositionTarget.Rendering -= CompositionTarget_Rendering;
+        }
 
         void CompositionTarget_Rendering(object sender, object e)
         {
-            
             d2dTarget.RenderAll();
         }
-
-
-
     }
 }
