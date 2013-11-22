@@ -65,7 +65,7 @@ namespace SharpDX.Toolkit
             ContextType = GameContextType.Desktop;
         }
 
-#if !W8CORE && NET35Plus && !DIRECTX11_1
+#if !W8CORE && NET35Plus
         protected GameContext(object control, int requestedWidth = 0, int requestedHeight = 0)
         {
             Control = control;

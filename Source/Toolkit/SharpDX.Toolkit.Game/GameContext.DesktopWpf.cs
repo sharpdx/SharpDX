@@ -17,7 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if !W8CORE && NET35Plus && !DIRECTX11_1
+#if !W8CORE && NET35Plus
 
 namespace SharpDX.Toolkit
 {
@@ -34,7 +34,7 @@ namespace SharpDX.Toolkit
         /// <param name="requestedWidth">Width of the requested.</param>
         /// <param name="requestedHeight">Height of the requested.</param>
         public GameContextWpf(SharpDXElement element, int requestedWidth = 0, int requestedHeight = 0)
-            : base(element,requestedWidth, requestedHeight)
+            : base(element, requestedWidth, requestedHeight)
         {
         }
     }
