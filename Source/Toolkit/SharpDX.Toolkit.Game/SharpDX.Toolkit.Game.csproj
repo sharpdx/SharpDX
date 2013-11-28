@@ -100,7 +100,7 @@
     </ProjectReference>
   </ItemGroup>
   <Choose>
-    <When Condition=" '$(Configuration)' == 'Net40Debug' OR '$(Configuration)' == 'Net40Release' ">
+    <When Condition=" '$(Configuration)' == 'Net40Debug' OR '$(Configuration)' == 'Net40Release' OR '$(Configuration)' == 'DIRECTX11_2Debug' OR '$(Configuration)' == 'DIRECTX11_2Release'">
       <ItemGroup>
         <ProjectReference Include="..\..\SharpDX.Direct3D9\SharpDX.Direct3D9.csproj">
           <Project>{b4d984df-85b8-4bbf-8c3b-5cef905f40d9}</Project>
