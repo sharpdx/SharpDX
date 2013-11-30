@@ -56,6 +56,17 @@ namespace SharpDX.Toolkit.Content
         T Load<T>(string assetName, object options = null);
 
         /// <summary>
+        /// Loads an asset that has been processed by the Content Pipeline.  Reference page contains code sample.
+        /// </summary>
+        /// <param name="assetType"Asset Type</param>
+        /// <param name="assetName">Full asset name (with its extension)</param>
+        /// <param name="options">The options to pass to the content reader (null by default).</param>
+        /// <returns>Asset</returns>
+        /// <exception cref="SharpDX.Toolkit.Content.AssetNotFoundException">If the asset was not found from all <see cref="IContentResolver" />.</exception>
+        /// <exception cref="System.NotSupportedException">If no content reader was suitable to decode the asset.</exception>
+        object Load(Type assetType, string assetName, object options = null);
+
+        /// <summary>
         /// Unloads all data that was loaded by this ContentManager. All data will be disposed.
         /// </summary>
         /// <remarks>
