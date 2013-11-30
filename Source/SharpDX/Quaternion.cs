@@ -903,16 +903,16 @@ namespace SharpDX
         /// <param name="result">The newly created quaternion</param>
         public static void RotationLookAt(ref Vector3 forward, ref Vector3 up, out Quaternion result)
         {
-            Vector3 rel_right;
-            Vector3 rel_up;
-            Vector3.Cross(ref up, ref forward, out rel_right);
-            rel_right.Normalize();
-            Vector3.Cross(ref forward, ref rel_right, out rel_up);
-            result.W = (float)Math.Sqrt(1 + rel_right.X + rel_up.Y + forward.Z) * .5f;
+            Vector3 relativeRight;
+            Vector3 relativeUp;
+            Vector3.Cross(ref up, ref forward, out relativeRight);
+            relativeRight.Normalize();
+            Vector3.Cross(ref forward, ref relativeRight, out relativeUp);
+            result.W = (float)Math.Sqrt(1 + relativeRight.X + relativeUp.Y + forward.Z) * .5f;
             float reciprocal = 1.0f / (4.0f * result.W);
-            result.X = (rel_up.Z - forward.Y) * reciprocal;
-            result.Y = (forward.X - rel_right.Z) * reciprocal;
-            result.Z = (rel_right.Y - rel_up.X) * reciprocal;
+            result.X = (relativeUp.Z - forward.Y) * reciprocal;
+            result.Y = (forward.X - relativeRight.Z) * reciprocal;
+            result.Z = (relativeRight.Y - relativeUp.X) * reciprocal;
         }
 
         /// <summary>
