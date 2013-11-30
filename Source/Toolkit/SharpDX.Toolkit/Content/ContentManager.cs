@@ -160,12 +160,27 @@ namespace SharpDX.Toolkit.Content
         /// <exception cref="NotSupportedException">If no content reader was suitable to decode the asset.</exception>
         public virtual T Load<T>(string assetName, object options = null)
         {
-            if(assetName == null) throw new ArgumentNullException("assetName");
+            return (T)Load(typeof(T), assetName, options);
+        }
+
+        /// <summary>
+        /// Loads an asset that has been processed by the Content Pipeline.  Reference page contains code sample.
+        /// </summary>
+        /// <param name="assetType"Asset Type</param>
+        /// <param name="assetName">The asset name </param>
+        /// <param name="options">The options to pass to the content reader (null by default).</param>
+        /// <returns>Asset</returns>
+        /// <exception cref="SharpDX.Toolkit.Content.AssetNotFoundException">If the asset was not found from all <see cref="IContentResolver" />.</exception>
+        /// <exception cref="NotSupportedException">If no content reader was suitable to decode the asset.</exception>
+        public virtual object Load(Type assetType, string assetName, object options = null)
+        {
+            if (assetName == null) throw new ArgumentNullException("assetName");
+            if (assetType == null) throw new ArgumentNullException("assetType");
 
             object result = null;
 
             // Build asset key
-            var assetKey = new AssetKey(typeof(T), assetName);
+            var assetKey = new AssetKey(assetType, assetName);
 
             // Lock loading by asset name, like this, we can have several loading in multithreaded // with a single instance per asset name
             lock (GetAssetLocker(assetKey, true))
@@ -175,7 +190,7 @@ namespace SharpDX.Toolkit.Content
                 {
                     if (loadedAssets.TryGetValue(assetKey, out result))
                     {
-                        return (T)result;
+                        return result;
                     }
                 }
 
@@ -185,7 +200,7 @@ namespace SharpDX.Toolkit.Content
                 // First, resolve the stream for this asset.
                 var stream = FindStream(assetPath);
 
-                result = LoadAssetWithDynamicContentReader<T>(assetName, stream, options);
+                result = LoadAssetWithDynamicContentReader(assetType, assetName, stream, options);
 
                 // Cache the loaded assets
                 lock (loadedAssets)
@@ -195,8 +210,9 @@ namespace SharpDX.Toolkit.Content
             }
 
             // We could have an exception, but that's fine, as the user will be able to find why.
-            return (T)result;
+            return result;
         }
+
 
         /// <summary>
         /// Unloads all data that was loaded by this ContentManager. All data will be disposed.
@@ -314,15 +330,15 @@ namespace SharpDX.Toolkit.Content
             return stream;
         }
 
-        private object LoadAssetWithDynamicContentReader<T>(string assetName, Stream stream, object options)
+        private object LoadAssetWithDynamicContentReader(Type assetType, string assetName, Stream stream, object options)
         {
             object result;
-            var type = typeof(T);
+
 
             var parameters = new ContentReaderParameters
                              {
                                      AssetName = assetName,
-                                     AssetType = type,
+                                     AssetType = assetType,
                                      Stream = stream,
                                      Options = options
                                  };
@@ -332,17 +348,17 @@ namespace SharpDX.Toolkit.Content
                 IContentReader contentReader;
                 lock (registeredContentReaders)
                 {
-                    if (!registeredContentReaders.TryGetValue(type, out contentReader))
+                    if (!registeredContentReaders.TryGetValue(assetType, out contentReader))
                     {
                         // Use registered factories to handle a type
                         lock(registeredContentReaderFactories)
                         {
                             foreach(var factory in registeredContentReaderFactories)
                             {
-                                contentReader = factory.TryCreate(type);
+                                contentReader = factory.TryCreate(assetType);
                                 if(contentReader != null)
                                 {
-                                    registeredContentReaders.Add(type, contentReader);
+                                    registeredContentReaders.Add(assetType, contentReader);
                                     break;
                                 }
                             }
@@ -352,16 +368,16 @@ namespace SharpDX.Toolkit.Content
                         if(contentReader == null)
                         {
 #if WIN8METRO
-                            var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(type.GetTypeInfo(), true);
+                            var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(assetType.GetTypeInfo(), true);
 #else
-                            var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(type, true);
+                            var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(assetType, true);
 #endif
 
                             if(contentReaderAttribute != null)
                             {
                                 contentReader = Activator.CreateInstance(contentReaderAttribute.ContentReaderType) as IContentReader;
                                 if(contentReader != null)
-                                    Readers.Add(typeof(T), contentReader);
+                                    Readers.Add(assetType, contentReader);
                             }
                         }
                     }
@@ -369,14 +385,14 @@ namespace SharpDX.Toolkit.Content
 
                 if (contentReader == null)
                 {
-                    throw new NotSupportedException(string.Format("Type [{0}] doesn't provide a ContentReaderAttribute, and there is no registered content reader/factory for it.", type.FullName));
+                    throw new NotSupportedException(string.Format("Type [{0}] doesn't provide a ContentReaderAttribute, and there is no registered content reader/factory for it.", assetType.FullName));
                 }
 
                 result = contentReader.ReadContent(this, ref parameters);
 
                 if (result == null)
                 {
-                    throw new NotSupportedException(string.Format("Registered ContentReader of type [{0}] fails to load content of type [{1}] from file [{2}].", contentReader.GetType(), type.FullName, assetName));
+                    throw new NotSupportedException(string.Format("Registered ContentReader of type [{0}] fails to load content of type [{1}] from file [{2}].", contentReader.GetType(), assetType.FullName, assetName));
                 }
             }
             finally
