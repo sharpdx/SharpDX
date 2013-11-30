@@ -44,7 +44,7 @@ namespace SharpDX.Toolkit.Yaml
         public YamlManager(IServiceRegistry registry) : base(registry)
         {
             Services.AddService(this);
-            yamlSettings = new SerializerSettings();
+            yamlSettings = new SerializerSettings();            
             attributeRegistry = yamlSettings.Attributes;
             serializer = CreateSerializer(yamlSettings);
         }
@@ -71,9 +71,8 @@ namespace SharpDX.Toolkit.Yaml
                 throw new InvalidOperationException("Unable to initialize YamlManager. Expecting IContentManager to be an instance of ContentManager");
             }
 
+            yamlSettings.ObjectSerializerBackend = new AssetObjectSerializerBackend(yamlSettings, contentManager);
             contentManager.ReaderFactories.Add(this);
-
-            
         }
 
         protected virtual Serializer CreateSerializer(SerializerSettings settings)
