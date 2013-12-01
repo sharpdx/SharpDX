@@ -1324,7 +1324,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator ==(Quaternion left, Quaternion right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -1335,7 +1335,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator !=(Quaternion left, Quaternion right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>
@@ -1439,9 +1439,21 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref="SharpDX.Quaternion"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(Quaternion other)
+        public bool Equals(ref Quaternion other)
         {
             return MathUtil.NearEqual(other.X, X) && MathUtil.NearEqual(other.Y, Y) && MathUtil.NearEqual(other.Z, Z) && MathUtil.NearEqual(other.W, W);
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="SharpDX.Quaternion"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="SharpDX.Quaternion"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="SharpDX.Quaternion"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(Quaternion other)
+        {
+            return Equals(ref other);
         }
 
         /// <summary>
@@ -1453,13 +1465,11 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
+            if (!(value is Quaternion))
                 return false;
 
-            if (!ReferenceEquals(value.GetType(), typeof(Quaternion)))
-                return false;
-
-            return Equals((Quaternion)value);
+            var strongValue = (Quaternion)value;
+            return Equals(ref strongValue);
         }
 
 #if SlimDX1xInterop

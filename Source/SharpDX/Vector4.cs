@@ -1181,7 +1181,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator ==(Vector4 left, Vector4 right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -1192,7 +1192,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator !=(Vector4 left, Vector4 right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>
@@ -1316,12 +1316,24 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref="SharpDX.Vector4"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(Vector4 other)
+        public bool Equals(ref Vector4 other)
         {
             return (MathUtil.NearEqual(other.X, X) &&
                 MathUtil.NearEqual(other.Y, Y) &&
                 MathUtil.NearEqual(other.Z, Z) &&
                 MathUtil.NearEqual(other.W, W));
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="SharpDX.Vector4"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="SharpDX.Vector4"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="SharpDX.Vector4"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(Vector4 other)
+        {
+            return Equals(ref other);
         }
 
         /// <summary>
@@ -1333,13 +1345,11 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
+            if (!(value is Vector4))
                 return false;
 
-            if (!ReferenceEquals(value.GetType(), typeof(Vector4)))
-                return false;
-
-            return Equals((Vector4)value);
+            var strongValue = (Vector4)value;
+            return Equals(ref strongValue);
         }
     }
 }

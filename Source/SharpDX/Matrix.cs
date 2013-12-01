@@ -3193,7 +3193,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator ==(Matrix left, Matrix right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -3204,7 +3204,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator !=(Matrix left, Matrix right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>
@@ -3347,6 +3347,7 @@ namespace SharpDX
                 M44 = serializer.Reader.ReadSingle();
             }
         }
+
         /// <summary>
         /// Determines whether the specified <see cref="SharpDX.Matrix"/> is equal to this instance.
         /// </summary>
@@ -3354,7 +3355,7 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref="SharpDX.Matrix"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(Matrix other)
+        public bool Equals(ref Matrix other)
         {
             return (MathUtil.NearEqual(other.M11, M11) &&
                 MathUtil.NearEqual(other.M12, M12) &&
@@ -3375,6 +3376,18 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Determines whether the specified <see cref="SharpDX.Matrix"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="SharpDX.Matrix"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="SharpDX.Matrix"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(Matrix other)
+        {
+            return Equals(ref other);
+        }
+
+        /// <summary>
         /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
         /// </summary>
         /// <param name="value">The <see cref="System.Object"/> to compare with this instance.</param>
@@ -3383,13 +3396,11 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
+            if (!(value is Matrix))
                 return false;
 
-            if (!ReferenceEquals(value.GetType(), typeof(Matrix)))
-                return false;
-
-            return Equals((Matrix)value);
+            var strongValue = (Matrix)value;
+            return Equals(ref strongValue);
         }
 
 #if SlimDX1xInterop

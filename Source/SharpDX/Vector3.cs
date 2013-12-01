@@ -1466,7 +1466,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator ==(Vector3 left, Vector3 right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -1477,7 +1477,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator !=(Vector3 left, Vector3 right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>
@@ -1598,9 +1598,21 @@ namespace SharpDX
         /// <returns>
         /// 	<c>true</c> if the specified <see cref="SharpDX.Vector3"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(Vector3 other)
+        public bool Equals(ref Vector3 other)
         {
             return MathUtil.NearEqual(other.X, X) && MathUtil.NearEqual(other.Y, Y) && MathUtil.NearEqual(other.Z, Z);
+        }
+        
+        /// <summary>
+        /// Determines whether the specified <see cref="SharpDX.Vector3"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="SharpDX.Vector3"/> to compare with this instance.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified <see cref="SharpDX.Vector3"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(Vector3 other)
+        {
+            return Equals(ref other);
         }
 
         /// <summary>
@@ -1612,13 +1624,11 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
+            if (!(value is Vector3))
                 return false;
 
-            if (!ReferenceEquals(value.GetType(), typeof(Vector3)))
-                return false;
-
-            return Equals((Vector3)value);
+            var strongValue = (Vector3)value;
+            return Equals(ref strongValue);
         }
 #if WPFInterop
         /// <summary>

@@ -1990,7 +1990,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator ==(Matrix3x3 left, Matrix3x3 right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -2001,7 +2001,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator !=(Matrix3x3 left, Matrix3x3 right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
         
         /// <summary>
@@ -2147,6 +2147,7 @@ namespace SharpDX
                 M33 = serializer.Reader.ReadSingle();
             }
         }
+
         /// <summary>
         /// Determines whether the specified <see cref="SharpDX.Matrix3x3"/> is equal to this instance.
         /// </summary>
@@ -2154,7 +2155,7 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref="SharpDX.Matrix3x3"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(Matrix3x3 other)
+        public bool Equals(ref Matrix3x3 other)
         {
             return (MathUtil.NearEqual(other.M11, M11) &&
                 MathUtil.NearEqual(other.M12, M12) &&
@@ -2165,6 +2166,18 @@ namespace SharpDX
                 MathUtil.NearEqual(other.M31, M31) &&
                 MathUtil.NearEqual(other.M32, M32) &&
                 MathUtil.NearEqual(other.M33, M33));
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="SharpDX.Matrix3x3"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="SharpDX.Matrix3x3"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="SharpDX.Matrix3x3"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(Matrix3x3 other)
+        {
+            return Equals(ref other);
         }
 
         /// <summary>
@@ -2196,13 +2209,11 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
+            if (!(value is Matrix3x3))
                 return false;
 
-            if (!ReferenceEquals(value.GetType(), typeof(Matrix3x3)))
-                return false;
-
-            return Equals((Matrix3x3)value);
+            var strongValue = (Matrix3x3)value;
+            return Equals(ref strongValue);
         }
 
 

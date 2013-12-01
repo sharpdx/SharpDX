@@ -1234,7 +1234,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator ==(Vector2 left, Vector2 right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -1245,7 +1245,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator !=(Vector2 left, Vector2 right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>
@@ -1359,9 +1359,21 @@ namespace SharpDX
         /// <returns>
         /// 	<c>true</c> if the specified <see cref="SharpDX.Vector2"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(Vector2 other)
+        public bool Equals(ref Vector2 other)
         {
             return MathUtil.NearEqual(other.X, X) && MathUtil.NearEqual(other.Y, Y);
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="SharpDX.Vector2"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="SharpDX.Vector2"/> to compare with this instance.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified <see cref="SharpDX.Vector2"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(Vector2 other)
+        {
+            return Equals(ref other);
         }
 
         /// <summary>
@@ -1373,13 +1385,11 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
+            if (!(value is Vector2))
                 return false;
 
-            if (!ReferenceEquals(value.GetType(), typeof(Vector2)))
-                return false;
-
-            return Equals((Vector2)value);
+            var strongValue = (Vector2)value;
+            return Equals(ref strongValue);
         }
 
 #if WPFInterop
