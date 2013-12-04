@@ -9,10 +9,13 @@
     d:DesignWidth="1366"
     d:DesignHeight="768">
     <Grid>
-        <local:Direct3DUserControl Width="320" Height="200" RenderTransformOrigin="0.5,0.5">
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Text behind</TextBlock>
+        <local:Direct3DUserControl Width="320" Height="200" RenderTransformOrigin="0.5,0.5" Opacity=".5">
         	<local:Direct3DUserControl.RenderTransform>
-        		<CompositeTransform Rotation="12" ScaleY="4" ScaleX="4"/>
-        	</local:Direct3DUserControl.RenderTransform>            
+        		<CompositeTransform Rotation="10" ScaleY="3" ScaleX="3"/>
+        	</local:Direct3DUserControl.RenderTransform>
+            <TextBlock>Text as content</TextBlock>
         </local:Direct3DUserControl>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,100,0,0">Text in front</TextBlock>
     </Grid>
 </Page>
