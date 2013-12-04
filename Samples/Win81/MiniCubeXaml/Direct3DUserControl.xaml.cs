@@ -72,7 +72,6 @@ namespace MiniCubeXaml
             // Setup rendering callback
             CompositionTargetEx.Rendering += CompositionTarget_Rendering;
 
-            this.SizeChanged += Direct3DUserControl_SizeChanged;
             this.LayoutUpdated += Direct3DUserControl_LayoutUpdated;
         }
 
@@ -80,11 +79,6 @@ namespace MiniCubeXaml
         {
             //TODO: handle updated Layout
             //throw new NotImplementedException();
-        }
-
-        void Direct3DUserControl_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            target.UpdateForSizeChange();
         }
 
         void DisplayProperties_LogicalDpiChanged(DisplayInformation displayInformation, object sender)
