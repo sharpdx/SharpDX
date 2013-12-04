@@ -51,16 +51,14 @@ namespace CommonDX
 
             // Gets the native panel
             nativePanel = ComObject.As<ISwapChainPanelNative>(panel);
-
-            // Register event on Window Size Changed
-            // So that resources dependent size can be resized
-            Window.Current.CoreWindow.SizeChanged += CoreWindow_SizeChanged;
+            panel.SizeChanged += panel_SizeChanged;
         }
 
-        void CoreWindow_SizeChanged(CoreWindow sender, WindowSizeChangedEventArgs args)
+        void panel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpdateForSizeChange();
         }
+
 
         protected override Windows.Foundation.Rect CurrentControlBounds
         {
@@ -71,9 +69,8 @@ namespace CommonDX
         {
             get
             {
-                // Unlike CoreWindow, Width/Height of the SwapChain must be specified
-                var currentWindow = Window.Current.CoreWindow;
-                return (int)(currentWindow.Bounds.Width * DeviceManager.Dpi / 96.0);
+                var width = Double.IsNaN(panel.Width) ? 1 : panel.Width;
+                return (int)(width * DeviceManager.Dpi / 96.0);
             }
         }
 
@@ -81,9 +78,8 @@ namespace CommonDX
         {
             get
             {
-                // Unlike CoreWindow, Width/Height of the SwapChain must be specified
-                var currentWindow = Window.Current.CoreWindow;
-                return (int)(currentWindow.Bounds.Height * DeviceManager.Dpi / 96.0); // Returns 0 to fill the CoreWindow 
+                var height = Double.IsNaN(panel.Height) ? 1 : panel.Height;
+                return (int)(height * DeviceManager.Dpi / 96.0);
             }
         }
 
