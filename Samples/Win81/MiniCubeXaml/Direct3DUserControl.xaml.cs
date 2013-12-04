@@ -41,22 +41,17 @@ namespace MiniCubeXaml
 
             // Add Initializer to device manager
             deviceManager.OnInitialize += target.Initialize;
-            try
-            {
-                //// New CubeRenderer
-                //cubeRenderer = new CubeRenderer();
-                //cubeRenderer.ShowCube = true;
-                //deviceManager.OnInitialize += cubeRenderer.Initialize;
-                //target.OnRender += cubeRenderer.Render;
-            }
-            catch (Exception ex) { 
-                //TODO: handle file not found exception in designer
-            }
 
+            // New CubeRenderer
+            cubeRenderer = new CubeRenderer();
+            cubeRenderer.ShowCube = true;
+            deviceManager.OnInitialize += cubeRenderer.Initialize;
+            target.OnRender += cubeRenderer.Render;
 
+            // New ShapeRenderer
             shapeRenderer = new ShapeRenderer();
             shapeRenderer.Show = true;
-            shapeRenderer.EnableClear = true;
+            shapeRenderer.EnableClear = false;
             deviceManager.OnInitialize += shapeRenderer.Initialize;            
             target.OnRender += shapeRenderer.Render;
 
