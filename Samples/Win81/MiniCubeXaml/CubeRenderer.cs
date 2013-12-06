@@ -30,6 +30,7 @@ using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.IO;
 using Windows.UI.Core;
+using System.IO;
 
 namespace MiniCube
 {
@@ -72,19 +73,28 @@ namespace MiniCube
 
             var path = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
 
-            // Loads vertex shader bytecode
-            var vertexShaderByteCode = NativeFile.ReadAllBytes(path + "\\MiniCube_VS.fxo");
-            vertexShader = new VertexShader(d3dDevice, vertexShaderByteCode);
+            try { 
+                // Loads vertex shader bytecode
+                var vertexShaderByteCode = NativeFile.ReadAllBytes(path + "\\MiniCube_VS.fxo");
+                vertexShader = new VertexShader(d3dDevice, vertexShaderByteCode);
 
-            // Loads pixel shader bytecode
-            pixelShader = new PixelShader(d3dDevice, NativeFile.ReadAllBytes(path + "\\MiniCube_PS.fxo"));
+                // Loads pixel shader bytecode
+                var pixelShaderByteCode = NativeFile.ReadAllBytes(path + "\\MiniCube_PS.fxo");
+                pixelShader = new PixelShader(d3dDevice, pixelShaderByteCode);
 
-            // Layout from VertexShader input signature
-            layout = new InputLayout(d3dDevice, vertexShaderByteCode, new[]
+                // Layout from VertexShader input signature
+                layout = new InputLayout(d3dDevice, vertexShaderByteCode, new[]
                     {
                         new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                         new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
-                    });
+                });
+            }
+            catch (FileNotFoundException ex)
+            {
+                //TODO: handle file not found
+            }
+
+            
 
             // Instantiate Vertex buffer from vertex data
             var vertices = SharpDX.Direct3D11.Buffer.Create(d3dDevice, BindFlags.VertexBuffer, new[]
@@ -174,11 +184,14 @@ namespace MiniCube
 
                 // Setup the pipeline
                 d3dContext.InputAssembler.SetVertexBuffers(0, vertexBufferBinding);
-                d3dContext.InputAssembler.InputLayout = layout;
+                if (null != layout)
+                    d3dContext.InputAssembler.InputLayout = layout;
                 d3dContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
                 d3dContext.VertexShader.SetConstantBuffer(0, constantBuffer);
-                d3dContext.VertexShader.Set(vertexShader);
-                d3dContext.PixelShader.Set(pixelShader);
+                if (null != vertexShader)
+                    d3dContext.VertexShader.Set(vertexShader);
+                if (null != pixelShader)
+                    d3dContext.PixelShader.Set(pixelShader);
 
                 // Update Constant Buffer
                 d3dContext.UpdateSubresource(ref worldViewProj, constantBuffer, 0);
