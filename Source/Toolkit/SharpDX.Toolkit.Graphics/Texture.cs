@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using SharpDX.DXGI;
 using SharpDX.Direct3D11;
@@ -72,7 +73,8 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         internal readonly int DepthStride;
 
-        internal TextureView[] shaderResourceViews;
+        internal TextureView defaultShaderResourceView;
+        internal Dictionary<TextureViewKey, TextureView> shaderResourceViews;
         internal TextureView[] renderTargetViews;
         internal UnorderedAccessView[] unorderedAccessViews;
         private MipMapDescription[] mipmapDescriptions;
@@ -811,11 +813,12 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Gets a specific <see cref="ShaderResourceView" /> from this texture.
         /// </summary>
+        /// <param name="viewFormat"></param>
         /// <param name="viewType">Type of the view slice.</param>
         /// <param name="arrayOrDepthSlice">The texture array slice index.</param>
         /// <param name="mipIndex">The mip map slice index.</param>
         /// <returns>An <see cref="ShaderResourceView" /></returns>
-        internal abstract TextureView GetShaderResourceView(ViewType viewType, int arrayOrDepthSlice, int mipIndex);
+        internal abstract TextureView GetShaderResourceView(Format viewFormat, ViewType viewType, int arrayOrDepthSlice, int mipIndex);
 
         /// <summary>
         /// Gets a specific <see cref="RenderTargetView" /> from this texture.
@@ -840,7 +843,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">Source for the.</param>
         public static implicit operator ShaderResourceView(Texture from)
         {
-            return @from == null ? null : @from.shaderResourceViews != null ? @from.shaderResourceViews[0] : null;
+            return @from == null ? null : from.defaultShaderResourceView;
         }
 
         /// <summary>
@@ -1093,10 +1096,12 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     if (this.shaderResourceViews != null)
                     {
-                        for (int i = 0; i < this.shaderResourceViews.Length; i++)
+                        int i = 0;
+                        foreach(var shaderResourceViewItem in shaderResourceViews)
                         {
-                            var shaderResourceView = this.shaderResourceViews[i];
+                            var shaderResourceView = shaderResourceViewItem.Value;
                             if (shaderResourceView != null) shaderResourceView.View.DebugName = Name == null ? null : String.Format("{0} SRV[{1}]", i, Name);
+                            i++;
                         }
                     }
 
@@ -1198,6 +1203,58 @@ namespace SharpDX.Toolkit.Graphics
                 bindFlags |= BindFlags.RenderTarget;
 
             return bindFlags;
+        }
+
+        internal struct TextureViewKey : IEquatable<TextureViewKey>
+        {
+            public TextureViewKey(Format viewFormat, ViewType viewType, int arrayOrDepthSlice, int mipIndex)
+            {
+                ViewFormat = viewFormat;
+                ViewType = viewType;
+                ArrayOrDepthSlice = arrayOrDepthSlice;
+                MipIndex = mipIndex;
+            }
+
+            public readonly DXGI.Format ViewFormat;
+
+            public readonly ViewType ViewType;
+
+            public readonly int ArrayOrDepthSlice;
+
+            public readonly int MipIndex;
+
+            public bool Equals(TextureViewKey other)
+            {
+                return ViewFormat == other.ViewFormat && ViewType == other.ViewType && ArrayOrDepthSlice == other.ArrayOrDepthSlice && MipIndex == other.MipIndex;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if(ReferenceEquals(null, obj)) return false;
+                return obj is TextureViewKey && Equals((TextureViewKey)obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    var hashCode = (int)ViewFormat;
+                    hashCode = (hashCode * 397) ^ (int)ViewType;
+                    hashCode = (hashCode * 397) ^ ArrayOrDepthSlice;
+                    hashCode = (hashCode * 397) ^ MipIndex;
+                    return hashCode;
+                }
+            }
+
+            public static bool operator ==(TextureViewKey left, TextureViewKey right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(TextureViewKey left, TextureViewKey right)
+            {
+                return !left.Equals(right);
+            }
         }
     }
 }

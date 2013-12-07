@@ -18,8 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Collections.Generic;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+using SharpDX.DXGI;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -85,7 +87,7 @@ namespace SharpDX.Toolkit.Graphics
             return new Texture3D(this.GraphicsDevice, this.Description.ToStagingDescription());
         }
 
-        internal override TextureView GetShaderResourceView(ViewType viewType, int arrayOrDepthSlice, int mipIndex)
+        internal override TextureView GetShaderResourceView(Format viewFormat, ViewType viewType, int arrayOrDepthSlice, int mipIndex)
         {
             if ((this.Description.BindFlags & BindFlags.ShaderResource) == 0)
                 return null;
@@ -94,18 +96,17 @@ namespace SharpDX.Toolkit.Graphics
             int mipCount;
             GetViewSliceBounds(viewType, ref arrayOrDepthSlice, ref mipIndex, out arrayCount, out mipCount);
 
-            var srvIndex = GetViewIndex(viewType, arrayOrDepthSlice, mipIndex);
+            var textureViewKey = new TextureViewKey(viewFormat, viewType, arrayOrDepthSlice, mipIndex);
 
             lock (this.shaderResourceViews)
             {
-                var srv = this.shaderResourceViews[srvIndex];
-
+                TextureView srv;
                 // Creates the shader resource view
-                if (srv == null)
+                if (!shaderResourceViews.TryGetValue(textureViewKey, out srv))
                 {
                     // Create the view
                     var srvDescription = new ShaderResourceViewDescription {
-                        Format = this.Description.Format,
+                        Format = viewFormat,
                         Dimension = ShaderResourceViewDimension.Texture3D,
                         Texture3D = {
                             MipLevels = mipCount,
@@ -114,7 +115,7 @@ namespace SharpDX.Toolkit.Graphics
                     };
 
                     srv = new TextureView(this, new ShaderResourceView(this.GraphicsDevice, this.Resource, srvDescription));
-                    this.shaderResourceViews[srvIndex] = ToDispose(srv);
+                    this.shaderResourceViews.Add(textureViewKey, ToDispose(srv));
                 }
 
                 return srv;
@@ -161,10 +162,15 @@ namespace SharpDX.Toolkit.Graphics
             // Creates the shader resource view
             if ((this.Description.BindFlags & BindFlags.ShaderResource) != 0)
             {
-                this.shaderResourceViews = new TextureView[GetViewCount()];
+                shaderResourceViews = new Dictionary<TextureViewKey, TextureView>();
 
                 // Pre initialize by default the view on the first array/mipmap
-                GetShaderResourceView(ViewType.Full, 0, 0);
+                var viewFormat = Format;
+                if (!FormatHelper.IsTypeless(viewFormat))
+                {
+                    // Only valid for non-typeless viewformat
+                    defaultShaderResourceView = GetShaderResourceView(viewFormat, ViewType.Full, 0, 0);
+                }
             }
 
             // Creates the unordered access view
