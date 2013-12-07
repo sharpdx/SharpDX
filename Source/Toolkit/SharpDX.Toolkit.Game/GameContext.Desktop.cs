@@ -81,6 +81,12 @@ namespace SharpDX.Toolkit
         public readonly object Control;
 
         /// <summary>
+        /// Gets or sets a value indicating whether use custom do events windows message loop.
+        /// </summary>
+        /// <value><c>true</c> if [use custom do events]; otherwise, <c>false</c>.</value>
+        public bool UseCustomDoEvents { get; set; }
+
+        /// <summary>
         /// Performs an implicit conversion from <see cref="Control"/> to <see cref="GameContext"/>.
         /// </summary>
         /// <param name="control">The control.</param>
