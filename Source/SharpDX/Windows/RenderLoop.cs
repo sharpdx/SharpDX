@@ -101,13 +101,13 @@ namespace SharpDX.Windows
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the render loop should use a custom windows event handler (default false).
+        /// Gets or sets a value indicating whether the render loop should use a custom window message loop (default false).
         /// </summary>
         /// <value><c>true</c> if the render loop should use a custom windows event handler (default false); otherwise, <c>false</c>.</value>
         /// <remarks>By default, RenderLoop is using <see cref="Application.DoEvents" /> to process windows event message. Set this parameter to true to use a custom event handler that could
         /// lead to better performance. Note that using a custom windows event message handler is not compatible with <see cref="Application.AddMessageFilter" /> or any other features
         /// that are part of <see cref="Application" />.</remarks>
-        public bool UseCustomDoEvents { get; set; }
+        public bool UseLightweightWindowMessageLoop { get; set; }
 
         /// <summary>
         /// Calls this method on each frame.
@@ -129,7 +129,7 @@ namespace SharpDX.Windows
 
             if(isControlAlive)
             {
-                if(UseCustomDoEvents)
+                if(UseLightweightWindowMessageLoop)
                 {
                     var localHandle = controlHandle;
                     if(localHandle != IntPtr.Zero)
@@ -203,13 +203,17 @@ namespace SharpDX.Windows
         /// </summary>
         /// <param name="form">The form.</param>
         /// <param name="renderCallback">The rendering callback.</param>
-        public static void Run(Control form, RenderCallback renderCallback)
+        /// <param name="useLightweightWindowMessageLoop">if set to <c>true</c> this method is using a lightweight window message loop.</param>
+        /// <exception cref="System.ArgumentNullException">form
+        /// or
+        /// renderCallback</exception>
+        public static void Run(Control form, RenderCallback renderCallback, bool useLightweightWindowMessageLoop = false)
         {
             if(form == null) throw new ArgumentNullException("form");
             if(renderCallback == null) throw new ArgumentNullException("renderCallback");
 
             form.Show();
-            using(var renderLoop = new RenderLoop(form))
+            using(var renderLoop = new RenderLoop(form) { UseLightweightWindowMessageLoop =  useLightweightWindowMessageLoop})
             {
                 while(renderLoop.NextFrame())
                 {
