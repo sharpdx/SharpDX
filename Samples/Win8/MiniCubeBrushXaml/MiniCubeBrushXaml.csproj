@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>MiniCubeBrushXaml_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>3D954C2BFAB1677895023DCADEA1ECF52DBF1118</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>61977F4BA8DAF8E5049677BCE9EB7862C4579459</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>

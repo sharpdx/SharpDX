@@ -12,7 +12,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateThumbprint>48CCAD92A8EFF4FD985C2D1441F7216EBF488D94</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>D4448785B0A2B0DFE59C03F3E397C6BE99203C95</PackageCertificateThumbprint>
     <PackageCertificateKeyFile>MiniCube_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

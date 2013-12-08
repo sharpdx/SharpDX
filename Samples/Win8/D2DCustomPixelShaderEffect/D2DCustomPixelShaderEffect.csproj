@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>D2DCustomPixelShaderEffect_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>582F1E96A79095CF9365078454B07DE24210F7F1</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>E199D54BD7B38440905DBD7052C875F540E546DC</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>

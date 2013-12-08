@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>D2DLightingEffects_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>52575949779ECC889AE81A7696018CBA18678B0B</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>7473CE2ABC051E5B404645C509C07443497B0F7D</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
