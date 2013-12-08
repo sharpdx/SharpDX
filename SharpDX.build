@@ -85,7 +85,7 @@
       <CleanFiles Include="$(SamplesDirectory)\**\Obj\**\*"/>
       <CleanFiles Include="$(SamplesDirectory)\**\_ReSharper*\**\*" />
       <CleanFiles Include="$(SamplesDirectory)\**\AppPackages\**\*" />
-	  <CleanFiles Include="$(SamplesDirectory)\**\*.suo" />
+      <CleanFiles Include="$(SamplesDirectory)\**\*.suo" />
       <CleanFiles Include="$(SamplesDirectory)\**\*.bak" />
       <CleanFiles Include="$(SamplesDirectory)\**\*.user" />
     </ItemGroup> 
@@ -98,10 +98,11 @@
     <!-- Build all samples -->
     <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXSamples.sln"/>
     <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXToolkitSamples.sln" Properties="Configuration=Debug;Platform=x86"/>
-    <!-- <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXWin8Samples.sln" Properties="Configuration=Debug;Platform=Any CPU"/> -->
-    <!-- <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXWP8Samples.sln" Properties="Configuration=Debug;Platform=Any CPU"/> -->
+    <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXWin8Samples.sln" Properties="Configuration=Debug;Platform=Any CPU"/>
+    <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXWin81Samples.sln" Properties="Configuration=Debug;Platform=Any CPU"/>
+    <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXWP8Samples.sln" Properties="Configuration=Debug;Platform=Any CPU"/>
 
-	<CallTarget Targets="CleanSamples"/>
+    <CallTarget Targets="CleanSamples"/>
   </Target>
   
   <Target Name="GitCheckout">
