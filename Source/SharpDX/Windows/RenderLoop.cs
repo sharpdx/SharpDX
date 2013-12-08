@@ -46,7 +46,7 @@ namespace SharpDX.Windows
     /// </code>
     /// Note that the main control can be changed at anytime inside the loop.
     /// </remarks>
-    public class RenderLoop : IDisposable, IMessageFilter
+    public class RenderLoop : IDisposable
     {
         private IntPtr controlHandle;
         private Control control;
@@ -85,7 +85,6 @@ namespace SharpDX.Windows
                 if(control != null && !switchControl)
                 {
                     isControlAlive = false;
-                    MessageFilterHook.RemoveMessageFilter(controlHandle, this); // use cached controlHandle as control can be disposed at this time
                     control.Disposed -= ControlDisposed;
                     controlHandle = IntPtr.Zero;
                 }
@@ -101,13 +100,12 @@ namespace SharpDX.Windows
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the render loop should use a custom window message loop (default false).
+        /// Gets or sets a value indicating whether the render loop should use the default <see cref="Application.DoEvents"/> instead of a custom window message loop lightweight for GC. Default is false.
         /// </summary>
-        /// <value><c>true</c> if the render loop should use a custom windows event handler (default false); otherwise, <c>false</c>.</value>
-        /// <remarks>By default, RenderLoop is using <see cref="Application.DoEvents" /> to process windows event message. Set this parameter to true to use a custom event handler that could
-        /// lead to better performance. Note that using a custom windows event message handler is not compatible with <see cref="Application.AddMessageFilter" /> or any other features
-        /// that are part of <see cref="Application" />.</remarks>
-        public bool UseLightweightWindowMessageLoop { get; set; }
+        /// <value><c>true</c> if the render loop should use the default <see cref="Application.DoEvents"/> instead of a custom window message loop (default false); otherwise, <c>false</c>.</value>
+        /// <remarks>By default, RenderLoop is using a custom window message loop that is more lightweight than <see cref="Application.DoEvents" /> to process windows event message. 
+        /// Set this parameter to true to use the default <see cref="Application.DoEvents"/>.</remarks>
+        public bool UseApplicationDoEvents { get; set; }
 
         /// <summary>
         /// Calls this method on each frame.
@@ -122,17 +120,23 @@ namespace SharpDX.Windows
             {
                 controlHandle = control.Handle;
                 control.Disposed += ControlDisposed;
-                MessageFilterHook.AddMessageFilter(control.Handle, this);
                 isControlAlive = true;
                 switchControl = false;
             }
 
             if(isControlAlive)
             {
-                if(UseLightweightWindowMessageLoop)
+                if(UseApplicationDoEvents)
+                {
+                    // Revert back to Application.DoEvents in order to support Application.AddMessageFilter
+                    // Seems that DoEvents is compatible with Mono unlike Application.Run that was not running
+                    // correctly.
+                    Application.DoEvents();
+                }
+                else
                 {
                     var localHandle = controlHandle;
-                    if(localHandle != IntPtr.Zero)
+                    if (localHandle != IntPtr.Zero)
                     {
                         // Previous code not compatible with Application.AddMessageFilter but faster then DoEvents
                         Win32Native.NativeMessage msg;
@@ -145,31 +149,24 @@ namespace SharpDX.Windows
                                     Marshal.GetLastWin32Error()));
                             }
 
-                            Win32Native.TranslateMessage(ref msg);
-                            Win32Native.DispatchMessage(ref msg);
+                            // NCDESTROY event?
+                            if (msg.msg == 130)
+                            {
+                                isControlAlive = false;
+                            }
+
+                            var message = new Message() { HWnd = msg.handle, LParam = msg.lParam, Msg = msg.msg, WParam = msg.wParam };
+                            if (!Application.FilterMessage(ref message))
+                            {
+                                Win32Native.TranslateMessage(ref msg);
+                                Win32Native.DispatchMessage(ref msg);
+                            }
                         }
                     }
-                }
-                else
-                {
-                    // Revert back to Application.DoEvents in order to support Application.AddMessageFilter
-                    // Seems that DoEvents is compatible with Mono unlike Application.Run that was not running
-                    // correctly.
-                    Application.DoEvents();
                 }
             }
 
             return isControlAlive || switchControl;
-        }
-
-        bool IMessageFilter.PreFilterMessage(ref Message m)
-        {
-            // NCDESTROY event?
-            if(m.Msg == 130)
-            {
-                isControlAlive = false;
-            }
-            return false;
         }
 
         private void ControlDisposed(object sender, EventArgs e)
@@ -203,17 +200,17 @@ namespace SharpDX.Windows
         /// </summary>
         /// <param name="form">The form.</param>
         /// <param name="renderCallback">The rendering callback.</param>
-        /// <param name="useLightweightWindowMessageLoop">if set to <c>true</c> this method is using a lightweight window message loop.</param>
+        /// <param name="useApplicationDoEvents">if set to <c>true</c> indicating whether the render loop should use the default <see cref="Application.DoEvents"/> instead of a custom window message loop lightweight for GC. Default is false.</param>
         /// <exception cref="System.ArgumentNullException">form
         /// or
         /// renderCallback</exception>
-        public static void Run(Control form, RenderCallback renderCallback, bool useLightweightWindowMessageLoop = false)
+        public static void Run(Control form, RenderCallback renderCallback, bool useApplicationDoEvents = false)
         {
             if(form == null) throw new ArgumentNullException("form");
             if(renderCallback == null) throw new ArgumentNullException("renderCallback");
 
             form.Show();
-            using(var renderLoop = new RenderLoop(form) { UseLightweightWindowMessageLoop =  useLightweightWindowMessageLoop})
+            using (var renderLoop = new RenderLoop(form) { UseApplicationDoEvents = useApplicationDoEvents })
             {
                 while(renderLoop.NextFrame())
                 {

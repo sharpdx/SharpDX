@@ -203,7 +203,7 @@ namespace SharpDX.Toolkit
             {
                 // Use custom render loop
                 Control.Show();
-                using (renderLoop = new RenderLoop(Control) { UseLightweightWindowMessageLoop =  GameContext.UseLightweightWindowMessageLoop})
+                using (renderLoop = new RenderLoop(Control) { UseApplicationDoEvents =  GameContext.UseApplicationDoEvents})
                 {
                     while (renderLoop.NextFrame())
                     {

@@ -81,10 +81,10 @@ namespace SharpDX.Toolkit
         public readonly object Control;
 
         /// <summary>
-        /// Gets or sets a value indicating whether use a custom window message loop.
+        /// Gets or sets a value indicating whether the render loop should use the default <see cref="Application.DoEvents"/> instead of a custom window message loop lightweight for GC. Default is false
         /// </summary>
-        /// <value><c>true</c> if use a custom window message loop; otherwise, <c>false</c>.</value>
-        public bool UseLightweightWindowMessageLoop { get; set; }
+        /// <value><c>true</c> if use the default <see cref="Application.DoEvents"/>; otherwise, <c>false</c>.</value>
+        public bool UseApplicationDoEvents { get; set; }
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="Control"/> to <see cref="GameContext"/>.
