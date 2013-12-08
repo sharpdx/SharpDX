@@ -899,30 +899,25 @@ namespace SharpDX
         /// Creates a quaternion given forward and up vectors
         /// </summary>
         /// <param name="forward">The forward vector the quaternion should look at</param>
-        /// <param name="up">The up vector of the quaternion</param>
-        /// <param name="right">The right vector of the quaternion</param>
+        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
+        /// <param name="right">The right vector of the quaternion (must be perpendicular to forward vector)</param>
         /// <param name="result">The newly created quaternion</param>
         public static void RotationLookAt(ref Vector3 forward, ref Vector3 up, ref Vector3 right, out Quaternion result)
         {
-            forward.Normalize(); up.Normalize(); right.Normalize();
-            result.W = (float)Math.Sqrt(1 + right.X + up.Y + forward.Z) * .5f;
-            float reciprocal = 1.0f / (4.0f * result.W);
-            result.X = (up.Z - forward.Y) * reciprocal;
-            result.Y = (forward.X - right.Z) * reciprocal;
-            result.Z = (right.Y - up.X) * reciprocal;
+            RotationLookAt(ref forward, ref up, ref right, true, out result);
         }
 
         /// <summary>
         /// Creates a quaternion given forward and up vectors
         /// </summary>
         /// <param name="forward">The forward vector the quaternion should look at</param>
-        /// <param name="up">The up vector of the quaternion</param>
-        /// <param name="right">The right vector of the quaternion</param>
-        /// <param name="NormalizeInput">Set true to normalize input parameters</param>
+        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
+        /// <param name="right">The right vector of the quaternion (must be perpendicular to forward vector)</param>
+        /// <param name="normalizeInput">Set true to normalize input parameters</param>
         /// <param name="result">The newly created quaternion</param>
-        public static void RotationLookAt(ref Vector3 forward, ref Vector3 up, ref Vector3 right, bool NormalizeInput, out Quaternion result)
+        public static void RotationLookAt(ref Vector3 forward, ref Vector3 up, ref Vector3 right, bool normalizeInput, out Quaternion result)
         {
-            if (NormalizeInput)
+            if (normalizeInput)
             {
                 forward.Normalize(); 
                 up.Normalize(); 
@@ -939,7 +934,7 @@ namespace SharpDX
         /// Creates a quaternion given forward and up vectors
         /// </summary>
         /// <param name="forward">The forward vector the quaternion should look at</param>
-        /// <param name="up">The up vector of the quaternion</param>
+        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
         /// <param name="right">The right vector of the quaternion</param>
         /// <returns>The newly created quaternion</returns>
         public static Quaternion RotationLookAt(Vector3 forward, Vector3 up, Vector3 right)
@@ -950,10 +945,10 @@ namespace SharpDX
         }
         
         /// <summary>
-        /// Creates a quaternion given forward and up vectors
+        /// Creates a quaternion given left-handed forward and up vectors
         /// </summary>
         /// <param name="forward">The forward vector the quaternion should look at</param>
-        /// <param name="up">The up vector of the quaternion</param>
+        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
         /// <param name="result">The newly created quaternion</param>
         public static void RotationLookAtLH(ref Vector3 forward, ref Vector3 up, out Quaternion result)
         {
@@ -963,10 +958,10 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a quaternion given forward and up vectors
+        /// Creates a quaternion given left-handed forward and up vectors
         /// </summary>
         /// <param name="forward">The forward vector the quaternion should look at</param>
-        /// <param name="up">The up vector of the quaternion</param>
+        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
         /// <returns>The newly created quaternion</returns>
         public static Quaternion RotationLookAtLH(Vector3 forward, Vector3 up)
         {
@@ -976,10 +971,10 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a quaternion given forward and up vectors
+        /// Creates a quaternion given right-handed forward and up vectors
         /// </summary>
         /// <param name="forward">The forward vector the quaternion should look at</param>
-        /// <param name="up">The up vector of the quaternion</param>
+        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
         /// <param name="result">The newly created quaternion</param>
         public static void RotationLookAtRH(ref Vector3 forward, ref Vector3 up, out Quaternion result)
         {
@@ -989,10 +984,10 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a quaternion given forward and up vectors
+        /// Creates a quaternion given right-handed forward and up vectors
         /// </summary>
         /// <param name="forward">The forward vector the quaternion should look at</param>
-        /// <param name="up">The up vector of the quaternion</param>
+        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
         /// <returns>The newly created quaternion</returns>
         public static Quaternion RotationLookAtRH(Vector3 forward, Vector3 up)
         {
