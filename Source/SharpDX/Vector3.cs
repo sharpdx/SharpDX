@@ -314,6 +314,28 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Perform a component-wise addition
+        /// </summary>
+        /// <param name="left">The input vector</param>
+        /// <param name="right">The scalar value to be added to elements</param>
+        /// <param name="result">The vector with added scalar for each element.</param>
+        public static void Add(ref Vector3 left, ref float right, out Vector3 result)
+        {
+            result = new Vector3(left.X + right, left.Y + right, left.Z + right);
+        }
+
+        /// <summary>
+        /// Perform a component-wise addition
+        /// </summary>
+        /// <param name="left">The input vector</param>
+        /// <param name="right">The scalar value to be added to elements</param>
+        /// <returns>The vector with added scalar for each element.</returns>
+        public static Vector3 Add(Vector3 left, float right)
+        {
+            return new Vector3(left.X + right, left.Y + right, left.Z + right);
+        }
+
+        /// <summary>
         /// Subtracts two vectors.
         /// </summary>
         /// <param name="left">The first vector to subtract.</param>
@@ -333,6 +355,50 @@ namespace SharpDX
         public static Vector3 Subtract(Vector3 left, Vector3 right)
         {
             return new Vector3(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="left">The input vector</param>
+        /// <param name="right">The scalar value to be subtraced from elements</param>
+        /// <param name="result">The vector with subtracted scalar for each element.</param>
+        public static void Subtract(ref Vector3 left, ref float right, out Vector3 result)
+        {
+            result = new Vector3(left.X - right, left.Y - right, left.Z - right);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="left">The input vector</param>
+        /// <param name="right">The scalar value to be subtraced from elements</param>
+        /// <returns>The vector with subtracted scalar for each element.</returns>
+        public static Vector3 Subtract(Vector3 left, float right)
+        {
+            return new Vector3(left.X - right, left.Y - right, left.Z - right);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="left">The scalar value to be subtraced from elements</param>
+        /// <param name="right">The input vector.</param>
+        /// <param name="result">The vector with subtracted scalar for each element.</param>
+        public static void Subtract(ref float left, ref Vector3 right, out Vector3 result)
+        {
+            result = new Vector3(left - right.X, left - right.Y, left - right.Z);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="left">The scalar value to be subtraced from elements</param>
+        /// <param name="right">The input vector.</param>
+        /// <returns>The vector with subtracted scalar for each element.</returns>
+        public static Vector3 Subtract(float left, Vector3 right)
+        {
+            return new Vector3(left - right.X, left - right.Y, left - right.Z);
         }
 
         /// <summary>
@@ -1456,6 +1522,50 @@ namespace SharpDX
         public static Vector3 operator /(Vector3 value, Vector3 scale)
         {
             return new Vector3(value.X / scale.X, value.Y / scale.Y, value.Z / scale.Z);
+        }
+        
+        /// <summary>
+        /// Perform a component-wise addition
+        /// </summary>
+        /// <param name="value">The input vector.</param>
+        /// <param name="scalar">The scalar value to be added on elements</param>
+        /// <returns>The vector with added scalar for each element.</returns>
+        public static Vector3 operator +(Vector3 value, float scalar)
+        {
+            return new Vector3(value.X + scalar, value.Y + scalar, value.Z + scalar);
+        }
+
+        /// <summary>
+        /// Perform a component-wise addition
+        /// </summary>
+        /// <param name="value">The input vector.</param>
+        /// <param name="scalar">The scalar value to be added on elements</param>
+        /// <returns>The vector with added scalar for each element.</returns>
+        public static Vector3 operator +(float scalar, Vector3 value)
+        {
+            return new Vector3(scalar + value.X, scalar + value.Y, scalar + value.Z);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="value">The input vector.</param>
+        /// <param name="scalar">The scalar value to be subtraced from elements</param>
+        /// <returns>The vector with added scalar from each element.</returns>
+        public static Vector3 operator -(Vector3 value, float scalar)
+        {
+            return new Vector3(value.X - scalar, value.Y - scalar, value.Z - scalar);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="value">The input vector.</param>
+        /// <param name="scalar">The scalar value to be subtraced from elements</param>
+        /// <returns>The vector with subtraced scalar from each element.</returns>
+        public static Vector3 operator -(float scalar, Vector3 value)
+        {
+            return new Vector3(scalar - value.X, scalar - value.Y, scalar - value.Z);
         }
 
         /// <summary>
