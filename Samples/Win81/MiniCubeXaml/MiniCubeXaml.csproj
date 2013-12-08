@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>MiniCubeXaml_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>16DC1910978792A372F00DBF4CEE132DCD2B641E</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>9351C163A3164FF09BFB692396ADCF38BFEC49CC</PackageCertificateThumbprint>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
