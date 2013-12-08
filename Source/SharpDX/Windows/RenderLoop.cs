@@ -155,7 +155,7 @@ namespace SharpDX.Windows
                                 isControlAlive = false;
                             }
 
-                            var message = new Message() { HWnd = msg.handle, LParam = msg.lParam, Msg = msg.msg, WParam = msg.wParam };
+                            var message = new Message() { HWnd = msg.handle, LParam = msg.lParam, Msg = (int)msg.msg, WParam = msg.wParam };
                             if (!Application.FilterMessage(ref message))
                             {
                                 Win32Native.TranslateMessage(ref msg);
