@@ -327,7 +327,7 @@ namespace SharpDX.Toolkit
         }
 
         /// <summary>
-        /// Handles the <see cref="Control.KeyPress" event to receive text for the TextInput event./>
+        /// Handles the <see cref="Control.KeyPress"/> event to receive text for the TextInput event.
         /// </summary>
         /// <param name="sender">Object sender.</param>
         /// <param name="e">KeyPress event arguments.</param>
