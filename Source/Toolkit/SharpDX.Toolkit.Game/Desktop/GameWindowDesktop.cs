@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -189,6 +189,8 @@ namespace SharpDX.Toolkit
             {
                 Control.Resize += OnClientSizeChanged;
             }
+
+            Control.KeyPress += HandleControlKeyPress;
         }
 
         /// <inheritdoc />
@@ -242,6 +244,7 @@ namespace SharpDX.Toolkit
             // unbind event handlers from previous control
             Control.MouseEnter -= HandleControlMouseEnter;
             Control.MouseLeave -= HandleControlMouseLeave;
+            Control.KeyPress -= HandleControlKeyPress;
 
             gameForm = Control as RenderForm;
             if (gameForm != null)
@@ -322,6 +325,17 @@ namespace SharpDX.Toolkit
                 isMouseCurrentlyHidden = false;
             }
         }
+
+        /// <summary>
+        /// Handles the <see cref="Control.KeyPress"/> event to receive text for the TextInput event.
+        /// </summary>
+        /// <param name="sender">Object sender.</param>
+        /// <param name="e">KeyPress event arguments.</param>
+        private void HandleControlKeyPress(object sender, KeyPressEventArgs e)
+        {
+            OnTextInput(sender, new TextInputEventArgs(e.KeyChar));
+        }
+
     }
 }
 #endif

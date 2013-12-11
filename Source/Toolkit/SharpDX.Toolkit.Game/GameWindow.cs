@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -58,6 +58,11 @@ namespace SharpDX.Toolkit
         /// Occurs, when device orientation is changed.
         /// </summary>
         public event EventHandler<EventArgs> OrientationChanged;
+
+        /// <summary>
+        /// Occurs when text is sent from the keyboard.
+        /// </summary>
+        public event EventHandler<TextInputEventArgs> TextInput;
 
         #endregion
 
@@ -219,6 +224,14 @@ namespace SharpDX.Toolkit
             if (handler != null)
             {
                 handler(this, e);
+            }
+        }
+
+        protected void OnTextInput(object sender, TextInputEventArgs e)
+        {
+            if (TextInput != null)
+            {
+                TextInput(sender, e);
             }
         }
 
