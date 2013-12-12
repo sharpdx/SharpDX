@@ -104,6 +104,34 @@ namespace SharpDX
             B = blue;
             A = 255;
         }
+		
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SharpDX.Color"/> struct.  Passed values clamped within byte range.
+        /// </summary>
+        /// <param name="red">The red component of the color.</param>
+        /// <param name="green">The green component of the color.</param>
+        /// <param name="blue">The blue component of the color.</param>
+		public Color(int red, int green, int blue, int alpha)
+		{
+			R = ToByte(red);
+			G = ToByte(green);
+			B = ToByte(blue);
+			A = ToByte(alpha);
+		}
+		
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SharpDX.Color"/> struct.  Alpha is set to 255.  Passed values clamped within byte range.
+        /// </summary>
+        /// <param name="red">The red component of the color.</param>
+        /// <param name="green">The green component of the color.</param>
+        /// <param name="blue">The blue component of the color.</param>
+		public Color(int red, int green, int blue)
+		{
+			R = ToByte(red);
+			G = ToByte(green);
+			B = ToByte(blue);
+			A = 255;
+		}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SharpDX.Color"/> struct.
@@ -1177,8 +1205,13 @@ namespace SharpDX
         private static byte ToByte(float component)
         {
             var value = (int)(component * 255.0f);
-            return (byte)(value < 0 ? 0 : value > 255 ? 255 : value);
+			return ToByte(value);
         }
+
+		public static byte ToByte(int value)
+		{
+			return (byte)(value < 0 ? 0 : value > 255 ? 255 : value);
+		}
 
         /// <inheritdoc/>
         void IDataSerializable.Serialize(BinarySerializer serializer)
