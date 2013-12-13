@@ -59,7 +59,7 @@ namespace SharpDX.Toolkit.Graphics
 
             public Color Value32Bpp
             {
-                get { return new Color(R, 0, 0, 255); }
+                get { return new Color(R, (byte)0, (byte)0, (byte)255); }
                 set { R = value.R; }
             }
 
@@ -94,7 +94,7 @@ namespace SharpDX.Toolkit.Graphics
 
             public Color Value32Bpp
             {
-                get { return new Color(R, G, 0, 255); }
+                get { return new Color(R, G, (byte)0, (byte)255); }
                 set
                 {
                     R = value.R;
