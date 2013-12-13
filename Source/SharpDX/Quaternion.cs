@@ -904,25 +904,7 @@ namespace SharpDX
         /// <param name="result">The newly created quaternion</param>
         public static void RotationLookAt(ref Vector3 forward, ref Vector3 up, ref Vector3 right, out Quaternion result)
         {
-            RotationLookAt(ref forward, ref up, ref right, true, out result);
-        }
-
-        /// <summary>
-        /// Creates a quaternion given forward and up vectors
-        /// </summary>
-        /// <param name="forward">The forward vector the quaternion should look at</param>
-        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
-        /// <param name="right">The right vector of the quaternion (must be perpendicular to forward vector)</param>
-        /// <param name="normalizeInput">Set true to normalize input parameters</param>
-        /// <param name="result">The newly created quaternion</param>
-        public static void RotationLookAt(ref Vector3 forward, ref Vector3 up, ref Vector3 right, bool normalizeInput, out Quaternion result)
-        {
-            if (normalizeInput)
-            {
-                forward.Normalize(); 
-                up.Normalize(); 
-                right.Normalize();
-            }
+            forward.Normalize(); up.Normalize(); right.Normalize();
             result.W = (float)Math.Sqrt(1 + right.X + up.Y + forward.Z) * .5f;
             float reciprocal = 1.0f / (4.0f * result.W);
             result.X = (up.Z - forward.Y) * reciprocal;
@@ -1013,14 +995,11 @@ namespace SharpDX
             float lengthSq = difference.LengthSquared();
             if (MathUtil.IsZero(lengthSq))
                 difference = -cameraForwardVector;
-            else
-                difference *= (float)(1.0 / Math.Sqrt(lengthSq));
 
             Vector3.Cross(ref cameraUpVector, ref difference, out right);
-            right.Normalize();
             Vector3.Cross(ref difference, ref right, out up);
 
-            RotationLookAt(ref difference, ref up, ref right, false, out result);
+            RotationLookAt(ref difference, ref up, ref right, out result);
         }
         
         /// <summary>
@@ -1055,14 +1034,11 @@ namespace SharpDX
             float lengthSq = difference.LengthSquared();
             if (MathUtil.IsZero(lengthSq))
                 difference = cameraForwardVector;
-            else
-                difference *= (float)(1.0 / Math.Sqrt(lengthSq));
 
             Vector3.Cross(ref cameraUpVector, ref difference, out right);
-            right.Normalize();
             Vector3.Cross(ref difference, ref right, out up);
 
-            RotationLookAt(ref difference, ref up, ref right, false, out result);
+            RotationLookAt(ref difference, ref up, ref right, out result);
         }
 
         /// <summary>
