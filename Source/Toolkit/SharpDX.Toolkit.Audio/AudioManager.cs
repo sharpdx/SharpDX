@@ -77,8 +77,20 @@ namespace SharpDX.Toolkit.Audio
                 throw new InvalidOperationException("Unable to initialize AudioManager. Expecting IContentManager to be an instance of ContentManager");
             }
 
-            Device = new XAudio2(XAudio2Flags.None, ProcessorSpecifier.DefaultProcessor);
-            Device.StartEngine();
+#if !WIN8METRO && DEBUG
+            try
+            {
+                Device = new XAudio2(XAudio2Flags.DebugEngine, ProcessorSpecifier.DefaultProcessor);
+                Device.StartEngine();
+            }
+            catch (Exception)
+#endif
+            {
+                Device = new XAudio2(XAudio2Flags.None, ProcessorSpecifier.DefaultProcessor);
+                Device.StartEngine();                
+            }  
+
+           
 
 #if WIN8METRO
             string deviceId = null;

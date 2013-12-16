@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 
 namespace SharpDX.Toolkit.Audio
 {
+    using SharpDX.IO;
     using SharpDX.Multimedia;
     using SharpDX.XAudio2;
     using System.IO;
@@ -37,7 +38,7 @@ namespace SharpDX.Toolkit.Audio
         private SoundEffectInstancePool instancePool;
 
 
-        private SoundEffect(AudioManager audioManager, Stream stream)
+        private SoundEffect(AudioManager audioManager, Stream stream, string name)
         {
             if (audioManager == null)
                 throw new ArgumentNullException("audioManager");
@@ -63,21 +64,27 @@ namespace SharpDX.Toolkit.Audio
 
             this.children = new List<WeakReference>();
             this.instancePool = new SoundEffectInstancePool(this);
-
+            this.Name = name;
             this.Manager = audioManager;
         }
 
 
         public TimeSpan Duration { get; private set; }
+        public string Name { get; private set; }
         internal AudioManager Manager { get; private set; }
         internal WaveFormat Format { get; private set; }
 
 
         public static SoundEffect FromStream(AudioManager audioManager, Stream stream)
         {
-            return new SoundEffect(audioManager, stream);
+            return new SoundEffect(audioManager, stream, null);
         }
 
+        public static SoundEffect FromFile(AudioManager audioManager, string filePath)
+        {
+            using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
+                return new SoundEffect(audioManager, stream, Path.GetFileNameWithoutExtension(filePath));
+        }
 
         public bool Play(float volume, float pitch, float pan)
         {

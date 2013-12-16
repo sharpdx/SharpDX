@@ -38,7 +38,7 @@ namespace Audio
         private AudioManager audioManager;
         private SoundEffect effect;
         private SoundEffectInstance effectInstance;
-
+        private SoundEffect effectFromFile;
 
         public AudioGame()
         {
@@ -68,12 +68,14 @@ namespace Audio
 
             effect = Content.Load<SoundEffect>("ergon.wav");
             effectInstance = effect.Create();
+
+            effectFromFile = SoundEffect.FromFile(audioManager,@"Content\ergon.adpcm.wav");
         }
 
 
         protected override void UnloadContent()
         {
-            Utilities.Dispose(ref effect);
+            Utilities.Dispose(ref effectFromFile);
             base.UnloadContent();            
         }
 
@@ -98,8 +100,8 @@ namespace Audio
 
             if (current.IsKeyDown(Keys.Enter) && keyboardState.IsKeyUp(Keys.Enter))
             {
-                if (effect != null)
-                    effect.Play(0.5f, 1.0f, -1.0f);
+                if (effectFromFile != null)
+                    effectFromFile.Play(0.5f, 1.0f, -1.0f);
             }
 
             keyboardState = current;
