@@ -28,6 +28,8 @@
     <Compile Include="SoundEffectInstance.cs" />
     <Compile Include="SoundEffectInstancePool.cs" />
     <Compile Include="SoundState.cs" />
+    <Compile Include="WaveBank.cs" />
+    <Compile Include="WaveBankReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SharpDX.XAudio2\SharpDX.XAudio2.csproj">

@@ -139,7 +139,7 @@ namespace SharpDX.Toolkit.Audio
 
         IContentReader IContentReaderFactory.TryCreate(Type type)
         {
-            if (type == typeof(SoundEffect))
+            if (type == typeof(SoundEffect) || type == typeof(WaveBank))
                 return this;
 
             return null;
@@ -150,6 +150,9 @@ namespace SharpDX.Toolkit.Audio
         {
             if (parameters.AssetType == typeof(SoundEffect))
                 return SoundEffect.FromStream(this, parameters.Stream);
+
+            if (parameters.AssetType == typeof(WaveBank))
+                return WaveBank.FromStream(this, parameters.Stream);
 
             return null;
         }

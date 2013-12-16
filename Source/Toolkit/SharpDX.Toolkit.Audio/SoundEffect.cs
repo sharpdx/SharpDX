@@ -88,6 +88,9 @@ namespace SharpDX.Toolkit.Audio
 
         public bool Play(float volume, float pitch, float pan)
         {
+            if (IsDisposed)
+                throw new ObjectDisposedException(this.GetType().FullName);
+            
             SoundEffectInstance instance = instancePool.Acquire(true);
             instance.Volume = volume;
             instance.Pitch = pitch;
@@ -106,6 +109,9 @@ namespace SharpDX.Toolkit.Audio
 
         public SoundEffectInstance Create()
         {
+            if (IsDisposed)
+                throw new ObjectDisposedException(this.GetType().FullName);
+            
             SoundEffectInstance instance = instancePool.Acquire(false);
             instance.IsFireAndForget = false;
             AddChild(instance);
