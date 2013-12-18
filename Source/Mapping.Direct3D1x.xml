@@ -428,8 +428,7 @@
     <map param="ID3D(\d+)DeviceContext::OMSetBlendState::SampleMask" default="-1"/>
     <map param="ID3D(\d+)DeviceContext::OMSetDepthStencilState::StencilRef" default="0"/>
     <map param="ID3D(\d+)DeviceContext::[A-Z][A-Z]GetShader::pNumClassInstances" attribute="inout" />
-    <map method="ID3D(\d+)DeviceContext::Map" name="MapSubresource" />
-    <map param="pMappedResource" return="true" />
+    <map method="ID3D(\d+)DeviceContext::Map" name="MapSubresource" check="false" visibility="internal"/>
     <map method="ID3D(\d+)DeviceContext::Unmap" name="UnmapSubresource" />
     <map method="ID3D(\d+)DeviceContext::UpdateSubresource"/>
     <map param="ID3D(\d+)DeviceContext::Map::MapFlags" type="D3D$1_MAP_FLAG" />

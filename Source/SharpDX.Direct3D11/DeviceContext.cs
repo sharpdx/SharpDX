@@ -359,6 +359,34 @@ namespace SharpDX.Direct3D11
             }
         }
 
+        /// <summary>	
+        /// <p>Gets a reference to the data contained in a subresource, and denies the GPU access to that subresource.</p>	
+        /// </summary>	
+        /// <param name="resourceRef"><dd>  <p>A reference to a <strong><see cref="SharpDX.Direct3D11.Resource"/></strong> interface.</p> </dd></param>	
+        /// <param name="subresource"><dd>  <p>Index number of the subresource.</p> </dd></param>	
+        /// <param name="mapType"><dd>  <p>Specifies the CPU's read and write permissions for a resource. For possible values, see <strong><see cref="SharpDX.Direct3D11.MapMode"/></strong>.</p> </dd></param>	
+        /// <param name="mapFlags"><dd>  <p> <strong>Flag</strong> that specifies what the CPU should do when the GPU is busy. This flag is optional.</p> </dd></param>	
+        /// <param name="mappedResourceRef"><dd>  <p>A reference to the mapped subresource (see <strong><see cref="SharpDX.DataBox"/></strong>).</p> </dd></param>	
+        /// <returns>The mapped subresource (see <strong><see cref="SharpDX.DataBox"/></strong>). If <see cref="MapFlags.DoNotWait"/> is used and the resource is still being used by the GPU, this method return an empty DataBox whose property <see cref="DataBox.IsEmpty"/> returns <c>true</c>.<p>This method also throws an exception with the code <strong><see cref="SharpDX.DXGI.ResultCode.DeviceRemoved"/></strong> if <em>MapType</em> allows any CPU read access and the video card has been removed.</p><p>For more information about these error codes, see DXGI_ERROR.</p></returns>	
+        /// <remarks>	
+        /// <p>If you call <strong>Map</strong> on a deferred context, you can only pass <strong><see cref="SharpDX.Direct3D11.MapMode.WriteDiscard"/></strong>, <strong><see cref="SharpDX.Direct3D11.MapMode.WriteNoOverwrite"/></strong>, or both to the <em>MapType</em> parameter. Other <strong><see cref="SharpDX.Direct3D11.MapMode"/></strong>-typed values are not supported for a deferred context.</p><p>The Direct3D 11.1 runtime, which is available starting with Windows Developer Preview, can  map shader resource views (SRVs) of dynamic buffers with <strong><see cref="SharpDX.Direct3D11.MapMode.WriteNoOverwrite"/></strong>.  The Direct3D 11 and earlier runtimes limited mapping to vertex or index buffers.</p>	
+        /// If <see cref="MapFlags.DoNotWait"/> is used and the resource is still being used by the GPU, this method return an empty DataBox whose property <see cref="DataBox.IsEmpty"/> returns <c>true</c>.
+        /// </remarks>	
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        public SharpDX.DataBox MapSubresource(SharpDX.Direct3D11.Resource resourceRef, int subresource, SharpDX.Direct3D11.MapMode mapType, SharpDX.Direct3D11.MapFlags mapFlags)
+        {
+            var box = default(DataBox);
+            var result = MapSubresource(resourceRef, subresource, mapType, mapFlags, out box);
+            if((mapFlags & MapFlags.DoNotWait) != 0 && result == DXGI.ResultCode.WasStillDrawing)
+            {
+                return box;
+            }
+            result.CheckError();
+            return box;
+        }
+
         /// <summary>
         /// Copies data from the CPU to to a non-mappable subresource region.
         /// </summary>
