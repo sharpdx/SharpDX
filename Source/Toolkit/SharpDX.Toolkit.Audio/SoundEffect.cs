@@ -69,6 +69,22 @@ namespace SharpDX.Toolkit.Audio
         }
 
 
+        internal SoundEffect(AudioManager audioManager, string name, WaveFormat format,AudioBuffer buffer, uint[] decodedPacketsInfo)
+        {
+            this.Manager = audioManager;
+            this.Name = name;
+            this.Format = format;
+            this.audioBuffer = buffer;
+            this.decodedPacketsInfo = decodedPacketsInfo;
+
+            var sampleCount = (float)this.audioBuffer.PlayLength;
+            var avgBPS = (float)this.Format.AverageBytesPerSecond;
+            this.Duration = TimeSpan.FromSeconds(sampleCount / avgBPS);
+
+            this.children = new List<WeakReference>();
+            this.instancePool = new SoundEffectInstancePool(this);
+        }
+
         public TimeSpan Duration { get; private set; }
         public string Name { get; private set; }
         internal AudioManager Manager { get; private set; }

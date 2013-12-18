@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using SharpDX.IO;
+using SharpDX.XAudio2;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,10 +44,50 @@ namespace SharpDX.Toolkit.Audio
             
             this.audioManager = audioManager;
 
-            this.effects = WaveBankReader.GetSoundEffects(stream);
-            this.effectsByName = this.effects.ToDictionary(se => se.Name);
+            using (var reader = new WaveBankReader(stream))
+            {               
+                
+                this.effects = new SoundEffect[reader.Count];
+                this.effectsByName = new Dictionary<string, SoundEffect>();
+
+                for (uint i = 0; i < reader.Count; i++)
+                {
+                    var format = reader.GetWaveFormat(i);
+                    var metadata = reader.GetMetadata(i);
+                    var name = reader.GetName(i);
+                    var data = reader.GetWaveData(i);
+                    uint[] packData = null;
+
+                    if (format.Encoding == Multimedia.WaveFormatEncoding.Wmaudio2 || format.Encoding == Multimedia.WaveFormatEncoding.Wmaudio3)
+                    {
+                        Multimedia.WaveFormatEncoding tag;
+                        packData = reader.GetSeekTable(i, out tag);
+                    }
+
+                    var buffer = new AudioBuffer
+                    {
+                       
+                        Stream = DataStream.Create<byte>(data,true,false),
+                        AudioBytes = data.Length,
+                        //PlayBegin = (int)metadata.OffsetBytes,
+                        //PlayLength = (int)metadata.LengthBytes,
+                        //LoopBegin = (int)metadata.LoopStart,
+                        //LoopLength = (int)metadata.LoopLength,
+                        //LoopCount = 
+                        Flags = BufferFlags.EndOfStream,
+                    };
+
+                    var effect = this.effects[i] = new SoundEffect(audioManager, name, format, buffer, packData);
+
+                    if (!string.IsNullOrEmpty(name))
+                        this.effectsByName.Add(name, effect);
+                }
+            }
+
+            
 	    }
 
+        public int Count { get { return effects == null ? 0 : effects.Length;}}
 
         public static WaveBank FromStream(AudioManager audioManager, Stream stream)
         {
@@ -66,7 +107,7 @@ namespace SharpDX.Toolkit.Audio
             if (IsDisposed)
                 throw new ObjectDisposedException(this.GetType().FullName);
 
-            if (index < 0 || index > effects.Length)
+            if (index < 0 || index >= effects.Length)
                 return false;
 
             return effects[index].Play(volume,pitch,pan);
@@ -78,7 +119,7 @@ namespace SharpDX.Toolkit.Audio
             if (IsDisposed)
                 throw new ObjectDisposedException(this.GetType().FullName);
 
-            if (index < 0 || index > effects.Length)
+            if (index < 0 || index >= effects.Length)
                 return false;
 
             return effects[index].Play();
@@ -122,7 +163,7 @@ namespace SharpDX.Toolkit.Audio
             if (IsDisposed)
                 throw new ObjectDisposedException(this.GetType().FullName);
 
-            if (index < 0 || index > effects.Length)
+            if (index < 0 || index >= effects.Length)
                 throw new ArgumentOutOfRangeException("index", string.Format("No wave at index '{0}' exists."));
 
             return effects[index].Create();

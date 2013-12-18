@@ -23,6 +23,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AudioManager.cs" />
+    <Compile Include="BitField.cs" />
     <Compile Include="Pool.cs" />
     <Compile Include="SoundEffect.cs" />
     <Compile Include="SoundEffectInstance.cs" />
