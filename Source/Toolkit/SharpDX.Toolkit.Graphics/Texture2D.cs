@@ -226,5 +226,14 @@ namespace SharpDX.Toolkit.Graphics
             using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
                 return Load(device, stream, flags, usage);
         }
+
+        /// <summary>
+        /// Implicit casting operator to <see cref="Direct3D11.Resource"/>
+        /// </summary>
+        /// <param name="from">The GraphicsResource to convert from.</param>
+        public static implicit operator Resource(Texture2D from)
+        {
+            return from == null ? null : (Resource)from.Resource;
+        }
     }
 }
