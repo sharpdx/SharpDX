@@ -26,18 +26,10 @@ namespace SharpDX.Toolkit.Input
     /// <summary>
     /// Provides access to keyboard state
     /// </summary>
-    public class KeyboardManager : Component, IGameSystem, IKeyboardService
+    public class KeyboardManager : GameSystem, IKeyboardService
     {
-        // a reference to game is kept to access the native window in the Initialize method
-        private readonly Game game;
-
-        // a list of pressed keys:
-
-#if WinFormsInterop && !NET35Plus // .NET 2.0
-        private readonly List<Keys> pressedKeys = new List<Keys>();
-#else
-        private readonly HashSet<Keys> pressedKeys = new HashSet<Keys>();
-#endif
+        private KeyboardState state;
+        private KeyboardState nextState;
 
         // provides platform-specific bindings to keyboard events
         private KeyboardPlatform platform;
@@ -47,12 +39,9 @@ namespace SharpDX.Toolkit.Input
         /// </summary>
         /// <param name="game">The <see cref="Game"/> instance whose window is used as source of keyboard input events</param>
         /// <exception cref="ArgumentNullException">Is thrown if <paramref name="game"/> is null</exception>
-        public KeyboardManager(Game game)
+        public KeyboardManager(Game game) : base(game)
         {
-            if (game == null) throw new ArgumentNullException("game");
-
-            this.game = game;
-
+            Enabled = true;
             // register the keyboard service instance
             game.Services.AddService(typeof(IKeyboardService), this);
             // register the keyboard manager as game system
@@ -63,14 +52,16 @@ namespace SharpDX.Toolkit.Input
         /// Initializes this instance and starts listening to keyboard input events
         /// </summary>
         /// <exception cref="NotSupportedException">Is thrown if keyboard manager is used on an unsupported platform.</exception>
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
+
             // create the platform-specific instance
-            platform = KeyboardPlatform.Create(game.Window.NativeWindow);
+            platform = KeyboardPlatform.Create(Game.Window.NativeWindow);
 
             // bind to platform-independent events
-            platform.KeyPressed += HandleKeyPressed;
-            platform.KeyReleased += HandleKeyReleased;
+            platform.KeyDown += HandleKeyDown;
+            platform.KeyUp += HandleKeyUp;
         }
 
         /// <summary>
@@ -79,30 +70,42 @@ namespace SharpDX.Toolkit.Input
         /// <returns>A snapshot of current keyboard state</returns>
         public KeyboardState GetState()
         {
-            return new KeyboardState(pressedKeys);
+            return state;
         }
 
         /// <summary>
-        /// Handles the <see cref="KeyboardPlatform.KeyPressed"/> event
+        /// Handles the <see cref="KeyboardPlatform.KeyDown"/> event
         /// </summary>
         /// <param name="key">The pressed key</param>
-        private void HandleKeyPressed(Keys key)
+        private void HandleKeyDown(Keys key)
         {
-            // need to remove pressed key only on .NET 2.0 platform, as others are using HashSet
-            // for storage which disallows duplicates
-#if WinFormsInterop && !NET35Plus // .NET 2.0
-            pressedKeys.Remove(key);
-#endif
-            pressedKeys.Add(key);
+            if (!nextState.IsKeyDown(key))
+            {
+                nextState.KeysPressed.Set(key);
+            }
+            nextState.KeysDown.Set(key);
         }
 
         /// <summary>
-        /// Handles the <see cref="KeyboardPlatform.KeyReleased"/> event
+        /// Handles the <see cref="KeyboardPlatform.KeyUp"/> event
         /// </summary>
         /// <param name="key">The released key</param>
-        private void HandleKeyReleased(Keys key)
+        private void HandleKeyUp(Keys key)
         {
-            pressedKeys.Remove(key);
+            nextState.KeysReleased.Set(key);
+
+            nextState.KeysPressed.UnSet(key);
+            nextState.KeysDown.UnSet(key);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            state = nextState;
+
+            nextState.KeysPressed = new KeysSet();
+            nextState.KeysReleased = new KeysSet();
         }
     }
 }

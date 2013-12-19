@@ -18,21 +18,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 namespace SharpDX.Toolkit.Input
 {
     /// <summary>
     /// Represents the state of a keyboard key or mouse button
     /// </summary>
+    [Flags]
     public enum KeyState
     {
         /// <summary>
-        /// Key is released (not pressed)
+        /// No key event.
         /// </summary>
-        Up = 0,
+        None = 0,
 
         /// <summary>
-        /// Key is pressed
+        /// Key is currently down.
         /// </summary>
-        Down = 1
+        Down = 1,
+
+        /// <summary>
+        /// Key was released since last frame.
+        /// </summary>
+        Released = 2,
+
+        /// <summary>
+        /// Key was pressed since last frame.
+        /// </summary>
+        Pressed = 4
     }
 }
