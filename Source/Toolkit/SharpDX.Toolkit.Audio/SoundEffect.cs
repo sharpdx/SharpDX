@@ -19,9 +19,6 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharpDX.Toolkit.Audio
 {
@@ -36,37 +33,6 @@ namespace SharpDX.Toolkit.Audio
         private uint[] decodedPacketsInfo;
         private List<WeakReference> children;
         private SoundEffectInstancePool instancePool;
-
-
-        private SoundEffect(AudioManager audioManager, Stream stream, string name)
-        {
-            if (audioManager == null)
-                throw new ArgumentNullException("audioManager");
-
-            if (stream == null)
-                throw new ArgumentNullException("stream");
-
-            var sound = new SoundStream(stream);
-            this.Format = sound.Format;
-            this.decodedPacketsInfo = sound.DecodedPacketsInfo;
-            this.audioBuffer = new AudioBuffer()
-            {
-                Stream = sound.ToDataStream(),
-                AudioBytes = (int)sound.Length,
-                Flags = BufferFlags.EndOfStream,
-            };
-
-            sound.Close();
-
-            var sampleCount = (float)this.audioBuffer.PlayLength;
-            var avgBPS = (float)this.Format.AverageBytesPerSecond;
-            this.Duration = TimeSpan.FromSeconds(sampleCount / avgBPS);
-
-            this.children = new List<WeakReference>();
-            this.instancePool = new SoundEffectInstancePool(this);
-            this.Name = name;
-            this.Manager = audioManager;
-        }
 
 
         internal SoundEffect(AudioManager audioManager, string name, WaveFormat format,AudioBuffer buffer, uint[] decodedPacketsInfo)
@@ -91,15 +57,33 @@ namespace SharpDX.Toolkit.Audio
         internal WaveFormat Format { get; private set; }
 
 
-        public static SoundEffect FromStream(AudioManager audioManager, Stream stream)
+        public static SoundEffect FromStream(AudioManager audioManager, Stream stream, string name = null)
         {
-            return new SoundEffect(audioManager, stream, null);
+            if (audioManager == null)
+                throw new ArgumentNullException("audioManager");
+
+            if (stream == null)
+                throw new ArgumentNullException("stream");
+
+            var sound = new SoundStream(stream);
+            var format = sound.Format;
+            var decodedPacketsInfo = sound.DecodedPacketsInfo;
+            var buffer = new AudioBuffer()
+            {
+                Stream = sound.ToDataStream(),
+                AudioBytes = (int)sound.Length,
+                Flags = BufferFlags.EndOfStream,
+            };
+
+            sound.Close();
+
+            return new SoundEffect(audioManager, name, format, buffer, decodedPacketsInfo);
         }
 
         public static SoundEffect FromFile(AudioManager audioManager, string filePath)
         {
             using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
-                return new SoundEffect(audioManager, stream, Path.GetFileNameWithoutExtension(filePath));
+                return FromStream(audioManager, stream, Path.GetFileNameWithoutExtension(filePath));
         }
 
         public bool Play(float volume, float pitch, float pan)

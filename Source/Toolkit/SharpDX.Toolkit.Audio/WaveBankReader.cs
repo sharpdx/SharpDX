@@ -35,7 +35,6 @@ using SharpDX.Multimedia;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace SharpDX.Toolkit.Audio
@@ -66,7 +65,7 @@ namespace SharpDX.Toolkit.Audio
         }
 
         public int Count { get { return bankData == null ? 0 : (int)bankData.EntryCount; } }
-        public bool IsStreaming { get { return bankData == null ? false : bankData.Flags.HasFlag(BankDataFlags.DataTypeStreaming); } }
+        public bool IsStreaming { get { return bankData == null ? false : (bankData.Flags & BankDataFlags.DataTypeStreaming) == BankDataFlags.DataTypeStreaming; } }
 
         private void ReadHeader()
         {
@@ -121,7 +120,7 @@ namespace SharpDX.Toolkit.Audio
             if (bankData.EntryCount <= 0)
                 throw new Exception("No Data.");
 
-            if (bankData.Flags.HasFlag(BankDataFlags.Compact))
+            if ((bankData.Flags & BankDataFlags.Compact) == BankDataFlags.Compact)
             {
                 if (bankData.EntryMetaDataElementSize != EntryCompact.Size)
                 {
@@ -169,7 +168,7 @@ namespace SharpDX.Toolkit.Audio
         {
             SeekSegment(SegmentIndex.EntryMetaData);
 
-            if (bankData.Flags.HasFlag(BankDataFlags.Compact))
+            if ((bankData.Flags & BankDataFlags.Compact) == BankDataFlags.Compact)
             {
                 compactMetadata = new EntryCompact[(int)bankData.EntryCount];
 
@@ -242,7 +241,7 @@ namespace SharpDX.Toolkit.Audio
                 throw new Exception("No Wave Data.");
             }
 
-            if (bankData.Flags.HasFlag(BankDataFlags.DataTypeStreaming))
+            if ((bankData.Flags & BankDataFlags.DataTypeStreaming) == BankDataFlags.DataTypeStreaming)
             {
                 //Not sure what to do here just leave the binary reader / stream open??
             }
@@ -292,12 +291,12 @@ namespace SharpDX.Toolkit.Audio
             if (index >= bankData.EntryCount)
                 throw new ArgumentOutOfRangeException("index");
 
-            if (bankData.Flags.HasFlag(BankDataFlags.DataTypeStreaming))
+            if ((bankData.Flags & BankDataFlags.DataTypeStreaming) == BankDataFlags.DataTypeStreaming)
             {
                 throw new InvalidOperationException("Operation is invalid for streaming wave banks.");
             }
 
-            if (bankData.Flags.HasFlag(BankDataFlags.Compact))
+            if ((bankData.Flags & BankDataFlags.Compact) == BankDataFlags.Compact)
             {
                 var entry = compactMetadata[index];
                 uint offset, length;
@@ -333,7 +332,7 @@ namespace SharpDX.Toolkit.Audio
 
             var metadata = new MetaData();
 
-            if (bankData.Flags.HasFlag(BankDataFlags.Compact))
+            if ((bankData.Flags & BankDataFlags.Compact) == BankDataFlags.Compact)
             {
                 var entry = compactMetadata[index];
                 uint offset, length;
@@ -398,7 +397,7 @@ namespace SharpDX.Toolkit.Audio
 
         private MiniWaveFormat GetMiniWaveFormat(uint index)
         {
-            return bankData.Flags.HasFlag(BankDataFlags.Compact) ? bankData.CompactFormat : metaData[index].Format;
+            return (bankData.Flags & BankDataFlags.Compact) == BankDataFlags.Compact ? bankData.CompactFormat : metaData[index].Format;
         }
 
         private uint[] FindSeekTable(uint index)
@@ -427,7 +426,7 @@ namespace SharpDX.Toolkit.Audio
 
         public void Dispose()
         {
-            reader.Dispose();
+            reader.Close();
         }
 
         const uint DVDSectorSize = 2048;

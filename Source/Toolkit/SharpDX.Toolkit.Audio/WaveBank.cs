@@ -22,8 +22,6 @@ using SharpDX.XAudio2;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace SharpDX.Toolkit.Audio
 {
@@ -56,12 +54,12 @@ namespace SharpDX.Toolkit.Audio
                     var metadata = reader.GetMetadata(i);
                     var name = reader.GetName(i);
                     var data = reader.GetWaveData(i);
-                    uint[] packData = null;
+                    uint[] decodedPacketsInfo = null;
 
                     if (format.Encoding == Multimedia.WaveFormatEncoding.Wmaudio2 || format.Encoding == Multimedia.WaveFormatEncoding.Wmaudio3)
                     {
                         Multimedia.WaveFormatEncoding tag;
-                        packData = reader.GetSeekTable(i, out tag);
+                        decodedPacketsInfo = reader.GetSeekTable(i, out tag);
                     }
 
                     var buffer = new AudioBuffer
@@ -69,15 +67,16 @@ namespace SharpDX.Toolkit.Audio
                        
                         Stream = DataStream.Create<byte>(data,true,false),
                         AudioBytes = data.Length,
+                        // setting these causes crash
                         //PlayBegin = (int)metadata.OffsetBytes,
                         //PlayLength = (int)metadata.LengthBytes,
                         //LoopBegin = (int)metadata.LoopStart,
                         //LoopLength = (int)metadata.LoopLength,
-                        //LoopCount = 
+                        //LoopCount = 1,
                         Flags = BufferFlags.EndOfStream,
                     };
 
-                    var effect = this.effects[i] = new SoundEffect(audioManager, name, format, buffer, packData);
+                    var effect = this.effects[i] = new SoundEffect(audioManager, name, format, buffer, decodedPacketsInfo);
 
                     if (!string.IsNullOrEmpty(name))
                         this.effectsByName.Add(name, effect);

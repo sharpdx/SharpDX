@@ -19,9 +19,6 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SharpDX.Toolkit.Content;
 
 namespace SharpDX.Toolkit.Audio
@@ -149,7 +146,7 @@ namespace SharpDX.Toolkit.Audio
         object IContentReader.ReadContent(IContentManager contentManager, ref ContentReaderParameters parameters)
         {
             if (parameters.AssetType == typeof(SoundEffect))
-                return SoundEffect.FromStream(this, parameters.Stream);
+                return SoundEffect.FromStream(this, parameters.Stream, parameters.AssetName);
 
             if (parameters.AssetType == typeof(WaveBank))
                 return WaveBank.FromStream(this, parameters.Stream);
