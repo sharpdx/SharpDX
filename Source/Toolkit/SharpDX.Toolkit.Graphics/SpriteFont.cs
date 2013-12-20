@@ -269,7 +269,7 @@ namespace SharpDX.Toolkit.Graphics
             var spriteEffects = parameters.spriteEffects;
 
             var offset = new Vector2(x, y + glyph.Offset.Y);
-            Vector2.Modulate(ref offset, ref axisDirectionTable[(int)spriteEffects & 3], out offset);
+            Vector2.Multiply(ref offset, ref axisDirectionTable[(int)spriteEffects & 3], out offset);
             Vector2.Add(ref offset, ref parameters.origin, out offset);
 
 
@@ -277,7 +277,7 @@ namespace SharpDX.Toolkit.Graphics
             {
                 // For mirrored characters, specify bottom and/or right instead of top left.
                 var glyphRect = new Vector2(glyph.Subrect.Right - glyph.Subrect.Left, glyph.Subrect.Top - glyph.Subrect.Bottom);
-                Vector2.Modulate(ref glyphRect, ref axisIsMirroredTable[(int)spriteEffects & 3], out offset);
+                Vector2.Multiply(ref glyphRect, ref axisIsMirroredTable[(int)spriteEffects & 3], out offset);
             }
             var destination = new RectangleF(parameters.position.X, parameters.position.Y, parameters.scale.X, parameters.scale.Y);
             Rectangle? sourceRectangle = glyph.Subrect;

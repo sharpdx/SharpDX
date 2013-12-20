@@ -416,23 +416,23 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Modulates a vector with another by performing component-wise multiplication.
+        /// Multiplies a vector with another by performing component-wise multiplication.
         /// </summary>
-        /// <param name="left">The first vector to modulate.</param>
-        /// <param name="right">The second vector to modulate.</param>
-        /// <param name="result">When the method completes, contains the modulated vector.</param>
-        public static void Modulate(ref Vector4 left, ref Vector4 right, out Vector4 result)
+        /// <param name="left">The first vector to multiply.</param>
+        /// <param name="right">The second vector to multiply.</param>
+        /// <param name="result">When the method completes, contains the multiplied vector.</param>
+        public static void Multiply(ref Vector4 left, ref Vector4 right, out Vector4 result)
         {
             result = new Vector4(left.X * right.X, left.Y * right.Y, left.Z * right.Z, left.W * right.W);
         }
 
         /// <summary>
-        /// Modulates a vector with another by performing component-wise multiplication.
+        /// Multiplies a vector with another by performing component-wise multiplication.
         /// </summary>
-        /// <param name="left">The first vector to modulate.</param>
-        /// <param name="right">The second vector to modulate.</param>
-        /// <returns>The modulated vector.</returns>
-        public static Vector4 Modulate(Vector4 left, Vector4 right)
+        /// <param name="left">The first vector to multiply.</param>
+        /// <param name="right">The second vector to multiply.</param>
+        /// <returns>The multiplied vector.</returns>
+        public static Vector4 Multiply(Vector4 left, Vector4 right)
         {
             return new Vector4(left.X * right.X, left.Y * right.Y, left.Z * right.Z, left.W * right.W);
         }
@@ -1154,7 +1154,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Modulates a vector with another by performing component-wise multiplication equivalent to <see cref="Modulate(ref SharpDX.Vector4,ref SharpDX.Vector4,out SharpDX.Vector4)"/>.
+        /// Multiplies a vector with another by performing component-wise multiplication equivalent to <see cref="Multiply(ref SharpDX.Vector4,ref SharpDX.Vector4,out SharpDX.Vector4)"/>.
         /// </summary>
         /// <param name="left">The first vector to multiply.</param>
         /// <param name="right">The second vector to multiply.</param>

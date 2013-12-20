@@ -432,11 +432,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Modulates a quaternion by another.
+        /// Multiplies a quaternion by another.
         /// </summary>
-        /// <param name="left">The first quaternion to modulate.</param>
-        /// <param name="right">The second quaternion to modulate.</param>
-        /// <param name="result">When the method completes, contains the modulated quaternion.</param>
+        /// <param name="left">The first quaternion to multiply.</param>
+        /// <param name="right">The second quaternion to multiply.</param>
+        /// <param name="result">When the method completes, contains the multiplied quaternion.</param>
         public static void Multiply(ref Quaternion left, ref Quaternion right, out Quaternion result)
         {
             float lx = left.X;
@@ -458,11 +458,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Modulates a quaternion by another.
+        /// Multiplies a quaternion by another.
         /// </summary>
-        /// <param name="left">The first quaternion to modulate.</param>
-        /// <param name="right">The second quaternion to modulate.</param>
-        /// <returns>The modulated quaternion.</returns>
+        /// <param name="left">The first quaternion to multiply.</param>
+        /// <param name="right">The second quaternion to multiply.</param>
+        /// <returns>The multiplied quaternion.</returns>
         public static Quaternion Multiply(Quaternion left, Quaternion right)
         {
             Quaternion result;
