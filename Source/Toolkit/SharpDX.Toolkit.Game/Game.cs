@@ -358,11 +358,6 @@ namespace SharpDX.Toolkit
                 throw new InvalidOperationException("No GraphicsDeviceManager found");
             }
 
-            if (graphicsDeviceManager == null)
-            {
-                throw new InvalidOperationException("No GraphicsDeviceManager found");
-            }
-
             // Gets the GameWindow Context
             gameContext = gameContext ?? new GameContext();
 
