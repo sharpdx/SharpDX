@@ -28,22 +28,21 @@ namespace SharpDX.Toolkit.Audio
     using System.IO;
 
     public sealed class SoundEffect : IDisposable
-    {
-        private AudioBuffer audioBuffer;
-        private uint[] decodedPacketsInfo;
+    {       
+        
         private List<WeakReference> children;
         private SoundEffectInstancePool instancePool;
 
 
-        internal SoundEffect(AudioManager audioManager, string name, WaveFormat format,AudioBuffer buffer, uint[] decodedPacketsInfo)
+        internal SoundEffect(AudioManager audioManager, string name, WaveFormat format, DataStream buffer, uint[] decodedPacketsInfo)
         {
             this.Manager = audioManager;
             this.Name = name;
             this.Format = format;
-            this.audioBuffer = buffer;
-            this.decodedPacketsInfo = decodedPacketsInfo;
+            this.AudioBuffer = buffer;
+            this.DecodedPacketsInfo = decodedPacketsInfo;
 
-            var sampleCount = (float)this.audioBuffer.PlayLength;
+            var sampleCount = (float)this.AudioBuffer.Length;
             var avgBPS = (float)this.Format.AverageBytesPerSecond;
             this.Duration = TimeSpan.FromSeconds(sampleCount / avgBPS);
 
@@ -55,6 +54,8 @@ namespace SharpDX.Toolkit.Audio
         public string Name { get; private set; }
         internal AudioManager Manager { get; private set; }
         internal WaveFormat Format { get; private set; }
+        internal DataStream AudioBuffer { get; private set; }
+        internal uint[] DecodedPacketsInfo { get; private set; }
 
 
         public static SoundEffect FromStream(AudioManager audioManager, Stream stream, string name = null)
@@ -68,12 +69,7 @@ namespace SharpDX.Toolkit.Audio
             var sound = new SoundStream(stream);
             var format = sound.Format;
             var decodedPacketsInfo = sound.DecodedPacketsInfo;
-            var buffer = new AudioBuffer()
-            {
-                Stream = sound.ToDataStream(),
-                AudioBytes = (int)sound.Length,
-                Flags = BufferFlags.EndOfStream,
-            };
+            var buffer = sound.ToDataStream();
 
             sound.Close();
 
@@ -126,14 +122,7 @@ namespace SharpDX.Toolkit.Audio
                 this.children.Add(new WeakReference(instance));
             }
         }
-
-
-        internal void SubmitAudioBuffer(SourceVoice voice)
-        {
-            voice.SubmitSourceBuffer(audioBuffer, decodedPacketsInfo);
-        }
-
-
+        
         public bool IsDisposed { get; private set; }
 
 
@@ -157,8 +146,8 @@ namespace SharpDX.Toolkit.Audio
                     this.instancePool.Clear();
                 }
 
-                audioBuffer.Stream.Dispose();
-                audioBuffer = null;
+                AudioBuffer.Dispose();
+                AudioBuffer = null;
             }
         }
 
@@ -179,6 +168,8 @@ namespace SharpDX.Toolkit.Audio
                 }
             }
         }
+
+
 
         
     }

@@ -27,6 +27,7 @@ namespace SharpDX.Toolkit.Audio
 
     public sealed class SoundEffectInstance
     {
+        private AudioBuffer audioBuffer;
         private SourceVoice voice;
         private bool paused;
         private float volume;
@@ -35,15 +36,19 @@ namespace SharpDX.Toolkit.Audio
         private float[] panOutputMatrix;
 
 
-        internal SoundEffectInstance(SourceVoice voice, SoundEffect soundEffect, bool isFireAndForget)
-        {
-            if (voice == null)
-                throw new ArgumentNullException("voice");
-
+        internal SoundEffectInstance(SoundEffect soundEffect, bool isFireAndForget)
+        {           
             if (soundEffect == null)
                 throw new ArgumentNullException("effect");
 
-            this.voice = voice;
+            this.voice = new SourceVoice(soundEffect.Manager.Device, soundEffect.Format, VoiceFlags.None, XAudio2.MaximumFrequencyRatio);
+            this.audioBuffer = new AudioBuffer
+            {
+                Stream = soundEffect.AudioBuffer,
+                AudioBytes = (int)soundEffect.AudioBuffer.Length,
+                Flags = BufferFlags.EndOfStream,
+            };
+
             this.Effect = soundEffect;
             this.IsFireAndForget = isFireAndForget;
             this.volume = 1.0f;
@@ -54,6 +59,7 @@ namespace SharpDX.Toolkit.Audio
 
 
         public SoundEffect Effect { get; internal set; }
+
         internal bool IsFireAndForget { get; set; }
 
 
@@ -153,7 +159,8 @@ namespace SharpDX.Toolkit.Audio
                 voice.Stop();
                 voice.FlushSourceBuffers();
             }
-            Effect.SubmitAudioBuffer(voice);
+
+            voice.SubmitSourceBuffer(audioBuffer, Effect.DecodedPacketsInfo);
             voice.Start();
 
             paused = false;
@@ -179,7 +186,7 @@ namespace SharpDX.Toolkit.Audio
             {
                 voice.Stop();
                 voice.FlushSourceBuffers();
-                Effect.SubmitAudioBuffer(voice);
+                voice.SubmitSourceBuffer(audioBuffer, Effect.DecodedPacketsInfo);
             }
 
             voice.Start();
@@ -289,6 +296,8 @@ namespace SharpDX.Toolkit.Audio
                 Effect.ChildDisposed(this);
                 DestroyVoice();
                 Effect = null;
+                panOutputMatrix = null;
+                audioBuffer = null;
             }
         }
 
@@ -305,7 +314,10 @@ namespace SharpDX.Toolkit.Audio
             {
                 IsDisposed = true;
                 DestroyVoice();
-                Effect = null;
+                Effect = null; 
+                panOutputMatrix = null;
+
+                audioBuffer = null;
             }
         }
 

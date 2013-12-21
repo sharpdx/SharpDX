@@ -62,19 +62,7 @@ namespace SharpDX.Toolkit.Audio
                         decodedPacketsInfo = reader.GetSeekTable(i, out tag);
                     }
 
-                    var buffer = new AudioBuffer
-                    {
-                       
-                        Stream = DataStream.Create<byte>(data,true,false),
-                        AudioBytes = data.Length,
-                        // setting these causes crash
-                        //PlayBegin = (int)metadata.OffsetBytes,
-                        //PlayLength = (int)metadata.LengthBytes,
-                        //LoopBegin = (int)metadata.LoopStart,
-                        //LoopLength = (int)metadata.LoopLength,
-                        //LoopCount = 1,
-                        Flags = BufferFlags.EndOfStream,
-                    };
+                    var buffer = DataStream.Create<byte>(data,true,false);
 
                     var effect = this.effects[i] = new SoundEffect(audioManager, name, format, buffer, decodedPacketsInfo);
 

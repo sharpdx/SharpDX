@@ -44,7 +44,7 @@ namespace SharpDX.Toolkit.Audio
 
         protected override SoundEffectInstance Create()
         {
-            return new SoundEffectInstance(new SourceVoice(effect.Manager.Device, effect.Format, VoiceFlags.None, XAudio2.MaximumFrequencyRatio), effect, true);
+            return new SoundEffectInstance(effect, true);
         }
 
         protected override void Reset(SoundEffectInstance item)
