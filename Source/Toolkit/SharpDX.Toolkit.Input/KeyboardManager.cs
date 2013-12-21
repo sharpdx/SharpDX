@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 
 namespace SharpDX.Toolkit.Input
 {
@@ -79,11 +78,14 @@ namespace SharpDX.Toolkit.Input
         /// <param name="key">The pressed key</param>
         private void HandleKeyDown(Keys key)
         {
-            if (!nextState.IsKeyDown(key))
+            var keyState = nextState[key];
+
+            if (!keyState.Down)
             {
-                nextState.KeysPressed.Set(key);
+                keyState.Pressed = true;
             }
-            nextState.KeysDown.Set(key);
+            keyState.Down = true;
+            nextState[key] = keyState;
         }
 
         /// <summary>
@@ -92,10 +94,7 @@ namespace SharpDX.Toolkit.Input
         /// <param name="key">The released key</param>
         private void HandleKeyUp(Keys key)
         {
-            nextState.KeysReleased.Set(key);
-
-            nextState.KeysPressed.UnSet(key);
-            nextState.KeysDown.UnSet(key);
+            nextState[key] = ButtonStateFlags.Released;
         }
 
         public override void Update(GameTime gameTime)
@@ -104,8 +103,7 @@ namespace SharpDX.Toolkit.Input
 
             state = nextState;
 
-            nextState.KeysPressed = new KeysSet();
-            nextState.KeysReleased = new KeysSet();
+            nextState.ResetPressedReleased();
         }
     }
 }

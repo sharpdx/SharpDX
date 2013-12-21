@@ -97,7 +97,7 @@ namespace KeyboardInput
 
             // print the current mouse state
             var sb = new StringBuilder();
-            sb.AppendLine("Pressed keys:");
+            sb.AppendLine("Down keys:");
 
             keyboardState.GetDownKeys(keys);
             foreach(var key in keys)

@@ -24,6 +24,7 @@
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="ButtonState.cs" />
+    <Compile Include="ButtonStateFlags.cs" />
     <Compile Include="IKeyboardService.cs" />
     <Compile Include="IPointerService.cs" />
     <Compile Include="KeyboardManager.cs" />
@@ -34,12 +35,10 @@
     <Compile Include="KeyboardState.cs" />
     <Compile Include="KeyModifiers.cs" />
     <Compile Include="Keys.cs" />
-    <Compile Include="KeysSet.cs" />
     <Compile Include="MousePlatformDesktopWpf.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="MousePlatformDesktop.cs" />
     <Compile Include="IMouseService.cs" />
-    <Compile Include="KeyState.cs" />
     <Compile Include="MouseButton.cs" />
     <Compile Include="MouseManager.cs" />
     <Compile Include="MouseState.cs" />

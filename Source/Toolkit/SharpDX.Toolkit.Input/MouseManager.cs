@@ -25,17 +25,11 @@ namespace SharpDX.Toolkit.Input
     /// <summary>
     /// The <see cref="MouseManager"/> component provides access to mouse state
     /// </summary>
-    public class MouseManager : Component, IGameSystem, IMouseService
+    public class MouseManager : GameSystem, IMouseService
     {
-        private readonly Game game; // keep a reference to game to get access to native window during initialization
-
         // as the MouseState structure is immutable - keep a state from which the structure can be rebuilt
-        private ButtonState left;
-        private ButtonState middle;
-        private ButtonState right;
-        private ButtonState xButton1;
-        private ButtonState xButton2;
-        private int wheelDelta;
+        private MouseState state;
+        private MouseState nextState;
 
         // provides platform-specific binding to mouse functionality
         private MousePlatform platform;
@@ -45,12 +39,9 @@ namespace SharpDX.Toolkit.Input
         /// </summary>
         /// <param name="game">The <see cref="Game"/> instance whose window is used as source of mouse input events</param>
         /// <exception cref="ArgumentNullException">Is thrown if <paramref name="game"/> is null</exception>
-        public MouseManager(Game game)
+        public MouseManager(Game game) : base(game)
         {
-            if (game == null) throw new ArgumentNullException("game");
-
-            this.game = game;
-
+            Enabled = true;
             // register the mouse service instance
             game.Services.AddService(typeof(IMouseService), this);
             // register the mouse manager as game system
@@ -61,10 +52,11 @@ namespace SharpDX.Toolkit.Input
         /// Initializes this instance and starts listening to mouse input events
         /// </summary>
         /// <exception cref="NotSupportedException">Is thrown if mouse manager is used on an unsupported platform.</exception>
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
             // create platform-specific instance
-            platform = MousePlatform.Create(game.Window.NativeWindow);
+            platform = MousePlatform.Create(Game.Window.NativeWindow);
 
             // platform will report state changes trough these events:
             platform.MouseDown += HandleMouseDown;
@@ -82,7 +74,9 @@ namespace SharpDX.Toolkit.Input
             // read the mouse position information
             var position = platform.GetLocation();
 
-            return new MouseState(left, middle, right, xButton1, xButton2, position.X, position.Y, wheelDelta);
+            state.x = position.X;
+            state.y = position.Y;
+            return state;
         }
 
         /// <summary>
@@ -104,7 +98,7 @@ namespace SharpDX.Toolkit.Input
         /// <param name="button">The pressed button</param>
         private void HandleMouseDown(MouseButton button)
         {
-            SetButtonStateTo(button, ButtonState.Pressed);
+            SetButtonStateTo(button, true);
         }
 
         /// <summary>
@@ -113,7 +107,7 @@ namespace SharpDX.Toolkit.Input
         /// <param name="button">The pressed button</param>
         private void HandleMouseUp(MouseButton button)
         {
-            SetButtonStateTo(button, ButtonState.Released);
+            SetButtonStateTo(button, false);
         }
 
         /// <summary>
@@ -122,39 +116,72 @@ namespace SharpDX.Toolkit.Input
         /// <param name="wheelDelta">The pressed button</param>
         private void HandleWheelDelta(int wheelDelta)
         {
-            this.wheelDelta += wheelDelta;
+            nextState.wheelDelta += wheelDelta;
         }
 
         /// <summary>
         /// Sets the state of specified mouse button
         /// </summary>
         /// <param name="button">The button whose state needs to be set.</param>
-        /// <param name="state">The new state of the button.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Is thrown if the <paramref name="button"/> has an unknown value.</exception>
-        private void SetButtonStateTo(MouseButton button, ButtonState state)
+        /// <param name="isDown">if set to <c>true</c> [is pressed].</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">button</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Is thrown if the <paramref name="button" /> has an unknown value.</exception>
+        private void SetButtonStateTo(MouseButton button, bool isDown)
         {
             switch (button)
             {
                 case MouseButton.None:
                     break;
                 case MouseButton.Left:
-                    left = state;
+                    HandleState(ref nextState.leftButton, isDown);
                     break;
                 case MouseButton.Middle:
-                    middle = state;
+                    HandleState(ref nextState.middleButton, isDown);
                     break;
                 case MouseButton.Right:
-                    right = state;
+                    HandleState(ref nextState.rightButton, isDown);
                     break;
                 case MouseButton.XButton1:
-                    xButton1 = state;
+                    HandleState(ref nextState.xButton1, isDown);
                     break;
                 case MouseButton.XButton2:
-                    xButton2 = state;
+                    HandleState(ref nextState.xButton2, isDown);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("button");
             }
+        }
+
+        private static void HandleState(ref ButtonState state, bool isDown)
+        {
+            if(isDown)
+            {
+                if(!state.Down)
+                {
+                    state.Pressed = true;
+                }
+                state.Down = true;
+                state.Released = false;
+            }
+            else
+            {
+                state.Down = false;
+                state.Pressed = false;
+                state.Released = true;
+            }
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            state = nextState;
+
+            nextState.leftButton.ResetEvents();
+            nextState.middleButton.ResetEvents();
+            nextState.rightButton.ResetEvents();
+            nextState.xButton1.ResetEvents();
+            nextState.xButton2.ResetEvents();
         }
     }
 }

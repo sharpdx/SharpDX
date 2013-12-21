@@ -23,29 +23,29 @@ using System;
 namespace SharpDX.Toolkit.Input
 {
     /// <summary>
-    /// Represents the state of a keyboard key or mouse button
+    /// State of a button declared as an enum. See <see cref="ButtonState"/>.
     /// </summary>
     [Flags]
-    public enum KeyState
+    public enum ButtonStateFlags : byte
     {
         /// <summary>
-        /// No key event.
+        /// Button is in a none state.
         /// </summary>
         None = 0,
 
         /// <summary>
-        /// Key is currently down.
+        /// The button is being pressed.
         /// </summary>
         Down = 1,
 
         /// <summary>
-        /// Key was released since last frame.
+        /// The button was pressed since last frame.
         /// </summary>
-        Released = 2,
+        Pressed = 2,
 
         /// <summary>
-        /// Key was pressed since last frame.
+        /// The button was released since last frame.
         /// </summary>
-        Pressed = 4
+        Released = 4,
     }
 }
