@@ -460,6 +460,28 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Scales a vector by the given value.
+        /// </summary>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="result">When the method completes, contains the scaled vector.</param>
+        public static void Divide(float scale, ref Vector4 value, out Vector4 result)
+        {
+            result = new Vector4(scale / value.X, scale / value.Y, scale / value.Z, scale / value.W);
+        }
+
+        /// <summary>
+        /// Scales a vector by the given value.
+        /// </summary>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <returns>The scaled vector.</returns>
+        public static Vector4 Divide(float scale, Vector4 value)
+        {
+            return new Vector4(scale / value.X, scale / value.Y, scale / value.Z, scale / value.W);
+        }
+
+        /// <summary>
         /// Reverses the direction of a given vector.
         /// </summary>
         /// <param name="value">The vector to negate.</param>
@@ -1226,6 +1248,17 @@ namespace SharpDX
         public static Vector4 operator /(Vector4 value, float scale)
         {
             return new Vector4(value.X / scale, value.Y / scale, value.Z / scale, value.W / scale);
+        }
+
+        /// <summary>
+        /// Scales a vector by the given value.
+        /// </summary>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <param name="value">The vector to scale.</param>        
+        /// <returns>The scaled vector.</returns>
+        public static Vector4 operator /(float scale,Vector4 value)
+        {
+            return new Vector4(scale / value.X, scale / value.Y, scale / value.Z, scale / value.W);
         }
 
         /// <summary>

@@ -399,6 +399,28 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Scales a vector by the given value.
+        /// </summary>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="result">When the method completes, contains the scaled vector.</param>
+        public static void Divide(float scale,ref Vector2 value, out Vector2 result)
+        {
+            result = new Vector2(scale / value.X, scale / value.Y);
+        }
+
+        /// <summary>
+        /// Scales a vector by the given value.
+        /// </summary>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <returns>The scaled vector.</returns>
+        public static Vector2 Divide(float scale, Vector2 value)
+        {
+            return new Vector2(scale / value.X, scale / value.Y);
+        }
+
+        /// <summary>
         /// Reverses the direction of a given vector.
         /// </summary>
         /// <param name="value">The vector to negate.</param>
@@ -1279,6 +1301,17 @@ namespace SharpDX
         public static Vector2 operator /(Vector2 value, float scale)
         {
             return new Vector2(value.X / scale, value.Y / scale);
+        }
+
+        /// <summary>
+        /// Scales a vector by the given value.
+        /// </summary>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <param name="value">The vector to scale.</param>  
+        /// <returns>The scaled vector.</returns>
+        public static Vector2 operator /(float scale , Vector2 value)
+        {
+            return new Vector2(scale / value.X, scale / value.Y);
         }
 
         /// <summary>

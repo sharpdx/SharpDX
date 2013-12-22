@@ -466,6 +466,28 @@ namespace SharpDX
         {
             return new Vector3(value.X / scale, value.Y / scale, value.Z / scale);
         }
+        
+        /// <summary>
+        /// Scales a vector by the given value.
+        /// </summary>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="result">When the method completes, contains the scaled vector.</param>
+        public static void Divide(float scale, ref Vector3 value, out Vector3 result)
+        {
+            result = new Vector3(scale / value.X, scale / value.Y, scale / value.Z);
+        }
+
+        /// <summary>
+        /// Scales a vector by the given value.
+        /// </summary>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <returns>The scaled vector.</returns>
+        public static Vector3 Divide(float scale, Vector3 value)
+        {
+            return new Vector3(scale / value.X, scale / value.Y, scale / value.Z);
+        }
 
         /// <summary>
         /// Reverses the direction of a given vector.
@@ -1511,6 +1533,17 @@ namespace SharpDX
         public static Vector3 operator /(Vector3 value, float scale)
         {
             return new Vector3(value.X / scale, value.Y / scale, value.Z / scale);
+        }
+
+        /// <summary>
+        /// Scales a vector by the given value.
+        /// </summary>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <param name="value">The vector to scale.</param>  
+        /// <returns>The scaled vector.</returns>
+        public static Vector3 operator /(float scale, Vector3 value)
+        {
+            return new Vector3(scale / value.X, scale / value.Y, scale / value.Z);
         }
 
         /// <summary>
