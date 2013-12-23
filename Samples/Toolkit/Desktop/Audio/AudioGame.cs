@@ -40,7 +40,7 @@ namespace Audio
         private SoundEffectInstance effectInstance;
         private SoundEffect effectFromFile;
         private WaveBank waveBank;
-        private WaveBank waveBank2;
+        private WaveBank waveBankXbox;
 
         public AudioGame()
         {
@@ -71,7 +71,7 @@ namespace Audio
             effect = Content.Load<SoundEffect>("ergon.wav");
             effectInstance = effect.Create();
             waveBank = Content.Load<WaveBank>("TestBank.xwb");
-            waveBank2 = Content.Load<WaveBank>("TestBankXbox.xwb");
+            waveBankXbox = Content.Load<WaveBank>("TestBankXbox.xwb"); //does not play correctly
             effectFromFile = SoundEffect.FromFile(audioManager,@"Content\ergon.adpcm.wav");
         }
 
@@ -111,13 +111,15 @@ namespace Audio
 
             }
 
+
+            //does not play correctly
             if (current.IsKeyDown(Keys.LeftControl) && keyboardState.IsKeyUp(Keys.LeftControl))
             {
-                if (bankIndex >= waveBank2.Count)
+                if (bankIndex >= waveBankXbox.Count)
                     bankIndex = 0;
 
-                if (waveBank2 != null)
-                    waveBank2.Play(bankIndex++);
+                if (waveBankXbox != null)
+                    waveBankXbox.Play(bankIndex++);
 
             }
 

@@ -32,10 +32,11 @@
 // http://go.microsoft.com/fwlink/?LinkId=248929
 //-------------------------------------------------------------------------------------
 using SharpDX.Multimedia;
+using SharpDX.Text;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
+//using System.Text;
 
 namespace SharpDX.Toolkit.Audio
 {
@@ -109,7 +110,7 @@ namespace SharpDX.Toolkit.Audio
 
             bankData.Flags = (BankDataFlags)ReadUInt32();
             bankData.EntryCount = ReadUInt32();
-            bankData.BankName = ASCIIEncoding.ASCII.GetString(reader.ReadBytes(BankData.BankNameLength)).Trim('\0');
+            bankData.BankName = Encoding.ASCII.GetString(reader.ReadBytes(BankData.BankNameLength)).Trim('\0');
             bankData.EntryMetaDataElementSize = ReadUInt32();
             bankData.EntryNameElementSize = ReadUInt32();
             bankData.Alignment = ReadUInt32();
@@ -158,7 +159,7 @@ namespace SharpDX.Toolkit.Audio
                     SeekSegment(SegmentIndex.EntryNames);
                     for (int i = 0; i < bankData.EntryCount; i++)
                     {
-                        names[i] = ASCIIEncoding.ASCII.GetString(reader.ReadBytes((int)bankData.EntryNameElementSize)).Trim('\0');
+                        names[i] = Encoding.ASCII.GetString(reader.ReadBytes((int)bankData.EntryNameElementSize)).Trim('\0');
                     }
                 }
             }
@@ -222,8 +223,8 @@ namespace SharpDX.Toolkit.Audio
 
                             if (count > 0)
                             {
-                                seekTable[i] = new uint[count]; 
-                                Array.Copy(seekTableRaw, offset + 1, seekTable[i], 0, count);
+                                seekTable[i] = new uint[count];
+                                Array.Copy(seekTableRaw, (int)offset + 1, seekTable[i], 0, (int)count);
                             }
 
                         }
@@ -307,7 +308,7 @@ namespace SharpDX.Toolkit.Audio
                     throw new Exception("Wave entry exceeds wave data buffer.");
                 }
                 var result = new byte[length];
-                Array.Copy(waveData, offset, result, 0, length);
+                Array.Copy(waveData, (int)offset, result, 0, (int)length);
                 return result;
             }
             else
@@ -320,7 +321,7 @@ namespace SharpDX.Toolkit.Audio
                 }
 
                 var result = new byte[entry.PlayRegion.Length];
-                Array.Copy(waveData, entry.PlayRegion.Offset, result, 0, entry.PlayRegion.Length);
+                Array.Copy(waveData, (int)entry.PlayRegion.Offset, result, 0, (int)entry.PlayRegion.Length);
                 return result;
             }
         }
@@ -426,7 +427,11 @@ namespace SharpDX.Toolkit.Audio
 
         public void Dispose()
         {
+#if !NET35Plus
             reader.Close();
+#else            
+            reader.Dispose();
+#endif
         }
 
         const uint DVDSectorSize = 2048;

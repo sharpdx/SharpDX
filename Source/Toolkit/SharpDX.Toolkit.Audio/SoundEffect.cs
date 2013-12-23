@@ -71,8 +71,12 @@ namespace SharpDX.Toolkit.Audio
             var decodedPacketsInfo = sound.DecodedPacketsInfo;
             var buffer = sound.ToDataStream();
 
-            sound.Close();
-
+#if WIN8METRO
+            sound.Dispose();
+#else
+            //sound.Close();
+            sound.Dispose();
+#endif            
             return new SoundEffect(audioManager, name, format, buffer, decodedPacketsInfo);
         }
 

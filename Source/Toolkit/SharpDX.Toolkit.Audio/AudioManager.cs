@@ -98,7 +98,7 @@ namespace SharpDX.Toolkit.Audio
             MasteringVoice.SetVolume(masterVolume);
 
 #if WIN8METRO
-           Speakers = (Speakers)MasterVoice.ChannelMask;
+            Speakers = (Speakers)MasteringVoice.ChannelMask;
 #else
             var deviceDetails = Device.GetDeviceDetails(deviceId);
             Speakers = deviceDetails.OutputFormat.ChannelMask;
