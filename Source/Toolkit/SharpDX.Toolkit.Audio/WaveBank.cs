@@ -125,7 +125,7 @@ namespace SharpDX.Toolkit.Audio
             }
 
             return false;
-            //throw new ArgumentOutOfRangeException("name", string.Format("No wave with name '{0}' exists.",name));
+            //throw new ArgumentOutOfRangeException("name", string.Format("No wave with name '{0}' exists.", name));
         }
 
 
@@ -133,6 +133,9 @@ namespace SharpDX.Toolkit.Audio
         {
             if (IsDisposed)
                 throw new ObjectDisposedException(this.GetType().FullName);
+
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("name", "The name cannot be null or empty.");
             
             SoundEffect soundEffect = null;
             if (effectsByName.TryGetValue(name, out soundEffect))
@@ -141,7 +144,7 @@ namespace SharpDX.Toolkit.Audio
             }
 
             return false;
-            //throw new ArgumentOutOfRangeException("name", string.Format("No wave with name '{0}' exists.",name));
+            //throw new ArgumentOutOfRangeException("name", string.Format("No wave with name '{0}' exists.", name));
         }
 
 
@@ -151,7 +154,7 @@ namespace SharpDX.Toolkit.Audio
                 throw new ObjectDisposedException(this.GetType().FullName);
 
             if (index < 0 || index >= effects.Length)
-                throw new ArgumentOutOfRangeException("index", string.Format("No wave at index '{0}' exists."));
+                throw new ArgumentOutOfRangeException("index", string.Format("No wave at index '{0}' exists.", index));
 
             return effects[index].Create();
         }
@@ -162,13 +165,16 @@ namespace SharpDX.Toolkit.Audio
             if (IsDisposed)
                 throw new ObjectDisposedException(this.GetType().FullName);
 
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("name", "The name cannot be null or empty.");
+
             SoundEffect soundEffect = null;
             if (effectsByName.TryGetValue(name, out soundEffect))
             {
                 return soundEffect.Create();
             }
 
-            throw new ArgumentOutOfRangeException("name", string.Format("No wave with name '{0}' exists.",name));
+            throw new ArgumentOutOfRangeException("name", string.Format("No wave with name '{0}' exists.", name));
         }
 
 

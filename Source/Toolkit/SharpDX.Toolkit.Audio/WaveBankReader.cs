@@ -40,7 +40,7 @@ using System.IO;
 
 namespace SharpDX.Toolkit.Audio
 {
-    public class WaveBankReader : IDisposable
+    internal sealed class WaveBankReader : IDisposable
     {
         private BinaryReader reader;
         private bool isBigEndian;

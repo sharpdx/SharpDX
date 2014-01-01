@@ -17,48 +17,17 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
-using System.Collections.Generic;
+
+using SharpDX.Toolkit.Content;
 
 namespace SharpDX.Toolkit.Audio
 {
-    using SharpDX.Multimedia;
-    using SharpDX.XAudio2;
-
     /// <summary>
-    /// Pool of <see cref="SoundEffectInstance"/> used to maintain fire and forget instances.
+    /// The <see cref="A:SharpDX.Toolkit.Audio"/> assembly provides support for loading audio files
+    /// through the <see cref="IContentManager" and playing them./>.
     /// </summary>
-    internal class SoundEffectInstancePool : Pool<SoundEffectInstance>
+    [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    class AssemblyDoc
     {
-        private readonly SoundEffect effect;
-
-        public SoundEffectInstancePool(SoundEffect soundEffect):base()
-        {
-            effect = soundEffect;
-        }
-
-        protected override bool IsActive(SoundEffectInstance item)
-        {
-            return item.State != SoundState.Stopped;
-        }
-
-        protected override SoundEffectInstance Create()
-        {
-            return new SoundEffectInstance(effect, true);
-        }
-
-        protected override void Reset(SoundEffectInstance item)
-        {
-            item.Volume = 1.0f;
-            item.Pitch = 0.0f;
-            item.Pan = 0.0f;
-            item.IsLooped = false;
-            item.IsFireAndForget = true;
-        }
-
-        protected override void ClearItem(SoundEffectInstance item)
-        {
-            item.ParentDisposed();
-        }
     }
 }

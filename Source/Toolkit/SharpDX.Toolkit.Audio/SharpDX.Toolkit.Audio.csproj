@@ -18,8 +18,10 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AssemblyDoc.cs" />
     <Compile Include="AudioManager.cs" />
     <Compile Include="BitField.cs" />
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="Pool.cs" />
     <Compile Include="SoundEffect.cs" />
     <Compile Include="SoundEffectInstance.cs" />

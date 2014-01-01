@@ -27,7 +27,7 @@ namespace SharpDX.Toolkit.Audio
     using SharpDX.Multimedia;
 
     /// <summary>
-    /// This manages the XAudio2 object and the voice graph.  This manager also allows loading of <see cref="SoundEffect"/> using
+    /// This manages the XAudio2 audio graph, device, and mastering voice.  This manager also allows loading of <see cref="SoundEffect"/> using
     /// the <see cref="IContentManager"/>
     /// </summary>
     public class AudioManager : GameSystem, IContentReader, IContentReaderFactory 

@@ -25,11 +25,15 @@ namespace SharpDX.Toolkit.Audio
     using SharpDX.Multimedia;
     using SharpDX.XAudio2;
 
+    /// <summary>
+    /// Provides a single playing, paused, or stopped instance of a <see cref="SoundEffect"/> sound.
+    /// </summary>
     public sealed class SoundEffectInstance
     {
         private AudioBuffer audioBuffer;
         private SourceVoice voice;
         private bool paused;
+        private bool isLooped;
         private float volume;
         private float pan;
         private float pitch;
@@ -41,24 +45,26 @@ namespace SharpDX.Toolkit.Audio
             if (soundEffect == null)
                 throw new ArgumentNullException("effect");
 
-            this.voice = new SourceVoice(soundEffect.Manager.Device, soundEffect.Format, VoiceFlags.None, XAudio2.MaximumFrequencyRatio);
-            this.audioBuffer = new AudioBuffer
+            voice = new SourceVoice(soundEffect.Manager.Device, soundEffect.Format, VoiceFlags.None, XAudio2.MaximumFrequencyRatio);
+            audioBuffer = new AudioBuffer
             {
                 Stream = soundEffect.AudioBuffer,
                 AudioBytes = (int)soundEffect.AudioBuffer.Length,
                 Flags = BufferFlags.EndOfStream,
             };
 
-            this.Effect = soundEffect;
-            this.IsFireAndForget = isFireAndForget;
-            this.volume = 1.0f;
-            this.pan = 0.0f;
-            this.pitch = 0.0f;
-            this.panOutputMatrix = null;
+            Effect = soundEffect;
+            IsFireAndForget = isFireAndForget;
+            paused = false;
+            isLooped = false;
+            volume = 1.0f;
+            pan = 0.0f;
+            pitch = 0.0f;
+            panOutputMatrix = null;
         }
 
 
-        public SoundEffect Effect { get; internal set; }
+        public SoundEffect Effect { get; private set; }
 
         internal bool IsFireAndForget { get; set; }
 
@@ -82,7 +88,7 @@ namespace SharpDX.Toolkit.Audio
                 voice.SetVolume(volume);
             }
         }
-
+        
 
         public float Pitch
         {
@@ -118,15 +124,25 @@ namespace SharpDX.Toolkit.Audio
 
                 if (value == pan)
                     return;
-
-                if (value < -1f || value > 1f)
-                {
-                    throw new ArgumentOutOfRangeException("value");
-                }
-
+                
                 pan = MathUtil.Clamp(value, -1.0f, 1.0f);
 
                 SetPanOutputMatrix();
+            }
+        }
+
+
+        public bool IsLooped
+        {
+            get { return isLooped; }
+            set 
+            { 
+                isLooped = value;
+
+                if (isLooped)
+                    audioBuffer.LoopCount = AudioBuffer.LoopInfinite;
+                else
+                    audioBuffer.LoopCount = 0;
             }
         }
 
@@ -151,7 +167,7 @@ namespace SharpDX.Toolkit.Audio
             if (IsDisposed)
                 throw new ObjectDisposedException(this.GetType().FullName);
 
-            if (this.State == SoundState.Playing)
+            if (State == SoundState.Playing)
                 return;
 
             if (voice.State.BuffersQueued > 0)
@@ -176,17 +192,20 @@ namespace SharpDX.Toolkit.Audio
             paused = true;
         }
 
-
+        
         public void Resume()
         {
             if (IsDisposed)
                 throw new ObjectDisposedException(this.GetType().FullName);
 
-            if (voice.State.BuffersQueued == 0)
+            if (!isLooped)
             {
-                voice.Stop();
-                voice.FlushSourceBuffers();
-                voice.SubmitSourceBuffer(audioBuffer, Effect.DecodedPacketsInfo);
+                if (voice.State.BuffersQueued == 0)
+                {
+                    voice.Stop();
+                    voice.FlushSourceBuffers();
+                    voice.SubmitSourceBuffer(audioBuffer, Effect.DecodedPacketsInfo);
+                }
             }
 
             voice.Start();
@@ -205,7 +224,7 @@ namespace SharpDX.Toolkit.Audio
             paused = false;
         }
 
-
+        
         public void Stop(bool immediate)
         {
             if (IsDisposed)
@@ -219,8 +238,8 @@ namespace SharpDX.Toolkit.Audio
 
         private void SetPanOutputMatrix()
         {
-            var destinationChannels = this.Effect.Manager.MasteringVoice.VoiceDetails.InputChannelCount;
-            var sourceChannels = this.Effect.Format.Channels;
+            var destinationChannels = Effect.Manager.MasteringVoice.VoiceDetails.InputChannelCount;
+            var sourceChannels = Effect.Format.Channels;
 
             var outputMatrixSize = destinationChannels * sourceChannels;
 
@@ -242,7 +261,7 @@ namespace SharpDX.Toolkit.Audio
                 //is specified in the form pLevelMatrix[SourceChannels × D + S]
                 for (int S = 0; S < sourceChannels; S++)
                 {
-                    switch (this.Effect.Manager.Speakers)
+                    switch (Effect.Manager.Speakers)
                     {
                         case Speakers.Stereo:
                         case Speakers.TwoPointOne:

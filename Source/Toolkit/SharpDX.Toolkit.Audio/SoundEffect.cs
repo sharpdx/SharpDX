@@ -27,6 +27,9 @@ namespace SharpDX.Toolkit.Audio
     using SharpDX.XAudio2;
     using System.IO;
 
+    /// <summary>
+    /// Provides a loaded sound resource.
+    /// </summary>
     public sealed class SoundEffect : IDisposable
     {       
         
@@ -36,19 +39,18 @@ namespace SharpDX.Toolkit.Audio
 
         internal SoundEffect(AudioManager audioManager, string name, WaveFormat format, DataStream buffer, uint[] decodedPacketsInfo)
         {
-            this.Manager = audioManager;
-            this.Name = name;
-            this.Format = format;
-            this.AudioBuffer = buffer;
-            this.DecodedPacketsInfo = decodedPacketsInfo;
+            Manager = audioManager;
+            Name = name;
+            Format = format;
+            AudioBuffer = buffer;
+            DecodedPacketsInfo = decodedPacketsInfo;
 
-            var sampleCount = (float)this.AudioBuffer.Length;
-            var avgBPS = (float)this.Format.AverageBytesPerSecond;
-            this.Duration = TimeSpan.FromSeconds(sampleCount / avgBPS);
+            Duration = Format.SampleRate > 0 ? TimeSpan.FromMilliseconds(GetSamplesDuration() * 1000 / Format.SampleRate) : TimeSpan.Zero;
 
-            this.children = new List<WeakReference>();
-            this.instancePool = new SoundEffectInstancePool(this);
+            children = new List<WeakReference>();
+            instancePool = new SoundEffectInstancePool(this);
         }
+                
 
         public TimeSpan Duration { get; private set; }
         public string Name { get; private set; }
@@ -121,12 +123,50 @@ namespace SharpDX.Toolkit.Audio
 
         private void AddChild(SoundEffectInstance instance)
         {
-            lock (this.children)
+            lock (children)
             {
                 this.children.Add(new WeakReference(instance));
             }
         }
-        
+
+
+        private long GetSamplesDuration()
+        {
+            switch (Format.Encoding)
+            {
+                case WaveFormatEncoding.Adpcm:
+                    var adpcmFormat = Format as WaveFormatAdpcm;
+                    long duration = (AudioBuffer.Length / adpcmFormat.BlockAlign) * adpcmFormat.SamplesPerBlock;
+                    long partial = AudioBuffer.Length % adpcmFormat.BlockAlign;
+                    if (partial > 0)
+                    {
+                        if (partial >= (7 * adpcmFormat.Channels))
+                            duration += (partial * 2) / (adpcmFormat.Channels - 12);
+                    }
+
+                    return duration;
+                case WaveFormatEncoding.Wmaudio2:
+                case WaveFormatEncoding.Wmaudio3:
+                    if (DecodedPacketsInfo != null)
+                    {
+                        return DecodedPacketsInfo[DecodedPacketsInfo.Length - 1] / Format.Channels;
+                    }
+                    break;
+
+                case WaveFormatEncoding.Pcm:
+                    if (Format.BitsPerSample > 0)
+                    {
+                        return ((long)AudioBuffer.Length) * 8 / (Format.BitsPerSample * Format.Channels);
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            return 0;
+        }
+
+
         public bool IsDisposed { get; private set; }
 
 
@@ -136,9 +176,9 @@ namespace SharpDX.Toolkit.Audio
             {
                 IsDisposed = true;
 
-                lock (this.children)
+                lock (children)
                 {
-                    foreach (var item in this.children)
+                    foreach (var item in children)
                     {
                         SoundEffectInstance soundEffectInstance = item.Target as SoundEffectInstance;
                         if (soundEffectInstance != null)
@@ -146,8 +186,8 @@ namespace SharpDX.Toolkit.Audio
                             soundEffectInstance.ParentDisposed();
                         }
                     }
-                    this.children.Clear();
-                    this.instancePool.Clear();
+                    children.Clear();
+                    instancePool.Clear();
                 }
 
                 AudioBuffer.Dispose();
@@ -160,13 +200,13 @@ namespace SharpDX.Toolkit.Audio
         {
             lock (this.children)
             {
-                for (int i = 0; i < this.children.Count; i++)
+                for (int i = 0; i < children.Count; i++)
                 {
-                    WeakReference weakReference = this.children[i];
+                    WeakReference weakReference = children[i];
                     SoundEffectInstance soundEffectInstance = weakReference.Target as SoundEffectInstance;
                     if (!weakReference.IsAlive || soundEffectInstance == null || soundEffectInstance == child)
                     {
-                        this.children.RemoveAt(i);
+                        children.RemoveAt(i);
                         i--;
                     }
                 }

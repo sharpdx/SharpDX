@@ -68,9 +68,10 @@ namespace Audio
         {
             base.LoadContent();
 
-            effect = Content.Load<SoundEffect>("ergon.wav");
-            effectInstance = effect.Create();
+            effect = Content.Load<SoundEffect>("ergon.wav");            
             waveBank = Content.Load<WaveBank>("TestBank.xwb");
+            effectInstance = waveBank.Create("PewPew");
+            effectInstance.IsLooped = true;
             waveBankXbox = Content.Load<WaveBank>("TestBankXbox.xwb"); //does not play correctly
             effectFromFile = SoundEffect.FromFile(audioManager,@"Content\ergon.adpcm.wav");
         }
