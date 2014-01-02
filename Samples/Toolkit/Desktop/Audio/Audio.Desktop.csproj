@@ -52,6 +52,9 @@
       <Link>Content\ergon.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <ToolkitTexture Include="Content\listen.png" />
+    <ToolkitTexture Include="Content\speaker.png" />
+    <ToolkitFont Include="Content\Arial16.xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AudioGame.cs" />

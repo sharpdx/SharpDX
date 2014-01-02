@@ -25,6 +25,7 @@ namespace SharpDX.Toolkit.Audio
 {
     using SharpDX.XAudio2;
     using SharpDX.Multimedia;
+    using SharpDX.X3DAudio;
 
     /// <summary>
     /// This manages the XAudio2 audio graph, device, and mastering voice.  This manager also allows loading of <see cref="SoundEffect"/> using
@@ -34,21 +35,9 @@ namespace SharpDX.Toolkit.Audio
     {
         private ContentManager contentManager;
         private float masterVolume;
+        private X3DAudio x3DAudio;
 
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AudioManager" /> class.
-        /// </summary>
-        /// <param name="registry">The registry.</param>
-        public AudioManager(IServiceRegistry registry)
-            : base(registry)
-        {
-            Services.AddService(this);
-            masterVolume = 1.0f;
-            Speakers = Multimedia.Speakers.None;
-        }
-
-
+       
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioManager" /> class.
         /// </summary>
@@ -59,6 +48,9 @@ namespace SharpDX.Toolkit.Audio
             Services.AddService(this);
             masterVolume = 1.0f;
             Speakers = Multimedia.Speakers.None;
+
+            // register the audio manager as game system
+            game.GameSystems.Add(this);
         }
 
 
@@ -97,12 +89,16 @@ namespace SharpDX.Toolkit.Audio
             MasteringVoice = new MasteringVoice(Device, XAudio2.DefaultChannels, XAudio2.DefaultSampleRate, deviceId);
             MasteringVoice.SetVolume(masterVolume);
 
+            
+
 #if WIN8METRO
             Speakers = (Speakers)MasteringVoice.ChannelMask;
 #else
             var deviceDetails = Device.GetDeviceDetails(deviceId);
             Speakers = deviceDetails.OutputFormat.ChannelMask;
 #endif
+            x3DAudio = new X3DAudio(Speakers, SoundEffect.SpeedOfSound);
+            
             contentManager.ReaderFactories.Add(this);
         }
 
@@ -131,7 +127,14 @@ namespace SharpDX.Toolkit.Audio
 
 
         internal Speakers Speakers { get; private set; }
+        internal XAudio2 Device { get; private set; }
         internal MasteringVoice MasteringVoice  { get; private set; }
+
+
+        internal void Calculate3D(Listener listener, Emitter emitter, CalculateFlags flags, DspSettings dspSettings)
+        {
+            x3DAudio.Calculate(listener, emitter, flags, dspSettings);            
+        }
 
 
         IContentReader IContentReaderFactory.TryCreate(Type type)
@@ -161,6 +164,11 @@ namespace SharpDX.Toolkit.Audio
 
             if (disposeManagedResources)
             {
+                if(x3DAudio != null)
+                {
+                    x3DAudio = null;
+                }                
+                
                 if (MasteringVoice != null)
                 {
                     MasteringVoice.DestroyVoice();
@@ -178,7 +186,7 @@ namespace SharpDX.Toolkit.Audio
         }
 
 
-        internal XAudio2 Device { get; private set; }
+        
 
        
     }

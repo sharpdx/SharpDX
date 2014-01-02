@@ -49,10 +49,7 @@ namespace SharpDX.Toolkit.Audio
 
         protected override void Reset(SoundEffectInstance item)
         {
-            item.Volume = 1.0f;
-            item.Pitch = 0.0f;
-            item.Pan = 0.0f;
-            item.IsLooped = false;
+            item.Reset();
             item.IsFireAndForget = true;
         }
 

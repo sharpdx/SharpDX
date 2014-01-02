@@ -25,6 +25,7 @@ namespace SharpDX.Toolkit.Audio
     using SharpDX.IO;
     using SharpDX.Multimedia;
     using SharpDX.XAudio2;
+    using SharpDX.X3DAudio;
     using System.IO;
 
     /// <summary>
@@ -42,7 +43,20 @@ namespace SharpDX.Toolkit.Audio
             Manager = audioManager;
             Name = name;
             Format = format;
-            AudioBuffer = buffer;
+            AudioBuffer = new AudioBuffer
+            {
+                Stream = buffer,
+                AudioBytes = (int)buffer.Length,
+                Flags = BufferFlags.EndOfStream,
+            };
+            LoopedAudioBuffer = new AudioBuffer
+            {
+                Stream = buffer,
+                AudioBytes = (int)buffer.Length,
+                Flags = BufferFlags.EndOfStream,
+                LoopCount = AudioBuffer.LoopInfinite,
+            };
+
             DecodedPacketsInfo = decodedPacketsInfo;
 
             Duration = Format.SampleRate > 0 ? TimeSpan.FromMilliseconds(GetSamplesDuration() * 1000 / Format.SampleRate) : TimeSpan.Zero;
@@ -50,13 +64,65 @@ namespace SharpDX.Toolkit.Audio
             children = new List<WeakReference>();
             instancePool = new SoundEffectInstancePool(this);
         }
-                
+
+        const float FLT_MIN = 1.175494351e-38F;
+
+        static float distanceScale = 1.0f;// FLT_MIN;
+        public static float DistanceScale
+        {
+            get
+            {
+                return distanceScale;
+            }
+            set
+            {
+                if (value <= 0f)
+                {
+                    throw new ArgumentOutOfRangeException("value");
+                }
+
+                distanceScale = value;
+            }
+        }
+
+        static float dopplerScale = 1f;
+        public static float DopplerScale
+        {
+            get
+            {
+                return dopplerScale;
+            }
+            set
+            {
+                if (value < 0f)
+                {
+                    throw new ArgumentOutOfRangeException("value");
+                }
+
+                dopplerScale = value;
+            }
+        }
+
+        static float speedOfSound = X3DAudio.SpeedOfSound;
+        public static float SpeedOfSound
+        {
+            get
+            {
+                return speedOfSound;
+            }
+            set
+            {
+                speedOfSound = value;
+            }
+        }
+
 
         public TimeSpan Duration { get; private set; }
         public string Name { get; private set; }
         internal AudioManager Manager { get; private set; }
         internal WaveFormat Format { get; private set; }
-        internal DataStream AudioBuffer { get; private set; }
+        internal AudioBuffer AudioBuffer { get; private set; }
+        internal AudioBuffer LoopedAudioBuffer { get; private set; }
         internal uint[] DecodedPacketsInfo { get; private set; }
 
 
@@ -131,13 +197,14 @@ namespace SharpDX.Toolkit.Audio
 
 
         private long GetSamplesDuration()
-        {
+        {           
+            
             switch (Format.Encoding)
             {
                 case WaveFormatEncoding.Adpcm:
                     var adpcmFormat = Format as WaveFormatAdpcm;
-                    long duration = (AudioBuffer.Length / adpcmFormat.BlockAlign) * adpcmFormat.SamplesPerBlock;
-                    long partial = AudioBuffer.Length % adpcmFormat.BlockAlign;
+                    long duration = (AudioBuffer.AudioBytes / adpcmFormat.BlockAlign) * adpcmFormat.SamplesPerBlock;
+                    long partial = AudioBuffer.AudioBytes % adpcmFormat.BlockAlign;
                     if (partial > 0)
                     {
                         if (partial >= (7 * adpcmFormat.Channels))
@@ -156,7 +223,7 @@ namespace SharpDX.Toolkit.Audio
                 case WaveFormatEncoding.Pcm:
                     if (Format.BitsPerSample > 0)
                     {
-                        return ((long)AudioBuffer.Length) * 8 / (Format.BitsPerSample * Format.Channels);
+                        return ((long)AudioBuffer.AudioBytes) * 8 / (Format.BitsPerSample * Format.Channels);
                     }
                     break;
                 default:
@@ -190,8 +257,9 @@ namespace SharpDX.Toolkit.Audio
                     instancePool.Clear();
                 }
 
-                AudioBuffer.Dispose();
+                AudioBuffer.Stream.Dispose();
                 AudioBuffer = null;
+                LoopedAudioBuffer = null;
             }
         }
 

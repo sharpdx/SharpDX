@@ -24,21 +24,22 @@ namespace SharpDX.Toolkit.Audio
 {
     using SharpDX.Multimedia;
     using SharpDX.XAudio2;
+    using SharpDX.X3DAudio;
 
     /// <summary>
     /// Provides a single playing, paused, or stopped instance of a <see cref="SoundEffect"/> sound.
     /// </summary>
     public sealed class SoundEffectInstance
-    {
-        private AudioBuffer audioBuffer;
+    {        
         private SourceVoice voice;
         private bool paused;
-        private bool isLooped;
         private float volume;
         private float pan;
         private float pitch;
-        private float[] panOutputMatrix;
-
+        private float[] outputMatrix;
+        private Emitter emitter;
+        private Listener listener;
+        private DspSettings dspSettings;
 
         internal SoundEffectInstance(SoundEffect soundEffect, bool isFireAndForget)
         {           
@@ -46,21 +47,16 @@ namespace SharpDX.Toolkit.Audio
                 throw new ArgumentNullException("effect");
 
             voice = new SourceVoice(soundEffect.Manager.Device, soundEffect.Format, VoiceFlags.None, XAudio2.MaximumFrequencyRatio);
-            audioBuffer = new AudioBuffer
-            {
-                Stream = soundEffect.AudioBuffer,
-                AudioBytes = (int)soundEffect.AudioBuffer.Length,
-                Flags = BufferFlags.EndOfStream,
-            };
+           
 
             Effect = soundEffect;
             IsFireAndForget = isFireAndForget;
             paused = false;
-            isLooped = false;
+            IsLooped = false;
             volume = 1.0f;
             pan = 0.0f;
             pitch = 0.0f;
-            panOutputMatrix = null;
+            outputMatrix = null;
         }
 
 
@@ -68,6 +64,16 @@ namespace SharpDX.Toolkit.Audio
 
         internal bool IsFireAndForget { get; set; }
 
+        private AudioBuffer CurrentAudioBuffer
+        {
+            get
+            {
+                if(Effect == null || Effect.AudioBuffer == null)
+                    return null;
+
+                return IsLooped ? Effect.LoopedAudioBuffer : Effect.AudioBuffer;
+            }
+        }
 
         public float Volume
         {
@@ -132,19 +138,7 @@ namespace SharpDX.Toolkit.Audio
         }
 
 
-        public bool IsLooped
-        {
-            get { return isLooped; }
-            set 
-            { 
-                isLooped = value;
-
-                if (isLooped)
-                    audioBuffer.LoopCount = AudioBuffer.LoopInfinite;
-                else
-                    audioBuffer.LoopCount = 0;
-            }
-        }
+        public bool IsLooped { get; set; }
 
 
         public SoundState State
@@ -176,7 +170,7 @@ namespace SharpDX.Toolkit.Audio
                 voice.FlushSourceBuffers();
             }
 
-            voice.SubmitSourceBuffer(audioBuffer, Effect.DecodedPacketsInfo);
+            voice.SubmitSourceBuffer(CurrentAudioBuffer, Effect.DecodedPacketsInfo);
             voice.Start();
 
             paused = false;
@@ -198,13 +192,13 @@ namespace SharpDX.Toolkit.Audio
             if (IsDisposed)
                 throw new ObjectDisposedException(this.GetType().FullName);
 
-            if (!isLooped)
+            if (!IsLooped)
             {
                 if (voice.State.BuffersQueued == 0)
                 {
                     voice.Stop();
                     voice.FlushSourceBuffers();
-                    voice.SubmitSourceBuffer(audioBuffer, Effect.DecodedPacketsInfo);
+                    voice.SubmitSourceBuffer(CurrentAudioBuffer, Effect.DecodedPacketsInfo);
                 }
             }
 
@@ -236,19 +230,88 @@ namespace SharpDX.Toolkit.Audio
         }
 
 
+        public void Reset()
+        {
+            Volume = 1.0f;
+            Pitch = 0.0f;
+            Pan = 0.0f;
+            IsLooped = false;
+        }
+
+
+        public void Apply3D(Matrix listener, Vector3 listenerVelocity, Matrix emitter, Vector3 emitterVelocity)
+        {
+            Apply3D(listener.Forward, listener.Up, listener.TranslationVector, listenerVelocity, emitter.Forward, emitter.Up, emitter.TranslationVector, emitterVelocity);         
+            
+        }
+
+
+        // TODO: X3DAudio uses a left-handed Cartesian coordinate system. may need overloads for lh/rh.  seems to work with right hand matricies without it though.
+        //public void Apply3DRH(Matrix listenerTransform, Vector3 listenerVelocity, Matrix emitterTransform, Vector3 emitterVelocity)
+        //{
+        //    //  X3DAudio uses a left-handed Cartesian coordinate system, needs to be converted
+
+        //    var listenerForward = listenerTransform.Forward;
+        //    var listenerUp = listenerTransform.Up;
+        //    var listenerPosition = listenerTransform.TranslationVector;
+            
+            
+        //    var emitterForward = emitterTransform.Forward;
+        //    var emitterUp = emitterTransform.Up;
+        //    var emitterPosition = emitterTransform.TranslationVector;
+            
+            
+        //    Apply3D(listenerForward, listenerUp, listenerPosition, listenerVelocity, emitterForward, emitterUp, emitterPosition, emitterVelocity);
+
+        //}
+
+
+        public void Apply2D(Vector2 listener, Vector2 listenerVelocity, Vector2 emitter, Vector2 emitterVelocity)
+        {
+            Apply3D(Vector3.ForwardLH, Vector3.Up, new Vector3(listener, 0), new Vector3(listenerVelocity, 0), Vector3.ForwardLH, Vector3.Up, new Vector3(emitter, 0), new Vector3(emitterVelocity, 0));
+
+        }
+
+
+        private void Apply3D(Vector3 listenerForward, Vector3 listenerUp, Vector3 listenerPosition, Vector3 listenerVelocity, Vector3 emitterForward, Vector3 emitterUp, Vector3 emitterPosition, Vector3 emitterVelocity)
+        {
+            if (emitter == null)
+                emitter = new Emitter();
+
+            emitter.OrientFront = emitterForward;
+            emitter.OrientTop = emitterUp;
+            emitter.Position = emitterPosition;
+            emitter.Velocity = emitterVelocity;
+            emitter.DopplerScaler = SoundEffect.DopplerScale;
+            emitter.CurveDistanceScaler = SoundEffect.DistanceScale;
+            emitter.ChannelCount = Effect.Format.Channels;
+
+            //TODO: work out what ChannelAzimuths is supposed to be.
+            if (emitter.ChannelCount > 1)
+                emitter.ChannelAzimuths = new float[emitter.ChannelCount];
+
+            if (listener == null)
+                listener = new Listener();
+
+            listener.OrientFront = listenerForward;
+            listener.OrientTop = listenerUp;
+            listener.Position = listenerPosition;
+            listener.Velocity = listenerVelocity;
+
+            if (dspSettings == null)
+                dspSettings = new DspSettings(Effect.Format.Channels, Effect.Manager.MasteringVoice.VoiceDetails.InputChannelCount);
+
+            Effect.Manager.Calculate3D(listener, emitter, CalculateFlags.Matrix | CalculateFlags.Doppler, dspSettings);
+
+            voice.SetOutputMatrix(dspSettings.SourceChannelCount, dspSettings.DestinationChannelCount, dspSettings.MatrixCoefficients);
+            voice.SetFrequencyRatio(dspSettings.DopplerFactor);
+        }
+
         private void SetPanOutputMatrix()
         {
-            var destinationChannels = Effect.Manager.MasteringVoice.VoiceDetails.InputChannelCount;
-            var sourceChannels = Effect.Format.Channels;
-
-            var outputMatrixSize = destinationChannels * sourceChannels;
-
-            if (panOutputMatrix == null || panOutputMatrix.Length < outputMatrixSize)
-                panOutputMatrix = new float[outputMatrixSize];
-
-            // Default to full volume for all channels/destinations   
-            for (var i = 0; i < panOutputMatrix.Length; i++)
-                panOutputMatrix[i] = 1.0f;
+            int destinationChannels;
+            int sourceChannels;
+            InitializeOutputMatrix(out destinationChannels, out sourceChannels);
 
             if (pan != 0.0f)
             {
@@ -266,30 +329,30 @@ namespace SharpDX.Toolkit.Audio
                         case Speakers.Stereo:
                         case Speakers.TwoPointOne:
                         case Speakers.Surround:
-                            panOutputMatrix[(sourceChannels * 0) + S] = panLeft;
-                            panOutputMatrix[(sourceChannels * 1) + S] = panRight;
+                            outputMatrix[(sourceChannels * 0) + S] = panLeft;
+                            outputMatrix[(sourceChannels * 1) + S] = panRight;
                             break;
 
                         case Speakers.Quad:
-                            panOutputMatrix[(sourceChannels * 0) + S] = panOutputMatrix[(sourceChannels * 2) + S] = panLeft;
-                            panOutputMatrix[(sourceChannels * 1) + S] = panOutputMatrix[(sourceChannels * 3) + S] = panRight;
+                            outputMatrix[(sourceChannels * 0) + S] = outputMatrix[(sourceChannels * 2) + S] = panLeft;
+                            outputMatrix[(sourceChannels * 1) + S] = outputMatrix[(sourceChannels * 3) + S] = panRight;
                             break;
 
                         case Speakers.FourPointOne:
-                            panOutputMatrix[(sourceChannels * 0) + S] = panOutputMatrix[(sourceChannels * 3) + S] = panLeft;
-                            panOutputMatrix[(sourceChannels * 1) + S] = panOutputMatrix[(sourceChannels * 4) + S] = panRight;
+                            outputMatrix[(sourceChannels * 0) + S] = outputMatrix[(sourceChannels * 3) + S] = panLeft;
+                            outputMatrix[(sourceChannels * 1) + S] = outputMatrix[(sourceChannels * 4) + S] = panRight;
                             break;
 
                         case Speakers.FivePointOne:
                         case Speakers.SevenPointOne:
                         case Speakers.FivePointOneSurround:
-                            panOutputMatrix[(sourceChannels * 0) + S] = panOutputMatrix[(sourceChannels * 4) + S] = panLeft;
-                            panOutputMatrix[(sourceChannels * 1) + S] = panOutputMatrix[(sourceChannels * 5) + S] = panRight;
+                            outputMatrix[(sourceChannels * 0) + S] = outputMatrix[(sourceChannels * 4) + S] = panLeft;
+                            outputMatrix[(sourceChannels * 1) + S] = outputMatrix[(sourceChannels * 5) + S] = panRight;
                             break;
 
                         case Speakers.SevenPointOneSurround:
-                            panOutputMatrix[(sourceChannels * 0) + S] = panOutputMatrix[(sourceChannels * 4) + S] = panOutputMatrix[(sourceChannels * 6) + S] = panLeft;
-                            panOutputMatrix[(sourceChannels * 1) + S] = panOutputMatrix[(sourceChannels * 5) + S] = panOutputMatrix[(sourceChannels * 7) + S] = panRight;
+                            outputMatrix[(sourceChannels * 0) + S] = outputMatrix[(sourceChannels * 4) + S] = outputMatrix[(sourceChannels * 6) + S] = panLeft;
+                            outputMatrix[(sourceChannels * 1) + S] = outputMatrix[(sourceChannels * 5) + S] = outputMatrix[(sourceChannels * 7) + S] = panRight;
                             break;
 
                         case Speakers.Mono:
@@ -300,7 +363,22 @@ namespace SharpDX.Toolkit.Audio
                 }
             }
 
-            voice.SetOutputMatrix(sourceChannels, destinationChannels, panOutputMatrix);
+            voice.SetOutputMatrix(sourceChannels, destinationChannels, outputMatrix);
+        }
+
+        private void InitializeOutputMatrix(out int destinationChannels, out int sourceChannels)
+        {
+            destinationChannels = Effect.Manager.MasteringVoice.VoiceDetails.InputChannelCount;
+            sourceChannels = Effect.Format.Channels;
+
+            var outputMatrixSize = destinationChannels * sourceChannels;
+
+            if (outputMatrix == null || outputMatrix.Length < outputMatrixSize)
+                outputMatrix = new float[outputMatrixSize];
+
+            // Default to full volume for all channels/destinations   
+            for (var i = 0; i < outputMatrix.Length; i++)
+                outputMatrix[i] = 1.0f;
         }
 
 
@@ -315,8 +393,7 @@ namespace SharpDX.Toolkit.Audio
                 Effect.ChildDisposed(this);
                 DestroyVoice();
                 Effect = null;
-                panOutputMatrix = null;
-                audioBuffer = null;
+                outputMatrix = null;
             }
         }
 
@@ -334,9 +411,7 @@ namespace SharpDX.Toolkit.Audio
                 IsDisposed = true;
                 DestroyVoice();
                 Effect = null; 
-                panOutputMatrix = null;
-
-                audioBuffer = null;
+                outputMatrix = null;
             }
         }
 
