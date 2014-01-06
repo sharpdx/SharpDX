@@ -1105,7 +1105,7 @@ namespace SharpDX.Toolkit.Graphics
             var image = new Image(metadata, pDDS, offset, handle, !isCopyNeeded, cpFlags);
 
             // Size must be inferior to destination size.
-            Debug.Assert(size <= image.TotalSizeInBytes);
+            //Debug.Assert(size <= image.TotalSizeInBytes);
 
             if (!isCopyNeeded && (convFlags & (ConversionFlags.Swizzle | ConversionFlags.NoAlpha)) == 0)
                 return image;
