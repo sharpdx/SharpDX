@@ -106,8 +106,7 @@ namespace MonitorInfo
         private readonly GraphicsDeviceManager graphicsDeviceManager; // mandatory
         private readonly KeyboardManager keyboardManager; // we will process keyboard input here
 
-        private KeyboardState currentKeyboardState;
-        private KeyboardState previousKeyboardState;
+        private KeyboardState keyboardState;
 
         private SpriteBatch spriteBatch;
         private SpriteFont font;
@@ -223,11 +222,10 @@ namespace MonitorInfo
             base.Update(gameTime);
 
             // update keyboard state
-            previousKeyboardState = currentKeyboardState;
-            currentKeyboardState = keyboardManager.GetState();
+            keyboardState = keyboardManager.GetState();
 
             // if Esc is pressed - quit program
-            if (IsKeyPress(Keys.Escape))
+            if (keyboardState.IsKeyPressed(Keys.Escape))
             {
                 Exit();
                 return;
@@ -238,7 +236,7 @@ namespace MonitorInfo
             for (int i = 0; i < availableModes.Count; i++)
             {
                 var key = (Keys)Enum.Parse(typeof(Keys), "D" + i);
-                if (IsKeyPress(key))
+                if (keyboardState.IsKeyPressed(key))
                 {
                     ApplyMode(availableModes[i]);
                     return;
@@ -344,18 +342,6 @@ namespace MonitorInfo
         private PointerSize ToMB(PointerSize size)
         {
             return size / (1024 * 1024);
-        }
-
-        /// <summary>
-        /// Checks if a key was just pressed
-        /// </summary>
-        /// <param name="key">The key to check</param>
-        /// <returns>True if the key was just pressed</returns>
-        private bool IsKeyPress(Keys key)
-        {
-            // a key is considered 'just' pressed if in previous state it was not pressed
-            // and it is pressed in the current state
-            return previousKeyboardState.IsKeyUp(key) && currentKeyboardState.IsKeyDown(key);
         }
     }
 }
