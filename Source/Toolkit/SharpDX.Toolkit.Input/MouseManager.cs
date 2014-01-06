@@ -165,9 +165,9 @@ namespace SharpDX.Toolkit.Input
             }
             else
             {
+                state.Released = state.Down;
                 state.Down = false;
                 state.Pressed = false;
-                state.Released = true;
             }
         }
 
