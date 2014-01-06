@@ -66,7 +66,7 @@ namespace SharpDX.Toolkit.Audio
                 throw new InvalidOperationException("Unable to initialize AudioManager. Expecting IContentManager to be an instance of ContentManager");
             }
 
-#if !WIN8METRO && DEBUG
+#if !WIN8METRO && !WP8 && DEBUG
             try
             {
                 Device = new XAudio2(XAudio2Flags.DebugEngine, ProcessorSpecifier.DefaultProcessor);
@@ -81,7 +81,7 @@ namespace SharpDX.Toolkit.Audio
 
            
 
-#if WIN8METRO
+#if WIN8METRO || WP8
             string deviceId = null;
 #else
             const int deviceId = 0;
@@ -89,9 +89,9 @@ namespace SharpDX.Toolkit.Audio
             MasteringVoice = new MasteringVoice(Device, XAudio2.DefaultChannels, XAudio2.DefaultSampleRate, deviceId);
             MasteringVoice.SetVolume(masterVolume);
 
-            
 
-#if WIN8METRO
+
+#if WIN8METRO || WP8
             Speakers = (Speakers)MasteringVoice.ChannelMask;
 #else
             var deviceDetails = Device.GetDeviceDetails(deviceId);
