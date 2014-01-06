@@ -176,6 +176,7 @@
     <Compile Include="Win32\ErrorCode.cs" />
     <Compile Include="Win32\MessageFilterHook.cs" />
     <Compile Include="Win32\NamespaceDoc.cs" />
+    <Compile Include="Win32\NativeMessage.cs" />
     <Compile Include="Win32\PropertyBag.cs" />
     <Compile Include="Win32\IStream.cs" />
     <Compile Include="Win32\IStreamBase.cs" />

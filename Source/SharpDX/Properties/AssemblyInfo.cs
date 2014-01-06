@@ -64,6 +64,8 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("SharpDX.XACT3")]
 [assembly: InternalsVisibleTo("SharpDX.WIC")]
 [assembly: InternalsVisibleTo("SharpDX.MediaFoundation")]
+[assembly: InternalsVisibleTo("SharpDX.DirectComposition")]
+[assembly: InternalsVisibleTo("SharpDX.DirectManipulation")]
 
 [assembly: InternalsVisibleTo("SharpDX.Toolkit.Graphics")]
 [assembly: InternalsVisibleTo("SharpDX.Toolkit.Game")]

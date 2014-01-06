@@ -149,6 +149,8 @@
   <ifndef name="WP8">
     <ifndef name="WIN8METRO">
       <file>SharpDX.Direct3D11.Effects\Mapping.xml</file>
+      <file>SharpDX.DirectComposition\Mapping.xml</file>
+      <file>SharpDX.DirectManipulation\Mapping.xml</file>
     </ifndef>
     <file>SharpDX.Direct2D1\Mapping.xml</file>
     <ifndef name="DIRECTX11_1">
