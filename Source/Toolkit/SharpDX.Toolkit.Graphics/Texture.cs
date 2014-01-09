@@ -1015,7 +1015,7 @@ namespace SharpDX.Toolkit.Graphics
         internal static int CalculateMipMapCount(MipMapCount requestedLevel, int width, int height = 0, int depth = 0)
         {
             int size = Math.Max(Math.Max(width, height), depth);
-            int maxMipMap = 1 + (int)Math.Ceiling(Math.Log(size) / Math.Log(2.0));
+            int maxMipMap = 1 + (int)Math.Log(size, 2);
 
             return requestedLevel  == 0 ? maxMipMap : Math.Min(requestedLevel, maxMipMap);
         }
