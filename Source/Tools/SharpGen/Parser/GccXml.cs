@@ -339,7 +339,7 @@ namespace SharpGen.Parser
                 }
             }
 
-            Logger.Exit("Missing Windows SDK [{0}]. Download at least SDK 7.1 from: http://www.microsoft.com/en-us/download/details.aspx?id=8279 or install a recent Windows8.0/8.1 SDK", string.Join("/", versions));
+            Logger.Exit("Missing Windows SDK [{0}]. Please, download and install the SDK from Microsoft website (Check for a full install that includes Framework headers and C++ compiler).", string.Join("/", versions));
             return null;
         }
 
