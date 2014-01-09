@@ -367,7 +367,7 @@ namespace SharpDX.Toolkit.Graphics
                             // New line.
                             x = 0;
                             y += LineSpacing;
-                            key |= character;
+                            key = 0;
                             break;
 
                         default:
@@ -394,17 +394,13 @@ namespace SharpDX.Toolkit.Graphics
 
                             var glyph = (SpriteFontData.Glyph*) pGlyph + glyphIndex;
 
-                            // do not offset the first character, otherwise it is impossible to compute correct alignment
-                            // using MeasureString results
-                            if (x > 0f) x += glyph->Offset.X;
+                            x += glyph->Offset.X;
 
-                            // reset negative offset (it can happen only for first character)
-                            if(x < 0f) x = 0f;
-
-                            // Offset the kerning
                             float kerningOffset;
                             if (kerningMap != null && kerningMap.TryGetValue(key, out kerningOffset))
                                 x += kerningOffset;
+
+                            if (x < 0) x = 0;
 
                             if (!char.IsWhiteSpace(character))
                             {
