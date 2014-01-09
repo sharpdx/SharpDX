@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -394,14 +394,14 @@ namespace SharpDX.Toolkit.Graphics
 
                             var glyph = (SpriteFontData.Glyph*) pGlyph + glyphIndex;
 
-                            // do not offset the first character, otherwise it is impossible to compute correct alignment
-                            // using MeasureString results
-                            if (x > 0f) x += glyph->Offset.X;
+                            // Do not offset the first character, otherwise it is impossible to compute correct alignment.
+                            // Also handles white space if it is the first character.
+                            if (i != 0 || char.IsWhiteSpace(character))
+                            {
+                                x += glyph->Offset.X;
+                            }
 
-                            // reset negative offset (it can happen only for first character)
-                            if(x < 0f) x = 0f;
-
-                            // Offset the kerning
+                            // Offset the kerning, except for the first character
                             float kerningOffset;
                             if (kerningMap != null && kerningMap.TryGetValue(key, out kerningOffset))
                                 x += kerningOffset;
