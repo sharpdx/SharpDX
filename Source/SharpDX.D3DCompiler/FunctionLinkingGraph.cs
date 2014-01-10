@@ -104,6 +104,15 @@ namespace SharpDX.D3DCompiler
             return module;
         }
 
+        /// <summary>
+        /// Gets the error from the last function call of the function-linking-graph, as a string
+        /// </summary>
+        public string LastErrorString
+        {
+            get { return Utilities.BlobToString(this.LastError);  }
+        }
+
+
         /// <summary>	
         /// <p>[This documentation is preliminary and is subject to change.]</p><p>Creates a call-function linking node to use in the function-linking-graph.</p>	
         /// </summary>	
