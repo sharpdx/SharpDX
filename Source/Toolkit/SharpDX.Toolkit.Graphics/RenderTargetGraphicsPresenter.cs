@@ -34,8 +34,8 @@ namespace SharpDX.Toolkit.Graphics
         private readonly bool allowRecreateBackBuffer;
         private RenderTarget2D backBuffer;
 
-        public RenderTargetGraphicsPresenter(GraphicsDevice device, Texture2DDescription renderTargetDescription, DepthFormat depthFormat = DepthFormat.None, bool allowFormatChange = true, bool disposeRenderTarget = false)
-            : base(device, CreatePresentationParameters(renderTargetDescription, depthFormat))
+        public RenderTargetGraphicsPresenter(GraphicsDevice device, Texture2DDescription renderTargetDescription, DepthFormat depthFormat = DepthFormat.None, bool allowFormatChange = true, bool disposeRenderTarget = false, bool depthAsShaderResource = false)
+            : base(device, CreatePresentationParameters(renderTargetDescription, depthFormat, depthAsShaderResource))
         {
             PresentInterval = Description.PresentationInterval;
 
@@ -50,8 +50,8 @@ namespace SharpDX.Toolkit.Graphics
                 ToDispose(backBuffer);
         }
 
-        public RenderTargetGraphicsPresenter(GraphicsDevice device, RenderTarget2D backBuffer, DepthFormat depthFormat = DepthFormat.None, bool disposeRenderTarget = false)
-            : base(device, CreatePresentationParameters(backBuffer, depthFormat))
+        public RenderTargetGraphicsPresenter(GraphicsDevice device, RenderTarget2D backBuffer, DepthFormat depthFormat = DepthFormat.None, bool disposeRenderTarget = false, bool depthAsShaderResource = false)
+            : base(device, CreatePresentationParameters(backBuffer, depthFormat, depthAsShaderResource))
         {
             PresentInterval = Description.PresentationInterval;
 
@@ -61,7 +61,7 @@ namespace SharpDX.Toolkit.Graphics
                 ToDispose(this.backBuffer);
         }
 
-        private static PresentationParameters CreatePresentationParameters(Texture2DDescription renderTargetDescription, DepthFormat depthFormat)
+        private static PresentationParameters CreatePresentationParameters(Texture2DDescription renderTargetDescription, DepthFormat depthFormat, bool depthAsShaderResource)
         {
             return new PresentationParameters()
                 {
@@ -69,6 +69,7 @@ namespace SharpDX.Toolkit.Graphics
                     BackBufferHeight = renderTargetDescription.Height,
                     BackBufferFormat = renderTargetDescription.Format,
                     DepthStencilFormat = depthFormat,
+                    DepthBufferShaderResource = depthAsShaderResource, 
                     DeviceWindowHandle = renderTargetDescription,
                     Flags = SwapChainFlags.None,
                     IsFullScreen = true,
@@ -79,7 +80,7 @@ namespace SharpDX.Toolkit.Graphics
                 };
         }
 
-        private static PresentationParameters CreatePresentationParameters(RenderTarget2D renderTarget2D, DepthFormat depthFormat)
+        private static PresentationParameters CreatePresentationParameters(RenderTarget2D renderTarget2D, DepthFormat depthFormat, bool depthAsShaderResource)
         {
             return new PresentationParameters()
             {
@@ -87,6 +88,7 @@ namespace SharpDX.Toolkit.Graphics
                 BackBufferHeight = renderTarget2D.Height,
                 BackBufferFormat = renderTarget2D.Description.Format,
                 DepthStencilFormat = depthFormat,
+                DepthBufferShaderResource = depthAsShaderResource,
                 DeviceWindowHandle = renderTarget2D,
                 Flags = SwapChainFlags.None,
                 IsFullScreen = true,

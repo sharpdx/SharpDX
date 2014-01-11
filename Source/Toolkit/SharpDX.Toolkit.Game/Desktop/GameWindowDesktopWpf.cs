@@ -159,7 +159,7 @@ namespace SharpDX.Toolkit
             RemoveAndDispose(ref presenter);
             RemoveAndDispose(ref queryForCompletion);
 
-            presenter = ToDispose(new RenderTargetGraphicsPresenter(device, backbufferDesc, parameters.DepthStencilFormat, false, true));
+            presenter = ToDispose(new RenderTargetGraphicsPresenter(device, backbufferDesc, parameters.DepthStencilFormat, false, true, parameters.DepthBufferShaderResource));
             // used to indicate if all drawing operations have completed
             queryForCompletion = ToDispose(new Query(presenter.GraphicsDevice, new QueryDescription { Type = QueryType.Event, Flags = QueryFlags.None }));
 
