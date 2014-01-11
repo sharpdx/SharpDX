@@ -280,6 +280,12 @@ namespace SharpGen.Config
         [XmlAttribute("group")]
         public string CsClass { get; set; }
 
+		/// <summary>
+		/// An integer that can be used to transform the method's vtable offset relative to the value specified by the compiler.
+		/// </summary>
+		[XmlAttribute("offset-translate")]
+		public int LayoutOffsetTranslate { get; set; }
+
         //public override string ToString()
         //{
         //    return Utilities.PropertiesToString(this);

@@ -198,6 +198,9 @@ namespace SharpGen.Generator
             if (tag.MappingType != null)
                 cppMethod.ReturnType.Tag = new MappingRule() { MappingType = tag.MappingType };
 
+            // Apply any offset to the method's vtable
+            method.Offset += tag.LayoutOffsetTranslate;
+
             // Get the inferred return type
             method.ReturnType = Manager.GetCsType<CsMarshalBase>(cppMethod.ReturnType);
 

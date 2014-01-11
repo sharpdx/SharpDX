@@ -47,9 +47,6 @@
     <Compile Include="Visual2.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Mapping-directcomposition.xml">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Mapping.xml" />
   </ItemGroup>
   <ItemGroup>

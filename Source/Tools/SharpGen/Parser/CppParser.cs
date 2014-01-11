@@ -910,6 +910,8 @@ namespace SharpGen.Parser
             // Parse annotations
             ParseAnnotations(xElement, cppInterface);
 
+			List<CppMethod> methods = new List<CppMethod>();
+
             // Parse methods
             foreach (var method in xElement.Elements())
             {
@@ -918,10 +920,43 @@ namespace SharpGen.Parser
                     && string.IsNullOrWhiteSpace(method.AttributeValue("overrides")))
                 {
                     var cppMethod = ParseMethodOrFunction<CppMethod>(method);
-                    cppMethod.Offset = offsetMethod++;
-                    cppInterface.Add(cppMethod);
+					methods.Add(cppMethod);
                 }
             }
+
+			// The Visual C++ compiler breaks the rules of the COM ABI when overloaded methods are used.
+			// It will group the overloads together in memory and lay them out in the reverse of their declaration order.
+			// Since GCC always lays them out in the order declared, we have to modify the order of the methods to match Visual C++.
+			// See http://support.microsoft.com/kb/131104 for more information.
+			for (int i = 0; i < methods.Count; i++)
+			{
+				string name = methods[i].Name;
+
+				// Look for overloads of this function
+				for (int j = i + 1; j < methods.Count; j++)
+				{
+					var nextMethod = methods[j];
+					if (nextMethod.Name == name)
+					{
+						// Remove this one from its current position further into the vtable
+						methods.RemoveAt(j);
+
+						// Put this one before all other overloads (aka reverse declaration order)
+						int k = i - 1;
+						while (k >= 0 && methods[k].Name == name)
+							k--;
+						methods.Insert(k + 1, nextMethod);
+						i++;
+					}
+				}
+			}
+
+			// Add the methods to the interface with the correct offsets
+			foreach (var cppMethod in methods)
+			{
+				cppMethod.Offset = offsetMethod++;
+				cppInterface.Add(cppMethod);
+			}
 
             cppInterface.TotalMethodCount = offsetMethod;
 

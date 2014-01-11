@@ -7,12 +7,12 @@ namespace SharpDX.DirectComposition
 {
 	partial class Animation
 	{
-		public Animation(Device device)
+		public Animation(Device device) : base(IntPtr.Zero)
 		{
 			device.CreateAnimation(this);
 		}
 
-		public Animation(Device2 device)
+		public Animation(Device2 device) : base(IntPtr.Zero)
 		{
 			device.CreateAnimation(this);
 		}

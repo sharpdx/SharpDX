@@ -109,6 +109,8 @@
 		<map method="IDCompositionSurfaceFactory::Create(Virtual)?Surface" visibility="internal" />
 		<map param="IDCompositionSurfaceFactory::Create(Virtual)?Surface::(virtualS|s)urface" attribute="out fast" />
 
+		<map method="IDComposition(Rotate|Translate|Skew|Matrix)Transform(3D)?::Set.*" property="false" />
+
 		<!--
     // *****************************************************************
     // DComp Functions
