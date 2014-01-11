@@ -38,11 +38,11 @@ namespace SharpDX.Toolkit.Audio
         private SoundEffectInstancePool instancePool;
 
 
-        internal SoundEffect(AudioManager audioManager, string name, WaveFormat format, DataStream buffer, uint[] decodedPacketsInfo)
+        internal SoundEffect(AudioManager audioManager, string name, WaveFormat waveFormat, DataStream buffer, uint[] decodedPacketsInfo)
         {
-            Manager = audioManager;
+            AudioManager = audioManager;
             Name = name;
-            Format = format;
+            Format = waveFormat;
             AudioBuffer = new AudioBuffer
             {
                 Stream = buffer,
@@ -119,7 +119,7 @@ namespace SharpDX.Toolkit.Audio
 
         public TimeSpan Duration { get; private set; }
         public string Name { get; private set; }
-        internal AudioManager Manager { get; private set; }
+        internal AudioManager AudioManager { get; private set; }
         internal WaveFormat Format { get; private set; }
         internal AudioBuffer AudioBuffer { get; private set; }
         internal AudioBuffer LoopedAudioBuffer { get; private set; }
@@ -158,14 +158,18 @@ namespace SharpDX.Toolkit.Audio
         {
             if (IsDisposed)
                 throw new ObjectDisposedException(this.GetType().FullName);
-            
-            SoundEffectInstance instance = instancePool.Acquire(true);
-            instance.Volume = volume;
-            instance.Pitch = pitch;
-            instance.Pan = pan;
-            instance.Play();
-            AddChild(instance);
-            return true;
+
+            SoundEffectInstance instance = null;
+            if(instancePool.TryAcquire(true, out instance))
+            {
+                instance.Volume = volume;
+                instance.Pitch = pitch;
+                instance.Pan = pan;
+                instance.Play();
+                return true;
+            }
+
+            return false;
         }
 
 
@@ -174,16 +178,20 @@ namespace SharpDX.Toolkit.Audio
             return Play(1.0f, 0.0f, 0.0f);
         }
 
-
         public SoundEffectInstance Create()
         {
             if (IsDisposed)
-                throw new ObjectDisposedException(this.GetType().FullName);
-            
-            SoundEffectInstance instance = instancePool.Acquire(false);
-            instance.IsFireAndForget = false;
-            AddChild(instance);
-            return instance;
+                throw new ObjectDisposedException(this.GetType().FullName);    
+
+            SoundEffectInstance instance = null;
+            if (instancePool.TryAcquire(true, out instance))
+            {
+                instance.IsFireAndForget = false;
+                AddChild(instance);
+                return instance;
+            }
+
+            throw new InvalidOperationException("Unable to create SoundEffectInstance, insufficient source voices available.");
         }
 
 
@@ -254,7 +262,7 @@ namespace SharpDX.Toolkit.Audio
                         }
                     }
                     children.Clear();
-                    instancePool.Clear();
+                    instancePool.Dispose();
                 }
 
                 AudioBuffer.Stream.Dispose();
@@ -281,8 +289,5 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
-
-
-        
     }
 }

@@ -29,7 +29,7 @@ namespace SharpDX.Toolkit.Audio
     /// <summary>
     /// Provides a single playing, paused, or stopped instance of a <see cref="SoundEffect"/> sound.
     /// </summary>
-    public sealed class SoundEffectInstance
+    public sealed class SoundEffectInstance: IDisposable
     {        
         private SourceVoice voice;
         private bool paused;
@@ -41,14 +41,15 @@ namespace SharpDX.Toolkit.Audio
         private Listener listener;
         private DspSettings dspSettings;
 
-        internal SoundEffectInstance(SoundEffect soundEffect, bool isFireAndForget)
+        internal SoundEffectInstance(SoundEffect soundEffect, SourceVoice sourceVoice, bool isFireAndForget)
         {           
             if (soundEffect == null)
-                throw new ArgumentNullException("effect");
+                throw new ArgumentNullException("soundEffect");
 
-            voice = new SourceVoice(soundEffect.Manager.Device, soundEffect.Format, VoiceFlags.None, XAudio2.MaximumFrequencyRatio);
-           
+            if (sourceVoice == null)
+                throw new ArgumentNullException("sourceVoice");
 
+            voice = sourceVoice;  
             Effect = soundEffect;
             IsFireAndForget = isFireAndForget;
             paused = false;
@@ -224,7 +225,18 @@ namespace SharpDX.Toolkit.Audio
             if (IsDisposed)
                 throw new ObjectDisposedException(this.GetType().FullName);
 
-            voice.Stop(immediate ? 0 : (int)PlayFlags.Tails);
+            if(immediate)
+            {
+                voice.Stop(0);
+            }
+            else if(IsLooped)
+            {
+                voice.ExitLoop();
+            }
+            else
+            {
+                voice.Stop((int)PlayFlags.Tails);
+            }
 
             paused = false;
         }
@@ -238,6 +250,11 @@ namespace SharpDX.Toolkit.Audio
             IsLooped = false;
         }
 
+        internal void Reset(SourceVoice sourceVoice)
+        {
+            voice = sourceVoice;
+            Reset();
+        }
 
         public void Apply3D(Matrix listener, Vector3 listenerVelocity, Matrix emitter, Vector3 emitterVelocity)
         {
@@ -299,9 +316,9 @@ namespace SharpDX.Toolkit.Audio
             listener.Velocity = listenerVelocity;
 
             if (dspSettings == null)
-                dspSettings = new DspSettings(Effect.Format.Channels, Effect.Manager.MasteringVoice.VoiceDetails.InputChannelCount);
+                dspSettings = new DspSettings(Effect.Format.Channels, Effect.AudioManager.MasteringVoice.VoiceDetails.InputChannelCount);
 
-            Effect.Manager.Calculate3D(listener, emitter, CalculateFlags.Matrix | CalculateFlags.Doppler, dspSettings);
+            Effect.AudioManager.Calculate3D(listener, emitter, CalculateFlags.Matrix | CalculateFlags.Doppler, dspSettings);
 
             voice.SetOutputMatrix(dspSettings.SourceChannelCount, dspSettings.DestinationChannelCount, dspSettings.MatrixCoefficients);
             voice.SetFrequencyRatio(dspSettings.DopplerFactor);
@@ -324,7 +341,7 @@ namespace SharpDX.Toolkit.Audio
                 //is specified in the form pLevelMatrix[SourceChannels × D + S]
                 for (int S = 0; S < sourceChannels; S++)
                 {
-                    switch (Effect.Manager.Speakers)
+                    switch (Effect.AudioManager.Speakers)
                     {
                         case Speakers.Stereo:
                         case Speakers.TwoPointOne:
@@ -368,7 +385,7 @@ namespace SharpDX.Toolkit.Audio
 
         private void InitializeOutputMatrix(out int destinationChannels, out int sourceChannels)
         {
-            destinationChannels = Effect.Manager.MasteringVoice.VoiceDetails.InputChannelCount;
+            destinationChannels = Effect.AudioManager.MasteringVoice.VoiceDetails.InputChannelCount;
             sourceChannels = Effect.Format.Channels;
 
             var outputMatrixSize = destinationChannels * sourceChannels;
@@ -417,14 +434,17 @@ namespace SharpDX.Toolkit.Audio
 
 
         private void DestroyVoice()
-        {
+        {            
             if (voice != null)
             {
-                if (Effect.Manager.Device != null)
+                if (!IsFireAndForget)
                 {
-                    voice.DestroyVoice();
+                    if (Effect.AudioManager.Device != null)
+                    {
+                        voice.DestroyVoice();
+                    }
+                    voice.Dispose();
                 }
-                voice.Dispose();
                 voice = null;
             }
         }

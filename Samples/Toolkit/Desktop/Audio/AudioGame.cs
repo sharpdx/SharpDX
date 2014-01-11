@@ -90,7 +90,7 @@ namespace Audio
 
         protected override void LoadContent()
         {     
-            ergonWave = Content.Load<SoundEffect>("ergon.wav");
+            ergonWave = Content.Load<SoundEffect>("ergon.adpcm.wav");
             ergonWaveInstance = ergonWave.Create();
             ergonWaveInstance.IsLooped = true;
             waveBank = Content.Load<WaveBank>("TestBank.xwb");
@@ -151,11 +151,11 @@ namespace Audio
 
 
         protected override void UnloadContent()
-        {           
+        {
+            base.UnloadContent();
             Utilities.Dispose(ref spriteBatch);
             Utilities.Dispose(ref primitiveBatch);
-            Utilities.Dispose(ref primitiveBatchEffect);
-            base.UnloadContent();            
+            Utilities.Dispose(ref primitiveBatchEffect);                        
         }
         
         protected override void Update(GameTime gameTime)
@@ -249,6 +249,7 @@ namespace Audio
             geometryEffect.Texture = emitterTexture;
             geometryEffect.World = emitter;
             cube.Draw(geometryEffect);
+
         }
 
         private void DrawTiles()

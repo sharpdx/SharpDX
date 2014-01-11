@@ -39,27 +39,40 @@ namespace SharpDX.Toolkit.Audio
 
         public TItem Acquire(bool trackItem)
         {
+            TItem item;
+            if(TryAcquire(trackItem,out item))
+            {
+                return item;
+            }
+
+            throw new InvalidOperationException(string.Format("Unable to create item of type {0}.", typeof(TItem).Name));
+        }
+
+        public bool TryAcquire(bool trackItem, out TItem item)
+        {
             lock (freeItems)
             {
 
                 if (freeItems.Count == 0)
                     AuditItems();
 
-                TItem item;
+                
                 if (freeItems.Count == 0)
                 {
-                    item = Create();
+                    if (!TryCreate(trackItem, out item))
+                        return false;
                 }
                 else
                 {
                     item = freeItems.Dequeue();
-                    Reset(item);
+                    if (!TryReset(trackItem, item))
+                        return false;
                 }
 
-                if(trackItem)
+                if (trackItem)
                     activeItems.Add(item);
-                
-                return item;
+
+                return true;
             }
         }
 
@@ -84,8 +97,8 @@ namespace SharpDX.Toolkit.Audio
 
 
         protected abstract bool IsActive(TItem item);
-        protected abstract TItem Create();
-        protected virtual void Reset(TItem item) { }
+        protected abstract bool TryCreate(bool trackItem, out TItem item);
+        protected virtual bool TryReset(bool trackItem, TItem item) { return true; }
         protected virtual void ClearItem(TItem item) { }
 
 

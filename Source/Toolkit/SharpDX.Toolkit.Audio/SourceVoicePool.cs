@@ -26,59 +26,45 @@ namespace SharpDX.Toolkit.Audio
     using SharpDX.XAudio2;
 
     /// <summary>
-    /// Pool of <see cref="SoundEffectInstance"/> used to maintain fire and forget instances.
+    /// Pool of <see cref="SourceVoice"/>.
     /// </summary>
-    internal class SoundEffectInstancePool : Pool<SoundEffectInstance>, IDisposable
+    internal sealed class SourceVoicePool : Pool<SourceVoice>, IDisposable
     {
-        private readonly SoundEffect effect;
-        private readonly SourceVoicePool voicePool;
+        private SourceVoicePoolManager manager;
+        private WaveFormat format;
+        public bool IsManaged { get; set; }
 
-        public SoundEffectInstancePool(SoundEffect soundEffect):base()
+        public SourceVoicePool(SourceVoicePoolManager poolManager, WaveFormat waveFormat, bool isManaged)
         {
-            if (soundEffect == null)
-                throw new ArgumentNullException("soundEffect");
+            if (poolManager == null)
+                throw new ArgumentNullException("poolManager");
 
-            effect = soundEffect;
-            voicePool = effect.AudioManager.PoolManager.GetSourceVoicePool(effect.Format);
+            if (waveFormat == null)
+                throw new ArgumentNullException("waveFormat");
+
+            manager = poolManager;
+            format = waveFormat;
+            IsManaged = isManaged;
+        }
+        
+        protected override bool IsActive(SourceVoice item)
+        {
+            return item.State.BuffersQueued > 0;
         }
 
-        protected override bool IsActive(SoundEffectInstance item)
+        protected override bool TryCreate(bool trackItem, out SourceVoice item)
         {
-            return item.State != SoundState.Stopped;
+            item = new SourceVoice(manager.AudioManager.Device, format, VoiceFlags.None, XAudio2.MaximumFrequencyRatio);
+            return true;
         }
-
-        protected override bool TryCreate(bool trackItem, out SoundEffectInstance item)
+        protected override void ClearItem(SourceVoice item)
         {
-            SourceVoice voice;
-            if (voicePool.TryAcquire(trackItem, out voice))
+            if (!item.IsDisposed && manager.AudioManager.Device != null)
             {
-                item = new SoundEffectInstance(effect, voice, true);
-                return true;
+                item.DestroyVoice();
+                item.Dispose();
             }
-            
-            item = null;
-            return false;
         }
-
-        protected override bool TryReset(bool trackItem, SoundEffectInstance item)
-        {
-            
-            SourceVoice voice;
-            if (voicePool.TryAcquire(trackItem, out voice))
-            {                
-                item.Reset(voice);
-                return true;
-            }
-
-            item = null;
-            return false;
-        }
-
-        protected override void ClearItem(SoundEffectInstance item)
-        {
-            item.ParentDisposed();
-        }
-
 
         public bool IsDisposed { get; private set; }
 
@@ -87,8 +73,7 @@ namespace SharpDX.Toolkit.Audio
             if (!IsDisposed)
             {
                 IsDisposed = true;
-                if (!voicePool.IsManaged)
-                    voicePool.Dispose();
+                this.Clear();
             }
         }
 
