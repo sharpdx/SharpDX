@@ -35,8 +35,6 @@ namespace SharpDX.Toolkit.Audio
     {       
         
         private List<WeakReference> children;
-        private SoundEffectInstancePool instancePool;
-
 
         internal SoundEffect(AudioManager audioManager, string name, WaveFormat waveFormat, DataStream buffer, uint[] decodedPacketsInfo)
         {
@@ -62,7 +60,7 @@ namespace SharpDX.Toolkit.Audio
             Duration = Format.SampleRate > 0 ? TimeSpan.FromMilliseconds(GetSamplesDuration() * 1000 / Format.SampleRate) : TimeSpan.Zero;
 
             children = new List<WeakReference>();
-            instancePool = new SoundEffectInstancePool(this);
+            VoicePool = AudioManager.InstancePool.GetVoicePool(Format);
         }
 
         const float FLT_MIN = 1.175494351e-38F;
@@ -119,7 +117,8 @@ namespace SharpDX.Toolkit.Audio
 
         public TimeSpan Duration { get; private set; }
         public string Name { get; private set; }
-        internal AudioManager AudioManager { get; private set; }
+        public AudioManager AudioManager { get; private set; }
+        internal SourceVoicePool VoicePool { get; private set; }
         internal WaveFormat Format { get; private set; }
         internal AudioBuffer AudioBuffer { get; private set; }
         internal AudioBuffer LoopedAudioBuffer { get; private set; }
@@ -160,7 +159,7 @@ namespace SharpDX.Toolkit.Audio
                 throw new ObjectDisposedException(this.GetType().FullName);
 
             SoundEffectInstance instance = null;
-            if(instancePool.TryAcquire(true, out instance))
+            if(AudioManager.InstancePool.TryAcquire(this, true, out instance))
             {
                 instance.Volume = volume;
                 instance.Pitch = pitch;
@@ -184,9 +183,8 @@ namespace SharpDX.Toolkit.Audio
                 throw new ObjectDisposedException(this.GetType().FullName);    
 
             SoundEffectInstance instance = null;
-            if (instancePool.TryAcquire(true, out instance))
-            {
-                instance.IsFireAndForget = false;
+            if (AudioManager.InstancePool.TryAcquire(this, false, out instance))
+            {                
                 AddChild(instance);
                 return instance;
             }
@@ -241,7 +239,7 @@ namespace SharpDX.Toolkit.Audio
             return 0;
         }
 
-
+        
         public bool IsDisposed { get; private set; }
 
 
@@ -262,7 +260,8 @@ namespace SharpDX.Toolkit.Audio
                         }
                     }
                     children.Clear();
-                    instancePool.Dispose();
+                    VoicePool.Release();
+                    VoicePool = null;
                 }
 
                 AudioBuffer.Stream.Dispose();

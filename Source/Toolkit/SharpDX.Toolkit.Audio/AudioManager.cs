@@ -48,7 +48,7 @@ namespace SharpDX.Toolkit.Audio
             Services.AddService(this);
             masterVolume = 1.0f;
             Speakers = Multimedia.Speakers.None;
-            PoolManager = new SourceVoicePoolManager(this);
+            InstancePool = new SoundEffectInstancePool(this);
 
             // register the audio manager as game system
             game.GameSystems.Add(this);
@@ -130,7 +130,7 @@ namespace SharpDX.Toolkit.Audio
         internal Speakers Speakers { get; private set; }
         internal XAudio2 Device { get; private set; }
         internal MasteringVoice MasteringVoice  { get; private set; }
-        internal SourceVoicePoolManager PoolManager { get; private set; }
+        internal SoundEffectInstancePool InstancePool { get; private set; }
 
         internal void Calculate3D(Listener listener, Emitter emitter, CalculateFlags flags, DspSettings dspSettings)
         {
@@ -161,16 +161,15 @@ namespace SharpDX.Toolkit.Audio
 
         protected override void Dispose(bool disposeManagedResources)
         {
-            base.Dispose(disposeManagedResources);
-
-            if (!disposeManagedResources)
+            
+            if (disposeManagedResources)
             {
+                InstancePool.Dispose();
+                
                 if (x3DAudio != null)
                 {
                     x3DAudio = null;
                 }
-
-                PoolManager.Dispose();
 
                 if (MasteringVoice != null)
                 {
@@ -187,6 +186,7 @@ namespace SharpDX.Toolkit.Audio
                 }
             }
 
-        }       
+            base.Dispose(disposeManagedResources);
+        }  
     }
 }

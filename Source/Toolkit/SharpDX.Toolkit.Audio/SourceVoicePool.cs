@@ -30,21 +30,21 @@ namespace SharpDX.Toolkit.Audio
     /// </summary>
     internal sealed class SourceVoicePool : Pool<SourceVoice>, IDisposable
     {
-        private SourceVoicePoolManager manager;
+        private SoundEffectInstancePool instancePool;
         private WaveFormat format;
-        public bool IsManaged { get; set; }
+        private bool isShared;
 
-        public SourceVoicePool(SourceVoicePoolManager poolManager, WaveFormat waveFormat, bool isManaged)
+        public SourceVoicePool(SoundEffectInstancePool soundEffectInstancePool, WaveFormat waveFormat, bool isShared)
         {
-            if (poolManager == null)
-                throw new ArgumentNullException("poolManager");
+            if (soundEffectInstancePool == null)
+                throw new ArgumentNullException("soundEffectInstancePool");
 
             if (waveFormat == null)
                 throw new ArgumentNullException("waveFormat");
 
-            manager = poolManager;
+            instancePool = soundEffectInstancePool;
             format = waveFormat;
-            IsManaged = isManaged;
+            this.isShared = isShared;
         }
         
         protected override bool IsActive(SourceVoice item)
@@ -54,15 +54,39 @@ namespace SharpDX.Toolkit.Audio
 
         protected override bool TryCreate(bool trackItem, out SourceVoice item)
         {
-            item = new SourceVoice(manager.AudioManager.Device, format, VoiceFlags.None, XAudio2.MaximumFrequencyRatio);
+            item = new SourceVoice(instancePool.AudioManager.Device, format, VoiceFlags.None, XAudio2.MaximumFrequencyRatio);
             return true;
         }
+
         protected override void ClearItem(SourceVoice item)
         {
-            if (!item.IsDisposed && manager.AudioManager.Device != null)
+            if (!item.IsDisposed && instancePool.AudioManager.Device != null)
             {
                 item.DestroyVoice();
                 item.Dispose();
+            }
+        }
+
+        internal void ReleaseSourceVoice(ref SourceVoice voice)
+        {
+            if (voice != null && !voice.IsDisposed)
+            {
+                voice.Stop(0);
+
+                //TODO: see if wee can get it to return it to it's pool.
+                voice.DestroyVoice();
+                voice.Dispose();
+            }
+
+            voice = null;
+        }
+
+        public void Release()
+        {
+            if (!isShared)
+            {
+                instancePool.RemoveUnshared(this);
+                Dispose();
             }
         }
 

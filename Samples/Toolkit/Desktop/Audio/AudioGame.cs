@@ -151,11 +151,11 @@ namespace Audio
 
 
         protected override void UnloadContent()
-        {
-            base.UnloadContent();
+        {            
             Utilities.Dispose(ref spriteBatch);
             Utilities.Dispose(ref primitiveBatch);
-            Utilities.Dispose(ref primitiveBatchEffect);                        
+            Utilities.Dispose(ref primitiveBatchEffect);
+            base.UnloadContent();           
         }
         
         protected override void Update(GameTime gameTime)

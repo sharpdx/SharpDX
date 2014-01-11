@@ -27,7 +27,6 @@
     <Compile Include="SoundEffectInstance.cs" />
     <Compile Include="SoundEffectInstancePool.cs" />
     <Compile Include="SourceVoicePool.cs" />
-    <Compile Include="SourceVoicePoolManager.cs" />
     <Compile Include="SoundState.cs" />
     <Compile Include="WaveBank.cs" />
     <Compile Include="WaveBankReader.cs" />

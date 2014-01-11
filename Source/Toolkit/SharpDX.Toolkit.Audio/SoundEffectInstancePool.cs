@@ -28,57 +28,103 @@ namespace SharpDX.Toolkit.Audio
     /// <summary>
     /// Pool of <see cref="SoundEffectInstance"/> used to maintain fire and forget instances.
     /// </summary>
-    internal class SoundEffectInstancePool : Pool<SoundEffectInstance>, IDisposable
-    {
-        private readonly SoundEffect effect;
-        private readonly SourceVoicePool voicePool;
+    internal class SoundEffectInstancePool :  IDisposable
+    {        
+        
+        private Dictionary<uint, SourceVoicePool> sharedVoicePools;
+        private List<SourceVoicePool> unsharedVoicePools;
+        private InstancePool instancePool;
 
-        public SoundEffectInstancePool(SoundEffect soundEffect):base()
+        public SoundEffectInstancePool(AudioManager audioManager)
         {
-            if (soundEffect == null)
-                throw new ArgumentNullException("soundEffect");
+             if (audioManager == null)
+                throw new ArgumentNullException("audioManager");
 
-            effect = soundEffect;
-            voicePool = effect.AudioManager.PoolManager.GetSourceVoicePool(effect.Format);
+            AudioManager = audioManager;
+
+            sharedVoicePools = new Dictionary<uint, SourceVoicePool>();
+            unsharedVoicePools = new List<SourceVoicePool>();
+            instancePool = new InstancePool();
         }
 
-        protected override bool IsActive(SoundEffectInstance item)
-        {
-            return item.State != SoundState.Stopped;
-        }
+        internal AudioManager AudioManager { get; private set; }
 
-        protected override bool TryCreate(bool trackItem, out SoundEffectInstance item)
+        public SourceVoicePool GetVoicePool(WaveFormat waveFormat)
         {
-            SourceVoice voice;
-            if (voicePool.TryAcquire(trackItem, out voice))
+            lock (sharedVoicePools)
             {
-                item = new SoundEffectInstance(effect, voice, true);
-                return true;
+                uint waveKey = MakeWaveFormatKey(waveFormat);
+                SourceVoicePool pool;
+
+                if (waveKey == 0)
+                {
+                    pool = new SourceVoicePool(this, waveFormat, false);
+                    unsharedVoicePools.Add(pool);
+                }
+                else
+                {
+                    if (!sharedVoicePools.TryGetValue(waveKey, out pool))
+                        sharedVoicePools[waveKey] = pool = new SourceVoicePool(this, waveFormat, true);
+                }
+
+                return pool;
             }
-            
-            item = null;
+        }
+
+        public bool TryAcquire(SoundEffect soundEffect, bool isFireAndForget, out SoundEffectInstance instance)
+        {
+            SourceVoice voice = null;
+            if (soundEffect.VoicePool.TryAcquire(isFireAndForget, out voice))
+            {
+                if (instancePool.TryAcquire(isFireAndForget, out instance))
+                {
+                    instance.Reset(soundEffect, voice, isFireAndForget);
+                    return true;
+                }
+            }
+
+            instance = null;
             return false;
         }
 
-        protected override bool TryReset(bool trackItem, SoundEffectInstance item)
+        /// <summary>
+        /// Creates a key based on wave format
+        /// </summary>
+        /// <param name="waveFormat"></param>
+        /// <returns></returns>
+        private uint MakeWaveFormatKey(WaveFormat waveFormat)
         {
-            
-            SourceVoice voice;
-            if (voicePool.TryAcquire(trackItem, out voice))
-            {                
-                item.Reset(voice);
-                return true;
+            uint key = 0;
+            uint extra = 0;
+
+            BitField.Set((uint)waveFormat.Encoding, 9, 0, ref key);
+            BitField.Set((uint)waveFormat.Channels, 7, 9, ref key);
+
+            switch (waveFormat.Encoding)
+            {
+                case WaveFormatEncoding.Pcm:
+                    extra = (uint)waveFormat.BitsPerSample;
+                    break;
+                case WaveFormatEncoding.IeeeFloat:
+                    if (waveFormat.BitsPerSample != 32) return 0;
+                    extra = (uint)waveFormat.BitsPerSample;
+                    break;
+                case WaveFormatEncoding.Adpcm:
+                    extra = (uint)((WaveFormatAdpcm)waveFormat).SamplesPerBlock;
+                    break;
+                default:
+                    return 0;
             }
 
-            item = null;
-            return false;
+            BitField.Set(extra, 16, 16, ref key);
+
+            return key;
         }
 
-        protected override void ClearItem(SoundEffectInstance item)
-        {
-            item.ParentDisposed();
-        }
-
+        /// <summary>
+        /// Occurs when when Dispose is called.
+        /// </summary>
+        public event EventHandler<EventArgs> Disposing;
 
         public bool IsDisposed { get; private set; }
 
@@ -87,14 +133,71 @@ namespace SharpDX.Toolkit.Audio
             if (!IsDisposed)
             {
                 IsDisposed = true;
-                if (!voicePool.IsManaged)
-                    voicePool.Dispose();
+
+                // Call the disposing event.
+                var handler = Disposing;
+                if (handler != null)
+                {
+                    handler(this, EventArgs.Empty);
+                }
+
+                lock (sharedVoicePools)
+                {
+                    foreach (var pool in sharedVoicePools.Values)
+                    {
+                        pool.Dispose();
+                    }
+
+                    foreach (var pool in unsharedVoicePools)
+                    {
+                        pool.Dispose();
+                    }
+
+                    sharedVoicePools.Clear();
+                    unsharedVoicePools.Clear();
+                    instancePool.Clear();
+                }
             }
         }
 
         public void Dispose()
         {
             Dispose(true);
+        }
+
+        internal void RemoveUnshared(SourceVoicePool pool)
+        {
+            lock (sharedVoicePools)
+            {
+                unsharedVoicePools.Remove(pool);
+            }
+        }       
+
+       
+
+        private class InstancePool : Pool<SoundEffectInstance>
+        {
+            protected override bool IsActive(SoundEffectInstance item)
+            {
+                return item.State != SoundState.Stopped;
+            }
+
+            protected override bool TryCreate(bool trackItem, out SoundEffectInstance item)
+            {
+                item = new SoundEffectInstance(null, null, true);
+                return true;
+            }
+
+            protected override bool TryReset(bool trackItem, SoundEffectInstance item)
+            {
+                item.Reset(null, null, true);
+                return true;
+            }
+
+            protected override void ClearItem(SoundEffectInstance item)
+            {
+                item.Dispose();
+            }
         }
     }
 }

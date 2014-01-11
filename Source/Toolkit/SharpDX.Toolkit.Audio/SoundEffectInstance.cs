@@ -42,15 +42,9 @@ namespace SharpDX.Toolkit.Audio
         private DspSettings dspSettings;
 
         internal SoundEffectInstance(SoundEffect soundEffect, SourceVoice sourceVoice, bool isFireAndForget)
-        {           
-            if (soundEffect == null)
-                throw new ArgumentNullException("soundEffect");
-
-            if (sourceVoice == null)
-                throw new ArgumentNullException("sourceVoice");
-
-            voice = sourceVoice;  
+        {  
             Effect = soundEffect;
+            voice = sourceVoice;  
             IsFireAndForget = isFireAndForget;
             paused = false;
             IsLooped = false;
@@ -60,10 +54,10 @@ namespace SharpDX.Toolkit.Audio
             outputMatrix = null;
         }
 
-
         public SoundEffect Effect { get; private set; }
 
-        internal bool IsFireAndForget { get; set; }
+
+        internal bool IsFireAndForget { get; private set; }
 
         private AudioBuffer CurrentAudioBuffer
         {
@@ -250,38 +244,26 @@ namespace SharpDX.Toolkit.Audio
             IsLooped = false;
         }
 
-        internal void Reset(SourceVoice sourceVoice)
-        {
+        internal void Reset(SoundEffect soundEffect, SourceVoice sourceVoice, bool isFireAndForget)
+        {           
+            Effect = soundEffect;
             voice = sourceVoice;
-            Reset();
-        }
+            IsFireAndForget = isFireAndForget;
 
-        public void Apply3D(Matrix listener, Vector3 listenerVelocity, Matrix emitter, Vector3 emitterVelocity)
-        {
-            Apply3D(listener.Forward, listener.Up, listener.TranslationVector, listenerVelocity, emitter.Forward, emitter.Up, emitter.TranslationVector, emitterVelocity);         
-            
-        }
+            if(!IsFireAndForget)
+                Effect.AudioManager.InstancePool.Disposing += OnPoolDisposing;
 
+            if(soundEffect != null && sourceVoice != null)
+                Reset();
+        }
 
         // TODO: X3DAudio uses a left-handed Cartesian coordinate system. may need overloads for lh/rh.  seems to work with right hand matricies without it though.
-        //public void Apply3DRH(Matrix listenerTransform, Vector3 listenerVelocity, Matrix emitterTransform, Vector3 emitterVelocity)
-        //{
-        //    //  X3DAudio uses a left-handed Cartesian coordinate system, needs to be converted
-
-        //    var listenerForward = listenerTransform.Forward;
-        //    var listenerUp = listenerTransform.Up;
-        //    var listenerPosition = listenerTransform.TranslationVector;
+        public void Apply3D(Matrix listenerWorld, Vector3 listenerVelocity, Matrix emitterWorld, Vector3 emitterVelocity)
+        {
+            Apply3D(listenerWorld.Forward, listenerWorld.Up, listenerWorld.TranslationVector, listenerVelocity, emitterWorld.Forward, emitterWorld.Up, emitterWorld.TranslationVector, emitterVelocity);         
             
-            
-        //    var emitterForward = emitterTransform.Forward;
-        //    var emitterUp = emitterTransform.Up;
-        //    var emitterPosition = emitterTransform.TranslationVector;
-            
-            
-        //    Apply3D(listenerForward, listenerUp, listenerPosition, listenerVelocity, emitterForward, emitterUp, emitterPosition, emitterVelocity);
-
-        //}
-
+        }
+        
 
         public void Apply2D(Vector2 listener, Vector2 listenerVelocity, Vector2 emitter, Vector2 emitterVelocity)
         {
@@ -399,6 +381,11 @@ namespace SharpDX.Toolkit.Audio
         }
 
 
+        private void OnPoolDisposing(object sender, EventArgs args)
+        {            
+            Dispose();
+        }
+
         public bool IsDisposed { get; private set; }
 
 
@@ -407,8 +394,9 @@ namespace SharpDX.Toolkit.Audio
             if (!IsDisposed)
             {
                 IsDisposed = true;
+                Effect.AudioManager.InstancePool.Disposing -= OnPoolDisposing;
+                Effect.VoicePool.ReleaseSourceVoice(ref voice);
                 Effect.ChildDisposed(this);
-                DestroyVoice();
                 Effect = null;
                 outputMatrix = null;
             }
@@ -420,34 +408,16 @@ namespace SharpDX.Toolkit.Audio
             Dispose(true);
         }
 
-
         internal void ParentDisposed()
         {
             if (!IsDisposed)
             {
                 IsDisposed = true;
-                DestroyVoice();
+                Effect.AudioManager.InstancePool.Disposing -= OnPoolDisposing;
+                Effect.VoicePool.ReleaseSourceVoice(ref voice);
                 Effect = null; 
                 outputMatrix = null;
             }
         }
-
-
-        private void DestroyVoice()
-        {            
-            if (voice != null)
-            {
-                if (!IsFireAndForget)
-                {
-                    if (Effect.AudioManager.Device != null)
-                    {
-                        voice.DestroyVoice();
-                    }
-                    voice.Dispose();
-                }
-                voice = null;
-            }
-        }
-
     }
 }
