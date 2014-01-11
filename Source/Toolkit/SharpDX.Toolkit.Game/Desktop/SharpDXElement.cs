@@ -108,6 +108,8 @@ namespace SharpDX.Toolkit
             resizeDelayTimer.Interval = SendResizeDelay;
             resizeDelayTimer.Tick += HandleResizeDelayTimerTick;
 
+            Focusable = true;
+
             SizeChanged += HandleSizeChanged;
             Unloaded += HandleUnloaded;
         }
