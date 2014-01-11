@@ -38,6 +38,7 @@ namespace SharpDX.Toolkit
     internal class GameWindowDesktopWpf : GameWindow
     {
         private SharpDXElement element;
+        private Window window;
         private DispatcherOperation previousRenderCall; // keep previous render call to avoid calling it again if prev one is not finished yet
         private readonly Action renderDelegate; //delegate cache to avoid garbage generation
 
@@ -224,6 +225,10 @@ namespace SharpDX.Toolkit
         /// <inheritdoc />
         protected override void SetTitle(string title)
         {
+            if(window != null)
+            {
+                window.Title = title;
+            }
             // ignore. SharpDXElement doesn't have title
         }
 
@@ -299,6 +304,17 @@ namespace SharpDX.Toolkit
         /// <param name="e">Ignored.</param>
         private void HandleElementLoaded(object sender, RoutedEventArgs e)
         {
+            var searchWindow = (FrameworkElement)element;
+            while (searchWindow != null && searchWindow.Parent != null || searchWindow.TemplatedParent != null)
+            {
+                searchWindow = (searchWindow.Parent ?? searchWindow.TemplatedParent) as FrameworkElement;
+                if (searchWindow is Window)
+                {
+                    window = (Window)searchWindow;
+                    break;
+                }
+            }
+
             OnActivated(this, EventArgs.Empty);
         }
 
@@ -310,6 +326,7 @@ namespace SharpDX.Toolkit
         private void HandleElementUnloaded(object sender, RoutedEventArgs e)
         {
             OnDeactivated(this, EventArgs.Empty);
+            window = null;
         }
 
         /// <summary>
