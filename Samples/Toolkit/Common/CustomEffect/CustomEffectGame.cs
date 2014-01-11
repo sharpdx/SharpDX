@@ -81,7 +81,7 @@ namespace CustomEffect
             metaTunnelEffect.Parameters["w"].SetValue((float)gameTime.TotalGameTime.TotalSeconds);
 
             // Draw a full screen quad using the specified effect.
-            GraphicsDevice.DrawQuad(metaTunnelEffect);
+            GraphicsDevice.Quad.Draw(metaTunnelEffect, true);
 
             // Handle base.Draw
             base.Draw(gameTime);
