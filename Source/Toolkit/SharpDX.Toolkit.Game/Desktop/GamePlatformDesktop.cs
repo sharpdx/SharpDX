@@ -47,7 +47,7 @@ namespace SharpDX.Toolkit
         {
             get
             {
-                var assemblyUri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
+                var assemblyUri = new Uri(game.GetType().Assembly.CodeBase);
                 return Path.GetDirectoryName(assemblyUri.LocalPath);
             }
         }
