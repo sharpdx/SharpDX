@@ -162,19 +162,13 @@ It compiles all files of type ToolkitFxc/ToolkitFont
   <UsingTask TaskName="SharpDX.Toolkit.ModelCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
   <UsingTask TaskName="SharpDX.Toolkit.TextureCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
 
-  <!-- Plugs all compilers in BuildDependsOn --> 
+  <!-- Plugs all dependency listing in AssignTargetPathsDependsOn - in order to support generated output to be copied as part of the build  --> 
   <PropertyGroup>
     <BuildDependsOn>
       TkCompileTarget;
       $(BuildDependsOn);
     </BuildDependsOn>
 
-    <ToolkitFxcDebugOption>true</ToolkitFxcDebugOption>
-    <ToolkitFxcDebugOption Condition="$(Optimize) == 'true'">false</ToolkitFxcDebugOption>
-  </PropertyGroup>
-
-  <!-- Plugs all dependency listing in AssignTargetPathsDependsOn - in order to support generated output to be copied as part of the build  --> 
-  <PropertyGroup>
     <AssignTargetPathsDependsOn>
       $(AssignTargetPathsDependsOn);
       TkListContentAndCompileTarget;
