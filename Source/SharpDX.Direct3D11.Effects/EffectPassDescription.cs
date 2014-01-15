@@ -34,6 +34,14 @@ namespace SharpDX.Direct3D11
                 return new ShaderBytecode(this.PIAInputSignature, this.IAInputSignatureSize);
             }
         }
+
+        /// <summary>
+        /// Returns true if this Effect pass has a Signature (eg: if a VertexShader or Geometry Shader is present), false otherwise
+        /// </summary>
+        public bool HasSignature
+        {
+            get { return this.PIAInputSignature != System.IntPtr.Zero; }
+        }
     }
 }
 #endif
