@@ -80,7 +80,7 @@
             Represents a YAML stream emitter.
             </summary>
         </member>
-        <member name="M:SharpYaml.IEmitter.Emit(SharpYaml.Events.IParsingEvent)">
+        <member name="M:SharpYaml.IEmitter.Emit(SharpYaml.Events.ParsingEvent)">
             <summary>
             Emits an event.
             </summary>
@@ -121,7 +121,7 @@
             bestWidth;The bestWidth parameter must be greater than bestIndent * 2.
             </exception>
         </member>
-        <member name="M:SharpYaml.Emitter.Emit(SharpYaml.Events.IParsingEvent)">
+        <member name="M:SharpYaml.Emitter.Emit(SharpYaml.Events.ParsingEvent)">
             <summary>
             Emit an evt.
             </summary>
@@ -136,7 +136,7 @@
              - 3 events for MAPPING-START
             </summary>
         </member>
-        <member name="M:SharpYaml.Emitter.AnalyzeEvent(SharpYaml.Events.IParsingEvent)">
+        <member name="M:SharpYaml.Emitter.AnalyzeEvent(SharpYaml.Events.ParsingEvent)">
             <summary>
             Check if the evt data is valid.
             </summary>
@@ -151,17 +151,17 @@
             Check if a tag is valid.
             </summary>
         </member>
-        <member name="M:SharpYaml.Emitter.StateMachine(SharpYaml.Events.IParsingEvent)">
+        <member name="M:SharpYaml.Emitter.StateMachine(SharpYaml.Events.ParsingEvent)">
             <summary>
             State dispatcher.
             </summary>
         </member>
-        <member name="M:SharpYaml.Emitter.EmitStreamStart(SharpYaml.Events.IParsingEvent)">
+        <member name="M:SharpYaml.Emitter.EmitStreamStart(SharpYaml.Events.ParsingEvent)">
             <summary>
             Expect STREAM-START.
             </summary>
         </member>
-        <member name="M:SharpYaml.Emitter.EmitDocumentStart(SharpYaml.Events.IParsingEvent,System.Boolean)">
+        <member name="M:SharpYaml.Emitter.EmitDocumentStart(SharpYaml.Events.ParsingEvent,System.Boolean)">
             <summary>
             Expect DOCUMENT-START or STREAM-END.
             </summary>
@@ -181,17 +181,17 @@
             Check if a %YAML directive is valid.
             </summary>
         </member>
-        <member name="M:SharpYaml.Emitter.EmitDocumentContent(SharpYaml.Events.IParsingEvent)">
+        <member name="M:SharpYaml.Emitter.EmitDocumentContent(SharpYaml.Events.ParsingEvent)">
             <summary>
             Expect the root node.
             </summary>
         </member>
-        <member name="M:SharpYaml.Emitter.EmitNode(SharpYaml.Events.IParsingEvent,System.Boolean,System.Boolean,System.Boolean)">
+        <member name="M:SharpYaml.Emitter.EmitNode(SharpYaml.Events.ParsingEvent,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
             Expect a node.
             </summary>
         </member>
-        <member name="M:SharpYaml.Emitter.EmitSequenceStart(SharpYaml.Events.IParsingEvent)">
+        <member name="M:SharpYaml.Emitter.EmitSequenceStart(SharpYaml.Events.ParsingEvent)">
             <summary>
             Expect SEQUENCE-START.
             </summary>
@@ -211,12 +211,12 @@
             Write a tag.
             </summary>
         </member>
-        <member name="M:SharpYaml.Emitter.EmitMappingStart(SharpYaml.Events.IParsingEvent)">
+        <member name="M:SharpYaml.Emitter.EmitMappingStart(SharpYaml.Events.ParsingEvent)">
             <summary>
             Expect MAPPING-START.
             </summary>
         </member>
-        <member name="M:SharpYaml.Emitter.EmitScalar(SharpYaml.Events.IParsingEvent)">
+        <member name="M:SharpYaml.Emitter.EmitScalar(SharpYaml.Events.ParsingEvent)">
             <summary>
             Expect SCALAR.
             </summary>
@@ -236,7 +236,7 @@
             Increase the indentation level.
             </summary>
         </member>
-        <member name="M:SharpYaml.Emitter.SelectScalarStyle(SharpYaml.Events.IParsingEvent)">
+        <member name="M:SharpYaml.Emitter.SelectScalarStyle(SharpYaml.Events.ParsingEvent)">
             <summary>
             Determine an acceptable scalar style.
             </summary>
@@ -251,18 +251,18 @@
             Write an achor.
             </summary>
         </member>
-        <member name="M:SharpYaml.Emitter.EmitDocumentEnd(SharpYaml.Events.IParsingEvent)">
+        <member name="M:SharpYaml.Emitter.EmitDocumentEnd(SharpYaml.Events.ParsingEvent)">
             <summary>
             Expect DOCUMENT-END.
             </summary>
         </member>
-        <member name="M:SharpYaml.Emitter.EmitFlowSequenceItem(SharpYaml.Events.IParsingEvent,System.Boolean)">
+        <member name="M:SharpYaml.Emitter.EmitFlowSequenceItem(SharpYaml.Events.ParsingEvent,System.Boolean)">
             <summary>
             
             Expect a flow item node.
             </summary>
         </member>
-        <member name="M:SharpYaml.Emitter.EmitFlowMappingKey(SharpYaml.Events.IParsingEvent,System.Boolean)">
+        <member name="M:SharpYaml.Emitter.EmitFlowMappingKey(SharpYaml.Events.ParsingEvent,System.Boolean)">
             <summary>
             Expect a flow key node.
             </summary>
@@ -272,22 +272,22 @@
             Check if the next node can be expressed as a simple key.
             </summary>
         </member>
-        <member name="M:SharpYaml.Emitter.EmitFlowMappingValue(SharpYaml.Events.IParsingEvent,System.Boolean)">
+        <member name="M:SharpYaml.Emitter.EmitFlowMappingValue(SharpYaml.Events.ParsingEvent,System.Boolean)">
             <summary>
             Expect a flow value node.
             </summary>
         </member>
-        <member name="M:SharpYaml.Emitter.EmitBlockSequenceItem(SharpYaml.Events.IParsingEvent,System.Boolean)">
+        <member name="M:SharpYaml.Emitter.EmitBlockSequenceItem(SharpYaml.Events.ParsingEvent,System.Boolean)">
             <summary>
             Expect a block item node.
             </summary>
         </member>
-        <member name="M:SharpYaml.Emitter.EmitBlockMappingKey(SharpYaml.Events.IParsingEvent,System.Boolean)">
+        <member name="M:SharpYaml.Emitter.EmitBlockMappingKey(SharpYaml.Events.ParsingEvent,System.Boolean)">
             <summary>
             Expect a block key node.
             </summary>
         </member>
-        <member name="M:SharpYaml.Emitter.EmitBlockMappingValue(SharpYaml.Events.IParsingEvent,System.Boolean)">
+        <member name="M:SharpYaml.Emitter.EmitBlockMappingValue(SharpYaml.Events.ParsingEvent,System.Boolean)">
             <summary>
             Expect a block value node.
             </summary>
@@ -466,21 +466,6 @@
             Base class for parsing events.
             </summary>
         </member>
-        <member name="T:SharpYaml.Events.IParsingEvent">
-            <summary>
-            Base interface for parsing events.
-            </summary>
-        </member>
-        <member name="P:SharpYaml.Events.IParsingEvent.Start">
-            <summary>
-            Gets the position in the input stream where the event start.
-            </summary>
-        </member>
-        <member name="P:SharpYaml.Events.IParsingEvent.End">
-            <summary>
-            Gets the position in the input stream where the event ends.
-            </summary>
-        </member>
         <member name="M:SharpYaml.Events.ParsingEvent.#ctor(SharpYaml.Mark,SharpYaml.Mark)">
             <summary>
             Initializes a new instance of the <see cref="T:SharpYaml.Events.ParsingEvent"/> class.
@@ -508,16 +493,6 @@
         <member name="P:SharpYaml.Events.ParsingEvent.End">
             <summary>
             Gets the position in the input stream where the event ends.
-            </summary>
-        </member>
-        <member name="T:SharpYaml.Events.IAnchorAlias">
-            <summary>
-            Represents an alias event.
-            </summary>
-        </member>
-        <member name="P:SharpYaml.Events.IAnchorAlias.Value">
-            <summary>
-            Gets the value of the alias.
             </summary>
         </member>
         <member name="M:SharpYaml.Events.AnchorAlias.#ctor(System.String,SharpYaml.Mark,SharpYaml.Mark)">
@@ -563,19 +538,6 @@
             <summary>
             Represents a document end event.
             </summary>
-        </member>
-        <member name="T:SharpYaml.Events.IDocumentEnd">
-            <summary>
-            Represents a document end event.
-            </summary>
-        </member>
-        <member name="P:SharpYaml.Events.IDocumentEnd.IsImplicit">
-            <summary>
-            Gets a value indicating whether this instance is implicit.
-            </summary>
-            <value>
-            	<c>true</c> if this instance is implicit; otherwise, <c>false</c>.
-            </value>
         </member>
         <member name="M:SharpYaml.Events.DocumentEnd.#ctor(System.Boolean,SharpYaml.Mark,SharpYaml.Mark)">
             <summary>
@@ -623,31 +585,6 @@
             <summary>
             Represents a document start event.
             </summary>
-        </member>
-        <member name="T:SharpYaml.Events.IDocumentStart">
-            <summary>
-            Represents a document start event.
-            </summary>
-        </member>
-        <member name="P:SharpYaml.Events.IDocumentStart.Tags">
-            <summary>
-            Gets the tags.
-            </summary>
-            <value>The tags.</value>
-        </member>
-        <member name="P:SharpYaml.Events.IDocumentStart.Version">
-            <summary>
-            Gets the version.
-            </summary>
-            <value>The version.</value>
-        </member>
-        <member name="P:SharpYaml.Events.IDocumentStart.IsImplicit">
-            <summary>
-            Gets a value indicating whether this instance is implicit.
-            </summary>
-            <value>
-            	<c>true</c> if this instance is implicit; otherwise, <c>false</c>.
-            </value>
         </member>
         <member name="M:SharpYaml.Events.DocumentStart.#ctor(SharpYaml.Tokens.VersionDirective,SharpYaml.TagDirectiveCollection,System.Boolean,SharpYaml.Mark,SharpYaml.Mark)">
             <summary>
@@ -777,96 +714,6 @@
         <member name="F:SharpYaml.Events.EventType.YAML_MAPPING_END_EVENT">
             <summary>
             A MAPPING-END event.
-            </summary>
-        </member>
-        <member name="T:SharpYaml.Events.IMappingEnd">
-            <summary>
-            Represents a mapping end event.
-            </summary>
-        </member>
-        <member name="T:SharpYaml.Events.IMappingStart">
-            <summary>
-            Represents a mapping start event.
-            </summary>
-        </member>
-        <member name="T:SharpYaml.Events.INodeEvent">
-            <summary>
-            Defines the behavior that is common between node events.
-            </summary>
-        </member>
-        <member name="P:SharpYaml.Events.INodeEvent.Anchor">
-            <summary>
-            Gets the anchor.
-            </summary>
-        </member>
-        <member name="P:SharpYaml.Events.INodeEvent.Tag">
-            <summary>
-            Gets the tag.
-            </summary>
-        </member>
-        <member name="P:SharpYaml.Events.INodeEvent.IsCanonical">
-            <summary>
-            Gets a value indicating whether this instance is canonical.
-            </summary>
-        </member>
-        <member name="P:SharpYaml.Events.IMappingStart.IsImplicit">
-            <summary>
-            Gets a value indicating whether this instance is implicit.
-            </summary>
-            <value>
-            	<c>true</c> if this instance is implicit; otherwise, <c>false</c>.
-            </value>
-        </member>
-        <member name="P:SharpYaml.Events.IMappingStart.Style">
-            <summary>
-            Gets the style of the mapping.
-            </summary>
-        </member>
-        <member name="T:SharpYaml.Events.IScalar">
-            <summary>
-            Represents a scalar event.
-            </summary>
-        </member>
-        <member name="P:SharpYaml.Events.IScalar.Style">
-            <summary>
-            Gets the style of the scalar.
-            </summary>
-            <value>The style.</value>
-        </member>
-        <member name="P:SharpYaml.Events.IScalar.IsPlainImplicit">
-            <summary>
-            Gets a value indicating whether the tag is optional for the plain style.
-            </summary>
-        </member>
-        <member name="P:SharpYaml.Events.IScalar.IsQuotedImplicit">
-            <summary>
-            Gets a value indicating whether the tag is optional for any non-plain style.
-            </summary>
-        </member>
-        <member name="T:SharpYaml.Events.ISequenceEnd">
-            <summary>
-            Represents a sequence end event.
-            </summary>
-        </member>
-        <member name="T:SharpYaml.Events.ISequenceStart">
-            <summary>
-            Represents a sequence start event.
-            </summary>
-        </member>
-        <member name="P:SharpYaml.Events.ISequenceStart.Style">
-            <summary>
-            Gets the style.
-            </summary>
-            <value>The style.</value>
-        </member>
-        <member name="T:SharpYaml.Events.IStreamEnd">
-            <summary>
-            Represents a stream end event.
-            </summary>
-        </member>
-        <member name="T:SharpYaml.Events.IStreamStart">
-            <summary>
-            Represents a stream start event.
             </summary>
         </member>
         <member name="T:SharpYaml.Events.NodeEvent">
@@ -1221,12 +1068,27 @@
             Interface used to write YAML events.
             </summary>
         </member>
+        <member name="T:SharpYaml.Serialization.Descriptors.DefaultKeyComparer">
+            <summary>
+            Default comparer used to sort keys for object members and dictionary keys. See remarks.
+            </summary>
+            <remarks><ul>
+              <li>For members of an object, this comparer will first try to use an explicit order defined by
+            using <see cref="P:SharpYaml.Serialization.YamlMemberAttribute.Order"/> otherwise It will use the name of the field/property.
+              </li>
+              <li>If both objects are string, use <see cref="M:System.String.CompareOrdinal(System.String,System.Int32,System.String,System.Int32,System.Int32)"/></li>
+              <li>
+            For keys of a dictionary, this comparer will try to use <see cref="T:System.IComparable"/> interface
+            when comparing keys.
+              </li>
+              </ul></remarks>
+        </member>
         <member name="T:SharpYaml.Serialization.ObjectContext">
             <summary>
             The object context used when serializing/deserializing an object instance. See remarks.
             </summary>
             <remarks>
-            <para>When serializing, this struct contains the <see cref="F:SharpYaml.Serialization.ObjectContext.Instance"/> of the object to serialize, the type, the tag to use
+            <para>When serializing, this struct contains the <see cref="P:SharpYaml.Serialization.ObjectContext.Instance"/> of the object to serialize, the type, the tag to use
             and the style, as well as providing access to the <see cref="F:SharpYaml.Serialization.ObjectContext.SerializerContext"/>.</para>
             <para>When deserializing, this struct will contain the expected type to deserialize and if not null, the instance of an object
             that will recieve deserialization of its members (in case the instance cannot be created).</para>
@@ -1243,31 +1105,6 @@
         <member name="F:SharpYaml.Serialization.ObjectContext.SerializerContext">
             <summary>
             The serializer context associated to this object context.
-            </summary>
-        </member>
-        <member name="F:SharpYaml.Serialization.ObjectContext.Instance">
-            <summary>
-            The instance link to this context.
-            </summary>
-        </member>
-        <member name="F:SharpYaml.Serialization.ObjectContext.Descriptor">
-            <summary>
-            The expected type descriptor.
-            </summary>
-        </member>
-        <member name="F:SharpYaml.Serialization.ObjectContext.Tag">
-            <summary>
-            The tag used when serializing.
-            </summary>
-        </member>
-        <member name="F:SharpYaml.Serialization.ObjectContext.Anchor">
-            <summary>
-            The anchor used when serializing.
-            </summary>
-        </member>
-        <member name="F:SharpYaml.Serialization.ObjectContext.Style">
-            <summary>
-            The style used when serializing.
             </summary>
         </member>
         <member name="P:SharpYaml.Serialization.ObjectContext.Reader">
@@ -1294,6 +1131,31 @@
             </summary>
             <value>The object serializer backend.</value>
         </member>
+        <member name="P:SharpYaml.Serialization.ObjectContext.Instance">
+            <summary>
+            The instance link to this context.
+            </summary>
+        </member>
+        <member name="P:SharpYaml.Serialization.ObjectContext.Descriptor">
+            <summary>
+            The expected type descriptor.
+            </summary>
+        </member>
+        <member name="P:SharpYaml.Serialization.ObjectContext.Tag">
+            <summary>
+            The tag used when serializing.
+            </summary>
+        </member>
+        <member name="P:SharpYaml.Serialization.ObjectContext.Anchor">
+            <summary>
+            The anchor used when serializing.
+            </summary>
+        </member>
+        <member name="P:SharpYaml.Serialization.ObjectContext.Style">
+            <summary>
+            The style used when serializing.
+            </summary>
+        </member>
         <member name="T:SharpYaml.Serialization.Serializers.DefaultObjectSerializerBackend">
             <summary>
             Default implementation for <see cref="T:SharpYaml.Serialization.IObjectSerializerBackend"/>
@@ -1311,7 +1173,7 @@
         </member>
         <member name="M:SharpYaml.Serialization.IObjectSerializerBackend.GetStyle(SharpYaml.Serialization.ObjectContext@)">
             <summary>
-            Gets the style that will be used to serialize the object provided by <see cref="F:SharpYaml.Serialization.ObjectContext.Instance"/>.
+            Gets the style that will be used to serialize the object provided by <see cref="P:SharpYaml.Serialization.ObjectContext.Instance"/>.
             </summary>
             <param name="objectContext">The object context which contains the object instance to serialize.</param>
             <returns>The <see cref="T:SharpYaml.YamlStyle"/> to use when serializing the object instance.</returns>
@@ -2699,6 +2561,12 @@
             <exception cref="T:System.ArgumentNullException">type</exception>
             <exception cref="T:SharpYaml.YamlException">Failed to get ObjectDescriptor for type [{0}]. The member [{1}] cannot be registered as a member with the same name is already registered [{2}].DoFormat(type.FullName, member, existingMember)</exception>
         </member>
+        <member name="M:SharpYaml.Serialization.Descriptors.ObjectDescriptor.SortMembers(System.Collections.Generic.IComparer{System.Object})">
+            <summary>
+            Sorts the members of this instance with the specified instance.
+            </summary>
+            <param name="keyComparer">The key comparer.</param>
+        </member>
         <member name="M:SharpYaml.Serialization.Descriptors.ArrayDescriptor.#ctor(SharpYaml.Serialization.IAttributeRegistry,System.Type)">
             <summary>
             Initializes a new instance of the <see cref="T:SharpYaml.Serialization.Descriptors.ObjectDescriptor"/> class.
@@ -3353,10 +3221,10 @@
         <member name="M:SharpYaml.Serialization.Serializers.ObjectSerializer.CreateOrTransformObject(SharpYaml.Serialization.ObjectContext@)">
             <summary>
             Overrides this method when deserializing/serializing an object that needs a special instantiation or transformation. By default, this is calling
-            <see cref="M:SharpYaml.Serialization.IObjectFactory.Create(System.Type)"/> if the <see cref="F:SharpYaml.Serialization.ObjectContext.Instance"/> is null or returning <see cref="F:SharpYaml.Serialization.ObjectContext.Instance"/>.
+            <see cref="M:SharpYaml.Serialization.IObjectFactory.Create(System.Type)"/> if the <see cref="P:SharpYaml.Serialization.ObjectContext.Instance"/> is null or returning <see cref="P:SharpYaml.Serialization.ObjectContext.Instance"/>.
             </summary>
             <param name="objectContext">The object context.</param>
-            <returns>A new instance of the object or <see cref="F:SharpYaml.Serialization.ObjectContext.Instance"/> if not null</returns>
+            <returns>A new instance of the object or <see cref="P:SharpYaml.Serialization.ObjectContext.Instance"/> if not null</returns>
         </member>
         <member name="M:SharpYaml.Serialization.Serializers.ObjectSerializer.TransformObjectAfterRead(SharpYaml.Serialization.ObjectContext@)">
             <summary>
@@ -3364,7 +3232,7 @@
             the deserialization process. See remarks for usage.
             </summary>
             <param name="objectContext"></param>
-            <returns>The actual object deserialized. By default same as <see cref="F:SharpYaml.Serialization.ObjectContext.Instance"/>.</returns>
+            <returns>The actual object deserialized. By default same as <see cref="P:SharpYaml.Serialization.ObjectContext.Instance"/>.</returns>
             <remarks>
             This method is usefull in conjunction with <see cref="M:SharpYaml.Serialization.Serializers.ObjectSerializer.CreateOrTransformObject(SharpYaml.Serialization.ObjectContext@)"/>.
             For example, in the case of deserializing to an immutable member, where we need to call the constructor of a type instead of setting each of 
@@ -3479,6 +3347,16 @@
             </summary>
             <param name="objectContext">The object context.</param>
             <param name="keyValue">The key value.</param>
+        </member>
+        <member name="M:SharpYaml.Serialization.Serializers.ScalarSerializerBase.WriteScalar(SharpYaml.Serialization.ObjectContext@,SharpYaml.Serialization.ScalarEventInfo)">
+            <summary>
+            Writes the scalar to the <see cref="P:SharpYaml.Serialization.SerializerContext.Writer"/>. See remarks.
+            </summary>
+            <param name="objectContext">The object context.</param>
+            <param name="scalar">The scalar.</param>
+            <remarks>
+            This method can be overloaded to replace the converted scalar just before writing it.
+            </remarks>
         </member>
         <member name="T:SharpYaml.Serialization.Serializers.RoutingSerializer">
             <summary>
@@ -4622,6 +4500,12 @@
             </summary>
             <value><c>true</c> to emit anchor alias; otherwise, <c>false</c>.</value>
         </member>
+        <member name="P:SharpYaml.Serialization.SerializerSettings.EmitTags">
+            <summary>
+            Gets or sets a value indicating whether to emit tags when serializing. Default is true.
+            </summary>
+            <value><c>true</c> to emit tags when serializing; otherwise, <c>false</c>.</value>
+        </member>
         <member name="P:SharpYaml.Serialization.SerializerSettings.IndentLess">
             <summary>
             Gets or sets a value indicating whether the identation is trying to less
@@ -4663,6 +4547,14 @@
             Gets or sets a value indicating whether to emit default value. Default is false.
             </summary>
             <value><c>true</c> if to emit default value; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:SharpYaml.Serialization.SerializerSettings.ComparerForKeySorting">
+            <summary>
+            Gets or sets the default key comparer used to sort members (<see cref="T:SharpYaml.Serialization.IMemberDescriptor"/>) or
+            dictionary keys, when serializing objects as YAML mappings. Default is <see cref="T:SharpYaml.Serialization.Descriptors.DefaultKeyComparer"/>. 
+            To disable the default comparer, this value can be set to null.
+            </summary>
+            <value>The key comparer.</value>
         </member>
         <member name="P:SharpYaml.Serialization.SerializerSettings.EmitShortTypeName">
             <summary>

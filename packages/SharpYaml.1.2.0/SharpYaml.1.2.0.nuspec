@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>SharpYaml</id>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <authors>Alexandre Mutel</authors>
     <owners>Alexandre Mutel</owners>
     <licenseUrl>https://github.com/xoofx/SharpYaml/blob/master/LICENSE.txt</licenseUrl>
