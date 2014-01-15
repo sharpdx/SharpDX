@@ -826,10 +826,8 @@ namespace SharpDX.Toolkit
             if (forceCreate)
             {
                 // Make sure that all GraphicsAdapter are cleared and removed when device is disposed.
-                GraphicsAdapter.Dispose();
-
-                // Make sure that GraphicsAdapter are initialized.
-                GraphicsAdapter.Initialize();
+                // and re-initialized them
+                GraphicsAdapter.Reset();
             }
 
             isChangingDevice = true;

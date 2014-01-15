@@ -86,10 +86,9 @@ namespace SharpDX.Toolkit.Graphics
             {
 #if !WIN8METRO
                 var outputIndex = PrefferedFullScreenOutputIndex;
-                var availableOutputs = GraphicsDevice.Adapter.OutputsCount;
 
                 // no outputs connected to the current graphics adapter
-                var output = availableOutputs == 0 ? null : GraphicsDevice.Adapter.GetOutputAt(outputIndex);
+                var output = GraphicsDevice.Adapter == null || GraphicsDevice.Adapter.OutputsCount == 0 ? null : GraphicsDevice.Adapter.GetOutputAt(outputIndex);
 
                 Output currentOutput = null;
 

@@ -20,7 +20,7 @@
 
 using System;
 using System.Collections.Generic;
-
+using System.Resources;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -35,7 +35,12 @@ namespace SharpDX.Toolkit.Graphics
     /// <unmanaged-short>IDXGIAdapter1</unmanaged-short>	
     public class GraphicsAdapter : Component
     {
+        private static readonly object staticLock = new object();
+        private static bool isInitialized = false;
         private static DisposeCollector staticCollector;
+        private static GraphicsAdapter[] adapters;
+        private static GraphicsAdapter defaultAdapter;
+        private static Factory1 defaultFactory;
         private readonly Adapter1 adapter;
         private readonly int adapterOrdinal;
 
@@ -48,7 +53,7 @@ namespace SharpDX.Toolkit.Graphics
         private GraphicsAdapter(int adapterOrdinal)
         {
             this.adapterOrdinal = adapterOrdinal;
-            adapter = ToDispose(Factory.GetAdapter1(adapterOrdinal));
+            adapter = ToDispose(defaultFactory.GetAdapter1(adapterOrdinal));
             Description = adapter.Description1;
             var outputs = adapter.Outputs;
 
@@ -58,25 +63,33 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Initializes static members of the <see cref="GraphicsAdapter" /> class.
-        /// </summary>
-        static GraphicsAdapter()
-        {
-            Initialize();
-        }
-
-        /// <summary>
         /// Initializes the GraphicsAdapter. On Desktop and WinRT, this is done statically.
         /// </summary>
         public static void Initialize()
         {
-            if (Adapters == null)
+            lock(staticLock)
             {
+                if (!isInitialized)
+                {
 #if DIRECTX11_1
             using (var factory = new Factory1()) Initialize(factory.QueryInterface<Factory2>());
 #else
-                Initialize(new Factory1());
+                    Initialize(new Factory1());
 #endif
+                    isInitialized = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Perform a <see cref="Dispose"/> and <see cref="Initialize"/> to re-initialize all adapters informations.
+        /// </summary>
+        public static void Reset()
+        {
+            lock(staticLock)
+            {
+                Dispose();
+                Initialize();
             }
         }
 
@@ -85,9 +98,13 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public new static void Dispose()
         {
-            Utilities.Dispose(ref staticCollector);
-            Adapters = null;
-            Default = null;
+            lock(staticLock)
+            {
+                Utilities.Dispose(ref staticCollector);
+                adapters = null;
+                defaultAdapter = null;
+                isInitialized = false;
+            }
         }
 
         /// <summary>
@@ -102,31 +119,67 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             staticCollector = new DisposeCollector();
-            Factory = factory1;
-            staticCollector.Collect(Factory);
+            defaultFactory = factory1;
+            staticCollector.Collect(defaultFactory);
 
-            int countAdapters = Factory.GetAdapterCount1();
-            var adapters = new List<GraphicsAdapter>();
+            int countAdapters = defaultFactory.GetAdapterCount1();
+            var adapterList = new List<GraphicsAdapter>();
             for (int i = 0; i < countAdapters; i++)
             {
                 var adapter = new GraphicsAdapter(i);
                 staticCollector.Collect(adapter);
-                adapters.Add(adapter);
+                adapterList.Add(adapter);
             }
 
-            Default = adapters[0];
-            Adapters = adapters.ToArray();
+            defaultAdapter = adapterList.Count > 0 ? adapterList[0] : null;
+            adapters = adapterList.ToArray();
         }
 
         /// <summary>
         /// Collection of available adapters on the system.
         /// </summary>
-        public static GraphicsAdapter[] Adapters { get; private set; }
+        public static GraphicsAdapter[] Adapters
+        {
+            get
+            {
+                lock(staticLock)
+                {
+                    Initialize();
+                    return adapters;
+                }
+            }
+
+        }
 
         /// <summary>
-        /// Gets the default adapter.
+        /// Gets the default adapter. This property can be <c>null</c>.
         /// </summary>
-        public static GraphicsAdapter Default { get; private set; }
+        public static GraphicsAdapter Default
+        {
+            get
+            {
+                lock (staticLock)
+                {
+                    Initialize();
+                    return defaultAdapter;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the <see cref="Factory1"/> used by all GraphicsAdapter.
+        /// </summary>
+        public static Factory1 Factory
+        {
+            get
+            {
+                lock (staticLock)
+                {
+                    Initialize();
+                    return defaultFactory;
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the number of <see cref="GraphicsOutput"/> attached to this <see cref="GraphicsAdapter"/>.
@@ -142,11 +195,6 @@ namespace SharpDX.Toolkit.Graphics
         /// Default PixelFormat used.
         /// </summary>
         public readonly PixelFormat DefaultFormat = PixelFormat.R8G8B8A8.UNorm;
-
-        /// <summary>
-        /// Gets the <see cref="Factory1"/> used by all GraphicsAdapter.
-        /// </summary>
-        public static Factory1 Factory { get; private set; }
 
         /// <summary>
         /// Determines if this instance of GraphicsAdapter is the default adapter.
