@@ -878,6 +878,13 @@
     <map param="MFCreateWaveFormatExFromMFMediaType::ppWF" type="void"/>
     
     <map param="MFCreateMediaType::ppMFType" attribute="out fast"/>
+    
+    <map param="MFCreateSample::ppIMFSample" return="true"/>
+    <map param="MFCreateMemoryBuffer::ppBuffer" return="true"/>
+    <map param="MFCreateSinkWriterFromURL::ppSinkWriter" return="true"/>
+    <map param="IMFCollection::GetElement::ppUnkElement" return="true"/>
+    <map param="MFTranscodeGetAudioOutputAvailableTypes::ppAvailableTypes" return="true"/>
+    <map param="MFTranscodeGetAudioOutputAvailableTypes::dwMFTFlags" type="_MFT_ENUM_FLAG"/>
 
     <map function="MFTranscodeGetAudioOutputAvailableTypes" dll='"mf.dll"'/>
     <map function="MFShutdownObject" dll='"mf.dll"'/>
