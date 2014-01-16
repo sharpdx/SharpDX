@@ -259,8 +259,13 @@ namespace SharpDX.Toolkit.Graphics
             ForEachGlyph(ref text, drawGlyphDelegate, ref drawCommand);
         }
 
-        internal void InternalDrawGlyph(ref InternalDrawCommand parameters, ref SpriteFontData.Glyph glyph, float x, float y)
+        internal void InternalDrawGlyph(ref InternalDrawCommand parameters, ref SpriteFontData.Glyph glyph, float x, float y, float nextx)
         {
+            if(char.IsWhiteSpace((char)glyph.Character))
+            {
+                return;
+            }
+
             var spriteEffects = parameters.spriteEffects;
 
             var offset = new Vector2(x, y + glyph.Offset.Y);
@@ -312,13 +317,12 @@ namespace SharpDX.Toolkit.Graphics
             return result;
         }
 
-        private void MeasureStringGlyph(ref Vector2 result, ref SpriteFontData.Glyph glyph, float x, float y)
+        private void MeasureStringGlyph(ref Vector2 result, ref SpriteFontData.Glyph glyph, float x, float y, float nextx)
         {
-            float w = x + (glyph.Subrect.Right - glyph.Subrect.Left) + Spacing;
             float h = y + Math.Max((glyph.Subrect.Bottom - glyph.Subrect.Top) + glyph.Offset.Y, LineSpacing);
-            if (w > result.X)
+            if (nextx > result.X)
             {
-                result.X = w;
+                result.X = nextx;
             }
             if (h > result.Y)
             {
@@ -341,7 +345,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>Gets or sets the spacing of the font characters.</summary>
         public float Spacing { get; set; }
 
-        private delegate void GlyphAction<T>(ref T parameters, ref SpriteFontData.Glyph glyph, float x, float y);
+        private delegate void GlyphAction<T>(ref T parameters, ref SpriteFontData.Glyph glyph, float x, float y, float nextx);
 
         private unsafe void ForEachGlyph<T>(ref StringProxy text, GlyphAction<T> action, ref T parameters)
         {
@@ -402,12 +406,10 @@ namespace SharpDX.Toolkit.Graphics
 
                             if (x < 0) x = 0;
 
-                            if (!char.IsWhiteSpace(character))
-                            {
-                                action(ref parameters, ref *glyph, x, y);
-                            }
+                            float nextX = x + glyph->XAdvance + Spacing;
+                            action(ref parameters, ref *glyph, x, y, nextX);
+                            x = nextX;
 
-                            x += glyph->XAdvance + Spacing;
                             break;
                     }
 
