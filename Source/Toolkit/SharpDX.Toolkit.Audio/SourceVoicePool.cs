@@ -67,18 +67,23 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
-        internal void ReleaseSourceVoice(ref SourceVoice voice)
+        internal void ReleaseSourceVoice(SourceVoice voice)
         {
             if (voice != null && !voice.IsDisposed)
             {
-                voice.Stop(0);
-
-                //TODO: see if wee can get it to return it to it's pool.
-                voice.DestroyVoice();
-                voice.Dispose();
+                if (IsDisposed)
+                {
+                    voice.DestroyVoice();
+                    voice.Dispose();
+                }
+                else
+                {
+                    voice.Stop(0);
+                    voice.FlushSourceBuffers();
+                    Return(voice);
+                }
             }
 
-            voice = null;
         }
 
         public void Release()

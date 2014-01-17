@@ -26,6 +26,7 @@ namespace SharpDX.Toolkit.Audio
     using SharpDX.XAudio2;
     using SharpDX.Multimedia;
     using SharpDX.X3DAudio;
+using SharpDX.XAPO.Fx;
 
     /// <summary>
     /// This manages the XAudio2 audio graph, device, and mastering voice.  This manager also allows loading of <see cref="SoundEffect"/> using
@@ -36,7 +37,9 @@ namespace SharpDX.Toolkit.Audio
         private ContentManager contentManager;
         private float masterVolume;
         private X3DAudio x3DAudio;
-
+        private bool isMasteringLimiterEnabled;
+        private MasteringLimiterParameters masteringLimiterParameters;
+        private MasteringLimiter masteringLimiter;
        
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioManager" /> class.
@@ -48,6 +51,7 @@ namespace SharpDX.Toolkit.Audio
             Services.AddService(this);
             masterVolume = 1.0f;
             Speakers = Multimedia.Speakers.None;
+            masteringLimiterParameters = new MasteringLimiterParameters { Loudness = MasteringLimiter.DefaultLoudness, Release = MasteringLimiter.DefaultRelease };
             InstancePool = new SoundEffectInstancePool(this);
 
             // register the audio manager as game system
@@ -100,6 +104,14 @@ namespace SharpDX.Toolkit.Audio
 #endif
             x3DAudio = new X3DAudio(Speakers, SoundEffect.SpeedOfSound);
             
+
+            if(isMasteringLimiterEnabled)
+            {
+                masteringLimiter = new MasteringLimiter();
+                masteringLimiter.Parameter = masteringLimiterParameters;
+                MasteringVoice.SetEffectChain(new EffectDescriptor(masteringLimiter));
+            }
+
             contentManager.ReaderFactories.Add(this);
         }
 
@@ -132,6 +144,58 @@ namespace SharpDX.Toolkit.Audio
         internal MasteringVoice MasteringVoice  { get; private set; }
         internal SoundEffectInstancePool InstancePool { get; private set; }
 
+
+        public void EnableMasterVolumeLimiter()
+        {
+            if (isMasteringLimiterEnabled)
+                return;
+
+            if (MasteringVoice != null)
+            {
+                if (masteringLimiter == null)
+                {                    
+                    masteringLimiter = new MasteringLimiter();
+                    masteringLimiter.Parameter = masteringLimiterParameters;
+                    MasteringVoice.SetEffectChain(new EffectDescriptor(masteringLimiter));
+                }
+                else
+                {
+                    MasteringVoice.EnableEffect(0);
+                }
+            }            
+
+            isMasteringLimiterEnabled = true;
+        }
+
+        public void DisableMasterVolumeLimiter()
+        {
+            if (!isMasteringLimiterEnabled)
+                return;            
+
+            if (MasteringVoice != null && masteringLimiter != null)
+            {
+                MasteringVoice.DisableEffect(0);
+            }
+
+            isMasteringLimiterEnabled = false;
+        }
+
+        public void SetMasteringLimit(int release, int loudness)
+        {
+            if (release < MasteringLimiter.MinimumRelease || release > MasteringLimiter.MaximumRelease)
+                throw new ArgumentOutOfRangeException("release");
+
+            if (loudness < MasteringLimiter.MinimumLoudness || loudness > MasteringLimiter.MaximumLoudness)
+                throw new ArgumentOutOfRangeException("loudness");
+            
+            masteringLimiterParameters = new MasteringLimiterParameters { Loudness = loudness, Release = release };
+
+            if(MasteringVoice != null && masteringLimiter != null)
+            {
+                MasteringVoice.SetEffectParameters(0, masteringLimiterParameters);
+            }
+        }
+
         internal void Calculate3D(Listener listener, Emitter emitter, CalculateFlags flags, DspSettings dspSettings)
         {
             x3DAudio.Calculate(listener, emitter, flags, dspSettings);            
@@ -158,14 +222,18 @@ namespace SharpDX.Toolkit.Audio
             return null;
         }
 
+        internal SoundEffect ToDisposeSoundEffect(SoundEffect soundEffect)
+        {
+            return ToDispose(soundEffect);
+        }
+
 
         protected override void Dispose(bool disposeManagedResources)
-        {
-            
+        {            
             if (disposeManagedResources)
             {
                 InstancePool.Dispose();
-                
+                base.Dispose(disposeManagedResources);
                 if (x3DAudio != null)
                 {
                     x3DAudio = null;
@@ -178,6 +246,13 @@ namespace SharpDX.Toolkit.Audio
                     MasteringVoice = null;
                 }
 
+                if(masteringLimiter != null)
+                {
+                    masteringLimiter.Dispose();
+                    masteringLimiter = null;
+                }
+                isMasteringLimiterEnabled = false;
+
                 if (Device != null)
                 {
                     Device.StopEngine();
@@ -186,7 +261,6 @@ namespace SharpDX.Toolkit.Audio
                 }
             }
 
-            base.Dispose(disposeManagedResources);
         }  
     }
 }

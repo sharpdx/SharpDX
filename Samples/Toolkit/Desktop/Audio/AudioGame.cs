@@ -74,7 +74,8 @@ namespace Audio
             random = new Random();           
 
             audioManager = new AudioManager(this);
-
+            //audioManager.EnableMasterVolumeLimiter();
+            
             // Setup the relative directory to the executable directory
             // for loading contents with the ContentManager
             Content.RootDirectory = "Content";

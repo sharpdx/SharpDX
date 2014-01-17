@@ -250,9 +250,6 @@ namespace SharpDX.Toolkit.Audio
             voice = sourceVoice;
             IsFireAndForget = isFireAndForget;
 
-            if(!IsFireAndForget)
-                Effect.AudioManager.InstancePool.Disposing += OnPoolDisposing;
-
             if(soundEffect != null && sourceVoice != null)
                 Reset();
         }
@@ -379,13 +376,7 @@ namespace SharpDX.Toolkit.Audio
             for (var i = 0; i < outputMatrix.Length; i++)
                 outputMatrix[i] = 1.0f;
         }
-
-
-        private void OnPoolDisposing(object sender, EventArgs args)
-        {            
-            Dispose();
-        }
-
+        
         public bool IsDisposed { get; private set; }
 
 
@@ -394,8 +385,8 @@ namespace SharpDX.Toolkit.Audio
             if (!IsDisposed)
             {
                 IsDisposed = true;
-                Effect.AudioManager.InstancePool.Disposing -= OnPoolDisposing;
-                Effect.VoicePool.ReleaseSourceVoice(ref voice);
+                Effect.VoicePool.ReleaseSourceVoice(voice);
+                voice = null;
                 Effect.ChildDisposed(this);
                 Effect = null;
                 outputMatrix = null;
@@ -413,8 +404,8 @@ namespace SharpDX.Toolkit.Audio
             if (!IsDisposed)
             {
                 IsDisposed = true;
-                Effect.AudioManager.InstancePool.Disposing -= OnPoolDisposing;
-                Effect.VoicePool.ReleaseSourceVoice(ref voice);
+                Effect.VoicePool.ReleaseSourceVoice(voice);
+                voice = null;
                 Effect = null; 
                 outputMatrix = null;
             }

@@ -76,6 +76,14 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
+        public void Return(TItem item)
+        {
+            lock (freeItems)
+            {                
+                freeItems.Enqueue(item);
+            }
+        }
+
 
         public void Clear()
         {

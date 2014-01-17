@@ -64,7 +64,7 @@ namespace SharpDX.Toolkit.Audio
 
                     var buffer = DataStream.Create<byte>(data,true,false);
 
-                    var effect = this.effects[i] = new SoundEffect(audioManager, name, format, buffer, decodedPacketsInfo);
+                    var effect = this.effects[i] = audioManager.ToDisposeSoundEffect( new SoundEffect(audioManager, name, format, buffer, decodedPacketsInfo));
 
                     if (!string.IsNullOrEmpty(name))
                         this.effectsByName.Add(name, effect);

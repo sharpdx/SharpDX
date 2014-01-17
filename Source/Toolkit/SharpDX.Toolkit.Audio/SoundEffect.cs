@@ -144,7 +144,7 @@ namespace SharpDX.Toolkit.Audio
             //sound.Close();
             sound.Dispose();
 #endif            
-            return new SoundEffect(audioManager, name, format, buffer, decodedPacketsInfo);
+            return audioManager.ToDisposeSoundEffect( new SoundEffect(audioManager, name, format, buffer, decodedPacketsInfo));
         }
 
         public static SoundEffect FromFile(AudioManager audioManager, string filePath)

@@ -121,11 +121,6 @@ namespace SharpDX.Toolkit.Audio
             return key;
         }
 
-        /// <summary>
-        /// Occurs when when Dispose is called.
-        /// </summary>
-        public event EventHandler<EventArgs> Disposing;
-
         public bool IsDisposed { get; private set; }
 
         private void Dispose(bool disposing)
@@ -133,13 +128,6 @@ namespace SharpDX.Toolkit.Audio
             if (!IsDisposed)
             {
                 IsDisposed = true;
-
-                // Call the disposing event.
-                var handler = Disposing;
-                if (handler != null)
-                {
-                    handler(this, EventArgs.Empty);
-                }
 
                 lock (sharedVoicePools)
                 {
@@ -154,7 +142,7 @@ namespace SharpDX.Toolkit.Audio
                     }
 
                     sharedVoicePools.Clear();
-                    unsharedVoicePools.Clear();
+                    unsharedVoicePools.Clear();                   
                     instancePool.Clear();
                 }
             }
@@ -171,9 +159,7 @@ namespace SharpDX.Toolkit.Audio
             {
                 unsharedVoicePools.Remove(pool);
             }
-        }       
-
-       
+        }   
 
         private class InstancePool : Pool<SoundEffectInstance>
         {
