@@ -23,6 +23,7 @@
     <Compile Include="BitField.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="Pool.cs" />
+    <Compile Include="ReverbPresets.cs" />
     <Compile Include="SoundEffect.cs" />
     <Compile Include="SoundEffectInstance.cs" />
     <Compile Include="SoundEffectInstancePool.cs" />

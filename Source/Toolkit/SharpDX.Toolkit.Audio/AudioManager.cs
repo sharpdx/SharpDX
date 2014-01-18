@@ -26,8 +26,10 @@ namespace SharpDX.Toolkit.Audio
     using SharpDX.XAudio2;
     using SharpDX.Multimedia;
     using SharpDX.X3DAudio;
-using SharpDX.XAPO.Fx;
-
+    using SharpDX.XAPO.Fx;
+    using SharpDX.XAudio2.Fx;
+    using ReverbParameters = SharpDX.XAudio2.Fx.ReverbParameters;
+    using Reverb = SharpDX.XAudio2.Fx.Reverb;
     /// <summary>
     /// This manages the XAudio2 audio graph, device, and mastering voice.  This manager also allows loading of <see cref="SoundEffect"/> using
     /// the <see cref="IContentManager"/>
@@ -40,7 +42,44 @@ using SharpDX.XAPO.Fx;
         private bool isMasteringLimiterEnabled;
         private MasteringLimiterParameters masteringLimiterParameters;
         private MasteringLimiter masteringLimiter;
-       
+        public bool IsReverbEffectEnabled { get; private set; }
+        private ReverbParameters reverbParameters;
+        private Reverb reverb;
+
+        private static ReverbI3DL2Parameters[] reverbPresets = new ReverbI3DL2Parameters[]
+        {            
+            ReverbI3DL2Parameters.Presets.Default,
+            ReverbI3DL2Parameters.Presets.Generic,        
+            ReverbI3DL2Parameters.Presets.PaddedCell,     
+            ReverbI3DL2Parameters.Presets.Room,           
+            ReverbI3DL2Parameters.Presets.BathRoom,       
+            ReverbI3DL2Parameters.Presets.LivingRoom,     
+            ReverbI3DL2Parameters.Presets.StoneRoom,      
+            ReverbI3DL2Parameters.Presets.Auditorium,     
+            ReverbI3DL2Parameters.Presets.ConcertHall,   
+            ReverbI3DL2Parameters.Presets.Cave,           
+            ReverbI3DL2Parameters.Presets.Arena,          
+            ReverbI3DL2Parameters.Presets.Hangar,         
+            ReverbI3DL2Parameters.Presets.CarpetedHallway,
+            ReverbI3DL2Parameters.Presets.Hallway,        
+            ReverbI3DL2Parameters.Presets.StoneCorridor,  
+            ReverbI3DL2Parameters.Presets.Alley,          
+            ReverbI3DL2Parameters.Presets.Forest,         
+            ReverbI3DL2Parameters.Presets.City,           
+            ReverbI3DL2Parameters.Presets.Mountains,      
+            ReverbI3DL2Parameters.Presets.Quarry,         
+            ReverbI3DL2Parameters.Presets.Plain,          
+            ReverbI3DL2Parameters.Presets.ParkingLot,     
+            ReverbI3DL2Parameters.Presets.SewerPipe,      
+            ReverbI3DL2Parameters.Presets.UnderWater,     
+            ReverbI3DL2Parameters.Presets.SmallRoom,      
+            ReverbI3DL2Parameters.Presets.MediumRoom,     
+            ReverbI3DL2Parameters.Presets.LargeRoom,      
+            ReverbI3DL2Parameters.Presets.MediumHall,     
+            ReverbI3DL2Parameters.Presets.LargeHall,      
+            ReverbI3DL2Parameters.Presets.Plate,          
+        };
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioManager" /> class.
         /// </summary>
@@ -52,6 +91,8 @@ using SharpDX.XAPO.Fx;
             masterVolume = 1.0f;
             Speakers = Multimedia.Speakers.None;
             masteringLimiterParameters = new MasteringLimiterParameters { Loudness = MasteringLimiter.DefaultLoudness, Release = MasteringLimiter.DefaultRelease };
+            reverbParameters = (ReverbParameters)ReverbI3DL2Parameters.Presets.Default;
+
             InstancePool = new SoundEffectInstancePool(this);
 
             // register the audio manager as game system
@@ -112,6 +153,15 @@ using SharpDX.XAPO.Fx;
                 MasteringVoice.SetEffectChain(new EffectDescriptor(masteringLimiter));
             }
 
+            if(IsReverbEffectEnabled)
+            {
+                VoiceDetails masterDetails = MasteringVoice.VoiceDetails;
+                ReverbVoice = new SubmixVoice(Device, masterDetails.InputChannelCount, masterDetails.InputSampleRate, VoiceSendFlags.None, 0);
+                reverb = new Reverb();
+                reverb.Parameter = reverbParameters;
+                ReverbVoice.SetEffectChain(new EffectDescriptor(reverb));
+            }
+
             contentManager.ReaderFactories.Add(this);
         }
 
@@ -128,6 +178,9 @@ using SharpDX.XAPO.Fx;
             set
             {
 
+                if (IsDisposed)
+                    throw new ObjectDisposedException(this.GetType().FullName);
+            
                 if (value == masterVolume)
                     return;
 
@@ -142,11 +195,15 @@ using SharpDX.XAPO.Fx;
         internal Speakers Speakers { get; private set; }
         internal XAudio2 Device { get; private set; }
         internal MasteringVoice MasteringVoice  { get; private set; }
+        internal SubmixVoice ReverbVoice { get; private set; }
         internal SoundEffectInstancePool InstancePool { get; private set; }
 
 
         public void EnableMasterVolumeLimiter()
         {
+            if (IsDisposed)
+                throw new ObjectDisposedException(this.GetType().FullName);
+            
             if (isMasteringLimiterEnabled)
                 return;
 
@@ -169,6 +226,9 @@ using SharpDX.XAPO.Fx;
 
         public void DisableMasterVolumeLimiter()
         {
+            if (IsDisposed)
+                throw new ObjectDisposedException(this.GetType().FullName);
+            
             if (!isMasteringLimiterEnabled)
                 return;            
 
@@ -182,6 +242,9 @@ using SharpDX.XAPO.Fx;
 
         public void SetMasteringLimit(int release, int loudness)
         {
+            if (IsDisposed)
+                throw new ObjectDisposedException(this.GetType().FullName);
+            
             if (release < MasteringLimiter.MinimumRelease || release > MasteringLimiter.MaximumRelease)
                 throw new ArgumentOutOfRangeException("release");
 
@@ -196,8 +259,79 @@ using SharpDX.XAPO.Fx;
             }
         }
 
+        public void EnableReverbEffect()
+        {
+            if (IsDisposed)
+                throw new ObjectDisposedException(this.GetType().FullName);
+            
+            if (IsReverbEffectEnabled)
+                return;
+
+            if (MasteringVoice != null)
+            {
+                if (ReverbVoice == null)
+                {
+                    VoiceDetails masterDetails = MasteringVoice.VoiceDetails;
+                    ReverbVoice = new SubmixVoice(Device, masterDetails.InputChannelCount, masterDetails.InputSampleRate, VoiceSendFlags.None, 0);
+                    reverb = new Reverb();
+                    reverb.Parameter = reverbParameters;
+                    ReverbVoice.SetEffectChain(new EffectDescriptor(reverb));
+                }
+                else
+                {
+                    ReverbVoice.DisableEffect(0);
+                }
+            }
+
+            IsReverbEffectEnabled = true;
+        }
+
+        public void DisableReverbEffect()
+        {
+            if (IsDisposed)
+                throw new ObjectDisposedException(this.GetType().FullName);
+            
+            if (!IsReverbEffectEnabled)
+                return;
+
+            if (ReverbVoice != null && reverb != null)
+            {
+                VoiceDetails masterDetails = MasteringVoice.VoiceDetails;
+                ReverbVoice = new SubmixVoice(Device, masterDetails.InputChannelCount, masterDetails.InputSampleRate, VoiceSendFlags.None, 0);
+                reverb = new Reverb();
+                reverb.Parameter = reverbParameters;
+                ReverbVoice.SetEffectChain(new EffectDescriptor(reverb));
+            }
+
+            IsReverbEffectEnabled = false;
+        }
+
+        public void SetReverbEffectParameters(ReverbParameters parameters)
+        {
+            if (IsDisposed)
+                throw new ObjectDisposedException(this.GetType().FullName);
+            
+            reverbParameters = parameters;
+
+            if (ReverbVoice != null && reverb != null)
+            {
+                ReverbVoice.SetEffectParameters(0, parameters);
+            }
+        }
+
+        public void SetReverbEffectParameters(ReverbPresets preset)
+        {
+            if (IsDisposed)
+                throw new ObjectDisposedException(this.GetType().FullName);
+            
+            SetReverbEffectParameters((ReverbParameters)reverbPresets[(int)preset]);
+        }
+
         internal void Calculate3D(Listener listener, Emitter emitter, CalculateFlags flags, DspSettings dspSettings)
         {
+            if (IsDisposed)
+                throw new ObjectDisposedException(this.GetType().FullName);
+            
             x3DAudio.Calculate(listener, emitter, flags, dspSettings);            
         }
 
@@ -252,6 +386,16 @@ using SharpDX.XAPO.Fx;
                     masteringLimiter = null;
                 }
                 isMasteringLimiterEnabled = false;
+
+                if(ReverbVoice != null)
+                {
+                    ReverbVoice.DestroyVoice();
+                    ReverbVoice.Dispose();
+                    ReverbVoice = null;
+                    reverb.Dispose();
+                    reverb = null;
+                }
+                IsReverbEffectEnabled = false;
 
                 if (Device != null)
                 {

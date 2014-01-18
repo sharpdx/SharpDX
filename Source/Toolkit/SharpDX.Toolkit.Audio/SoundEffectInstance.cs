@@ -297,10 +297,43 @@ namespace SharpDX.Toolkit.Audio
             if (dspSettings == null)
                 dspSettings = new DspSettings(Effect.Format.Channels, Effect.AudioManager.MasteringVoice.VoiceDetails.InputChannelCount);
 
-            Effect.AudioManager.Calculate3D(listener, emitter, CalculateFlags.Matrix | CalculateFlags.Doppler, dspSettings);
 
-            voice.SetOutputMatrix(dspSettings.SourceChannelCount, dspSettings.DestinationChannelCount, dspSettings.MatrixCoefficients);
+            CalculateFlags flags = CalculateFlags.Matrix | CalculateFlags.Doppler | CalculateFlags.LpfDirect;
+
+            if((Effect.AudioManager.Speakers & Speakers.LowFrequency) > 0)
+            {
+                // On devices with an LFE channel, allow the mono source data to be routed to the LFE destination channel.
+                flags |= CalculateFlags.RedirectToLfe;
+            }
+
+            if(Effect.AudioManager.IsReverbEffectEnabled)
+            {
+                flags |= CalculateFlags.Reverb | CalculateFlags.LpfReverb;
+            }
+
+            Effect.AudioManager.Calculate3D(listener, emitter, flags, dspSettings);
+
             voice.SetFrequencyRatio(dspSettings.DopplerFactor);
+            voice.SetOutputMatrix(dspSettings.SourceChannelCount, dspSettings.DestinationChannelCount, dspSettings.MatrixCoefficients);
+
+            if(Effect.AudioManager.IsReverbEffectEnabled)
+            {
+                voice.SetOutputMatrix(Effect.AudioManager.ReverbVoice, 1, 1, new []{ dspSettings.ReverbLevel });
+            }
+            
+            //if (mFlags & SoundEffectInstance_ReverbUseFilters)
+            //{
+            //    FilterParameters filterDirect = new FilterParameters { Type = FilterType.LowPassFilter, Frequency = 2.0f * (float)Math.Sin(X3DAudio.PI / 6.0f * dspSettings.LpfDirectCoefficient), OneOverQ = 1.0f };
+            //    // see XAudio2CutoffFrequencyToRadians() in XAudio2.h for more information on the formula used here
+            //    voice.SetOutputFilterParameters(Effect.AudioManager.MasteringVoice, filterDirect);
+
+            //    if (Effect.AudioManager.IsReverbEffectEnabled)
+            //    {
+            //        FilterParameters filterReverb = new FilterParameters { Type = FilterType.LowPassFilter, Frequency = 2.0f * (float)Math.Sin(X3DAudio.PI / 6.0f * dspSettings.LpfReverbCoefficient), OneOverQ = 1.0f };
+            //        // see XAudio2CutoffFrequencyToRadians() in XAudio2.h for more information on the formula used here
+            //        voice.SetOutputFilterParameters(Effect.AudioManager.ReverbVoice, filterReverb);
+            //    }
+            //}
         }
 
         private void SetPanOutputMatrix()
