@@ -75,7 +75,10 @@ namespace Audio
 
             audioManager = new AudioManager(this);
             //audioManager.EnableMasterVolumeLimiter();
-            
+            //audioManager.EnableReverbEffect();
+            //audioManager.SetReverbEffectParameters(ReverbPresets.SewerPipe);
+
+
             // Setup the relative directory to the executable directory
             // for loading contents with the ContentManager
             Content.RootDirectory = "Content";

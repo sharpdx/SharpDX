@@ -156,10 +156,10 @@ namespace SharpDX.Toolkit.Audio
             if(IsReverbEffectEnabled)
             {
                 VoiceDetails masterDetails = MasteringVoice.VoiceDetails;
-                ReverbVoice = new SubmixVoice(Device, masterDetails.InputChannelCount, masterDetails.InputSampleRate, VoiceSendFlags.None, 0);
                 reverb = new Reverb();
-                reverb.Parameter = reverbParameters;
-                ReverbVoice.SetEffectChain(new EffectDescriptor(reverb));
+                ReverbVoice = new SubmixVoice(Device, 1, masterDetails.InputSampleRate, VoiceSendFlags.None, 0);
+                ReverbVoice.SetEffectChain(new EffectDescriptor(reverb, 1));
+                ReverbVoice.SetEffectParameters(0, reverbParameters);
             }
 
             contentManager.ReaderFactories.Add(this);
@@ -272,14 +272,14 @@ namespace SharpDX.Toolkit.Audio
                 if (ReverbVoice == null)
                 {
                     VoiceDetails masterDetails = MasteringVoice.VoiceDetails;
-                    ReverbVoice = new SubmixVoice(Device, masterDetails.InputChannelCount, masterDetails.InputSampleRate, VoiceSendFlags.None, 0);
                     reverb = new Reverb();
-                    reverb.Parameter = reverbParameters;
-                    ReverbVoice.SetEffectChain(new EffectDescriptor(reverb));
+                    ReverbVoice = new SubmixVoice(Device, 1, masterDetails.InputSampleRate, VoiceSendFlags.None, 0);
+                    ReverbVoice.SetEffectChain(new EffectDescriptor(reverb,1));
+                    ReverbVoice.SetEffectParameters(0, reverbParameters);
                 }
                 else
                 {
-                    ReverbVoice.DisableEffect(0);
+                    ReverbVoice.EnableEffect(0);
                 }
             }
 
@@ -296,11 +296,7 @@ namespace SharpDX.Toolkit.Audio
 
             if (ReverbVoice != null && reverb != null)
             {
-                VoiceDetails masterDetails = MasteringVoice.VoiceDetails;
-                ReverbVoice = new SubmixVoice(Device, masterDetails.InputChannelCount, masterDetails.InputSampleRate, VoiceSendFlags.None, 0);
-                reverb = new Reverb();
-                reverb.Parameter = reverbParameters;
-                ReverbVoice.SetEffectChain(new EffectDescriptor(reverb));
+                ReverbVoice.DisableEffect(0);
             }
 
             IsReverbEffectEnabled = false;

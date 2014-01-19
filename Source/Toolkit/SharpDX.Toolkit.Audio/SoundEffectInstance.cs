@@ -314,7 +314,7 @@ namespace SharpDX.Toolkit.Audio
             Effect.AudioManager.Calculate3D(listener, emitter, flags, dspSettings);
 
             voice.SetFrequencyRatio(dspSettings.DopplerFactor);
-            voice.SetOutputMatrix(dspSettings.SourceChannelCount, dspSettings.DestinationChannelCount, dspSettings.MatrixCoefficients);
+            voice.SetOutputMatrix(Effect.AudioManager.MasteringVoice,dspSettings.SourceChannelCount, dspSettings.DestinationChannelCount, dspSettings.MatrixCoefficients);
 
             if(Effect.AudioManager.IsReverbEffectEnabled)
             {
