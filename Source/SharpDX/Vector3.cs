@@ -209,6 +209,14 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Gets a value indicting whether this vector is zero
+        /// </summary>
+        public bool IsZero
+        {
+            get { return X == 0 && Y == 0 && Z == 0; }
+        }
+
+        /// <summary>
         /// Gets or sets the component at the specified index.
         /// </summary>
         /// <value>The value of the X, Y, or Z component, depending on the index.</value>
