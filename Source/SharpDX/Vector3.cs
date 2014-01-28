@@ -1259,6 +1259,35 @@ namespace SharpDX
             }
         }
 
+
+        /// <summary>
+        /// Transforms a 3D vector by the given <see cref="SharpDX.Matrix3x3"/>.
+        /// </summary>
+        /// <param name="vector">The source vector.</param>
+        /// <param name="transform">The transformation <see cref="SharpDX.Matrix3x3"/>.</param>
+        /// <param name="result">When the method completes, contains the transformed <see cref="SharpDX.Vector3"/>.</param>
+        public static void Transform(ref Vector3 vector, ref Matrix3x3 transform, out Vector3 result)
+        {
+            result = new Vector3(   (vector.X * transform.M11) + (vector.Y * transform.M21) + (vector.Z * transform.M31),
+                                    (vector.X * transform.M12) + (vector.Y * transform.M22) + (vector.Z * transform.M32),
+                                    (vector.X * transform.M13) + (vector.Y * transform.M23) + (vector.Z * transform.M33)
+                                );
+        }
+
+        /// <summary>
+        /// Transforms a 3D vector by the given <see cref="SharpDX.Matrix3x3"/>.
+        /// </summary>
+        /// <param name="vector">The source vector.</param>
+        /// <param name="transform">The transformation <see cref="SharpDX.Matrix3x3"/>.</param>
+        /// <returns>The transformed <see cref="SharpDX.Vector3"/>.</returns>
+        public static Vector3 Transform(Vector3 vector, Matrix3x3 transform)
+        {
+            Vector3 result;
+            Transform(ref vector, ref transform, out result);
+            return result;
+        }
+
+
         /// <summary>
         /// Transforms a 3D vector by the given <see cref="SharpDX.Matrix"/>.
         /// </summary>
