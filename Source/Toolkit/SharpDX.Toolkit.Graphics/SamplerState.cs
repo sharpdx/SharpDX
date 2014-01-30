@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 
@@ -43,6 +44,11 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="description">The description.</param>
         private SamplerState(GraphicsDevice device, SamplerStateDescription description) : base(device.MainDevice)
         {
+            // For 9.1, anisotropy cannot be larger then 2
+            if (device.Features.Level == FeatureLevel.Level_9_1)
+            {
+                description.MaximumAnisotropy = Math.Min(2, description.MaximumAnisotropy);
+            }
             Description = description;
             Initialize(new SharpDX.Direct3D11.SamplerState(device, description));
         }
@@ -109,7 +115,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             return new SamplerState(device, description) {Name = name};
         }
-        
+
         /// <summary>
         /// Implicit casting operator to <see cref="Direct3D11.Resource"/>
         /// </summary>
@@ -122,12 +128,6 @@ namespace SharpDX.Toolkit.Graphics
         internal static SamplerState New(GraphicsDevice device, string name, Filter filterMode, TextureAddressMode uvwMode)
         {
             var description = SamplerStateDescription.Default();
-
-            // For 9.1, anisotropy cannot be larger then 2
-            if (device.Features.Level == FeatureLevel.Level_9_1)
-            {
-                description.MaximumAnisotropy = 2;
-            }
 
             description.Filter = filterMode;
             description.AddressU = uvwMode;
