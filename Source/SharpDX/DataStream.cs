@@ -215,7 +215,7 @@ namespace SharpDX
 
             unsafe
             {
-                if (_ownsBuffer && _buffer != (sbyte*)0)
+                if (_ownsBuffer && _buffer != (byte*)0)
                 {
                     Utilities.FreeMemory((IntPtr)_buffer);
                     _buffer = (byte*)0;
