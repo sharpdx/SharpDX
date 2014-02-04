@@ -37,6 +37,7 @@ namespace SharpDX.Toolkit
         private readonly DeviceEx device9;
         private readonly DispatcherTimer resizeDelayTimer;
         private Texture texture;
+        private IntPtr textureSurfaceHandle;
 
         private bool isDisposed;
 
@@ -86,6 +87,7 @@ namespace SharpDX.Toolkit
         public SharpDXElement()
         {
             image = new D3DImage();
+            image.IsFrontBufferAvailableChanged += HandleIsFrontBufferAvailableChanged;
 
             var presentparams = new PresentParameters
                 {
@@ -207,7 +209,10 @@ namespace SharpDX.Toolkit
             }
 
             using (var surface = texture.GetSurfaceLevel(0))
-                TrySetBackbufferPointer(surface.NativePointer);
+            {
+                textureSurfaceHandle = surface.NativePointer;
+                TrySetBackbufferPointer(textureSurfaceHandle);
+            }
         }
 
         /// <summary>
@@ -252,6 +257,12 @@ namespace SharpDX.Toolkit
         {
             if (isDisposed)
                 throw new ObjectDisposedException("SharpDXElement", "The element is disposed - either explicitly or via Unloaded event, it cannot be reused.");
+        }
+
+        private void HandleIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (image.IsFrontBufferAvailable)
+                TrySetBackbufferPointer(textureSurfaceHandle);
         }
 
         private void HandleUnloaded(object sender, RoutedEventArgs e)
