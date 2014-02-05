@@ -140,8 +140,20 @@ namespace SharpDX
             return SetWindowLongPtr64(hwnd, index, wndProcPtr);
         }
 
+        [DllImport("user32.dll", EntryPoint = "SetParent", CharSet = CharSet.Unicode)]
+        public static extern IntPtr SetParent(HandleRef hWnd, IntPtr hWndParent);
+
         [DllImport("user32.dll", EntryPoint = "SetWindowLong", CharSet = CharSet.Unicode)]
         private static extern IntPtr SetWindowLong32(HandleRef hwnd, WindowLongType index, IntPtr wndProc);
+
+
+        public static bool ShowWindow(HandleRef hWnd, bool windowVisible)
+        {
+            return ShowWindow(hWnd, windowVisible ? 1 : 0);
+        }
+
+        [DllImport("user32.dll", EntryPoint = "ShowWindow", CharSet = CharSet.Unicode)]
+        private static extern bool ShowWindow(HandleRef hWnd, int mCmdShow);
 
         [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr", CharSet = CharSet.Unicode)]
         private static extern IntPtr SetWindowLongPtr64(HandleRef hwnd, WindowLongType index, IntPtr wndProc);

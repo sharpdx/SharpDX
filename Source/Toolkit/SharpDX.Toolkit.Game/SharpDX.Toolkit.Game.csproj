@@ -25,6 +25,7 @@
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="Desktop\GameWindowDesktopWpf.cs" />
     <Compile Include="Desktop\SharpDXElement.cs" />
+    <Compile Include="Desktop\ToolkitHwndHost.cs" />
     <Compile Include="GameContext.DesktopWpf.cs" />
     <Compile Include="GameContext.WindowsPhoneBackgroundXaml.cs" />
     <Compile Include="GameContext.WinRTBackgroundXaml.cs" />

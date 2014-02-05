@@ -85,6 +85,9 @@ namespace SharpDX.Toolkit.Graphics
             set
             {
 #if !WIN8METRO
+                if(swapChain == null)
+                    return;
+                
                 var outputIndex = PrefferedFullScreenOutputIndex;
 
                 // no outputs connected to the current graphics adapter

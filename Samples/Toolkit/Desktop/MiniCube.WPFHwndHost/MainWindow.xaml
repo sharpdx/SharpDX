@@ -1,0 +1,28 @@
+﻿<Window x:Class="MiniCube.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="480" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Width="400px"  TextWrapping="Wrap">
+            Hi there!<LineBreak/><LineBreak/>
+            The rendering below is performed through a standard WinForm (SharpDX 
+            RenderForm) but directly integrated into a WPF Border Control. This method
+            is relying on the capability of WPF to host standard HWND content.
+            <LineBreak/>
+            If the WPF application doesn't require to display a WPF content on top of 
+            the Direct3D content, this method is preferred vs using D3DImage, as it is 
+            more scalable and efficient.
+            <LineBreak/>
+        </TextBlock>
+
+        <Border Grid.Row="1" Grid.Column="0"  Name="GameSurface"/>
+    </Grid>
+</Window>

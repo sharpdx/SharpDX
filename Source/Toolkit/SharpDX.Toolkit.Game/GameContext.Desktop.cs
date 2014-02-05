@@ -54,6 +54,22 @@ namespace SharpDX.Toolkit
         /// <summary>
         /// Initializes a new instance of the <see cref="GameContext" /> class.
         /// </summary>
+        /// <param name="border">The border.</param>
+        /// <param name="requestedWidth">Width of the requested.</param>
+        /// <param name="requestedHeight">Height of the requested.</param>
+        /// <exception cref="System.ArgumentNullException">border</exception>
+        public GameContext(System.Windows.Controls.Border border, int requestedWidth = 0, int requestedHeight = 0)
+        {
+            if(border == null) throw new ArgumentNullException("border");
+            Control = border;
+            RequestedWidth = requestedWidth;
+            RequestedHeight = requestedHeight;
+            ContextType = GameContextType.DesktopHwndWpf;
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GameContext" /> class.
+        /// </summary>
         /// <param name="windowHandle">The window handle.</param>
         /// <param name="requestedWidth">Width of the requested.</param>
         /// <param name="requestedHeight">Height of the requested.</param>
@@ -78,23 +94,13 @@ namespace SharpDX.Toolkit
         /// <summary>
         /// The control used as a GameWindow context (either an instance of <see cref="System.Windows.Forms.Control"/> or <see cref="System.Windows.Controls.Control"/>.
         /// </summary>
-        public readonly object Control;
+        public object Control { get; private set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the render loop should use the default <see cref="Application.DoEvents"/> instead of a custom window message loop lightweight for GC. Default is false
         /// </summary>
         /// <value><c>true</c> if use the default <see cref="Application.DoEvents"/>; otherwise, <c>false</c>.</value>
         public bool UseApplicationDoEvents { get; set; }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="Control"/> to <see cref="GameContext"/>.
-        /// </summary>
-        /// <param name="control">The control.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator GameContext(Control control)
-        {
-            return new GameContext(control);
-        }
     }
 }
 #endif
