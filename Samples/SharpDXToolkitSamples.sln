@@ -85,6 +85,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCube.SwitchContext.WP8.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCube.SwitchContext.WPF.MVVM", "Toolkit\Desktop\MiniCube.SwitchContext.WPF.MVVM\MiniCube.SwitchContext.WPF.MVVM.csproj", "{3214BC9A-30DF-4180-8FB7-57AE86BBB8E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Audio.Desktop", "Toolkit\Desktop\Audio\Audio.Desktop.csproj", "{9621AEC5-8ECA-4D34-B7E4-A6EC3480876B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -978,6 +980,20 @@ Global
 		{3214BC9A-30DF-4180-8FB7-57AE86BBB8E8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{3214BC9A-30DF-4180-8FB7-57AE86BBB8E8}.Release|x64.ActiveCfg = Release|Any CPU
 		{3214BC9A-30DF-4180-8FB7-57AE86BBB8E8}.Release|x86.ActiveCfg = Release|Any CPU
+		{9621AEC5-8ECA-4D34-B7E4-A6EC3480876B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9621AEC5-8ECA-4D34-B7E4-A6EC3480876B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9621AEC5-8ECA-4D34-B7E4-A6EC3480876B}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{9621AEC5-8ECA-4D34-B7E4-A6EC3480876B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{9621AEC5-8ECA-4D34-B7E4-A6EC3480876B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{9621AEC5-8ECA-4D34-B7E4-A6EC3480876B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9621AEC5-8ECA-4D34-B7E4-A6EC3480876B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9621AEC5-8ECA-4D34-B7E4-A6EC3480876B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9621AEC5-8ECA-4D34-B7E4-A6EC3480876B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9621AEC5-8ECA-4D34-B7E4-A6EC3480876B}.Release|ARM.ActiveCfg = Release|Any CPU
+		{9621AEC5-8ECA-4D34-B7E4-A6EC3480876B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9621AEC5-8ECA-4D34-B7E4-A6EC3480876B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{9621AEC5-8ECA-4D34-B7E4-A6EC3480876B}.Release|x64.ActiveCfg = Release|Any CPU
+		{9621AEC5-8ECA-4D34-B7E4-A6EC3480876B}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
