@@ -100,6 +100,23 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Draws a raw quad requiring a Vertex and Pixel shader to be setup before calling this method.
+        /// </summary>
+        /// <param name="fullScreenTriangle">if set to <c>true</c> to draw an optimized full screen triangle as a full screen quad.</param>
+        public void DrawRaw(bool fullScreenTriangle)
+        {
+            GraphicsDevice.SetVertexBuffer(fullScreenTriangle ? sharedData.VertexBufferFullQuad : sharedData.VertexBuffer);
+            GraphicsDevice.SetVertexInputLayout(sharedData.VertexInputLayout);
+
+            // Make sure that we are using our vertex shader
+            GraphicsDevice.Draw(PrimitiveType.TriangleStrip, fullScreenTriangle ? 3 : 4);
+
+            // Reset the vertex buffer
+            GraphicsDevice.SetVertexBuffer(0, null, 0);
+            GraphicsDevice.InputAssemblerStage.SetInputLayout(null);
+        }
+
+        /// <summary>
         /// Draws a quad. The effect must have been applied before calling this method with pixel shader having the signature float2:TEXCOORD.
         /// </summary>
         public void Draw()
@@ -113,18 +130,10 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="fullScreenTriangle">if set to <c>true</c> to draw an optimized full screen triangle as a full screen quad.</param>
         public void Draw(bool fullScreenTriangle)
         {
-            GraphicsDevice.SetVertexBuffer(fullScreenTriangle ? sharedData.VertexBufferFullQuad : sharedData.VertexBuffer);
-            GraphicsDevice.SetVertexInputLayout(sharedData.VertexInputLayout);
-
             ResetShaderStages();
-
             // Make sure that we are using our vertex shader
             quadPass.Apply();
-            GraphicsDevice.Draw(PrimitiveType.TriangleStrip, fullScreenTriangle ? 3 : 4);
-
-            // Reset the vertex buffer
-            GraphicsDevice.SetVertexBuffer(0, null, 0);
-            GraphicsDevice.InputAssemblerStage.SetInputLayout(null);
+            DrawRaw(fullScreenTriangle);
         }
 
         /// <summary>
