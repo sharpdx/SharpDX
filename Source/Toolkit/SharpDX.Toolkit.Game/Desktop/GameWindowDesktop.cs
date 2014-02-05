@@ -181,6 +181,7 @@ namespace SharpDX.Toolkit
 
         private void InitializeFromWpfControl(object wpfControl)
         {
+#if NET35Plus
             wpfBorderControl = (System.Windows.Controls.Border)wpfControl;
             renderingThreadForWpfCanRun = new ManualResetEvent(false);
             renderingThreadForWpfHwndHostReady = new ManualResetEvent(false);
@@ -189,6 +190,7 @@ namespace SharpDX.Toolkit
             var thread = new Thread(RunWpfRenderLoop) { IsBackground = true };
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
+#endif
         }
 
         /// <inheritdoc />
@@ -228,16 +230,19 @@ namespace SharpDX.Toolkit
         /// <inheritdoc />
         internal override void Run()
         {
+#if NET35Plus
             if(wpfBorderControl != null)
             {
                 StartWpfRenderLoop();
             }
             else
+#endif
             {
                 RunRenderLoop();
             }
         }
 
+#if NET35Plus
         private void StartWpfRenderLoop()
         {
             // Wait for HwndHost ready
@@ -266,6 +271,7 @@ namespace SharpDX.Toolkit
 
             RunRenderLoop();
         }
+#endif
 
         private void RunRenderLoop()
         {

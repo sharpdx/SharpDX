@@ -50,22 +50,6 @@ namespace SharpDX.Toolkit
             RequestedHeight = requestedHeight;
             ContextType = GameContextType.Desktop;
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GameContext" /> class.
-        /// </summary>
-        /// <param name="border">The border.</param>
-        /// <param name="requestedWidth">Width of the requested.</param>
-        /// <param name="requestedHeight">Height of the requested.</param>
-        /// <exception cref="System.ArgumentNullException">border</exception>
-        public GameContext(System.Windows.Controls.Border border, int requestedWidth = 0, int requestedHeight = 0)
-        {
-            if(border == null) throw new ArgumentNullException("border");
-            Control = border;
-            RequestedWidth = requestedWidth;
-            RequestedHeight = requestedHeight;
-            ContextType = GameContextType.DesktopHwndWpf;
-        }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="GameContext" /> class.
@@ -81,7 +65,23 @@ namespace SharpDX.Toolkit
             ContextType = GameContextType.Desktop;
         }
 
-#if !W8CORE && NET35Plus
+#if NET35Plus
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GameContext" /> class.
+        /// </summary>
+        /// <param name="border">The border.</param>
+        /// <param name="requestedWidth">Width of the requested.</param>
+        /// <param name="requestedHeight">Height of the requested.</param>
+        /// <exception cref="System.ArgumentNullException">border</exception>
+        public GameContext(System.Windows.Controls.Border border, int requestedWidth = 0, int requestedHeight = 0)
+        {
+            if (border == null) throw new ArgumentNullException("border");
+            Control = border;
+            RequestedWidth = requestedWidth;
+            RequestedHeight = requestedHeight;
+            ContextType = GameContextType.DesktopHwndWpf;
+        }
+
         protected GameContext(object control, int requestedWidth = 0, int requestedHeight = 0)
         {
             Control = control;
