@@ -862,7 +862,7 @@ namespace SharpDX.Toolkit
                             var newOutputIndex = graphicsDeviceInformation.PresentationParameters.PreferredFullScreenOutputIndex;
 
                             GraphicsDevice.Presenter.PrefferedFullScreenOutputIndex = newOutputIndex;
-                            GraphicsDevice.Presenter.Resize(newWidth, newHeight, newFormat);
+                            GraphicsDevice.Presenter.Resize(newWidth, newHeight, newFormat, graphicsDeviceInformation.PresentationParameters.RefreshRate);
 
                             // Change full screen if needed
                             GraphicsDevice.Presenter.IsFullScreen = graphicsDeviceInformation.PresentationParameters.IsFullScreen;

@@ -139,9 +139,9 @@ namespace SharpDX.Toolkit.Graphics
 #endif
         }
 
-        public override bool Resize(int width, int height, Format format)
+        public override bool Resize(int width, int height, Format format, Rational? refreshRate)
         {
-            if (!base.Resize(width, height, format)) return false;
+            if (!base.Resize(width, height, format, refreshRate)) return false;
 
             // backbuffer was set externally, do not touch it
             if (!allowRecreateBackBuffer) return false;
