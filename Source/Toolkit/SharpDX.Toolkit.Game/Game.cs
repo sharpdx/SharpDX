@@ -31,7 +31,7 @@ namespace SharpDX.Toolkit
     /// <summary>
     /// The game.
     /// </summary>
-    public class Game : Component
+    public partial class Game : Component
     {
         #region Fields
 
@@ -337,6 +337,16 @@ namespace SharpDX.Toolkit
             Update(gameTime);
 
             isFirstUpdateDone = true;
+        }
+
+        public void Run(object control)
+        {
+            Run(new GameContext(control));
+        }
+
+        public void Switch(object control)
+        {
+            Switch(new GameContext(control));
         }
 
         /// <summary>

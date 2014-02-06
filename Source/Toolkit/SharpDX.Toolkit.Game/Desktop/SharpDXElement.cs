@@ -180,7 +180,7 @@ namespace SharpDX.Toolkit
         /// <returns>An <see cref="GameContextWpf"/> instance derived from <see cref="GameContext"/>.</returns>
         public static implicit operator GameContext(SharpDXElement element)
         {
-            return new GameContextWpf(element);
+            return new GameContext(element);
         }
 
         internal event EventHandler ResizeCompleted;

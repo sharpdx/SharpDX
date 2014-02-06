@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 #if !W8CORE
 using System;
-using System.Windows.Forms;
 using SharpDX.Windows;
+using System.Windows.Forms;
 
 namespace SharpDX.Toolkit
 {
@@ -30,71 +30,48 @@ namespace SharpDX.Toolkit
     public partial class GameContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GameContext" /> class with a default <see cref="RenderForm"/>.
+        /// Initializes a new instance of the <see cref="GameContext"/> class.
         /// </summary>
-        public GameContext()
-            : this((Control)null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GameContext" /> class.
-        /// </summary>
-        /// <param name="control">The control.</param>
+        /// <param name="control">The control, platform dependent. See remarks for supported controls.</param>
         /// <param name="requestedWidth">Width of the requested.</param>
         /// <param name="requestedHeight">Height of the requested.</param>
-        public GameContext(Control control, int requestedWidth = 0, int requestedHeight = 0)
+        /// <exception cref="System.ArgumentException">Control is not supported. Must inherit from System.Windows.Forms.Control (WinForm) or System.Windows.Controls.Border (WPF hosting WinForm) or SharpDX.Toolkit.SharpDXElement (WPF)</exception>
+        /// <remarks>
+        /// On Windows Desktop, the Toolkit supports the following controls:
+        /// <ul>
+        /// <li>WinForm control inheriting <see cref="System.Windows.Forms.Control"/></li>
+        /// <li>WPF control inheriting <see cref="System.Windows.Controls.Border"/> for Hwnd hosting</li>
+        /// <li>WPF D3DImage control <see cref="SharpDX.Toolkit.SharpDXElement"/></li>
+        /// </ul>
+        /// </remarks>
+        public GameContext(object control = null, int requestedWidth = 0, int requestedHeight = 0)
         {
-            Control = control ?? new RenderForm("SharpDX Game") { AllowUserResizing = false };
+            Control = control ?? CreateDefaultControl();
             RequestedWidth = requestedWidth;
             RequestedHeight = requestedHeight;
-            ContextType = GameContextType.Desktop;
-        }
-        
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GameContext" /> class.
-        /// </summary>
-        /// <param name="windowHandle">The window handle.</param>
-        /// <param name="requestedWidth">Width of the requested.</param>
-        /// <param name="requestedHeight">Height of the requested.</param>
-        public GameContext(IntPtr windowHandle, int requestedWidth = 0, int requestedHeight = 0)
-        {
-            Control = System.Windows.Forms.Control.FromHandle(windowHandle);
-            RequestedWidth = requestedWidth;
-            RequestedHeight = requestedHeight;
-            ContextType = GameContextType.Desktop;
-        }
-
-#if NET35Plus
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GameContext" /> class.
-        /// </summary>
-        /// <param name="border">The border.</param>
-        /// <param name="requestedWidth">Width of the requested.</param>
-        /// <param name="requestedHeight">Height of the requested.</param>
-        /// <exception cref="System.ArgumentNullException">border</exception>
-        public GameContext(System.Windows.Controls.Border border, int requestedWidth = 0, int requestedHeight = 0)
-        {
-            if (border == null) throw new ArgumentNullException("border");
-            Control = border;
-            RequestedWidth = requestedWidth;
-            RequestedHeight = requestedHeight;
-            ContextType = GameContextType.DesktopHwndWpf;
+            var controlType = Control.GetType();
+            if (Utilities.IsTypeInheritFrom(controlType, "System.Windows.Forms.Control"))
+            {
+                ContextType = GameContextType.Desktop;
+            }
+            else if (Utilities.IsTypeInheritFrom(controlType, "System.Windows.Controls.Border"))
+            {
+                ContextType = GameContextType.DesktopHwndWpf;
+            }
+            else if (Utilities.IsTypeInheritFrom(controlType, "SharpDX.Toolkit.SharpDXElement"))
+            {
+                ContextType = GameContextType.DesktopWpf;
+            }
+            else
+            {
+                throw new ArgumentException("Control is not supported. Must inherit from System.Windows.Forms.Control (WinForm) or System.Windows.Controls.Border (WPF hosting WinForm) or SharpDX.Toolkit.SharpDXElement (WPF)");
+            }
         }
 
-        protected GameContext(object control, int requestedWidth = 0, int requestedHeight = 0)
+        private static object CreateDefaultControl()
         {
-            Control = control;
-            RequestedWidth = requestedWidth;
-            RequestedHeight = requestedHeight;
-            ContextType = GameContextType.DesktopWpf;
+            return new RenderForm("Toolkit Game");
         }
-#endif
-
-        /// <summary>
-        /// The control used as a GameWindow context (either an instance of <see cref="System.Windows.Forms.Control"/> or <see cref="System.Windows.Controls.Control"/>.
-        /// </summary>
-        public object Control { get; private set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the render loop should use the default <see cref="Application.DoEvents"/> instead of a custom window message loop lightweight for GC. Default is false

@@ -46,11 +46,6 @@ namespace SharpDX.Toolkit
         WinRT,
 
         /// <summary>
-        /// Game running on WinRT in a SwapChainBackgroundPanel.
-        /// </summary>
-        WinRTBackgroundXaml,
-
-        /// <summary>
         /// Game running on WinRT in a SurfaceImageSource.
         /// </summary>
         WinRTXaml,

@@ -123,7 +123,7 @@ namespace SharpDX.Toolkit
 
         internal override bool CanHandle(GameContext windowContext)
         {
-            return windowContext.ContextType == GameContextType.WinRTBackgroundXaml;
+            return windowContext.ContextType == GameContextType.WinRTXaml;
         }
 
         internal override void Initialize(GameContext windowContext)
