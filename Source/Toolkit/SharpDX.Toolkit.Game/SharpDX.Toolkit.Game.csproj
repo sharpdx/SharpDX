@@ -88,11 +88,6 @@
       <Name>SharpDX.Toolkit.Graphics</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\SharpDX.Toolkit.Compiler\SharpDX.Toolkit.Compiler.csproj" Condition=" '$(SharpDXWin8Core)' == 'false'">
-      <Project>{8BFFF9D1-84EC-4FBA-9BEB-710ECF1857A8}</Project>
-      <Name>SharpDX.Toolkit.Compiler</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\SharpDX.Toolkit\SharpDX.Toolkit.csproj">
       <Project>{9ff0707c-75bb-4984-a01f-b9eaad293f6c}</Project>
       <Name>SharpDX.Toolkit</Name>
