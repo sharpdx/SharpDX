@@ -44,7 +44,6 @@
 */
 
 using System;
-using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Serialization;
@@ -56,10 +55,6 @@ namespace SharpDX
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     [DynamicSerializer("TKM3")]
-#if !W8CORE
-    [Serializable]
-    [TypeConverter(typeof(SharpDX.Design.Matrix3x3Converter))]
-#endif
     public struct Matrix3x3 : IEquatable<Matrix3x3>, IFormattable, IDataSerializable
     {
         /// <summary>

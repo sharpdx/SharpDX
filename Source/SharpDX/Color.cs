@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Serialization;
@@ -28,10 +27,6 @@ namespace SharpDX
     /// <summary>
     /// Represents a 32-bit color (4 bytes) in the form of RGBA (in byte order: R, G, B, A).
     /// </summary>
-#if !W8CORE
-    [Serializable]
-    [TypeConverter(typeof(SharpDX.Design.ColorConverter))]
-#endif
     [StructLayout(LayoutKind.Sequential, Size = 4)]
     [DynamicSerializer("TKC1")]
     public partial struct Color : IEquatable<Color>, IFormattable, IDataSerializable
@@ -104,7 +99,7 @@ namespace SharpDX
             B = blue;
             A = 255;
         }
-		
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="SharpDX.Color"/> struct.  Passed values are clamped within byte range.
         /// </summary>
@@ -118,7 +113,7 @@ namespace SharpDX
             B = ToByte(blue);
             A = ToByte(alpha);
         }
-		
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="SharpDX.Color"/> struct.  Alpha is set to 255.  Passed values are clamped within byte range.
         /// </summary>

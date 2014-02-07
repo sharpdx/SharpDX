@@ -27,9 +27,6 @@ namespace SharpDX
     /// <summary>
     /// Represents a 32-bit color (4 bytes) in the form of BGRA (in byte order: B, G, B, A).
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential, Size = 4)]
     [DynamicSerializer("TKC0")]
     public partial struct ColorBGRA : IEquatable<ColorBGRA>, IFormattable, IDataSerializable

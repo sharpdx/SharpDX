@@ -43,7 +43,6 @@
 * THE SOFTWARE.
 */
 using System;
-using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Serialization;
@@ -55,10 +54,6 @@ namespace SharpDX
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     [DynamicSerializer("TKV2")]
-#if !W8CORE
-    [Serializable]
-    [TypeConverter(typeof(SharpDX.Design.Vector2Converter))]
-#endif
     public struct Vector2 : IEquatable<Vector2>, IFormattable, IDataSerializable
     {
         /// <summary>

@@ -53,9 +53,6 @@ namespace SharpDX
     /// <summary>
     /// Represents an axis-aligned bounding box in three dimensional space.
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct BoundingBox : IEquatable<BoundingBox>, IFormattable, IDataSerializable
     {

@@ -26,9 +26,6 @@ namespace SharpDX
     /// <summary>
     /// Result structure for COM methods.
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential)]
     public struct Result : IEquatable<Result>, IDataSerializable
     {

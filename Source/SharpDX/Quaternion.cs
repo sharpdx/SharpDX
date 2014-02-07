@@ -43,7 +43,6 @@
 * THE SOFTWARE.
 */
 using System;
-using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Serialization;
@@ -54,10 +53,6 @@ namespace SharpDX
     /// Represents a four dimensional mathematical quaternion.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-#if !W8CORE
-    [Serializable]
-    [TypeConverter(typeof(SharpDX.Design.QuaternionConverter))]
-#endif
     public struct Quaternion : IEquatable<Quaternion>, IFormattable, IDataSerializable
     {
         /// <summary>

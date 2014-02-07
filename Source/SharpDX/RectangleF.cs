@@ -28,10 +28,6 @@ namespace SharpDX
     /// Define a RectangleF. This structure is slightly different from System.Drawing.RectangleF as it is
     /// internally storing Left,Top,Right,Bottom instead of Left,Top,Width,Height.
     /// </summary>
-#if !W8CORE
-
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential)]
     public struct RectangleF : IEquatable<RectangleF>, IDataSerializable
     {

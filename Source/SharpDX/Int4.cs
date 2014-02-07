@@ -27,9 +27,6 @@ namespace SharpDX
     /// <summary>
     /// Represents a four dimensional mathematical vector.
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     [DynamicSerializer("TKI4")]
     public struct Int4 : IEquatable<Int4>, IFormattable, IDataSerializable

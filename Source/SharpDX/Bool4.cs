@@ -27,9 +27,6 @@ namespace SharpDX
     /// <summary>
     /// Represents a four dimensional mathematical vector of bool (32 bits per bool value).
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     [DynamicSerializer("TKB4")]
     public struct Bool4 : IEquatable<Bool4>, IFormattable, IDataSerializable

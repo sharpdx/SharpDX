@@ -27,9 +27,6 @@ namespace SharpDX
     /// <summary>
     /// Structure using the same layout than <see cref="System.Drawing.Size"/>.
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential)]
     public struct Size2 : IEquatable<Size2>, IDataSerializable
     {

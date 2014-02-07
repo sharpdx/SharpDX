@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.ComponentModel;
 using System.Runtime.InteropServices;
 using SharpDX.Serialization;
 
@@ -29,10 +28,6 @@ namespace SharpDX
     /// Defines a two component vector, using half precision floating point coordinates.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-#if !W8CORE
-    [Serializable]
-    [TypeConverter(typeof(SharpDX.Design.Half2Converter))]
-#endif
     [DynamicSerializer("TKH2")]
     public struct Half2 : IEquatable<Half2>, IDataSerializable
     {

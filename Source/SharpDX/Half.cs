@@ -18,8 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Serialization;
@@ -30,10 +28,6 @@ namespace SharpDX
     /// A half precision (16 bit) floating point value.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-#if !W8CORE
-    [Serializable]
-    [TypeConverter(typeof(SharpDX.Design.HalfConverter))]
-#endif
     [DynamicSerializer("TKH1")]
     public struct Half : IDataSerializable
     {

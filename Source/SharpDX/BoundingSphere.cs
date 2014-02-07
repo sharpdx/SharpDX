@@ -53,9 +53,6 @@ namespace SharpDX
     /// <summary>
     /// Represents a bounding sphere in three dimensional space.
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct BoundingSphere : IEquatable<BoundingSphere>, IFormattable, IDataSerializable
     {

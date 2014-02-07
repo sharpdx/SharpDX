@@ -45,7 +45,6 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using System.ComponentModel;
 using SharpDX.Serialization;
 
 namespace SharpDX
@@ -53,10 +52,6 @@ namespace SharpDX
     /// <summary>
     /// Represents a color in the form of rgba.
     /// </summary>
-#if !W8CORE
-    [Serializable]
-    [TypeConverter(typeof(SharpDX.Design.Color4Converter))]
-#endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     [DynamicSerializer("TKC4")]
     public struct Color4 : IEquatable<Color4>, IFormattable, IDataSerializable

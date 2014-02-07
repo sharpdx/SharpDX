@@ -25,9 +25,6 @@ namespace SharpDX
     /// <summary>
     ///   The base class for errors that occur in SharpDX.
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     public class SharpDXException : Exception
     {
         private ResultDescriptor descriptor;
