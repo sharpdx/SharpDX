@@ -130,6 +130,57 @@ namespace SharpPak
             AssembliesToLink.RemoveAt(0);
         }
 
+        private void AddAssemblies(AssemblyDefinition assembly,
+            List<string> paths,
+            string fromDirectory,
+            string[] includeMergeListRegex)
+        {
+            var hashSet = new HashSet<AssemblyDefinition>();
+            AddAssemblies(assembly, paths, fromDirectory, includeMergeListRegex, hashSet);
+        }
+
+
+        private void AddAssemblies(AssemblyDefinition assembly, List<string> paths, string fromDirectory, string[] includeMergeListRegex, HashSet<AssemblyDefinition> added)
+        {
+            if(added.Contains(assembly))
+                return;
+
+            added.Add(assembly);
+            var directoryOfAssembly = Path.GetDirectoryName(assembly.MainModule.FullyQualifiedName);
+            if (fromDirectory == directoryOfAssembly)
+            {
+                if(!paths.Contains(assembly.MainModule.FullyQualifiedName))
+                {
+                    paths.Add(assembly.MainModule.FullyQualifiedName);
+                }
+            }
+
+            // Load SharpDX assemblies
+            foreach (var assemblyRef in assembly.MainModule.AssemblyReferences)
+            {
+                bool isAssemblyAdded = false;
+
+                foreach (var regexIncludeStr in includeMergeListRegex)
+                {
+                    var regexInclude = new Regex(regexIncludeStr);
+                    if (regexInclude.Match(assemblyRef.Name).Success)
+                    {
+                        var assemblyDefRef = assembly.MainModule.AssemblyResolver.Resolve(assemblyRef);
+                        AddAssemblies(assemblyDefRef, paths, fromDirectory, includeMergeListRegex, added);
+                        isAssemblyAdded = true;
+                        break;
+                    }
+                }
+
+                if (!isAssemblyAdded && AutoReferences)
+                {
+                    var assemblyDefRef = assembly.MainModule.AssemblyResolver.Resolve(assemblyRef);
+                    AddAssemblies(assemblyDefRef, paths, fromDirectory, includeMergeListRegex, added);
+                }
+            }
+        }
+
+
 
         /// <summary>
         /// Performs packing.
@@ -147,40 +198,12 @@ namespace SharpPak
             var corlib = (AssemblyNameReference)assembly.MainModule.TypeSystem.Corlib;
             bool isNet40 = corlib.Version.Major == 4;
 
-            var assemblyReferences = new List<AssemblyDefinition>();
             var paths = new List<string>();
-            paths.Add(assembly.MainModule.FullyQualifiedName);
 
             var fromDirectory = Path.GetDirectoryName(assembly.MainModule.FullyQualifiedName);
 
             // Load SharpDX assemblies
-            foreach (var assemblyRef in assembly.MainModule.AssemblyReferences)
-            {
-                bool isAssemblyAdded = false;
-
-                foreach (var regexIncludeStr in includeMergeListRegex)
-                {
-                    var regexInclude = new Regex(regexIncludeStr);
-                    if (regexInclude.Match(assemblyRef.Name).Success)
-                    {
-                        var assemblyDefRef = assembly.MainModule.AssemblyResolver.Resolve(assemblyRef);
-                        assemblyReferences.Add(assemblyDefRef);
-                        paths.Add(assemblyDefRef.MainModule.FullyQualifiedName);
-                        isAssemblyAdded = true;
-                        break;
-                    }
-                }
-
-                if (!isAssemblyAdded && AutoReferences)
-                {
-                    var assemblyDefRef = assembly.MainModule.AssemblyResolver.Resolve(assemblyRef);
-                    var directoryOfAssembly = Path.GetDirectoryName(assemblyDefRef.MainModule.FullyQualifiedName);
-                    if (fromDirectory == directoryOfAssembly)
-                    {
-                        paths.Add(assemblyDefRef.MainModule.FullyQualifiedName);
-                    }
-                }
-            }
+            AddAssemblies(assembly, paths, fromDirectory, includeMergeListRegex);
 
             // Load assemblies to link
             foreach (var assemblyToLinkName in AssembliesToLink)
