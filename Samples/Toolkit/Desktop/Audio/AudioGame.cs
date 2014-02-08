@@ -75,9 +75,9 @@ namespace Audio
 
             audioManager = new AudioManager(this);
             //audioManager.EnableMasterVolumeLimiter();
-            //audioManager.EnableReverbEffect();
-            //audioManager.SetReverbEffectParameters(ReverbPresets.SewerPipe);
-
+            audioManager.EnableReverbEffect();
+            audioManager.SetReverbEffectParameters(ReverbPresets.BathRoom);
+            //audioManager.EnableReverbFilter();
 
             // Setup the relative directory to the executable directory
             // for loading contents with the ContentManager
@@ -223,10 +223,10 @@ namespace Audio
             if (play3D)
                 return;
 
-            listener = Matrix.LookAtRH(Vector3.Zero, new Vector3(0, 0, 4), Vector3.Up);
+            listener = Matrix.LookAtRH(Vector3.Zero, new Vector3(0, 0, 8), Vector3.Up);
             listenerVelocity = Vector3.Zero;
 
-            emitter = Matrix.LookAtRH(new Vector3(0,0,4), Vector3.Zero, Vector3.Up);
+            emitter = Matrix.LookAtRH(new Vector3(0,0,8), Vector3.Zero, Vector3.Up);
             emitterVelocity = Vector3.Zero;
 
             audio3DEffectInstance = waveBank.Create("PewPew");
@@ -240,7 +240,7 @@ namespace Audio
         {
             var rotation = (float)gameTime.TotalGameTime.TotalSeconds * 2.0f;
 
-            emitter = Matrix.LookAtRH(new Vector3(0, 0, 4), Vector3.Zero, Vector3.Up) * Matrix.RotationY(rotation);
+            emitter = Matrix.LookAtRH(new Vector3(0, 0, 8), Vector3.Zero, Vector3.Up) * Matrix.RotationY(rotation);
             audio3DEffectInstance.Apply3D(listener, listenerVelocity, emitter, emitterVelocity);
         }
 

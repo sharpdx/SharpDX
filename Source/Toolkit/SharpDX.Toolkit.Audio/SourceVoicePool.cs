@@ -65,26 +65,7 @@ namespace SharpDX.Toolkit.Audio
                 item.DestroyVoice();
                 item.Dispose();
             }
-        }
-
-        internal void ReleaseSourceVoice(SourceVoice voice)
-        {
-            if (voice != null && !voice.IsDisposed)
-            {
-                if (IsDisposed)
-                {
-                    voice.DestroyVoice();
-                    voice.Dispose();
-                }
-                else
-                {
-                    voice.Stop(0);
-                    voice.FlushSourceBuffers();
-                    Return(voice);
-                }
-            }
-
-        }
+        }        
 
         public void Release()
         {

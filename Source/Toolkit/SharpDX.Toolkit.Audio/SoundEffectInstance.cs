@@ -37,6 +37,8 @@ namespace SharpDX.Toolkit.Audio
         private float pan;
         private float pitch;
         private float[] outputMatrix;
+        float[] reverbLevels;
+        bool isReverbSubmixEnabled;
         private Emitter emitter;
         private Listener listener;
         private DspSettings dspSettings;
@@ -318,22 +320,56 @@ namespace SharpDX.Toolkit.Audio
 
             if(Effect.AudioManager.IsReverbEffectEnabled)
             {
-                voice.SetOutputMatrix(Effect.AudioManager.ReverbVoice, 1, 1, new []{ dspSettings.ReverbLevel });
-            }
-            
-            //if (mFlags & SoundEffectInstance_ReverbUseFilters)
-            //{
-            //    FilterParameters filterDirect = new FilterParameters { Type = FilterType.LowPassFilter, Frequency = 2.0f * (float)Math.Sin(X3DAudio.PI / 6.0f * dspSettings.LpfDirectCoefficient), OneOverQ = 1.0f };
-            //    // see XAudio2CutoffFrequencyToRadians() in XAudio2.h for more information on the formula used here
-            //    voice.SetOutputFilterParameters(Effect.AudioManager.MasteringVoice, filterDirect);
+                if(!isReverbSubmixEnabled)
+                {
+                    VoiceSendFlags sendFlags = Effect.AudioManager.IsReverbFilterEnabled ? VoiceSendFlags.UseFilter : VoiceSendFlags.None;
+                    VoiceSendDescriptor[] outputVoices = new VoiceSendDescriptor[]
+                    {
+                        new VoiceSendDescriptor { OutputVoice = Effect.AudioManager.MasteringVoice, Flags = sendFlags },
+                        new VoiceSendDescriptor { OutputVoice = Effect.AudioManager.ReverbVoice, Flags = sendFlags }
+                    };
 
-            //    if (Effect.AudioManager.IsReverbEffectEnabled)
-            //    {
-            //        FilterParameters filterReverb = new FilterParameters { Type = FilterType.LowPassFilter, Frequency = 2.0f * (float)Math.Sin(X3DAudio.PI / 6.0f * dspSettings.LpfReverbCoefficient), OneOverQ = 1.0f };
-            //        // see XAudio2CutoffFrequencyToRadians() in XAudio2.h for more information on the formula used here
-            //        voice.SetOutputFilterParameters(Effect.AudioManager.ReverbVoice, filterReverb);
-            //    }
-            //}
+                    
+                    voice.SetOutputVoices(outputVoices);
+                    isReverbSubmixEnabled = true;
+                }
+                
+                if(reverbLevels == null || reverbLevels.Length != Effect.Format.Channels)
+                    reverbLevels = new float [Effect.Format.Channels];
+
+                for (int i = 0; i < reverbLevels.Length; i++)
+                {
+                    reverbLevels[i] = dspSettings.ReverbLevel;
+                }                
+
+                voice.SetOutputMatrix(Effect.AudioManager.ReverbVoice, Effect.Format.Channels, 1, reverbLevels);
+            }
+
+            if (Effect.AudioManager.IsReverbFilterEnabled)
+            {
+                FilterParameters filterDirect = new FilterParameters 
+                { 
+                    Type = FilterType.LowPassFilter,
+                    // see XAudio2CutoffFrequencyToRadians() in XAudio2.h for more information on the formula used here
+                    Frequency = 2.0f * (float)Math.Sin(X3DAudio.PI / 6.0f * dspSettings.LpfDirectCoefficient),
+                    OneOverQ = 1.0f 
+                };
+                
+                voice.SetOutputFilterParameters(Effect.AudioManager.MasteringVoice, filterDirect);
+
+                if (Effect.AudioManager.IsReverbEffectEnabled)
+                {
+                    FilterParameters filterReverb = new FilterParameters 
+                    { 
+                        Type = FilterType.LowPassFilter,
+                        // see XAudio2CutoffFrequencyToRadians() in XAudio2.h for more information on the formula used here
+                        Frequency = 2.0f * (float)Math.Sin(X3DAudio.PI / 6.0f * dspSettings.LpfReverbCoefficient),                         
+                        OneOverQ = 1.0f 
+                    };
+                    
+                    voice.SetOutputFilterParameters(Effect.AudioManager.ReverbVoice, filterReverb);
+                }
+            }
         }
 
         private void SetPanOutputMatrix()
@@ -402,14 +438,41 @@ namespace SharpDX.Toolkit.Audio
 
             var outputMatrixSize = destinationChannels * sourceChannels;
 
-            if (outputMatrix == null || outputMatrix.Length < outputMatrixSize)
+            if (outputMatrix == null || outputMatrix.Length != outputMatrixSize)
                 outputMatrix = new float[outputMatrixSize];
 
             // Default to full volume for all channels/destinations   
             for (var i = 0; i < outputMatrix.Length; i++)
                 outputMatrix[i] = 1.0f;
         }
-        
+
+
+        private void ReleaseSourceVoice()
+        {
+            if (voice != null && !voice.IsDisposed)
+            {
+                voice.Stop(0);
+                voice.FlushSourceBuffers();
+                if (isReverbSubmixEnabled)
+                {
+                    voice.SetOutputVoices((VoiceSendDescriptor[])null);
+                    isReverbSubmixEnabled = false;
+                }
+                
+                if (Effect.VoicePool.IsDisposed)
+                {                   
+                    voice.DestroyVoice();
+                    voice.Dispose();
+                }
+                else
+                {                    
+                    Effect.VoicePool.Return(voice);
+                }
+
+            }
+            voice = null;
+        }
+
         public bool IsDisposed { get; private set; }
 
 
@@ -418,8 +481,7 @@ namespace SharpDX.Toolkit.Audio
             if (!IsDisposed)
             {
                 IsDisposed = true;
-                Effect.VoicePool.ReleaseSourceVoice(voice);
-                voice = null;
+                ReleaseSourceVoice();                
                 Effect.ChildDisposed(this);
                 Effect = null;
                 outputMatrix = null;
@@ -437,8 +499,7 @@ namespace SharpDX.Toolkit.Audio
             if (!IsDisposed)
             {
                 IsDisposed = true;
-                Effect.VoicePool.ReleaseSourceVoice(voice);
-                voice = null;
+                ReleaseSourceVoice();
                 Effect = null; 
                 outputMatrix = null;
             }

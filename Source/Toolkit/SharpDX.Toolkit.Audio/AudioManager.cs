@@ -41,8 +41,7 @@ namespace SharpDX.Toolkit.Audio
         private X3DAudio x3DAudio;
         private bool isMasteringLimiterEnabled;
         private MasteringLimiterParameters masteringLimiterParameters;
-        private MasteringLimiter masteringLimiter;
-        public bool IsReverbEffectEnabled { get; private set; }
+        private MasteringLimiter masteringLimiter;        
         private ReverbParameters reverbParameters;
         private Reverb reverb;
 
@@ -134,7 +133,7 @@ namespace SharpDX.Toolkit.Audio
 #endif
             MasteringVoice = new MasteringVoice(Device, XAudio2.DefaultChannels, XAudio2.DefaultSampleRate, deviceId);
             MasteringVoice.SetVolume(masterVolume);
-
+            
 
 
 #if WIN8METRO || WP8
@@ -148,24 +147,18 @@ namespace SharpDX.Toolkit.Audio
 
             if(isMasteringLimiterEnabled)
             {
-                masteringLimiter = new MasteringLimiter();
-                masteringLimiter.Parameter = masteringLimiterParameters;
-                MasteringVoice.SetEffectChain(new EffectDescriptor(masteringLimiter));
+                CreateMasteringLimitier();
             }
 
             if(IsReverbEffectEnabled)
             {
-                VoiceDetails masterDetails = MasteringVoice.VoiceDetails;
-                reverb = new Reverb();
-                ReverbVoice = new SubmixVoice(Device, 1, masterDetails.InputSampleRate, VoiceSendFlags.None, 0);
-                ReverbVoice.SetEffectChain(new EffectDescriptor(reverb, 1));
-                ReverbVoice.SetEffectParameters(0, reverbParameters);
+                CreateReverbSubmixVoice();
             }
 
             contentManager.ReaderFactories.Add(this);
         }
 
-
+        
         /// <summary>
         /// Sets and gets the volume of the Masteing voice.
         /// </summary>
@@ -197,12 +190,13 @@ namespace SharpDX.Toolkit.Audio
         internal MasteringVoice MasteringVoice  { get; private set; }
         internal SubmixVoice ReverbVoice { get; private set; }
         internal SoundEffectInstancePool InstancePool { get; private set; }
-
+        public bool IsReverbEffectEnabled { get; private set; }
+        public bool IsReverbFilterEnabled { get; private set; }
 
         public void EnableMasterVolumeLimiter()
         {
             if (IsDisposed)
-                throw new ObjectDisposedException(this.GetType().FullName);
+                throw new ObjectDisposedException(this.GetType().FullName);            
             
             if (isMasteringLimiterEnabled)
                 return;
@@ -210,10 +204,8 @@ namespace SharpDX.Toolkit.Audio
             if (MasteringVoice != null)
             {
                 if (masteringLimiter == null)
-                {                    
-                    masteringLimiter = new MasteringLimiter();
-                    masteringLimiter.Parameter = masteringLimiterParameters;
-                    MasteringVoice.SetEffectChain(new EffectDescriptor(masteringLimiter));
+                {
+                    CreateMasteringLimitier();
                 }
                 else
                 {
@@ -223,6 +215,7 @@ namespace SharpDX.Toolkit.Audio
 
             isMasteringLimiterEnabled = true;
         }
+
 
         public void DisableMasterVolumeLimiter()
         {
@@ -238,6 +231,13 @@ namespace SharpDX.Toolkit.Audio
             }
 
             isMasteringLimiterEnabled = false;
+        }
+
+        private void CreateMasteringLimitier()
+        {
+            masteringLimiter = new MasteringLimiter();
+            masteringLimiter.Parameter = masteringLimiterParameters;
+            MasteringVoice.SetEffectChain(new EffectDescriptor(masteringLimiter));
         }
 
         public void SetMasteringLimit(int release, int loudness)
@@ -271,11 +271,7 @@ namespace SharpDX.Toolkit.Audio
             {
                 if (ReverbVoice == null)
                 {
-                    VoiceDetails masterDetails = MasteringVoice.VoiceDetails;
-                    reverb = new Reverb();
-                    ReverbVoice = new SubmixVoice(Device, 1, masterDetails.InputSampleRate, VoiceSendFlags.None, 0);
-                    ReverbVoice.SetEffectChain(new EffectDescriptor(reverb,1));
-                    ReverbVoice.SetEffectParameters(0, reverbParameters);
+                    CreateReverbSubmixVoice();
                 }
                 else
                 {
@@ -321,6 +317,22 @@ namespace SharpDX.Toolkit.Audio
                 throw new ObjectDisposedException(this.GetType().FullName);
             
             SetReverbEffectParameters((ReverbParameters)reverbPresets[(int)preset]);
+        }
+
+        public void EnableReverbFilter()
+        {
+            IsReverbFilterEnabled = true;
+        }
+        
+        
+        private void CreateReverbSubmixVoice()
+        {
+            VoiceDetails masterDetails = MasteringVoice.VoiceDetails;
+            VoiceSendFlags sendFlags = IsReverbFilterEnabled ? VoiceSendFlags.UseFilter : VoiceSendFlags.None;
+            ReverbVoice = new SubmixVoice(Device, 1, masterDetails.InputSampleRate, sendFlags, 0);
+            reverb = new Reverb();
+            ReverbVoice.SetEffectChain(new EffectDescriptor(reverb, 1));
+            ReverbVoice.SetEffectParameters(0, reverbParameters);
         }
 
         internal void Calculate3D(Listener listener, Emitter emitter, CalculateFlags flags, DspSettings dspSettings)
@@ -369,6 +381,17 @@ namespace SharpDX.Toolkit.Audio
                     x3DAudio = null;
                 }
 
+                if (ReverbVoice != null)
+                {
+                    ReverbVoice.DestroyVoice();
+                    ReverbVoice.Dispose();
+                    ReverbVoice = null;
+                    reverb.Dispose();
+                    reverb = null;
+                }
+
+                IsReverbEffectEnabled = false;
+
                 if (MasteringVoice != null)
                 {
                     MasteringVoice.DestroyVoice();
@@ -381,17 +404,8 @@ namespace SharpDX.Toolkit.Audio
                     masteringLimiter.Dispose();
                     masteringLimiter = null;
                 }
-                isMasteringLimiterEnabled = false;
 
-                if(ReverbVoice != null)
-                {
-                    ReverbVoice.DestroyVoice();
-                    ReverbVoice.Dispose();
-                    ReverbVoice = null;
-                    reverb.Dispose();
-                    reverb = null;
-                }
-                IsReverbEffectEnabled = false;
+                isMasteringLimiterEnabled = false;
 
                 if (Device != null)
                 {
