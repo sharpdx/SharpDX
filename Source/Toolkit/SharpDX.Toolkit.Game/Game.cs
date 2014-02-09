@@ -473,6 +473,11 @@ namespace SharpDX.Toolkit
                 // If there is no need for update, then exit
                 if (updateCount == 0)
                 {
+                    // check if we can sleep the thread to free CPU resources
+                    var sleepTime = TargetElapsedTime - accumulatedElapsedGameTime;
+                    if (sleepTime > TimeSpan.Zero)
+                        Utilities.Sleep(sleepTime);
+
                     return;
                 }
 
