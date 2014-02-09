@@ -15,7 +15,7 @@ namespace System.Reflection
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ObfuscateAssemblyAttribute"/> class,
-        /// specifying whether the assembly to be obfuscated is public or private.
+        /// specifying whether the assembly to be obfuscated is public or priyvate.
         /// </summary>
         /// <param name="assemblyIsPrivate"><c>true</c> if the assembly is used within the scope of one application; otherwise, <c>false</c>.</param>
         public ObfuscateAssemblyAttribute(bool assemblyIsPrivate)

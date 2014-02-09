@@ -72,8 +72,4 @@ using System.Runtime.CompilerServices;
 #if DEBUG
 [assembly: InternalsVisibleTo("SharpDX.Tests")]
 #endif
-
-[assembly: Obfuscation(Feature = "Apply to type * when public and interface: renaming", Exclude = false, ApplyToMembers = true)]
-[assembly: Obfuscation(Feature = "Apply to type * when struct: renaming", Exclude = false, ApplyToMembers = true)]
-
 #endif

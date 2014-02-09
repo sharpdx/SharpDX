@@ -228,6 +228,8 @@ namespace SharpPak
             merge.OutputFile = OutputDirectory + "\\" + strOutputFile;
             merge.SetInputAssemblies(files);
             merge.DebugInfo = false;
+            merge.CopyAttributes = true;
+            merge.AllowMultipleAssemblyLevelAttributes = true;
             merge.XmlDocumentation = false;
 
             // Special case for v4 framework
