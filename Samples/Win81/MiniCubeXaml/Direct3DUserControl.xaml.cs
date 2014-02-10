@@ -28,13 +28,29 @@ namespace MiniCubeXaml
         CubeRenderer cubeRenderer;
         ShapeRenderer shapeRenderer;
 
+        public static readonly DependencyProperty DesignModeD3DRenderingProperty =
+            DependencyProperty.Register("DesignModeD3DRendering", typeof(Boolean), typeof(Direct3DUserControl), new PropertyMetadata(false));
+
+        public Boolean DesignModeD3DRendering
+        {
+            get
+            {
+                return (Boolean)GetValue(DesignModeD3DRenderingProperty);
+            }
+            set
+            {
+                SetValue(DesignModeD3DRenderingProperty, value);
+            }
+        }
+
         public Direct3DUserControl()
         {
             this.InitializeComponent();
 
             // do not initialize D3D in design mode as it may cause designer crashes
             if(Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-                return;
+                if (!DesignModeD3DRendering)
+                    return;
 
             // Safely dispose any previous instance
             // Creates a new DeviceManager (Direct3D, Direct2D, DirectWrite, WIC)
