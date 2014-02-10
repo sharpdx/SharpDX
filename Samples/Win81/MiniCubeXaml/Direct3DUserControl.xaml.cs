@@ -32,6 +32,10 @@ namespace MiniCubeXaml
         {
             this.InitializeComponent();
 
+            // do not initialize D3D in design mode as it may cause designer crashes
+            if(Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+                return;
+
             // Safely dispose any previous instance
             // Creates a new DeviceManager (Direct3D, Direct2D, DirectWrite, WIC)
             deviceManager = new DeviceManager();            
