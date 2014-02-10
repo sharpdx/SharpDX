@@ -93,6 +93,66 @@
     <const from-guid="CLSID_Audio.*" class="SharpDX.XAudio2.Fx.XAudio2FxContants" type="System.Guid">new System.Guid("$1")</const>    
     <create class="SharpDX.XAudio2.Fx.XAudio2FxContants" />
     -->
+    <create class="SharpDX.XAudio2.Fx.Reverb" visibility="public"/>
+    <const from-macro="XAUDIO2FX_REVERB_MIN_WET_DRY_MIX"       type="float" cpp-type="float" name="MinWetDryMix" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MIN_REFLECTIONS_DELAY" type="int"   cpp-type="int"   name="MinReflectionsDelay" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MIN_REVERB_DELAY"      type="byte"  cpp-type="int"  name="MinReverbDelay" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MIN_REAR_DELAY"        type="byte"  cpp-type="int"  name="MinRearDelay" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MIN_POSITION"          type="byte"  cpp-type="int"  name="MinPosition" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MIN_DIFFUSION"         type="byte"  cpp-type="int"  name="MinDiffusion" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MIN_LOW_EQ_GAIN"       type="byte"  cpp-type="int"  name="MinLowEqGain" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MIN_LOW_EQ_CUTOFF"     type="byte"  cpp-type="int"  name="MinLowEqCutoff" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MIN_HIGH_EQ_GAIN"      type="byte"  cpp-type="int"  name="MinHighEqGain" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MIN_HIGH_EQ_CUTOFF"    type="byte"  cpp-type="int"  name="MinHighEqCutoff" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MIN_ROOM_FILTER_FREQ"  type="float" cpp-type="float" name="MinRoomFilterFreq" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MIN_ROOM_FILTER_MAIN"  type="float" cpp-type="float" name="MinRoomFilterMain" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MIN_ROOM_FILTER_HF"    type="float" cpp-type="float" name="MinRoomFilterHf" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MIN_REFLECTIONS_GAIN"  type="float" cpp-type="float" name="MinReflectionsGain" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MIN_REVERB_GAIN"       type="float" cpp-type="float" name="MinReverbGain" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MIN_DECAY_TIME"        type="float" cpp-type="float" name="MinDecayTime" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MIN_DENSITY"           type="float" cpp-type="float" name="MinDensity" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MIN_ROOM_SIZE"         type="float" cpp-type="float" name="MinRoomSize" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+
+    <const from-macro="XAUDIO2FX_REVERB_MAX_WET_DRY_MIX"       type="float" cpp-type="float" name="MaxWetDryMix" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MAX_REFLECTIONS_DELAY" type="int"   cpp-type="int"   name="MaxReflectionsDelay" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MAX_REVERB_DELAY"      type="byte"  cpp-type="int"  name="MaxReverbDelay" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MAX_REAR_DELAY"        type="byte"  cpp-type="int"  name="MaxRearDelay" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MAX_POSITION"          type="byte"  cpp-type="int"  name="MaxPosition" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MAX_DIFFUSION"         type="byte"  cpp-type="int"  name="MaxDiffusion" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MAX_LOW_EQ_GAIN"       type="byte"  cpp-type="int"  name="MaxLowEqGain" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MAX_LOW_EQ_CUTOFF"     type="byte"  cpp-type="int"  name="MaxLowEqCutoff" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MAX_HIGH_EQ_GAIN"      type="byte"  cpp-type="int"  name="MaxHighEqGain" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MAX_HIGH_EQ_CUTOFF"    type="byte"  cpp-type="int"  name="MaxHighEqCutoff" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MAX_ROOM_FILTER_FREQ"  type="float" cpp-type="float" name="MaxRoomFilterFreq" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MAX_ROOM_FILTER_MAIN"  type="float" cpp-type="float" name="MaxRoomFilterMain" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MAX_ROOM_FILTER_HF"    type="float" cpp-type="float" name="MaxRoomFilterHf" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MAX_REFLECTIONS_GAIN"  type="float" cpp-type="float" name="MaxReflectionsGain" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MAX_REVERB_GAIN"       type="float" cpp-type="float" name="MaxReverbGain" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MAX_DECAY_TIME"        type="float" cpp-type="float" name="MaxDecayTime" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MAX_DENSITY"           type="float" cpp-type="float" name="MaxDensity" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_MAX_ROOM_SIZE"         type="float" cpp-type="float" name="MaxRoomSize" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_WET_DRY_MIX"       type="float" cpp-type="float" name="DefaultWetDryMix" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_REFLECTIONS_DELAY" type="int"   cpp-type="int"   name="DefaultReflectionsDelay" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_REVERB_DELAY"      type="byte"  cpp-type="int"  name="DefaultReverbDelay" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_REAR_DELAY"        type="byte"  cpp-type="int"  name="DefaultRearDelay" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_POSITION"          type="byte"  cpp-type="int"  name="DefaultPosition" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_POSITION_MATRIX"   type="byte"  cpp-type="int"  name="DefaultPositionMatrix" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_EARLY_DIFFUSION"   type="byte"  cpp-type="int"  name="DefaultEarlyDiffusion" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_LATE_DIFFUSION"    type="byte"  cpp-type="int"  name="DefaultLateDiffusion" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />    
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_LOW_EQ_GAIN"       type="byte"  cpp-type="int"  name="DefaultLowEqGain" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_LOW_EQ_CUTOFF"     type="byte"  cpp-type="int"  name="DefaultLowEqCutoff" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_HIGH_EQ_GAIN"      type="byte"  cpp-type="int"  name="DefaultHighEqGain" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_HIGH_EQ_CUTOFF"    type="byte"  cpp-type="int"  name="DefaultHighEqCutoff" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_ROOM_FILTER_FREQ"  type="float" cpp-type="float" name="DefaultRoomFilterFreq" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_ROOM_FILTER_MAIN"  type="float" cpp-type="float" name="DefaultRoomFilterMain" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_ROOM_FILTER_HF"    type="float" cpp-type="float" name="DefaultRoomFilterHf" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_REFLECTIONS_GAIN"  type="float" cpp-type="float" name="DefaultReflectionsGain" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_REVERB_GAIN"       type="float" cpp-type="float" name="DefaultReverbGain" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_DECAY_TIME"        type="float" cpp-type="float" name="DefaultDecayTime" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_DENSITY"           type="float" cpp-type="float" name="DefaultDensity" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+    <const from-macro="XAUDIO2FX_REVERB_DEFAULT_ROOM_SIZE"         type="float" cpp-type="float" name="DefaultRoomSize" class="SharpDX.XAudio2.Fx.Reverb" visibility="public const" />
+
     <context-clear/>
   </extension>
 

@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\SharpDX.PreSettings.targets" />
+  <PropertyGroup>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1FA327C8-6C48-4FFC-9235-B98B7521B79D}</ProjectGuid>
+    <RootNamespace>SharpDX.Toolkit.Audio</RootNamespace>
+    <AssemblyName>SharpDX.Toolkit.Audio</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(SharpDXWin8Core)' == 'false'">
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="AudioManager.cs" />
+    <Compile Include="BitField.cs" />
+    <Compile Include="NamespaceDoc.cs" />
+    <Compile Include="Pool.cs" />
+    <Compile Include="ReverbPresets.cs" />
+    <Compile Include="SoundEffect.cs" />
+    <Compile Include="SoundEffectInstance.cs" />
+    <Compile Include="SoundEffectInstancePool.cs" />
+    <Compile Include="SourceVoicePool.cs" />
+    <Compile Include="SoundState.cs" />
+    <Compile Include="WaveBank.cs" />
+    <Compile Include="WaveBankReader.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SharpDX.XAudio2\SharpDX.XAudio2.csproj">
+      <Project>{4995127e-0b8e-45b8-80c4-6bac1bbe3783}</Project>
+      <Name>SharpDX.XAudio2</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpDX\SharpDX.csproj">
+      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
+      <Name>SharpDX</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpDX.Toolkit.Game\SharpDX.Toolkit.Game.csproj">
+      <Project>{b2516a23-1a99-4263-964a-b820fd07fa80}</Project>
+      <Name>SharpDX.Toolkit.Game</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpDX.Toolkit\SharpDX.Toolkit.csproj">
+      <Project>{9ff0707c-75bb-4984-a01f-b9eaad293f6c}</Project>
+      <Name>SharpDX.Toolkit</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

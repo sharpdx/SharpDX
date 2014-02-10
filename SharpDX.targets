@@ -94,6 +94,9 @@ It compiles all files of type ToolkitFxc/ToolkitFont
     <Reference Include="SharpDX.Toolkit.Yaml">
       <HintPath>$(SharpDXSdkBinDir)\SharpDX.Toolkit.Yaml.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDX.Toolkit.Audio">
+      <HintPath>$(SharpDXSdkBinDir)\SharpDX.Toolkit.Audio.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX.Direct3D11">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SharpDXSdkBinDir)\SharpDX.Direct3D11.dll</HintPath>
