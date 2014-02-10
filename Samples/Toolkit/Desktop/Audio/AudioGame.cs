@@ -17,19 +17,20 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using SharpDX;
-using SharpDX.Toolkit;
-using SharpDX.Toolkit.Audio;
-using SharpDX.Toolkit.Graphics;
-using SharpDX.Toolkit.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Audio
 {
+    using SharpDX;
+    using SharpDX.Toolkit;
+    using SharpDX.Toolkit.Audio;
+    using SharpDX.Toolkit.Graphics;
+    using SharpDX.Toolkit.Input;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
     class AudioGame :Game
     {
         private GraphicsDeviceManager graphicsDeviceManager;
@@ -171,7 +172,7 @@ namespace Audio
             {
                 if (tile.Border.Contains(new Vector2(currentMouse.X * GraphicsDevice.Viewport.Width,currentMouse.Y * GraphicsDevice.Viewport.Height)))
                 {
-                    if (currentMouse.Left == ButtonState.Pressed && mouseState.Left == ButtonState.Released)
+                    if (currentMouse.LeftButton.Pressed)
                     {
                         tile.BorderColor = Color.Green;
                         tile.Play();
