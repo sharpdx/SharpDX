@@ -76,6 +76,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using SharpDX.Direct2D1;
+using SharpDX.DirectWrite;
+using SharpDX.WIC;
+using Factory = SharpDX.DirectWrite.Factory;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -98,6 +102,151 @@ namespace SharpDX.Toolkit.Graphics
 
 
         public void Import(FontDescription options)
+        {
+            var factory = new DirectWrite.Factory();
+            DirectWrite.Font font = null;
+
+            using(var fontCollection = factory.GetSystemFontCollection(false))
+            {
+                int index;
+                if(!fontCollection.FindFamilyName(options.FontName, out index))
+                {
+                    throw new Exception(string.Format("Can't find font '{0}'.", options.FontName));
+                }
+
+                using(var fontFamily = fontCollection.GetFontFamily(index))
+                {
+                    var weight = FontWeight.Regular;
+                    var style = DirectWrite.FontStyle.Normal;
+                    switch(options.Style)
+                    {
+                        case FontStyle.Bold:
+                            weight = FontWeight.Bold;
+                            break;
+                        case FontStyle.Italic:
+                            weight = FontWeight.Regular;
+                            style = DirectWrite.FontStyle.Italic;
+                            break;
+                        case FontStyle.Regular:
+                            weight = FontWeight.Regular;
+                            break;
+                        case FontStyle.Strikeout:
+                        case FontStyle.Underline:
+                            // TODO: currently not supported
+                            throw new Exception(string.Format("Underline/Strikeout for font '{0}'not supported in tkfont", options.FontName));
+                    }
+
+                    font = fontFamily.GetFirstMatchingFont(weight, DirectWrite.FontStretch.Normal, style);
+                }
+            }
+
+            var fontFace = new FontFace(font);
+            var fontMetrics = fontFace.Metrics;
+
+            // Create a bunch of GDI+ objects.
+            var fontSize = PointsToPixels(options.Size);
+            
+            // Which characters do we want to include?
+            var characters = CharacterRegion.Flatten(options.CharacterRegions);
+
+            var glyphList = new List<Glyph>();
+
+            // Store the font height.
+            LineSpacing = (float)(fontMetrics.LineGap + fontMetrics.Ascent + fontMetrics.Descent) / fontMetrics.DesignUnitsPerEm * fontSize;
+
+            // Rasterize each character in turn.
+            foreach (char character in characters)
+            {
+                var glyph = ImportGlyph(factory, fontFace, character, fontMetrics, fontSize);
+                glyph.YOffset += (float)(fontMetrics.LineGap + fontMetrics.Ascent) / fontMetrics.DesignUnitsPerEm * fontSize; ;
+
+                glyphList.Add(glyph);
+            }
+
+            Glyphs = glyphList;
+
+        }
+
+        private Glyph ImportGlyph(Factory factory, FontFace fontFace, char character, FontMetrics fontMetrics, float fontSize)
+        {
+            var indices = fontFace.GetGlyphIndices(new int[] {character});
+
+            var metrics = fontFace.GetDesignGlyphMetrics(indices, false);
+            var metric = metrics[0];
+
+            var width = (float)(metric.AdvanceWidth - metric.LeftSideBearing - metric.RightSideBearing) / fontMetrics.DesignUnitsPerEm * fontSize;
+            var height = (float)(metric.AdvanceHeight - metric.TopSideBearing - metric.BottomSideBearing) / fontMetrics.DesignUnitsPerEm * fontSize;
+
+            var xOffset = (float)metric.LeftSideBearing / fontMetrics.DesignUnitsPerEm * fontSize;
+            var yOffset = (float)(metric.TopSideBearing - metric.VerticalOriginY) / fontMetrics.DesignUnitsPerEm * fontSize;
+
+            var advanceWidth = (float)(metric.AdvanceWidth) / fontMetrics.DesignUnitsPerEm * fontSize;
+            var advanceHeight = (float)(metric.AdvanceHeight) / fontMetrics.DesignUnitsPerEm * fontSize;
+
+            var pixelWidth = (int)Math.Ceiling(width + 2);
+            var pixelHeight = (int)Math.Ceiling(height + 2);
+
+            Bitmap bitmap;
+            if(character == ' ')
+            {
+                bitmap = new Bitmap(1, 1, PixelFormat.Format32bppArgb);
+            }
+            else
+            {
+                var glyphRun = new GlyphRun()
+                               {
+                                   FontFace = fontFace,
+                                   Advances = new[] {advanceWidth},
+                                   FontSize = fontSize,
+                                   BidiLevel = 0,
+                                   Indices = indices,
+                                   IsSideways = false,
+                                   Offsets = new[] {new GlyphOffset()},
+                               };
+
+                var matrix = SharpDX.Matrix.Identity;
+                matrix.M41 = -(float)Math.Floor(xOffset - 1);
+                matrix.M42 = -(float)Math.Floor(yOffset - 1);
+
+                using(var runAnalysis = new GlyphRunAnalysis(factory,
+                    glyphRun,
+                    1.0f,
+                    matrix,
+                    RenderingMode.CleartypeNaturalSymmetric,
+                    MeasuringMode.Natural,
+                    0.0f,
+                    0.0f))
+                {
+                    var bounds = new SharpDX.Rectangle(0, 0, pixelWidth, pixelHeight);
+
+                    var texture = new byte[bounds.Width * bounds.Height * 3];
+                    runAnalysis.CreateAlphaTexture(TextureType.Cleartype3x1, bounds, texture, texture.Length);
+                    bitmap = new Bitmap(bounds.Width, bounds.Height, PixelFormat.Format32bppArgb);
+                    for(int y = 0; y < bounds.Height; y++)
+                    {
+                        for(int x = 0; x < bounds.Width; x++)
+                        {
+                            int pixelX = (y * bounds.Width + x) * 3;
+                            bitmap.SetPixel(x, y, Color.FromArgb(texture[pixelX], texture[pixelX + 1], texture[pixelX + 2]));
+                        }
+                    }
+
+                    //var positionUnderline = (float)fontMetrics.UnderlinePosition / fontMetrics.DesignUnitsPerEm * fontSize;
+                    //var positionUnderlineSize = (float)fontMetrics.UnderlineThickness / fontMetrics.DesignUnitsPerEm * fontSize;
+                }
+            }
+
+            BitmapUtils.ConvertGreyToAlpha(bitmap);
+            var glyph = new Glyph(character, bitmap)
+                        {
+                            XOffset = (float)Math.Floor(xOffset-1),
+                            XAdvance = advanceWidth,
+                            YOffset = (float)Math.Floor(yOffset-1),
+                        };
+            return glyph;
+        }
+
+        public void Import2(FontDescription options)
         {
             // Create a bunch of GDI+ objects.
             using (Font font = CreateFont(options))

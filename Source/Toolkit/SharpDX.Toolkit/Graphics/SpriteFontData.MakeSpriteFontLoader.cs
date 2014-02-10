@@ -65,9 +65,6 @@ namespace SharpDX.Toolkit.Graphics
                 serializer.Serialize(ref Glyphs[i].Subrect);
                 serializer.Serialize(ref Glyphs[i].Offset);
                 serializer.Serialize(ref Glyphs[i].XAdvance);
-
-                // Fix XAdvance with Right/Left for MakeSpriteFont
-                Glyphs[i].XAdvance += Glyphs[i].Subrect.Right - Glyphs[i].Subrect.Left;
             }
 
             serializer.Serialize(ref LineSpacing);
