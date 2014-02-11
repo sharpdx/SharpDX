@@ -204,10 +204,23 @@ namespace SharpDX.Toolkit.Graphics
                                                  FontTextureFormat.Rgba32;
             }
 
+            // Output cleartype texture
+            if(!options.ClearType)
+            {
+                BitmapUtils.ConvertGreyToAlpha(bitmap);
+            }
+
             // Convert to premultiplied alpha format.
             if (!options.NoPremultiply)
             {
-                BitmapUtils.PremultiplyAlpha(bitmap);
+                if (options.ClearType)
+                {
+                    BitmapUtils.PremultiplyAlphaClearType(bitmap);
+                }
+                else
+                {
+                    BitmapUtils.PremultiplyAlpha(bitmap);
+                }
             }
 
             SpriteFontWriter.WriteSpriteFont(options, stream, glyphs, lineSpacing, bitmap);

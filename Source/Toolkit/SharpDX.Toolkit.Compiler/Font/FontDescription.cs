@@ -150,6 +150,10 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public bool NoPremultiply = false;
 
+        /// <summary>
+        /// By default, font textures is a grey. To generate ClearType textures, turn this flag to true 
+        /// </summary>
+        public bool ClearType = false;
 
         public static FontDescription Load(string fileName)
         {

@@ -130,10 +130,6 @@ namespace SharpDX.Toolkit.Graphics
                         case FontStyle.Regular:
                             weight = FontWeight.Regular;
                             break;
-                        case FontStyle.Strikeout:
-                        case FontStyle.Underline:
-                            // TODO: currently not supported
-                            throw new Exception(string.Format("Underline/Strikeout for font '{0}'not supported in tkfont", options.FontName));
                     }
 
                     font = fontFamily.GetFirstMatchingFont(weight, DirectWrite.FontStretch.Normal, style);
@@ -152,13 +148,15 @@ namespace SharpDX.Toolkit.Graphics
             var glyphList = new List<Glyph>();
 
             // Store the font height.
-            LineSpacing = (float)(fontMetrics.LineGap + fontMetrics.Ascent + fontMetrics.Descent) / fontMetrics.DesignUnitsPerEm * fontSize;
+            LineSpacing = (float)Math.Round((float)(fontMetrics.LineGap + fontMetrics.Ascent + fontMetrics.Descent) / fontMetrics.DesignUnitsPerEm * fontSize);
+
+            var baseLine = (float)Math.Round((float)(fontMetrics.LineGap + fontMetrics.Ascent) / fontMetrics.DesignUnitsPerEm * fontSize);
 
             // Rasterize each character in turn.
             foreach (char character in characters)
             {
                 var glyph = ImportGlyph(factory, fontFace, character, fontMetrics, fontSize);
-                glyph.YOffset += (float)(fontMetrics.LineGap + fontMetrics.Ascent) / fontMetrics.DesignUnitsPerEm * fontSize; ;
+                glyph.YOffset += baseLine;
 
                 glyphList.Add(glyph);
             }
@@ -187,7 +185,7 @@ namespace SharpDX.Toolkit.Graphics
             var pixelHeight = (int)Math.Ceiling(height + 2);
 
             Bitmap bitmap;
-            if(character == ' ')
+            if(char.IsWhiteSpace(character))
             {
                 bitmap = new Bitmap(1, 1, PixelFormat.Format32bppArgb);
             }
@@ -196,7 +194,7 @@ namespace SharpDX.Toolkit.Graphics
                 var glyphRun = new GlyphRun()
                                {
                                    FontFace = fontFace,
-                                   Advances = new[] {advanceWidth},
+                                   Advances = new[] { (float)Math.Round(advanceWidth) },
                                    FontSize = fontSize,
                                    BidiLevel = 0,
                                    Indices = indices,
@@ -227,7 +225,12 @@ namespace SharpDX.Toolkit.Graphics
                         for(int x = 0; x < bounds.Width; x++)
                         {
                             int pixelX = (y * bounds.Width + x) * 3;
-                            bitmap.SetPixel(x, y, Color.FromArgb(texture[pixelX], texture[pixelX + 1], texture[pixelX + 2]));
+                            var red = texture[pixelX];
+                            var green = texture[pixelX+1];
+                            var blue = texture[pixelX+2];
+                            var color = Color.FromArgb(red, green, blue);
+
+                            bitmap.SetPixel(x, y, color);
                         }
                     }
 
@@ -236,11 +239,10 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
-            BitmapUtils.ConvertGreyToAlpha(bitmap);
             var glyph = new Glyph(character, bitmap)
                         {
                             XOffset = (float)Math.Floor(xOffset-1),
-                            XAdvance = advanceWidth,
+                            XAdvance = (float)Math.Round(advanceWidth),
                             YOffset = (float)Math.Floor(yOffset-1),
                         };
             return glyph;

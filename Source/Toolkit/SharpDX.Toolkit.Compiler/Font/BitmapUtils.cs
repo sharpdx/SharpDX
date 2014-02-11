@@ -176,6 +176,29 @@ namespace SharpDX.Toolkit.Graphics
 
 
         // Converts a bitmap to premultiplied alpha format.
+
+        public static void PremultiplyAlphaClearType(Bitmap bitmap)
+        {
+            using (var bitmapData = new PixelAccessor(bitmap, ImageLockMode.ReadWrite))
+            {
+                for (int y = 0; y < bitmap.Height; y++)
+                {
+                    for (int x = 0; x < bitmap.Width; x++)
+                    {
+                        Color color = bitmapData[x, y];
+
+                        int a = (color.R + color.G + color.B) / 3;
+                        int r = color.R;
+                        int g = color.G;
+                        int b = color.B;
+
+                        bitmapData[x, y] = Color.FromArgb(a, r, g, b);
+                    }
+                }
+            }
+        }
+
+
         public static void PremultiplyAlpha(Bitmap bitmap)
         {
             using (var bitmapData = new PixelAccessor(bitmap, ImageLockMode.ReadWrite))
