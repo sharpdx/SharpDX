@@ -11,7 +11,7 @@ namespace System.Reflection
     /// Instructs obfuscation tools to use their standard obfuscation rules for the appropriate assembly type.
     /// </summary>
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
-    sealed class ObfuscateAssemblyAttribute : Attribute
+    public sealed class ObfuscateAssemblyAttribute : Attribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ObfuscateAssemblyAttribute"/> class,
@@ -57,7 +57,7 @@ namespace System.Reflection
     /// Instructs obfuscation tools to take the specified actions for an assembly, type, or member.
     /// </summary>
     [AttributeUsage(AttributeTargets.Delegate | AttributeTargets.Parameter | AttributeTargets.Interface | AttributeTargets.Event | AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method | AttributeTargets.Enum | AttributeTargets.Struct | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]
-    sealed class ObfuscationAttribute : Attribute
+    public sealed class ObfuscationAttribute : Attribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ObfuscationAttribute"/> class.
