@@ -37,6 +37,7 @@
     <Compile Include="Font\ContentCompilerResult.cs" />
     <Compile Include="Font\FontCompiler.cs" />
     <Compile Include="Font\FontDescription.cs" />
+    <Compile Include="Font\FontException.cs" />
     <Compile Include="Font\FontStyle.cs" />
     <Compile Include="Font\FontTextureFormat.cs" />
     <Compile Include="Font\Glyph.cs" />

@@ -103,15 +103,18 @@ namespace SharpDX.Toolkit.Graphics
 
         public void Import(FontDescription options)
         {
+            //ImportBitmapFonts(options);
+            //return;
             var factory = new DirectWrite.Factory();
             DirectWrite.Font font = null;
 
-            using(var fontCollection = factory.GetSystemFontCollection(false))
+            using (var fontCollection = factory.GetSystemFontCollection(false))
             {
                 int index;
                 if(!fontCollection.FindFamilyName(options.FontName, out index))
                 {
-                    throw new Exception(string.Format("Can't find font '{0}'.", options.FontName));
+                    // Lets try to import System.Drawing for old system bitmap fonts (like MS Sans Serif)
+                    throw new FontException(string.Format("Can't find font '{0}'.", options.FontName));
                 }
 
                 using(var fontFamily = fontCollection.GetFontFamily(index))
@@ -152,10 +155,13 @@ namespace SharpDX.Toolkit.Graphics
 
             var baseLine = (float)Math.Round((float)(fontMetrics.LineGap + fontMetrics.Ascent) / fontMetrics.DesignUnitsPerEm * fontSize);
 
+            // If font size <= 13, use aliased fonts instead
+            bool activateAntiAliasDetection = options.Size > 13;
+
             // Rasterize each character in turn.
             foreach (char character in characters)
             {
-                var glyph = ImportGlyph(factory, fontFace, character, fontMetrics, fontSize);
+                var glyph = ImportGlyph(factory, fontFace, character, fontMetrics, fontSize, activateAntiAliasDetection);
                 glyph.YOffset += baseLine;
 
                 glyphList.Add(glyph);
@@ -165,7 +171,7 @@ namespace SharpDX.Toolkit.Graphics
 
         }
 
-        private Glyph ImportGlyph(Factory factory, FontFace fontFace, char character, FontMetrics fontMetrics, float fontSize)
+        private Glyph ImportGlyph(Factory factory, FontFace fontFace, char character, FontMetrics fontMetrics, float fontSize, bool activateAntiAliasDetection)
         {
             var indices = fontFace.GetGlyphIndices(new int[] {character});
 
@@ -199,38 +205,70 @@ namespace SharpDX.Toolkit.Graphics
                                    BidiLevel = 0,
                                    Indices = indices,
                                    IsSideways = false,
-                                   Offsets = new[] {new GlyphOffset()},
+                                   Offsets = new[] {new GlyphOffset()}
                                };
 
                 var matrix = SharpDX.Matrix.Identity;
                 matrix.M41 = -(float)Math.Floor(xOffset - 1);
                 matrix.M42 = -(float)Math.Floor(yOffset - 1);
 
+                RenderingMode renderingMode;
+                if (activateAntiAliasDetection)
+                {
+                    var rtParams = new RenderingParams(factory);
+                    renderingMode = fontFace.GetRecommendedRenderingMode(fontSize, 1.0f, MeasuringMode.Natural, rtParams);
+                    rtParams.Dispose();
+                }
+                else
+                {
+                    renderingMode = RenderingMode.Aliased;
+                }
+
                 using(var runAnalysis = new GlyphRunAnalysis(factory,
                     glyphRun,
                     1.0f,
                     matrix,
-                    RenderingMode.CleartypeNaturalSymmetric,
+                    renderingMode,
                     MeasuringMode.Natural,
                     0.0f,
                     0.0f))
                 {
                     var bounds = new SharpDX.Rectangle(0, 0, pixelWidth, pixelHeight);
-
-                    var texture = new byte[bounds.Width * bounds.Height * 3];
-                    runAnalysis.CreateAlphaTexture(TextureType.Cleartype3x1, bounds, texture, texture.Length);
                     bitmap = new Bitmap(bounds.Width, bounds.Height, PixelFormat.Format32bppArgb);
-                    for(int y = 0; y < bounds.Height; y++)
-                    {
-                        for(int x = 0; x < bounds.Width; x++)
-                        {
-                            int pixelX = (y * bounds.Width + x) * 3;
-                            var red = texture[pixelX];
-                            var green = texture[pixelX+1];
-                            var blue = texture[pixelX+2];
-                            var color = Color.FromArgb(red, green, blue);
 
-                            bitmap.SetPixel(x, y, color);
+                    if(renderingMode == RenderingMode.Aliased)
+                    {
+                        var texture = new byte[bounds.Width * bounds.Height];
+                        runAnalysis.CreateAlphaTexture(TextureType.Aliased1x1, bounds, texture, texture.Length);
+                        bitmap = new Bitmap(bounds.Width, bounds.Height, PixelFormat.Format32bppArgb);
+                        for (int y = 0; y < bounds.Height; y++)
+                        {
+                            for (int x = 0; x < bounds.Width; x++)
+                            {
+                                int pixelX = y * bounds.Width + x;
+                                var grey = texture[pixelX];
+                                var color = Color.FromArgb(grey, grey, grey);
+
+                                bitmap.SetPixel(x, y, color);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var texture = new byte[bounds.Width * bounds.Height * 3];
+                        runAnalysis.CreateAlphaTexture(TextureType.Cleartype3x1, bounds, texture, texture.Length);
+                        for (int y = 0; y < bounds.Height; y++)
+                        {
+                            for (int x = 0; x < bounds.Width; x++)
+                            {
+                                int pixelX = (y * bounds.Width + x) * 3;
+                                var red = texture[pixelX];
+                                var green = texture[pixelX + 1];
+                                var blue = texture[pixelX + 2];
+                                var color = Color.FromArgb(red, green, blue);
+
+                                bitmap.SetPixel(x, y, color);
+                            }
                         }
                     }
 
@@ -248,7 +286,7 @@ namespace SharpDX.Toolkit.Graphics
             return glyph;
         }
 
-        public void Import2(FontDescription options)
+        public void ImportBitmapFonts(FontDescription options)
         {
             // Create a bunch of GDI+ objects.
             using (Font font = CreateFont(options))
@@ -310,7 +348,7 @@ namespace SharpDX.Toolkit.Graphics
                 }
 
                 // A font substitution must have occurred.
-                throw new Exception(string.Format("Can't find font '{0}'.", options.FontName));
+                throw new FontException(string.Format("Can't find font '{0}'.", options.FontName));
             }
             catch
             {
@@ -347,7 +385,7 @@ namespace SharpDX.Toolkit.Graphics
             int bitmapHeight = characterHeight + padHeight * 2;
 
             if (bitmapWidth > MaxGlyphSize || bitmapHeight > MaxGlyphSize)
-                throw new Exception("Excessively large glyph won't fit in my lazily implemented fixed size temp surface.");
+                throw new FontException("Excessively large glyph won't fit in my lazily implemented fixed size temp surface.");
 
             // Render the character.
             graphics.Clear(Color.Black);
@@ -357,7 +395,7 @@ namespace SharpDX.Toolkit.Graphics
             // Clone the newly rendered image.
             Bitmap glyphBitmap = bitmap.Clone(new Rectangle(0, 0, bitmapWidth, bitmapHeight), PixelFormat.Format32bppArgb);
 
-            BitmapUtils.ConvertGreyToAlpha(glyphBitmap);
+            //BitmapUtils.ConvertGreyToAlpha(glyphBitmap);
 
             // Query its ABC spacing.
             float? abc = GetCharacterWidth(character, font, graphics);

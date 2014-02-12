@@ -107,7 +107,7 @@ namespace SharpDX.Toolkit.Graphics
             }
             catch
             {
-                throw new Exception(string.Format("Unable to load '{0}'.", options.FontName));
+                throw new FontException(string.Format("Unable to load '{0}'.", options.FontName));
             }
 
             // Convert to our desired pixel format.
