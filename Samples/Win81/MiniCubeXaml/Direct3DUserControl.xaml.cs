@@ -46,11 +46,15 @@ namespace MiniCubeXaml
         public Direct3DUserControl()
         {
             this.InitializeComponent();
+            // Do D3D initialization when element is loaded, because DesignModeD3DRendering is yet not set in ctor
+            this.Loaded += Direct3DUserControl_Loaded;            
+        }
 
-            // do not initialize D3D in design mode as it may cause designer crashes
-            if(Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-                if (!DesignModeD3DRendering)
-                    return;
+        void Direct3DUserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Do not initialize D3D in design mode as default, since it may cause designer crashes
+            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled && !DesignModeD3DRendering)
+                return;
 
             // Safely dispose any previous instance
             // Creates a new DeviceManager (Direct3D, Direct2D, DirectWrite, WIC)
