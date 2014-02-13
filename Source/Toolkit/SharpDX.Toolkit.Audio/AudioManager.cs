@@ -328,7 +328,7 @@ namespace SharpDX.Toolkit.Audio
         private void CreateReverbSubmixVoice()
         {
             VoiceDetails masterDetails = MasteringVoice.VoiceDetails;
-            VoiceSendFlags sendFlags = IsReverbFilterEnabled ? VoiceSendFlags.UseFilter : VoiceSendFlags.None;
+            SubmixVoiceFlags sendFlags = IsReverbFilterEnabled ? SubmixVoiceFlags.UseFilter : SubmixVoiceFlags.None;
             ReverbVoice = new SubmixVoice(Device, 1, masterDetails.InputSampleRate, sendFlags, 0);
             reverb = new Reverb();
             ReverbVoice.SetEffectChain(new EffectDescriptor(reverb, 1));

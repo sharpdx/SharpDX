@@ -77,7 +77,8 @@ namespace Audio
             //audioManager.EnableMasterVolumeLimiter();
             audioManager.EnableReverbEffect();
             audioManager.SetReverbEffectParameters(ReverbPresets.BathRoom);
-            //audioManager.EnableReverbFilter();
+            SoundEffect.DistanceScale = 10f; //needs a higher distance scale to hear reverb.
+            audioManager.EnableReverbFilter();
 
             // Setup the relative directory to the executable directory
             // for loading contents with the ContentManager

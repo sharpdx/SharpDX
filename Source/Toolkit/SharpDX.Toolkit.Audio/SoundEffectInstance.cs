@@ -311,16 +311,8 @@ namespace SharpDX.Toolkit.Audio
             if(Effect.AudioManager.IsReverbEffectEnabled)
             {
                 flags |= CalculateFlags.Reverb | CalculateFlags.LpfReverb;
-            }
 
-            Effect.AudioManager.Calculate3D(listener, emitter, flags, dspSettings);
-
-            voice.SetFrequencyRatio(dspSettings.DopplerFactor);
-            voice.SetOutputMatrix(Effect.AudioManager.MasteringVoice,dspSettings.SourceChannelCount, dspSettings.DestinationChannelCount, dspSettings.MatrixCoefficients);
-
-            if(Effect.AudioManager.IsReverbEffectEnabled)
-            {
-                if(!isReverbSubmixEnabled)
+                if (!isReverbSubmixEnabled)
                 {
                     VoiceSendFlags sendFlags = Effect.AudioManager.IsReverbFilterEnabled ? VoiceSendFlags.UseFilter : VoiceSendFlags.None;
                     VoiceSendDescriptor[] outputVoices = new VoiceSendDescriptor[]
@@ -333,6 +325,15 @@ namespace SharpDX.Toolkit.Audio
                     voice.SetOutputVoices(outputVoices);
                     isReverbSubmixEnabled = true;
                 }
+            }
+
+            Effect.AudioManager.Calculate3D(listener, emitter, flags, dspSettings);
+
+            voice.SetFrequencyRatio(dspSettings.DopplerFactor);
+            voice.SetOutputMatrix(Effect.AudioManager.MasteringVoice,dspSettings.SourceChannelCount, dspSettings.DestinationChannelCount, dspSettings.MatrixCoefficients);
+
+            if(Effect.AudioManager.IsReverbEffectEnabled)
+            {               
                 
                 if(reverbLevels == null || reverbLevels.Length != Effect.Format.Channels)
                     reverbLevels = new float [Effect.Format.Channels];

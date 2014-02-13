@@ -63,9 +63,7 @@ namespace SharpDX.Toolkit.Audio
             VoicePool = AudioManager.InstancePool.GetVoicePool(Format);
         }
 
-        const float FLT_MIN = 1.175494351e-38F;
-
-        static float distanceScale = 1.0f;// FLT_MIN;
+        static float distanceScale = 1.0f;
         public static float DistanceScale
         {
             get
