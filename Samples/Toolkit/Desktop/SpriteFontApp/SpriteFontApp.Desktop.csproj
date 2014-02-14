@@ -71,6 +71,11 @@
       <Link>Content\Arial16Bold.xml</Link>
     </ToolkitFont>
   </ItemGroup>
+  <ItemGroup>
+    <ToolkitFont Include="..\..\Common\SpriteFontApp\Content\Arial16ClearType.xml">
+      <Link>Content\Arial16ClearType.xml</Link>
+    </ToolkitFont>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\..\..\SharpDX.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
