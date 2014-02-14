@@ -40,6 +40,7 @@ namespace SpriteFontApp
         private SpriteBatch spriteBatch;
         private SpriteFont arial13;
         private SpriteFont arial16;
+        private SpriteFont arial16ClearType;
         private SpriteFont arial16Bold;
         private SpriteFont courrierNew10;
         private SpriteFont calibri64;
@@ -63,6 +64,7 @@ namespace SpriteFontApp
             // Load fonts
             arial13 = ToDisposeContent(Content.Load<SpriteFont>("Arial13"));
             arial16 = ToDisposeContent(Content.Load<SpriteFont>("Arial16"));
+            arial16ClearType = ToDisposeContent(Content.Load<SpriteFont>("Arial16ClearType"));
             arial16Bold = ToDisposeContent(Content.Load<SpriteFont>("Arial16Bold"));
             calibri64 = ToDisposeContent(Content.Load<SpriteFont>("Calibri64"));
             courrierNew10 = ToDisposeContent(Content.Load<SpriteFont>("CourierNew10"));
@@ -117,7 +119,15 @@ ABCDEFGHIJ - ABCDEFGHIJ - A1C3E5G7I9
 
             text = "Rendering test\nRotated On Center";
             dim = arial16.MeasureString(text);
-            spriteBatch.DrawString(arial16, text, new SharpDX.Vector2(600, 150), SharpDX.Color.White, -(float)gameTime.TotalGameTime.TotalSeconds, new Vector2(dim.X/2.0f, dim.Y/2.0f), 1.0f, SpriteEffects.None, 0.0f);
+            spriteBatch.DrawString(arial16, text, new SharpDX.Vector2(600, 120), SharpDX.Color.White, -(float)gameTime.TotalGameTime.TotalSeconds, new Vector2(dim.X/2.0f, dim.Y/2.0f), 1.0f, SpriteEffects.None, 0.0f);
+
+            spriteBatch.DrawString(arial16ClearType, "Arial16 - ClearType\nAbc /\\Z Ghi SWy {}:;=&%@", new SharpDX.Vector2(470, 250), SharpDX.Color.White);
+            spriteBatch.DrawString(arial16, "Abc /\\Z Ghi SWy {}:;=&%@\nArial16 - Standard", new SharpDX.Vector2(470, 300), SharpDX.Color.White);
+
+            spriteBatch.DrawString(arial16, "Arial16 simulate shadow", new SharpDX.Vector2(471, 391), SharpDX.Color.Red);
+            spriteBatch.DrawString(arial16, "Arial16 simulate shadow", new SharpDX.Vector2(470, 390), SharpDX.Color.White);
+
+            spriteBatch.DrawString(arial16, "Arial16 scaled x1.5", new SharpDX.Vector2(470, 420), SharpDX.Color.White, 0.0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0.0f);
 
             spriteBatch.End();
 
