@@ -39,6 +39,7 @@ namespace SpriteFontApp
         private GraphicsDeviceManager graphicsDeviceManager;
         private SpriteBatch spriteBatch;
         private SpriteFont arial13;
+        private SpriteFont msSansSerif10;
         private SpriteFont arial16;
         private SpriteFont arial16ClearType;
         private SpriteFont arial16Bold;
@@ -63,6 +64,7 @@ namespace SpriteFontApp
         {
             // Load fonts
             arial13 = ToDisposeContent(Content.Load<SpriteFont>("Arial13"));
+            msSansSerif10 = ToDisposeContent(Content.Load<SpriteFont>("MicrosoftSansSerif10"));
             arial16 = ToDisposeContent(Content.Load<SpriteFont>("Arial16"));
             arial16ClearType = ToDisposeContent(Content.Load<SpriteFont>("Arial16ClearType"));
             arial16Bold = ToDisposeContent(Content.Load<SpriteFont>("Arial16Bold"));
@@ -107,7 +109,8 @@ ABCDEFGHIJ - ABCDEFGHIJ - A1C3E5G7I9
 
             spriteBatch.DrawString(courrierNew10, text, new SharpDX.Vector2(x, y + dim.Y + 8), SharpDX.Color.White);
 
-            spriteBatch.DrawString(arial13, "Arial 13 font with no-antialias when size <= 13", new SharpDX.Vector2(x, y + 160), SharpDX.Color.White);
+            spriteBatch.DrawString(arial13, "Arial 13, font with no-antialias when size <= 13.", new SharpDX.Vector2(x, y + 150), SharpDX.Color.White);
+            spriteBatch.DrawString(msSansSerif10, "Microsoft Sans Serif 10, font with no-antialias when size <= 13.", new SharpDX.Vector2(x, y + 175), SharpDX.Color.White);
 
             spriteBatch.DrawString(arial16Bold, "Font is in bold - Arial 16", new SharpDX.Vector2(x, y + 190), SharpDX.Color.White);
 

@@ -127,8 +127,8 @@ namespace SharpDX.Toolkit.Graphics
             var pixelHeight = (int)Math.Ceiling(height + 4);
 
             var matrix = SharpDX.Matrix.Identity;
-            matrix.M41 = -(float)Math.Floor(xOffset);
-            matrix.M42 = -(float)Math.Floor(yOffset);
+            matrix.M41 = -(float)Math.Floor(xOffset) + 1;
+            matrix.M42 = -(float)Math.Floor(yOffset) + 1;
 
             Bitmap bitmap;
             if(char.IsWhiteSpace(character))
@@ -140,7 +140,7 @@ namespace SharpDX.Toolkit.Graphics
                 var glyphRun = new GlyphRun()
                                {
                                    FontFace = fontFace,
-                                   Advances = new[] { (float)Math.Round(advanceWidth) },
+                                   Advances = new[] { (float)Math.Ceiling(advanceWidth) },
                                    FontSize = fontSize,
                                    BidiLevel = 0,
                                    Indices = indices,
@@ -215,7 +215,7 @@ namespace SharpDX.Toolkit.Graphics
             var glyph = new Glyph(character, bitmap)
                         {
                             XOffset = -matrix.M41,
-                            XAdvance = (float)Math.Round(advanceWidth),
+                            XAdvance = (float)Math.Ceiling(advanceWidth),
                             YOffset = -matrix.M42,
                         };
             return glyph;
