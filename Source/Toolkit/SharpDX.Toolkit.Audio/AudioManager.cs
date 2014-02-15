@@ -145,6 +145,7 @@ namespace SharpDX.Toolkit.Audio
 #if !WIN8METRO && !WP8
             if(Device.DeviceCount == 0)
             {
+                DisposeCore();
                 throw new AudioException("No default audio devices detected.");
             }
 #endif
