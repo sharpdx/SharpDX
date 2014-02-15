@@ -273,6 +273,9 @@ namespace SharpDX.Toolkit.Audio
 
         private void Apply3D(Vector3 listenerForward, Vector3 listenerUp, Vector3 listenerPosition, Vector3 listenerVelocity, Vector3 emitterForward, Vector3 emitterUp, Vector3 emitterPosition, Vector3 emitterVelocity)
         {
+            if (!Effect.AudioManager.IsSpatialAudioEnabled)
+                throw new InvalidOperationException("Spatial audio must be enabled first.");
+            
             if (emitter == null)
                 emitter = new Emitter();
 

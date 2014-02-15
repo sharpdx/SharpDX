@@ -99,19 +99,6 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
-        static float speedOfSound = X3DAudio.SpeedOfSound;
-        public static float SpeedOfSound
-        {
-            get
-            {
-                return speedOfSound;
-            }
-            set
-            {
-                speedOfSound = value;
-            }
-        }
-
 
         public TimeSpan Duration { get; private set; }
         public string Name { get; private set; }
@@ -142,7 +129,7 @@ namespace SharpDX.Toolkit.Audio
             //sound.Close();
             sound.Dispose();
 #endif            
-            return audioManager.ToDisposeSoundEffect( new SoundEffect(audioManager, name, format, buffer, decodedPacketsInfo));
+            return audioManager.ToDisposeAudioAsset( new SoundEffect(audioManager, name, format, buffer, decodedPacketsInfo));
         }
 
         public static SoundEffect FromFile(AudioManager audioManager, string filePath)

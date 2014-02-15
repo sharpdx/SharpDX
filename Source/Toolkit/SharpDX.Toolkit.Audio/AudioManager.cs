@@ -30,20 +30,24 @@ namespace SharpDX.Toolkit.Audio
     using SharpDX.XAudio2.Fx;
     using ReverbParameters = SharpDX.XAudio2.Fx.ReverbParameters;
     using Reverb = SharpDX.XAudio2.Fx.Reverb;
+
     /// <summary>
     /// This manages the XAudio2 audio graph, device, and mastering voice.  This manager also allows loading of <see cref="SoundEffect"/> using
     /// the <see cref="IContentManager"/>
     /// </summary>
     public class AudioManager : GameSystem, IContentReader, IContentReaderFactory 
     {
+        const float FLT_MIN = 1.175494351e-38F;
+
         private ContentManager contentManager;
         private float masterVolume;
         private X3DAudio x3DAudio;
-        private bool isMasteringLimiterEnabled;
         private MasteringLimiterParameters masteringLimiterParameters;
         private MasteringLimiter masteringLimiter;        
         private ReverbParameters reverbParameters;
         private Reverb reverb;
+        
+        private float speedOfSound;
 
         private static ReverbI3DL2Parameters[] reverbPresets = new ReverbI3DL2Parameters[]
         {            
@@ -110,19 +114,27 @@ namespace SharpDX.Toolkit.Audio
             {
                 throw new InvalidOperationException("Unable to initialize AudioManager. Expecting IContentManager to be an instance of ContentManager");
             }
-
-#if !WIN8METRO && !WP8 && DEBUG
             try
             {
-                Device = new XAudio2(XAudio2Flags.DebugEngine, ProcessorSpecifier.DefaultProcessor);
-                Device.StartEngine();
-            }
-            catch (Exception)
+
+#if !WIN8METRO && !WP8 && DEBUG
+                try
+                {
+                    Device = new XAudio2(XAudio2Flags.DebugEngine, ProcessorSpecifier.DefaultProcessor);
+                    Device.StartEngine();
+                }
+                catch (Exception)
 #endif
+                {
+                    Device = new XAudio2(XAudio2Flags.None, ProcessorSpecifier.DefaultProcessor);
+                    Device.StartEngine();
+                }
+            }
+            catch (SharpDXException ex)
             {
-                Device = new XAudio2(XAudio2Flags.None, ProcessorSpecifier.DefaultProcessor);
-                Device.StartEngine();                
-            }  
+                DisposeCore();
+                throw new AudioException("Error creating XAudio device.", ex);
+            }
 
            
 
@@ -131,8 +143,16 @@ namespace SharpDX.Toolkit.Audio
 #else
             const int deviceId = 0;
 #endif
-            MasteringVoice = new MasteringVoice(Device, XAudio2.DefaultChannels, XAudio2.DefaultSampleRate, deviceId);
-            MasteringVoice.SetVolume(masterVolume);
+            try
+            {
+                MasteringVoice = new MasteringVoice(Device, XAudio2.DefaultChannels, XAudio2.DefaultSampleRate, deviceId);
+                MasteringVoice.SetVolume(masterVolume);
+            }
+            catch (SharpDXException ex)
+            {
+                DisposeCore();
+                throw new AudioException("Error creating mastering voice.", ex);
+            }
             
 
 
@@ -142,17 +162,44 @@ namespace SharpDX.Toolkit.Audio
             var deviceDetails = Device.GetDeviceDetails(deviceId);
             Speakers = deviceDetails.OutputFormat.ChannelMask;
 #endif
-            x3DAudio = new X3DAudio(Speakers, SoundEffect.SpeedOfSound);
-            
 
-            if(isMasteringLimiterEnabled)
+            if(IsMasteringLimiterEnabled)
             {
-                CreateMasteringLimitier();
+                try
+                {
+                    CreateMasteringLimitier();
+                }
+                catch (Exception)
+                {
+                    DisposeCore();
+                    throw;
+                }
+            }
+
+            if (IsSpatialAudioEnabled)
+            {
+                try
+                {
+                    x3DAudio = new X3DAudio(Speakers, speedOfSound);
+                }
+                catch (Exception)
+                {
+                    DisposeCore();
+                    throw;
+                }
             }
 
             if(IsReverbEffectEnabled)
             {
-                CreateReverbSubmixVoice();
+                try
+                {
+                    CreateReverbSubmixVoice();
+                }
+                catch (Exception)
+                {
+                    DisposeCore();
+                    throw;
+                }
             }
 
             contentManager.ReaderFactories.Add(this);
@@ -192,13 +239,15 @@ namespace SharpDX.Toolkit.Audio
         internal SoundEffectInstancePool InstancePool { get; private set; }
         public bool IsReverbEffectEnabled { get; private set; }
         public bool IsReverbFilterEnabled { get; private set; }
+        public bool IsSpatialAudioEnabled { get; private set; }        
+        public bool IsMasteringLimiterEnabled {get;private set;}
 
         public void EnableMasterVolumeLimiter()
         {
             if (IsDisposed)
                 throw new ObjectDisposedException(this.GetType().FullName);            
             
-            if (isMasteringLimiterEnabled)
+            if (IsMasteringLimiterEnabled)
                 return;
 
             if (MasteringVoice != null)
@@ -213,7 +262,7 @@ namespace SharpDX.Toolkit.Audio
                 }
             }            
 
-            isMasteringLimiterEnabled = true;
+            IsMasteringLimiterEnabled = true;
         }
 
 
@@ -222,7 +271,7 @@ namespace SharpDX.Toolkit.Audio
             if (IsDisposed)
                 throw new ObjectDisposedException(this.GetType().FullName);
             
-            if (!isMasteringLimiterEnabled)
+            if (!IsMasteringLimiterEnabled)
                 return;            
 
             if (MasteringVoice != null && masteringLimiter != null)
@@ -230,14 +279,21 @@ namespace SharpDX.Toolkit.Audio
                 MasteringVoice.DisableEffect(0);
             }
 
-            isMasteringLimiterEnabled = false;
+            IsMasteringLimiterEnabled = false;
         }
 
         private void CreateMasteringLimitier()
         {
-            masteringLimiter = new MasteringLimiter();
-            masteringLimiter.Parameter = masteringLimiterParameters;
-            MasteringVoice.SetEffectChain(new EffectDescriptor(masteringLimiter));
+            try
+            {
+                masteringLimiter = new MasteringLimiter();
+                masteringLimiter.Parameter = masteringLimiterParameters;
+                MasteringVoice.SetEffectChain(new EffectDescriptor(masteringLimiter));
+            }
+            catch (SharpDXException ex)
+            {
+                throw new AudioException("Error creating mastering limiter.", ex);
+            }
         }
 
         public void SetMasteringLimit(int release, int loudness)
@@ -258,6 +314,29 @@ namespace SharpDX.Toolkit.Audio
                 MasteringVoice.SetEffectParameters(0, masteringLimiterParameters);
             }
         }
+
+        public void EnableSpatialAudio(float speedOfSound)
+        {
+            if (IsDisposed)
+                throw new ObjectDisposedException(this.GetType().FullName);
+
+            if (speedOfSound < FLT_MIN)
+                throw new ArgumentOutOfRangeException("speedOfSound", "Speed of sound must be greater than or equal to FLT_MIN (1.175494351e-38F).");
+
+            IsSpatialAudioEnabled = true;
+            this.speedOfSound = speedOfSound;
+
+            if (MasteringVoice != null)
+            {
+                x3DAudio = new X3DAudio(Speakers, speedOfSound);
+            }
+        }
+
+        public void EnableSpatialAudio()
+        {
+            EnableSpatialAudio( X3DAudio.SpeedOfSound);      
+        }
+
 
         public void EnableReverbEffect()
         {
@@ -327,12 +406,27 @@ namespace SharpDX.Toolkit.Audio
         
         private void CreateReverbSubmixVoice()
         {
-            VoiceDetails masterDetails = MasteringVoice.VoiceDetails;
-            SubmixVoiceFlags sendFlags = IsReverbFilterEnabled ? SubmixVoiceFlags.UseFilter : SubmixVoiceFlags.None;
-            ReverbVoice = new SubmixVoice(Device, 1, masterDetails.InputSampleRate, sendFlags, 0);
-            reverb = new Reverb();
-            ReverbVoice.SetEffectChain(new EffectDescriptor(reverb, 1));
-            ReverbVoice.SetEffectParameters(0, reverbParameters);
+            try
+            {
+                VoiceDetails masterDetails = MasteringVoice.VoiceDetails;
+                SubmixVoiceFlags sendFlags = IsReverbFilterEnabled ? SubmixVoiceFlags.UseFilter : SubmixVoiceFlags.None;
+                ReverbVoice = new SubmixVoice(Device, 1, masterDetails.InputSampleRate, sendFlags, 0);
+            }
+            catch (SharpDXException ex)
+            {
+                throw new AudioException("Error creating reverb submix voice.", ex);
+            }
+
+            try
+            {
+                reverb = new Reverb();
+                ReverbVoice.SetEffectChain(new EffectDescriptor(reverb, 1));
+                ReverbVoice.SetEffectParameters(0, reverbParameters);
+            }
+            catch (SharpDXException ex)
+            {
+                throw new AudioException("Error setting reverb effect.", ex);
+            }
         }
 
         internal void Calculate3D(Listener listener, Emitter emitter, CalculateFlags flags, DspSettings dspSettings)
@@ -364,9 +458,13 @@ namespace SharpDX.Toolkit.Audio
             return null;
         }
 
-        internal SoundEffect ToDisposeSoundEffect(SoundEffect soundEffect)
+        /// <summary>
+        /// Adds a disposable audio asset to the list of the objects to dispose.
+        /// </summary>
+        /// <param name="toDisposeArg">To dispose.</param>
+        internal T ToDisposeAudioAsset<T>(T audioAsset) where T : IDisposable
         {
-            return ToDispose(soundEffect);
+            return ToDispose(audioAsset);
         }
 
 
@@ -376,45 +474,50 @@ namespace SharpDX.Toolkit.Audio
             {
                 InstancePool.Dispose();
                 base.Dispose(disposeManagedResources);
-                if (x3DAudio != null)
-                {
-                    x3DAudio = null;
-                }
-
-                if (ReverbVoice != null)
-                {
-                    ReverbVoice.DestroyVoice();
-                    ReverbVoice.Dispose();
-                    ReverbVoice = null;
-                    reverb.Dispose();
-                    reverb = null;
-                }
-
-                IsReverbEffectEnabled = false;
-
-                if (MasteringVoice != null)
-                {
-                    MasteringVoice.DestroyVoice();
-                    MasteringVoice.Dispose();
-                    MasteringVoice = null;
-                }
-
-                if(masteringLimiter != null)
-                {
-                    masteringLimiter.Dispose();
-                    masteringLimiter = null;
-                }
-
-                isMasteringLimiterEnabled = false;
-
-                if (Device != null)
-                {
-                    Device.StopEngine();
-                    Device.Dispose();
-                    Device = null;
-                }
+                DisposeCore();
             }
 
+        }
+
+        private void DisposeCore()
+        {
+            if (x3DAudio != null)
+            {
+                x3DAudio = null;
+            }
+
+            if (ReverbVoice != null)
+            {
+                ReverbVoice.DestroyVoice();
+                ReverbVoice.Dispose();
+                ReverbVoice = null;
+                reverb.Dispose();
+                reverb = null;
+            }
+
+            IsReverbEffectEnabled = false;
+
+            if (MasteringVoice != null)
+            {
+                MasteringVoice.DestroyVoice();
+                MasteringVoice.Dispose();
+                MasteringVoice = null;
+            }
+
+            if (masteringLimiter != null)
+            {
+                masteringLimiter.Dispose();
+                masteringLimiter = null;
+            }
+
+            IsMasteringLimiterEnabled = false;
+
+            if (Device != null)
+            {
+                Device.StopEngine();
+                Device.Dispose();
+                Device = null;
+            }
         }  
     }
 }

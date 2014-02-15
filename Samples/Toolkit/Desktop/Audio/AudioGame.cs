@@ -49,13 +49,16 @@ namespace Audio
         private Random random;
 
 
-
-
         private AudioManager audioManager;
         private SoundEffect ergonWave;
         private SoundEffectInstance ergonWaveInstance;
         private WaveBank waveBank;
         //private WaveBank waveBankXbox; //does not play correctly
+        Matrix listener;
+        Vector3 listenerVelocity;
+        Matrix emitter;
+        Vector3 emitterVelocity;
+        SoundEffectInstance audio3DEffectInstance;
 
         private List<SoundTile> tiles;
         private bool play3D;
@@ -74,17 +77,16 @@ namespace Audio
             random = new Random();           
 
             audioManager = new AudioManager(this);
-            //audioManager.EnableMasterVolumeLimiter();
-            audioManager.EnableReverbEffect();
-            audioManager.SetReverbEffectParameters(ReverbPresets.BathRoom);
-            SoundEffect.DistanceScale = 10f; //needs a higher distance scale to hear reverb.
-            audioManager.EnableReverbFilter();
+            audioManager.EnableMasterVolumeLimiter();
+            //EnableSpatialAudioWithReverb();
 
             // Setup the relative directory to the executable directory
             // for loading contents with the ContentManager
             Content.RootDirectory = "Content";
             
         }
+
+        
 
         protected override void Initialize()
         {
@@ -211,18 +213,22 @@ namespace Audio
 
             base.Draw(gameTime);
         }
-
-
-        Matrix listener;
-        Vector3 listenerVelocity;
-        Matrix emitter;
-        Vector3 emitterVelocity;
-        SoundEffectInstance audio3DEffectInstance;
+        
+        private void EnableSpatialAudioWithReverb()
+        {
+            audioManager.EnableSpatialAudio();
+            audioManager.EnableReverbEffect();
+            audioManager.SetReverbEffectParameters(ReverbPresets.BathRoom);
+            SoundEffect.DistanceScale = 10f; //needs a higher distance scale to hear reverb.
+            audioManager.EnableReverbFilter();
+        }
 
         private void PlayAudio3D()
         {
             if (play3D)
                 return;
+
+            EnableSpatialAudioWithReverb();
 
             listener = Matrix.LookAtRH(Vector3.Zero, new Vector3(0, 0, 8), Vector3.Up);
             listenerVelocity = Vector3.Zero;
