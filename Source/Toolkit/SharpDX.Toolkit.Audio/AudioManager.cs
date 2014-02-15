@@ -84,6 +84,12 @@ namespace SharpDX.Toolkit.Audio
         };
 
         /// <summary>
+        /// Result of a device not found.
+        /// </summary>
+        /// <unmanaged>ERROR_NOT_FOUND</unmanaged>
+        private static readonly SharpDX.ResultDescriptor NotFound = new SharpDX.ResultDescriptor(unchecked((int)0x80070490), "Windows Portable Devices", "ERROR_NOT_FOUND", "NotFound");
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="AudioManager" /> class.
         /// </summary>
         /// <param name="game">The game.</param>
@@ -136,7 +142,13 @@ namespace SharpDX.Toolkit.Audio
                 throw new AudioException("Error creating XAudio device.", ex);
             }
 
-           
+#if !WIN8METRO && !WP8
+            if(Device.DeviceCount == 0)
+            {
+                throw new AudioException("No default audio devices detected.");
+            }
+#endif
+
 
 #if WIN8METRO || WP8
             string deviceId = null;
@@ -146,14 +158,24 @@ namespace SharpDX.Toolkit.Audio
             try
             {
                 MasteringVoice = new MasteringVoice(Device, XAudio2.DefaultChannels, XAudio2.DefaultSampleRate, deviceId);
-                MasteringVoice.SetVolume(masterVolume);
             }
             catch (SharpDXException ex)
             {
                 DisposeCore();
-                throw new AudioException("Error creating mastering voice.", ex);
+#if WIN8METRO || WP8
+                if(ex.ResultCode == AudioManager.NotFound)
+                {
+                    throw new AudioException("No default audio devices detected.");
+                }
+                else
+#endif
+                {
+                    throw new AudioException("Error creating mastering voice.", ex);
+                }
+
             }
-            
+
+            MasteringVoice.SetVolume(masterVolume);
 
 
 #if WIN8METRO || WP8
