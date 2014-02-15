@@ -18,6 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+
 #if !W8CORE
 
 namespace SharpDX.Toolkit.Input
@@ -79,7 +82,9 @@ namespace SharpDX.Toolkit.Input
         /// </summary>
         protected override Vector2 GetLocationInternal()
         {
-            var p = control.PointToClient(Cursor.Position);
+            Point p;
+            GetCursorPos(out p);
+            ScreenToClient(control.Handle, ref p);
 
             var clientSize = control.ClientSize;
             var position = new Vector2((float)p.X / clientSize.Width, (float)p.Y / clientSize.Height);
@@ -154,6 +159,12 @@ namespace SharpDX.Toolkit.Input
                     throw new ArgumentOutOfRangeException("button");
             }
         }
+
+        [DllImport("user32.dll", EntryPoint = "GetCursorPos", CharSet = CharSet.Auto)]
+        private static extern bool GetCursorPos(out SharpDX.Point pt);
+
+        [DllImport("user32.dll", EntryPoint = "ScreenToClient", CharSet = CharSet.Auto)]
+        private static extern bool ScreenToClient(IntPtr hWnd, ref SharpDX.Point point); 
     }
 }
 
