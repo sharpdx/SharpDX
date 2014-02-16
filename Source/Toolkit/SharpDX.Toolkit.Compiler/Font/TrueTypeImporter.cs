@@ -215,7 +215,7 @@ namespace SharpDX.Toolkit.Graphics
             var glyph = new Glyph(character, bitmap)
                         {
                             XOffset = -matrix.M41,
-                            XAdvance = (float)Math.Ceiling(advanceWidth),
+                            XAdvance = advanceWidth,
                             YOffset = -matrix.M42,
                         };
             return glyph;

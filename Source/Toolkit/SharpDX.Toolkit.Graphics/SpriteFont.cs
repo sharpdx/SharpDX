@@ -271,8 +271,8 @@ namespace SharpDX.Toolkit.Graphics
             var offset = new Vector2(x, y + glyph.Offset.Y);
             Vector2.Multiply(ref offset, ref axisDirectionTable[(int)spriteEffects & 3], out offset);
             Vector2.Add(ref offset, ref parameters.origin, out offset);
-            offset.X = (float)Math.Round(offset.X);
-            offset.Y = (float)Math.Round(offset.Y);
+            offset.X = (float)Math.Ceiling(offset.X);
+            offset.Y = (float)Math.Ceiling(offset.Y);
 
             if (spriteEffects != SpriteEffects.None)
             {
