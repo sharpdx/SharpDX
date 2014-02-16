@@ -90,13 +90,10 @@ namespace SharpDX.Toolkit.Graphics
 
             var baseLine = (float)(fontMetrics.LineGap + fontMetrics.Ascent) / fontMetrics.DesignUnitsPerEm * fontSize;
 
-            // If font size <= 13, use aliased fonts instead
-            bool activateAntiAliasDetection = options.Size > 13;
-
             // Rasterize each character in turn.
             foreach (char character in characters)
             {
-                var glyph = ImportGlyph(factory, fontFace, character, fontMetrics, fontSize, activateAntiAliasDetection);
+                var glyph = ImportGlyph(factory, fontFace, character, fontMetrics, fontSize, options.AntiAlias);
                 glyph.YOffset += baseLine;
 
                 glyphList.Add(glyph);
@@ -107,7 +104,7 @@ namespace SharpDX.Toolkit.Graphics
             factory.Dispose();
         }
 
-        private Glyph ImportGlyph(Factory factory, FontFace fontFace, char character, FontMetrics fontMetrics, float fontSize, bool activateAntiAliasDetection)
+        private Glyph ImportGlyph(Factory factory, FontFace fontFace, char character, FontMetrics fontMetrics, float fontSize, FontAntiAliasMode antiAliasMode)
         {
             var indices = fontFace.GetGlyphIndices(new int[] {character});
 
@@ -150,7 +147,7 @@ namespace SharpDX.Toolkit.Graphics
 
 
                 RenderingMode renderingMode;
-                if (activateAntiAliasDetection)
+                if (antiAliasMode != FontAntiAliasMode.Aliased)
                 {
                     var rtParams = new RenderingParams(factory);
                     renderingMode = fontFace.GetRecommendedRenderingMode(fontSize, 1.0f, MeasuringMode.Natural, rtParams);
@@ -200,9 +197,9 @@ namespace SharpDX.Toolkit.Graphics
                             for (int x = 0; x < bounds.Width; x++)
                             {
                                 int pixelX = (y * bounds.Width + x) * 3;
-                                var red = texture[pixelX];
-                                var green = texture[pixelX + 1];
-                                var blue = texture[pixelX + 2];
+                                var red = LinearToGamma(texture[pixelX]);
+                                var green = LinearToGamma(texture[pixelX + 1]);
+                                var blue = LinearToGamma(texture[pixelX + 2]);
                                 var color = Color.FromArgb(red, green, blue);
 
                                 bitmap.SetPixel(x, y, color);
@@ -219,6 +216,11 @@ namespace SharpDX.Toolkit.Graphics
                             YOffset = -matrix.M42,
                         };
             return glyph;
+        }
+
+        private static byte LinearToGamma(byte color)
+        {
+            return (byte)(Math.Pow(color / 255.0f, 1 / 2.2f) * 255.0f);
         }
 
         // Converts a font size from points to pixels. Can't just let GDI+ do this for us,

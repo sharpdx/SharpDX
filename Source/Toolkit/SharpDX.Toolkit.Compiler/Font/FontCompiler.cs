@@ -187,7 +187,7 @@ namespace SharpDX.Toolkit.Graphics
             foreach (Glyph glyph in glyphs)
             {
                 // Output cleartype texture
-                if (!options.ClearType)
+                if (options.AntiAlias != FontAntiAliasMode.ClearType)
                 {
                     BitmapUtils.ConvertGreyToAlpha(glyph.Bitmap);
                 }
@@ -216,7 +216,7 @@ namespace SharpDX.Toolkit.Graphics
             // Convert to premultiplied alpha format.
             if (!options.NoPremultiply)
             {
-                if (options.ClearType)
+                if (options.AntiAlias == FontAntiAliasMode.ClearType)
                 {
                     BitmapUtils.PremultiplyAlphaClearType(bitmap);
                 }
@@ -225,6 +225,7 @@ namespace SharpDX.Toolkit.Graphics
                     BitmapUtils.PremultiplyAlpha(bitmap);
                 }
             }
+
 
             SpriteFontWriter.WriteSpriteFont(options, stream, glyphs, lineSpacing, bitmap);
         }

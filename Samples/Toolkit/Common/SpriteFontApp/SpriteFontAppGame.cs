@@ -109,8 +109,8 @@ ABCDEFGHIJ - ABCDEFGHIJ - A1C3E5G7I9
 
             spriteBatch.DrawString(courrierNew10, text, new SharpDX.Vector2(x, y + dim.Y + 8), SharpDX.Color.White);
 
-            spriteBatch.DrawString(arial13, "Arial 13, font with no-antialias when size <= 13.", new SharpDX.Vector2(x, y + 150), SharpDX.Color.White);
-            spriteBatch.DrawString(msSansSerif10, "Microsoft Sans Serif 10, font with no-antialias when size <= 13.", new SharpDX.Vector2(x, y + 175), SharpDX.Color.White);
+            spriteBatch.DrawString(arial13, "Arial 13, font with with antialias.", new SharpDX.Vector2(x, y + 150), SharpDX.Color.White);
+            spriteBatch.DrawString(msSansSerif10, "Microsoft Sans Serif 10, font with cleartype antialias.", new SharpDX.Vector2(x, y + 175), SharpDX.Color.White);
 
             spriteBatch.DrawString(arial16Bold, "Font is in bold - Arial 16", new SharpDX.Vector2(x, y + 190), SharpDX.Color.White);
 
@@ -122,7 +122,7 @@ ABCDEFGHIJ - ABCDEFGHIJ - A1C3E5G7I9
 
             text = "Rendering test\nRotated On Center";
             dim = arial16.MeasureString(text);
-            spriteBatch.DrawString(arial16, text, new SharpDX.Vector2(600, 120), SharpDX.Color.White, -(float)gameTime.TotalGameTime.TotalSeconds, new Vector2(dim.X/2.0f, dim.Y/2.0f), 1.0f, SpriteEffects.None, 0.0f);
+            spriteBatch.DrawString(arial16, text, new SharpDX.Vector2(600, 120), SharpDX.Color.White, -(float)gameTime.TotalGameTime.TotalSeconds, new Vector2(dim.X / 2.0f, dim.Y / 2.0f), 1.0f, SpriteEffects.None, 0.0f);
 
             spriteBatch.DrawString(arial16ClearType, "Arial16 - ClearType\nAbc /\\Z Ghi SWy {}:;=&%@", new SharpDX.Vector2(470, 250), SharpDX.Color.White);
             spriteBatch.DrawString(arial16, "Abc /\\Z Ghi SWy {}:;=&%@\nArial16 - Standard", new SharpDX.Vector2(470, 300), SharpDX.Color.White);

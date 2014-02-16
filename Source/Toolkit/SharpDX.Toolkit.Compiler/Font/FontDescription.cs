@@ -153,7 +153,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// By default, font textures is a grey. To generate ClearType textures, turn this flag to true 
         /// </summary>
-        public bool ClearType = false;
+        public FontAntiAliasMode AntiAlias = FontAntiAliasMode.Default;
 
         public static FontDescription Load(string fileName)
         {

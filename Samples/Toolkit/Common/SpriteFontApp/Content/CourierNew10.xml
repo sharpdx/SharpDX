@@ -14,5 +14,6 @@
   </CharacterRegions>
   <DefaultCharacter>32</DefaultCharacter>
   <Style>Regular</Style>
+  <AntiAlias>Aliased</AntiAlias>
   <NoPremultiply>false</NoPremultiply>
 </TkFont>

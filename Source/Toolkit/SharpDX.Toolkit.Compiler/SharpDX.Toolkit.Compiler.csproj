@@ -35,6 +35,7 @@
     <Compile Include="Font\CharacterRegion.cs" />
     <Compile Include="Font\CharacterRegionTypeConverter.cs" />
     <Compile Include="Font\ContentCompilerResult.cs" />
+    <Compile Include="Font\FontAntiAliasMode.cs" />
     <Compile Include="Font\FontCompiler.cs" />
     <Compile Include="Font\FontDescription.cs" />
     <Compile Include="Font\FontException.cs" />
