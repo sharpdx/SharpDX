@@ -157,10 +157,11 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="graphicsDevice">The graphics device.</param>
         /// <param name="pass">The effect pass, null by default.</param>
+        /// <param name="usePatches">usePatches makes the draw call use the appropriate patch list primitive type.</param>
         /// <remarks>If an effect pass is passed to this method, the effect pass will be applied before drawing the geometry. 
         /// If no effect pass is passed, an <see cref="EffectPass"/> must have been applied previously.
         /// </remarks>
-        public void Draw(GraphicsDevice graphicsDevice, EffectPass pass = null)
+        public void Draw(GraphicsDevice graphicsDevice, EffectPass pass = null, bool usePatches = false)
         {
             if (pass != null)
                 pass.Apply();
@@ -175,7 +176,7 @@ namespace SharpDX.Toolkit.Graphics
             graphicsDevice.SetIndexBuffer(indexBuffer, isIndex32Bits);
 
             // Finally Draw this mesh
-            graphicsDevice.DrawIndexed(PrimitiveType.TriangleList, indexBuffer.ElementCount);
+            graphicsDevice.DrawIndexed(usePatches ? PrimitiveType.PatchList(3) : PrimitiveType.TriangleList, indexBuffer.ElementCount);
         }
 
         /// <summary>
