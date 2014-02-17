@@ -92,7 +92,7 @@
 		<map param="IDCompositionDevice2?::CreateSkewTransform::skewTransform" attribute="out fast" />
 		<map param="IDCompositionDevice2?::CreateSurface::surface" attribute="out fast" />
 		<map param="IDCompositionDevice2?::CreateSurfaceFactory::surfaceFactory" attribute="out fast" />
-		<map param="IDCompositionDevice2?::CreateTransformGroup3D::transform3DGroup" attribute="out fast" />
+		<map param="IDCompositionDevice2?::CreateTransform3DGroup::transform3DGroup" attribute="out fast" />
 		<map param="IDCompositionDevice2?::CreateTransformGroup::transformGroup" attribute="out fast" />
 		<map param="IDCompositionDevice2?::CreateTranslateTransform::translateTransform" attribute="out fast" />
 		<map param="IDCompositionDevice2?::CreateTranslateTransform3D::translateTransform3D" attribute="out fast" />

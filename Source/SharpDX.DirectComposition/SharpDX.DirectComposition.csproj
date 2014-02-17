@@ -40,6 +40,8 @@
     <Compile Include="Surface.cs" />
     <Compile Include="SurfaceFactory.cs" />
     <Compile Include="Target.cs" />
+    <Compile Include="Transform.cs" />
+    <Compile Include="Transform3D.cs" />
     <Compile Include="TranslateTransform.cs" />
     <Compile Include="TranslateTransform3D.cs" />
     <Compile Include="VirtualSurface.cs" />
