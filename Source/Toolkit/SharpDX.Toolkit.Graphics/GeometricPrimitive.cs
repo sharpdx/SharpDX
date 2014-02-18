@@ -153,15 +153,29 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Draws this <see cref="GeometricPrimitive" /> using an optional specific pass
+        /// Draws this <see cref="GeometricPrimitive" /> using an optional specific pass, and
+        /// a <see cref="PrimitiveType"/> of TriangleList.
         /// </summary>
         /// <param name="graphicsDevice">The graphics device.</param>
         /// <param name="pass">The effect pass, null by default.</param>
-        /// <param name="usePatches">usePatches makes the draw call use the appropriate patch list primitive type.</param>
         /// <remarks>If an effect pass is passed to this method, the effect pass will be applied before drawing the geometry. 
         /// If no effect pass is passed, an <see cref="EffectPass"/> must have been applied previously.
         /// </remarks>
-        public void Draw(GraphicsDevice graphicsDevice, EffectPass pass = null, bool usePatches = false)
+        public void Draw(GraphicsDevice graphicsDevice, EffectPass pass = null)
+        {
+            Draw(graphicsDevice, PrimitiveType.TriangleList, pass);
+        }
+
+        /// <summary>
+        /// Draws this <see cref="GeometricPrimitive" /> using an optional specific pass
+        /// </summary>
+        /// <param name="graphicsDevice">The graphics device.</param>
+        /// <param name="primitiveType">The primitive type to use when drawing.</param>
+        /// <param name="pass">The effect pass, null by default.</param>
+        /// <remarks>If an effect pass is passed to this method, the effect pass will be applied before drawing the geometry. 
+        /// If no effect pass is passed, an <see cref="EffectPass"/> must have been applied previously.
+        /// </remarks>
+        public void Draw(GraphicsDevice graphicsDevice, PrimitiveType primitiveType, EffectPass pass)
         {
             if (pass != null)
                 pass.Apply();
@@ -176,7 +190,7 @@ namespace SharpDX.Toolkit.Graphics
             graphicsDevice.SetIndexBuffer(indexBuffer, isIndex32Bits);
 
             // Finally Draw this mesh
-            graphicsDevice.DrawIndexed(usePatches ? PrimitiveType.PatchList(3) : PrimitiveType.TriangleList, indexBuffer.ElementCount);
+            graphicsDevice.DrawIndexed(primitiveType, indexBuffer.ElementCount);
         }
 
         /// <summary>
