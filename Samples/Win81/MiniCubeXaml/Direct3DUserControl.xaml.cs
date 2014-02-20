@@ -82,7 +82,7 @@ namespace MiniCubeXaml
             // Initialize the device manager and all registered deviceManager.OnInitialize             
             try {
                 deviceManager.Initialize(DisplayInformation.GetForCurrentView().LogicalDpi);
-                DisplayInformation.GetForCurrentView().DpiChanged += DisplayProperties_LogicalDpiChanged;
+                DisplayInformation.GetForCurrentView().DpiChanged += DisplayInformation_LogicalDpiChanged;
             } catch (Exception ex) {
                 //DisplayInformation.GetForCurrentView() will throw exception in designer
                 deviceManager.Initialize(96.0f);
@@ -92,17 +92,23 @@ namespace MiniCubeXaml
             CompositionTargetEx.Rendering += CompositionTarget_Rendering;
 
             this.LayoutUpdated += Direct3DUserControl_LayoutUpdated;
+            this.CompositionScaleChanged += Direct3DUserControl_CompositionScaleChanged;
+        }
+
+        void Direct3DUserControl_CompositionScaleChanged(SwapChainPanel sender, object args)
+        {
+            //TODO: handle changed composition scale
         }
 
         void Direct3DUserControl_LayoutUpdated(object sender, object e)
         {
             //TODO: handle updated Layout
-            //throw new NotImplementedException();
         }
 
-        void DisplayProperties_LogicalDpiChanged(DisplayInformation displayInformation, object sender)
+        void DisplayInformation_LogicalDpiChanged(DisplayInformation displayInformation, object sender)
         {
             deviceManager.Dpi = displayInformation.LogicalDpi;
+            //TODO: handle other value affected by DPI change
         }
 
         void CompositionTarget_Rendering(object sender, object e)
