@@ -92,6 +92,12 @@ namespace MiniCubeXaml
             CompositionTargetEx.Rendering += CompositionTarget_Rendering;
 
             this.LayoutUpdated += Direct3DUserControl_LayoutUpdated;
+            this.CompositionScaleChanged += Direct3DUserControl_CompositionScaleChanged;
+        }
+
+        void Direct3DUserControl_CompositionScaleChanged(SwapChainPanel sender, object args)
+        {
+            //TODO: handle changed composition scale
         }
 
         void Direct3DUserControl_LayoutUpdated(object sender, object e)
