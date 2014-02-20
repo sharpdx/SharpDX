@@ -746,8 +746,16 @@ namespace SharpCli
             if(absolutePath.StartsWith(".."))
                 return absolutePath;
 
-            Uri relativeUri = new Uri(basePath).MakeRelativeUri(new Uri(absolutePath));
-            return Uri.UnescapeDataString(relativeUri.ToString()).Replace('/', '\\');
+            try
+            {
+                Uri relativeUri = new Uri(basePath).MakeRelativeUri(new Uri(absolutePath));
+                return Uri.UnescapeDataString(relativeUri.ToString()).Replace('/', '\\');
+            }
+            catch(Exception ex)
+            {
+                // Just in case we are messing with absolute paths, leave it as it was in the pdb
+                return absolutePath;
+            }
         }
 
         /// <summary>
