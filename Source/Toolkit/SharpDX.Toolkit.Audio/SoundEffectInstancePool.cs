@@ -130,6 +130,15 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
+        /// <summary>
+        /// Returns the speicfied SoundEffectInstance to the instance pool
+        /// </summary>
+        /// <param name="item">SFXInstance to return to instance pool</param>
+        internal void Return(SoundEffectInstance item)
+        {
+            instancePool.Return(item);
+        }
+
         private void Dispose(bool disposing)
         {
             if (!IsDisposed)

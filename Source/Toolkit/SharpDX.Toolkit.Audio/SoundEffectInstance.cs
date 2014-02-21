@@ -573,5 +573,15 @@ namespace SharpDX.Toolkit.Audio
 
             voice.SetOutputMatrix(sourceChannels, destinationChannels, outputMatrix);
         }
+
+        /// <summary>
+        /// Returns this SoundEffectInstance to the SoundEffect InstancePool.
+        /// You should not continue to call other functions on this object.
+        /// </summary>
+        public void Return()
+        {
+            ReleaseSourceVoice();
+            Effect.AudioManager.InstancePool.Return(this);
+        }
     }
 }
