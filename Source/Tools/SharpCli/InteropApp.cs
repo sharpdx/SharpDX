@@ -736,88 +736,6 @@ namespace SharpCli
             return Environment.GetEnvironmentVariable("ProgramFiles");
         }
 
-        private static FieldInfo GetField(Type type, string name, ref FieldInfo fieldInfo)
-        {
-            return fieldInfo ?? (fieldInfo = type.GetField(name, BindingFlags.Instance | BindingFlags.NonPublic));
-        }
-
-        private static string MakeRelative(string basePath, string absolutePath)
-        {
-            if(absolutePath.StartsWith(".."))
-                return absolutePath;
-
-            try
-            {
-                Uri relativeUri = new Uri(basePath).MakeRelativeUri(new Uri(absolutePath));
-                return Uri.UnescapeDataString(relativeUri.ToString()).Replace('/', '\\');
-            }
-            catch(Exception ex)
-            {
-                // Just in case we are messing with absolute paths, leave it as it was in the pdb
-                return absolutePath;
-            }
-        }
-
-        /// <summary>
-        /// Patches the PDB to use relative path for source file instead of absolute path.
-        /// Having relative path is making the pdb much easier to redistribute (and we don't need anymore
-        /// to distribute pdb files to nuget symbols server)
-        /// </summary>
-        /// <param name="assembly">The assembly.</param>
-        private void PatchPdbToUseRelativePath(AssemblyDefinition assembly)
-        {
-            FieldInfo functionsField = null;
-            FieldInfo linesField = null;
-            FieldInfo fileField = null;
-            FieldInfo nameField = null;
-
-            foreach(var module in assembly.Modules)
-            {
-                ISymbolReader symbols = module.SymbolReader;
-                if(symbols == null)
-                    continue;
-
-                var basePath = module.FullyQualifiedName;
-                if(basePath == null)
-                    continue;
-                basePath = Path.GetDirectoryName(basePath);
-                if(basePath == null)
-                    continue;
-                if(!basePath.EndsWith("\\"))
-                {
-                    basePath += "\\";
-                }
-
-                // Because we don't have access to the underlying classes, we are doing this with reflection
-                var functions = (IDictionary)GetField(symbols.GetType(), "functions", ref functionsField).GetValue(symbols);
-
-                if(functions == null)
-                    return;
-
-                foreach(var function in functions.Values)
-                {
-                    var lines = (object[])GetField(function.GetType(), "lines", ref linesField).GetValue(function);
-                    if(lines == null)
-                        continue;
-
-                    foreach(var line in lines)
-                    {
-                        var source = GetField(line.GetType(), "file", ref fileField).GetValue(line);
-                        if(source == null)
-                            continue;
-
-                        GetField(source.GetType(), "name", ref nameField);
-                        var name = (string)nameField.GetValue(source);
-                        if(name == null)
-                            continue;
-
-                        var newName = MakeRelative(basePath, name);
-                        nameField.SetValue(source, newName);
-                    }
-                }
-            }
-        }
-
         /// <summary>
         /// Patches the file.
         /// </summary>
@@ -851,9 +769,6 @@ namespace SharpCli
             // Read Assembly
             assembly = AssemblyDefinition.ReadAssembly(file, readerParameters);
             ((BaseAssemblyResolver)assembly.MainModule.AssemblyResolver).AddSearchDirectory(Path.GetDirectoryName(file));
-
-            // Patch pdb to use relative instead of absolute file path
-            PatchPdbToUseRelativePath(assembly);
 
             foreach (var assemblyNameReference in assembly.MainModule.AssemblyReferences)
             {
