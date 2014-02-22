@@ -136,5 +136,13 @@ namespace SharpDX.Toolkit.Graphics
         {
             return new DisplayMode(description.Format, description.Width, description.Height, description.RefreshRate);
         }
+
+#if DIRECTX11_1
+        public static DisplayMode FromDescription(ModeDescription1 description)
+        {
+            return new DisplayMode(description.Format, description.Width, description.Height, description.RefreshRate);
+        }
+#endif
+
     }
 }
