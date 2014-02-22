@@ -20,7 +20,10 @@
 
 using System;
 using System.Collections.Generic;
+using SharpDX.Direct3D;
+using SharpDX.Direct3D11;
 using SharpDX.DXGI;
+using ResultCode = SharpDX.DXGI.ResultCode;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -32,37 +35,108 @@ namespace SharpDX.Toolkit.Graphics
     /// <unmanaged-short>IDXGIOutput</unmanaged-short>	
     public class GraphicsOutput : Component
     {
+        private readonly GraphicsAdapter adapter;
         private readonly Output output;
         private readonly OutputDescription outputDescription;
+        private DisplayMode currentDisplayMode;
+        private DisplayMode[] supportedDisplayModes;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="GraphicsOutput"/>.
+        /// Initializes a new instance of <see cref="GraphicsOutput" />.
         /// </summary>
-        /// <param name="output">The DXGI <see cref="Output"/> counterpart of this instance.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Is thrown when <paramref name="outputOrdinal"/> is less than zero.</exception>
-        /// <exception cref="ArgumentNullException">Is thrown when <paramref name="output"/> is null.</exception>
-        internal GraphicsOutput(Output output)
+        /// <param name="adapter">The adapter.</param>
+        /// <param name="output">The DXGI <see cref="Output" /> counterpart of this instance.</param>
+        /// <exception cref="System.ArgumentNullException">output</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Is thrown when <paramref name="outputOrdinal" /> is less than zero.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown when <paramref name="output" /> is null.</exception>
+        internal GraphicsOutput(GraphicsAdapter adapter, Output output)
         {
+            if(adapter == null) throw new ArgumentNullException("adapter");
             if (output == null) throw new ArgumentNullException("output");
 
+            this.adapter = adapter;
             this.output = ToDispose(output);
             outputDescription = output.Description;
+        }
 
-            InitializeSupportedDisplayModes();
+        /// <summary>
+        /// Find the display mode that most closely matches the requested display mode.
+        /// </summary>
+        /// <param name="targetProfiles">The target profile, as available formats are different depending on the feature level..</param>
+        /// <param name="mode">The mode.</param>
+        /// <returns>Returns the closes display mode.</returns>
+        /// <unmanaged>HRESULT IDXGIOutput::FindClosestMatchingMode([In] const DXGI_MODE_DESC* pModeToMatch,[Out] DXGI_MODE_DESC* pClosestMatch,[In, Optional] IUnknown* pConcernedDevice)</unmanaged>
+        /// <remarks>Direct3D devices require UNORM formats. This method finds the closest matching available display mode to the mode specified in pModeToMatch. Similarly ranked fields (i.e. all specified, or all unspecified, etc) are resolved in the following order.  ScanlineOrdering Scaling Format Resolution RefreshRate  When determining the closest value for a particular field, previously matched fields are used to filter the display mode list choices, and  other fields are ignored. For example, when matching Resolution, the display mode list will have already been filtered by a certain ScanlineOrdering,  Scaling, and Format, while RefreshRate is ignored. This ordering doesn't define the absolute ordering for every usage scenario of FindClosestMatchingMode, because  the application can choose some values initially, effectively changing the order that fields are chosen. Fields of the display mode are matched one at a time, generally in a specified order. If a field is unspecified, FindClosestMatchingMode gravitates toward the values for the desktop related to this output.  If this output is not part of the desktop, then the default desktop output is used to find values. If an application uses a fully unspecified  display mode, FindClosestMatchingMode will typically return a display mode that matches the desktop settings for this output.   Unspecified fields are lower priority than specified fields and will be resolved later than specified fields.</remarks>
+        public DisplayMode FindClosestMatchingDisplayMode(FeatureLevel[] targetProfiles,  DisplayMode mode)
+        {
+            ModeDescription closestDescription;
+            SharpDX.Direct3D11.Device deviceTemp = null;
+            try
+            {
+                deviceTemp = new SharpDX.Direct3D11.Device(adapter, DeviceCreationFlags.None, targetProfiles);
+            }
+            catch(Exception ex) {}
 
-            InitializeCurrentDisplayMode();
+            var descriprtion = new ModeDescription()
+                                   {
+                                       Width = mode.Width,
+                                       Height = mode.Height,
+                                       RefreshRate = mode.RefreshRate,
+                                       Format = mode.Format,
+                                       Scaling = DisplayModeScaling.Unspecified,
+                                       ScanlineOrdering = DisplayModeScanlineOrder.Unspecified
+                                   };
+            using (var device = deviceTemp)
+                output.GetClosestMatchingMode(device, descriprtion, out closestDescription);
+
+            return DisplayMode.FromDescription(closestDescription);
+        }
+
+        /// <summary>
+        /// Gets the adapter this output is attached.
+        /// </summary>
+        /// <value>The adapter.</value>
+        public GraphicsAdapter Adapter
+        {
+            get { return adapter; }
         }
 
         /// <summary>
         /// Gets the current display mode.
         /// </summary>
         /// <value>The current display mode.</value>
-        public DisplayMode CurrentDisplayMode { get; private set; }
+        public DisplayMode CurrentDisplayMode
+        {
+            get
+            {
+                lock(output)
+                {
+                    if(currentDisplayMode == null)
+                    {
+                        InitializeCurrentDisplayMode();
+                    }
+                }
+                return currentDisplayMode;
+            }
+        }
 
         /// <summary>
         /// Returns a collection of supported display modes for this <see cref="GraphicsOutput"/>.
         /// </summary>
-        public DisplayMode[] SupportedDisplayModes { get; private set; }
+        public DisplayMode[] SupportedDisplayModes
+        {
+            get
+            {
+                lock(output)
+                {
+                    if(supportedDisplayModes == null)
+                    {
+                        InitializeSupportedDisplayModes();
+                    }
+                }
+                return supportedDisplayModes;
+            }
+        }
 
         /// <summary>
         /// Retrieves the handle of the monitor associated with this <see cref="GraphicsOutput"/>.
@@ -121,7 +195,7 @@ namespace SharpDX.Toolkit.Graphics
                             DisplayMode oldMode;
                             if (!modesMap.TryGetValue(key, out oldMode))
                             {
-                                var displayMode = new DisplayMode(mode.Format, mode.Width, mode.Height, mode.RefreshRate);
+                                var displayMode = DisplayMode.FromDescription(mode);
 
                                 modesMap.Add(key, displayMode);
                                 modesAvailable.Add(displayMode);
@@ -139,7 +213,7 @@ namespace SharpDX.Toolkit.Graphics
 #if DIRECTX11_1
             output1.Dispose();
 #endif
-            SupportedDisplayModes = modesAvailable.ToArray();
+            supportedDisplayModes = modesAvailable.ToArray();
         }
 
         /// <summary>
@@ -149,7 +223,7 @@ namespace SharpDX.Toolkit.Graphics
         /// if it is not found - it checks for <see cref="Format.B8G8R8A8_UNorm"/>.</remarks>
         private void InitializeCurrentDisplayMode()
         {
-            CurrentDisplayMode = TryFindMatchingDisplayMode(Format.R8G8B8A8_UNorm)
+            currentDisplayMode = TryFindMatchingDisplayMode(Format.R8G8B8A8_UNorm)
                                  ?? TryFindMatchingDisplayMode(Format.B8G8R8A8_UNorm);
         }
 

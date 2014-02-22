@@ -375,14 +375,19 @@ namespace SharpDX.Toolkit
                                             GraphicsDeviceInformation deviceInfo,
                                             List<GraphicsDeviceInformation> graphicsDeviceInfos)
         {
-            if (output.CurrentDisplayMode != null)
-                AddDevice(output.CurrentDisplayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
+            var preferredMode = new DisplayMode(prefferedParameters.PreferredBackBufferFormat,
+                prefferedParameters.PreferredBackBufferWidth,
+                prefferedParameters.PreferredBackBufferHeight,
+                prefferedParameters.PreferredRefreshRate);
 
             if (prefferedParameters.IsFullScreen)
             {
-                // Get display mode for the particular width, height, pixelformat
-                foreach (var displayMode in output.SupportedDisplayModes)
-                    AddDevice(displayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
+                var displayMode = output.FindClosestMatchingDisplayMode(prefferedParameters.PreferredGraphicsProfile, preferredMode);
+                AddDevice(displayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
+            }
+            else
+            {
+                AddDevice(preferredMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
             }
         }
 
