@@ -1,15 +1,15 @@
 ﻿// Copyright (c) 2010-2013 SharpDX - SharpDX Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -29,7 +29,7 @@ namespace SharpDX.XAudio2.Fx
         /// <param name="I3DL2Parameters">The value to convert.</param>
         /// <returns>A <see cref="SharpDX.XAudio2.Fx.ReverbParameters"/> that represents the converted <see cref="SharpDX.XAudio2.Fx.ReverbI3DL2Parameters"/>.</returns>
         /// <remarks>
-        /// The <see cref="SharpDX.XAudio2.Fx.ReverbI3DL2Parameters"/> is converted to <see cref="SharpDX.XAudio2.Fx.ReverbParameters"/> 
+        /// The <see cref="SharpDX.XAudio2.Fx.ReverbI3DL2Parameters"/> is converted to <see cref="SharpDX.XAudio2.Fx.ReverbParameters"/>
         /// using the same logic as the inline function "ReverbConvertI3DL2ToNative" from "XAudio2fx.h".
         /// </remarks>
         public static explicit operator ReverbParameters(ReverbI3DL2Parameters I3DL2Parameters)

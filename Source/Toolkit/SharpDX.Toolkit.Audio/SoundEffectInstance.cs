@@ -1,15 +1,15 @@
 ﻿// Copyright (c) 2010-2013 SharpDX - SharpDX Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,34 +19,33 @@
 // THE SOFTWARE.
 using System;
 
-
 namespace SharpDX.Toolkit.Audio
 {
     using SharpDX.Multimedia;
-    using SharpDX.XAudio2;
     using SharpDX.X3DAudio;
+    using SharpDX.XAudio2;
 
     /// <summary>
     /// Provides a single playing, paused, or stopped instance of a <see cref="SoundEffect"/> sound.
     /// </summary>
-    public sealed class SoundEffectInstance: IDisposable
-    {        
-        private SourceVoice voice;
-        private bool paused;
-        private float volume;
-        private float pan;
-        private float pitch;
-        private float[] outputMatrix;
-        float[] reverbLevels;
-        bool isReverbSubmixEnabled;
-        private Emitter emitter;
-        private Listener listener;
+    public sealed class SoundEffectInstance : IDisposable
+    {
         private DspSettings dspSettings;
+        private Emitter emitter;
+        private bool isReverbSubmixEnabled;
+        private Listener listener;
+        private float[] outputMatrix;
+        private float pan;
+        private bool paused;
+        private float pitch;
+        private float[] reverbLevels;
+        private SourceVoice voice;
+        private float volume;
 
         internal SoundEffectInstance(SoundEffect soundEffect, SourceVoice sourceVoice, bool isFireAndForget)
-        {  
+        {
             Effect = soundEffect;
-            voice = sourceVoice;  
+            voice = sourceVoice;
             IsFireAndForget = isFireAndForget;
             paused = false;
             IsLooped = false;
@@ -58,17 +57,61 @@ namespace SharpDX.Toolkit.Audio
 
         public SoundEffect Effect { get; private set; }
 
+        public bool IsDisposed { get; private set; }
 
-        internal bool IsFireAndForget { get; private set; }
+        public bool IsLooped { get; set; }
 
-        private AudioBuffer CurrentAudioBuffer
+        public float Pan
         {
             get
             {
-                if(Effect == null || Effect.AudioBuffer == null)
-                    return null;
+                return pan;
+            }
+            set
+            {
+                if (IsDisposed)
+                    throw new ObjectDisposedException(this.GetType().FullName);
 
-                return IsLooped ? Effect.LoopedAudioBuffer : Effect.AudioBuffer;
+                if (value == pan)
+                    return;
+
+                pan = MathUtil.Clamp(value, -1.0f, 1.0f);
+
+                SetPanOutputMatrix();
+            }
+        }
+
+        public float Pitch
+        {
+            get
+            {
+                return pitch;
+            }
+            set
+            {
+                if (IsDisposed)
+                    throw new ObjectDisposedException(this.GetType().FullName);
+
+                if (value == pitch)
+                    return;
+
+                pitch = MathUtil.Clamp(value, -1.0f, 1.0f);
+
+                voice.SetFrequencyRatio(XAudio2.SemitonesToFrequencyRatio(pitch));
+            }
+        }
+
+        public SoundState State
+        {
+            get
+            {
+                if (voice == null || voice.State.BuffersQueued == 0)
+                    return SoundState.Stopped;
+
+                if (paused)
+                    return SoundState.Paused;
+
+                return SoundState.Playing;
             }
         }
 
@@ -91,67 +134,44 @@ namespace SharpDX.Toolkit.Audio
                 voice.SetVolume(volume);
             }
         }
-        
 
-        public float Pitch
+        internal bool IsFireAndForget { get; private set; }
+
+        private AudioBuffer CurrentAudioBuffer
         {
             get
             {
-                return pitch;
-            }
-            set
-            {
-                if (IsDisposed)
-                    throw new ObjectDisposedException(this.GetType().FullName);
+                if (Effect == null || Effect.AudioBuffer == null)
+                    return null;
 
-                if (value == pitch)
-                    return;
-
-                pitch = MathUtil.Clamp(value, -1.0f, 1.0f);
-
-                voice.SetFrequencyRatio(XAudio2.SemitonesToFrequencyRatio(pitch));
+                return IsLooped ? Effect.LoopedAudioBuffer : Effect.AudioBuffer;
             }
         }
 
-
-        public float Pan
+        public void Apply2D(Vector2 listener, Vector2 listenerVelocity, Vector2 emitter, Vector2 emitterVelocity)
         {
-            get
-            {
-                return pan;
-            }
-            set
-            {
-                if (IsDisposed)
-                    throw new ObjectDisposedException(this.GetType().FullName);
-
-                if (value == pan)
-                    return;
-                
-                pan = MathUtil.Clamp(value, -1.0f, 1.0f);
-
-                SetPanOutputMatrix();
-            }
+            Apply3D(Vector3.ForwardLH, Vector3.Up, new Vector3(listener, 0), new Vector3(listenerVelocity, 0), Vector3.ForwardLH, Vector3.Up, new Vector3(emitter, 0), new Vector3(emitterVelocity, 0));
         }
 
-
-        public bool IsLooped { get; set; }
-
-
-        public SoundState State
+        // TODO: X3DAudio uses a left-handed Cartesian coordinate system. may need overloads for lh/rh.  seems to work with right hand matricies without it though.
+        public void Apply3D(Matrix listenerWorld, Vector3 listenerVelocity, Matrix emitterWorld, Vector3 emitterVelocity)
         {
-            get
-            {
-                if (voice == null || voice.State.BuffersQueued == 0)
-                    return SoundState.Stopped;
-
-                if (paused)
-                    return SoundState.Paused;
-
-                return SoundState.Playing;
-            }
+            Apply3D(listenerWorld.Forward, listenerWorld.Up, listenerWorld.TranslationVector, listenerVelocity, emitterWorld.Forward, emitterWorld.Up, emitterWorld.TranslationVector, emitterVelocity);
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        public void Pause()
+        {
+            if (IsDisposed)
+                throw new ObjectDisposedException(this.GetType().FullName);
+
+            voice.Stop();
+            paused = true;
+        }
 
         public void Play()
         {
@@ -173,17 +193,14 @@ namespace SharpDX.Toolkit.Audio
             paused = false;
         }
 
-
-        public void Pause()
+        public void Reset()
         {
-            if (IsDisposed)
-                throw new ObjectDisposedException(this.GetType().FullName);
-
-            voice.Stop();
-            paused = true;
+            Volume = 1.0f;
+            Pitch = 0.0f;
+            Pan = 0.0f;
+            IsLooped = false;
         }
 
-        
         public void Resume()
         {
             if (IsDisposed)
@@ -203,7 +220,6 @@ namespace SharpDX.Toolkit.Audio
             paused = false;
         }
 
-
         public void Stop()
         {
             if (IsDisposed)
@@ -215,17 +231,16 @@ namespace SharpDX.Toolkit.Audio
             paused = false;
         }
 
-        
         public void Stop(bool immediate)
         {
             if (IsDisposed)
                 throw new ObjectDisposedException(this.GetType().FullName);
 
-            if(immediate)
+            if (immediate)
             {
                 voice.Stop(0);
             }
-            else if(IsLooped)
+            else if (IsLooped)
             {
                 voice.ExitLoop();
             }
@@ -237,45 +252,32 @@ namespace SharpDX.Toolkit.Audio
             paused = false;
         }
 
-
-        public void Reset()
+        internal void ParentDisposed()
         {
-            Volume = 1.0f;
-            Pitch = 0.0f;
-            Pan = 0.0f;
-            IsLooped = false;
+            if (!IsDisposed)
+            {
+                IsDisposed = true;
+                ReleaseSourceVoice();
+                Effect = null;
+                outputMatrix = null;
+            }
         }
 
         internal void Reset(SoundEffect soundEffect, SourceVoice sourceVoice, bool isFireAndForget)
-        {           
+        {
             Effect = soundEffect;
             voice = sourceVoice;
             IsFireAndForget = isFireAndForget;
 
-            if(soundEffect != null && sourceVoice != null)
+            if (soundEffect != null && sourceVoice != null)
                 Reset();
         }
-
-        // TODO: X3DAudio uses a left-handed Cartesian coordinate system. may need overloads for lh/rh.  seems to work with right hand matricies without it though.
-        public void Apply3D(Matrix listenerWorld, Vector3 listenerVelocity, Matrix emitterWorld, Vector3 emitterVelocity)
-        {
-            Apply3D(listenerWorld.Forward, listenerWorld.Up, listenerWorld.TranslationVector, listenerVelocity, emitterWorld.Forward, emitterWorld.Up, emitterWorld.TranslationVector, emitterVelocity);         
-            
-        }
-        
-
-        public void Apply2D(Vector2 listener, Vector2 listenerVelocity, Vector2 emitter, Vector2 emitterVelocity)
-        {
-            Apply3D(Vector3.ForwardLH, Vector3.Up, new Vector3(listener, 0), new Vector3(listenerVelocity, 0), Vector3.ForwardLH, Vector3.Up, new Vector3(emitter, 0), new Vector3(emitterVelocity, 0));
-
-        }
-
 
         private void Apply3D(Vector3 listenerForward, Vector3 listenerUp, Vector3 listenerPosition, Vector3 listenerVelocity, Vector3 emitterForward, Vector3 emitterUp, Vector3 emitterPosition, Vector3 emitterVelocity)
         {
             if (!Effect.AudioManager.IsSpatialAudioEnabled)
                 throw new InvalidOperationException("Spatial audio must be enabled first.");
-            
+
             if (emitter == null)
                 emitter = new Emitter();
 
@@ -302,16 +304,15 @@ namespace SharpDX.Toolkit.Audio
             if (dspSettings == null)
                 dspSettings = new DspSettings(Effect.Format.Channels, Effect.AudioManager.MasteringVoice.VoiceDetails.InputChannelCount);
 
-
             CalculateFlags flags = CalculateFlags.Matrix | CalculateFlags.Doppler | CalculateFlags.LpfDirect;
 
-            if((Effect.AudioManager.Speakers & Speakers.LowFrequency) > 0)
+            if ((Effect.AudioManager.Speakers & Speakers.LowFrequency) > 0)
             {
                 // On devices with an LFE channel, allow the mono source data to be routed to the LFE destination channel.
                 flags |= CalculateFlags.RedirectToLfe;
             }
 
-            if(Effect.AudioManager.IsReverbEffectEnabled)
+            if (Effect.AudioManager.IsReverbEffectEnabled)
             {
                 flags |= CalculateFlags.Reverb | CalculateFlags.LpfReverb;
 
@@ -324,7 +325,6 @@ namespace SharpDX.Toolkit.Audio
                         new VoiceSendDescriptor { OutputVoice = Effect.AudioManager.ReverbVoice, Flags = sendFlags }
                     };
 
-                    
                     voice.SetOutputVoices(outputVoices);
                     isReverbSubmixEnabled = true;
                 }
@@ -333,47 +333,98 @@ namespace SharpDX.Toolkit.Audio
             Effect.AudioManager.Calculate3D(listener, emitter, flags, dspSettings);
 
             voice.SetFrequencyRatio(dspSettings.DopplerFactor);
-            voice.SetOutputMatrix(Effect.AudioManager.MasteringVoice,dspSettings.SourceChannelCount, dspSettings.DestinationChannelCount, dspSettings.MatrixCoefficients);
+            voice.SetOutputMatrix(Effect.AudioManager.MasteringVoice, dspSettings.SourceChannelCount, dspSettings.DestinationChannelCount, dspSettings.MatrixCoefficients);
 
-            if(Effect.AudioManager.IsReverbEffectEnabled)
-            {               
-                
-                if(reverbLevels == null || reverbLevels.Length != Effect.Format.Channels)
-                    reverbLevels = new float [Effect.Format.Channels];
+            if (Effect.AudioManager.IsReverbEffectEnabled)
+            {
+                if (reverbLevels == null || reverbLevels.Length != Effect.Format.Channels)
+                    reverbLevels = new float[Effect.Format.Channels];
 
                 for (int i = 0; i < reverbLevels.Length; i++)
                 {
                     reverbLevels[i] = dspSettings.ReverbLevel;
-                }                
+                }
 
                 voice.SetOutputMatrix(Effect.AudioManager.ReverbVoice, Effect.Format.Channels, 1, reverbLevels);
             }
 
             if (Effect.AudioManager.IsReverbFilterEnabled)
             {
-                FilterParameters filterDirect = new FilterParameters 
-                { 
+                FilterParameters filterDirect = new FilterParameters
+                {
                     Type = FilterType.LowPassFilter,
                     // see XAudio2CutoffFrequencyToRadians() in XAudio2.h for more information on the formula used here
                     Frequency = 2.0f * (float)Math.Sin(X3DAudio.PI / 6.0f * dspSettings.LpfDirectCoefficient),
-                    OneOverQ = 1.0f 
+                    OneOverQ = 1.0f
                 };
-                
+
                 voice.SetOutputFilterParameters(Effect.AudioManager.MasteringVoice, filterDirect);
 
                 if (Effect.AudioManager.IsReverbEffectEnabled)
                 {
-                    FilterParameters filterReverb = new FilterParameters 
-                    { 
+                    FilterParameters filterReverb = new FilterParameters
+                    {
                         Type = FilterType.LowPassFilter,
                         // see XAudio2CutoffFrequencyToRadians() in XAudio2.h for more information on the formula used here
-                        Frequency = 2.0f * (float)Math.Sin(X3DAudio.PI / 6.0f * dspSettings.LpfReverbCoefficient),                         
-                        OneOverQ = 1.0f 
+                        Frequency = 2.0f * (float)Math.Sin(X3DAudio.PI / 6.0f * dspSettings.LpfReverbCoefficient),
+                        OneOverQ = 1.0f
                     };
-                    
+
                     voice.SetOutputFilterParameters(Effect.AudioManager.ReverbVoice, filterReverb);
                 }
             }
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (!IsDisposed)
+            {
+                IsDisposed = true;
+                ReleaseSourceVoice();
+                Effect.ChildDisposed(this);
+                Effect = null;
+                outputMatrix = null;
+            }
+        }
+
+        private void InitializeOutputMatrix(out int destinationChannels, out int sourceChannels)
+        {
+            destinationChannels = Effect.AudioManager.MasteringVoice.VoiceDetails.InputChannelCount;
+            sourceChannels = Effect.Format.Channels;
+
+            var outputMatrixSize = destinationChannels * sourceChannels;
+
+            if (outputMatrix == null || outputMatrix.Length != outputMatrixSize)
+                outputMatrix = new float[outputMatrixSize];
+
+            // Default to full volume for all channels/destinations
+            for (var i = 0; i < outputMatrix.Length; i++)
+                outputMatrix[i] = 1.0f;
+        }
+
+        private void ReleaseSourceVoice()
+        {
+            if (voice != null && !voice.IsDisposed)
+            {
+                voice.Stop(0);
+                voice.FlushSourceBuffers();
+                if (isReverbSubmixEnabled)
+                {
+                    voice.SetOutputVoices((VoiceSendDescriptor[])null);
+                    isReverbSubmixEnabled = false;
+                }
+
+                if (Effect.VoicePool.IsDisposed)
+                {
+                    voice.DestroyVoice();
+                    voice.Dispose();
+                }
+                else
+                {
+                    Effect.VoicePool.Return(voice);
+                }
+            }
+            voice = null;
         }
 
         private void SetPanOutputMatrix()
@@ -384,12 +435,10 @@ namespace SharpDX.Toolkit.Audio
 
             if (pan != 0.0f)
             {
-
                 var panLeft = 1.0f - pan;
                 var panRight = 1.0f + pan;
 
-
-                //The level sent from source channel S to destination channel D 
+                //The level sent from source channel S to destination channel D
                 //is specified in the form pLevelMatrix[SourceChannels × D + S]
                 for (int S = 0; S < sourceChannels; S++)
                 {
@@ -426,87 +475,13 @@ namespace SharpDX.Toolkit.Audio
 
                         case Speakers.Mono:
                         default:
-                            // don't do any panning here   
+                            // don't do any panning here
                             break;
                     }
                 }
             }
 
             voice.SetOutputMatrix(sourceChannels, destinationChannels, outputMatrix);
-        }
-
-        private void InitializeOutputMatrix(out int destinationChannels, out int sourceChannels)
-        {
-            destinationChannels = Effect.AudioManager.MasteringVoice.VoiceDetails.InputChannelCount;
-            sourceChannels = Effect.Format.Channels;
-
-            var outputMatrixSize = destinationChannels * sourceChannels;
-
-            if (outputMatrix == null || outputMatrix.Length != outputMatrixSize)
-                outputMatrix = new float[outputMatrixSize];
-
-            // Default to full volume for all channels/destinations   
-            for (var i = 0; i < outputMatrix.Length; i++)
-                outputMatrix[i] = 1.0f;
-        }
-
-
-        private void ReleaseSourceVoice()
-        {
-            if (voice != null && !voice.IsDisposed)
-            {
-                voice.Stop(0);
-                voice.FlushSourceBuffers();
-                if (isReverbSubmixEnabled)
-                {
-                    voice.SetOutputVoices((VoiceSendDescriptor[])null);
-                    isReverbSubmixEnabled = false;
-                }
-                
-                if (Effect.VoicePool.IsDisposed)
-                {                   
-                    voice.DestroyVoice();
-                    voice.Dispose();
-                }
-                else
-                {                    
-                    Effect.VoicePool.Return(voice);
-                }
-
-            }
-            voice = null;
-        }
-
-        public bool IsDisposed { get; private set; }
-
-
-        private void Dispose(bool disposing)
-        {
-            if (!IsDisposed)
-            {
-                IsDisposed = true;
-                ReleaseSourceVoice();                
-                Effect.ChildDisposed(this);
-                Effect = null;
-                outputMatrix = null;
-            }
-        }
-
-
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        internal void ParentDisposed()
-        {
-            if (!IsDisposed)
-            {
-                IsDisposed = true;
-                ReleaseSourceVoice();
-                Effect = null; 
-                outputMatrix = null;
-            }
         }
     }
 }

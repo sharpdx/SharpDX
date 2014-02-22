@@ -1,15 +1,15 @@
 ﻿// Copyright (c) 2010-2013 SharpDX - SharpDX Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,15 +25,15 @@ namespace SharpDX.Toolkit.Audio
     using SharpDX.IO;
     using SharpDX.Multimedia;
     using SharpDX.XAudio2;
-    using SharpDX.X3DAudio;
     using System.IO;
 
     /// <summary>
     /// Provides a loaded sound resource.
     /// </summary>
     public sealed class SoundEffect : IDisposable
-    {       
-        
+    {
+        private static float distanceScale = 1.0f;
+        private static float dopplerScale = 1f;
         private List<WeakReference> children;
 
         internal SoundEffect(AudioManager audioManager, string name, WaveFormat waveFormat, DataStream buffer, uint[] decodedPacketsInfo)
@@ -63,7 +63,6 @@ namespace SharpDX.Toolkit.Audio
             VoicePool = AudioManager.InstancePool.GetVoicePool(Format);
         }
 
-        static float distanceScale = 1.0f;
         public static float DistanceScale
         {
             get
@@ -81,7 +80,6 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
-        static float dopplerScale = 1f;
         public static float DopplerScale
         {
             get
@@ -99,16 +97,29 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
+        public AudioManager AudioManager { get; private set; }
 
         public TimeSpan Duration { get; private set; }
+
+        public bool IsDisposed { get; private set; }
+
         public string Name { get; private set; }
-        public AudioManager AudioManager { get; private set; }
-        internal SourceVoicePool VoicePool { get; private set; }
-        internal WaveFormat Format { get; private set; }
+
         internal AudioBuffer AudioBuffer { get; private set; }
-        internal AudioBuffer LoopedAudioBuffer { get; private set; }
+
         internal uint[] DecodedPacketsInfo { get; private set; }
 
+        internal WaveFormat Format { get; private set; }
+
+        internal AudioBuffer LoopedAudioBuffer { get; private set; }
+
+        internal SourceVoicePool VoicePool { get; private set; }
+
+        public static SoundEffect FromFile(AudioManager audioManager, string filePath)
+        {
+            using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
+                return FromStream(audioManager, stream, Path.GetFileNameWithoutExtension(filePath));
+        }
 
         public static SoundEffect FromStream(AudioManager audioManager, Stream stream, string name = null)
         {
@@ -128,105 +139,24 @@ namespace SharpDX.Toolkit.Audio
 #else
             //sound.Close();
             sound.Dispose();
-#endif            
-            return audioManager.ToDisposeAudioAsset( new SoundEffect(audioManager, name, format, buffer, decodedPacketsInfo));
-        }
-
-        public static SoundEffect FromFile(AudioManager audioManager, string filePath)
-        {
-            using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
-                return FromStream(audioManager, stream, Path.GetFileNameWithoutExtension(filePath));
-        }
-
-        public bool Play(float volume, float pitch, float pan)
-        {
-            if (IsDisposed)
-                throw new ObjectDisposedException(this.GetType().FullName);
-
-            SoundEffectInstance instance = null;
-            if(AudioManager.InstancePool.TryAcquire(this, true, out instance))
-            {
-                instance.Volume = volume;
-                instance.Pitch = pitch;
-                instance.Pan = pan;
-                instance.Play();
-                return true;
-            }
-
-            return false;
-        }
-
-
-        public bool Play()
-        {
-            return Play(1.0f, 0.0f, 0.0f);
+#endif
+            return audioManager.ToDisposeAudioAsset(new SoundEffect(audioManager, name, format, buffer, decodedPacketsInfo));
         }
 
         public SoundEffectInstance Create()
         {
             if (IsDisposed)
-                throw new ObjectDisposedException(this.GetType().FullName);    
+                throw new ObjectDisposedException(this.GetType().FullName);
 
             SoundEffectInstance instance = null;
             if (AudioManager.InstancePool.TryAcquire(this, false, out instance))
-            {                
+            {
                 AddChild(instance);
                 return instance;
             }
 
             throw new InvalidOperationException("Unable to create SoundEffectInstance, insufficient source voices available.");
         }
-
-
-        private void AddChild(SoundEffectInstance instance)
-        {
-            lock (children)
-            {
-                this.children.Add(new WeakReference(instance));
-            }
-        }
-
-
-        private long GetSamplesDuration()
-        {           
-            
-            switch (Format.Encoding)
-            {
-                case WaveFormatEncoding.Adpcm:
-                    var adpcmFormat = Format as WaveFormatAdpcm;
-                    long duration = (AudioBuffer.AudioBytes / adpcmFormat.BlockAlign) * adpcmFormat.SamplesPerBlock;
-                    long partial = AudioBuffer.AudioBytes % adpcmFormat.BlockAlign;
-                    if (partial > 0)
-                    {
-                        if (partial >= (7 * adpcmFormat.Channels))
-                            duration += (partial * 2) / (adpcmFormat.Channels - 12);
-                    }
-
-                    return duration;
-                case WaveFormatEncoding.Wmaudio2:
-                case WaveFormatEncoding.Wmaudio3:
-                    if (DecodedPacketsInfo != null)
-                    {
-                        return DecodedPacketsInfo[DecodedPacketsInfo.Length - 1] / Format.Channels;
-                    }
-                    break;
-
-                case WaveFormatEncoding.Pcm:
-                    if (Format.BitsPerSample > 0)
-                    {
-                        return ((long)AudioBuffer.AudioBytes) * 8 / (Format.BitsPerSample * Format.Channels);
-                    }
-                    break;
-                default:
-                    break;
-            }
-
-            return 0;
-        }
-
-        
-        public bool IsDisposed { get; private set; }
-
 
         public void Dispose()
         {
@@ -255,6 +185,28 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
+        public bool Play(float volume, float pitch, float pan)
+        {
+            if (IsDisposed)
+                throw new ObjectDisposedException(this.GetType().FullName);
+
+            SoundEffectInstance instance = null;
+            if (AudioManager.InstancePool.TryAcquire(this, true, out instance))
+            {
+                instance.Volume = volume;
+                instance.Pitch = pitch;
+                instance.Pan = pan;
+                instance.Play();
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool Play()
+        {
+            return Play(1.0f, 0.0f, 0.0f);
+        }
 
         internal void ChildDisposed(SoundEffectInstance child)
         {
@@ -273,5 +225,50 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
+        private void AddChild(SoundEffectInstance instance)
+        {
+            lock (children)
+            {
+                this.children.Add(new WeakReference(instance));
+            }
+        }
+
+        private long GetSamplesDuration()
+        {
+            switch (Format.Encoding)
+            {
+                case WaveFormatEncoding.Adpcm:
+                    var adpcmFormat = Format as WaveFormatAdpcm;
+                    long duration = (AudioBuffer.AudioBytes / adpcmFormat.BlockAlign) * adpcmFormat.SamplesPerBlock;
+                    long partial = AudioBuffer.AudioBytes % adpcmFormat.BlockAlign;
+                    if (partial > 0)
+                    {
+                        if (partial >= (7 * adpcmFormat.Channels))
+                            duration += (partial * 2) / (adpcmFormat.Channels - 12);
+                    }
+
+                    return duration;
+
+                case WaveFormatEncoding.Wmaudio2:
+                case WaveFormatEncoding.Wmaudio3:
+                    if (DecodedPacketsInfo != null)
+                    {
+                        return DecodedPacketsInfo[DecodedPacketsInfo.Length - 1] / Format.Channels;
+                    }
+                    break;
+
+                case WaveFormatEncoding.Pcm:
+                    if (Format.BitsPerSample > 0)
+                    {
+                        return ((long)AudioBuffer.AudioBytes) * 8 / (Format.BitsPerSample * Format.Channels);
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+
+            return 0;
+        }
     }
 }
