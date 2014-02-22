@@ -26,5 +26,17 @@ namespace MiniCubeXaml
         {
             this.InitializeComponent();
         }
+
+        private void ScaleSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            if (D3DUserControl != null && ScaleSlider != null)
+            {
+                var transform = new CompositeTransform();
+                transform.Rotation = RotateSlider.Value;
+                transform.ScaleX = ScaleSlider.Value;
+                transform.ScaleY = ScaleSlider.Value;
+                D3DUserControl.RenderTransform = transform;
+            }
+        }
     }
 }
