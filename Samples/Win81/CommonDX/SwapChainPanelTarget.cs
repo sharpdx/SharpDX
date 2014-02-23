@@ -115,17 +115,17 @@ namespace CommonDX
             }
         }
 
-        protected override SharpDX.DXGI.SwapChain1 CreateSwapChain(SharpDX.DXGI.Factory2 factory, SharpDX.Direct3D11.Device1 device, SharpDX.DXGI.SwapChainDescription1 desc)
+        protected override SharpDX.DXGI.SwapChain2 CreateSwapChain(SharpDX.DXGI.Factory2 factory, SharpDX.Direct3D11.Device1 device, SharpDX.DXGI.SwapChainDescription1 desc)
         {
             // Creates the swap chain for XAML composition
             var swapChain1 = new SwapChain1(factory, device, ref desc);
-            swapChain2 = new SwapChain2(swapChain1.NativePointer);
+            var swapChain2 = new SwapChain2(swapChain1.NativePointer);
 
             // Associate the SwapChainPanel with the swap chain
-            nativePanel.SwapChain = swapChain1;
+            nativePanel.SwapChain = swapChain2;
 
             // Returns the new swap chain
-            return swapChain1;
+            return swapChain2;
         }
     }
 }

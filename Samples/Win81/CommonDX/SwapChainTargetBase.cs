@@ -36,7 +36,7 @@ namespace CommonDX
     /// </remarks>
     public abstract class SwapChainTargetBase : TargetBase
     {
-        SharpDX.DXGI.SwapChain1 swapChain;
+        SharpDX.DXGI.SwapChain2 swapChain;
 
         /// <summary>
         /// Initializes this instance.
@@ -68,7 +68,7 @@ namespace CommonDX
             }
         }
 
-        public SwapChain1 SwapChain
+        public SwapChain2 SwapChain
         {
             get { return swapChain; }
         }
@@ -230,6 +230,6 @@ namespace CommonDX
         /// <param name="device">The D3D11 device</param>
         /// <param name="desc">The swap chain description</param>
         /// <returns>An instance of swap chain</returns>
-        protected abstract SharpDX.DXGI.SwapChain1 CreateSwapChain(SharpDX.DXGI.Factory2 factory, SharpDX.Direct3D11.Device1 device, SharpDX.DXGI.SwapChainDescription1 desc);
+        protected abstract SharpDX.DXGI.SwapChain2 CreateSwapChain(SharpDX.DXGI.Factory2 factory, SharpDX.Direct3D11.Device1 device, SharpDX.DXGI.SwapChainDescription1 desc);
     }
 }
