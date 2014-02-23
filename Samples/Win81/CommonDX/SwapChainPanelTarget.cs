@@ -38,8 +38,6 @@ namespace CommonDX
         private float lastCompositionScaleX = 0;
         private float lastCompositionScaleY = 0;
 
-        private SwapChain2 swapChain2;
-
         /// <summary>
         /// Initializes a new <see cref="SwapChainPanelTarget"/> instance
         /// </summary>
@@ -107,11 +105,9 @@ namespace CommonDX
         {
             base.CreateSizeDependentResources(renderBase);
 
-            if (swapChain2 != null)
+            if (SwapChain != null)
             {
-                swapChain2.MatrixTransform = Matrix3x2.Scaling(1f / panel.CompositionScaleX, 1f / panel.CompositionScaleY);
-                lastCompositionScaleX = panel.CompositionScaleX;
-                lastCompositionScaleY = panel.CompositionScaleY;
+                SwapChain.MatrixTransform = Matrix3x2.Scaling(1f / panel.CompositionScaleX, 1f / panel.CompositionScaleY);
             }
         }
 
