@@ -92,19 +92,11 @@ namespace MiniCubeXaml
 
             // Setup rendering callback
             CompositionTargetEx.Rendering += CompositionTarget_Rendering;
-
-            this.LayoutUpdated += Direct3DUserControl_LayoutUpdated;
-        }
-
-        void Direct3DUserControl_LayoutUpdated(object sender, object e)
-        {
-            //TODO: handle updated Layout
         }
 
         void DisplayInformation_LogicalDpiChanged(DisplayInformation displayInformation, object sender)
         {
             deviceManager.Dpi = displayInformation.LogicalDpi;
-            //TODO: handle other value affected by DPI change
         }
 
         void CompositionTarget_Rendering(object sender, object e)
