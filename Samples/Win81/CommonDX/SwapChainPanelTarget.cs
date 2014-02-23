@@ -78,7 +78,7 @@ namespace CommonDX
             get
             {
                 var width = Double.IsNaN(panel.Width) ? 1 : panel.Width;
-                return (int)(width * panel.CompositionScaleX);
+                return (int)(width * panel.CompositionScaleX + 0.5f);
             }
         }
 
@@ -87,7 +87,7 @@ namespace CommonDX
             get
             {
                 var height = Double.IsNaN(panel.Height) ? 1 : panel.Height;
-                return (int)(height * panel.CompositionScaleY);
+                return (int)(height * panel.CompositionScaleY + 0.5f);
             }
         }
 
