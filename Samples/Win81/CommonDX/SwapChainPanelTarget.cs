@@ -35,8 +35,8 @@ namespace CommonDX
     {
         private SwapChainPanel panel;
         private ISwapChainPanelNative nativePanel;
-        private float lastCompositionScaleX = 0;
-        private float lastCompositionScaleY = 0;
+        private int lastWidth = 0;
+        private int lastHeight = 0;
 
         /// <summary>
         /// Initializes a new <see cref="SwapChainPanelTarget"/> instance
@@ -54,8 +54,10 @@ namespace CommonDX
 
         private void panel_CompositionScaleChanged(SwapChainPanel sender, object args)
         {
-            if (panel.CompositionScaleX != lastCompositionScaleX && panel.CompositionScaleY != lastCompositionScaleY)
+            if (Width != lastWidth || Height != lastHeight)
             {
+                lastWidth = Width;
+                lastHeight = Height;
                 CreateSizeDependentResources(this);
             }
         }
@@ -64,7 +66,6 @@ namespace CommonDX
         {
             UpdateForSizeChange();
         }
-
 
         protected override Windows.Foundation.Rect CurrentControlBounds
         {
