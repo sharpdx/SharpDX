@@ -18,6 +18,7 @@ using MiniShape;
 using Windows.Graphics.Display;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
+using SharpDX;
 
 namespace MiniCubeXaml
 {
@@ -80,9 +81,10 @@ namespace MiniCubeXaml
             target.OnRender += shapeRenderer.Render;
 
             // Initialize the device manager and all registered deviceManager.OnInitialize             
-            try {
+            try
+            {
                 deviceManager.Initialize(DisplayInformation.GetForCurrentView().LogicalDpi);
-                DisplayInformation.GetForCurrentView().DpiChanged += DisplayProperties_LogicalDpiChanged;
+                DisplayInformation.GetForCurrentView().DpiChanged += DisplayInformation_LogicalDpiChanged;
             } catch (Exception ex) {
                 //DisplayInformation.GetForCurrentView() will throw exception in designer
                 deviceManager.Initialize(96.0f);
@@ -97,12 +99,12 @@ namespace MiniCubeXaml
         void Direct3DUserControl_LayoutUpdated(object sender, object e)
         {
             //TODO: handle updated Layout
-            //throw new NotImplementedException();
         }
 
-        void DisplayProperties_LogicalDpiChanged(DisplayInformation displayInformation, object sender)
+        void DisplayInformation_LogicalDpiChanged(DisplayInformation displayInformation, object sender)
         {
             deviceManager.Dpi = displayInformation.LogicalDpi;
+            //TODO: handle other value affected by DPI change
         }
 
         void CompositionTarget_Rendering(object sender, object e)
