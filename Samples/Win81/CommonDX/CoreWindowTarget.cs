@@ -74,7 +74,8 @@ namespace CommonDX
         {
             // Creates a SwapChain from a CoreWindow pointer
             using (var comWindow = new ComObject(window))
-                return new SwapChain2(new SwapChain1(factory, device, comWindow, ref desc).NativePointer);
+            using (var swapChain1 = new SwapChain1(factory, device, comWindow, ref desc))
+                return swapChain1.QueryInterface<SwapChain2>();
         }
 
         private void window_SizeChanged(CoreWindow sender, WindowSizeChangedEventArgs args)
