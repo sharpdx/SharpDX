@@ -1,15 +1,15 @@
 ﻿// Copyright (c) 2010-2013 SharpDX - SharpDX Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Collections.Generic;
 
 namespace SharpDX.Toolkit.Audio
 {
@@ -30,8 +29,8 @@ namespace SharpDX.Toolkit.Audio
     /// </summary>
     internal sealed class SourceVoicePool : Pool<SourceVoice>, IDisposable
     {
-        private SoundEffectInstancePool instancePool;
         private WaveFormat format;
+        private SoundEffectInstancePool instancePool;
         private bool isShared;
 
         public SourceVoicePool(SoundEffectInstancePool soundEffectInstancePool, WaveFormat waveFormat, bool isShared)
@@ -46,7 +45,32 @@ namespace SharpDX.Toolkit.Audio
             format = waveFormat;
             this.isShared = isShared;
         }
-        
+
+        public bool IsDisposed { get; private set; }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        public void Release()
+        {
+            if (!isShared)
+            {
+                instancePool.RemoveUnshared(this);
+                Dispose();
+            }
+        }
+
+        protected override void ClearItem(SourceVoice item)
+        {
+            if (!item.IsDisposed && instancePool.AudioManager.Device != null)
+            {
+                item.DestroyVoice();
+                item.Dispose();
+            }
+        }
+
         protected override bool IsActive(SourceVoice item)
         {
             return item.State.BuffersQueued > 0;
@@ -58,26 +82,6 @@ namespace SharpDX.Toolkit.Audio
             return true;
         }
 
-        protected override void ClearItem(SourceVoice item)
-        {
-            if (!item.IsDisposed && instancePool.AudioManager.Device != null)
-            {
-                item.DestroyVoice();
-                item.Dispose();
-            }
-        }        
-
-        public void Release()
-        {
-            if (!isShared)
-            {
-                instancePool.RemoveUnshared(this);
-                Dispose();
-            }
-        }
-
-        public bool IsDisposed { get; private set; }
-
         private void Dispose(bool disposing)
         {
             if (!IsDisposed)
@@ -85,11 +89,6 @@ namespace SharpDX.Toolkit.Audio
                 IsDisposed = true;
                 this.Clear();
             }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }

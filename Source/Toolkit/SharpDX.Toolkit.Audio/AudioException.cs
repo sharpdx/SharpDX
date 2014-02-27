@@ -17,13 +17,33 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+using System;
 
 namespace SharpDX.Toolkit.Audio
 {
-    public enum SoundState
+    /// <summary>
+    ///   An Audio exception.
+    /// </summary>
+    public class AudioException : SharpDXException
     {
-        Playing,
-        Paused,
-        Stopped
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AudioException"/> class.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        public AudioException(string message)
+            : base(message)
+        {
+        }
+
+        /// <summary>
+        ///   Initializes a new instance of the <see cref = "AudioException" /> class.
+        /// </summary>
+        /// <param name = "message">The message describing the exception.</param>
+        /// <param name = "innerException">The exception that caused this exception.</param>
+        /// <param name="args">formatting arguments</param>
+        public AudioException(string message, Exception innerException, params object[] args)
+            : base(message, innerException, args)
+        {
+        }
     }
 }
