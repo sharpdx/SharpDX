@@ -36,4 +36,9 @@
     <file>OPM\Mapping.xml</file>
   </ifndef>
 
+  <ifndef name="W8CORE">
+    <depends>sharpdx-mediafoundation-dsp</depends>
+    <file>Dsp\Mapping.xml</file>
+  </ifndef>
+
 </config>
