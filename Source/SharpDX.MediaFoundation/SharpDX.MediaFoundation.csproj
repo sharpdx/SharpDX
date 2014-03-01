@@ -34,9 +34,9 @@
     <Compile Include="Dsp\NamespaceDoc.cs" />
     <Compile Include="DXGIDeviceManager.cs" />
     <Compile Include="AsyncResult.cs" />
-    <Compile Include="Generated\Dsp\Enumerations.cs" />
-    <Compile Include="Generated\Dsp\Interfaces.cs" />
-    <Compile Include="Generated\Dsp\Structures.cs" />
+    <Compile Condition=" '$(SharpDXWin8Core)' == 'false'" Include="Generated\Dsp\Enumerations.cs" />
+    <Compile Condition=" '$(SharpDXWin8Core)' == 'false'" Include="Generated\Dsp\Interfaces.cs" />
+    <Compile Condition=" '$(SharpDXWin8Core)' == 'false'" Include="Generated\Dsp\Structures.cs" />
     <Compile Include="IAsyncCallback.cs" />
     <Compile Include="IByteStream.cs" />
     <Compile Include="MediaEngineClassFactory.cs" />
