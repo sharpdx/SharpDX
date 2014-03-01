@@ -116,7 +116,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Dsp\Mapping.xml" />
+    <None Include="Dsp\Mapping.xml" />
   </ItemGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
