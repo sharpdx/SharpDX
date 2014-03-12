@@ -142,22 +142,6 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Does something with arrays.
-        /// </summary>
-        /// <typeparam name="T">Most likely the type of elements in the array.</typeparam>
-        /// <param name="value">Who knows what this is for.</param>
-        /// <param name="count">Probably the length of the array.</param>
-        /// <returns>An array of who knows what.</returns>
-        public static T[] Array<T>(T value, int count)
-        {
-            T[] result = new T[count];
-            for (int i = 0; i < count; i++)
-                result[i] = value;
-
-            return result;
-        }
-
-        /// <summary>
         /// Converts revolutions to degrees.
         /// </summary>
         /// <param name="revolution">The value to convert.</param>
