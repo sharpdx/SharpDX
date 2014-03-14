@@ -9,12 +9,19 @@
     d:DesignWidth="1366"
     d:DesignHeight="768">
     <Grid>
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Text behind</TextBlock>
-        <local:Direct3DUserControl x:Name="D3DUserControl" Width="320" Height="200" RenderTransformOrigin="0.5,0.5" Opacity=".5">
+
+        
+        <Grid Height="298" Margin="106,178,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="674" Background="Black">
+            <Rectangle   Fill="#FFFFEE44"/>
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="48" Foreground="Black">Text behind</TextBlock>
+        </Grid>
+        
+        <!-- Opacity will be ignored by this Direct3DUserControl, as it is set by the content not the control. -->
+        <local:Direct3DUserControl x:Name="D3DUserControl" Width="320" Height="200" RenderTransformOrigin="0.5,0.5" >
         	<local:Direct3DUserControl.RenderTransform>
         		<CompositeTransform Rotation="10" ScaleY="3" ScaleX="3"/>
         	</local:Direct3DUserControl.RenderTransform>
-            <TextBlock>Text as content</TextBlock>
+            <TextBlock Margin="408,214,-408,-214">Text as content</TextBlock>
         </local:Direct3DUserControl>
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,100,0,0">Text in front</TextBlock>
         
