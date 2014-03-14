@@ -219,6 +219,7 @@ namespace CommonDX
                 BufferCount = 2,
                 Scaling = SharpDX.DXGI.Scaling.None,
                 SwapEffect = SharpDX.DXGI.SwapEffect.FlipSequential,
+                AlphaMode = AlphaMode.Premultiplied
             };
             return desc;
         }
