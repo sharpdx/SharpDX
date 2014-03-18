@@ -40,6 +40,7 @@
     <Compile Include="Device1.cs" />
     <Compile Include="DeviceContext1.cs" />
     <Compile Include="DirectWrite\Factory1.cs" />
+    <Compile Include="DirectWrite\LocalFontFileLoader.cs" />
     <Compile Include="DirectWrite\TextAnalyzer1.cs" />
     <Compile Include="DirectWrite\TextAnalysisSource1Shadow.cs" />
     <Compile Include="DirectWrite\TextAnalysisSource1.cs" />
