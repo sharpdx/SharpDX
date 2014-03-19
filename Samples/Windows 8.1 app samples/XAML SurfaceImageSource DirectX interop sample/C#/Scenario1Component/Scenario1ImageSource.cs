@@ -1,4 +1,28 @@
-﻿//*********************************************************
+﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+// -----------------------------------------------------------------------------
+// This is a port of the sample "XAML SurfaceImageSource DirectX interop sample
+// from the Windows 8.1 SDK
+// -----------------------------------------------------------------------------
+
+//*********************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
 // THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
@@ -7,6 +31,7 @@
 // PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 //
 //*********************************************************
+
 using Windows.UI.Xaml;
 using SharpDX;
 using SharpDX.Direct2D1;
@@ -37,6 +62,61 @@ namespace Scenario1Component
             Application.Current.Suspending += OnSuspending;
         }
 
+        // Initialize hardware-dependent resources.
+        private void CreateDeviceResources()
+        {
+            // Unlike the original C++ sample, we don't have smart pointers so we need to
+            // dispose Direct3D objects explicitly
+            Utilities.Dispose(ref d3dDevice);
+            Utilities.Dispose(ref d2dDevice);
+            Utilities.Dispose(ref d2dContext);
+
+            // This flag adds support for surfaces with a different color channel ordering
+            // than the API default. It is required for compatibility with Direct2D.
+            var creationFlags = DeviceCreationFlags.BgraSupport;
+
+#if DEBUG
+            // If the project is in a debug build, enable debugging via SDK Layers.
+            creationFlags |= DeviceCreationFlags.Debug;
+#endif
+
+            // This array defines the set of DirectX hardware feature levels this app will support.
+            // Note the ordering should be preserved.
+            // Don't forget to declare your application's minimum required feature level in its
+            // description.  All applications are assumed to support 9.1 unless otherwise stated.
+            FeatureLevel[] featureLevels =
+            {
+                FeatureLevel.Level_11_1,
+                FeatureLevel.Level_11_0,
+                FeatureLevel.Level_10_1,
+                FeatureLevel.Level_10_0,
+                FeatureLevel.Level_9_3,
+                FeatureLevel.Level_9_2,
+                FeatureLevel.Level_9_1,
+            };
+
+            // Create the Direct3D 11 API device object.
+            d3dDevice = new Device(DriverType.Hardware, creationFlags, featureLevels);
+
+            // Get the Direct3D 11.1 API device.
+            using (var dxgiDevice = d3dDevice.QueryInterface<SharpDX.DXGI.Device>())
+            {
+                // Create the Direct2D device object and a corresponding context.
+                d2dDevice = new SharpDX.Direct2D1.Device(dxgiDevice);
+
+                d2dContext = new SharpDX.Direct2D1.DeviceContext(d2dDevice, DeviceContextOptions.None);
+
+                // Query for ISurfaceImageSourceNative interface.
+                using (var sisNative = ComObject.QueryInterface<ISurfaceImageSourceNative>(this))
+                    sisNative.Device = dxgiDevice;
+            }
+        }
+
+        public void BeginDraw()
+        {
+            BeginDraw(new Windows.Foundation.Rect(0, 0, width, height));
+        }
+        
         public void BeginDraw(Windows.Foundation.Rect updateRect)
         {
             // Express target area as a native RECT type.
@@ -104,16 +184,11 @@ namespace Scenario1Component
             }
         }
 
-        public void BeginDraw()
-        {
-            BeginDraw(new Windows.Foundation.Rect(0, 0, width, height));
-        }
-
         public void EndDraw()
         {
             // Remove the transform and clip applied in BeginDraw since
             // the target area can change on every update.
-            d2dContext.Transform = SharpDX.Matrix3x2.Identity;
+            d2dContext.Transform = Matrix3x2.Identity;
             d2dContext.PopAxisAlignedClip();
 
             // Remove the render target and end drawing.
@@ -148,56 +223,12 @@ namespace Scenario1Component
                 dxgiDevice.Trim();
         }
 
-        // Initialize hardware-dependent resources.
-        private void CreateDeviceResources()
-        {
-            // This flag adds support for surfaces with a different color channel ordering
-            // than the API default. It is required for compatibility with Direct2D.
-            var creationFlags = DeviceCreationFlags.BgraSupport;
-
-#if DEBUG
-            // If the project is in a debug build, enable debugging via SDK Layers.
-            creationFlags |= DeviceCreationFlags.Debug;
-#endif
-
-            // This array defines the set of DirectX hardware feature levels this app will support.
-            // Note the ordering should be preserved.
-            // Don't forget to declare your application's minimum required feature level in its
-            // description.  All applications are assumed to support 9.1 unless otherwise stated.
-            FeatureLevel[] featureLevels =
-            {
-                FeatureLevel.Level_11_1,
-                FeatureLevel.Level_11_0,
-                FeatureLevel.Level_10_1,
-                FeatureLevel.Level_10_0,
-                FeatureLevel.Level_9_3,
-                FeatureLevel.Level_9_2,
-                FeatureLevel.Level_9_1,
-            };
-
-            // Create the Direct3D 11 API device object.
-            d3dDevice = new Device(DriverType.Hardware, creationFlags, featureLevels);
-
-            // Get the Direct3D 11.1 API device.
-            using (var dxgiDevice = d3dDevice.QueryInterface<SharpDX.DXGI.Device>())
-            {
-                // Create the Direct2D device object and a corresponding context.
-                d2dDevice = new SharpDX.Direct2D1.Device(dxgiDevice);
-
-                d2dContext = new SharpDX.Direct2D1.DeviceContext(d2dDevice, DeviceContextOptions.None);
-
-                // Query for ISurfaceImageSourceNative interface.
-                var sisNative = ComObject.QueryInterface<ISurfaceImageSourceNative>(this);
-                sisNative.Device = dxgiDevice;
-            }
-        }
-
-        private static SharpDX.Color ConvertToColorF(Windows.UI.Color color)
+        private static Color ConvertToColorF(Windows.UI.Color color)
         {
             return new Color(color.R, color.G, color.B, color.A);
         }
 
-        private static SharpDX.RectangleF ConvertToRectF(Windows.Foundation.Rect rect)
+        private static RectangleF ConvertToRectF(Windows.Foundation.Rect rect)
         {
             return new RectangleF((float) rect.X, (float) rect.Y, (float) rect.Width, (float) rect.Height);
         }

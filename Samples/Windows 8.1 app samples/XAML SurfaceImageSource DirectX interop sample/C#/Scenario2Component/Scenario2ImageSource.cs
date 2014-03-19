@@ -1,4 +1,38 @@
-﻿using System.IO;
+﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+// -----------------------------------------------------------------------------
+// This is a port of the sample "XAML SurfaceImageSource DirectX interop sample
+// from the Windows 8.1 SDK
+// -----------------------------------------------------------------------------
+
+//*********************************************************
+//
+// Copyright (c) Microsoft. All rights reserved.
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+//*********************************************************
+
+using System.IO;
 using System.Runtime.InteropServices;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml;
@@ -45,9 +79,9 @@ namespace Scenario2Component
         private VertexShader vertexShader;
         private PixelShader pixelShader;
         private InputLayout inputLayout;
-        private SharpDX.Direct3D11.Buffer vertexBuffer;
-        private SharpDX.Direct3D11.Buffer indexBuffer;
-        private SharpDX.Direct3D11.Buffer constantBuffer;
+        private Buffer vertexBuffer;
+        private Buffer indexBuffer;
+        private Buffer constantBuffer;
 
         private ModelViewProjectionConstantBuffer constantBufferData;
 
@@ -69,8 +103,163 @@ namespace Scenario2Component
             Application.Current.Suspending += OnSuspending;
         }
 
+        // Initialize hardware-dependent resources.
+        private void CreateDeviceResources()
+        {
+            // Unlike the original C++ sample, we don't have smart pointers so we need to
+            // dispose Direct3D objects explicitly
+            Utilities.Dispose(ref d3dDevice);
+            Utilities.Dispose(ref vertexShader);
+            Utilities.Dispose(ref inputLayout);
+            Utilities.Dispose(ref pixelShader);
+            Utilities.Dispose(ref constantBuffer);
+            Utilities.Dispose(ref vertexBuffer);
+            Utilities.Dispose(ref indexBuffer);
+
+            // This flag adds support for surfaces with a different color channel ordering
+            // than the API default. It is required for compatibility with Direct2D.
+            var creationFlags = DeviceCreationFlags.BgraSupport;
+
+#if DEBUG
+            // If the project is in a debug build, enable debugging via SDK Layers.
+            creationFlags |= DeviceCreationFlags.Debug;
+#endif
+
+            // This array defines the set of DirectX hardware feature levels this app will support.
+            // Note the ordering should be preserved.
+            // Don't forget to declare your application's minimum required feature level in its
+            // description.  All applications are assumed to support 9.1 unless otherwise stated.
+            FeatureLevel[] featureLevels =
+            {
+                FeatureLevel.Level_11_1,
+                FeatureLevel.Level_11_0,
+                FeatureLevel.Level_10_1,
+                FeatureLevel.Level_10_0,
+                FeatureLevel.Level_9_3,
+                FeatureLevel.Level_9_2,
+                FeatureLevel.Level_9_1,
+            };
+
+            // Create the Direct3D 11 API device object.
+            d3dDevice = new Device(DriverType.Hardware, creationFlags, featureLevels);
+            d3dContext = d3dDevice.ImmediateContext;
+
+            // Get the Direct3D 11.1 API device.
+            using (var dxgiDevice = d3dDevice.QueryInterface<SharpDX.DXGI.Device>())
+            {
+                // Query for ISurfaceImageSourceNative interface.
+                using (var sisNative = ComObject.QueryInterface<ISurfaceImageSourceNative>(this))
+                {
+                    sisNative.Device = dxgiDevice;
+                }
+            }
+
+            // Load the vertex shader.
+            var vsBytecode = ReadData("Scenario2Component\\SimpleVertexShader.cso");
+            vertexShader = new VertexShader(d3dDevice, vsBytecode);
+
+            // Create input layout for vertex shader.
+            var vertexDesc = new[]
+            {
+                new InputElement("POSITION", 0, Format.R32G32B32_Float, 0, 0, InputClassification.PerVertexData, 0),
+                new InputElement("COLOR", 0, Format.R32G32B32_Float, 12, 0, InputClassification.PerVertexData, 0),
+            };
+
+            inputLayout = new InputLayout(d3dDevice, vsBytecode, vertexDesc);
+
+            // Load the pixel shader.
+            var psBytecode = ReadData("Scenario2Component\\SimplePixelShader.cso");
+            pixelShader = new PixelShader(d3dDevice, psBytecode);
+
+            // Create the constant buffer.
+            var constantBufferDesc = new BufferDescription()
+            {
+                SizeInBytes = Utilities.SizeOf<ModelViewProjectionConstantBuffer>(),
+                BindFlags = BindFlags.ConstantBuffer
+            };
+            constantBuffer = new Buffer(d3dDevice, constantBufferDesc);
+
+            // Describe the vertices of the cube.
+            var cubeVertices = new[]
+            {
+                new VertexPositionColor(new Vector3(-0.5f, -0.5f, -0.5f), new Vector3(0.0f, 0.0f, 0.0f)),
+                new VertexPositionColor(new Vector3(-0.5f, -0.5f, 0.5f), new Vector3(0.0f, 0.0f, 1.0f)),
+                new VertexPositionColor(new Vector3(-0.5f, 0.5f, -0.5f), new Vector3(0.0f, 1.0f, 0.0f)),
+                new VertexPositionColor(new Vector3(-0.5f, 0.5f, 0.5f), new Vector3(0.0f, 1.0f, 1.0f)),
+                new VertexPositionColor(new Vector3(0.5f, -0.5f, -0.5f), new Vector3(1.0f, 0.0f, 0.0f)),
+                new VertexPositionColor(new Vector3(0.5f, -0.5f, 0.5f), new Vector3(1.0f, 0.0f, 1.0f)),
+                new VertexPositionColor(new Vector3(0.5f, 0.5f, -0.5f), new Vector3(1.0f, 1.0f, 0.0f)),
+                new VertexPositionColor(new Vector3(0.5f, 0.5f, 0.5f), new Vector3(1.0f, 1.0f, 1.0f)),
+            };
+
+            var vertexBufferDesc = new BufferDescription()
+            {
+                SizeInBytes = Utilities.SizeOf<VertexPositionColor>() * cubeVertices.Length,
+                BindFlags = BindFlags.VertexBuffer
+            };
+            vertexBuffer = Buffer.Create(d3dDevice, cubeVertices, vertexBufferDesc);
+
+            // Describe the cube indices.
+            var cubeIndices = new ushort[]
+            {
+                0, 2, 1, // -x
+                1, 2, 3,
+
+                4, 5, 6, // +x
+                5, 7, 6,
+
+                0, 1, 5, // -y
+                0, 5, 4,
+
+                2, 6, 7, // +y
+                2, 7, 3,
+
+                0, 4, 6, // -z
+                0, 6, 2,
+
+                1, 3, 7, // +z
+                1, 7, 5,
+            };
+            indexCount = cubeIndices.Length;
+
+            // Create the index buffer.
+            var indexBufferDesc = new BufferDescription()
+            {
+                SizeInBytes = sizeof(ushort) * cubeIndices.Length,
+                BindFlags = BindFlags.IndexBuffer
+            };
+            indexBuffer = Buffer.Create(d3dDevice, cubeIndices, indexBufferDesc);
+
+            // Calculate the aspect ratio and field of view.
+            float aspectRatio = (float)width / (float)height;
+
+            float fovAngleY = 70.0f * MathUtil.Pi / 180.0f;
+            if (aspectRatio < 1.0f)
+            {
+                fovAngleY /= aspectRatio;
+            }
+
+            // Set right-handed perspective projection based on aspect ratio and field of view.
+            constantBufferData.projection = Matrix.Transpose(
+                Matrix.PerspectiveFovRH(
+                    fovAngleY,
+                    aspectRatio,
+                    0.01f,
+                    100.0f
+                    )
+                );
+
+            // Start animating at frame 0.
+            frameCount = 0;
+        }
+
         public void BeginDraw()
         {
+            // Unlike the original C++ sample, we don't have smart pointers so we need to
+            // dispose Direct3D objects explicitly
+            Utilities.Dispose(ref renderTargetView);
+            Utilities.Dispose(ref depthStencilView);
+
             // Express target area as a native RECT type.
             var updateRectNative = new Rectangle(0, 0, width, height);
 
@@ -86,7 +275,6 @@ namespace Scenario2Component
                         // QI for target texture from DXGI surface.
                         using (var d3DTexture = surface.QueryInterface<Texture2D>())
                         {
-                            Utilities.Dispose(ref renderTargetView);
                             renderTargetView = new RenderTargetView(d3dDevice, d3DTexture);
                         }
 
@@ -118,7 +306,6 @@ namespace Scenario2Component
                         // Allocate a 2-D surface as the depth/stencil buffer.
                         using (var depthStencil = new Texture2D(d3dDevice, depthStencilDesc))
                         {
-                            Utilities.Dispose(ref depthStencilView);
                             depthStencilView = new DepthStencilView(d3dDevice, depthStencil);
                         }
                     }
@@ -138,13 +325,6 @@ namespace Scenario2Component
                     }
                 }
             }
-        }
-
-        public void EndDraw()
-        {
-            // Query for ISurfaceImageSourceNative interface.
-            using (var sisNative = ComObject.QueryInterface<ISurfaceImageSourceNative>(this))
-                sisNative.EndDraw();
         }
 
         public void Clear(Windows.UI.Color color)
@@ -206,6 +386,13 @@ namespace Scenario2Component
             d3dContext.DrawIndexed(indexCount, 0, 0);
         }
 
+        public void EndDraw()
+        {
+            // Query for ISurfaceImageSourceNative interface.
+            using (var sisNative = ComObject.QueryInterface<ISurfaceImageSourceNative>(this))
+                sisNative.EndDraw();
+        }
+
         private void OnSuspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
         {
             // Hints to the driver that the app is entering an idle state and that its memory can be used temporarily for other apps.
@@ -213,164 +400,14 @@ namespace Scenario2Component
                 dxgiDevice.Trim();
         }
 
-        // Initialize hardware-dependent resources.
-        private void CreateDeviceResources()
-        {
-            // This flag adds support for surfaces with a different color channel ordering
-            // than the API default. It is required for compatibility with Direct2D.
-            var creationFlags = DeviceCreationFlags.BgraSupport;
-
-#if DEBUG
-            // If the project is in a debug build, enable debugging via SDK Layers.
-            creationFlags |= DeviceCreationFlags.Debug;
-#endif
-
-            // This array defines the set of DirectX hardware feature levels this app will support.
-            // Note the ordering should be preserved.
-            // Don't forget to declare your application's minimum required feature level in its
-            // description.  All applications are assumed to support 9.1 unless otherwise stated.
-            FeatureLevel[] featureLevels =
-            {
-                FeatureLevel.Level_11_1,
-                FeatureLevel.Level_11_0,
-                FeatureLevel.Level_10_1,
-                FeatureLevel.Level_10_0,
-                FeatureLevel.Level_9_3,
-                FeatureLevel.Level_9_2,
-                FeatureLevel.Level_9_1,
-            };
-
-            // Create the Direct3D 11 API device object.
-            Utilities.Dispose(ref d3dDevice);
-            d3dDevice = new Device(DriverType.Hardware, creationFlags, featureLevels);
-            d3dContext = d3dDevice.ImmediateContext;
-
-            // Get the Direct3D 11.1 API device.
-            using (var dxgiDevice = d3dDevice.QueryInterface<SharpDX.DXGI.Device>())
-            {
-                // Query for ISurfaceImageSourceNative interface.
-                using (var sisNative = ComObject.QueryInterface<ISurfaceImageSourceNative>(this))
-                {
-                    sisNative.Device = dxgiDevice;
-                }
-            }
-
-            // Load the vertex shader.
-            var vsBytecode =
-                NativeFile.ReadAllBytes(Path.Combine(Package.Current.InstalledLocation.Path,
-                    "Scenario2Component\\SimpleVertexShader.cso"));
-            Utilities.Dispose(ref vertexShader);
-            vertexShader = new VertexShader(d3dDevice, vsBytecode);
-
-            // Create input layout for vertex shader.
-            var vertexDesc = new []
-            {
-                new InputElement("POSITION", 0, Format.R32G32B32_Float, 0, 0, InputClassification.PerVertexData, 0),
-                new InputElement("COLOR", 0, Format.R32G32B32_Float, 12, 0, InputClassification.PerVertexData, 0),
-            };
-
-            Utilities.Dispose(ref inputLayout);
-            inputLayout = new InputLayout(d3dDevice, vsBytecode, vertexDesc);
-
-            // Load the pixel shader.
-            var psBytecode =
-                NativeFile.ReadAllBytes(Path.Combine(Package.Current.InstalledLocation.Path, "Scenario2Component\\SimplePixelShader.cso"));
-            Utilities.Dispose(ref pixelShader);
-            pixelShader = new PixelShader(d3dDevice, psBytecode);
-
-            // Create the constant buffer.
-            var constantBufferDesc = new BufferDescription()
-            {
-                SizeInBytes = Utilities.SizeOf<ModelViewProjectionConstantBuffer>(),
-                BindFlags = BindFlags.ConstantBuffer
-            };
-            Utilities.Dispose(ref constantBuffer);
-            constantBuffer = new Buffer(d3dDevice, constantBufferDesc);
-
-            // Describe the vertices of the cube.
-            var cubeVertices = new []
-            {
-                new VertexPositionColor(new Vector3(-0.5f, -0.5f, -0.5f), new Vector3(0.0f, 0.0f, 0.0f)),
-                new VertexPositionColor(new Vector3(-0.5f, -0.5f, 0.5f), new Vector3(0.0f, 0.0f, 1.0f)),
-                new VertexPositionColor(new Vector3(-0.5f, 0.5f, -0.5f), new Vector3(0.0f, 1.0f, 0.0f)),
-                new VertexPositionColor(new Vector3(-0.5f, 0.5f, 0.5f), new Vector3(0.0f, 1.0f, 1.0f)),
-                new VertexPositionColor(new Vector3(0.5f, -0.5f, -0.5f), new Vector3(1.0f, 0.0f, 0.0f)),
-                new VertexPositionColor(new Vector3(0.5f, -0.5f, 0.5f), new Vector3(1.0f, 0.0f, 1.0f)),
-                new VertexPositionColor(new Vector3(0.5f, 0.5f, -0.5f), new Vector3(1.0f, 1.0f, 0.0f)),
-                new VertexPositionColor(new Vector3(0.5f, 0.5f, 0.5f), new Vector3(1.0f, 1.0f, 1.0f)),
-            };
-
-            var vertexBufferDesc = new BufferDescription()
-            {
-                SizeInBytes = Utilities.SizeOf<VertexPositionColor>()*cubeVertices.Length,
-                BindFlags = BindFlags.VertexBuffer
-            };
-            Utilities.Dispose(ref vertexBuffer);
-            vertexBuffer = Buffer.Create(d3dDevice, cubeVertices, vertexBufferDesc);
-
-            // Describe the cube indices.
-            var cubeIndices = new ushort[]
-            {
-                0, 2, 1, // -x
-                1, 2, 3,
-
-                4, 5, 6, // +x
-                5, 7, 6,
-
-                0, 1, 5, // -y
-                0, 5, 4,
-
-                2, 6, 7, // +y
-                2, 7, 3,
-
-                0, 4, 6, // -z
-                0, 6, 2,
-
-                1, 3, 7, // +z
-                1, 7, 5,
-            };
-            indexCount = cubeIndices.Length;
-
-            // Create the index buffer.
-            var indexBufferDesc = new BufferDescription()
-            {
-                SizeInBytes = sizeof(ushort) * cubeIndices.Length,
-                BindFlags = BindFlags.IndexBuffer
-            };
-            Utilities.Dispose(ref indexBuffer);
-            indexBuffer = Buffer.Create(d3dDevice, cubeIndices, indexBufferDesc);
-
-            // Calculate the aspect ratio and field of view.
-            float aspectRatio = (float) width/(float) height;
-
-            float fovAngleY = 70.0f*MathUtil.Pi/180.0f;
-            if (aspectRatio < 1.0f)
-            {
-                fovAngleY /= aspectRatio;
-            }
-
-            // Set right-handed perspective projection based on aspect ratio and field of view.
-            constantBufferData.projection = Matrix.Transpose(
-                Matrix.PerspectiveFovRH(
-                    fovAngleY,
-                    aspectRatio,
-                    0.01f,
-                    100.0f
-                    )
-                );
-
-            // Start animating at frame 0.
-            frameCount = 0;
-        }
-
-        private static SharpDX.Color ConvertToColorF(Windows.UI.Color color)
+        private static Color ConvertToColorF(Windows.UI.Color color)
         {
             return new Color(color.R, color.G, color.B, color.A);
         }
 
-        private static SharpDX.RectangleF ConvertToRectF(Windows.Foundation.Rect rect)
+        private static byte[] ReadData(string relativePath)
         {
-            return new RectangleF((float) rect.X, (float) rect.Y, (float) rect.Width, (float) rect.Height);
+            return NativeFile.ReadAllBytes(Path.Combine(Package.Current.InstalledLocation.Path, relativePath));
         }
     }
 }
