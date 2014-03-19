@@ -351,11 +351,10 @@ namespace Scenario2Component
             constantBufferData.model = Matrix.Transpose(Matrix.RotationY(frameCount++*0.016f*MathUtil.PiOverFour));
 
             // Clear depth/stencil view.
-            //d3dContext.ClearDepthStencilView(depthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
+            d3dContext.ClearDepthStencilView(depthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
 
             // Set render target.
-            //d3dContext.OutputMerger.SetRenderTargets(depthStencilView, renderTargetView);
-            d3dContext.OutputMerger.SetRenderTargets(renderTargetView);
+            d3dContext.OutputMerger.SetRenderTargets(depthStencilView, renderTargetView);
 
             // Map update to constant buffer.
             d3dContext.UpdateSubresource(ref constantBufferData, constantBuffer);
