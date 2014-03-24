@@ -286,9 +286,11 @@ namespace SharpDX.Toolkit.Audio
             }
             try
             {
-#if !WIN8METRO && !WP8 && DEBUG
+#if DEBUG && !WIN8METRO && !WP8 && !DIRECTX11_1
                 try
                 {
+                    // "XAudio2Flags.DebugEngine" is supported only in XAudio 2.7, but not in newer versions
+                    // msdn.microsoft.com/en-us/library/windows/desktop/microsoft.directx_sdk.xaudio2.xaudio2create(v=vs.85).aspx
                     Device = new XAudio2(XAudio2Flags.DebugEngine, ProcessorSpecifier.DefaultProcessor);
                     Device.StartEngine();
                 }
@@ -305,7 +307,7 @@ namespace SharpDX.Toolkit.Audio
                 throw new AudioException("Error creating XAudio device.", ex);
             }
 
-#if !WIN8METRO && !WP8
+#if !WIN8METRO && !WP8 && !DIRECTX11_1
             if (Device.DeviceCount == 0)
             {
                 DisposeCore();
@@ -313,7 +315,7 @@ namespace SharpDX.Toolkit.Audio
             }
 #endif
 
-#if WIN8METRO || WP8
+#if WIN8METRO || WP8 || DIRECTX11_1
             string deviceId = null;
 #else
             const int deviceId = 0;
@@ -339,7 +341,7 @@ namespace SharpDX.Toolkit.Audio
 
             MasteringVoice.SetVolume(masterVolume);
 
-#if WIN8METRO || WP8
+#if WIN8METRO || WP8 || DIRECTX11_1
             Speakers = (Speakers)MasteringVoice.ChannelMask;
 #else
             var deviceDetails = Device.GetDeviceDetails(deviceId);
