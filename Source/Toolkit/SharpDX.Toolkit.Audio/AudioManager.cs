@@ -19,17 +19,17 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
 
 namespace SharpDX.Toolkit.Audio
 {
-    using SharpDX.Multimedia;
-    using SharpDX.X3DAudio;
-    using SharpDX.XAPO.Fx;
-    using SharpDX.XAudio2;
-    using SharpDX.XAudio2.Fx;
-    using Reverb = SharpDX.XAudio2.Fx.Reverb;
-    using ReverbParameters = SharpDX.XAudio2.Fx.ReverbParameters;
+    using System;
+    using Multimedia;
+    using X3DAudio;
+    using XAPO.Fx;
+    using XAudio2;
+    using XAudio2.Fx;
+    using Reverb = XAudio2.Fx.Reverb;
+    using ReverbParameters = XAudio2.Fx.ReverbParameters;
 
     /// <summary>
     /// This manages the XAudio2 audio graph, device, and mastering voice.  This manager also allows loading of <see cref="SoundEffect"/> using
@@ -43,9 +43,9 @@ namespace SharpDX.Toolkit.Audio
         /// Result of a device not found.
         /// </summary>
         /// <unmanaged>ERROR_NOT_FOUND</unmanaged>
-        private static readonly SharpDX.ResultDescriptor NotFound = new SharpDX.ResultDescriptor(unchecked((int)0x80070490), "Windows Portable Devices", "ERROR_NOT_FOUND", "NotFound");
+        private static readonly ResultDescriptor NotFound = new ResultDescriptor(unchecked((int)0x80070490), "Windows Portable Devices", "ERROR_NOT_FOUND", "NotFound");
 
-        private static ReverbI3DL2Parameters[] reverbPresets = new ReverbI3DL2Parameters[]
+        private static readonly ReverbI3DL2Parameters[] reverbPresets =
         {
             ReverbI3DL2Parameters.Presets.Default,
             ReverbI3DL2Parameters.Presets.Generic,
@@ -87,6 +87,15 @@ namespace SharpDX.Toolkit.Audio
         private ReverbParameters reverbParameters;
         private float speedOfSound;
         private X3DAudio x3DAudio;
+        private bool isMasteringLimiterEnabled;
+        private bool isReverbEffectEnabled;
+        private bool isReverbFilterEnabled;
+        private bool isSpatialAudioEnabled;
+        private XAudio2 device;
+        private SoundEffectInstancePool instancePool;
+        private MasteringVoice masteringVoice;
+        private SubmixVoice reverbVoice;
+        private Speakers speakers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioManager" /> class.
@@ -97,7 +106,7 @@ namespace SharpDX.Toolkit.Audio
         {
             Services.AddService(this);
             masterVolume = 1.0f;
-            Speakers = Multimedia.Speakers.None;
+            Speakers = Speakers.None;
             masteringLimiterParameters = new MasteringLimiterParameters { Loudness = MasteringLimiter.DefaultLoudness, Release = MasteringLimiter.DefaultRelease };
             reverbParameters = (ReverbParameters)ReverbI3DL2Parameters.Presets.Default;
 
@@ -107,29 +116,89 @@ namespace SharpDX.Toolkit.Audio
             game.GameSystems.Add(this);
         }
 
-        public bool IsMasteringLimiterEnabled { get; private set; }
-
-        public bool IsReverbEffectEnabled { get; private set; }
-
-        public bool IsReverbFilterEnabled { get; private set; }
-
-        public bool IsSpatialAudioEnabled { get; private set; }
+        /// <summary>
+        /// Gets a value indicating whether mastering limiter is enabled.
+        /// </summary>
+        public bool IsMasteringLimiterEnabled
+        {
+            get
+            {
+                DisposeGuard();
+                return isMasteringLimiterEnabled;
+            }
+            private set
+            {
+                DisposeGuard();
+                isMasteringLimiterEnabled = value;
+            }
+        }
 
         /// <summary>
-        /// Sets and gets the volume of the Masteing voice.
+        /// Gets a value indicating whether reverb effect is enabled.
+        /// </summary>
+        public bool IsReverbEffectEnabled
+        {
+            get
+            {
+                DisposeGuard();
+                return isReverbEffectEnabled;
+            }
+            private set
+            {
+                DisposeGuard();
+                isReverbEffectEnabled = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether reverb filter is enabled.
+        /// </summary>
+        public bool IsReverbFilterEnabled
+        {
+            get
+            {
+                DisposeGuard();
+                return isReverbFilterEnabled;
+            }
+            private set
+            {
+                DisposeGuard();
+                isReverbFilterEnabled = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether spatial audio is enabled.
+        /// </summary>
+        public bool IsSpatialAudioEnabled
+        {
+            get
+            {
+                DisposeGuard();
+                return isSpatialAudioEnabled;
+            }
+            private set
+            {
+                DisposeGuard();
+                isSpatialAudioEnabled = value;
+            }
+        }
+
+        /// <summary>
+        /// Sets and gets the volume of the Mastering voice.
         /// </summary>
         public float MasterVolume
         {
             get
             {
+                DisposeGuard();
                 return masterVolume;
             }
             set
             {
-                if (IsDisposed)
-                    throw new ObjectDisposedException(this.GetType().FullName);
+                DisposeGuard();
 
-                if (value == masterVolume)
+                if (MathUtil.NearEqual(value, masterVolume))
                     return;
 
                 masterVolume = MathUtil.Clamp(value, 0.0f, 1.0f);
@@ -139,103 +208,182 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
-        internal XAudio2 Device { get; private set; }
+        /// <summary>
+        /// Gets the <see cref="XAudio2"/> device associated with the current <see cref="AudioManager"/> instance.
+        /// </summary>
+        internal XAudio2 Device
+        {
+            get
+            {
+                DisposeGuard();
+                return device;
+            }
+            private set
+            {
+                DisposeGuard();
+                device = value;
+            }
+        }
 
-        internal SoundEffectInstancePool InstancePool { get; private set; }
+        /// <summary>
+        /// Gets the pool of <see cref="SoundEffectInstance"/> associated with the current <see cref="AudioManager"/> instance.
+        /// </summary>
+        internal SoundEffectInstancePool InstancePool
+        {
+            get
+            {
+                DisposeGuard();
+                return instancePool;
+            }
+            private set
+            {
+                DisposeGuard();
+                instancePool = value;
+            }
+        }
 
-        internal MasteringVoice MasteringVoice { get; private set; }
+        /// <summary>
+        /// Gets a reference to the <see cref="MasteringVoice"/> associated with the current <see cref="AudioManager"/> instance.
+        /// </summary>
+        internal MasteringVoice MasteringVoice
+        {
+            get
+            {
+                DisposeGuard();
+                return masteringVoice;
+            }
+            private set
+            {
+                DisposeGuard();
+                masteringVoice = value;
+            }
+        }
 
-        internal SubmixVoice ReverbVoice { get; private set; }
+        /// <summary>
+        /// Gets the <see cref="SubmixVoice"/> associated with the current <see cref="AudioManager"/> instance (for reverb effect).
+        /// </summary>
+        internal SubmixVoice ReverbVoice
+        {
+            get
+            {
+                DisposeGuard();
+                return reverbVoice;
+            }
+            private set
+            {
+                DisposeGuard();
+                reverbVoice = value;
+            }
+        }
 
-        internal Speakers Speakers { get; private set; }
+        /// <summary>
+        /// Gets the speaker configuration.
+        /// </summary>
+        internal Speakers Speakers
+        {
+            get
+            {
+                DisposeGuard();
+                return speakers;
+            }
+            private set
+            {
+                DisposeGuard();
+                speakers = value;
+            }
+        }
 
+        /// <summary>
+        /// Disables the master volume limiter.
+        /// </summary>
         public void DisableMasterVolumeLimiter()
         {
-            if (IsDisposed)
-                throw new ObjectDisposedException(this.GetType().FullName);
+            DisposeGuard();
 
             if (!IsMasteringLimiterEnabled)
                 return;
 
-            if (MasteringVoice != null && masteringLimiter != null)
-            {
+            if(MasteringVoice != null && masteringLimiter != null)
                 MasteringVoice.DisableEffect(0);
-            }
 
             IsMasteringLimiterEnabled = false;
         }
 
+        /// <summary>
+        /// Disables the reverb effect.
+        /// </summary>
         public void DisableReverbEffect()
         {
-            if (IsDisposed)
-                throw new ObjectDisposedException(this.GetType().FullName);
+            DisposeGuard();
 
             if (!IsReverbEffectEnabled)
                 return;
 
-            if (ReverbVoice != null && reverb != null)
-            {
+            if(ReverbVoice != null && reverb != null)
                 ReverbVoice.DisableEffect(0);
-            }
 
             IsReverbEffectEnabled = false;
         }
 
+        /// <summary>
+        /// Enables the master volume limiter.
+        /// </summary>
         public void EnableMasterVolumeLimiter()
         {
-            if (IsDisposed)
-                throw new ObjectDisposedException(this.GetType().FullName);
+            DisposeGuard();
 
             if (IsMasteringLimiterEnabled)
                 return;
 
             if (MasteringVoice != null)
             {
-                if (masteringLimiter == null)
-                {
+                if(masteringLimiter == null)
                     CreateMasteringLimitier();
-                }
                 else
-                {
                     MasteringVoice.EnableEffect(0);
-                }
             }
 
             IsMasteringLimiterEnabled = true;
         }
 
+        /// <summary>
+        /// Enables the reverb effect.
+        /// </summary>
         public void EnableReverbEffect()
         {
-            if (IsDisposed)
-                throw new ObjectDisposedException(this.GetType().FullName);
+            DisposeGuard();
 
             if (IsReverbEffectEnabled)
                 return;
 
             if (MasteringVoice != null)
             {
-                if (ReverbVoice == null)
-                {
+                if(ReverbVoice == null)
                     CreateReverbSubmixVoice();
-                }
                 else
-                {
                     ReverbVoice.EnableEffect(0);
-                }
             }
 
             IsReverbEffectEnabled = true;
         }
 
+        /// <summary>
+        /// Enables the reverb filter.
+        /// </summary>
         public void EnableReverbFilter()
         {
+            DisposeGuard();
+
             IsReverbFilterEnabled = true;
         }
 
+        /// <summary>
+        /// Enables spatial audio effect.
+        /// </summary>
+        /// <param name="speedOfSound"></param>
         public void EnableSpatialAudio(float speedOfSound)
         {
-            if (IsDisposed)
-                throw new ObjectDisposedException(this.GetType().FullName);
+            DisposeGuard();
 
             if (speedOfSound < FLT_MIN)
                 throw new ArgumentOutOfRangeException("speedOfSound", "Speed of sound must be greater than or equal to FLT_MIN (1.175494351e-38F).");
@@ -328,7 +476,7 @@ namespace SharpDX.Toolkit.Audio
             {
                 DisposeCore();
 #if WIN8METRO || WP8
-                if(ex.ResultCode == AudioManager.NotFound)
+                if (ex.ResultCode == AudioManager.NotFound)
                 {
                     throw new AudioException("No default audio devices detected.");
                 }
@@ -535,6 +683,12 @@ namespace SharpDX.Toolkit.Audio
                 Device.Dispose();
                 Device = null;
             }
+        }
+
+        private void DisposeGuard()
+        {
+            if (IsDisposed)
+                throw new ObjectDisposedException(GetType().FullName);
         }
     }
 }

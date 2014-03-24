@@ -20,11 +20,13 @@
 
 namespace SharpDX.Toolkit.Audio
 {
+    using Content;
+
     /// <summary>
     /// The <see cref="A:SharpDX.Toolkit.Audio"/> assembly provides support for loading audio files
-    /// through the <see cref="IContentManager" and playing them./>.
+    /// through the <see cref="IContentManager" /> and playing them.
     /// </summary>
-    [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [System.Runtime.CompilerServices.CompilerGeneratedAttribute]
     internal class AssemblyDoc
     {
     }
