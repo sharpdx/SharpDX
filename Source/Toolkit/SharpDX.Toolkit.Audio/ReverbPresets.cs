@@ -1,5 +1,8 @@
 ﻿namespace SharpDX.Toolkit.Audio
 {
+    /// <summary>
+    /// Default reverb presets.
+    /// </summary>
     public enum ReverbPresets : int
     {
         Default = 00,

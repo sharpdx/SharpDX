@@ -30,14 +30,14 @@ namespace SharpDX.Toolkit.Audio
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioException"/> class.
         /// </summary>
-        /// <param name="message">The message.</param>
+        /// <param name = "message">The message describing the exception.</param>
         public AudioException(string message)
             : base(message)
         {
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "AudioException" /> class.
+        /// Initializes a new instance of the <see cref="AudioException" /> class.
         /// </summary>
         /// <param name = "message">The message describing the exception.</param>
         /// <param name = "innerException">The exception that caused this exception.</param>

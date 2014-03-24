@@ -17,22 +17,28 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
 
 namespace SharpDX.Toolkit.Audio
 {
-    using SharpDX.Multimedia;
-    using SharpDX.XAudio2;
+    using System;
+    using Multimedia;
+    using XAudio2;
 
     /// <summary>
     /// Pool of <see cref="SourceVoice"/>.
     /// </summary>
     internal sealed class SourceVoicePool : Pool<SourceVoice>, IDisposable
     {
-        private WaveFormat format;
-        private SoundEffectInstancePool instancePool;
-        private bool isShared;
+        private readonly WaveFormat format;
+        private readonly SoundEffectInstancePool instancePool;
+        private readonly bool isShared;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SourceVoicePool"/> class.
+        /// </summary>
+        /// <param name="soundEffectInstancePool">The associated sound effect instance pool.</param>
+        /// <param name="waveFormat">The wave format of this pool.</param>
+        /// <param name="isShared">A value indicating whether the initialized instance is shared or not.</param>
         public SourceVoicePool(SoundEffectInstancePool soundEffectInstancePool, WaveFormat waveFormat, bool isShared)
         {
             if (soundEffectInstancePool == null)
@@ -46,13 +52,22 @@ namespace SharpDX.Toolkit.Audio
             this.isShared = isShared;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the current instance was already disposed.
+        /// </summary>
         public bool IsDisposed { get; private set; }
 
+        /// <summary>
+        /// Disposes the current instance and releases all associated unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
         }
 
+        /// <summary>
+        /// Removes from instance pool and disposes the current instance if it is not shared.
+        /// </summary>
         public void Release()
         {
             if (!isShared)

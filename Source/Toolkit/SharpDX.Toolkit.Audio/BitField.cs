@@ -20,22 +20,35 @@
 
 namespace SharpDX.Toolkit.Audio
 {
+    /// <summary>
+    /// Helper class that provides methods to manipulate bit fields.
+    /// </summary>
     internal static class BitField
     {
+        /// <summary>
+        /// Gets the bit values from the provided source at the 
+        /// </summary>
+        /// <param name="source">The source from where to read the bits.</param>
+        /// <param name="length">The lenghts of the range to read.</param>
+        /// <param name="offset">The offset of the bits to read.</param>
+        /// <returns>The read bits.</returns>
         public static uint Get(uint source, int length, int offset)
         {
-            uint mask = uint.MaxValue >> (sizeof(uint) * 8 - length);
+            var mask = uint.MaxValue >> (sizeof(uint) * 8 - length);
 
-            source = (source >> offset) & mask;
-
-            offset += length;
-
-            return source;
+            return (source >> offset) & mask;
         }
 
+        /// <summary>
+        /// Fills the provided destination with the bits read from the specified source.
+        /// </summary>
+        /// <param name="source">The bits source.</param>
+        /// <param name="length">The leght of the bit range.</param>
+        /// <param name="offset">The offset of the bit range.</param>
+        /// <param name="destination">The destination to write the bits.</param>
         public static void Set(uint source, int length, int offset, ref uint destination)
         {
-            uint mask = uint.MaxValue >> (sizeof(uint) * 8 - length);
+            var mask = uint.MaxValue >> (sizeof(uint) * 8 - length);
 
             destination |= (source & mask) << offset;
         }

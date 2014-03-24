@@ -31,15 +31,17 @@
 //
 // http://go.microsoft.com/fwlink/?LinkId=248929
 //-------------------------------------------------------------------------------------
-using SharpDX.Multimedia;
-using SharpDX.Text;
-using System;
-using System.IO;
-
-//using System.Text;
 
 namespace SharpDX.Toolkit.Audio
 {
+    using Multimedia;
+    using Text;
+    using System;
+    using System.IO;
+
+    /// <summary>
+    /// Helper class that reads <see cref="WaveBank"/> instances from binary data.
+    /// </summary>
     internal sealed class WaveBankReader : IDisposable
     {
         private const uint AlignmentDVD = DVDSectorSize;
@@ -59,6 +61,10 @@ namespace SharpDX.Toolkit.Audio
         private uint[][] seekTable;
         private byte[] waveData;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WaveBankReader"/>.
+        /// </summary>
+        /// <param name="stream">The stream containing wave bank data.</param>
         public WaveBankReader(Stream stream)
         {
             reader = new BinaryReader(stream);

@@ -20,10 +20,24 @@
 
 namespace SharpDX.Toolkit.Audio
 {
+    /// <summary>
+    /// The state of a sound effect instance.
+    /// </summary>
     public enum SoundState
     {
+        /// <summary>
+        /// The sound is being played.
+        /// </summary>
         Playing,
+
+        /// <summary>
+        /// The sound playback is paused.
+        /// </summary>
         Paused,
+
+        /// <summary>
+        /// The sound playback is stopped.
+        /// </summary>
         Stopped
     }
 }

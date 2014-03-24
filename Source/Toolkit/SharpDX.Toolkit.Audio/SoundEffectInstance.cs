@@ -17,13 +17,13 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
 
 namespace SharpDX.Toolkit.Audio
 {
-    using SharpDX.Multimedia;
-    using SharpDX.X3DAudio;
-    using SharpDX.XAudio2;
+    using System;
+    using Multimedia;
+    using X3DAudio;
+    using XAudio2;
 
     /// <summary>
     /// Provides a single playing, paused, or stopped instance of a <see cref="SoundEffect"/> sound.
@@ -42,6 +42,12 @@ namespace SharpDX.Toolkit.Audio
         private SourceVoice voice;
         private float volume;
 
+        /// <summary>
+        /// Creates a new instance of the <see cref="SoundEffectInstance"/> class.
+        /// </summary>
+        /// <param name="soundEffect">The source effect whose instance needs to be created.</param>
+        /// <param name="sourceVoice">The source voice to play the created instance.</param>
+        /// <param name="isFireAndForget">A value indicating whether this instance is not monitored after it is being send to playback.</param>
         internal SoundEffectInstance(SoundEffect soundEffect, SourceVoice sourceVoice, bool isFireAndForget)
         {
             Effect = soundEffect;
@@ -55,12 +61,26 @@ namespace SharpDX.Toolkit.Audio
             outputMatrix = null;
         }
 
+        /// <summary>
+        /// Gets the base sound effect.
+        /// </summary>
         public SoundEffect Effect { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is diposed.
+        /// </summary>
         public bool IsDisposed { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is looped.
+        /// </summary>
         public bool IsLooped { get; set; }
 
+        /// <summary>
+        /// Gets or sets the pan value of the sound effect.
+        /// </summary>
+        /// <remarks>The value is clamped to (-1f, 1f) range.</remarks>
+        /// <exception cref="ObjectDisposedException">Is thrown if the current instance was already disposed.</exception>
         public float Pan
         {
             get
@@ -70,9 +90,9 @@ namespace SharpDX.Toolkit.Audio
             set
             {
                 if (IsDisposed)
-                    throw new ObjectDisposedException(this.GetType().FullName);
+                    throw new ObjectDisposedException(GetType().FullName);
 
-                if (value == pan)
+                if (MathUtil.NearEqual(pan, value))
                     return;
 
                 pan = MathUtil.Clamp(value, -1.0f, 1.0f);
@@ -81,6 +101,11 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
+        /// <summary>
+        /// Gets or sets the pitch value of the sound effect.
+        /// </summary>
+        /// <remarks>The value is clamped to (-1f, 1f) range.</remarks>
+        /// <exception cref="ObjectDisposedException">Is thrown if the current instance was already disposed.</exception>
         public float Pitch
         {
             get
@@ -92,7 +117,7 @@ namespace SharpDX.Toolkit.Audio
                 if (IsDisposed)
                     throw new ObjectDisposedException(this.GetType().FullName);
 
-                if (value == pitch)
+                if (MathUtil.NearEqual(pitch, value))
                     return;
 
                 pitch = MathUtil.Clamp(value, -1.0f, 1.0f);
@@ -101,6 +126,9 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
+        /// <summary>
+        /// Gets the state of the current sound effect instance.
+        /// </summary>
         public SoundState State
         {
             get
@@ -115,6 +143,11 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
+        /// <summary>
+        /// Gets or sets the volume of the current sound effect instance.
+        /// </summary>
+        /// <remarks>The value is clamped to (0f, 1f) range.</remarks>
+        /// <exception cref="ObjectDisposedException">Is thrown if the current instance was already disposed.</exception>
         public float Volume
         {
             get
@@ -126,7 +159,7 @@ namespace SharpDX.Toolkit.Audio
                 if (IsDisposed)
                     throw new ObjectDisposedException(this.GetType().FullName);
 
-                if (value == volume)
+                if (MathUtil.NearEqual(volume, value))
                     return;
 
                 volume = MathUtil.Clamp(value, 0.0f, 1.0f);
@@ -135,8 +168,14 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is not monitored after submitting it for playback.
+        /// </summary>
         internal bool IsFireAndForget { get; private set; }
 
+        /// <summary>
+        /// Gets the current audio buffer.
+        /// </summary>
         private AudioBuffer CurrentAudioBuffer
         {
             get
@@ -148,22 +187,44 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
+        /// <summary>
+        /// Applies the 3D effect to the current sound effect instance.
+        /// </summary>
+        /// <param name="listener">The listener position.</param>
+        /// <param name="listenerVelocity">The listener velocity.</param>
+        /// <param name="emitter">The emitter position.</param>
+        /// <param name="emitterVelocity">The emitter velocity.</param>
         public void Apply2D(Vector2 listener, Vector2 listenerVelocity, Vector2 emitter, Vector2 emitterVelocity)
         {
             Apply3D(Vector3.ForwardLH, Vector3.Up, new Vector3(listener, 0), new Vector3(listenerVelocity, 0), Vector3.ForwardLH, Vector3.Up, new Vector3(emitter, 0), new Vector3(emitterVelocity, 0));
         }
 
+        
         // TODO: X3DAudio uses a left-handed Cartesian coordinate system. may need overloads for lh/rh.  seems to work with right hand matricies without it though.
+        /// <summary>
+        /// Applies the 3D effect to the current sound effect instance.
+        /// </summary>
+        /// <param name="listenerWorld">The listener world matrix.</param>
+        /// <param name="listenerVelocity">The listener velocity.</param>
+        /// <param name="emitterWorld">The emitter world matrix.</param>
+        /// <param name="emitterVelocity">The emitter velocity.</param>
         public void Apply3D(Matrix listenerWorld, Vector3 listenerVelocity, Matrix emitterWorld, Vector3 emitterVelocity)
         {
             Apply3D(listenerWorld.Forward, listenerWorld.Up, listenerWorld.TranslationVector, listenerVelocity, emitterWorld.Forward, emitterWorld.Up, emitterWorld.TranslationVector, emitterVelocity);
         }
 
+        /// <summary>
+        /// Disposes the current instance and releases all associated unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
         }
 
+        /// <summary>
+        /// Pauses the playback of the current instance.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is thrown if the current instance was already disposed.</exception>
         public void Pause()
         {
             if (IsDisposed)
@@ -173,6 +234,10 @@ namespace SharpDX.Toolkit.Audio
             paused = true;
         }
 
+        /// <summary>
+        /// Plays the current instance. If it is already playing - the call is ignored.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is thrown if the current instance was already disposed.</exception>
         public void Play()
         {
             if (IsDisposed)
@@ -193,6 +258,9 @@ namespace SharpDX.Toolkit.Audio
             paused = false;
         }
 
+        /// <summary>
+        /// Resets the current instance.
+        /// </summary>
         public void Reset()
         {
             Volume = 1.0f;
@@ -201,6 +269,10 @@ namespace SharpDX.Toolkit.Audio
             IsLooped = false;
         }
 
+        /// <summary>
+        /// Resumes playback of the current instance.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is thrown if the current instance was already disposed.</exception>
         public void Resume()
         {
             if (IsDisposed)
@@ -220,6 +292,10 @@ namespace SharpDX.Toolkit.Audio
             paused = false;
         }
 
+        /// <summary>
+        /// Stops the playback of the current instance.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is thrown if the current instance was already disposed.</exception>
         public void Stop()
         {
             if (IsDisposed)
@@ -231,6 +307,11 @@ namespace SharpDX.Toolkit.Audio
             paused = false;
         }
 
+        /// <summary>
+        /// Stops the playback of the current instance indicating whether the stop should occur immediately of at the end of the sound.
+        /// </summary>
+        /// <param name="immediate">A value indicating whether the playback should be stopped immediately or at the end of the sound.</param>
+        /// <exception cref="ObjectDisposedException">Is thrown if the current instance was already disposed.</exception>
         public void Stop(bool immediate)
         {
             if (IsDisposed)
@@ -252,6 +333,9 @@ namespace SharpDX.Toolkit.Audio
             paused = false;
         }
 
+        /// <summary>
+        /// Handles the event of disposal of the parent <see cref="SoundEffect"/>.
+        /// </summary>
         internal void ParentDisposed()
         {
             if (!IsDisposed)
@@ -263,6 +347,12 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
+        /// <summary>
+        /// Resets the current instance to be reused in an instance pool.
+        /// </summary>
+        /// <param name="soundEffect">The new parent sound effect.</param>
+        /// <param name="sourceVoice">The new source voice.</param>
+        /// <param name="isFireAndForget">The new <see cref="IsFireAndForget"/> value.</param>
         internal void Reset(SoundEffect soundEffect, SourceVoice sourceVoice, bool isFireAndForget)
         {
             Effect = soundEffect;

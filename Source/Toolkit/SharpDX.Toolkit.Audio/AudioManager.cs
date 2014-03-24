@@ -378,9 +378,9 @@ namespace SharpDX.Toolkit.Audio
         }
 
         /// <summary>
-        /// Enables spatial audio effect.
+        /// Enables the spatial audio effect.
         /// </summary>
-        /// <param name="speedOfSound"></param>
+        /// <param name="speedOfSound">The speed of the sound in the medium. Should be greater than or equal to 1.175494351e-38F.</param>
         public void EnableSpatialAudio(float speedOfSound)
         {
             DisposeGuard();
@@ -397,11 +397,15 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
+        /// <summary>
+        /// Enables the spatial audio effect with the default speed of sound equal to <see cref="X3DAudio.SpeedOfSound"/>.
+        /// </summary>
         public void EnableSpatialAudio()
         {
             EnableSpatialAudio(X3DAudio.SpeedOfSound);
         }
 
+        // TODO: refactor this to a separate class (violation of SRP S.O.L.I.D. principle).
         object IContentReader.ReadContent(IContentManager contentManager, ref ContentReaderParameters parameters)
         {
             if (parameters.AssetType == typeof(SoundEffect))
@@ -424,6 +428,8 @@ namespace SharpDX.Toolkit.Audio
         /// <summary>
         /// Initializes XAudio2 and MasteringVoice.  And registers itself as an <see cref="IContentReaderFactory"/>
         /// </summary>
+        /// <exception cref="InvalidOperationException">Is thrown when the IContentManager is not an instance of <see cref="ContentManager"/>.</exception>
+        /// <exception cref="AudioException">Is thrown when the <see cref="AudioManager"/> instance could not be initialized (either due to unsupported features or missing audio-device).</exception>
         public override void Initialize()
         {
             base.Initialize();
@@ -538,10 +544,18 @@ namespace SharpDX.Toolkit.Audio
             contentManager.ReaderFactories.Add(this);
         }
 
+        /// <summary>
+        /// Sets the mastering limiter parameters.
+        /// </summary>
+        /// <param name="release">Speed at which the limiter stops affecting audio once it drops below the limiter's threshold.</param>
+        /// <param name="loudness">Threshold of the limiter.</param>
+        /// <exception cref="ObjectDisposedException">Is thrown when this instance was already disposed.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Is thrown when either <paramref name="release"/> or <paramref name="loudness"/> are outside of allowed ranges
+        /// (<see cref="MasteringLimiter.MinimumRelease"/>/<see cref="MasteringLimiter.MaximumRelease"/> 
+        /// and <see cref="MasteringLimiter.MinimumLoudness"/>/<see cref="MasteringLimiter.MaximumLoudness"/> respectively).</exception>
         public void SetMasteringLimit(int release, int loudness)
         {
-            if (IsDisposed)
-                throw new ObjectDisposedException(this.GetType().FullName);
+            DisposeGuard();
 
             if (release < MasteringLimiter.MinimumRelease || release > MasteringLimiter.MaximumRelease)
                 throw new ArgumentOutOfRangeException("release");
@@ -557,10 +571,14 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
+        /// <summary>
+        /// Sets the Reverb effect parameters.
+        /// </summary>
+        /// <param name="parameters">The reverb effect parameters.</param>
+        /// /// <exception cref="ObjectDisposedException">Is thrown when this instance was already disposed.</exception>
         public void SetReverbEffectParameters(ReverbParameters parameters)
         {
-            if (IsDisposed)
-                throw new ObjectDisposedException(this.GetType().FullName);
+            DisposeGuard();
 
             reverbParameters = parameters;
 
@@ -570,18 +588,27 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
+        /// <summary>
+        /// Sets the Reverb effect parameters from an existing preset.
+        /// </summary>
+        /// <param name="preset">The existing Reverb preset.</param>
         public void SetReverbEffectParameters(ReverbPresets preset)
         {
-            if (IsDisposed)
-                throw new ObjectDisposedException(this.GetType().FullName);
+            DisposeGuard();
 
             SetReverbEffectParameters((ReverbParameters)reverbPresets[(int)preset]);
         }
 
+        /// <summary>
+        /// Calculate 3D Audio parameters.
+        /// </summary>
+        /// <param name="listener">The 3D audio listener definition.</param>
+        /// <param name="emitter">The 3D audio emitter definition.</param>
+        /// <param name="flags">The 3D audio calculate flags.</param>
+        /// <param name="dspSettings">The DSP settings.</param>
         internal void Calculate3D(Listener listener, Emitter emitter, CalculateFlags flags, DspSettings dspSettings)
         {
-            if (IsDisposed)
-                throw new ObjectDisposedException(this.GetType().FullName);
+            DisposeGuard();
 
             x3DAudio.Calculate(listener, emitter, flags, dspSettings);
         }
@@ -589,7 +616,7 @@ namespace SharpDX.Toolkit.Audio
         /// <summary>
         /// Adds a disposable audio asset to the list of the objects to dispose.
         /// </summary>
-        /// <param name="toDisposeArg">To dispose.</param>
+        /// <param name="audioAsset">To dispose.</param>
         internal T ToDisposeAudioAsset<T>(T audioAsset) where T : IDisposable
         {
             return ToDispose(audioAsset);
@@ -600,7 +627,7 @@ namespace SharpDX.Toolkit.Audio
             if (disposeManagedResources)
             {
                 InstancePool.Dispose();
-                base.Dispose(disposeManagedResources);
+                base.Dispose(true);
                 DisposeCore();
             }
         }

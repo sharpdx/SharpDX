@@ -17,23 +17,27 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
-using System.Collections.Generic;
 
 namespace SharpDX.Toolkit.Audio
 {
-    using SharpDX.Multimedia;
-    using SharpDX.XAudio2;
+    using System;
+    using System.Collections.Generic;
+    using Multimedia;
+    using XAudio2;
 
     /// <summary>
     /// Pool of <see cref="SoundEffectInstance"/> used to maintain fire and forget instances.
     /// </summary>
     internal class SoundEffectInstancePool : IDisposable
     {
-        private InstancePool instancePool;
-        private Dictionary<uint, SourceVoicePool> sharedVoicePools;
-        private List<SourceVoicePool> unsharedVoicePools;
+        private readonly InstancePool instancePool;
+        private readonly Dictionary<uint, SourceVoicePool> sharedVoicePools;
+        private readonly List<SourceVoicePool> unsharedVoicePools;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SoundEffectInstancePool"/> class.
+        /// </summary>
+        /// <param name="audioManager">The associated audio manager instance.</param>
         public SoundEffectInstancePool(AudioManager audioManager)
         {
             if (audioManager == null)
@@ -46,20 +50,34 @@ namespace SharpDX.Toolkit.Audio
             instancePool = new InstancePool();
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance was already disposed.
+        /// </summary>
         public bool IsDisposed { get; private set; }
 
+        /// <summary>
+        /// Gets the associated audio manager intance.
+        /// </summary>
         internal AudioManager AudioManager { get; private set; }
 
+        /// <summary>
+        /// Disposes the current instance and releases all associated unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
         }
 
+        /// <summary>
+        /// Gets the <see cref="SourceVoicePool"/> for the specified wave format.
+        /// </summary>
+        /// <param name="waveFormat">The wave format of the requested source voice pool.</param>
+        /// <returns>The source voice pool for the provided wave format.</returns>
         public SourceVoicePool GetVoicePool(WaveFormat waveFormat)
         {
             lock (sharedVoicePools)
             {
-                uint waveKey = MakeWaveFormatKey(waveFormat);
+                var waveKey = MakeWaveFormatKey(waveFormat);
                 SourceVoicePool pool;
 
                 if (waveKey == 0)
@@ -77,6 +95,13 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
+        /// <summary>
+        /// Tries to acquire an existing or to create a new instance of the <see cref="SoundEffectInstance"/> class.
+        /// </summary>
+        /// <param name="soundEffect">The parenet sound effect.</param>
+        /// <param name="isFireAndForget">A value indicating whether the instance doesn't need to be monitored for playback.</param>
+        /// <param name="instance">The acquired instance.</param>
+        /// <returns>true if operation succeeded, false - otherwise.</returns>
         public bool TryAcquire(SoundEffect soundEffect, bool isFireAndForget, out SoundEffectInstance instance)
         {
             SourceVoice voice = null;
@@ -93,6 +118,10 @@ namespace SharpDX.Toolkit.Audio
             return false;
         }
 
+        /// <summary>
+        /// Removes the specified pool from "unshared" list.
+        /// </summary>
+        /// <param name="pool">The pool to remove.</param>
         internal void RemoveUnshared(SourceVoicePool pool)
         {
             lock (sharedVoicePools)
@@ -127,10 +156,10 @@ namespace SharpDX.Toolkit.Audio
         }
 
         /// <summary>
-        /// Creates a key based on wave format
+        /// Creates a key based on wave format.
         /// </summary>
-        /// <param name="waveFormat"></param>
-        /// <returns></returns>
+        /// <param name="waveFormat">The wave format from which the key should be created.</param>
+        /// <returns>The created key.</returns>
         private uint MakeWaveFormatKey(WaveFormat waveFormat)
         {
             uint key = 0;
