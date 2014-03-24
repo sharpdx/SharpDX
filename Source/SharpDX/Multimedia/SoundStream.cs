@@ -299,7 +299,7 @@ namespace SharpDX.Multimedia
             if (newPosition < startPositionOfData || newPosition > (startPositionOfData+length))
                 throw new InvalidOperationException("Cannot seek outside the range of this stream");
 
-            return input.Seek(offset, origin);
+            return input.Seek(newPosition, SeekOrigin.Begin);
         }
 
         /// <summary>
