@@ -39,15 +39,5 @@ namespace SharpDX.Toolkit.Graphics
         /// An italic font.
         /// </summary>
         Italic = 2,
-
-        /// <summary>
-        /// An underline font.
-        /// </summary>
-        Underline = 4,
-
-        /// <summary>
-        /// A strikeout font.
-        /// </summary>
-        Strikeout = 8,
     }
 }

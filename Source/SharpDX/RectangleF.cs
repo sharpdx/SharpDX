@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Serialization;
 
@@ -450,6 +451,11 @@ namespace SharpDX
                 result = (result * 397) ^ _bottom.GetHashCode();
                 return result;
             }
+        }
+
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.InvariantCulture, "X:{0} Y:{1} Width:{2} Height:{3}", X, Y, Width, Height);
         }
 
         /// <summary>

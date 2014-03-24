@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Serialization;
 
@@ -488,6 +489,11 @@ namespace SharpDX
         public static implicit operator RectangleF(Rectangle value)
         {
             return new RectangleF(value.X, value.Y, value.Width, value.Height);
+        }
+
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.InvariantCulture, "X:{0} Y:{1} Width:{2} Height:{3}", X, Y, Width, Height);
         }
 
         internal void MakeXYAndWidthHeight()

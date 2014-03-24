@@ -20,6 +20,7 @@
 
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+using SharpDX.DXGI;
 using SharpDX.Toolkit.Graphics;
 
 namespace SharpDX.Toolkit
@@ -60,6 +61,11 @@ namespace SharpDX.Toolkit
         /// Gets or sets the depth stencil format
         /// </summary>
         public DepthFormat PreferredDepthStencilFormat;
+
+        /// <summary>
+        /// The preferred refresh rate
+        /// </summary>
+        public Rational PreferredRefreshRate;
 
         /// <summary>
         ///   Gets or sets a value indicating whether the application is in full screen mode.

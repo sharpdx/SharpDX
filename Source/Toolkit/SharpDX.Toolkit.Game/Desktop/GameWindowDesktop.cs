@@ -145,16 +145,75 @@ namespace SharpDX.Toolkit
         /// <returns>true</returns>
         internal override bool IsBlockingRun { get { return true; } }
 
+        private bool isFullScreenMaximized;
+        private FormBorderStyle savedFormBorderStyle;
+        private FormWindowState savedWindowState;
+        private System.Drawing.Rectangle savedBounds;
+        private System.Drawing.Size oldClientSize;
+        private System.Drawing.Rectangle savedRestoreBounds;
+        private bool oldVisible;
+        private bool deviceChangeChangedVisible;
+        private bool? deviceChangeWillBeFullScreen;
+
         /// <inheritdoc />
         public override void BeginScreenDeviceChange(bool willBeFullScreen)
         {
+            oldClientSize = gameForm.ClientSize;
+            if (willBeFullScreen && !isFullScreenMaximized)
+            {
+                savedFormBorderStyle = gameForm.FormBorderStyle;
+                savedWindowState = gameForm.WindowState;
+                savedBounds = gameForm.Bounds;
+                if (gameForm.WindowState == FormWindowState.Maximized)
+                    savedRestoreBounds = gameForm.RestoreBounds;
+            }
+            if (willBeFullScreen != isFullScreenMaximized)
+            {
+                deviceChangeChangedVisible = true;
+                oldVisible = Visible;
+                Visible = false;
+            }
+            else
+                deviceChangeChangedVisible = false;
+            if (!willBeFullScreen && isFullScreenMaximized)
+            {
+                gameForm.TopMost = false;
+                gameForm.FormBorderStyle = savedFormBorderStyle;
+            }
+            if (willBeFullScreen != isFullScreenMaximized)
+                gameForm.SendToBack();
+            deviceChangeWillBeFullScreen = new bool?(willBeFullScreen);
         }
 
         /// <inheritdoc />
         public override void EndScreenDeviceChange(int clientWidth, int clientHeight)
         {
-            if (gameForm != null)
-                gameForm.ClientSize = new Size(clientWidth, clientHeight);
+            if(!deviceChangeWillBeFullScreen.HasValue)
+                return;
+
+            if (deviceChangeWillBeFullScreen.Value)
+            {
+                if (!isFullScreenMaximized)
+                {
+                    gameForm.TopMost = true;
+                    gameForm.FormBorderStyle = FormBorderStyle.None;
+                    gameForm.WindowState = FormWindowState.Normal;
+                    gameForm.BringToFront();
+                }
+                isFullScreenMaximized = true;
+            }
+            else if (isFullScreenMaximized)
+            {
+                gameForm.BringToFront();
+                isFullScreenMaximized = false;
+            }
+
+            if (deviceChangeChangedVisible)
+                Visible = oldVisible;
+
+            deviceChangeWillBeFullScreen = new bool?();
+
+            gameForm.ClientSize = new Size(clientWidth, clientHeight);
         }
 
         /// <inheritdoc />

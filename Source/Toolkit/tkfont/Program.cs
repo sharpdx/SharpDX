@@ -107,7 +107,7 @@ namespace SharpDX.Toolkit.Graphics
             // Parse the command line
             if (!ParseCommandLine(args))
             {
-                Environment.Exit(-1);
+                Environment.Exit(1);
             }
 
             // Loads the description
@@ -129,7 +129,18 @@ namespace SharpDX.Toolkit.Graphics
             bool forceCompilation = (DebugOutputSpriteSheet != null && !File.Exists(DebugOutputSpriteSheet));
 
             var result = FontCompiler.CompileAndSave(filePath, OutputFile, dependencyFile);
-            if (result.IsContentGenerated || forceCompilation)
+            
+            if(result.Logger.HasErrors)
+            {
+                ErrorColor();
+                foreach (var logMessage in result.Logger.Messages)
+                {
+                    Console.WriteLine(logMessage);
+                }
+                ResetColor();
+                Environment.Exit(1);
+            }
+            else if (result.IsContentGenerated || forceCompilation)
             {
                 Console.WriteLine("Writing [{0}] ({1} format)", OutputFile, fontDescription.Format);
 

@@ -18,6 +18,7 @@ using MiniShape;
 using Windows.Graphics.Display;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
+using SharpDX;
 
 namespace MiniCubeXaml
 {
@@ -28,9 +29,33 @@ namespace MiniCubeXaml
         CubeRenderer cubeRenderer;
         ShapeRenderer shapeRenderer;
 
+        public static readonly DependencyProperty DesignModeD3DRenderingProperty =
+            DependencyProperty.Register("DesignModeD3DRendering", typeof(Boolean), typeof(Direct3DUserControl), new PropertyMetadata(false));
+
+        public Boolean DesignModeD3DRendering
+        {
+            get
+            {
+                return (Boolean)GetValue(DesignModeD3DRenderingProperty);
+            }
+            set
+            {
+                SetValue(DesignModeD3DRenderingProperty, value);
+            }
+        }
+
         public Direct3DUserControl()
         {
             this.InitializeComponent();
+            // Do D3D initialization when element is loaded, because DesignModeD3DRendering is yet not set in ctor
+            this.Loaded += Direct3DUserControl_Loaded;            
+        }
+
+        void Direct3DUserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Do not initialize D3D in design mode as default, since it may cause designer crashes
+            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled && !DesignModeD3DRendering)
+                return;
 
             // Safely dispose any previous instance
             // Creates a new DeviceManager (Direct3D, Direct2D, DirectWrite, WIC)
@@ -56,9 +81,10 @@ namespace MiniCubeXaml
             target.OnRender += shapeRenderer.Render;
 
             // Initialize the device manager and all registered deviceManager.OnInitialize             
-            try {
+            try
+            {
                 deviceManager.Initialize(DisplayInformation.GetForCurrentView().LogicalDpi);
-                DisplayInformation.GetForCurrentView().DpiChanged += DisplayProperties_LogicalDpiChanged;
+                DisplayInformation.GetForCurrentView().DpiChanged += DisplayInformation_LogicalDpiChanged;
             } catch (Exception ex) {
                 //DisplayInformation.GetForCurrentView() will throw exception in designer
                 deviceManager.Initialize(96.0f);
@@ -66,17 +92,9 @@ namespace MiniCubeXaml
 
             // Setup rendering callback
             CompositionTargetEx.Rendering += CompositionTarget_Rendering;
-
-            this.LayoutUpdated += Direct3DUserControl_LayoutUpdated;
         }
 
-        void Direct3DUserControl_LayoutUpdated(object sender, object e)
-        {
-            //TODO: handle updated Layout
-            //throw new NotImplementedException();
-        }
-
-        void DisplayProperties_LogicalDpiChanged(DisplayInformation displayInformation, object sender)
+        void DisplayInformation_LogicalDpiChanged(DisplayInformation displayInformation, object sender)
         {
             deviceManager.Dpi = displayInformation.LogicalDpi;
         }

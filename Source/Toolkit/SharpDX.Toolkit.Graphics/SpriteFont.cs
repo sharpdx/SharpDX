@@ -271,7 +271,8 @@ namespace SharpDX.Toolkit.Graphics
             var offset = new Vector2(x, y + glyph.Offset.Y);
             Vector2.Multiply(ref offset, ref axisDirectionTable[(int)spriteEffects & 3], out offset);
             Vector2.Add(ref offset, ref parameters.origin, out offset);
-
+            offset.X = (float)Math.Round(offset.X);
+            offset.Y = (float)Math.Round(offset.Y);
 
             if (spriteEffects != SpriteEffects.None)
             {
@@ -319,7 +320,7 @@ namespace SharpDX.Toolkit.Graphics
 
         private void MeasureStringGlyph(ref Vector2 result, ref SpriteFontData.Glyph glyph, float x, float y, float nextx)
         {
-            float h = y + Math.Max((glyph.Subrect.Bottom - glyph.Subrect.Top) + glyph.Offset.Y, LineSpacing);
+            float h = y + LineSpacing;
             if (nextx > result.X)
             {
                 result.X = nextx;
@@ -398,16 +399,14 @@ namespace SharpDX.Toolkit.Graphics
 
                             var glyph = (SpriteFontData.Glyph*) pGlyph + glyphIndex;
 
-                            x += glyph->Offset.X;
+                            float dx = glyph->Offset.X;
 
                             float kerningOffset;
                             if (kerningMap != null && kerningMap.TryGetValue(key, out kerningOffset))
-                                x += kerningOffset;
-
-                            if (x < 0) x = 0;
+                                dx += kerningOffset;
 
                             float nextX = x + glyph->XAdvance + Spacing;
-                            action(ref parameters, ref *glyph, x, y, nextX);
+                            action(ref parameters, ref *glyph, x + dx, y, nextX);
                             x = nextX;
 
                             break;

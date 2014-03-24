@@ -1282,6 +1282,18 @@ namespace SharpDX
             return result;
         }
 
+        /// <summary>
+        /// Transforms a 3D vector by the given <see cref="SharpDX.Matrix"/>.
+        /// </summary>
+        /// <param name="vector">The source vector.</param>
+        /// <param name="transform">The transformation <see cref="SharpDX.Matrix"/>.</param>
+        /// <param name="result">When the method completes, contains the transformed <see cref="SharpDX.Vector3"/>.</param>
+        public static void Transform(ref Vector3 vector, ref Matrix transform, out Vector3 result)
+        {
+            Vector4 intermediate;
+            Transform(ref vector, ref transform, out intermediate);
+            result = (Vector3)intermediate;
+        }
 
         /// <summary>
         /// Transforms a 3D vector by the given <see cref="SharpDX.Matrix"/>.

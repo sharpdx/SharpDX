@@ -18,13 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SharpDX;
 using SharpDX.DXGI;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -40,6 +35,8 @@ namespace CommonDX
     {
         private SwapChainPanel panel;
         private ISwapChainPanelNative nativePanel;
+        private int lastWidth = 0;
+        private int lastHeight = 0;
 
         /// <summary>
         /// Initializes a new <see cref="SwapChainPanelTarget"/> instance
@@ -51,14 +48,24 @@ namespace CommonDX
 
             // Gets the native panel
             nativePanel = ComObject.As<ISwapChainPanelNative>(panel);
+            panel.CompositionScaleChanged += panel_CompositionScaleChanged;
             panel.SizeChanged += panel_SizeChanged;
+        }
+
+        private void panel_CompositionScaleChanged(SwapChainPanel sender, object args)
+        {
+            if (Width != lastWidth || Height != lastHeight)
+            {
+                lastWidth = Width;
+                lastHeight = Height;
+                CreateSizeDependentResources(this);
+            }
         }
 
         void panel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpdateForSizeChange();
         }
-
 
         protected override Windows.Foundation.Rect CurrentControlBounds
         {
@@ -70,7 +77,7 @@ namespace CommonDX
             get
             {
                 var width = Double.IsNaN(panel.Width) ? 1 : panel.Width;
-                return (int)(width * DeviceManager.Dpi / 96.0);
+                return (int)(width * panel.CompositionScaleX + 0.5f);
             }
         }
 
@@ -79,7 +86,7 @@ namespace CommonDX
             get
             {
                 var height = Double.IsNaN(panel.Height) ? 1 : panel.Height;
-                return (int)(height * DeviceManager.Dpi / 96.0);
+                return (int)(height * panel.CompositionScaleY + 0.5f);
             }
         }
 
@@ -95,16 +102,29 @@ namespace CommonDX
             return desc;
         }
 
-        protected override SharpDX.DXGI.SwapChain1 CreateSwapChain(SharpDX.DXGI.Factory2 factory, SharpDX.Direct3D11.Device1 device, SharpDX.DXGI.SwapChainDescription1 desc)
+        protected override void CreateSizeDependentResources(TargetBase renderBase)
+        {
+            base.CreateSizeDependentResources(renderBase);
+
+            if (SwapChain != null)
+            {
+                SwapChain.MatrixTransform = Matrix3x2.Scaling(1f / panel.CompositionScaleX, 1f / panel.CompositionScaleY);
+            }
+        }
+
+        protected override SharpDX.DXGI.SwapChain2 CreateSwapChain(SharpDX.DXGI.Factory2 factory, SharpDX.Direct3D11.Device1 device, SharpDX.DXGI.SwapChainDescription1 desc)
         {
             // Creates the swap chain for XAML composition
-            var swapChain = new SwapChain1(factory, device, ref desc);
+            using (var swapChain1 = new SwapChain1(factory, device, ref desc))
+            {
+                var swapChain2 = swapChain1.QueryInterface<SwapChain2>();
 
-            // Associate the SwapChainPanel with the swap chain
-            nativePanel.SwapChain = swapChain;
+                // Associate the SwapChainPanel with the swap chain
+                nativePanel.SwapChain = swapChain2;
 
-            // Returns the new swap chain
-            return swapChain;
+                // Returns the new swap chain
+                return swapChain2;
+            }
         }
     }
 }
