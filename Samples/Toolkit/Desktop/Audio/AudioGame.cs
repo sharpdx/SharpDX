@@ -31,7 +31,7 @@ namespace Audio
     using System.Text;
     using System.Threading.Tasks;
 
-    class AudioGame :Game
+    class AudioGame : Game
     {
         private GraphicsDeviceManager graphicsDeviceManager;
         private KeyboardManager keyboardManager;
@@ -63,6 +63,7 @@ namespace Audio
 
         private List<SoundTile> tiles;
         private bool play3D;
+        private bool isMusicPlaying;
 
         public AudioGame()
         {
@@ -75,7 +76,7 @@ namespace Audio
             mouseManager = new MouseManager(this);
             IsMouseVisible = true;
 
-            random = new Random();           
+            random = new Random();
 
             audioManager = new AudioManager(this);
             audioManager.EnableMasterVolumeLimiter();
@@ -84,10 +85,10 @@ namespace Audio
             // Setup the relative directory to the executable directory
             // for loading contents with the ContentManager
             Content.RootDirectory = "Content";
-            
+
         }
 
-        
+
 
         protected override void Initialize()
         {
@@ -97,7 +98,7 @@ namespace Audio
 
 
         protected override void LoadContent()
-        {     
+        {
             ergonWave = Content.Load<SoundEffect>("ergon.adpcm.wav");
             ergonWaveInstance = ergonWave.Create();
             ergonWaveInstance.IsLooped = true;
@@ -118,15 +119,15 @@ namespace Audio
 
 
             // setup tests
-            tiles = new List<SoundTile>();           
+            tiles = new List<SoundTile>();
             Rectangle border = new Rectangle();
             border.X = SoundTile.Padding.X;
             border.Y = SoundTile.Padding.Y;
 
-            AddTile(ref border, "Click to play looped SoundEffectInstance of " + ergonWave.Name, () => ergonWaveInstance.Play());
+            AddTile(ref border, "Click to play looped SoundEffectInstance of " + ergonWave.Name, PlayMusic, PauseMusic);
             AddTile(ref border, "Click to play 'PewPew' wave bank entry", () => waveBank.Play("PewPew"));
-            AddTile(ref border, "Click to play 'PewPew' wave bank entry with random pitch and pan", () => waveBank.Play("PewPew", 1,random.NextFloat(-1,1),random.NextFloat(-1,1)));
-            AddTile(ref border, "Click to play 'PewPew' with 3D audio", () => PlayAudio3D());
+            AddTile(ref border, "Click to play 'PewPew' wave bank entry with random pitch and pan", () => waveBank.Play("PewPew", 1, random.NextFloat(-1, 1), random.NextFloat(-1, 1)));
+            AddTile(ref border, "Click to play 'PewPew' with 3D audio", PlayAudio3D, StopAudio3D);
 
             // setup 3D
             geometryEffect = ToDisposeContent(new BasicEffect(GraphicsDevice)
@@ -140,45 +141,45 @@ namespace Audio
 
             // Load the texture
             listenerTexture = Content.Load<Texture2D>("listen");
-            emitterTexture = Content.Load<Texture2D>("speaker");            
+            emitterTexture = Content.Load<Texture2D>("speaker");
             geometryEffect.TextureEnabled = true;
 
             base.LoadContent();
 
         }
 
-        private void AddTile(ref Rectangle border, string label, Action playDelegate)
+        private void AddTile(ref Rectangle border, string label, Action playDelegate, Action stopDelegate = null)
         {
             Vector2 labelSize;
             labelSize = arial16BMFont.MeasureString(label);
             border.Width = (int)(labelSize.X + SoundTile.Padding.X * 2);
             border.Height = (int)(labelSize.Y + SoundTile.Padding.Y * 2);
-            tiles.Add(new SoundTile { Border = border, Label = label, PlayDelegate = playDelegate });
-            border.Y = border.Bottom + SoundTile.Padding.Y; 
+            tiles.Add(new SoundTile { Border = border, Label = label, PlayDelegate = playDelegate, StopDelegate = stopDelegate });
+            border.Y = border.Bottom + SoundTile.Padding.Y;
         }
 
 
         protected override void UnloadContent()
-        {            
+        {
             Utilities.Dispose(ref spriteBatch);
             Utilities.Dispose(ref primitiveBatch);
             Utilities.Dispose(ref primitiveBatchEffect);
-            base.UnloadContent();           
+            base.UnloadContent();
         }
-        
+
         protected override void Update(GameTime gameTime)
         {
             var currentKey = keyboardManager.GetState();
-            var currentMouse = mouseManager.GetState();           
+            var currentMouse = mouseManager.GetState();
 
             foreach (var tile in tiles)
             {
-                if (tile.Border.Contains(new Vector2(currentMouse.X * GraphicsDevice.Viewport.Width,currentMouse.Y * GraphicsDevice.Viewport.Height)))
+                if (tile.Border.Contains(new Vector2(currentMouse.X * GraphicsDevice.Viewport.Width, currentMouse.Y * GraphicsDevice.Viewport.Height)))
                 {
                     if (currentMouse.LeftButton.Pressed)
                     {
                         tile.BorderColor = Color.Green;
-                        tile.Play();
+                        tile.Toggle();
                     }
                     else
                     {
@@ -190,7 +191,7 @@ namespace Audio
                     tile.BorderColor = Color.Gray;
                 }
             }
-           
+
 
             keyboardState = currentKey;
             mouseState = currentMouse;
@@ -199,8 +200,8 @@ namespace Audio
                 UpdateAudio3D(gameTime);
 
             base.Update(gameTime);
-        }  
-        
+        }
+
         protected override void Draw(GameTime gameTime)
         {
             // Clears the screen
@@ -214,7 +215,23 @@ namespace Audio
 
             base.Draw(gameTime);
         }
-        
+
+        private void PlayMusic()
+        {
+            if (isMusicPlaying)
+                ergonWaveInstance.Resume();
+            else
+            {
+                ergonWaveInstance.Play();
+                isMusicPlaying = true;
+            }
+        }
+
+        private void PauseMusic()
+        {
+            ergonWaveInstance.Pause();
+        }
+
         private void EnableSpatialAudioWithReverb()
         {
             audioManager.EnableSpatialAudio();
@@ -234,7 +251,7 @@ namespace Audio
             listener = Matrix.LookAtRH(Vector3.Zero, new Vector3(0, 0, 8), Vector3.Up);
             listenerVelocity = Vector3.Zero;
 
-            emitter = Matrix.LookAtRH(new Vector3(0,0,8), Vector3.Zero, Vector3.Up);
+            emitter = Matrix.LookAtRH(new Vector3(0, 0, 8), Vector3.Zero, Vector3.Up);
             emitterVelocity = Vector3.Zero;
 
             audio3DEffectInstance = waveBank.Create("PewPew");
@@ -242,6 +259,17 @@ namespace Audio
             audio3DEffectInstance.Apply3D(listener, listenerVelocity, emitter, emitterVelocity);
             audio3DEffectInstance.Play();
             play3D = true;
+        }
+
+        private void StopAudio3D()
+        {
+            if (!play3D) return;
+
+            audio3DEffectInstance.Stop(true);
+            audio3DEffectInstance.Dispose();
+            audio3DEffectInstance = null;
+
+            play3D = false;
         }
 
         private void UpdateAudio3D(GameTime gameTime)
@@ -309,8 +337,10 @@ namespace Audio
 
         class SoundTile
         {
+            private bool isPlaying;
+
             public static Point Padding = new Point(4, 4);
-            
+
             public Rectangle Border { get; set; }
             public Color BorderColor { get; set; }
             public string Label { get; set; }
@@ -322,10 +352,20 @@ namespace Audio
                 BorderColor = Color.White;
             }
 
-            public void Play()
+            public void Toggle()
             {
-                if (PlayDelegate != null)
-                    PlayDelegate();
+                if (isPlaying)
+                {
+                    if (StopDelegate != null)
+                        StopDelegate();
+                    isPlaying = false;
+                }
+                else
+                {
+                    if (PlayDelegate != null)
+                        PlayDelegate();
+                    isPlaying = StopDelegate != null;
+                }
             }
         }
     }
