@@ -49,26 +49,19 @@
   </Target>
   
   <Target Name="Build">
-    <Exec Command="RMDIR /Q /S $(MSBuildThisFileDirectory)\Bin"/>
+	<!--Build all targets / platforms-->
 
-    <!--Build all targets / platforms-->
+	<Exec Command="RMDIR /Q /S $(MSBuildThisFileDirectory)\Bin"/>
+	
+	<CallTarget Targets="BuildSigned" Condition="'$(BuildSignedSharpDX)' == 'true'"/>
+	<CallTarget Targets="DesktopNet20" />
+    	<CallTarget Targets="DesktopNet40" />
+    	<CallTarget Targets="MetroWin8" />
+	<CallTarget Targets="DesktopDx112" />
+    	<CallTarget Targets="WP8x86" />
+    	<CallTarget Targets="WP8ARM" />
 
-    <CallTarget Targets="BuildSigned" Condition="'$(BuildSignedSharpDX)' == 'true'"/>
-
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Net20Release;Platform=Any CPU"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Net40Release;Platform=Any CPU"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Win8Release;Platform=Any CPU"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=DIRECTX11_2Release;Platform=Any CPU"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolutionWP8)" Properties="Configuration=WP8Release;Platform=x86"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolutionWP8)" Properties="Configuration=WP8Release;Platform=ARM"/>
-
-    <!--Copy redistribution D3D files to Bin-->
-    <ItemGroup>
-      <RedistFiles Include="External\D3D\**\*.*"/>
-    </ItemGroup>
-
-    <MakeDir Directories="Bin\Redist\D3D"/>
-    <Copy SourceFiles="@(RedistFiles)" DestinationFiles="@(RedistFiles->'Bin\Redist\D3D\%(RecursiveDir)%(Filename)%(Extension)')" />
+    	<CallTarget Targets="CopyD3DRedistributionFiles" />
 
   </Target>
 
@@ -79,6 +72,40 @@
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=DIRECTX11_2Release;Platform=Any CPU;SharpDXSign=true"/>
   </Target>
 
+  <Target Name="DesktopNet20">
+	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Net20Release;Platform=Any CPU"/>
+  </Target>
+  
+  <Target Name="DesktopNet40">
+	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Net40Release;Platform=Any CPU"/>
+  </Target>
+  
+  <Target Name="MetroWin8">
+	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Win8Release;Platform=Any CPU"/>
+  </Target>
+  
+  <Target Name="DesktopDx112">
+	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=DIRECTX11_2Release;Platform=Any CPU"/>
+  </Target>
+  
+  <Target Name="WP8x86">
+	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolutionWP8)" Properties="Configuration=WP8Release;Platform=x86"/>
+  </Target>
+  
+  <Target Name="WP8ARM">
+	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolutionWP8)" Properties="Configuration=WP8Release;Platform=ARM"/>
+  </Target>
+  
+  <Target Name="CopyD3DRedistributionFiles">
+	<!--Copy redistribution D3D files to Bin-->
+    <ItemGroup>
+      <RedistFiles Include="External\D3D\**\*.*"/>
+    </ItemGroup>
+
+    <MakeDir Directories="Bin\Redist\D3D"/>
+    <Copy SourceFiles="@(RedistFiles)" DestinationFiles="@(RedistFiles->'Bin\Redist\D3D\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+  
   <Target Name="CleanSamples">
     <ItemGroup>
       <CleanFiles Include="$(SamplesDirectory)\**\Bin\**\*"/>
