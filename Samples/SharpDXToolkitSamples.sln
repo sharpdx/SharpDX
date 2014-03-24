@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld.Desktop", "Toolkit\Desktop\HelloWorld\HelloWorld.Desktop.csproj", "{05D111D6-C8FD-4DA4-B6C0-8C47E7081C3F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomEffect.Desktop", "Toolkit\Desktop\CustomEffect\CustomEffect.Desktop.csproj", "{0C9A4884-6357-4392-9341-27B43E195456}"
@@ -90,6 +92,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Audio.Desktop", "Toolkit\Desktop\Audio\Audio.Desktop.csproj", "{9621AEC5-8ECA-4D34-B7E4-A6EC3480876B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteFontApp.Desktop", "Toolkit\Desktop\SpriteFontApp\SpriteFontApp.Desktop.csproj", "{B3B57794-8FE7-47A8-B0DA-E97D3F6643C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Audio.WinRT", "Toolkit\WinRT\Audio\Audio.WinRT.csproj", "{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1026,6 +1030,36 @@ Global
 		{B3B57794-8FE7-47A8-B0DA-E97D3F6643C5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B3B57794-8FE7-47A8-B0DA-E97D3F6643C5}.Release|x64.ActiveCfg = Release|Any CPU
 		{B3B57794-8FE7-47A8-B0DA-E97D3F6643C5}.Release|x86.ActiveCfg = Release|Any CPU
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Debug|ARM.ActiveCfg = Debug|ARM
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Debug|ARM.Build.0 = Debug|ARM
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Debug|ARM.Deploy.0 = Debug|ARM
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Debug|Mixed Platforms.Deploy.0 = Debug|x86
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Debug|x64.ActiveCfg = Debug|x64
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Debug|x64.Build.0 = Debug|x64
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Debug|x64.Deploy.0 = Debug|x64
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Debug|x86.ActiveCfg = Debug|x86
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Debug|x86.Build.0 = Debug|x86
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Debug|x86.Deploy.0 = Debug|x86
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Release|ARM.ActiveCfg = Release|ARM
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Release|ARM.Build.0 = Release|ARM
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Release|ARM.Deploy.0 = Release|ARM
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Release|Mixed Platforms.Build.0 = Release|x86
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Release|Mixed Platforms.Deploy.0 = Release|x86
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Release|x64.ActiveCfg = Release|x64
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Release|x64.Build.0 = Release|x64
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Release|x64.Deploy.0 = Release|x64
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Release|x86.ActiveCfg = Release|x86
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Release|x86.Build.0 = Release|x86
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
