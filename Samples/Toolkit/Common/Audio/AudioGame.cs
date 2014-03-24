@@ -34,10 +34,8 @@ namespace Audio
     class AudioGame : Game
     {
         private GraphicsDeviceManager graphicsDeviceManager;
-        private KeyboardManager keyboardManager;
-        private KeyboardState keyboardState;
-        private MouseManager mouseManager;
-        private MouseState mouseState;
+        private PointerManager pointerManager;
+        private PointerState pointerState;
 
         private SpriteBatch spriteBatch;
         private SpriteFont arial16BMFont;
@@ -69,11 +67,11 @@ namespace Audio
         {
             // Creates a graphics manager. This is mandatory.
             graphicsDeviceManager = new GraphicsDeviceManager(this);
-            keyboardManager = new KeyboardManager(this);
-            keyboardState = new KeyboardState();
 
             // Create the pointer manager
-            mouseManager = new MouseManager(this);
+            pointerManager = new PointerManager(this);
+            pointerState = new PointerState();
+
             IsMouseVisible = true;
 
             random = new Random();
@@ -169,32 +167,33 @@ namespace Audio
 
         protected override void Update(GameTime gameTime)
         {
-            var currentKey = keyboardManager.GetState();
-            var currentMouse = mouseManager.GetState();
+            pointerManager.GetState(pointerState);
 
             foreach (var tile in tiles)
+                tile.BorderColor = Color.White;
+
+            if (pointerState.Points.Count > 0)
             {
-                if (tile.Border.Contains(new Vector2(currentMouse.X * GraphicsDevice.Viewport.Width, currentMouse.Y * GraphicsDevice.Viewport.Height)))
+                var point = pointerState.Points[0];
+                if (point.EventType == PointerEventType.Pressed)
                 {
-                    if (currentMouse.LeftButton.Pressed)
+                    var viewport = GraphicsDevice.Presenter.DefaultViewport;
+
+                    var pointerPosition = new Vector2(point.Position.X * viewport.Width, point.Position.Y * viewport.Height);
+
+                    foreach (var tile in tiles)
                     {
-                        tile.BorderColor = Color.Green;
-                        tile.Toggle();
+                        if (tile.Border.Contains(pointerPosition))
+                        {
+                            if (point.IsLeftButtonPressed)
+                            {
+                                tile.BorderColor = Color.Green;
+                                tile.Toggle();
+                            }
+                        }
                     }
-                    else
-                    {
-                        tile.BorderColor = Color.White;
-                    }
-                }
-                else
-                {
-                    tile.BorderColor = Color.Gray;
                 }
             }
-
-
-            keyboardState = currentKey;
-            mouseState = currentMouse;
 
             if (play3D)
                 UpdateAudio3D(gameTime);

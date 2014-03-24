@@ -95,6 +95,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteFontApp.Desktop", "To
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Audio.WinRT", "Toolkit\WinRT\Audio\Audio.WinRT.csproj", "{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Audio.WP8", "Toolkit\WP8\Audio\Audio.WP8.csproj", "{D6077DA0-B588-450C-B722-8342826F3C43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1060,6 +1062,32 @@ Global
 		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Release|x86.ActiveCfg = Release|x86
 		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Release|x86.Build.0 = Release|x86
 		{E63A00EA-ECF2-48CA-9155-8E849AE7F02E}.Release|x86.Deploy.0 = Release|x86
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Debug|ARM.ActiveCfg = Debug|ARM
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Debug|ARM.Build.0 = Debug|ARM
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Debug|ARM.Deploy.0 = Debug|ARM
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Debug|Mixed Platforms.ActiveCfg = Debug|ARM
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Debug|Mixed Platforms.Build.0 = Debug|ARM
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Debug|Mixed Platforms.Deploy.0 = Debug|ARM
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Debug|x86.ActiveCfg = Debug|x86
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Debug|x86.Build.0 = Debug|x86
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Debug|x86.Deploy.0 = Debug|x86
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Release|ARM.ActiveCfg = Release|ARM
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Release|ARM.Build.0 = Release|ARM
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Release|ARM.Deploy.0 = Release|ARM
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Release|Mixed Platforms.Build.0 = Release|x86
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Release|Mixed Platforms.Deploy.0 = Release|x86
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Release|x64.ActiveCfg = Release|Any CPU
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Release|x86.ActiveCfg = Release|x86
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Release|x86.Build.0 = Release|x86
+		{D6077DA0-B588-450C-B722-8342826F3C43}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
