@@ -356,9 +356,7 @@ namespace SharpDX.Multimedia
         ///   </exception>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if ( (input.Position + count) > (startPositionOfData +length))
-                throw new InvalidOperationException("Cannot read more than the length of the stream");
-            return input.Read(buffer, offset, count);
+            return input.Read(buffer, offset, Math.Min(count, (int)(startPositionOfData + length - input.Position)));
         }
 
         /// <summary>
