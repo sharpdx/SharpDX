@@ -461,7 +461,7 @@ namespace SharpDX.Toolkit.Audio
                 throw new AudioException("Error creating XAudio device.", ex);
             }
 
-#if !WIN8METRO && !WP8 && !DIRECTX11_1
+#if !W8CORE && !DIRECTX11_1
             if (Device.DeviceCount == 0)
             {
                 DisposeCore();
@@ -469,7 +469,7 @@ namespace SharpDX.Toolkit.Audio
             }
 #endif
 
-#if WIN8METRO || WP8 || DIRECTX11_1
+#if W8CORE || DIRECTX11_1
             string deviceId = null;
 #else
             const int deviceId = 0;
@@ -481,7 +481,7 @@ namespace SharpDX.Toolkit.Audio
             catch (SharpDXException ex)
             {
                 DisposeCore();
-#if WIN8METRO || WP8
+#if W8CORE
                 if (ex.ResultCode == AudioManager.NotFound)
                 {
                     throw new AudioException("No default audio devices detected.");
@@ -495,7 +495,7 @@ namespace SharpDX.Toolkit.Audio
 
             MasteringVoice.SetVolume(masterVolume);
 
-#if WIN8METRO || WP8 || DIRECTX11_1
+#if W8CORE || DIRECTX11_1
             Speakers = (Speakers)MasteringVoice.ChannelMask;
 #else
             var deviceDetails = Device.GetDeviceDetails(deviceId);
