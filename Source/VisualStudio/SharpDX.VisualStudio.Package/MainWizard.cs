@@ -97,9 +97,13 @@ namespace SharpDX.VisualStudio.ProjectWizard
             this.dte = automationObject as EnvDTE._DTE;
 
             // Check that SharpDX is correctly installed
-            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SharpDXSdkDir")))
+            const string SharpDXSdkDirEnv = "SharpDXSdkDir";
+
+            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable(SharpDXSdkDirEnv, EnvironmentVariableTarget.Machine)) ||
+                string.IsNullOrEmpty(Environment.GetEnvironmentVariable(SharpDXSdkDirEnv, EnvironmentVariableTarget.User))
+                )
             {
-                MessageBox.Show("Unable to find SharpDX installation directory. Expecting [SharpDXSdkDir] environment variable", "SharpDX Toolkit Wizard Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Unable to find SharpDX installation directory. Expecting [SharpDXSdkDir] environment variable to point to valid folder where SharpDX SDK is located", "SharpDX Toolkit Wizard Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw new WizardCancelledException("Expecting [SharpDXSdkDir] environment variable");
             }
             props.Add("$safeclassname$", props["$safeprojectname$"].Replace(".", string.Empty));
