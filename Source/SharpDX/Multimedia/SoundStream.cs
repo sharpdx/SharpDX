@@ -356,7 +356,7 @@ namespace SharpDX.Multimedia
         ///   </exception>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            return input.Read(buffer, offset, Math.Min(count, (int)(startPositionOfData + length - input.Position)));
+            return input.Read(buffer, offset, Math.Min(count, (int)Math.Max(startPositionOfData + length - input.Position, 0)));
         }
 
         /// <summary>
