@@ -910,7 +910,7 @@ namespace SharpGen.Parser
             // Parse annotations
             ParseAnnotations(xElement, cppInterface);
 
-			List<CppMethod> methods = new List<CppMethod>();
+            List<CppMethod> methods = new List<CppMethod>();
 
             // Parse methods
             foreach (var method in xElement.Elements())
@@ -920,43 +920,43 @@ namespace SharpGen.Parser
                     && string.IsNullOrWhiteSpace(method.AttributeValue("overrides")))
                 {
                     var cppMethod = ParseMethodOrFunction<CppMethod>(method);
-					methods.Add(cppMethod);
+                    methods.Add(cppMethod);
                 }
             }
 
-			// The Visual C++ compiler breaks the rules of the COM ABI when overloaded methods are used.
-			// It will group the overloads together in memory and lay them out in the reverse of their declaration order.
-			// Since GCC always lays them out in the order declared, we have to modify the order of the methods to match Visual C++.
-			// See http://support.microsoft.com/kb/131104 for more information.
-			for (int i = 0; i < methods.Count; i++)
-			{
-				string name = methods[i].Name;
+            // The Visual C++ compiler breaks the rules of the COM ABI when overloaded methods are used.
+            // It will group the overloads together in memory and lay them out in the reverse of their declaration order.
+            // Since GCC always lays them out in the order declared, we have to modify the order of the methods to match Visual C++.
+            // See http://support.microsoft.com/kb/131104 for more information.
+            for (int i = 0; i < methods.Count; i++)
+            {
+                string name = methods[i].Name;
 
-				// Look for overloads of this function
-				for (int j = i + 1; j < methods.Count; j++)
-				{
-					var nextMethod = methods[j];
-					if (nextMethod.Name == name)
-					{
-						// Remove this one from its current position further into the vtable
-						methods.RemoveAt(j);
+                // Look for overloads of this function
+                for (int j = i + 1; j < methods.Count; j++)
+                {
+                    var nextMethod = methods[j];
+                    if (nextMethod.Name == name)
+                    {
+                        // Remove this one from its current position further into the vtable
+                        methods.RemoveAt(j);
 
-						// Put this one before all other overloads (aka reverse declaration order)
-						int k = i - 1;
-						while (k >= 0 && methods[k].Name == name)
-							k--;
-						methods.Insert(k + 1, nextMethod);
-						i++;
-					}
-				}
-			}
+                        // Put this one before all other overloads (aka reverse declaration order)
+                        int k = i - 1;
+                        while (k >= 0 && methods[k].Name == name)
+                            k--;
+                        methods.Insert(k + 1, nextMethod);
+                        i++;
+                    }
+                }
+            }
 
-			// Add the methods to the interface with the correct offsets
-			foreach (var cppMethod in methods)
-			{
-				cppMethod.Offset = offsetMethod++;
-				cppInterface.Add(cppMethod);
-			}
+            // Add the methods to the interface with the correct offsets
+            foreach (var cppMethod in methods)
+            {
+                cppMethod.Offset = offsetMethod++;
+                cppInterface.Add(cppMethod);
+            }
 
             cppInterface.TotalMethodCount = offsetMethod;
 
@@ -1535,12 +1535,21 @@ namespace SharpGen.Parser
                     int i = 0;
                     foreach (CppEnumItem cppEnumItem in cppEnum.EnumItems)
                     {
-                        if (i < count)
+                        cppEnumItem.Id = docItem.Id;
+
+                        // Try to find the matching item
+                        bool foundMatch = false;
+                        foreach (var subItem in docItem.Items)
                         {
-                            cppEnumItem.Id = docItem.Id;
-                            cppEnumItem.Description = docItem.Items[i];
+                            if (Utilities.ContainsCppIdentifier(subItem.Term, cppEnumItem.Name))
+                            {
+                                cppEnumItem.Description = subItem.Description;
+                                foundMatch = true;
+                                break;
+                            }
                         }
-                        else break;
+                        if (!foundMatch && i < count)
+                            cppEnumItem.Description = docItem.Items[i].Description;
                         i++;
                     }
                 }
@@ -1561,12 +1570,21 @@ namespace SharpGen.Parser
                     int i = 0;
                     foreach (CppField cppField in cppStruct.Fields)
                     {
-                        if (i < count)
+                        cppField.Id = docItem.Id;
+
+                        // Try to find the matching item
+                        bool foundMatch = false;
+                        foreach (var subItem in docItem.Items)
                         {
-                            cppField.Id = cppStruct.Id;
-                            cppField.Description = docItem.Items[i];
+                            if (Utilities.ContainsCppIdentifier(subItem.Term, cppField.Name))
+                            {
+                                cppField.Description = subItem.Description;
+                                foundMatch = true;
+                                break;
+                            }
                         }
-                        else break;
+                        if (!foundMatch && i < count)
+                            cppField.Description = docItem.Items[i].Description;
                         i++;
                     }
                 }
@@ -1600,9 +1618,21 @@ namespace SharpGen.Parser
                         int i = 0;
                         foreach (CppParameter cppParameter in cppMethod.Parameters)
                         {
-                            if (i < count)
-                                cppParameter.Description = methodDocItem.Items[i];
-                            else break;
+                            cppParameter.Id = methodDocItem.Id;
+
+                            // Try to find the matching item
+                            bool foundMatch = false;
+                            foreach (var subItem in methodDocItem.Items)
+                            {
+                                if (Utilities.ContainsCppIdentifier(subItem.Term, cppParameter.Name))
+                                {
+                                    cppParameter.Description = subItem.Description;
+                                    foundMatch = true;
+                                    break;
+                                }
+                            }
+                            if (!foundMatch && i < count)
+                                cppParameter.Description = methodDocItem.Items[i].Description;
                             i++;
                         }
                     }
@@ -1626,9 +1656,21 @@ namespace SharpGen.Parser
                     int i = 0;
                     foreach (CppParameter cppParameter in cppFunction.Parameters)
                     {
-                        if (i < count)
-                            cppParameter.Description = docItem.Items[i];
-                        else break;
+                        cppParameter.Id = docItem.Id;
+
+                        // Try to find the matching item
+                        bool foundMatch = false;
+                        foreach (var subItem in docItem.Items)
+                        {
+                            if (Utilities.ContainsCppIdentifier(subItem.Term, cppParameter.Name))
+                            {
+                                cppParameter.Description = subItem.Description;
+                                foundMatch = true;
+                                break;
+                            }
+                        }
+                        if (!foundMatch && i < count)
+                            cppParameter.Description = docItem.Items[i].Description;
                         i++;
                     }
                 }

@@ -7,6 +7,7 @@
     <ProjectGuid>{FBE5DD99-00A0-4FED-A116-941A46A0C0D0}</ProjectGuid>
     <RootNamespace>SharpDX.DirectComposition</RootNamespace>
     <AssemblyName>SharpDX.DirectComposition</AssemblyName>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup Condition=" '$(SharpDXWin8)' == 'false'">
     <Reference Include="System" />

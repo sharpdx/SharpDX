@@ -7,6 +7,7 @@
     <ProjectGuid>{F826CCCE-4B72-47F4-9493-DFCB51C106B7}</ProjectGuid>
     <RootNamespace>SharpDX.DirectManipulation</RootNamespace>
     <AssemblyName>SharpDX.DirectManipulation</AssemblyName>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup Condition=" '$(SharpDXWin8)' == 'false'">
     <Reference Include="System" />

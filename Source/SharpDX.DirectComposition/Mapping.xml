@@ -105,11 +105,13 @@
 		<map param="IDCompositionDesktopDevice::CreateSurfaceFromHwnd::surface" return="true" />
 
 		<map method="IDCompositionRectangleClip::.*" property="false" />
+		<map method="IDCompositionEffectGroup::SetOpacity.*" property="false" />
+		<map method="IDCompositionVisual::Set(Clip|Offset|Transform).*" property="false" />
 
 		<map method="IDCompositionSurfaceFactory::Create(Virtual)?Surface" visibility="internal" />
 		<map param="IDCompositionSurfaceFactory::Create(Virtual)?Surface::(virtualS|s)urface" attribute="out fast" />
 
-		<map method="IDComposition(Rotate|Translate|Skew|Matrix)Transform(3D)?::Set.*" property="false" />
+		<map method="IDComposition(Rotate|Translate|Scale|Skew|Matrix)Transform(3D)?::Set.*" property="false" />
 
 		<!--
     // *****************************************************************
