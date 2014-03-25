@@ -158,8 +158,9 @@ namespace SharpDX.Toolkit
         /// <inheritdoc />
         public override void BeginScreenDeviceChange(bool willBeFullScreen)
         {
-            oldClientSize = gameForm.ClientSize;
-            if (willBeFullScreen && !isFullScreenMaximized)
+            if (gameForm != null)
+                oldClientSize = gameForm.ClientSize;
+            if (willBeFullScreen && !isFullScreenMaximized && gameForm != null)
             {
                 savedFormBorderStyle = gameForm.FormBorderStyle;
                 savedWindowState = gameForm.WindowState;
@@ -167,33 +168,39 @@ namespace SharpDX.Toolkit
                 if (gameForm.WindowState == FormWindowState.Maximized)
                     savedRestoreBounds = gameForm.RestoreBounds;
             }
+
             if (willBeFullScreen != isFullScreenMaximized)
             {
                 deviceChangeChangedVisible = true;
                 oldVisible = Visible;
                 Visible = false;
+
+                if (gameForm != null)
+                    gameForm.SendToBack();
             }
             else
+            {
                 deviceChangeChangedVisible = false;
-            if (!willBeFullScreen && isFullScreenMaximized)
+            }
+
+            if (!willBeFullScreen && isFullScreenMaximized && gameForm != null)
             {
                 gameForm.TopMost = false;
                 gameForm.FormBorderStyle = savedFormBorderStyle;
             }
-            if (willBeFullScreen != isFullScreenMaximized)
-                gameForm.SendToBack();
-            deviceChangeWillBeFullScreen = new bool?(willBeFullScreen);
+
+            deviceChangeWillBeFullScreen = willBeFullScreen;
         }
 
         /// <inheritdoc />
         public override void EndScreenDeviceChange(int clientWidth, int clientHeight)
         {
-            if(!deviceChangeWillBeFullScreen.HasValue)
+            if (!deviceChangeWillBeFullScreen.HasValue)
                 return;
 
             if (deviceChangeWillBeFullScreen.Value)
             {
-                if (!isFullScreenMaximized)
+                if (!isFullScreenMaximized && gameForm != null)
                 {
                     gameForm.TopMost = true;
                     gameForm.FormBorderStyle = FormBorderStyle.None;
@@ -204,7 +211,8 @@ namespace SharpDX.Toolkit
             }
             else if (isFullScreenMaximized)
             {
-                gameForm.BringToFront();
+                if (gameForm != null)
+                    gameForm.BringToFront();
                 isFullScreenMaximized = false;
             }
 
@@ -213,7 +221,8 @@ namespace SharpDX.Toolkit
 
             deviceChangeWillBeFullScreen = new bool?();
 
-            gameForm.ClientSize = new Size(clientWidth, clientHeight);
+            if (gameForm != null)
+                gameForm.ClientSize = new Size(clientWidth, clientHeight);
         }
 
         /// <inheritdoc />
@@ -232,7 +241,7 @@ namespace SharpDX.Toolkit
                 Control = (Control)gameContext.Control;
                 InitializeFromWinForm();
             }
-            else if(gameContext.ContextType == GameContextType.DesktopHwndWpf)
+            else if (gameContext.ContextType == GameContextType.DesktopHwndWpf)
             {
                 InitializeFromWpfControl(gameContext.Control);
             }
@@ -290,7 +299,7 @@ namespace SharpDX.Toolkit
         internal override void Run()
         {
 #if NET35Plus
-            if(wpfBorderControl != null)
+            if (wpfBorderControl != null)
             {
                 StartWpfRenderLoop();
             }
@@ -317,7 +326,7 @@ namespace SharpDX.Toolkit
         private void RunWpfRenderLoop()
         {
             // Allocation of the RenderForm should be done on the same thread
-            Control = new RenderForm("SharpDX") {TopLevel = false, Visible = false};
+            Control = new RenderForm("SharpDX") { TopLevel = false, Visible = false };
             InitializeFromWinForm();
 
             windowHandle = Control.Handle;
