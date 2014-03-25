@@ -35,7 +35,7 @@ namespace SharpDX.Toolkit.Audio
     /// This manages the XAudio2 audio graph, device, and mastering voice.  This manager also allows loading of <see cref="SoundEffect"/> using
     /// the <see cref="IContentManager"/>
     /// </summary>
-    public class AudioManager : GameSystem, IContentReader, IContentReaderFactory
+    public class AudioManager : GameSystem
     {
         private const float FLT_MIN = 1.175494351e-38F;
 
@@ -405,26 +405,6 @@ namespace SharpDX.Toolkit.Audio
             EnableSpatialAudio(X3DAudio.SpeedOfSound);
         }
 
-        // TODO: refactor this to a separate class (violation of SRP S.O.L.I.D. principle).
-        object IContentReader.ReadContent(IContentManager contentManager, ref ContentReaderParameters parameters)
-        {
-            if (parameters.AssetType == typeof(SoundEffect))
-                return SoundEffect.FromStream(this, parameters.Stream, parameters.AssetName);
-
-            if (parameters.AssetType == typeof(WaveBank))
-                return WaveBank.FromStream(this, parameters.Stream);
-
-            return null;
-        }
-
-        IContentReader IContentReaderFactory.TryCreate(Type type)
-        {
-            if (type == typeof(SoundEffect) || type == typeof(WaveBank))
-                return this;
-
-            return null;
-        }
-
         /// <summary>
         /// Initializes XAudio2 and MasteringVoice.  And registers itself as an <see cref="IContentReaderFactory"/>
         /// </summary>
@@ -541,7 +521,7 @@ namespace SharpDX.Toolkit.Audio
                 }
             }
 
-            contentManager.ReaderFactories.Add(this);
+            contentManager.ReaderFactories.Add(new AudioContentReaderFactory());
         }
 
         /// <summary>

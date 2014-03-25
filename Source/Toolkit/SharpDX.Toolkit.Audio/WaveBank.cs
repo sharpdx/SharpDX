@@ -24,10 +24,12 @@ namespace SharpDX.Toolkit.Audio
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using Content;
 
     /// <summary>
     /// Represents a wave bank that were read from a stream.
     /// </summary>
+    [ContentReader(typeof(WaveBankReader))]
     public sealed class WaveBank : IDisposable
     {
         private readonly Dictionary<string, SoundEffect> effectsByName;
@@ -230,7 +232,7 @@ namespace SharpDX.Toolkit.Audio
                 throw new ObjectDisposedException(GetType().FullName);
 
             SoundEffect soundEffect;
-            if(effectsByName.TryGetValue(name, out soundEffect))
+            if (effectsByName.TryGetValue(name, out soundEffect))
                 return soundEffect.Play(volume, pitch, pan);
 
             throw new ArgumentOutOfRangeException("name", string.Format("No wave with name '{0}' exists.", name));
@@ -252,7 +254,7 @@ namespace SharpDX.Toolkit.Audio
                 throw new ArgumentNullException("name", "The name cannot be null or empty.");
 
             SoundEffect soundEffect;
-            if(effectsByName.TryGetValue(name, out soundEffect))
+            if (effectsByName.TryGetValue(name, out soundEffect))
                 return soundEffect.Play();
 
             throw new ArgumentOutOfRangeException("name", string.Format("No wave with name '{0}' exists.", name));

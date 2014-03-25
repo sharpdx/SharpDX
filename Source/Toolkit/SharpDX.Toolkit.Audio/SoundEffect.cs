@@ -26,10 +26,12 @@ namespace SharpDX.Toolkit.Audio
     using Multimedia;
     using XAudio2;
     using System.IO;
+    using Content;
 
     /// <summary>
     /// Represents a loaded sound resource.
     /// </summary>
+    [ContentReader(typeof(SoundEffectContentReader))]
     public sealed class SoundEffect : IDisposable
     {
         private static float distanceScale = 1f;

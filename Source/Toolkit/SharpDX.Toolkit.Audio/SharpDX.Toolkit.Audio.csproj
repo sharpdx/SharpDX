@@ -19,6 +19,8 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="AudioContentReader.cs" />
+    <Compile Include="AudioContentReaderFactory.cs" />
     <Compile Include="AudioException.cs" />
     <Compile Include="AudioManager.cs" />
     <Compile Include="BitField.cs" />
@@ -26,11 +28,13 @@
     <Compile Include="Pool.cs" />
     <Compile Include="ReverbPresets.cs" />
     <Compile Include="SoundEffect.cs" />
+    <Compile Include="SoundEffectContentReader.cs" />
     <Compile Include="SoundEffectInstance.cs" />
     <Compile Include="SoundEffectInstancePool.cs" />
     <Compile Include="SourceVoicePool.cs" />
     <Compile Include="SoundState.cs" />
     <Compile Include="WaveBank.cs" />
+    <Compile Include="WaveBankContentReader.cs" />
     <Compile Include="WaveBankReader.cs" />
   </ItemGroup>
   <ItemGroup>
