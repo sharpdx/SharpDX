@@ -661,6 +661,31 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Computes the premultiplied value of the provided color.
+        /// </summary>
+        /// <param name="value">The non-premultiplied value.</param>
+        /// <param name="result">The premultiplied result.</param>
+        public static void Premultiply(ref Color4 value, out Color4 result)
+        {
+            result.Alpha = value.Alpha;
+            result.Red = value.Red * value.Alpha;
+            result.Green = value.Green * value.Alpha;
+            result.Blue = value.Blue * value.Alpha;
+        }
+
+        /// <summary>
+        /// Computes the premultiplied value of the provided color.
+        /// </summary>
+        /// <param name="value">The non-premultiplied value.</param>
+        /// <returns>The premultiplied result.</returns>
+        public static Color4 Premultiply(Color4 value)
+        {
+            Color4 result;
+            Premultiply(ref value, out result);
+            return result;
+        }
+
+        /// <summary>
         /// Adds two colors.
         /// </summary>
         /// <param name="left">The first color to add.</param>
