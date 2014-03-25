@@ -63,6 +63,8 @@ namespace SharpDX.Toolkit
         /// <inheritdoc />
         public override bool AllowUserResizing { get { return false; } set { /* ignore, WPF will resize everything itself */ } }
 
+        public override System.Drawing.Point Location { get { return System.Drawing.Point.Empty; } set { /* irrelevant to WPF */ } }
+
         /// <inheritdoc />
         public override Rectangle ClientBounds { get { return new Rectangle(0, 0, (int)element.ActualWidth, (int)element.ActualHeight); } }
 
