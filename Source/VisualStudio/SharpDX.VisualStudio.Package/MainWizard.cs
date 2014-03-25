@@ -99,7 +99,7 @@ namespace SharpDX.VisualStudio.ProjectWizard
             // Check that SharpDX is correctly installed
             const string SharpDXSdkDirEnv = "SharpDXSdkDir";
 
-            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable(SharpDXSdkDirEnv, EnvironmentVariableTarget.Machine)) ||
+            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable(SharpDXSdkDirEnv, EnvironmentVariableTarget.Machine)) &&
                 string.IsNullOrEmpty(Environment.GetEnvironmentVariable(SharpDXSdkDirEnv, EnvironmentVariableTarget.User))
                 )
             {
