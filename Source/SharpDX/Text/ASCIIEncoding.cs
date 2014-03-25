@@ -29,7 +29,7 @@ namespace SharpDX.Text
         /// Returns an encoding for the ASCII character set. The returned encoding
         //  will be an instance of the ASCIIEncoding class.
         /// </summary>
-        public static readonly System.Text.Encoding ASCII = new ASCIIEncoding();
+        public static readonly ASCIIEncoding ASCII = new ASCIIEncoding();
 #endif
     }
 
@@ -70,6 +70,11 @@ namespace SharpDX.Text
         public override int GetMaxCharCount(int byteCount)
         {
             return byteCount;
+        }
+
+        public string GetString(byte[] bytes)
+        {
+            return base.GetString(bytes, 0, bytes.Length);
         }
     }
 }
