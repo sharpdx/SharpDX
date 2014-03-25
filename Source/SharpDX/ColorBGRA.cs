@@ -782,6 +782,32 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Computes the premultiplied value of the provided color.
+        /// </summary>
+        /// <param name="value">The non-premultiplied value.</param>
+        /// <param name="result">The premultiplied result.</param>
+        public static void Premultiply(ref ColorBGRA value, out ColorBGRA result)
+        {
+            var a = value.A / (255f * 255f);
+            result.A = value.A;
+            result.R = ToByte(value.R * a);
+            result.G = ToByte(value.G * a);
+            result.B = ToByte(value.B * a);
+        }
+
+        /// <summary>
+        /// Computes the premultiplied value of the provided color.
+        /// </summary>
+        /// <param name="value">The non-premultiplied value.</param>
+        /// <returns>The premultiplied result.</returns>
+        public static ColorBGRA Premultiply(ColorBGRA value)
+        {
+            ColorBGRA result;
+            Premultiply(ref value, out result);
+            return result;
+        }
+
+        /// <summary>
         /// Adds two colors.
         /// </summary>
         /// <param name="left">The first color to add.</param>
