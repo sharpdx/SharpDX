@@ -299,7 +299,7 @@ namespace SharpDX
 
                 // Untrack the object
                 if (Configuration.EnableObjectTracking)
-                    ObjectTracker.UnTrack(this);                
+                    ObjectTracker.UnTrack(this);
 
                 // Set pointer to null (using protected members in order to avoid NativePointerUpdat* callbacks.
                 _nativePointer = (void*)0;

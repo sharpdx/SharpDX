@@ -29,7 +29,7 @@ namespace SharpGen
     {
         public DocItem()
         {
-            Items = new List<string>();
+            Items = new List<DocSubItem>();
         }
 
         /// <summary>
@@ -62,6 +62,22 @@ namespace SharpGen
         /// Gets or sets the items.
         /// </summary>
         /// <value>The items.</value>
-        public List<string> Items { get; set; }
+        public List<DocSubItem> Items { get; set; }
     }
+
+	/// <summary>
+	/// Documentation sub-item, used for structure fields, enum items, and function parameters.
+	/// </summary>
+	public class DocSubItem
+	{
+		/// <summary>
+		/// Gets or sets the name of the sub item.
+		/// </summary>
+		public string Term { get; set; }
+
+		/// <summary>
+		/// Gets or sets the description associated with the sub item.
+		/// </summary>
+		public string Description { get; set; }
+	}
 }

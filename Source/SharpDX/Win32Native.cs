@@ -20,6 +20,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
+using SharpDX.Win32;
 
 namespace SharpDX
 {
@@ -74,17 +75,6 @@ namespace SharpDX
         }
 
 #if !W8CORE
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct NativeMessage
-        {
-            public IntPtr handle;
-            public uint msg;
-            public IntPtr wParam;
-            public IntPtr lParam;
-            public uint time;
-            public Point p;
-        }
 
         [DllImport("user32.dll", EntryPoint = "PeekMessage"), SuppressUnmanagedCodeSecurity]
         public static extern int PeekMessage(out NativeMessage lpMsg, IntPtr hWnd, int wMsgFilterMin,

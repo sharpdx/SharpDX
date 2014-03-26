@@ -139,7 +139,7 @@ namespace SharpDX.Windows
                     if (localHandle != IntPtr.Zero)
                     {
                         // Previous code not compatible with Application.AddMessageFilter but faster then DoEvents
-                        Win32Native.NativeMessage msg;
+                        NativeMessage msg;
                         while (Win32Native.PeekMessage(out msg, IntPtr.Zero, 0, 0, 0) != 0)
                         {
                             if (Win32Native.GetMessage(out msg, IntPtr.Zero, 0, 0) == -1)
@@ -229,7 +229,7 @@ namespace SharpDX.Windows
         {
             get
             {
-                Win32Native.NativeMessage msg;
+                NativeMessage msg;
                 return (bool)(Win32Native.PeekMessage(out msg, IntPtr.Zero, 0, 0, 0) == 0);
             }
         }
