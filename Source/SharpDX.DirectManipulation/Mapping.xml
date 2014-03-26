@@ -99,6 +99,9 @@
 		<map method="IDirectManipulationContent::GetContentTransform" visibility="internal" />
 		<map method="IDirectManipulationContent::GetOutputTransform" visibility="internal" />
 		<map method="IDirectManipulationContent::SyncContentTransform" visibility="internal" />
+		<map method="IDirectManipulationManager::CreateViewport" visibility="internal" />
+		<map method="IDirectManipulationManager::CreateContent" visibility="internal" />
+		<map method="IDirectManipulationManager2::CreateBehavior" visibility="internal" />
 
     <!--
     // *****************************************************************

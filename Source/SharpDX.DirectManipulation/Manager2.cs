@@ -12,6 +12,12 @@ namespace SharpDX.DirectManipulation
 			Utilities.CreateComInstance(ManagerClassId, Utilities.CLSCTX.ClsctxInprocServer, Utilities.GetGuidFromType(typeof(Manager2)), this);
 		}
 
+		/// <summary>
+		/// Factory method to create a behavior.
+		/// </summary>
+		/// <typeparam name="T">The type of the COM object to create.</typeparam>
+		/// <param name="classId">CLSID of the behavior. The CLSID specifies the type of behavior.</param>
+		/// <returns></returns>
 		public T CreateBehavior<T>(Guid classId) where T : ComObject
 		{
 			IntPtr temp;

@@ -7,6 +7,9 @@ namespace SharpDX.DirectManipulation
 {
 	partial class Content
 	{
+		/// <summary>
+		/// Retrieves the transform applied to the content.
+		/// </summary>
 		public Matrix3x2 ContentTransform
 		{
 			get
@@ -17,6 +20,9 @@ namespace SharpDX.DirectManipulation
 			}
 		}
 
+		/// <summary>
+		/// Gets the final transform applied to the content.
+		/// </summary>
 		public Matrix3x2 OutputTransform
 		{
 			get
@@ -27,6 +33,10 @@ namespace SharpDX.DirectManipulation
 			}
 		}
 
+		/// <summary>
+		/// Modifies the content transform while maintaining the output transform.
+		/// </summary>
+		/// <param name="transform"></param>
 		public void SyncContentTransform(Matrix3x2 transform)
 		{
 			float[] values = transform.ToArray();

@@ -14,17 +14,17 @@ namespace SharpDX.DirectManipulation
 			Utilities.CreateComInstance(ManagerClassId, Utilities.CLSCTX.ClsctxInprocServer, Utilities.GetGuidFromType(typeof(Manager)), this);
 		}
 
+		/// <summary>
+		/// The factory method that is used to create an instance of secondary content (such as a panning indicator) inside a viewport.
+		/// </summary>
+		/// <typeparam name="T">The type of the COM object to create.</typeparam>
+		/// <param name="frameInfo">The frame info provider for the secondary content. This should match the frame info provider used to create the viewport.</param>
+		/// <param name="contentClassId">Class identifier (CLSID) of the secondary content. This ID specifies the content type.</param>
+		/// <returns></returns>
 		public T CreateContent<T>(FrameInfoProvider frameInfo, Guid contentClassId) where T : ComObject
 		{
 			IntPtr temp;
 			CreateContent(frameInfo, contentClassId, Utilities.GetGuidFromType(typeof(T)), out temp);
-			return ComObject.FromPointer<T>(temp);
-		}
-
-		public T CreateViewport<T>(FrameInfoProvider frameInfo, IntPtr window) where T : ComObject
-		{
-			IntPtr temp;
-			CreateViewport(frameInfo, window, Utilities.GetGuidFromType(typeof(T)), out temp);
 			return ComObject.FromPointer<T>(temp);
 		}
 	}
