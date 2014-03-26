@@ -412,7 +412,7 @@ namespace SharpGen.Doc
             HtmlNode firstElement = element.ChildNodes.FindFirst("dl");
             if (firstElement != null)
             {
-				string termName = null;
+                string termName = null;
                 List<string> currentDoc = new List<string>();
                 var nodes = firstElement.ChildNodes;
                 foreach (HtmlNode htmlNode in nodes)
@@ -422,12 +422,12 @@ namespace SharpGen.Doc
                         if (currentDoc.Count > 0)
                         {
                             item.Items.Add(new DocSubItem
-							{
-								Term = termName, 
-								Description = currentDoc[currentDoc.Count - 1]
-							});
+                            {
+                                Term = termName, 
+                                Description = currentDoc[currentDoc.Count - 1]
+                            });
                             currentDoc.Clear();
-							termName = htmlNode.InnerText;
+                            termName = htmlNode.InnerText;
                         }
                     }
                     else if (htmlNode.Name == "dd")
@@ -435,12 +435,12 @@ namespace SharpGen.Doc
                         currentDoc.Add(ParseNode(htmlNode));
                     }
                 }
-				if (currentDoc.Count > 0)
-					item.Items.Add(new DocSubItem
-					{
-						Term = termName,
-						Description = currentDoc[currentDoc.Count - 1]
-					});
+                if (currentDoc.Count > 0)
+                    item.Items.Add(new DocSubItem
+                    {
+                        Term = termName,
+                        Description = currentDoc[currentDoc.Count - 1]
+                    });
             }
             var headerCollection = element.SelectNodes("//h3 | //h2");
             if (headerCollection != null)
