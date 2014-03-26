@@ -37,6 +37,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
     <!--But a future version may provide compression/rescale on the fly, so we need to introduce it now -->
     <!--in order to keep project compatible-->
     <AvailableItemName Include="ToolkitTexture"></AvailableItemName>
+    <AvailableItemName Include="ToolkitAudio"></AvailableItemName>
   </ItemGroup>
 
   <!-- Global property most of them are overridable in the project including this project file -->
@@ -168,6 +169,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
   <UsingTask TaskName="SharpDX.Toolkit.CompilerDependencyTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
   <UsingTask TaskName="SharpDX.Toolkit.ModelCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
   <UsingTask TaskName="SharpDX.Toolkit.TextureCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
+  <UsingTask TaskName="SharpDX.Toolkit.AudioCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
 
   <!-- Plugs all dependency listing in AssignTargetPathsDependsOn - in order to support generated output to be copied as part of the build  --> 
   <PropertyGroup>
@@ -199,7 +201,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
         ProjectDirectory="$(ProjectDir)"
         IntermediateDirectory="$(IntermediateOutputPath)"
         Debug="$(ToolkitFxcDebugOption)"
-        Files="@(ToolkitFxc);@(ToolkitFont);@(ToolkitModel);@(ToolkitTexture)"
+        Files="@(ToolkitFxc);@(ToolkitFont);@(ToolkitModel);@(ToolkitTexture);@(ToolkitAudio)"
         RootNamespace="$(RootNamespace)"
         >
         <Output TaskParameter="ContentFiles" ItemName="TkContent"/>
@@ -259,5 +261,15 @@ It compiles all files of type ToolkitFxc/ToolkitFont
         RootNamespace="$(RootNamespace)"
         >
     </TextureCompilerTask>
+
+    <AudioCompilerTask
+        ProjectDirectory="$(ProjectDir)"
+        IntermediateDirectory="$(IntermediateOutputPath)"
+        DynamicCompiling="$(ToolkitFxcDynamicCompilingOption)"
+        Debug="$(ToolkitFxcDebugOption)"
+        Files="@(ToolkitAudio)"
+        RootNamespace="$(RootNamespace)"
+        >
+    </AudioCompilerTask>
   </Target>
 </Project>

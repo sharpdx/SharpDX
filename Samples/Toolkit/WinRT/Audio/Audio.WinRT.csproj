@@ -123,14 +123,13 @@
     <Content Include="Assets\StoreLogo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\XAudio2\PlaySound\ergon.adpcm.wav">
+    <ToolkitAudio Include="..\..\..\XAudio2\PlaySound\ergon.adpcm.wav">
       <Link>Content\ergon.adpcm.wav</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\XAudio2\PlaySound\ergon.wav">
+    </ToolkitAudio>
+    <ToolkitAudio Include="..\..\..\XAudio2\PlaySound\ergon.wav">
       <Link>Content\ergon.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </ToolkitAudio>
     <ToolkitFont Include="..\..\Common\Audio\Content\Arial16.xml">
       <Link>Content\Arial16.xml</Link>
     </ToolkitFont>
@@ -142,14 +141,13 @@
     </ToolkitTexture>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\Common\Audio\Content\TestBank.xwb">
+    <ToolkitAudio Include="..\..\Common\Audio\Content\TestBank.xwb">
       <Link>Content\TestBank.xwb</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\Common\Audio\Content\TestBankXbox.xwb">
+    </ToolkitAudio>
+    <ToolkitAudio Include="..\..\Common\Audio\Content\TestBankXbox.xwb">
       <Link>Content\TestBankXbox.xwb</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </ToolkitAudio>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

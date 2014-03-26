@@ -97,10 +97,10 @@ namespace Audio
 
         protected override void LoadContent()
         {
-            ergonWave = Content.Load<SoundEffect>("ergon.adpcm.wav");
+            ergonWave = Content.Load<SoundEffect>("ergon.adpcm");
             ergonWaveInstance = ergonWave.Create();
             ergonWaveInstance.IsLooped = true;
-            waveBank = Content.Load<WaveBank>("TestBank.xwb");
+            waveBank = Content.Load<WaveBank>("TestBank");
             //waveBankXbox = Content.Load<WaveBank>("TestBankXbox.xwb"); //does not play correctly
 
             // SpriteFont supports the following font file format:
