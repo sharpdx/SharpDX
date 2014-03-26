@@ -127,7 +127,6 @@
   <file>SharpDX\Mapping.xml</file>
   <file>SharpDX.DXGI\Mapping.xml</file>
   <ifndef name="WP8">
-    <file>SharpDX.Animation\Mapping.xml</file>
     <file>SharpDX.D3DCompiler\Mapping.xml</file>
   </ifndef>
   
@@ -146,12 +145,16 @@
     <file>SharpDX.MediaFoundation\Mapping.xml</file>
   </ifdef>
 
-  <ifndef name="WP8">
-    <ifndef name="WIN8METRO">
+  <ifndef name="W8CORE">
+    <ifdef name="DIRECTX11_1|DIRECTX11_2">
+      <file>SharpDX.Animation\Mapping.xml</file>
       <file>SharpDX.Direct3D11.Effects\Mapping.xml</file>
       <file>SharpDX.DirectComposition\Mapping.xml</file>
       <file>SharpDX.DirectManipulation\Mapping.xml</file>
-    </ifndef>
+    </ifdef>
+  </ifndef>
+  
+  <ifndef name="WP8">
     <file>SharpDX.Direct2D1\Mapping.xml</file>
     <ifndef name="DIRECTX11_1">
       <file>SharpDX.DirectInput\Mapping.xml</file>
