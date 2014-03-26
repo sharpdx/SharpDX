@@ -50,14 +50,19 @@ namespace SharpDX.Toolkit.Content
 
         public bool Exists(string assetName)
         {
-            return NativeFile.Exists(GetAssetPath(assetName));
+            return NativeFile.Exists(GetAssetPath(assetName))
+                || NativeFile.Exists(GetAssetPath(assetName, true));
         }
 
         public Stream Resolve(string assetName)
         {
             try
             {
-                return new NativeFileStream(GetAssetPath(assetName), NativeFileMode.Open, NativeFileAccess.Read);
+                var assetPath = GetAssetPath(assetName);
+                if (!NativeFile.Exists(assetPath))
+                    assetPath = GetAssetPath(assetName, true);
+
+                return new NativeFileStream(assetPath, NativeFileMode.Open, NativeFileAccess.Read);
             }
             catch
             {
@@ -69,10 +74,11 @@ namespace SharpDX.Toolkit.Content
         /// Gets the full asset path based on the root directory and default extension.
         /// </summary>
         /// <param name="assetName">The asset name.</param>
+        /// <param name="forceAppendExtension">A value indicating whether to append the default extension even if the supplied name already has one.</param>
         /// <returns>The full asset path.</returns>
-        protected string GetAssetPath(string assetName)
+        protected string GetAssetPath(string assetName, bool forceAppendExtension = false)
         {
-            if (string.IsNullOrEmpty(Path.GetExtension(assetName)))
+            if (string.IsNullOrEmpty(Path.GetExtension(assetName)) || forceAppendExtension)
                 assetName += DefaultExtension;
 
             return PathUtility.GetNormalizedPath(Path.Combine(RootDirectory ?? string.Empty, assetName));
