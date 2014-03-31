@@ -34,10 +34,10 @@ namespace SharpDX.Toolkit.Content
     public class ContentManager : Component, IContentManager
     {
         private readonly Dictionary<AssetKey, object> assetLockers;
-        private readonly Dictionary<AssetKey, object> loadedAssets;
         private readonly List<IContentResolver> registeredContentResolvers;
         private readonly Dictionary<Type, IContentReader> registeredContentReaders;
         private readonly List<IContentReaderFactory> registeredContentReaderFactories;
+        protected readonly Dictionary<AssetKey, object> loadedAssets;
 
         private string rootDirectory;
 
@@ -288,7 +288,7 @@ namespace SharpDX.Toolkit.Content
             return true;
         }
 
-        private object GetAssetLocker(AssetKey assetKey, bool create)
+        protected object GetAssetLocker(AssetKey assetKey, bool create)
         {
             object assetLockerRead;
             lock (assetLockers)
@@ -488,7 +488,7 @@ namespace SharpDX.Toolkit.Content
         /// <summary>
         /// Use this key to store loaded assets.
         /// </summary>
-        private struct AssetKey : IEquatable<AssetKey>
+        protected struct AssetKey : IEquatable<AssetKey>
         {
             public AssetKey(Type assetType, string assetName)
             {
