@@ -227,7 +227,7 @@ namespace SharpDX
                 if (MathUtil.IsZero(length))
                     return Vector3.UnitX;
 
-                float inv = 1.0f / length;
+                float inv = 1.0f / (float)Math.Sqrt(length);
                 return new Vector3(X * inv, Y * inv, Z * inv);
             }
         }
