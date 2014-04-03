@@ -51,7 +51,6 @@
     <Compile Include="IComponent.cs" />
     <Compile Include="IServiceRegistry.cs" />
     <Compile Include="IO\PathUtility.cs" />
-    <Compile Include="IO\RandomStream.cs" />
     <Compile Include="Multimedia\WavWriter.cs" />
     <Compile Include="IInspectable.cs" />
     <Compile Include="InspectableShadow.cs" />
