@@ -58,7 +58,12 @@ namespace SharpDX.Toolkit
         {
             get
             {
-                return new Rectangle(0, 0, (int)(this.surfaceControl.ActualWidth * DisplayProperties.LogicalDpi / 96.0), (int)(this.surfaceControl.ActualHeight * DisplayProperties.LogicalDpi / 96.0));
+                var swapChainPanel = surfaceControl as SwapChainPanel;
+                if (swapChainPanel != null)
+                {
+                    return new Rectangle(0, 0, (int)(this.surfaceControl.ActualWidth * swapChainPanel.CompositionScaleX + 0.5f), (int)(this.surfaceControl.ActualHeight * swapChainPanel.CompositionScaleY + 0.5f));
+                }
+                return new Rectangle(0, 0, (int)(this.surfaceControl.ActualWidth * DisplayProperties.LogicalDpi / 96.0 + 0.5f), (int)(this.surfaceControl.ActualHeight * DisplayProperties.LogicalDpi / 96.0 + 0.5f));
             }
         }
 
@@ -157,6 +162,10 @@ namespace SharpDX.Toolkit
         {
             surfaceControl.SizeChanged -= SurfaceControlSizeChanged;
 
+            var swapChainPanel = surfaceControl as SwapChainPanel;
+            if (swapChainPanel != null)
+                swapChainPanel.CompositionScaleChanged -= SwapChainPanelCompositionScaleChanged;
+
             BindSurfaceControl(context);
         }
 
@@ -167,6 +176,15 @@ namespace SharpDX.Toolkit
                 throw new ArgumentException("A FrameworkElement expected.");
 
             surfaceControl.SizeChanged += SurfaceControlSizeChanged;
+
+            var swapChainPanel = surfaceControl as SwapChainPanel;
+            if (swapChainPanel != null)
+                swapChainPanel.CompositionScaleChanged += SwapChainPanelCompositionScaleChanged;
+        }
+
+        private void SwapChainPanelCompositionScaleChanged(SwapChainPanel sender, object args)
+        {
+            OnClientSizeChanged(sender, EventArgs.Empty);
         }
 
         void CompositionTarget_Rendering(object sender, object e)

@@ -41,6 +41,9 @@ namespace SharpDX.Toolkit.Graphics
         private RenderTarget2D backBuffer;
 
         private SwapChain swapChain;
+#if DIRECTX11_2
+        private SwapChain2 swapChain2;
+#endif
 
         private int bufferCount;
 
@@ -51,6 +54,10 @@ namespace SharpDX.Toolkit.Graphics
 
             // Initialize the swap chain
             swapChain = ToDispose(CreateSwapChain());
+
+#if DIRECTX11_2
+            swapChain2 = ToDispose(new SwapChain2(swapChain.NativePointer));
+#endif
 
             backBuffer = ToDispose(RenderTarget2D.New(device, swapChain.GetBackBuffer<Direct3D11.Texture2D>(0)));
         }
@@ -169,6 +176,15 @@ namespace SharpDX.Toolkit.Graphics
             if (!base.Resize(width, height, format, refreshRate)) return false;
 
             RemoveAndDispose(ref backBuffer);
+
+#if DIRECTX11_2 && WIN8METRO
+            var swapChainPanel = Description.DeviceWindowHandle as SwapChainPanel;
+            if (swapChainPanel != null && swapChain2 != null)
+            {
+
+                swapChain2.MatrixTransform = Matrix3x2.Scaling(1f / swapChainPanel.CompositionScaleX, 1f / swapChainPanel.CompositionScaleY);
+            }
+#endif
 
             swapChain.ResizeBuffers(bufferCount, width, height, format, Description.Flags);
 
