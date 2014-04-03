@@ -41,7 +41,9 @@ namespace SharpDX.Toolkit.Graphics
         private RenderTarget2D backBuffer;
 
         private SwapChain swapChain;
+#if DIRECTX11_2
         private SwapChain2 swapChain2;
+#endif
 
         private int bufferCount;
 
@@ -52,7 +54,10 @@ namespace SharpDX.Toolkit.Graphics
 
             // Initialize the swap chain
             swapChain = ToDispose(CreateSwapChain());
+
+#if DIRECTX11_2
             swapChain2 = ToDispose(new SwapChain2(swapChain.NativePointer));
+#endif
 
             backBuffer = ToDispose(RenderTarget2D.New(device, swapChain.GetBackBuffer<Direct3D11.Texture2D>(0)));
         }
@@ -172,7 +177,7 @@ namespace SharpDX.Toolkit.Graphics
 
             RemoveAndDispose(ref backBuffer);
 
-#if DIRECTX11_2
+#if DIRECTX11_2 && WIN8METRO
             var swapChainPanel = Description.DeviceWindowHandle as SwapChainPanel;
             if (swapChainPanel != null && swapChain2 != null)
             {
@@ -250,11 +255,11 @@ namespace SharpDX.Toolkit.Graphics
 #if DIRECTX11_2
                 using (var comObject = new ComObject(Description.DeviceWindowHandle))
                 {
-                    var swapChainPanelNative = comObject.QueryInterfaceOrNull<ISwapChainPanelNative>();
-                    if (swapChainPanelNative != null)
+                    var swapChainPanel = comObject.QueryInterfaceOrNull<ISwapChainPanelNative>();
+                    if (swapChainPanel != null)
                     {
                         var swapChain = new SwapChain1((DXGI.Factory2)GraphicsAdapter.Factory, (Direct3D11.Device)GraphicsDevice, ref description);
-                        swapChainPanelNative.SwapChain = swapChain;
+                        swapChainPanel.SwapChain = swapChain;
                         return swapChain;
                     }
                 }
@@ -309,8 +314,5 @@ namespace SharpDX.Toolkit.Graphics
             return newSwapChain;
         }
 #endif
-
-
-
     }
 }
