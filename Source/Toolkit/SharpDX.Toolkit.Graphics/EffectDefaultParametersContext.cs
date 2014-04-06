@@ -26,16 +26,6 @@ namespace SharpDX.Toolkit.Graphics
     public struct EffectDefaultParametersContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EffectDefaultParametersContext"/> struct.
-        /// </summary>
-        /// <param name="viewProjection">The view projection.</param>
-        public EffectDefaultParametersContext(ref Matrix viewProjection)
-        {
-            ViewProjection = viewProjection;
-            IsViewProjectionCalculated = true;
-        }
-
-        /// <summary>
         /// The view projection. Set <see cref="IsViewProjectionCalculated"/> to true if this value is already calculated.
         /// </summary>
         public Matrix ViewProjection;
@@ -44,5 +34,9 @@ namespace SharpDX.Toolkit.Graphics
         /// A boolean indicating whether the <see cref="ViewProjection"/> matrix is already calculated.
         /// </summary>
         public bool IsViewProjectionCalculated;
+
+        public Matrix ViewInverse;
+
+        public bool IsViewInverseCalculated;
     }
 }

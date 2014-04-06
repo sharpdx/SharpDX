@@ -17,6 +17,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System.Reflection;
 #if !W8CORE
 using System;
 using System.IO;
@@ -38,6 +40,24 @@ namespace SharpDX.Toolkit
         #endregion
 
         #region Methods
+
+        private void InitializeCompiler()
+        {
+            var assemblyDirectory = Path.GetDirectoryName(typeof(EffectCompilerSystem).Assembly.Location);
+            if(assemblyDirectory != null)
+            {
+                var assemblyPath = Path.Combine(assemblyDirectory, "SharpDX.Toolkit.Compiler.dll");
+                if(File.Exists(assemblyPath))
+                {
+                    var assembly = Assembly.LoadFile(assemblyPath);
+                    var type = assembly.GetType("SharpDX.Toolkit.Graphics.EffectCompiler");
+                    if(type != null)
+                    {
+                        compiler = (IEffectCompiler)Activator.CreateInstance(type);
+                    }
+                }
+            }
+        }
 
         protected virtual void TrackEffect(Effect effect)
         {

@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Serialization;
 
@@ -28,10 +29,6 @@ namespace SharpDX
     /// Define a Rectangle. This structure is slightly different from System.Drawing.Rectangle as it is
     /// internally storing Left,Top,Right,Bottom instead of Left,Top,Width,Height.
     /// </summary>
-#if !W8CORE
-
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential)]
     public struct Rectangle : IEquatable<Rectangle>, IDataSerializable
     {
@@ -492,6 +489,11 @@ namespace SharpDX
         public static implicit operator RectangleF(Rectangle value)
         {
             return new RectangleF(value.X, value.Y, value.Width, value.Height);
+        }
+
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.InvariantCulture, "X:{0} Y:{1} Width:{2} Height:{3}", X, Y, Width, Height);
         }
 
         internal void MakeXYAndWidthHeight()

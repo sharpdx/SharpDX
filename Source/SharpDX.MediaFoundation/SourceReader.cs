@@ -31,6 +31,22 @@ namespace SharpDX.MediaFoundation
     {
         private ByteStream byteStream;
 
+        /// <summary>
+        /// Creates the source reader from a URL
+        /// </summary>
+        /// <param name="url">The URL of a media file to open.</param>
+        /// <param name="attributes"><dd> <p>Pointer to the <strong><see cref="SharpDX.MediaFoundation.MediaAttributes"/></strong> interface. You can use this parameter to configure the source reader. For more information, see Source Reader Attributes. This parameter can be <strong><c>null</c></strong>.</p> </dd></param>	
+        /// <remarks>	
+        /// <p>Call <strong>CoInitialize(Ex)</strong> and <strong><see cref="SharpDX.MediaFoundation.MediaFactory.Startup"/></strong> before calling this function.</p><p> Internally, the source reader calls the <strong><see cref="SharpDX.MediaFoundation.SourceResolver.CreateObjectFromURL_"/></strong> method to create a media source from the byte stream. Therefore, a byte-stream handler must be registered for the byte stream. For more information about byte-stream handlers, see Scheme Handlers and Byte-Stream Handlers. </p><p>This function is available on Windows?Vista if Platform Update Supplement for Windows?Vista is installed.</p>	
+        /// </remarks>
+        /// <msdn-id>dd388110</msdn-id>
+        /// <unmanaged>HRESULT MFCreateSourceReaderFromURL([In] const wchar_t* pwszURL,[In, Optional] IMFAttributes* pAttributes,[Out, Fast] IMFSourceReader** ppSourceReader)</unmanaged>	
+        /// <unmanaged-short>MFCreateSourceReaderFromURL</unmanaged-short>	
+        public SourceReader(string url, MediaAttributes attributes = null)
+        {
+            MediaFactory.CreateSourceReaderFromURL(url, attributes, this);
+        }
+
         /// <summary>	
         /// Creates the source reader from a byte stream.
         /// </summary>	

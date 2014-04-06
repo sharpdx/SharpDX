@@ -28,9 +28,6 @@ namespace SharpDX
     /// Represents a 4x4 mathematical Matrix5x4.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-#if !W8CORE
-    [Serializable]
-#endif
     public struct Matrix5x4 : IEquatable<Matrix5x4>, IFormattable, IDataSerializable
     {
         /// <summary>
@@ -993,11 +990,30 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return M11.GetHashCode() + M12.GetHashCode() + M13.GetHashCode() + M14.GetHashCode() +
-               M21.GetHashCode() + M22.GetHashCode() + M23.GetHashCode() + M24.GetHashCode() +
-               M31.GetHashCode() + M32.GetHashCode() + M33.GetHashCode() + M34.GetHashCode() +
-               M41.GetHashCode() + M42.GetHashCode() + M43.GetHashCode() + M44.GetHashCode() +
-               M51.GetHashCode() + M52.GetHashCode() + M53.GetHashCode() + M54.GetHashCode();
+            unchecked
+            {
+                var hashCode = M11.GetHashCode();
+                hashCode = (hashCode * 397) ^ M12.GetHashCode();
+                hashCode = (hashCode * 397) ^ M13.GetHashCode();
+                hashCode = (hashCode * 397) ^ M14.GetHashCode();
+                hashCode = (hashCode * 397) ^ M21.GetHashCode();
+                hashCode = (hashCode * 397) ^ M22.GetHashCode();
+                hashCode = (hashCode * 397) ^ M23.GetHashCode();
+                hashCode = (hashCode * 397) ^ M24.GetHashCode();
+                hashCode = (hashCode * 397) ^ M31.GetHashCode();
+                hashCode = (hashCode * 397) ^ M32.GetHashCode();
+                hashCode = (hashCode * 397) ^ M33.GetHashCode();
+                hashCode = (hashCode * 397) ^ M34.GetHashCode();
+                hashCode = (hashCode * 397) ^ M41.GetHashCode();
+                hashCode = (hashCode * 397) ^ M42.GetHashCode();
+                hashCode = (hashCode * 397) ^ M43.GetHashCode();
+                hashCode = (hashCode * 397) ^ M44.GetHashCode();
+                hashCode = (hashCode * 397) ^ M51.GetHashCode();
+                hashCode = (hashCode * 397) ^ M52.GetHashCode();
+                hashCode = (hashCode * 397) ^ M53.GetHashCode();
+                hashCode = (hashCode * 397) ^ M54.GetHashCode();
+                return hashCode;
+            }
         }
 
         /// <summary>

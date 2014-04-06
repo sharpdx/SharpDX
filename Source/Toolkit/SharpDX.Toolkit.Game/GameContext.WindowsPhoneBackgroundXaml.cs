@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 #if WP8
 using System;
-using System.Windows.Controls;
 
 namespace SharpDX.Toolkit
 {
@@ -31,73 +30,40 @@ namespace SharpDX.Toolkit
         /// <summary>
         /// Initializes a new instance of the <see cref="GameContext"/> class.
         /// </summary>
-        /// <exception cref="System.NotSupportedException">Expecting a DrawingSurfaceBackgroundGrid or DrawingSurface to run the GameContext</exception>
-        public GameContext()
-        {
-            throw new NotSupportedException("Expecting a DrawingSurfaceBackgroundGrid or DrawingSurface to run the GameContext");
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GameContext" /> class.
-        /// </summary>
-        /// <param name="control">The control.</param>
+        /// <param name="control">The control, platform dependent. See remarks for supported controls.</param>
         /// <param name="requestedWidth">Width of the requested.</param>
         /// <param name="requestedHeight">Height of the requested.</param>
-        public GameContext(DrawingSurfaceBackgroundGrid control, int requestedWidth = 0, int requestedHeight = 0)
+        /// <exception cref="System.ArgumentException">Control is not supported. Must inherit from System.Windows.Forms.Control (WinForm) or System.Windows.Controls.Border (WPF hosting WinForm) or SharpDX.Toolkit.SharpDXElement (WPF)</exception>
+        /// <remarks>
+        /// On Windows Phone, the Toolkit supports the following controls:
+        /// <ul>
+        /// <li>XAML control inheriting <see cref="System.Windows.Controls.DrawingSurfaceBackgroundGrid"/></li>
+        /// <li>XAML control inheriting <see cref="System.Windows.Controls.DrawingSurface"/></li>
+        /// </ul>
+        /// </remarks>
+        public GameContext(object control = null, int requestedWidth = 0, int requestedHeight = 0)
         {
             if (control == null)
             {
-                throw new ArgumentNullException("control");
+                throw new ArgumentNullException("control", "Does no support null control on WP8 platform");
             }
-
+            
             Control = control;
             RequestedWidth = requestedWidth;
             RequestedHeight = requestedHeight;
-            ContextType = GameContextType.WindowsPhoneBackgroundXaml;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GameContext" /> class.
-        /// </summary>
-        /// <param name="control">The control.</param>
-        /// <param name="requestedWidth">Width of the requested.</param>
-        /// <param name="requestedHeight">Height of the requested.</param>
-        public GameContext(DrawingSurface control, int requestedWidth = 0, int requestedHeight = 0)
-        {
-            if (control == null)
+            var controlType = Control.GetType();
+            if (Utilities.IsTypeInheritFrom(controlType, "System.Windows.Controls.DrawingSurfaceBackgroundGrid"))
             {
-                throw new ArgumentNullException("control");
+                ContextType = GameContextType.WindowsPhoneBackgroundXaml;
             }
-
-            Control = control;
-            RequestedWidth = requestedWidth;
-            RequestedHeight = requestedHeight;
-            ContextType = GameContextType.WindowsPhoneXaml;
-        }
-
-        /// <summary>
-        /// The control used as a GameWindow context (either an instance of <see cref="DrawingSurfaceBackgroundGrid"/> or <see cref="DrawingSurface"/>.
-        /// </summary>
-        public readonly object Control;
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="DrawingSurfaceBackgroundGrid"/> to <see cref="GameContext"/>.
-        /// </summary>
-        /// <param name="control">The control.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator GameContext(DrawingSurfaceBackgroundGrid control)
-        {
-            return new GameContext(control);
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="DrawingSurface"/> to <see cref="GameContext"/>.
-        /// </summary>
-        /// <param name="control">The control.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator GameContext(DrawingSurface control)
-        {
-            return new GameContext(control);
+            else if (Utilities.IsTypeInheritFrom(controlType, "System.Windows.Controls.DrawingSurface"))
+            {
+                ContextType = GameContextType.WindowsPhoneXaml;
+            }
+            else
+            {
+                throw new ArgumentException("Control is not supported. Must inherit from System.Windows.Forms.Control (WinForm) or System.Windows.Controls.Border (WPF hosting WinForm) or SharpDX.Toolkit.SharpDXElement (WPF)");
+            }
         }
     }
 }

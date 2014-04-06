@@ -26,9 +26,6 @@ namespace SharpDX
     /// <summary>
     /// Frustum camera parameters.
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct FrustumCameraParams
     {

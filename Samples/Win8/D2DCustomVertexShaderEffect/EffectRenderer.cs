@@ -38,7 +38,7 @@ namespace D2DCustomVertexShaderEffect
 
         private Brush sceneColorBrush;
         private SharpDX.Direct2D1.Effect _waveEffect;
-        private SharpDX.Direct2D1.Effects.BitmapSourceEffect bitmapSourceEffect;
+        private SharpDX.Direct2D1.Effects.BitmapSource bitmapSourceEffect;
 
         private Windows.UI.Xaml.UIElement _root;
         private Windows.UI.Xaml.DependencyObject _rootParent;
@@ -173,7 +173,7 @@ namespace D2DCustomVertexShaderEffect
             var d2dContext = _deviceManager.ContextDirect2D;
 
             // Effect 1 : BitmapSource - take decoded image data and get a BitmapSource from it
-            bitmapSourceEffect = new SharpDX.Direct2D1.Effects.BitmapSourceEffect(d2dContext);
+            bitmapSourceEffect = new SharpDX.Direct2D1.Effects.BitmapSource(d2dContext);
             bitmapSourceEffect.WicBitmapSource = formatConverter;
             bitmapSourceEffect.Cached = true; // Because the image will not be changing, we should cache the effect for performance reasons.
             

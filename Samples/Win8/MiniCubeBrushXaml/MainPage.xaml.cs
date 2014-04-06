@@ -113,11 +113,25 @@ namespace MiniCubeBrushXaml
             // Initialize the device manager and all registered deviceManager.OnInitialize 
             deviceManager.Initialize(DisplayProperties.LogicalDpi);
 
-            // Setup rendering callback
-            CompositionTarget.Rendering += CompositionTarget_Rendering;
+            CoreWindow.GetForCurrentThread().VisibilityChanged += (_, args) =>
+                                                                  {
+                                                                      if (args.Visible)
+                                                                          BindRenderingEvents();
+                                                                      else
+                                                                          UnbindRenderingEvents();
+                                                                  };
+        }
 
-            // Callback on DpiChanged
+        private void BindRenderingEvents()
+        {
+            CompositionTarget.Rendering += CompositionTarget_Rendering;
             DisplayProperties.LogicalDpiChanged += DisplayProperties_LogicalDpiChanged;
+        }
+
+        private void UnbindRenderingEvents()
+        {
+            CompositionTarget.Rendering -= CompositionTarget_Rendering;
+            DisplayProperties.LogicalDpiChanged -= DisplayProperties_LogicalDpiChanged;
         }
 
         void DisplayProperties_LogicalDpiChanged(object sender)

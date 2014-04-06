@@ -23,6 +23,7 @@ using System.Collections.Generic;
 
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+using SharpDX.DXGI;
 using SharpDX.Toolkit.Graphics;
 
 namespace SharpDX.Toolkit
@@ -87,6 +88,7 @@ namespace SharpDX.Toolkit
         private bool isReallyFullScreen;
 
         private GraphicsDevice graphicsDevice;
+        private Rational preferredRefreshRate;
 
         #endregion
 
@@ -111,6 +113,7 @@ namespace SharpDX.Toolkit
             PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
             preferredBackBufferWidth = DefaultBackBufferWidth;
             preferredBackBufferHeight = DefaultBackBufferHeight;
+            preferredRefreshRate = new Rational(60, 1);
             PreferMultiSampling = false;
             PreferredGraphicsProfile = new[]
                 {
@@ -272,6 +275,23 @@ namespace SharpDX.Toolkit
                 if (preferredBackBufferFormat != value)
                 {
                     preferredBackBufferFormat = value;
+                    deviceSettingsChanged = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the preferred refresh rate (Default is 60fps).
+        /// </summary>
+        /// <value>The preferred refresh rate.</value>
+        public Rational PreferredRefreshRate
+        {
+            get { return preferredRefreshRate; }
+            set
+            {
+                if(preferredRefreshRate != value)
+                {
+                    preferredRefreshRate = value;
                     deviceSettingsChanged = true;
                 }
             }
@@ -565,6 +585,7 @@ namespace SharpDX.Toolkit
                     PreferredBackBufferHeight = PreferredBackBufferHeight,
                     PreferredBackBufferFormat = PreferredBackBufferFormat,
                     PreferredDepthStencilFormat = PreferredDepthStencilFormat,
+                    PreferredRefreshRate =  PreferredRefreshRate,
                     IsFullScreen = IsFullScreen,
                     PreferredFullScreenOutputIndex = PreferredFullScreenOutputIndex,
                     DepthBufferShaderResource = DepthBufferShaderResource,
@@ -826,10 +847,8 @@ namespace SharpDX.Toolkit
             if (forceCreate)
             {
                 // Make sure that all GraphicsAdapter are cleared and removed when device is disposed.
-                GraphicsAdapter.Dispose();
-
-                // Make sure that GraphicsAdapter are initialized.
-                GraphicsAdapter.Initialize();
+                // and re-initialized them
+                GraphicsAdapter.Reset();
             }
 
             isChangingDevice = true;
@@ -864,7 +883,7 @@ namespace SharpDX.Toolkit
                             var newOutputIndex = graphicsDeviceInformation.PresentationParameters.PreferredFullScreenOutputIndex;
 
                             GraphicsDevice.Presenter.PrefferedFullScreenOutputIndex = newOutputIndex;
-                            GraphicsDevice.Presenter.Resize(newWidth, newHeight, newFormat);
+                            GraphicsDevice.Presenter.Resize(newWidth, newHeight, newFormat, graphicsDeviceInformation.PresentationParameters.RefreshRate);
 
                             // Change full screen if needed
                             GraphicsDevice.Presenter.IsFullScreen = graphicsDeviceInformation.PresentationParameters.IsFullScreen;

@@ -25,7 +25,7 @@
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="Desktop\GameWindowDesktopWpf.cs" />
     <Compile Include="Desktop\SharpDXElement.cs" />
-    <Compile Include="GameContext.DesktopWpf.cs" />
+    <Compile Include="Desktop\ToolkitHwndHost.cs" />
     <Compile Include="GameContext.WindowsPhoneBackgroundXaml.cs" />
     <Compile Include="GameContext.WinRTBackgroundXaml.cs" />
     <Compile Include="GameContext.WinRT.cs" />
@@ -88,11 +88,6 @@
       <Name>SharpDX.Toolkit.Graphics</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\SharpDX.Toolkit.Compiler\SharpDX.Toolkit.Compiler.csproj" Condition=" '$(SharpDXWin8Core)' == 'false'">
-      <Project>{8BFFF9D1-84EC-4FBA-9BEB-710ECF1857A8}</Project>
-      <Name>SharpDX.Toolkit.Compiler</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\SharpDX.Toolkit\SharpDX.Toolkit.csproj">
       <Project>{9ff0707c-75bb-4984-a01f-b9eaad293f6c}</Project>
       <Name>SharpDX.Toolkit</Name>
@@ -100,7 +95,7 @@
     </ProjectReference>
   </ItemGroup>
   <Choose>
-    <When Condition=" '$(Configuration)' == 'Net40Debug' OR '$(Configuration)' == 'Net40Release' ">
+    <When Condition=" '$(Configuration)' == 'Net40Debug' OR '$(Configuration)' == 'Net40Release' OR '$(Configuration)' == 'DIRECTX11_2Debug' OR '$(Configuration)' == 'DIRECTX11_2Release'">
       <ItemGroup>
         <ProjectReference Include="..\..\SharpDX.Direct3D9\SharpDX.Direct3D9.csproj">
           <Project>{b4d984df-85b8-4bbf-8c3b-5cef905f40d9}</Project>

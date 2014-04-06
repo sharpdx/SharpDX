@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>D2DEffectsHelloWorld_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>9FE6E45BE45E51B6A5FAF9EAE7330A8CC93E4FDA</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>0143325A07AA79F7AD36E89847FFE7FA08DD3EB6</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -37,16 +37,16 @@
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\Bin\DirectX11_1-winrt\SharpDX.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_2-winrt\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct2D1">
-      <HintPath>..\..\..\Bin\DirectX11_1-winrt\SharpDX.Direct2D1.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_2-winrt\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\..\..\Bin\DirectX11_1-winrt\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_2-winrt\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI">
-      <HintPath>..\..\..\Bin\DirectX11_1-winrt\SharpDX.DXGI.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_2-winrt\SharpDX.DXGI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

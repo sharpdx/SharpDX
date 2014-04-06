@@ -42,7 +42,13 @@ namespace SharpDX.Direct2D1
 
         public class CommandSinkVtbl : ComObjectVtbl
         {
-            public CommandSinkVtbl() : base(28)
+            public CommandSinkVtbl()
+                : this(0)
+            {
+            }
+
+            public CommandSinkVtbl(int numMethods)
+                : base(numMethods + 28)
             {
                 AddMethod(new CallNoParams(BeginDrawImpl));
                 AddMethod(new CallNoParams(EndDrawImpl));
@@ -223,7 +229,7 @@ namespace SharpDX.Direct2D1
                     return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
-            }            
+            }
 
             /// <summary>	
             /// Sets the unit mode
@@ -255,7 +261,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.Clear( color == IntPtr.Zero ? (Color4?)null : *(Color4*)color);
+                    callback.Clear(color == IntPtr.Zero ? (Color4?)null : *(Color4*)color);
                 }
                 catch (Exception exception)
                 {
@@ -320,7 +326,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.DrawGeometry(new Geometry(geometry),  new Brush(brush), strokeWidth, new StrokeStyle(strokeStyle));
+                    callback.DrawGeometry(new Geometry(geometry), new Brush(brush), strokeWidth, new StrokeStyle(strokeStyle));
                 }
                 catch (Exception exception)
                 {
@@ -357,11 +363,11 @@ namespace SharpDX.Direct2D1
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
                     callback.DrawBitmap(new Bitmap(bitmap),
-                        destinationRectangle == IntPtr.Zero ? (SharpDX.RectangleF?)null : *(SharpDX.RectangleF*)destinationRectangle, 
+                        destinationRectangle == IntPtr.Zero ? (SharpDX.RectangleF?)null : *(SharpDX.RectangleF*)destinationRectangle,
                         opacity,
                         interpolationMode,
-                        sourceRectangle == IntPtr.Zero ? (SharpDX.RectangleF?) null : *(SharpDX.RectangleF*)sourceRectangle, 
-                        erspectiveTransformRef == IntPtr.Zero ? (SharpDX.Matrix?) null : *(SharpDX.Matrix*)erspectiveTransformRef);
+                        sourceRectangle == IntPtr.Zero ? (SharpDX.RectangleF?)null : *(SharpDX.RectangleF*)sourceRectangle,
+                        erspectiveTransformRef == IntPtr.Zero ? (SharpDX.Matrix?)null : *(SharpDX.Matrix*)erspectiveTransformRef);
                 }
                 catch (Exception exception)
                 {
@@ -381,7 +387,7 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.DrawImage(new Image(image),
                         targetOffset == IntPtr.Zero ? (SharpDX.Vector2?)null : *(SharpDX.Vector2*)targetOffset,
-                        imageRectangle == IntPtr.Zero ? (SharpDX.RectangleF?)null : *(SharpDX.RectangleF*)imageRectangle, 
+                        imageRectangle == IntPtr.Zero ? (SharpDX.RectangleF?)null : *(SharpDX.RectangleF*)imageRectangle,
                         interpolationMode,
                         compositeMode);
                 }
@@ -401,8 +407,8 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.DrawGdiMetafile(new GdiMetafile(gdiMetafile), 
-                        targetOffset == IntPtr.Zero ? (SharpDX.Vector2?) null: *(SharpDX.Vector2*)targetOffset);
+                    callback.DrawGdiMetafile(new GdiMetafile(gdiMetafile),
+                        targetOffset == IntPtr.Zero ? (SharpDX.Vector2?)null : *(SharpDX.Vector2*)targetOffset);
                 }
                 catch (Exception exception)
                 {
@@ -576,7 +582,7 @@ namespace SharpDX.Direct2D1
                 }
                 return Result.Ok.Code;
             }
-       }
+        }
 
         protected override CppObjectVtbl GetVtbl
         {

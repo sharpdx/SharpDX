@@ -52,7 +52,7 @@ namespace SharpDX.XAudio2
         /// <param name="inputSampleRate">[in]  Sample rate of the input audio data of the mastering voice. This rate must be a multiple of XAUDIO2_QUANTUM_DENOMINATOR. InputSampleRate must be between XAUDIO2_MIN_SAMPLE_RATE and XAUDIO2_MAX_SAMPLE_RATE. InputSampleRate can be set to XAUDIO2_DEFAULT_SAMPLERATE, with the default being determined by the current platform. Windows  Windows XP defaults to 44100. Windows Vista and Windows 7 default to the setting specified in the Sound Control Panel. The default for this setting is 44100 (or 48000 if required by the driver).  Xbox 360  Defaults to 48000.  </param>
         /// <unmanaged>HRESULT IXAudio2::CreateSubmixVoice([Out] IXAudio2SubmixVoice** ppSubmixVoice,[None] UINT32 InputChannels,[None] UINT32 InputSampleRate,[None] UINT32 Flags,[None] UINT32 DeviceIndex,[In, Optional] const XAUDIO2_EFFECT_CHAIN* pEffectChain)</unmanaged>
         public SubmixVoice(XAudio2 device, int inputChannels, int inputSampleRate)
-            : this(device, inputChannels, inputSampleRate, VoiceSendFlags.None, 0)
+            : this(device, inputChannels, inputSampleRate, SubmixVoiceFlags.None, 0)
         {
 
         }
@@ -67,7 +67,7 @@ namespace SharpDX.XAudio2
         /// <param name="processingStage">[in]  An arbitrary number that specifies when this voice is processed with respect to other submix  voices, if the XAudio2 engine is running other submix voices. The voice is processed after all other  voices that include a smaller ProcessingStage value, and before all other voices  that include a larger ProcessingStage value. Voices that include the same  ProcessingStage value are processed in any order. A submix voice cannot send to  another submix voice with a lower or equal ProcessingStage value; this prevents  audio being lost due to a submix cycle. </param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAudio2::CreateSubmixVoice([Out] IXAudio2SubmixVoice** ppSubmixVoice,[None] UINT32 InputChannels,[None] UINT32 InputSampleRate,[None] UINT32 Flags,[None] UINT32 ProcessingStage,[In, Optional] const XAUDIO2_VOICE_SENDS* pSendList,[In, Optional] const XAUDIO2_EFFECT_CHAIN* pEffectChain)</unmanaged>
-        public SubmixVoice(XAudio2 device, int inputChannels, int inputSampleRate, VoiceSendFlags flags, int processingStage)
+        public SubmixVoice(XAudio2 device, int inputChannels, int inputSampleRate, SubmixVoiceFlags flags, int processingStage)
             : base(IntPtr.Zero)
         {
             device.CreateSubmixVoice(this, inputChannels, inputSampleRate,  flags, processingStage, null, null);

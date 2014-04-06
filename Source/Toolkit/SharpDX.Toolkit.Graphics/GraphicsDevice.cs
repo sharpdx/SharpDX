@@ -355,6 +355,18 @@ namespace SharpDX.Toolkit.Graphics
         public GraphicsPerformance Performance { get; private set; }
 
         /// <summary>
+        /// Gets the default quad primitive to issue draw commands.
+        /// </summary>
+        /// <value>The default quad primitive to issue draw commands.</value>
+        public PrimitiveQuad Quad
+        {
+            get
+            {
+                return primitiveQuad;
+            }
+        }
+
+        /// <summary>
         /// Clears the default render target and depth stencil buffer attached to the current <see cref="Presenter"/>.
         /// </summary>
         /// <param name="color">Set this color value in all buffers.</param>
@@ -759,135 +771,6 @@ namespace SharpDX.Toolkit.Graphics
 
             PrimitiveType = primitiveType;
             Context.DrawIndexedInstancedIndirect(argumentsBuffer, alignedByteOffsetForArgs);
-        }
-
-        /// <summary>
-        /// Draws a fullscreen quad. An effect with at least a pixel shader (with the expected signature - float2:TEXCOORD) must have been applied before using this method.
-        /// </summary>
-        /// <seealso cref="PrimitiveQuad" />
-        public void DrawQuad()
-        {
-            primitiveQuad.Draw();
-        }
-
-        /// <summary>
-        /// Draws a fullscreen quad with a pixel shader to output a texture with a particular sampler (default linear clamp).
-        /// </summary>
-        /// <param name="texture">The texture.</param>
-        /// <param name="color">The color to multiply with the texture color.</param>
-        public void DrawQuad(SharpDX.Direct3D11.ShaderResourceView texture, Color4 color)
-        {
-            primitiveQuad.Color = color;
-            primitiveQuad.Draw(texture, null);
-            primitiveQuad.Color = new Color4(1.0f);
-        }
-
-        /// <summary>
-        /// Draws a fullscreen quad with a pixel shader to output a texture with a particular sampler (default linear clamp).
-        /// </summary>
-        /// <param name="texture">The texture.</param>
-        /// <param name="samplerState">State of the sampler. If null, default sampler is <see cref="SamplerStateCollection.LinearClamp" />.</param>
-        public void DrawQuad(SharpDX.Direct3D11.ShaderResourceView texture, SharpDX.Direct3D11.SamplerState samplerState = null)
-        {
-            primitiveQuad.Draw(texture, samplerState);
-        }
-
-        /// <summary>
-        /// Draws a fullscreen quad with a pixel shader to output a texture with a particular sampler (default linear clamp).
-        /// </summary>
-        /// <param name="texture">The texture.</param>
-        /// <param name="samplerState">State of the sampler. If null, default sampler is <see cref="SamplerStateCollection.LinearClamp" />.</param>
-        /// <param name="color">The color to multiply with the texture color.</param>
-        public void DrawQuad(SharpDX.Direct3D11.ShaderResourceView texture, SharpDX.Direct3D11.SamplerState samplerState, Color4 color)
-        {
-            primitiveQuad.Color = color;
-            primitiveQuad.Draw(texture, samplerState);
-            primitiveQuad.Color = new Color4(1.0f);
-        }
-
-        /// <summary>
-        /// Draws a fullscreen quad with a pixel shader to output a texture with a particular sampler (default linear clamp).
-        /// </summary>
-        /// <param name="texture">The texture.</param>
-        /// <param name="tranform">The matrix transform.</param>
-        /// <param name="samplerState">State of the sampler. If null, default sampler is <see cref="SamplerStateCollection.LinearClamp" />.</param>
-        public void DrawQuad(SharpDX.Direct3D11.ShaderResourceView texture, Matrix tranform, SharpDX.Direct3D11.SamplerState samplerState = null)
-        {
-            primitiveQuad.Transform = tranform;
-            primitiveQuad.Draw(texture, samplerState);
-        }
-
-        /// <summary>
-        /// Draw a fullscreen quad. An effect with at least a pixel shader (with the expected signature - float2:TEXCOORD) must have been applied before using this method.
-        /// </summary>
-        /// <param name="tranform">The transform.</param>
-        /// <seealso cref="PrimitiveQuad"/>
-        public void DrawQuad(Matrix tranform)
-        {
-            primitiveQuad.Transform = tranform;
-            primitiveQuad.Draw();
-        }
-
-        /// <summary>
-        /// Draw a fullscreen quad with the specified effect (with the expected signature - float2:TEXCOORD).
-        /// </summary>
-        /// <param name="effect">The effect.</param>
-        public void DrawQuad(Effect effect)
-        {
-            primitiveQuad.Draw(effect);
-        }
-
-        /// <summary>
-        /// Draw a fullscreen quad with the specified effect (with the expected signature - float2:TEXCOORD).
-        /// </summary>
-        /// <param name="effect">The effect.</param>
-        /// <param name="transform">The transform.</param>
-        public void DrawQuad(Effect effect, Matrix transform)
-        {
-            primitiveQuad.Transform = transform;
-            primitiveQuad.Draw(effect);
-        }
-
-        /// <summary>
-        /// Draw a fullscreen quad with the specified effect (with the expected signature - float2:TEXCOORD).
-        /// </summary>
-        /// <param name="effect">The effect.</param>
-        /// <param name="transform">The transform.</param>
-        public void DrawQuad(Effect effect, ref Matrix transform)
-        {
-            primitiveQuad.Transform = transform;
-            primitiveQuad.Draw(effect);
-        }
-
-        /// <summary>
-        /// Draw a fullscreen quad with the specified effect pass (with the expected signature - float2:TEXCOORD).
-        /// </summary>
-        /// <param name="effectPass">The effect pass.</param>
-        public void DrawQuad(EffectPass effectPass)
-        {
-            primitiveQuad.Draw(effectPass);
-        }
-
-        /// <summary>
-        /// Draw a fullscreen quad with the specified effect pass (with the expected signature - float2:TEXCOORD).
-        /// </summary>
-        /// <param name="effectPass">The effect pass.</param>
-        /// <param name="transform">The transform.</param>
-        public void DrawQuad(EffectPass effectPass, Matrix transform)
-        {
-            primitiveQuad.Transform = transform;
-            primitiveQuad.Draw(effectPass);
-        }
-
-        /// <summary>
-        /// Draw a fullscreen quad with the specified effect pass (with the expected signature - float2:TEXCOORD).
-        /// </summary>
-        /// <param name="effectPass">The effect pass.</param>
-        /// <param name="transform">The transform.</param>
-        public void DrawQuad(EffectPass effectPass, ref Matrix transform)
-        {
-            primitiveQuad.Transform = transform;
-            primitiveQuad.Draw(effectPass);
         }
 
         /// <summary>	

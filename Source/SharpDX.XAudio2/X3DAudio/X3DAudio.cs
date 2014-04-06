@@ -34,6 +34,11 @@ namespace SharpDX.X3DAudio
         public const float SpeedOfSound = 343.5f;
 
         /// <summary>
+        /// Represents the ratio of the circumference of a circle to its diameter.
+        /// </summary>
+        public const float PI = 3.141592654f;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="X3DAudio"/> class.
         /// </summary>
         /// <param name="speakers">The speakers config.</param>

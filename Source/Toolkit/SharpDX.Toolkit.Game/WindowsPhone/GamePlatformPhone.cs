@@ -86,11 +86,24 @@ namespace SharpDX.Toolkit
             // Else this is a DrawingSruface 
             var device = GraphicsDevice.New(deviceInformation.Adapter, deviceInformation.DeviceCreationFlags, deviceInformation.GraphicsProfile);
 
+            CreatePresenter(device, deviceInformation.PresentationParameters);
+
+            return device;
+        }
+
+        protected override void CreatePresenter(GraphicsDevice device, PresentationParameters parameters, object newControl = null)
+        {
+            if(!(gameWindow is GameWindowPhoneXaml)) return;
+
+            parameters = TryGetParameters(device, parameters);
+
+            DisposeGraphicsPresenter(device);
+
             var renderTargetDesc = new Texture2DDescription
             {
                 Format = Format.B8G8R8A8_UNorm,
-                Width = (int)deviceInformation.PresentationParameters.BackBufferWidth,
-                Height = (int)deviceInformation.PresentationParameters.BackBufferHeight,
+                Width = parameters.BackBufferWidth,
+                Height = parameters.BackBufferHeight,
                 ArraySize = 1,
                 MipLevels = 1,
                 BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
@@ -102,13 +115,11 @@ namespace SharpDX.Toolkit
 
             var backBuffer = RenderTarget2D.New(device, renderTargetDesc);
 
-            var graphicsPresenter = new RenderTargetGraphicsPresenter(device, backBuffer, deviceInformation.PresentationParameters.DepthStencilFormat, true);
+            var graphicsPresenter = new RenderTargetGraphicsPresenter(device, backBuffer, parameters.DepthStencilFormat, true);
             device.Presenter = graphicsPresenter;
 
             var gameWindowXaml = (GameWindowPhoneXaml)gameWindow;
             gameWindowXaml.CreateSynchronizedTexture(backBuffer);
-
-            return device;
         }
     }
 }

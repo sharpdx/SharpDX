@@ -59,8 +59,8 @@ namespace MiniCube
             basicEffect = ToDisposeContent(new BasicEffect(GraphicsDevice)
                 {
                     VertexColorEnabled = true,
-                    View = Matrix.LookAtLH(new Vector3(0, 0, -5), new Vector3(0, 0, 0), Vector3.UnitY),
-                    Projection = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, 100.0f),
+                    View = Matrix.LookAtRH(new Vector3(0, 0, 5), new Vector3(0, 0, 0), Vector3.UnitY),
+                    Projection = Matrix.PerspectiveFovRH((float)Math.PI / 4.0f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, 100.0f),
                     World = Matrix.Identity
                 });
 
@@ -69,42 +69,47 @@ namespace MiniCube
                 GraphicsDevice,
                 new[]
                     {
-                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, -1.0f), Color.Orange), // Front
-                        new VertexPositionColor(new Vector3(-1.0f, 1.0f, -1.0f), Color.Orange),
-                        new VertexPositionColor(new Vector3(1.0f, 1.0f, -1.0f), Color.Orange),
-                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, -1.0f), Color.Orange),
-                        new VertexPositionColor(new Vector3(1.0f, 1.0f, -1.0f), Color.Orange),
-                        new VertexPositionColor(new Vector3(1.0f, -1.0f, -1.0f), Color.Orange),
-                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, 1.0f), Color.Orange), // BACK
-                        new VertexPositionColor(new Vector3(1.0f, 1.0f, 1.0f), Color.Orange),
+                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, 1.0f), Color.Orange), // Back
                         new VertexPositionColor(new Vector3(-1.0f, 1.0f, 1.0f), Color.Orange),
-                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, 1.0f), Color.Orange),
-                        new VertexPositionColor(new Vector3(1.0f, -1.0f, 1.0f), Color.Orange),
                         new VertexPositionColor(new Vector3(1.0f, 1.0f, 1.0f), Color.Orange),
-                        new VertexPositionColor(new Vector3(-1.0f, 1.0f, -1.0f), Color.OrangeRed), // Top
-                        new VertexPositionColor(new Vector3(-1.0f, 1.0f, 1.0f), Color.OrangeRed),
-                        new VertexPositionColor(new Vector3(1.0f, 1.0f, 1.0f), Color.OrangeRed),
+                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, 1.0f), Color.Orange),
+                        new VertexPositionColor(new Vector3(1.0f, 1.0f, 1.0f), Color.Orange),
+                        new VertexPositionColor(new Vector3(1.0f, -1.0f, 1.0f), Color.Orange),
+
+                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, -1.0f), Color.Orange), // Front
+                        new VertexPositionColor(new Vector3(1.0f, 1.0f, -1.0f), Color.Orange),
+                        new VertexPositionColor(new Vector3(-1.0f, 1.0f, -1.0f), Color.Orange),
+                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, -1.0f), Color.Orange),
+                        new VertexPositionColor(new Vector3(1.0f, -1.0f, -1.0f), Color.Orange),
+                        new VertexPositionColor(new Vector3(1.0f, 1.0f, -1.0f), Color.Orange),
+
+                        new VertexPositionColor(new Vector3(-1.0f, 1.0f, 1.0f), Color.OrangeRed), // Top
                         new VertexPositionColor(new Vector3(-1.0f, 1.0f, -1.0f), Color.OrangeRed),
-                        new VertexPositionColor(new Vector3(1.0f, 1.0f, 1.0f), Color.OrangeRed),
                         new VertexPositionColor(new Vector3(1.0f, 1.0f, -1.0f), Color.OrangeRed),
-                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, -1.0f), Color.OrangeRed), // Bottom
-                        new VertexPositionColor(new Vector3(1.0f, -1.0f, 1.0f), Color.OrangeRed),
-                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, 1.0f), Color.OrangeRed),
-                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, -1.0f), Color.OrangeRed),
+                        new VertexPositionColor(new Vector3(-1.0f, 1.0f, 1.0f), Color.OrangeRed),
+                        new VertexPositionColor(new Vector3(1.0f, 1.0f, -1.0f), Color.OrangeRed),
+                        new VertexPositionColor(new Vector3(1.0f, 1.0f, 1.0f), Color.OrangeRed),
+
+                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, 1.0f), Color.OrangeRed), // Bottom
                         new VertexPositionColor(new Vector3(1.0f, -1.0f, -1.0f), Color.OrangeRed),
+                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, -1.0f), Color.OrangeRed),
+                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, 1.0f), Color.OrangeRed),
                         new VertexPositionColor(new Vector3(1.0f, -1.0f, 1.0f), Color.OrangeRed),
-                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, -1.0f), Color.DarkOrange), // Left
-                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, 1.0f), Color.DarkOrange),
-                        new VertexPositionColor(new Vector3(-1.0f, 1.0f, 1.0f), Color.DarkOrange),
+                        new VertexPositionColor(new Vector3(1.0f, -1.0f, -1.0f), Color.OrangeRed),
+
+                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, 1.0f), Color.DarkOrange), // Left
                         new VertexPositionColor(new Vector3(-1.0f, -1.0f, -1.0f), Color.DarkOrange),
-                        new VertexPositionColor(new Vector3(-1.0f, 1.0f, 1.0f), Color.DarkOrange),
                         new VertexPositionColor(new Vector3(-1.0f, 1.0f, -1.0f), Color.DarkOrange),
-                        new VertexPositionColor(new Vector3(1.0f, -1.0f, -1.0f), Color.DarkOrange), // Right
-                        new VertexPositionColor(new Vector3(1.0f, 1.0f, 1.0f), Color.DarkOrange),
-                        new VertexPositionColor(new Vector3(1.0f, -1.0f, 1.0f), Color.DarkOrange),
-                        new VertexPositionColor(new Vector3(1.0f, -1.0f, -1.0f), Color.DarkOrange),
+                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, 1.0f), Color.DarkOrange),
+                        new VertexPositionColor(new Vector3(-1.0f, 1.0f, -1.0f), Color.DarkOrange),
+                        new VertexPositionColor(new Vector3(-1.0f, 1.0f, 1.0f), Color.DarkOrange),
+
+                        new VertexPositionColor(new Vector3(1.0f, -1.0f, 1.0f), Color.DarkOrange), // Right
                         new VertexPositionColor(new Vector3(1.0f, 1.0f, -1.0f), Color.DarkOrange),
+                        new VertexPositionColor(new Vector3(1.0f, -1.0f, -1.0f), Color.DarkOrange),
+                        new VertexPositionColor(new Vector3(1.0f, -1.0f, 1.0f), Color.DarkOrange),
                         new VertexPositionColor(new Vector3(1.0f, 1.0f, 1.0f), Color.DarkOrange),
+                        new VertexPositionColor(new Vector3(1.0f, 1.0f, -1.0f), Color.DarkOrange),
                     }));
             ToDisposeContent(vertices);
 
@@ -126,7 +131,7 @@ namespace MiniCube
             // Rotate the cube.
             var time = (float)gameTime.TotalGameTime.TotalSeconds;
             basicEffect.World = Matrix.RotationX(time) * Matrix.RotationY(time * 2.0f) * Matrix.RotationZ(time * .7f);
-            basicEffect.Projection = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, 100.0f);
+            basicEffect.Projection = Matrix.PerspectiveFovRH((float)Math.PI / 4.0f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, 100.0f);
 
             // Handle base.Update
             base.Update(gameTime);

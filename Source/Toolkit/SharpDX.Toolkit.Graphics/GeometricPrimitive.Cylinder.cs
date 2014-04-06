@@ -143,7 +143,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="toLeftHanded">if set to <c>true</c> vertices and indices will be transformed to left handed. Default is true.</param>
             /// <returns>A cylinder primitive.</returns>
             /// <exception cref="System.ArgumentOutOfRangeException">tessellation;tessellation must be &gt;= 3</exception>
-            public static GeometricPrimitive New(GraphicsDevice device, float height = 1.0f, float diameter = 1.0f, int tessellation = 32, bool toLeftHanded = true)
+            public static GeometricPrimitive New(GraphicsDevice device, float height = 1.0f, float diameter = 1.0f, int tessellation = 32, bool toLeftHanded = false)
             {
                 if (tessellation < 3)
                     throw new ArgumentOutOfRangeException("tessellation", "tessellation must be >= 3");

@@ -81,7 +81,7 @@ namespace SharpDX.Multimedia
             return result;
         }
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 2)]
+        [StructLayout(LayoutKind.Sequential, Pack = 2)]
         internal new struct __Native
         {
             public WaveFormat.__Native waveFormat;

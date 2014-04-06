@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -635,7 +636,7 @@ namespace SharpCli
                         {
                             if (methodDescription.Name.StartsWith("Calli") && methodDescription.DeclaringType.Name == "LocalInterop")
                             {
-                                var callSite = new CallSite { ReturnType = methodDescription.ReturnType, CallingConvention = MethodCallingConvention.StdCall };
+                                var callSite = new CallSite(methodDescription.ReturnType) { CallingConvention = MethodCallingConvention.StdCall };
                                 // Last parameter is the function ptr, so we don't add it as a parameter for calli
                                 // as it is already an implicit parameter for calli
                                 for (int j = 0; j < methodDescription.Parameters.Count - 1; j++)

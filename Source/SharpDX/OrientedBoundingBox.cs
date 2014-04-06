@@ -27,9 +27,6 @@ namespace SharpDX
     /// <summary>
     /// OrientedBoundingBox (OBB) is a rectangular block, much like an AABB (BoundingBox) but with an arbitrary orientation.
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct OrientedBoundingBox : IEquatable<OrientedBoundingBox>, IFormattable, IDataSerializable
     {

@@ -43,7 +43,6 @@
 * THE SOFTWARE.
 */
 using System;
-using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Serialization;
@@ -55,10 +54,6 @@ namespace SharpDX
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     [DynamicSerializer("TKV3")]
-#if !W8CORE
-    [Serializable]
-    [TypeConverter(typeof(SharpDX.Design.Vector3Converter))]
-#endif
     public struct Vector3 : IEquatable<Vector3>, IFormattable, IDataSerializable
     {
         /// <summary>
@@ -209,6 +204,14 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Gets a value indicting whether this vector is zero
+        /// </summary>
+        public bool IsZero
+        {
+            get { return X == 0 && Y == 0 && Z == 0; }
+        }
+
+        /// <summary>
         /// Gets or sets the component at the specified index.
         /// </summary>
         /// <value>The value of the X, Y, or Z component, depending on the index.</value>
@@ -314,6 +317,28 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Perform a component-wise addition
+        /// </summary>
+        /// <param name="left">The input vector</param>
+        /// <param name="right">The scalar value to be added to elements</param>
+        /// <param name="result">The vector with added scalar for each element.</param>
+        public static void Add(ref Vector3 left, ref float right, out Vector3 result)
+        {
+            result = new Vector3(left.X + right, left.Y + right, left.Z + right);
+        }
+
+        /// <summary>
+        /// Perform a component-wise addition
+        /// </summary>
+        /// <param name="left">The input vector</param>
+        /// <param name="right">The scalar value to be added to elements</param>
+        /// <returns>The vector with added scalar for each element.</returns>
+        public static Vector3 Add(Vector3 left, float right)
+        {
+            return new Vector3(left.X + right, left.Y + right, left.Z + right);
+        }
+
+        /// <summary>
         /// Subtracts two vectors.
         /// </summary>
         /// <param name="left">The first vector to subtract.</param>
@@ -333,6 +358,50 @@ namespace SharpDX
         public static Vector3 Subtract(Vector3 left, Vector3 right)
         {
             return new Vector3(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="left">The input vector</param>
+        /// <param name="right">The scalar value to be subtraced from elements</param>
+        /// <param name="result">The vector with subtracted scalar for each element.</param>
+        public static void Subtract(ref Vector3 left, ref float right, out Vector3 result)
+        {
+            result = new Vector3(left.X - right, left.Y - right, left.Z - right);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="left">The input vector</param>
+        /// <param name="right">The scalar value to be subtraced from elements</param>
+        /// <returns>The vector with subtracted scalar for each element.</returns>
+        public static Vector3 Subtract(Vector3 left, float right)
+        {
+            return new Vector3(left.X - right, left.Y - right, left.Z - right);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="left">The scalar value to be subtraced from elements</param>
+        /// <param name="right">The input vector.</param>
+        /// <param name="result">The vector with subtracted scalar for each element.</param>
+        public static void Subtract(ref float left, ref Vector3 right, out Vector3 result)
+        {
+            result = new Vector3(left - right.X, left - right.Y, left - right.Z);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="left">The scalar value to be subtraced from elements</param>
+        /// <param name="right">The input vector.</param>
+        /// <returns>The vector with subtracted scalar for each element.</returns>
+        public static Vector3 Subtract(float left, Vector3 right)
+        {
+            return new Vector3(left - right.X, left - right.Y, left - right.Z);
         }
 
         /// <summary>
@@ -358,23 +427,23 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Modulates a vector with another by performing component-wise multiplication.
+        /// Multiply a vector with another by performing component-wise multiplication.
         /// </summary>
-        /// <param name="left">The first vector to modulate.</param>
-        /// <param name="right">The second vector to modulate.</param>
-        /// <param name="result">When the method completes, contains the modulated vector.</param>
-        public static void Modulate(ref Vector3 left, ref Vector3 right, out Vector3 result)
+        /// <param name="left">The first vector to multiply.</param>
+        /// <param name="right">The second vector to multiply.</param>
+        /// <param name="result">When the method completes, contains the multiplied vector.</param>
+        public static void Multiply(ref Vector3 left, ref Vector3 right, out Vector3 result)
         {
             result = new Vector3(left.X * right.X, left.Y * right.Y, left.Z * right.Z);
         }
 
         /// <summary>
-        /// Modulates a vector with another by performing component-wise multiplication.
+        /// Multiply a vector with another by performing component-wise multiplication.
         /// </summary>
-        /// <param name="left">The first vector to modulate.</param>
-        /// <param name="right">The second vector to modulate.</param>
-        /// <returns>The modulated vector.</returns>
-        public static Vector3 Modulate(Vector3 left, Vector3 right)
+        /// <param name="left">The first vector to Multiply.</param>
+        /// <param name="right">The second vector to multiply.</param>
+        /// <returns>The multiplied vector.</returns>
+        public static Vector3 Multiply(Vector3 left, Vector3 right)
         {
             return new Vector3(left.X * right.X, left.Y * right.Y, left.Z * right.Z);
         }
@@ -399,6 +468,28 @@ namespace SharpDX
         public static Vector3 Divide(Vector3 value, float scale)
         {
             return new Vector3(value.X / scale, value.Y / scale, value.Z / scale);
+        }
+        
+        /// <summary>
+        /// Scales a vector by the given value.
+        /// </summary>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="result">When the method completes, contains the scaled vector.</param>
+        public static void Divide(float scale, ref Vector3 value, out Vector3 result)
+        {
+            result = new Vector3(scale / value.X, scale / value.Y, scale / value.Z);
+        }
+
+        /// <summary>
+        /// Scales a vector by the given value.
+        /// </summary>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <returns>The scaled vector.</returns>
+        public static Vector3 Divide(float scale, Vector3 value)
+        {
+            return new Vector3(scale / value.X, scale / value.Y, scale / value.Z);
         }
 
         /// <summary>
@@ -1163,6 +1254,47 @@ namespace SharpDX
             }
         }
 
+
+        /// <summary>
+        /// Transforms a 3D vector by the given <see cref="SharpDX.Matrix3x3"/>.
+        /// </summary>
+        /// <param name="vector">The source vector.</param>
+        /// <param name="transform">The transformation <see cref="SharpDX.Matrix3x3"/>.</param>
+        /// <param name="result">When the method completes, contains the transformed <see cref="SharpDX.Vector3"/>.</param>
+        public static void Transform(ref Vector3 vector, ref Matrix3x3 transform, out Vector3 result)
+        {
+            result = new Vector3(   (vector.X * transform.M11) + (vector.Y * transform.M21) + (vector.Z * transform.M31),
+                                    (vector.X * transform.M12) + (vector.Y * transform.M22) + (vector.Z * transform.M32),
+                                    (vector.X * transform.M13) + (vector.Y * transform.M23) + (vector.Z * transform.M33)
+                                );
+        }
+
+        /// <summary>
+        /// Transforms a 3D vector by the given <see cref="SharpDX.Matrix3x3"/>.
+        /// </summary>
+        /// <param name="vector">The source vector.</param>
+        /// <param name="transform">The transformation <see cref="SharpDX.Matrix3x3"/>.</param>
+        /// <returns>The transformed <see cref="SharpDX.Vector3"/>.</returns>
+        public static Vector3 Transform(Vector3 vector, Matrix3x3 transform)
+        {
+            Vector3 result;
+            Transform(ref vector, ref transform, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Transforms a 3D vector by the given <see cref="SharpDX.Matrix"/>.
+        /// </summary>
+        /// <param name="vector">The source vector.</param>
+        /// <param name="transform">The transformation <see cref="SharpDX.Matrix"/>.</param>
+        /// <param name="result">When the method completes, contains the transformed <see cref="SharpDX.Vector3"/>.</param>
+        public static void Transform(ref Vector3 vector, ref Matrix transform, out Vector3 result)
+        {
+            Vector4 intermediate;
+            Transform(ref vector, ref transform, out intermediate);
+            result = (Vector3)intermediate;
+        }
+
         /// <summary>
         /// Transforms a 3D vector by the given <see cref="SharpDX.Matrix"/>.
         /// </summary>
@@ -1373,7 +1505,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Modulates a vector with another by performing component-wise multiplication equivalent to <see cref="Modulate(ref SharpDX.Vector3,ref SharpDX.Vector3,out SharpDX.Vector3)"/>.
+        /// Multiplies a vector with another by performing component-wise multiplication equivalent to <see cref="Multiply(ref SharpDX.Vector3,ref SharpDX.Vector3,out SharpDX.Vector3)"/>.
         /// </summary>
         /// <param name="left">The first vector to multiply.</param>
         /// <param name="right">The second vector to multiply.</param>
@@ -1450,12 +1582,67 @@ namespace SharpDX
         /// <summary>
         /// Scales a vector by the given value.
         /// </summary>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <param name="value">The vector to scale.</param>  
+        /// <returns>The scaled vector.</returns>
+        public static Vector3 operator /(float scale, Vector3 value)
+        {
+            return new Vector3(scale / value.X, scale / value.Y, scale / value.Z);
+        }
+
+        /// <summary>
+        /// Scales a vector by the given value.
+        /// </summary>
         /// <param name="value">The vector to scale.</param>
         /// <param name="scale">The amount by which to scale the vector.</param>
         /// <returns>The scaled vector.</returns>
         public static Vector3 operator /(Vector3 value, Vector3 scale)
         {
             return new Vector3(value.X / scale.X, value.Y / scale.Y, value.Z / scale.Z);
+        }
+        
+        /// <summary>
+        /// Perform a component-wise addition
+        /// </summary>
+        /// <param name="value">The input vector.</param>
+        /// <param name="scalar">The scalar value to be added on elements</param>
+        /// <returns>The vector with added scalar for each element.</returns>
+        public static Vector3 operator +(Vector3 value, float scalar)
+        {
+            return new Vector3(value.X + scalar, value.Y + scalar, value.Z + scalar);
+        }
+
+        /// <summary>
+        /// Perform a component-wise addition
+        /// </summary>
+        /// <param name="value">The input vector.</param>
+        /// <param name="scalar">The scalar value to be added on elements</param>
+        /// <returns>The vector with added scalar for each element.</returns>
+        public static Vector3 operator +(float scalar, Vector3 value)
+        {
+            return new Vector3(scalar + value.X, scalar + value.Y, scalar + value.Z);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="value">The input vector.</param>
+        /// <param name="scalar">The scalar value to be subtraced from elements</param>
+        /// <returns>The vector with added scalar from each element.</returns>
+        public static Vector3 operator -(Vector3 value, float scalar)
+        {
+            return new Vector3(value.X - scalar, value.Y - scalar, value.Z - scalar);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="value">The input vector.</param>
+        /// <param name="scalar">The scalar value to be subtraced from elements</param>
+        /// <returns>The vector with subtraced scalar from each element.</returns>
+        public static Vector3 operator -(float scalar, Vector3 value)
+        {
+            return new Vector3(scalar - value.X, scalar - value.Y, scalar - value.Z);
         }
 
         /// <summary>
@@ -1466,7 +1653,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator ==(Vector3 left, Vector3 right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -1477,7 +1664,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator !=(Vector3 left, Vector3 right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>
@@ -1564,7 +1751,13 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode();
+            unchecked
+            {
+                var hashCode = X.GetHashCode();
+                hashCode = (hashCode * 397) ^ Y.GetHashCode();
+                hashCode = (hashCode * 397) ^ Z.GetHashCode();
+                return hashCode;
+            }
         }
 
         /// <inheritdoc/>
@@ -1592,9 +1785,21 @@ namespace SharpDX
         /// <returns>
         /// 	<c>true</c> if the specified <see cref="SharpDX.Vector3"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(Vector3 other)
+        public bool Equals(ref Vector3 other)
         {
             return MathUtil.NearEqual(other.X, X) && MathUtil.NearEqual(other.Y, Y) && MathUtil.NearEqual(other.Z, Z);
+        }
+        
+        /// <summary>
+        /// Determines whether the specified <see cref="SharpDX.Vector3"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="SharpDX.Vector3"/> to compare with this instance.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified <see cref="SharpDX.Vector3"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(Vector3 other)
+        {
+            return Equals(ref other);
         }
 
         /// <summary>
@@ -1606,13 +1811,11 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
+            if (!(value is Vector3))
                 return false;
 
-            if (!ReferenceEquals(value.GetType(), typeof(Vector3)))
-                return false;
-
-            return Equals((Vector3)value);
+            var strongValue = (Vector3)value;
+            return Equals(ref strongValue);
         }
 #if WPFInterop
         /// <summary>

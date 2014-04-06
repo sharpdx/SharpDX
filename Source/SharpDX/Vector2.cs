@@ -43,7 +43,6 @@
 * THE SOFTWARE.
 */
 using System;
-using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Serialization;
@@ -55,10 +54,6 @@ namespace SharpDX
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     [DynamicSerializer("TKV2")]
-#if !W8CORE
-    [Serializable]
-    [TypeConverter(typeof(SharpDX.Design.Vector2Converter))]
-#endif
     public struct Vector2 : IEquatable<Vector2>, IFormattable, IDataSerializable
     {
         /// <summary>
@@ -140,6 +135,14 @@ namespace SharpDX
         public bool IsNormalized
         {
             get { return MathUtil.IsOne((X * X) + (Y * Y)); }
+        }
+
+        /// <summary>
+        /// Gets a value indicting whether this vector is zero
+        /// </summary>
+        public bool IsZero
+        {
+            get { return X == 0 && Y == 0; }
         }
 
         /// <summary>
@@ -245,6 +248,28 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Perform a component-wise addition
+        /// </summary>
+        /// <param name="left">The input vector</param>
+        /// <param name="right">The scalar value to be added to elements</param>
+        /// <param name="result">The vector with added scalar for each element.</param>
+        public static void Add(ref Vector2 left, ref float right, out Vector2 result)
+        {
+            result = new Vector2(left.X + right, left.Y + right);
+        }
+
+        /// <summary>
+        /// Perform a component-wise addition
+        /// </summary>
+        /// <param name="left">The input vector</param>
+        /// <param name="right">The scalar value to be added to elements</param>
+        /// <returns>The vector with added scalar for each element.</returns>
+        public static Vector2 Add(Vector2 left, float right)
+        {
+            return new Vector2(left.X + right, left.Y + right);
+        }
+
+        /// <summary>
         /// Subtracts two vectors.
         /// </summary>
         /// <param name="left">The first vector to subtract.</param>
@@ -264,6 +289,50 @@ namespace SharpDX
         public static Vector2 Subtract(Vector2 left, Vector2 right)
         {
             return new Vector2(left.X - right.X, left.Y - right.Y);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="left">The input vector</param>
+        /// <param name="right">The scalar value to be subtraced from elements</param>
+        /// <param name="result">The vector with subtracted scalar for each element.</param>
+        public static void Subtract(ref Vector2 left, ref float right, out Vector2 result)
+        {
+            result = new Vector2(left.X - right, left.Y - right);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="left">The input vector</param>
+        /// <param name="right">The scalar value to be subtraced from elements</param>
+        /// <returns>The vector with subtracted scalar for each element.</returns>
+        public static Vector2 Subtract(Vector2 left, float right)
+        {
+            return new Vector2(left.X - right, left.Y - right);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="left">The scalar value to be subtraced from elements</param>
+        /// <param name="right">The input vector</param>
+        /// <param name="result">The vector with subtracted scalar for each element.</param>
+        public static void Subtract(ref float left, ref Vector2 right, out Vector2 result)
+        {
+            result = new Vector2(left - right.X, left - right.Y);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="left">The scalar value to be subtraced from elements</param>
+        /// <param name="right">The input vector</param>
+        /// <returns>The vector with subtracted scalar for each element.</returns>
+        public static Vector2 Subtract(float left, Vector2 right)
+        {
+            return new Vector2(left - right.X, left - right.Y);
         }
 
         /// <summary>
@@ -289,23 +358,23 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Modulates a vector with another by performing component-wise multiplication.
+        /// Multiplies a vector with another by performing component-wise multiplication.
         /// </summary>
-        /// <param name="left">The first vector to modulate.</param>
-        /// <param name="right">The second vector to modulate.</param>
-        /// <param name="result">When the method completes, contains the modulated vector.</param>
-        public static void Modulate(ref Vector2 left, ref Vector2 right, out Vector2 result)
+        /// <param name="left">The first vector to multiply.</param>
+        /// <param name="right">The second vector to multiply.</param>
+        /// <param name="result">When the method completes, contains the multiplied vector.</param>
+        public static void Multiply(ref Vector2 left, ref Vector2 right, out Vector2 result)
         {
             result = new Vector2(left.X * right.X, left.Y * right.Y);
         }
 
         /// <summary>
-        /// Modulates a vector with another by performing component-wise multiplication.
+        /// Multiplies a vector with another by performing component-wise multiplication.
         /// </summary>
-        /// <param name="left">The first vector to modulate.</param>
-        /// <param name="right">The second vector to modulate.</param>
-        /// <returns>The modulated vector.</returns>
-        public static Vector2 Modulate(Vector2 left, Vector2 right)
+        /// <param name="left">The first vector to multiply.</param>
+        /// <param name="right">The second vector to multiply.</param>
+        /// <returns>The multiplied vector.</returns>
+        public static Vector2 Multiply(Vector2 left, Vector2 right)
         {
             return new Vector2(left.X * right.X, left.Y * right.Y);
         }
@@ -330,6 +399,28 @@ namespace SharpDX
         public static Vector2 Divide(Vector2 value, float scale)
         {
             return new Vector2(value.X / scale, value.Y / scale);
+        }
+
+        /// <summary>
+        /// Scales a vector by the given value.
+        /// </summary>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="result">When the method completes, contains the scaled vector.</param>
+        public static void Divide(float scale,ref Vector2 value, out Vector2 result)
+        {
+            result = new Vector2(scale / value.X, scale / value.Y);
+        }
+
+        /// <summary>
+        /// Scales a vector by the given value.
+        /// </summary>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <returns>The scaled vector.</returns>
+        public static Vector2 Divide(float scale, Vector2 value)
+        {
+            return new Vector2(scale / value.X, scale / value.Y);
         }
 
         /// <summary>
@@ -1141,7 +1232,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Modulates a vector with another by performing component-wise multiplication equivalent to <see cref="Modulate(ref SharpDX.Vector2,ref SharpDX.Vector2,out SharpDX.Vector2)"/>.
+        /// Multiplies a vector with another by performing component-wise multiplication equivalent to <see cref="Multiply(ref SharpDX.Vector2,ref SharpDX.Vector2,out SharpDX.Vector2)"/>.
         /// </summary>
         /// <param name="left">The first vector to multiply.</param>
         /// <param name="right">The second vector to multiply.</param>
@@ -1218,12 +1309,67 @@ namespace SharpDX
         /// <summary>
         /// Scales a vector by the given value.
         /// </summary>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <param name="value">The vector to scale.</param>  
+        /// <returns>The scaled vector.</returns>
+        public static Vector2 operator /(float scale , Vector2 value)
+        {
+            return new Vector2(scale / value.X, scale / value.Y);
+        }
+
+        /// <summary>
+        /// Scales a vector by the given value.
+        /// </summary>
         /// <param name="value">The vector to scale.</param>
         /// <param name="scale">The amount by which to scale the vector.</param>
         /// <returns>The scaled vector.</returns>
         public static Vector2 operator /(Vector2 value, Vector2 scale)
         {
             return new Vector2(value.X / scale.X, value.Y / scale.Y);
+        }
+
+        /// <summary>
+        /// Perform a component-wise addition
+        /// </summary>
+        /// <param name="value">The input vector.</param>
+        /// <param name="scalar">The scalar value to be added on elements</param>
+        /// <returns>The vector with added scalar for each element.</returns>
+        public static Vector2 operator +(Vector2 value, float scalar)
+        {
+            return new Vector2(value.X + scalar, value.Y + scalar);
+        }
+
+        /// <summary>
+        /// Perform a component-wise addition
+        /// </summary>
+        /// <param name="value">The input vector.</param>
+        /// <param name="scalar">The scalar value to be added on elements</param>
+        /// <returns>The vector with added scalar for each element.</returns>
+        public static Vector2 operator +(float scalar, Vector2 value)
+        {
+            return new Vector2(scalar + value.X, scalar + value.Y);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="value">The input vector.</param>
+        /// <param name="scalar">The scalar value to be subtraced from elements</param>
+        /// <returns>The vector with subtraced scalar from each element.</returns>
+        public static Vector2 operator -(Vector2 value, float scalar)
+        {
+            return new Vector2(value.X - scalar, value.Y - scalar);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="value">The input vector.</param>
+        /// <param name="scalar">The scalar value to be subtraced from elements</param>
+        /// <returns>The vector with subtraced scalar from each element.</returns>
+        public static Vector2 operator -(float scalar, Vector2 value)
+        {
+            return new Vector2(scalar - value.X, scalar - value.Y);
         }
 
         /// <summary>
@@ -1234,7 +1380,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator ==(Vector2 left, Vector2 right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -1245,7 +1391,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator !=(Vector2 left, Vector2 right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>
@@ -1330,7 +1476,10 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return X.GetHashCode() + Y.GetHashCode();
+            unchecked
+            {
+                return (X.GetHashCode() * 397) ^ Y.GetHashCode();
+            }
         }
 
         /// <inheritdoc/>
@@ -1356,9 +1505,21 @@ namespace SharpDX
         /// <returns>
         /// 	<c>true</c> if the specified <see cref="SharpDX.Vector2"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(Vector2 other)
+        public bool Equals(ref Vector2 other)
         {
             return MathUtil.NearEqual(other.X, X) && MathUtil.NearEqual(other.Y, Y);
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="SharpDX.Vector2"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="SharpDX.Vector2"/> to compare with this instance.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified <see cref="SharpDX.Vector2"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(Vector2 other)
+        {
+            return Equals(ref other);
         }
 
         /// <summary>
@@ -1370,13 +1531,11 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
+            if (!(value is Vector2))
                 return false;
 
-            if (!ReferenceEquals(value.GetType(), typeof(Vector2)))
-                return false;
-
-            return Equals((Vector2)value);
+            var strongValue = (Vector2)value;
+            return Equals(ref strongValue);
         }
 
 #if WPFInterop

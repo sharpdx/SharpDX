@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Serialization;
@@ -28,10 +27,6 @@ namespace SharpDX
     /// <summary>
     /// Represents a 32-bit color (4 bytes) in the form of RGBA (in byte order: R, G, B, A).
     /// </summary>
-#if !W8CORE
-    [Serializable]
-    [TypeConverter(typeof(SharpDX.Design.ColorConverter))]
-#endif
     [StructLayout(LayoutKind.Sequential, Size = 4)]
     [DynamicSerializer("TKC1")]
     public partial struct Color : IEquatable<Color>, IFormattable, IDataSerializable
@@ -104,6 +99,29 @@ namespace SharpDX
             B = blue;
             A = 255;
         }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SharpDX.Color"/> struct.  Passed values are clamped within byte range.
+        /// </summary>
+        /// <param name="red">The red component of the color.</param>
+        /// <param name="green">The green component of the color.</param>
+        /// <param name="blue">The blue component of the color.</param>
+        public Color(int red, int green, int blue, int alpha)
+        {
+            R = ToByte(red);
+            G = ToByte(green);
+            B = ToByte(blue);
+            A = ToByte(alpha);
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SharpDX.Color"/> struct.  Alpha is set to 255.  Passed values are clamped within byte range.
+        /// </summary>
+        /// <param name="red">The red component of the color.</param>
+        /// <param name="green">The green component of the color.</param>
+        /// <param name="blue">The blue component of the color.</param>
+        public Color(int red, int green, int blue)
+            : this (red, green, blue, 255) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SharpDX.Color"/> struct.
@@ -606,6 +624,32 @@ namespace SharpDX
             blue = (blue < min.B) ? min.B : blue;
 
             result = new Color(red, green, blue, alpha);
+        }
+
+        /// <summary>
+        /// Computes the premultiplied value of the provided color.
+        /// </summary>
+        /// <param name="value">The non-premultiplied value.</param>
+        /// <param name="result">The premultiplied result.</param>
+        public static void Premultiply(ref Color value, out Color result)
+        {
+            var a = value.A / (255f * 255f);
+            result.A = value.A;
+            result.R = ToByte(value.R * a);
+            result.G = ToByte(value.G * a);
+            result.B = ToByte(value.B * a);
+        }
+
+        /// <summary>
+        /// Computes the premultiplied value of the provided color.
+        /// </summary>
+        /// <param name="value">The non-premultiplied value.</param>
+        /// <returns>The premultiplied result.</returns>
+        public static Color Premultiply(Color value)
+        {
+            Color result;
+            Premultiply(ref value, out result);
+            return result;
         }
 
         /// <summary>
@@ -1134,7 +1178,14 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return A.GetHashCode() + R.GetHashCode() + G.GetHashCode() + B.GetHashCode();
+            unchecked
+            {
+                var hashCode = R.GetHashCode();
+                hashCode = (hashCode * 397) ^ G.GetHashCode();
+                hashCode = (hashCode * 397) ^ B.GetHashCode();
+                hashCode = (hashCode * 397) ^ A.GetHashCode();
+                return hashCode;
+            }
         }
 
         /// <summary>
@@ -1170,6 +1221,11 @@ namespace SharpDX
         private static byte ToByte(float component)
         {
             var value = (int)(component * 255.0f);
+            return ToByte(value);
+        }
+
+        public static byte ToByte(int value)
+        {
             return (byte)(value < 0 ? 0 : value > 255 ? 255 : value);
         }
 

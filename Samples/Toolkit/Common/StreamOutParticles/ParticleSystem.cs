@@ -91,7 +91,7 @@ namespace StreamOutParticles
             // Normalize vector and create a billboard matrix that is used in the geometry shader
             // to expand a single particle vertex into four to form a quad.
             cameraForward = Vector3.Normalize(cameraForward);
-            var lookAtMatrix = Matrix.Billboard(Vector3.Zero, -cameraForward, up, cameraForward);
+            var lookAtMatrix = Matrix.BillboardLH(Vector3.Zero, -cameraForward, up, cameraForward);
 
             this.viewParameter.SetValue(view);
             this.projParameter.SetValue(proj);

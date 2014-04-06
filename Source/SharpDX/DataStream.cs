@@ -56,7 +56,7 @@ namespace SharpDX
     /// </summary>
     public class DataStream : Stream
     {
-        private unsafe sbyte* _buffer;
+        private unsafe byte* _buffer;
         private readonly bool _canRead;
         private readonly bool _canWrite;
         private GCHandle _gCHandle;
@@ -75,7 +75,7 @@ namespace SharpDX
             {
                 System.Diagnostics.Debug.Assert(buffer.GetBufferSize() > 0);
 
-                _buffer = (sbyte*) buffer.GetBufferPointer();
+                _buffer = (byte*) buffer.GetBufferPointer();
                 _size = buffer.GetBufferSize();
                 _canRead = true;
                 _canWrite = true;
@@ -136,7 +136,7 @@ namespace SharpDX
             {
                 System.Diagnostics.Debug.Assert(sizeInBytes > 0);
 
-                _buffer = (sbyte*) Utilities.AllocateMemory(sizeInBytes);
+                _buffer = (byte*) Utilities.AllocateMemory(sizeInBytes);
                 _size = sizeInBytes;
                 _ownsBuffer = true;
                 _canRead = canRead;
@@ -159,7 +159,7 @@ namespace SharpDX
             {
                 System.Diagnostics.Debug.Assert(userBuffer != IntPtr.Zero);
                 System.Diagnostics.Debug.Assert(sizeInBytes > 0);
-                _buffer = (sbyte*) userBuffer.ToPointer();
+                _buffer = (byte*) userBuffer.ToPointer();
                 _size = sizeInBytes;
                 _canRead = canRead;
                 _canWrite = canWrite;
@@ -170,7 +170,7 @@ namespace SharpDX
         {
             System.Diagnostics.Debug.Assert(sizeInBytes > 0);
             _gCHandle = handle;
-            _buffer = (sbyte*)dataPointer;
+            _buffer = (byte*)dataPointer;
             _size = sizeInBytes;
             _canRead = canRead;
             _canWrite = canWrite;
@@ -182,12 +182,12 @@ namespace SharpDX
             System.Diagnostics.Debug.Assert(sizeInBytes > 0);
             if (makeCopy)
             {
-                _buffer = (sbyte*) Utilities.AllocateMemory(sizeInBytes);
+                _buffer = (byte*) Utilities.AllocateMemory(sizeInBytes);
                 Utilities.CopyMemory((IntPtr) _buffer, (IntPtr) buffer, sizeInBytes);
             }
             else
             {
-                _buffer = (sbyte*) buffer;
+                _buffer = (byte*) buffer;
             }
             _size = sizeInBytes;
             _canRead = canRead;
@@ -215,10 +215,10 @@ namespace SharpDX
 
             unsafe
             {
-                if (_ownsBuffer && _buffer != (sbyte*)0)
+                if (_ownsBuffer && _buffer != (byte*)0)
                 {
                     Utilities.FreeMemory((IntPtr)_buffer);
-                    _buffer = (sbyte*)0;
+                    _buffer = (byte*)0;
                 }
             }
         }
@@ -250,9 +250,9 @@ namespace SharpDX
                 if (!_canRead)
                     throw new NotSupportedException();
 
-                sbyte* from = _buffer + _position;
+                byte* from = _buffer + _position;
                 T result = default(T);
-                _position = (sbyte*) Utilities.ReadAndPosition((IntPtr)from, ref result) - _buffer;
+                _position = (byte*) Utilities.ReadAndPosition((IntPtr)from, ref result) - _buffer;
                 return result;
             }
         }
@@ -633,9 +633,9 @@ namespace SharpDX
                 if (!_canRead)
                     throw new NotSupportedException();
 
-                sbyte* from = _buffer + _position;
+                byte* from = _buffer + _position;
                 var result = new T[count];
-                _position = (sbyte*) Utilities.Read((IntPtr)from, result, 0, count) - _buffer;
+                _position = (byte*) Utilities.Read((IntPtr)from, result, 0, count) - _buffer;
                 return result;
             }
         }
@@ -662,7 +662,7 @@ namespace SharpDX
                     throw new NotSupportedException();
 
                 var oldPosition = _position;
-                _position = (sbyte*)Utilities.Read((IntPtr)(_buffer + _position), buffer, offset, count) - _buffer;
+                _position = (byte*)Utilities.Read((IntPtr)(_buffer + _position), buffer, offset, count) - _buffer;
                 return (int) (_position - oldPosition);
             }
         }
@@ -726,7 +726,7 @@ namespace SharpDX
                 throw new NotSupportedException();
             unsafe
             {
-                _position = (sbyte*) Utilities.WriteAndPosition((IntPtr)(_buffer + _position), ref value) - _buffer;
+                _position = (byte*) Utilities.WriteAndPosition((IntPtr)(_buffer + _position), ref value) - _buffer;
             }
         }
 
@@ -1112,7 +1112,7 @@ namespace SharpDX
                 if (!_canWrite)
                     throw new NotSupportedException();
 
-                _position = (sbyte*) Utilities.Write((IntPtr)(_buffer + _position), data, offset, count) - _buffer;
+                _position = (byte*) Utilities.Write((IntPtr)(_buffer + _position), data, offset, count) - _buffer;
             }
         }
 

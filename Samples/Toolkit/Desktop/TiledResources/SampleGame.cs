@@ -174,9 +174,9 @@
             // handle input
             var keyboardState = _keyboardManager.GetState();
 
-            if (keyboardState.IsKeyDown(Keys.Escape) && _previousKeyboardState.IsKeyUp(Keys.Escape)) Exit();
+            if (_previousKeyboardState.IsKeyPressed(Keys.Escape)) Exit();
 
-            if (keyboardState.IsKeyDown(Keys.T) && _previousKeyboardState.IsKeyUp(Keys.T))
+            if (keyboardState.IsKeyPressed(Keys.T))
             {
                 _isBorderEnabled = !_isBorderEnabled;
                 _residencyManager.SetBorderMode(_isBorderEnabled);

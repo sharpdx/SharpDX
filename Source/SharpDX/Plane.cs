@@ -53,9 +53,6 @@ namespace SharpDX
     /// <summary>
     /// Represents a plane in three dimensional space.
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Plane : IEquatable<Plane>, IFormattable, IDataSerializable
     {
@@ -704,7 +701,10 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return Normal.GetHashCode() + D.GetHashCode();
+            unchecked
+            {
+                return (Normal.GetHashCode() * 397) ^ D.GetHashCode();
+            }
         }
 
         /// <summary>

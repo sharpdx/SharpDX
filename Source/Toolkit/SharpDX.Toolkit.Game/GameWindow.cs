@@ -129,6 +129,8 @@ namespace SharpDX.Toolkit
             }
         }
 
+        internal abstract bool IsBlockingRun { get; }
+
         #endregion
 
         #region Public Methods and Operators
@@ -165,6 +167,12 @@ namespace SharpDX.Toolkit
         internal abstract void Run();
 
         internal abstract void Resize(int width, int height);
+
+        /// <summary>
+        /// Switches the rendering onto another game context.
+        /// </summary>
+        /// <param name="context">The new context to switch to.</param>
+        internal abstract void Switch(GameContext context);
 
         /// <summary>
         /// Allows derived classes to create a custom graphics presenter

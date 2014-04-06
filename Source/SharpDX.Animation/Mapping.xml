@@ -39,8 +39,6 @@
   </extension>
 
   <bindings>
-    <!-- Removes dependencies to IDCompositionAnimation from IUIAnimationVariable2 -->
-    <bind from="IDCompositionAnimation" to="SharpDX.ComObject"/>
   </bindings>
 
   <mapping>
@@ -143,6 +141,14 @@
 
     <map method="IUIAnimationTimer::IsEnabled" return="true" check="false" property="false" name="IsEnabled_" visibility="internal"/>
     <map method="IUIAnimationTransition::IsDurationKnown" return="true" check="false" property="false" name="IsDurationKnown_" visibility="internal"/>
+		
+		<!-- IUIAnimationVariable2 -->
+		<!-- Remove dependencies on IDCompositionAnimation from this library, replace with ComObject. See SharpDX.DirectComposition for the actual wrappers. -->
+		<map param="IUIAnimationVariable2::GetCurve::animation" type="IUnknown" />
+		<map param="IUIAnimationVariable2::GetVectorCurve::animation" type="IUnknown" />
+		
+		<!-- IUIAnimationTransition2 -->
+		<map method="IUIAnimationTransition2::IsDurationKnown" hresult="true" />
 
     <!--
     // *****************************************************************

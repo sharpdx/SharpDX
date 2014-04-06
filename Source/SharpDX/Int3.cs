@@ -27,9 +27,6 @@ namespace SharpDX
     /// <summary>
     /// Represents a three dimensional mathematical int vector.
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     [DynamicSerializer("TKI3")]
     public struct Int3 : IEquatable<Int3>, IFormattable, IDataSerializable
@@ -578,7 +575,13 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode();
+            unchecked
+            {
+                var hashCode = X;
+                hashCode = (hashCode * 397) ^ Y;
+                hashCode = (hashCode * 397) ^ Z;
+                return hashCode;
+            }
         }
 
         /// <inheritdoc/>

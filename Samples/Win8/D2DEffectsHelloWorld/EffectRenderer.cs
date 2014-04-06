@@ -125,7 +125,7 @@ namespace D2DEffectsHelloWorld
             var d2dContext = _deviceManager.ContextDirect2D;
 
             // Effect 1 : BitmapSource - take decoded image data and get a BitmapSource from it
-            SharpDX.Direct2D1.Effects.BitmapSourceEffect bitmapSourceEffect = new SharpDX.Direct2D1.Effects.BitmapSourceEffect(d2dContext);
+            SharpDX.Direct2D1.Effects.BitmapSource bitmapSourceEffect = new SharpDX.Direct2D1.Effects.BitmapSource(d2dContext);
             bitmapSourceEffect.ScaleSource = scale;
             bitmapSourceEffect.WicBitmapSource = formatConverter;
 

@@ -21,6 +21,7 @@
 using System;
 using System.Reflection;
 using SharpDX.Toolkit.Content;
+using SharpYaml;
 using SharpYaml.Serialization;
 
 namespace SharpDX.Toolkit.Yaml
@@ -43,9 +44,9 @@ namespace SharpDX.Toolkit.Yaml
         public YamlManager(IServiceRegistry registry) : base(registry)
         {
             Services.AddService(this);
-            yamlSettings = new SerializerSettings();
+            yamlSettings = new SerializerSettings();            
             attributeRegistry = yamlSettings.Attributes;
-            serializer = new Serializer(yamlSettings);
+            serializer = CreateSerializer(yamlSettings);
         }
 
         /// <summary>
@@ -57,7 +58,7 @@ namespace SharpDX.Toolkit.Yaml
             Services.AddService(this);
             yamlSettings = new SerializerSettings();
             attributeRegistry = yamlSettings.Attributes;
-            serializer = new Serializer(yamlSettings);
+            serializer = CreateSerializer(yamlSettings);
         }
 
         public override void Initialize()
@@ -70,7 +71,13 @@ namespace SharpDX.Toolkit.Yaml
                 throw new InvalidOperationException("Unable to initialize YamlManager. Expecting IContentManager to be an instance of ContentManager");
             }
 
+            yamlSettings.ObjectSerializerBackend = new AssetObjectSerializerBackend(yamlSettings, contentManager);
             contentManager.ReaderFactories.Add(this);
+        }
+
+        protected virtual Serializer CreateSerializer(SerializerSettings settings)
+        {
+            return NewSerializer(settings);
         }
 
         /// <summary>
@@ -148,6 +155,110 @@ namespace SharpDX.Toolkit.Yaml
         object IContentReader.ReadContent(IContentManager contentManagerArg, ref ContentReaderParameters parameters)
         {
             return serializer.Deserialize(parameters.Stream, parameters.AssetType);
+        }
+
+        /// <summary>
+        /// Creates a new instance of the YAML serializer.
+        /// </summary>
+        /// <returns>The default YAML serializer used by the <see cref="YamlManager"/>.</returns>
+        public static Serializer NewSerializer()
+        {
+            return NewSerializer(new SerializerSettings());
+        }
+
+        /// <summary>
+        /// Creates a new instance of the YAML serializer.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns>The default YAML serializer used by the <see cref="YamlManager"/>.</returns>
+        /// <exception cref="System.ArgumentNullException">settings</exception>
+        public static Serializer NewSerializer(SerializerSettings settings)
+        {
+            if (settings == null) throw new ArgumentNullException("settings");
+
+            RegisterDefaults(settings);
+            return new Serializer(settings);
+        }
+
+        private static void RegisterDefaults(SerializerSettings settings)
+        {
+            settings.EmitAlias = false;
+
+            var attributes = (AttributeRegistry)settings.Attributes;
+
+            settings.RegisterTagMapping("!Vector2", typeof(Vector2));
+            attributes.Register(GetTypeInfo<Vector2>(), new YamlStyleAttribute(YamlStyle.Flow));
+            attributes.Register(GetField<Vector2>("X"), new YamlMemberAttribute(0));
+            attributes.Register(GetField<Vector2>("Y"), new YamlMemberAttribute(1));
+
+            settings.RegisterTagMapping("!Vector3", typeof(Vector3));
+            attributes.Register(GetTypeInfo<Vector3>(), new YamlStyleAttribute(YamlStyle.Flow));
+            attributes.Register(GetField<Vector3>("X"), new YamlMemberAttribute(0));
+            attributes.Register(GetField<Vector3>("Y"), new YamlMemberAttribute(1));
+            attributes.Register(GetField<Vector3>("Z"), new YamlMemberAttribute(2));
+
+            settings.RegisterTagMapping("!Vector4", typeof(Vector4));
+            attributes.Register(GetTypeInfo<Vector4>(), new YamlStyleAttribute(YamlStyle.Flow));
+            attributes.Register(GetField<Vector4>("X"), new YamlMemberAttribute(0));
+            attributes.Register(GetField<Vector4>("Y"), new YamlMemberAttribute(1));
+            attributes.Register(GetField<Vector4>("Z"), new YamlMemberAttribute(2));
+            attributes.Register(GetField<Vector4>("W"), new YamlMemberAttribute(3));
+
+            settings.RegisterTagMapping("!Color", typeof(Color));
+            attributes.Register(GetTypeInfo<Color>(), new YamlStyleAttribute(YamlStyle.Flow));
+            attributes.Register(GetField<Color>("R"), new YamlMemberAttribute(0));
+            attributes.Register(GetField<Color>("G"), new YamlMemberAttribute(1));
+            attributes.Register(GetField<Color>("B"), new YamlMemberAttribute(2));
+            attributes.Register(GetField<Color>("A"), new YamlMemberAttribute(3));
+
+            settings.RegisterTagMapping("!ColorBGRA", typeof(ColorBGRA));
+            attributes.Register(GetTypeInfo<ColorBGRA>(), new YamlStyleAttribute(YamlStyle.Flow));
+            attributes.Register(GetField<ColorBGRA>("B"), new YamlMemberAttribute(0));
+            attributes.Register(GetField<ColorBGRA>("G"), new YamlMemberAttribute(1));
+            attributes.Register(GetField<ColorBGRA>("R"), new YamlMemberAttribute(2));
+            attributes.Register(GetField<ColorBGRA>("A"), new YamlMemberAttribute(3));
+
+            settings.RegisterTagMapping("!Color3", typeof(Color3));
+            attributes.Register(GetTypeInfo<Color3>(), new YamlStyleAttribute(YamlStyle.Flow));
+            attributes.Register(GetField<Color3>("Red"), new YamlMemberAttribute("R") { Order = 0 });
+            attributes.Register(GetField<Color3>("Green"), new YamlMemberAttribute("G") { Order = 1 });
+            attributes.Register(GetField<Color3>("Blue"), new YamlMemberAttribute("B") { Order = 2 });
+
+            settings.RegisterTagMapping("!Color4", typeof(Color4));
+            attributes.Register(GetTypeInfo<Color4>(), new YamlStyleAttribute(YamlStyle.Flow));
+            attributes.Register(GetField<Color4>("Red"), new YamlMemberAttribute("R") { Order = 0 });
+            attributes.Register(GetField<Color4>("Green"), new YamlMemberAttribute("G") { Order = 1 });
+            attributes.Register(GetField<Color4>("Blue"), new YamlMemberAttribute("B") { Order = 2 });
+            attributes.Register(GetField<Color4>("Alpha"), new YamlMemberAttribute("A") { Order = 3 });
+
+            settings.RegisterAssembly(GetAssembly<Vector2>());
+        }
+
+        private static Assembly GetAssembly<T>()
+        {
+#if W8CORE
+            return typeof(T).GetTypeInfo().Assembly;
+#else
+            return typeof(T).Assembly;
+#endif
+        }
+
+        private static MemberInfo GetTypeInfo<T>()
+        {
+#if W8CORE
+            return typeof(T).GetTypeInfo();
+#else
+            return typeof(T);
+#endif
+        }
+
+        private static FieldInfo GetField<T>(string name)
+        {
+#if W8CORE
+            return typeof(T).GetTypeInfo().GetDeclaredField(name);
+#else
+            return typeof(T).GetField(name);
+#endif
         }
     }
 }

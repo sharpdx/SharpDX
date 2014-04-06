@@ -35,8 +35,10 @@
     <Compile Include="Font\CharacterRegion.cs" />
     <Compile Include="Font\CharacterRegionTypeConverter.cs" />
     <Compile Include="Font\ContentCompilerResult.cs" />
+    <Compile Include="Font\FontAntiAliasMode.cs" />
     <Compile Include="Font\FontCompiler.cs" />
     <Compile Include="Font\FontDescription.cs" />
+    <Compile Include="Font\FontException.cs" />
     <Compile Include="Font\FontStyle.cs" />
     <Compile Include="Font\FontTextureFormat.cs" />
     <Compile Include="Font\Glyph.cs" />
@@ -58,6 +60,10 @@
       <Project>{361d3f81-a48a-47f2-80df-ca4f9536cb4e}</Project>
       <Name>SharpDX.D3DCompiler</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpDX.Direct2D1\SharpDX.Direct2D1.csproj">
+      <Project>{c97878f4-1510-4bba-8153-bd71da7d50d8}</Project>
+      <Name>SharpDX.Direct2D1</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
       <Project>{736dfb52-1afe-4eff-9710-89046ab5b1f9}</Project>

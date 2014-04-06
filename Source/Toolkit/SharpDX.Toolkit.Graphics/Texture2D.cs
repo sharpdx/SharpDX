@@ -128,7 +128,7 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         public static Texture2D New(GraphicsDevice device, int width, int height, MipMapCount mipCount, PixelFormat format, TextureFlags flags = TextureFlags.ShaderResource, int arraySize = 1, ResourceUsage usage = ResourceUsage.Default)
         {
-            return new Texture2D(device, NewDescription(width, height, format, flags | TextureFlags.ShaderResource, mipCount, arraySize, usage));
+            return new Texture2D(device, NewDescription(width, height, format, flags, mipCount, arraySize, usage));
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         public static Texture2D New(GraphicsDevice device, int width, int height, MipMapCount mipCount, PixelFormat format, DataBox[] textureData, TextureFlags flags = TextureFlags.ShaderResource, int arraySize = 1, ResourceUsage usage = ResourceUsage.Default)
         {
-            return new Texture2D(device, NewDescription(width, height, format, flags | TextureFlags.ShaderResource, mipCount, arraySize, usage), textureData);
+            return new Texture2D(device, NewDescription(width, height, format, flags, mipCount, arraySize, usage), textureData);
         }
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace SharpDX.Toolkit.Graphics
             if (image.Description.Dimension != TextureDimension.Texture2D)
                 throw new ArgumentException("Invalid image. Must be 2D", "image");
 
-            return new Texture2D(device, CreateTextureDescriptionFromImage(image, flags | TextureFlags.ShaderResource, usage), image.ToDataBox());
+            return new Texture2D(device, CreateTextureDescriptionFromImage(image, flags, usage), image.ToDataBox());
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>A texture</returns>
         public static new Texture2D Load(GraphicsDevice device, Stream stream, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
         {
-            var texture = Texture.Load(device, stream, flags | TextureFlags.ShaderResource, usage);
+            var texture = Texture.Load(device, stream, flags, usage);
             if (!(texture is Texture2D))
                 throw new ArgumentException(string.Format("Texture is not type of [Texture2D] but [{0}]", texture.GetType().Name));
             return (Texture2D)texture;
@@ -224,7 +224,16 @@ namespace SharpDX.Toolkit.Graphics
         public static new Texture2D Load(GraphicsDevice device, string filePath, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
         {
             using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
-                return Load(device, stream, flags | TextureFlags.ShaderResource, usage);
+                return Load(device, stream, flags, usage);
+        }
+
+        /// <summary>
+        /// Implicit casting operator to <see cref="Direct3D11.Resource"/>
+        /// </summary>
+        /// <param name="from">The GraphicsResource to convert from.</param>
+        public static implicit operator Resource(Texture2D from)
+        {
+            return from == null ? null : (Resource)from.Resource;
         }
     }
 }

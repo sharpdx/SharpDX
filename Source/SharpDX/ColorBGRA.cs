@@ -27,9 +27,6 @@ namespace SharpDX
     /// <summary>
     /// Represents a 32-bit color (4 bytes) in the form of BGRA (in byte order: B, G, B, A).
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential, Size = 4)]
     [DynamicSerializer("TKC0")]
     public partial struct ColorBGRA : IEquatable<ColorBGRA>, IFormattable, IDataSerializable
@@ -785,6 +782,32 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Computes the premultiplied value of the provided color.
+        /// </summary>
+        /// <param name="value">The non-premultiplied value.</param>
+        /// <param name="result">The premultiplied result.</param>
+        public static void Premultiply(ref ColorBGRA value, out ColorBGRA result)
+        {
+            var a = value.A / (255f * 255f);
+            result.A = value.A;
+            result.R = ToByte(value.R * a);
+            result.G = ToByte(value.G * a);
+            result.B = ToByte(value.B * a);
+        }
+
+        /// <summary>
+        /// Computes the premultiplied value of the provided color.
+        /// </summary>
+        /// <param name="value">The non-premultiplied value.</param>
+        /// <returns>The premultiplied result.</returns>
+        public static ColorBGRA Premultiply(ColorBGRA value)
+        {
+            ColorBGRA result;
+            Premultiply(ref value, out result);
+            return result;
+        }
+
+        /// <summary>
         /// Adds two colors.
         /// </summary>
         /// <param name="left">The first color to add.</param>
@@ -1069,7 +1092,14 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return A.GetHashCode() + R.GetHashCode() + G.GetHashCode() + B.GetHashCode();
+            unchecked
+            {
+                var hashCode = B.GetHashCode();
+                hashCode = (hashCode * 397) ^ G.GetHashCode();
+                hashCode = (hashCode * 397) ^ R.GetHashCode();
+                hashCode = (hashCode * 397) ^ A.GetHashCode();
+                return hashCode;
+            }
         }
 
         /// <summary>

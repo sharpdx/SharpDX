@@ -56,7 +56,7 @@ namespace MiniTri
     struct Vertex
     {
         public Vector4 Position;
-        public SharpDX.Color Color;
+        public SharpDX.ColorBGRA Color;
     }
 
     /// <summary>

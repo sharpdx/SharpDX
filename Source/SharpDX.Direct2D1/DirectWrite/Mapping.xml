@@ -199,6 +199,9 @@
     <map method="IDWriteTextLayout::HitTestTextRange" check="false"/>
     <map method="IDWriteTextLayout::GetClusterMetrics" check="false"/>
     
+    <map method="IDWriteLocalFontFileLoader::GetFilePath.*" visibility="internal"/>
+    <map method="IDWriteLocalFontFileLoader::GetLastWriteTimeFromKey" visibility="internal"/>
+
     <!--
     // *****************************************************************
     // DWrite Functions

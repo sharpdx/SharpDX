@@ -61,7 +61,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="indices">The indices described in right handed form.</param>
         /// <param name="toLeftHanded">if set to <c>true</c> vertices and indices will be transformed to left handed. Default is true.</param>
         /// <exception cref="System.InvalidOperationException">Cannot generate more than 65535 indices on feature level HW &lt;= 9.3</exception>
-        public GeometricPrimitive(GraphicsDevice graphicsDevice, T[] vertices, short[] indices, bool toLeftHanded = true)
+        public GeometricPrimitive(GraphicsDevice graphicsDevice, T[] vertices, short[] indices, bool toLeftHanded = false)
         {
             GraphicsDevice = graphicsDevice;
 
@@ -85,7 +85,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="indices">The indices.</param>
         /// <param name="toLeftHanded">if set to <c>true</c> vertices and indices will be transformed to left handed. Default is true.</param>
         /// <exception cref="System.InvalidOperationException">Cannot generate more than 65535 indices on feature level HW <= 9.3</exception>
-        public GeometricPrimitive(GraphicsDevice graphicsDevice, T[] vertices, int[] indices, bool toLeftHanded = true)
+        public GeometricPrimitive(GraphicsDevice graphicsDevice, T[] vertices, int[] indices, bool toLeftHanded = false)
         {
             GraphicsDevice = graphicsDevice;
 
@@ -153,7 +153,8 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Draws this <see cref="GeometricPrimitive" /> using an optional specific pass
+        /// Draws this <see cref="GeometricPrimitive" /> using an optional specific pass, and
+        /// a <see cref="PrimitiveType"/> of TriangleList.
         /// </summary>
         /// <param name="graphicsDevice">The graphics device.</param>
         /// <param name="pass">The effect pass, null by default.</param>
@@ -161,6 +162,20 @@ namespace SharpDX.Toolkit.Graphics
         /// If no effect pass is passed, an <see cref="EffectPass"/> must have been applied previously.
         /// </remarks>
         public void Draw(GraphicsDevice graphicsDevice, EffectPass pass = null)
+        {
+            Draw(graphicsDevice, PrimitiveType.TriangleList, pass);
+        }
+
+        /// <summary>
+        /// Draws this <see cref="GeometricPrimitive" /> using an optional specific pass
+        /// </summary>
+        /// <param name="graphicsDevice">The graphics device.</param>
+        /// <param name="primitiveType">The primitive type to use when drawing.</param>
+        /// <param name="pass">The effect pass, null by default.</param>
+        /// <remarks>If an effect pass is passed to this method, the effect pass will be applied before drawing the geometry. 
+        /// If no effect pass is passed, an <see cref="EffectPass"/> must have been applied previously.
+        /// </remarks>
+        public void Draw(GraphicsDevice graphicsDevice, PrimitiveType primitiveType, EffectPass pass)
         {
             if (pass != null)
                 pass.Apply();
@@ -175,7 +190,7 @@ namespace SharpDX.Toolkit.Graphics
             graphicsDevice.SetIndexBuffer(indexBuffer, isIndex32Bits);
 
             // Finally Draw this mesh
-            graphicsDevice.DrawIndexed(PrimitiveType.TriangleList, indexBuffer.ElementCount);
+            graphicsDevice.DrawIndexed(primitiveType, indexBuffer.ElementCount);
         }
 
         /// <summary>
@@ -207,7 +222,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="indices">The indices described in right handed form.</param>
         /// <param name="toLeftHanded">if set to <c>true</c> vertices and indices will be transformed to left handed. Default is true.</param>
         /// <exception cref="System.InvalidOperationException">Cannot generate more than 65535 indices on feature level HW &lt;= 9.3</exception>
-        public GeometricPrimitive(GraphicsDevice graphicsDevice, VertexPositionNormalTexture[] vertices, short[] indices, bool toLeftHanded = true)
+        public GeometricPrimitive(GraphicsDevice graphicsDevice, VertexPositionNormalTexture[] vertices, short[] indices, bool toLeftHanded = false)
             : base(graphicsDevice, vertices, indices, toLeftHanded)
         {
         }
@@ -220,7 +235,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="indices">The indices.</param>
         /// <param name="toLeftHanded">if set to <c>true</c> vertices and indices will be transformed to left handed. Default is true.</param>
         /// <exception cref="System.InvalidOperationException">Cannot generate more than 65535 indices on feature level HW &lt;= 9.3</exception>
-        public GeometricPrimitive(GraphicsDevice graphicsDevice, VertexPositionNormalTexture[] vertices, int[] indices, bool toLeftHanded = true)
+        public GeometricPrimitive(GraphicsDevice graphicsDevice, VertexPositionNormalTexture[] vertices, int[] indices, bool toLeftHanded = false)
             : base(graphicsDevice, vertices, indices, toLeftHanded)
         {
         }

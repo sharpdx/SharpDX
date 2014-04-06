@@ -1,0 +1,31 @@
+﻿<Page
+    x:Class="MiniCubeXaml.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MiniCubeXaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"    
+    d:DesignWidth="1366"
+    d:DesignHeight="768">
+    <Grid>
+
+        
+        <Grid Height="298" Margin="106,178,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="674" Background="Black">
+            <Rectangle   Fill="#FFFFEE44"/>
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="48" Foreground="Black">Text behind</TextBlock>
+        </Grid>
+        
+        <!-- Opacity will be ignored by this Direct3DUserControl, as it is set by the content not the control. -->
+        <local:Direct3DUserControl x:Name="D3DUserControl" Width="320" Height="200" RenderTransformOrigin="0.5,0.5" >
+        	<local:Direct3DUserControl.RenderTransform>
+        		<CompositeTransform Rotation="10" ScaleY="3" ScaleX="3"/>
+        	</local:Direct3DUserControl.RenderTransform>
+            <TextBlock Margin="408,214,-408,-214">Text as content</TextBlock>
+        </local:Direct3DUserControl>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,100,0,0">Text in front</TextBlock>
+        
+        <Slider x:Name="ScaleSlider" Header="Scale" Margin="20" Value="3" Minimum="0.5" Maximum="10" Orientation="Horizontal" Width="300" VerticalAlignment="Bottom" HorizontalAlignment="Left" ValueChanged="ScaleSlider_OnValueChanged" StepFrequency="0.01"/>
+        <Slider x:Name="RotateSlider" Header="Rotate" Margin="340,20,20,20" Value="10" Minimum="0" Maximum="360" Orientation="Horizontal" Width="300" VerticalAlignment="Bottom" HorizontalAlignment="Left" ValueChanged="ScaleSlider_OnValueChanged" StepFrequency="1"/>
+    </Grid>
+</Page>

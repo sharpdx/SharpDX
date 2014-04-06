@@ -259,20 +259,26 @@ namespace SharpDX.Toolkit.Graphics
             ForEachGlyph(ref text, drawGlyphDelegate, ref drawCommand);
         }
 
-        internal void InternalDrawGlyph(ref InternalDrawCommand parameters, ref SpriteFontData.Glyph glyph, float x, float y)
+        internal void InternalDrawGlyph(ref InternalDrawCommand parameters, ref SpriteFontData.Glyph glyph, float x, float y, float nextx)
         {
+            if(char.IsWhiteSpace((char)glyph.Character))
+            {
+                return;
+            }
+
             var spriteEffects = parameters.spriteEffects;
 
             var offset = new Vector2(x, y + glyph.Offset.Y);
-            Vector2.Modulate(ref offset, ref axisDirectionTable[(int)spriteEffects & 3], out offset);
+            Vector2.Multiply(ref offset, ref axisDirectionTable[(int)spriteEffects & 3], out offset);
             Vector2.Add(ref offset, ref parameters.origin, out offset);
-
+            offset.X = (float)Math.Round(offset.X);
+            offset.Y = (float)Math.Round(offset.Y);
 
             if (spriteEffects != SpriteEffects.None)
             {
                 // For mirrored characters, specify bottom and/or right instead of top left.
                 var glyphRect = new Vector2(glyph.Subrect.Right - glyph.Subrect.Left, glyph.Subrect.Top - glyph.Subrect.Bottom);
-                Vector2.Modulate(ref glyphRect, ref axisIsMirroredTable[(int)spriteEffects & 3], out offset);
+                Vector2.Multiply(ref glyphRect, ref axisIsMirroredTable[(int)spriteEffects & 3], out offset);
             }
             var destination = new RectangleF(parameters.position.X, parameters.position.Y, parameters.scale.X, parameters.scale.Y);
             Rectangle? sourceRectangle = glyph.Subrect;
@@ -312,13 +318,12 @@ namespace SharpDX.Toolkit.Graphics
             return result;
         }
 
-        private void MeasureStringGlyph(ref Vector2 result, ref SpriteFontData.Glyph glyph, float x, float y)
+        private void MeasureStringGlyph(ref Vector2 result, ref SpriteFontData.Glyph glyph, float x, float y, float nextx)
         {
-            float w = x + (glyph.Subrect.Right - glyph.Subrect.Left) + Spacing;
-            float h = y + Math.Max((glyph.Subrect.Bottom - glyph.Subrect.Top) + glyph.Offset.Y, LineSpacing);
-            if (w > result.X)
+            float h = y + LineSpacing;
+            if (nextx > result.X)
             {
-                result.X = w;
+                result.X = nextx;
             }
             if (h > result.Y)
             {
@@ -341,7 +346,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>Gets or sets the spacing of the font characters.</summary>
         public float Spacing { get; set; }
 
-        private delegate void GlyphAction<T>(ref T parameters, ref SpriteFontData.Glyph glyph, float x, float y);
+        private delegate void GlyphAction<T>(ref T parameters, ref SpriteFontData.Glyph glyph, float x, float y, float nextx);
 
         private unsafe void ForEachGlyph<T>(ref StringProxy text, GlyphAction<T> action, ref T parameters)
         {
@@ -367,7 +372,7 @@ namespace SharpDX.Toolkit.Graphics
                             // New line.
                             x = 0;
                             y += LineSpacing;
-                            key |= character;
+                            key = 0;
                             break;
 
                         default:
@@ -394,24 +399,16 @@ namespace SharpDX.Toolkit.Graphics
 
                             var glyph = (SpriteFontData.Glyph*) pGlyph + glyphIndex;
 
-                            // do not offset the first character, otherwise it is impossible to compute correct alignment
-                            // using MeasureString results
-                            if (x > 0f) x += glyph->Offset.X;
+                            float dx = glyph->Offset.X;
 
-                            // reset negative offset (it can happen only for first character)
-                            if(x < 0f) x = 0f;
-
-                            // Offset the kerning
                             float kerningOffset;
                             if (kerningMap != null && kerningMap.TryGetValue(key, out kerningOffset))
-                                x += kerningOffset;
+                                dx += kerningOffset;
 
-                            if (!char.IsWhiteSpace(character))
-                            {
-                                action(ref parameters, ref *glyph, x, y);
-                            }
+                            float nextX = x + glyph->XAdvance + Spacing;
+                            action(ref parameters, ref *glyph, x + dx, y, nextX);
+                            x = nextX;
 
-                            x += glyph->XAdvance + Spacing;
                             break;
                     }
 

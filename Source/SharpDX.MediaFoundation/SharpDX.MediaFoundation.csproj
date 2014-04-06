@@ -31,8 +31,12 @@
     <Compile Condition=" '$(DirectX11_1)' == 'false'" Include="DirectX\VideoAccelerationService.cs" />
     <Compile Condition=" '$(DirectX11_1)' == 'false'" Include="DirectX\VideoDecoderService.cs" />
     <Compile Condition=" '$(DirectX11_1)' == 'false'" Include="DirectX\VideoProcessorService.cs" />
+    <Compile Include="Dsp\NamespaceDoc.cs" />
     <Compile Include="DXGIDeviceManager.cs" />
     <Compile Include="AsyncResult.cs" />
+    <Compile Condition=" '$(SharpDXWin8Core)' == 'false'" Include="Generated\Dsp\Enumerations.cs" />
+    <Compile Condition=" '$(SharpDXWin8Core)' == 'false'" Include="Generated\Dsp\Interfaces.cs" />
+    <Compile Condition=" '$(SharpDXWin8Core)' == 'false'" Include="Generated\Dsp\Structures.cs" />
     <Compile Include="IAsyncCallback.cs" />
     <Compile Include="IByteStream.cs" />
     <Compile Include="MediaEngineClassFactory.cs" />
@@ -111,7 +115,9 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Dsp\Mapping.xml" />
+  </ItemGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

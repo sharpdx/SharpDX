@@ -134,8 +134,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="width">New backbuffer width</param>
         /// <param name="height">New backbuffer height</param>
         /// <param name="format">Backbuffer display format.</param>
+        /// <param name="refreshRate"></param>
         /// <returns><c>true</c> if the presenter was resized, <c>false</c> otherwise</returns>
-        public virtual bool Resize(int width, int height, DXGI.Format format)
+        public virtual bool Resize(int width, int height, Format format, Rational? refreshRate = null)
         {
             if (Description.BackBufferWidth == width && Description.BackBufferHeight == height && Description.BackBufferFormat == format)
             {
@@ -150,6 +151,10 @@ namespace SharpDX.Toolkit.Graphics
             Description.BackBufferWidth = width;
             Description.BackBufferHeight = height;
             Description.BackBufferFormat = format;
+            if(refreshRate.HasValue)
+            {
+                Description.RefreshRate = refreshRate.Value;
+            }
 
             DefaultViewport = new ViewportF(0, 0, Description.BackBufferWidth, Description.BackBufferHeight);
 

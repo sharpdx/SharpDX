@@ -130,7 +130,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="tessellation">The tessellation.</param>
             /// <param name="toLeftHanded">if set to <c>true</c> vertices and indices will be transformed to left handed. Default is true.</param>
             /// <returns>A Geodesic sphere.</returns>
-            public static GeometricPrimitive New(GraphicsDevice graphicsDevice, float diameter = 1.0f, int tessellation = 3, bool toLeftHanded = true)
+            public static GeometricPrimitive New(GraphicsDevice graphicsDevice, float diameter = 1.0f, int tessellation = 3, bool toLeftHanded = false)
             {
                 var sphere = new GeoSphere();
                 return sphere.Create(graphicsDevice, diameter, tessellation, toLeftHanded);
@@ -144,7 +144,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="tessellation">The tessellation.</param>
             /// <param name="toLeftHanded">if set to <c>true</c> vertices and indices will be transformed to left handed. Default is true.</param>
             /// <returns>A Geodesic sphere.</returns>
-            private unsafe GeometricPrimitive Create(GraphicsDevice graphicsDevice, float diameter = 1.0f, int tessellation = 3, bool toLeftHanded = true)
+            private unsafe GeometricPrimitive Create(GraphicsDevice graphicsDevice, float diameter = 1.0f, int tessellation = 3, bool toLeftHanded = false)
             {
                 subdividedEdges = new Dictionary<UndirectedEdge, int>();
 

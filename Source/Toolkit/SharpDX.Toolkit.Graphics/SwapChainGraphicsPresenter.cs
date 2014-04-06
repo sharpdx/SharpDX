@@ -85,11 +85,13 @@ namespace SharpDX.Toolkit.Graphics
             set
             {
 #if !WIN8METRO
+                if(swapChain == null)
+                    return;
+                
                 var outputIndex = PrefferedFullScreenOutputIndex;
-                var availableOutputs = GraphicsDevice.Adapter.OutputsCount;
 
                 // no outputs connected to the current graphics adapter
-                var output = availableOutputs == 0 ? null : GraphicsDevice.Adapter.GetOutputAt(outputIndex);
+                var output = GraphicsDevice.Adapter == null || GraphicsDevice.Adapter.OutputsCount == 0 ? null : GraphicsDevice.Adapter.GetOutputAt(outputIndex);
 
                 Output currentOutput = null;
 
@@ -111,16 +113,25 @@ namespace SharpDX.Toolkit.Graphics
                 bool switchToFullScreen = value;
                 // If going to fullscreen mode: call 1) SwapChain.ResizeTarget 2) SwapChain.IsFullScreen
                 var description = new ModeDescription(backBuffer.Width, backBuffer.Height, Description.RefreshRate, Description.BackBufferFormat);
-                if (switchToFullScreen)
+                if(switchToFullScreen)
                 {
-                    swapChain.ResizeTarget(ref description);
-                    swapChain.SetFullscreenState(true, output);
+                    Description.IsFullScreen = true;
+                    // Destroy and recreate the full swapchain in case of fullscreen switch
+                    // It seems to be more reliable then trying to change the current swap-chain.
+                    RemoveAndDispose(ref backBuffer);
+                    RemoveAndDispose(ref swapChain);
+
+                    swapChain = CreateSwapChain();
+                    backBuffer = ToDispose(RenderTarget2D.New(GraphicsDevice, swapChain.GetBackBuffer<Direct3D11.Texture2D>(0)));
                 }
                 else
+                {
+                    Description.IsFullScreen = false;
                     swapChain.IsFullScreen = false;
 
-                // call 1) SwapChain.IsFullScreen 2) SwapChain.Resize
-                Resize(backBuffer.Width, backBuffer.Height, backBuffer.Format);
+                    // call 1) SwapChain.IsFullScreen 2) SwapChain.Resize
+                    Resize(backBuffer.Width, backBuffer.Height, backBuffer.Format);
+                }
 
                 // If going to window mode: 
                 if (!switchToFullScreen)
@@ -153,9 +164,9 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        public override bool Resize(int width, int height, Format format)
+        public override bool Resize(int width, int height, Format format, Rational? refreshRate = null)
         {
-            if (!base.Resize(width, height, format)) return false;
+            if (!base.Resize(width, height, format, refreshRate)) return false;
 
             RemoveAndDispose(ref backBuffer);
 

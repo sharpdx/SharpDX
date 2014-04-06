@@ -28,9 +28,6 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// A description for <see cref="Image"/>.
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential)]
     public struct ImageDescription : IEquatable<ImageDescription>, IDataSerializable
     {

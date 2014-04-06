@@ -31,6 +31,11 @@ namespace SharpDX.Toolkit
         public readonly GameContextType ContextType;
 
         /// <summary>
+        /// The native control used.
+        /// </summary>
+        public readonly object Control;
+
+        /// <summary>
         /// The requested width.
         /// </summary>
         public int RequestedWidth;

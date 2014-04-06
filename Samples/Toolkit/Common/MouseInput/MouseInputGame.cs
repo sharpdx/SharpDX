@@ -96,9 +96,9 @@ namespace MouseInput
 
             // print the current mouse state
             var sb = new StringBuilder();
-            sb.AppendFormat("Left button  : {0}\n", mouseState.Left);
-            sb.AppendFormat("Middle button: {0}\n", mouseState.Middle);
-            sb.AppendFormat("Right button : {0}\n", mouseState.Right);
+            sb.AppendFormat("Left button  : {0}\n", mouseState.LeftButton);
+            sb.AppendFormat("Middle button: {0}\n", mouseState.MiddleButton);
+            sb.AppendFormat("Right button : {0}\n", mouseState.RightButton);
             sb.AppendFormat("XButton1     : {0}\n", mouseState.XButton1);
             sb.AppendFormat("XButton2     : {0}\n", mouseState.XButton2);
 

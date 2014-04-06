@@ -1,0 +1,2 @@
+call "%~dp0..\..\..\fxc.bat" /Tvs_4_0_level_9_1 /Emain /FoSimpleVertexShader.cso SimpleVertexShader.hlsl
+call "%~dp0..\..\..\fxc.bat" /Tps_4_0_level_9_1 /Emain /FoSimplePixelShader.cso SimplePixelShader.hlsl

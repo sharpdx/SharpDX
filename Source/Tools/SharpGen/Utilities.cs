@@ -22,6 +22,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml.Serialization;
 
@@ -30,7 +31,7 @@ namespace SharpGen
     /// <summary>
     /// Utility class.
     /// </summary>
-    public class Utilities
+    public static class Utilities
     {
         /// <summary>
         /// Escapes the xml/html text in order to use it inside xml.
@@ -141,5 +142,19 @@ namespace SharpGen
                 Assembly.LoadFrom(assemblySerializer);
             }
         }
+
+		/// <summary>
+		/// Determines whether a string contains a given C++ identifier.
+		/// </summary>
+		/// <param name="str">The string to search.</param>
+		/// <param name="identifier">The C++ identifier to search for.</param>
+		/// <returns></returns>
+		public static bool ContainsCppIdentifier(string str, string identifier)
+		{
+			if (string.IsNullOrEmpty(str))
+				return string.IsNullOrEmpty(identifier);
+
+			return Regex.IsMatch(str, string.Format(@"\b{0}\b", Regex.Escape(identifier)), RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+		}
     }
 }

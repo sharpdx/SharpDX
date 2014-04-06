@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.ComponentModel;
 using System.Runtime.InteropServices;
 using SharpDX.Serialization;
 
@@ -29,10 +28,6 @@ namespace SharpDX
     /// Defines a four component vector, using half precision floating point coordinates.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-#if !W8CORE
-    [Serializable]
-    [TypeConverter(typeof(SharpDX.Design.Half4Converter))]
-#endif
     [DynamicSerializer("TKH4")]
     public struct Half4 : IEquatable<Half4>, IDataSerializable
     {
@@ -204,9 +199,14 @@ namespace SharpDX
         /// <returns>A 32-bit signed integer hash code.</returns>
         public override int GetHashCode()
         {
-            int num2 = this.W.GetHashCode() + this.Z.GetHashCode();
-            int num = this.Y.GetHashCode() + num2;
-            return (this.X.GetHashCode() + num);
+            unchecked
+            {
+                var hashCode = X.GetHashCode();
+                hashCode = (hashCode * 397) ^ Y.GetHashCode();
+                hashCode = (hashCode * 397) ^ Z.GetHashCode();
+                hashCode = (hashCode * 397) ^ W.GetHashCode();
+                return hashCode;
+            }
         }
 
         /// <inheritdoc/>

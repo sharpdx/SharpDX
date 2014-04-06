@@ -39,6 +39,7 @@ namespace CustomLoadingData
     {
         private GraphicsDeviceManager graphicsDeviceManager;
         private YamlManager yamlManager;
+        private SpriteBatch spriteBatch;
         private MyData loadedMyData;
 
         /// <summary>
@@ -76,13 +77,31 @@ namespace CustomLoadingData
             loadedMyData = Content.Load<MyData>("MyData.yml");
             Window.Title = string.Format("Yaml Data Loading: [{0}]", loadedMyData.Name);
 
+            // Instantiate a SpriteBatch
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+
+
             base.LoadContent();
+        }
+
+        protected override void UnloadContent()
+        {
+            spriteBatch.Dispose();
+
+            base.UnloadContent();
         }
 
         protected override void Draw(GameTime gameTime)
         {
             // Clear the color using MyData
             GraphicsDevice.Clear(loadedMyData.Color);
+
+            // Render the text
+            spriteBatch.Begin();
+            spriteBatch.DrawString(loadedMyData.Font, loadedMyData.Name, new Vector2(0, 0), Color.White);
+            var pos = new Vector2(0, loadedMyData.Font.MeasureString(loadedMyData.Name).Y);
+            spriteBatch.DrawString(loadedMyData.Font, "And so was this font.", pos, Color.White);
+            spriteBatch.End();
 
             // Handle base.Draw
             base.Draw(gameTime);
@@ -106,6 +125,8 @@ namespace CustomLoadingData
             public float SimpleValue { get; set; }
 
             public List<Vector4> Vectors { get; set; }
+
+            public SpriteFont Font { get; set; }
         }
     }
 }

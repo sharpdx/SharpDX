@@ -12,7 +12,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateThumbprint>48CCAD92A8EFF4FD985C2D1441F7216EBF488D94</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>D4448785B0A2B0DFE59C03F3E397C6BE99203C95</PackageCertificateThumbprint>
     <PackageCertificateKeyFile>MiniCube_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -47,16 +47,16 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\Bin\DirectX11_1-winrt\SharpDX.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_2-winrt\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct2D1">
-      <HintPath>..\..\..\Bin\DirectX11_1-winrt\SharpDX.Direct2D1.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_2-winrt\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\..\..\Bin\DirectX11_1-winrt\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_2-winrt\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI">
-      <HintPath>..\..\..\Bin\DirectX11_1-winrt\SharpDX.DXGI.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_2-winrt\SharpDX.DXGI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

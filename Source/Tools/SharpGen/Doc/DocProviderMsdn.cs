@@ -358,7 +358,7 @@ namespace SharpGen.Doc
                 return string.Empty;
 
             var builder = new StringBuilder();
-            var nodes = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase) { "h3", "mtps:collapsiblearea" };
+            var nodes = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase) { "h3", "h2", "mtps:collapsiblearea" };
             foreach (var untilNode in untilNodes)
             {
                 nodes.Add(untilNode);
@@ -412,17 +412,22 @@ namespace SharpGen.Doc
             HtmlNode firstElement = element.ChildNodes.FindFirst("dl");
             if (firstElement != null)
             {
+                string termName = null;
                 List<string> currentDoc = new List<string>();
                 var nodes = firstElement.ChildNodes;
-                int ddCount = 0;
                 foreach (HtmlNode htmlNode in nodes)
                 {
                     if (htmlNode.Name == "dt")
                     {
                         if (currentDoc.Count > 0)
                         {
-                            item.Items.Add(currentDoc[currentDoc.Count - 1]);
+                            item.Items.Add(new DocSubItem
+                            {
+                                Term = termName, 
+                                Description = currentDoc[currentDoc.Count - 1]
+                            });
                             currentDoc.Clear();
+                            termName = htmlNode.InnerText;
                         }
                     }
                     else if (htmlNode.Name == "dd")
@@ -431,9 +436,13 @@ namespace SharpGen.Doc
                     }
                 }
                 if (currentDoc.Count > 0)
-                    item.Items.Add(currentDoc[currentDoc.Count - 1]);
+                    item.Items.Add(new DocSubItem
+                    {
+                        Term = termName,
+                        Description = currentDoc[currentDoc.Count - 1]
+                    });
             }
-            var headerCollection = element.SelectNodes("//h3");
+            var headerCollection = element.SelectNodes("//h3 | //h2");
             if (headerCollection != null)
             {
                 foreach (HtmlNode htmlNode in headerCollection)

@@ -107,7 +107,7 @@ namespace SharpDX.Toolkit
             throw new ArgumentException("Game Window context not supported on this platform");
         }
 
-        public bool IsBlockingRun { get; protected set; }
+        public bool IsBlockingRun { get { return gameWindow != null && gameWindow.IsBlockingRun; } }
 
         public void Run(GameContext gameContext)
         {
@@ -130,6 +130,24 @@ namespace SharpDX.Toolkit
             }
 
             gameWindow.Run();
+        }
+
+        /// <summary>
+        /// Switches the game to a new game context.
+        /// </summary>
+        /// <param name="context">The new game context.</param>
+        /// <exception cref="NotSupportedException">Is thrown when a different game context type is passed (for example initially it was WinForms and became WPF).</exception>
+        public void Switch(GameContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+
+            if (gameWindow.CanHandle(context))
+            {
+                gameWindow.Switch(context);
+                CreatePresenter(game.GraphicsDevice, null, context.Control);
+            }
+            else
+                throw new NotSupportedException("Switching to a different game window type is not supported yet.");
         }
 
         public virtual void Exit()
@@ -229,16 +247,55 @@ namespace SharpDX.Toolkit
 
             var parameters = deviceInformation.PresentationParameters;
 
-            // Give a chance to gameWindow to create desired graphics presenter, otherwise - create our own.
-            var presenter = gameWindow.CreateGraphicsPresenter(device, parameters)
-                            ?? new SwapChainGraphicsPresenter(device, parameters);
-
-            device.Presenter = presenter;
+            CreatePresenter(device, parameters);
 
             // Force to resize the gameWindow
             gameWindow.Resize(parameters.BackBufferWidth, parameters.BackBufferHeight);
 
             return device;
+        }
+
+        protected virtual void CreatePresenter(GraphicsDevice device, PresentationParameters parameters, object newControl = null)
+        {
+            if (device == null) throw new ArgumentNullException("device");
+
+            parameters = TryGetParameters(device, parameters);
+
+            DisposeGraphicsPresenter(device);
+
+            // override the device window, if available
+            if (newControl != null)
+                parameters.DeviceWindowHandle = newControl;
+
+            // Give a chance to gameWindow to create desired graphics presenter, otherwise - create our own.
+            device.Presenter = gameWindow.CreateGraphicsPresenter(device, parameters)
+                               ?? new SwapChainGraphicsPresenter(device, parameters);
+        }
+
+        protected PresentationParameters TryGetParameters(GraphicsDevice device, PresentationParameters parameters)
+        {
+            var oldPresenter = device.Presenter;
+
+            if (parameters == null)
+            {
+                if (oldPresenter == null)
+                    throw new InvalidOperationException("Cannot retrieve PresentationParameters.");
+
+                // preserve the parameters from old GraphicsPresenter
+                parameters = oldPresenter.Description.Clone();
+            }
+
+            return parameters;
+        }
+
+        protected void DisposeGraphicsPresenter(GraphicsDevice device)
+        {
+            var oldPresenter = device.Presenter;
+            if(oldPresenter != null)
+            {
+                device.Presenter = null;
+                oldPresenter.Dispose();
+            }
         }
 
         protected void TryFindSupportedFeatureLevel(GameGraphicsParameters prefferedParameters,
@@ -318,14 +375,19 @@ namespace SharpDX.Toolkit
                                             GraphicsDeviceInformation deviceInfo,
                                             List<GraphicsDeviceInformation> graphicsDeviceInfos)
         {
-            if (output.CurrentDisplayMode != null)
-                AddDevice(output.CurrentDisplayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
+            var preferredMode = new DisplayMode(prefferedParameters.PreferredBackBufferFormat,
+                prefferedParameters.PreferredBackBufferWidth,
+                prefferedParameters.PreferredBackBufferHeight,
+                prefferedParameters.PreferredRefreshRate);
 
             if (prefferedParameters.IsFullScreen)
             {
-                // Get display mode for the particular width, height, pixelformat
-                foreach (var displayMode in output.SupportedDisplayModes)
-                    AddDevice(displayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
+                var displayMode = output.FindClosestMatchingDisplayMode(prefferedParameters.PreferredGraphicsProfile, preferredMode);
+                AddDevice(displayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
+            }
+            else
+            {
+                AddDevice(preferredMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
             }
         }
 

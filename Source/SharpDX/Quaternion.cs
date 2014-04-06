@@ -43,7 +43,6 @@
 * THE SOFTWARE.
 */
 using System;
-using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Serialization;
@@ -54,10 +53,6 @@ namespace SharpDX
     /// Represents a four dimensional mathematical quaternion.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-#if !W8CORE
-    [Serializable]
-    [TypeConverter(typeof(SharpDX.Design.QuaternionConverter))]
-#endif
     public struct Quaternion : IEquatable<Quaternion>, IFormattable, IDataSerializable
     {
         /// <summary>
@@ -232,7 +227,7 @@ namespace SharpDX
                 if (MathUtil.IsZero(length))
                     return Vector3.UnitX;
 
-                float inv = 1.0f / length;
+                float inv = 1.0f / (float)Math.Sqrt(length);
                 return new Vector3(X * inv, Y * inv, Z * inv);
             }
         }
@@ -432,11 +427,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Modulates a quaternion by another.
+        /// Multiplies a quaternion by another.
         /// </summary>
-        /// <param name="left">The first quaternion to modulate.</param>
-        /// <param name="right">The second quaternion to modulate.</param>
-        /// <param name="result">When the method completes, contains the modulated quaternion.</param>
+        /// <param name="left">The first quaternion to multiply.</param>
+        /// <param name="right">The second quaternion to multiply.</param>
+        /// <param name="result">When the method completes, contains the multiplied quaternion.</param>
         public static void Multiply(ref Quaternion left, ref Quaternion right, out Quaternion result)
         {
             float lx = left.X;
@@ -458,11 +453,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Modulates a quaternion by another.
+        /// Multiplies a quaternion by another.
         /// </summary>
-        /// <param name="left">The first quaternion to modulate.</param>
-        /// <param name="right">The second quaternion to modulate.</param>
-        /// <returns>The modulated quaternion.</returns>
+        /// <param name="left">The first quaternion to multiply.</param>
+        /// <param name="right">The second quaternion to multiply.</param>
+        /// <returns>The multiplied quaternion.</returns>
         public static Quaternion Multiply(Quaternion left, Quaternion right)
         {
             Quaternion result;
@@ -896,6 +891,178 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Creates a quaternion given forward and up vectors
+        /// </summary>
+        /// <param name="forward">The forward vector the quaternion should look at</param>
+        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
+        /// <param name="right">The right vector of the quaternion (must be perpendicular to forward vector)</param>
+        /// <param name="result">The newly created quaternion</param>
+        public static void RotationLookAt(ref Vector3 forward, ref Vector3 up, ref Vector3 right, out Quaternion result)
+        {
+            //normalize input
+            forward.Normalize(); 
+            up.Normalize(); 
+            right.Normalize();
+            //fill the 3x3 matrix with the bases for the system
+            Matrix3x3 m;
+            m.M11 = right.X;
+            m.M12 = right.Y;
+            m.M13 = right.Z;
+            m.M21 = up.X;
+            m.M22 = up.Y;
+            m.M23 = up.Z;
+            m.M31 = forward.X;
+            m.M32 = forward.Y;
+            m.M33 = forward.Z;
+            //create new quaternion from matrix
+            RotationMatrix(ref m, out result);
+        }
+        
+        /// <summary>
+        /// Creates a quaternion given forward and up vectors
+        /// </summary>
+        /// <param name="forward">The forward vector the quaternion should look at</param>
+        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
+        /// <param name="right">The right vector of the quaternion</param>
+        /// <returns>The newly created quaternion</returns>
+        public static Quaternion RotationLookAt(Vector3 forward, Vector3 up, Vector3 right)
+        {
+            Quaternion result;
+            RotationLookAt(ref forward, ref up, ref right, out result);
+            return result;
+        }
+        
+        /// <summary>
+        /// Creates a quaternion given left-handed forward and up vectors
+        /// </summary>
+        /// <param name="forward">The forward vector the quaternion should look at</param>
+        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
+        /// <param name="result">The newly created quaternion</param>
+        public static void RotationLookAtLH(ref Vector3 forward, ref Vector3 up, out Quaternion result)
+        {
+            Vector3 right;
+            Vector3.Cross(ref up, ref forward, out right);
+            RotationLookAt(ref forward, ref up, ref right, out result);
+        }
+
+        /// <summary>
+        /// Creates a quaternion given left-handed forward and up vectors
+        /// </summary>
+        /// <param name="forward">The forward vector the quaternion should look at</param>
+        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
+        /// <returns>The newly created quaternion</returns>
+        public static Quaternion RotationLookAtLH(Vector3 forward, Vector3 up)
+        {
+            Quaternion result;
+            RotationLookAtLH(ref forward, ref up, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a quaternion given right-handed forward and up vectors
+        /// </summary>
+        /// <param name="forward">The forward vector the quaternion should look at</param>
+        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
+        /// <param name="result">The newly created quaternion</param>
+        public static void RotationLookAtRH(ref Vector3 forward, ref Vector3 up, out Quaternion result)
+        {
+            Vector3 right;
+            Vector3.Cross(ref forward, ref up, out right);
+            RotationLookAt(ref forward, ref up, ref right, out result);
+        }
+
+        /// <summary>
+        /// Creates a quaternion given right-handed forward and up vectors
+        /// </summary>
+        /// <param name="forward">The forward vector the quaternion should look at</param>
+        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
+        /// <returns>The newly created quaternion</returns>
+        public static Quaternion RotationLookAtRH(Vector3 forward, Vector3 up)
+        {
+            Quaternion result;
+            RotationLookAtRH(ref forward, ref up, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a left-handed spherical billboard that rotates around a specified object position.
+        /// </summary>
+        /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
+        /// <param name="cameraPosition">The position of the camera.</param>
+        /// <param name="cameraUpVector">The up vector of the camera.</param>
+        /// <param name="cameraForwardVector">The forward vector of the camera.</param>
+        /// <param name="result">When the method completes, contains the created billboard quaternion.</param>
+        public static void BillboardLH(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Quaternion result)
+        {
+            Vector3 right;
+            Vector3 up;
+            Vector3 difference = objectPosition - cameraPosition;
+
+            float lengthSq = difference.LengthSquared();
+            if (MathUtil.IsZero(lengthSq))
+                difference = -cameraForwardVector;
+
+            Vector3.Cross(ref cameraUpVector, ref difference, out right);
+            Vector3.Cross(ref difference, ref right, out up);
+
+            RotationLookAt(ref difference, ref up, ref right, out result);
+        }
+        
+        /// <summary>
+        /// Creates a left-handed spherical billboard that rotates around a specified object position.
+        /// </summary>
+        /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
+        /// <param name="cameraPosition">The position of the camera.</param>
+        /// <param name="cameraUpVector">The up vector of the camera.</param>
+        /// <param name="cameraForwardVector">The forward vector of the camera.</param>
+        /// <returns>When the method completes, contains the created billboard quaternion.</returns>
+        public static Quaternion BillboardLH(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector)
+        {
+            Quaternion result;
+            BillboardLH(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a left-handed spherical billboard that rotates around a specified object position.
+        /// </summary>
+        /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
+        /// <param name="cameraPosition">The position of the camera.</param>
+        /// <param name="cameraUpVector">The up vector of the camera.</param>
+        /// <param name="cameraForwardVector">The forward vector of the camera.</param>
+        /// <param name="result">When the method completes, contains the created billboard quaternion.</param>
+        public static void BillboardRH(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Quaternion result)
+        {
+            Vector3 right;
+            Vector3 up;
+            Vector3 difference = cameraPosition - objectPosition;
+
+            float lengthSq = difference.LengthSquared();
+            if (MathUtil.IsZero(lengthSq))
+                difference = cameraForwardVector;
+
+            Vector3.Cross(ref cameraUpVector, ref difference, out right);
+            Vector3.Cross(ref difference, ref right, out up);
+
+            RotationLookAt(ref difference, ref up, ref right, out result);
+        }
+
+        /// <summary>
+        /// Creates a left-handed spherical billboard that rotates around a specified object position.
+        /// </summary>
+        /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
+        /// <param name="cameraPosition">The position of the camera.</param>
+        /// <param name="cameraUpVector">The up vector of the camera.</param>
+        /// <param name="cameraForwardVector">The forward vector of the camera.</param>
+        /// <returns>When the method completes, contains the created billboard quaternion.</returns>
+        public static Quaternion BillboardRH(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector)
+        {
+            Quaternion result;
+            BillboardRH(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
+            return result;
+        }
+
+        /// <summary>
         /// Creates a quaternion given a rotation matrix.
         /// </summary>
         /// <param name="matrix">The rotation matrix.</param>
@@ -1139,7 +1306,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator ==(Quaternion left, Quaternion right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -1150,7 +1317,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator !=(Quaternion left, Quaternion right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>
@@ -1217,7 +1384,14 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode() + W.GetHashCode();
+            unchecked
+            {
+                var hashCode = X.GetHashCode();
+                hashCode = (hashCode * 397) ^ Y.GetHashCode();
+                hashCode = (hashCode * 397) ^ Z.GetHashCode();
+                hashCode = (hashCode * 397) ^ W.GetHashCode();
+                return hashCode;
+            }
         }
 
         /// <inheritdoc/>
@@ -1247,9 +1421,21 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref="SharpDX.Quaternion"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(Quaternion other)
+        public bool Equals(ref Quaternion other)
         {
             return MathUtil.NearEqual(other.X, X) && MathUtil.NearEqual(other.Y, Y) && MathUtil.NearEqual(other.Z, Z) && MathUtil.NearEqual(other.W, W);
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="SharpDX.Quaternion"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="SharpDX.Quaternion"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="SharpDX.Quaternion"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(Quaternion other)
+        {
+            return Equals(ref other);
         }
 
         /// <summary>
@@ -1261,13 +1447,11 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
+            if (!(value is Quaternion))
                 return false;
 
-            if (!ReferenceEquals(value.GetType(), typeof(Quaternion)))
-                return false;
-
-            return Equals((Quaternion)value);
+            var strongValue = (Quaternion)value;
+            return Equals(ref strongValue);
         }
 
 #if SlimDX1xInterop

@@ -31,7 +31,7 @@ namespace SharpDX.Toolkit
     /// <summary>
     /// The game.
     /// </summary>
-    public class Game : Component
+    public partial class Game : Component
     {
         #region Fields
 
@@ -45,7 +45,7 @@ namespace SharpDX.Toolkit
         private readonly List<IContentable> contentableGameSystems;
         private readonly int[] lastUpdateCount;
         private readonly float updateCountAverageSlowLimit;
-        private readonly GamePlatform gamePlatform;
+        private GamePlatform gamePlatform;
         private IGraphicsDeviceService graphicsDeviceService;
         private IGraphicsDeviceManager graphicsDeviceManager;
 
@@ -339,6 +339,16 @@ namespace SharpDX.Toolkit
             isFirstUpdateDone = true;
         }
 
+        public void Run(object control)
+        {
+            Run(new GameContext(control));
+        }
+
+        public void Switch(object control)
+        {
+            Switch(new GameContext(control));
+        }
+
         /// <summary>
         /// Call this method to initialize the game, begin running the game loop, and start processing events for the game.
         /// </summary>
@@ -353,11 +363,6 @@ namespace SharpDX.Toolkit
 
             // Gets the graphics device manager
             graphicsDeviceManager = Services.GetService(typeof(IGraphicsDeviceManager)) as IGraphicsDeviceManager;
-            if (graphicsDeviceManager == null)
-            {
-                throw new InvalidOperationException("No GraphicsDeviceManager found");
-            }
-
             if (graphicsDeviceManager == null)
             {
                 throw new InvalidOperationException("No GraphicsDeviceManager found");
@@ -388,6 +393,21 @@ namespace SharpDX.Toolkit
                     IsRunning = false;
                 }
             }
+        }
+
+        /// <summary>
+        /// Call this method to switch game rendering to a different control.
+        /// </summary>
+        /// <param name="context">The new game context.</param>
+        /// <exception cref="ArgumentNullException">Is thrown when <paramref name="context"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">Is thrown when game is not running (<see cref="IsRunning"/> is false).</exception>
+        public void Switch(GameContext context)
+        {
+            if(context == null) throw new ArgumentNullException("context");
+
+            if (!IsRunning) throw new InvalidOperationException("Cannot switch context while not running, call Run(GameContext) instead.");
+
+            gamePlatform.Switch(context);
         }
 
         /// <summary>
@@ -453,6 +473,11 @@ namespace SharpDX.Toolkit
                 // If there is no need for update, then exit
                 if (updateCount == 0)
                 {
+                    // check if we can sleep the thread to free CPU resources
+                    var sleepTime = TargetElapsedTime - accumulatedElapsedGameTime;
+                    if (sleepTime > TimeSpan.Zero)
+                        Utilities.Sleep(sleepTime);
+
                     return;
                 }
 
