@@ -78,6 +78,7 @@ namespace SharpDX.Windows
         private bool isUserResizing;
         private bool allowUserResizing;
         private bool isBackgroundFirstDraw;
+        private bool isSizeChangedWithoutResizeBegin;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RenderForm"/> class.
@@ -151,8 +152,13 @@ namespace SharpDX.Windows
         public event EventHandler<EventArgs> UserResized;
 
         /// <summary>
-        /// Gets or sets a value indicating whether this form can be resized by the user. 
+        /// Gets or sets a value indicating whether this form can be resized by the user. See remarks.
         /// </summary>
+        /// <remarks>
+        /// This property alters <see cref="Form.FormBorderStyle"/>, 
+        /// for <c>true</c> value it is <see cref="FormBorderStyle.Sizable"/>, 
+        /// for <c>false</c> - <see cref="FormBorderStyle.FixedSingle"/>.
+        /// </remarks>
         /// <value><c>true</c> if this form can be resized by the user (by default); otherwise, <c>false</c>.</value>
         public bool AllowUserResizing
         {
@@ -166,10 +172,21 @@ namespace SharpDX.Windows
                 {
                     allowUserResizing = value;
                     MaximizeBox = allowUserResizing;
-                    FormBorderStyle = allowUserResizing ? FormBorderStyle.Sizable : FormBorderStyle.FixedSingle;
+                    FormBorderStyle = IsFullscreen
+                        ? FormBorderStyle.None
+                        : allowUserResizing ? FormBorderStyle.Sizable : FormBorderStyle.FixedSingle;
                 }
             }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicationg whether the current render form is in fullscreen mode. See remarks.
+        /// </summary>
+        /// <remarks>
+        /// If Toolkit is used, this property is set automatically,
+        /// otherwise user should maintain it himself as it affects the behavior of <see cref="AllowUserResizing"/> property.
+        /// </remarks>
+        public bool IsFullscreen { get; set; }
 
         /// <summary>
         /// Raises the <see cref="E:System.Windows.Forms.Form.ResizeBegin"/> event.
@@ -310,8 +327,6 @@ namespace SharpDX.Windows
             if (Screensaver != null)
                 Screensaver(this, e);
         }
-
-        private bool isSizeChangedWithoutResizeBegin;
 
         protected override void OnClientSizeChanged(EventArgs e)
         {
