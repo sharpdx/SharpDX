@@ -146,9 +146,9 @@
   </ifdef>
 
   <ifndef name="W8CORE">
+    <file>SharpDX.Direct3D11.Effects\Mapping.xml</file>
     <ifdef name="DIRECTX11_1|DIRECTX11_2">
       <file>SharpDX.Animation\Mapping.xml</file>
-      <file>SharpDX.Direct3D11.Effects\Mapping.xml</file>
       <file>SharpDX.DirectComposition\Mapping.xml</file>
       <file>SharpDX.DirectManipulation\Mapping.xml</file>
     </ifdef>
