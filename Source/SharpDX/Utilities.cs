@@ -1323,7 +1323,15 @@ namespace SharpDX
             comObject.NativePointer = localQuery.IUnknownPointer;
         }
 #else
-        // TODO THIS IS NOT TESTED under W8CORE
+        #if W8CORE
+        [DllImport("Combase.dll", ExactSpelling = true, EntryPoint = "CoCreateInstanceFromApp", PreserveSig = true)]
+        private static extern Result CoCreateInstanceFromApp([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, 
+            IntPtr pUnkOuter, 
+            CLSCTX dwClsContext, 
+            IntPtr reserved,
+            int countMultiQuery,
+            ref MultiQueryInterface query);
+        #else
         [DllImport("ole32.dll", ExactSpelling = true, EntryPoint = "CoCreateInstanceFromApp", PreserveSig = true)]
         private static extern Result CoCreateInstanceFromApp([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, 
             IntPtr pUnkOuter, 
@@ -1331,6 +1339,7 @@ namespace SharpDX
             IntPtr reserved,
             int countMultiQuery,
             ref MultiQueryInterface query);
+         #endif
 
         internal unsafe static void CreateComInstance(Guid clsid, CLSCTX clsctx, Guid riid, ComObject comObject)
         {
