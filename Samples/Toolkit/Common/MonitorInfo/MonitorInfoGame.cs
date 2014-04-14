@@ -212,6 +212,9 @@ namespace MonitorInfo
 
             spriteBatch.Begin(SpriteSortMode.Immediate, null);
             spriteBatch.DrawString(font, text, new Vector2(20, 20), Color.Black);
+
+            var textMillis = "Frametime in Milliseconds: " + gameTime.ElapsedGameTime.TotalMilliseconds;
+            spriteBatch.DrawString(font, textMillis, new Vector2(20, Window.ClientBounds.Height - 40), Color.Black);
             spriteBatch.End();
 
             base.Draw(gameTime);
