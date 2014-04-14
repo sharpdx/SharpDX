@@ -188,6 +188,10 @@ namespace SharpDX.WIC
 
         private static IntPtr ConvertToHPALETTE(ColorPalette colorPalette)
         {
+            // no palette is specified
+            if(colorPalette.Entries.Length == 0)
+                return IntPtr.Zero;
+
             IntPtr ptr = Marshal.AllocHGlobal((int) (4 * (2 + colorPalette.Entries.Length)));
             Marshal.WriteInt32(ptr, 0, colorPalette.Flags);
             Marshal.WriteInt32((IntPtr) (((long) ptr) + 4L), 0, colorPalette.Entries.Length);

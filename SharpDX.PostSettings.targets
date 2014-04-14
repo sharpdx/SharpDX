@@ -64,7 +64,7 @@
       <Output TaskParameter="Path" PropertyName="FrameworkSdkPath" />
     </GetFrameworkSdkPath>
 
-    <Exec Command='"$(FrameworkSdkPath)\bin\NETFX 4.0 Tools\x64\sn.exe" -Ra $(TargetPath) $(SolutionDir)sharpdx.snk' Condition="'$(SharpDXSign)' == 'true'"/>
+    <Exec Command='"$(FrameworkSdkPath)\bin\NETFX 4.5.1 Tools\x64\sn.exe" -Ra $(TargetPath) $(SolutionDir)sharpdx.snk' Condition="'$(SharpDXSign)' == 'true'"/>
 
     <!-- Copy back *.dll from bin/Debug|Release to obj/Debug/Release directory -->
     <Copy SourceFiles="@(MainAssembly)" DestinationFolder="$(IntermediateOutputPath)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"/>

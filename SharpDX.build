@@ -36,13 +36,14 @@
   <Import Project="$(ExtensionTasksPath)MSBuild.ExtensionPack.tasks"/>
   
   <Target Name="Help">
-	<Message Importance="high" Text="Use parameter /t:Build to build all SharpDX assemblies"/>
+	<Message Importance="high" Text="Use parameter /t:Pre-Build;Build to build SharpDX assemblies for non WP8 platforms. And /t:BuildForVS2012 for WP8"/>
   </Target>
 
-  <Target Name="FullBuild">
+  <Target Name="Pre-Build">
 	<CallTarget Targets="GitCheckout"/>
-	<CallTarget Targets="Build"/>
-	<CallTarget Targets="BuildSamples"/>
+  </Target>
+  
+  <Target Name="Post-Build">
 	<CallTarget Targets="GitUpdate"/>
 	<CallTarget Targets="ZipBuild"/>
 	<CallTarget Targets="FtpZip"/>
@@ -55,16 +56,18 @@
 	
 	<CallTarget Targets="BuildSigned" Condition="'$(BuildSignedSharpDX)' == 'true'"/>
 	<CallTarget Targets="DesktopNet20" />
-    	<CallTarget Targets="DesktopNet40" />
-    	<CallTarget Targets="MetroWin8" />
+	<CallTarget Targets="DesktopNet40" />
+	<CallTarget Targets="MetroWin8" />
 	<CallTarget Targets="DesktopDx112" />
-    	<CallTarget Targets="WP8x86" />
-    	<CallTarget Targets="WP8ARM" />
-
-    	<CallTarget Targets="CopyD3DRedistributionFiles" />
+	<CallTarget Targets="CopyD3DRedistributionFiles" />
 
   </Target>
 
+  <Target Name="BuildForVS2012">
+	<CallTarget Targets="WP8x86" />
+	<CallTarget Targets="WP8ARM" />
+  </Target>
+  
   <Target Name="BuildSigned">
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Net20Release;Platform=Any CPU;SharpDXSign=true"/>
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Net40Release;Platform=Any CPU;SharpDXSign=true"/>
