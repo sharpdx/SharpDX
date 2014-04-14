@@ -31,6 +31,11 @@ namespace SharpDX.Toolkit
         Desktop,
 
         /// <summary>
+        /// Game running on desktop in a WPF border control through a HwndHost
+        /// </summary>
+        DesktopHwndWpf,
+        
+        /// <summary>
         /// Game running on desktop in a WPF window through a D3DImage.
         /// </summary>
         DesktopWpf,
@@ -39,11 +44,6 @@ namespace SharpDX.Toolkit
         /// Game running on WinRT in a CoreWindow.
         /// </summary>
         WinRT,
-
-        /// <summary>
-        /// Game running on WinRT in a SwapChainBackgroundPanel.
-        /// </summary>
-        WinRTBackgroundXaml,
 
         /// <summary>
         /// Game running on WinRT in a SurfaceImageSource.

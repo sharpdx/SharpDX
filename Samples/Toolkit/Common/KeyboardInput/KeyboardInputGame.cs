@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Collections.Generic;
 using SharpDX;
 using SharpDX.Toolkit;
 
@@ -40,6 +41,7 @@ namespace KeyboardInput
         private SpriteBatch spriteBatch;
         private SpriteFont arial16BMFont;
         private KeyboardState keyboardState;
+        private readonly List<Keys> keys = new List<Keys>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpriteBatchAndFontGame" /> class.
@@ -95,9 +97,10 @@ namespace KeyboardInput
 
             // print the current mouse state
             var sb = new StringBuilder();
-            sb.AppendLine("Pressed keys:");
+            sb.AppendLine("Down keys:");
 
-            foreach(var key in keyboardState.GetPressedKeys())
+            keyboardState.GetDownKeys(keys);
+            foreach(var key in keys)
                 sb.AppendFormat("Key: {0}, Code: {1}\n", key, (int)key);
 
             // Render the text

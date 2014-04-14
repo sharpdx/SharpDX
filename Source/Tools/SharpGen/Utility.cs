@@ -26,7 +26,7 @@ using Microsoft.Win32;
 
 namespace SharpGen
 {
-    public class Utility
+    public static class Utility
     {
         /// <summary>
         /// Escapes the xml/html text in order to use it inside xml.

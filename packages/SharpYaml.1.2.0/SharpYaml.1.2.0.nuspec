@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>SharpYaml</id>
+    <version>1.2.0</version>
+    <authors>Alexandre Mutel</authors>
+    <owners>Alexandre Mutel</owners>
+    <licenseUrl>https://github.com/xoofx/SharpYaml/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/xoofx/SharpYaml</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A YAML portable .NET library. providing parsing and serialization of object graphs.</description>
+    <summary>This package contains the YAML parser and serializer/deserializer.</summary>
+    <language>en-US</language>
+    <tags>yaml parser development library</tags>
+  </metadata>
+</package>

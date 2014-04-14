@@ -145,6 +145,8 @@ namespace SharpDX.Toolkit
             }
         }
 
+        internal override bool IsBlockingRun { get { return false; } }
+
         #endregion
 
         #region Explicit Interface Properties
@@ -327,10 +329,25 @@ namespace SharpDX.Toolkit
 
         internal override void Run()
         {
-            drawingSurfaceBackgroundGrid.Loaded += DrawingSurfaceBackgroundGridOnLoaded;
+            BindDrawingSurfaceBackgroundGridEvents();
+        }
 
-            // Never called??
-            drawingSurfaceBackgroundGrid.Unloaded += drawingSurfaceBackgroundGrid_Unloaded;
+        internal override void Switch(GameContext context)
+        {
+            isInitialized = false;
+
+            drawingSurfaceBackgroundGrid.Loaded -= DrawingSurfaceBackgroundGridOnLoaded;
+            drawingSurfaceBackgroundGrid.Unloaded -= drawingSurfaceBackgroundGrid_Unloaded;
+            drawingSurfaceBackgroundGrid.SetBackgroundContentProvider(null);
+
+            drawingSurfaceBackgroundGrid = (DrawingSurfaceBackgroundGrid)context.Control;
+
+            BindDrawingSurfaceBackgroundGridEvents();
+            // TODO: check if this can cause issues as event "Loaded" never gets called
+            drawingSurfaceBackgroundGrid.SetBackgroundContentProvider(this);
+
+            currentDevice = null;
+            currentDeviceContext = null;
         }
 
         protected internal override void SetSupportedOrientations(DisplayOrientation orientations)
@@ -346,6 +363,12 @@ namespace SharpDX.Toolkit
 
         protected override void SetTitle(string title)
         {
+        }
+
+        private void BindDrawingSurfaceBackgroundGridEvents()
+        {
+            drawingSurfaceBackgroundGrid.Loaded += DrawingSurfaceBackgroundGridOnLoaded;
+            drawingSurfaceBackgroundGrid.Unloaded += drawingSurfaceBackgroundGrid_Unloaded;
         }
 
         private void DisposeAll()

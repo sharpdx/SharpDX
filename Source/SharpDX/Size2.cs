@@ -27,12 +27,19 @@ namespace SharpDX
     /// <summary>
     /// Structure using the same layout than <see cref="System.Drawing.Size"/>.
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential)]
     public struct Size2 : IEquatable<Size2>, IDataSerializable
     {
+        /// <summary>
+        /// A zero size with (width, height) = (0,0)
+        /// </summary>
+        public static readonly Size2 Zero = new Size2(0, 0);
+
+        /// <summary>
+        /// A zero size with (width, height) = (0,0)
+        /// </summary>
+        public static readonly Size2 Empty = Zero;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Size2"/> struct.
         /// </summary>

@@ -364,7 +364,7 @@ namespace SharpDX
             }
         }
 
-	/// <summary>
+    /// <summary>
         /// Converts bool array to integer pointers array.
         /// </summary>
         /// <param name="array">The bool array.</param>
@@ -388,13 +388,13 @@ namespace SharpDX
             return temp;
         }
 
- 	/// <summary>
+    /// <summary>
         /// Converts integer pointer array to bool array.
         /// </summary>
         /// <param name="array">The array of integer pointers.</param>
         /// <param name="length">Array size.</param>
         /// <returns>Converted array of bool.</returns>
-	public unsafe static bool[] ConvertToBoolArray(int* array, int length)
+    public unsafe static bool[] ConvertToBoolArray(int* array, int length)
         {
             var temp = new bool[length];
             for (int i = 0; i < temp.Length; i++)
@@ -562,7 +562,7 @@ namespace SharpDX
 #endif
         }
 
-	/// <summary>
+    /// <summary>
         /// Copies the contents of a managed String into unmanaged memory, converting into ANSI format as it copies.
         /// </summary>
         /// <param name="s">A managed string to be copied.</param> 
@@ -592,7 +592,7 @@ namespace SharpDX
 #endif
         }
 
-	    /// <summary>
+        /// <summary>
         /// Copies the contents of a managed String into unmanaged memory.
         /// </summary>
         /// <param name="s">A managed string to be copied.</param> 
@@ -999,7 +999,7 @@ namespace SharpDX
                     var parameters = method.GetParameters();
                     bool methodFound = true;
                     for (int i = 0; i < typeArgs.Length; i++)
-			        {
+                    {
                         if (parameters[i].ParameterType != typeArgs[i]) {
                             methodFound = false;
                             break;
@@ -1426,7 +1426,7 @@ namespace SharpDX
         [DllImport("kernel32", EntryPoint = "LoadPackagedLibrary", SetLastError = true)]
         static extern IntPtr LoadLibrary_(string lpFileName, int reserved = 0);
 #else
-        [DllImport("kernel32", EntryPoint = "LoadLibrary", SetLastError = true, CharSet = CharSet.Ansi)]
+        [DllImport("kernel32", EntryPoint = "LoadLibrary", SetLastError = true, CharSet = CharSet.Unicode)]
         static extern IntPtr LoadLibrary_(string lpFileName);
 #endif
 
@@ -1446,14 +1446,17 @@ namespace SharpDX
         }
 
 #if WP8
+        // http://msdn.microsoft.com/en-us/library/windows/desktop/ms683212%28v=vs.85%29.aspx
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate IntPtr GetProcAddressDelegate(IntPtr hModule, [MarshalAs(UnmanagedType.LPWStr)] string procName);
+        private delegate IntPtr GetProcAddressDelegate(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string procName);
         private static GetProcAddressDelegate getProcAddress_;
         private static GetProcAddressDelegate GetProcAddress_
         {
             get { return getProcAddress_ ?? (getProcAddress_ = (GetProcAddressDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.GetProcAddress()), typeof(GetProcAddressDelegate))); }
         }
 #else
+        // http://www.pinvoke.net/default.aspx/kernel32.getprocaddress
+        // http://stackoverflow.com/questions/3754264/c-sharp-getprocaddress-returns-zero
         [DllImport("kernel32", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
         static extern IntPtr GetProcAddress_(IntPtr hModule, string procName);
 #endif
@@ -1606,6 +1609,30 @@ namespace SharpDX
                 Array.Copy(items, 0, elementArray, 0, count);
                 return elementArray;
             }
+        }
+
+        /// <summary>
+        /// Determines whether the type inherits from the specified type (used to determine a type without using an explicit type instance).
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="parentType">Name of the parent type to find in inheritance hierarchy of type.</param>
+        /// <returns><c>true</c> if the type inherits from the specified type; otherwise, <c>false</c>.</returns>
+        public static bool IsTypeInheritFrom(Type type, string parentType)
+        {
+            while (type != null)
+            {
+                if (type.FullName == parentType)
+                {
+                    return true;
+                }
+#if W8CORE
+                type = type.GetTypeInfo().BaseType;
+#else
+                type = type.BaseType;
+#endif
+            }
+
+            return false;
         }
     }
 }

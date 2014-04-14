@@ -28,9 +28,6 @@ namespace SharpDX
     /// <summary>
     /// Descriptor used to provide detailed message for a particular <see cref="Result"/>.
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     public sealed class ResultDescriptor
     {
         private static readonly object LockDescriptor = new object();

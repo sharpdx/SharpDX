@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 using Microsoft.Win32;
@@ -300,7 +301,7 @@ namespace SharpGen.Parser
 #elif DIRECTX11_1
             string vsVersion = ResolveVisualStudioVersion("11");
 #else
-            string vsVersion = ResolveVisualStudioVersion("10");
+            string vsVersion = ResolveVisualStudioVersion("10", "11", "12");
 #endif
             return vsVersion;
         }
@@ -315,15 +316,30 @@ namespace SharpGen.Parser
                 {
                     // Check that the include directory actually exist
                     object directory = subKey.GetValue("InstallationFolder");
-                    if (directory != null && Directory.Exists(Path.Combine(directory.ToString(), "include")))
+                    if (directory != null)
                     {
-                        return version;
+                        var includeDirectory = Path.Combine(directory.ToString(), "include");
+                        if(Directory.Exists(includeDirectory))
+                        {
+                            // Check that we have enough files in the directory (case where the directory is there but
+                            // completely empty)
+                            if(Directory.EnumerateFiles(includeDirectory, "*.*", SearchOption.TopDirectoryOnly).Count() > 70)
+                            {
+                                return version;
+                            }
+                            else
+                            {
+                                Logger.Error("VS{0} Include directory from [{0}] is missing SDK C++ include files. Check your install",
+                                    version,
+                                    includeDirectory);
+                            }
+                        }
                     }
 
                 }
             }
 
-            Logger.Exit("Missing Windows SDK [{0}]. Download SDK 7.1 from: http://www.microsoft.com/en-us/download/details.aspx?id=8279", string.Join("/", versions));
+            Logger.Exit("Missing Windows SDK [{0}]. Please, download and install the SDK from Microsoft website (Check for a full install that includes Framework headers and C++ compiler).", string.Join("/", versions));
             return null;
         }
 

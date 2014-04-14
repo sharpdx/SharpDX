@@ -100,18 +100,16 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Draws a quad. The effect must have been applied before calling this method with pixel shader having the signature float2:TEXCOORD.
+        /// Draws a raw quad requiring a Vertex and Pixel shader to be setup before calling this method.
         /// </summary>
-        public void Draw()
+        /// <param name="fullScreenTriangle">if set to <c>true</c> to draw an optimized full screen triangle as a full screen quad.</param>
+        public void DrawRaw(bool fullScreenTriangle)
         {
-            GraphicsDevice.SetVertexBuffer(sharedData.VertexBuffer);
+            GraphicsDevice.SetVertexBuffer(fullScreenTriangle ? sharedData.VertexBufferFullQuad : sharedData.VertexBuffer);
             GraphicsDevice.SetVertexInputLayout(sharedData.VertexInputLayout);
 
-            ResetShaderStages();
-
             // Make sure that we are using our vertex shader
-            quadPass.Apply();
-            GraphicsDevice.Draw(PrimitiveType.TriangleStrip, 4);
+            GraphicsDevice.Draw(PrimitiveType.TriangleStrip, fullScreenTriangle ? 3 : 4);
 
             // Reset the vertex buffer
             GraphicsDevice.SetVertexBuffer(0, null, 0);
@@ -119,13 +117,34 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Draws a quad with a texture. This Draw method is using a simple pixel shader that is sampling the texture. 
+        /// Draws a quad. The effect must have been applied before calling this method with pixel shader having the signature float2:TEXCOORD.
+        /// </summary>
+        public void Draw()
+        {
+            Draw(false);
+        }
+
+        /// <summary>
+        /// Draws a quad. The effect must have been applied before calling this method with pixel shader having the signature float2:TEXCOORD.
+        /// </summary>
+        /// <param name="fullScreenTriangle">if set to <c>true</c> to draw an optimized full screen triangle as a full screen quad.</param>
+        public void Draw(bool fullScreenTriangle)
+        {
+            ResetShaderStages();
+            // Make sure that we are using our vertex shader
+            quadPass.Apply();
+            DrawRaw(fullScreenTriangle);
+        }
+
+        /// <summary>
+        /// Draws a quad with a texture. This Draw method is using a simple pixel shader that is sampling the texture.
         /// </summary>
         /// <param name="texture">The texture to draw.</param>
         /// <param name="samplerState">State of the sampler. If null, default sampler is <see cref="SamplerStateCollection.LinearClamp" />.</param>
-        public void Draw(SharpDX.Direct3D11.ShaderResourceView texture, SharpDX.Direct3D11.SamplerState samplerState = null)
+        /// <param name="fullScreenTriangle">if set to <c>true</c> to draw an optimized full screen triangle as a full screen quad.</param>
+        public void Draw(SharpDX.Direct3D11.ShaderResourceView texture, SharpDX.Direct3D11.SamplerState samplerState = null, bool fullScreenTriangle = false)
         {
-            GraphicsDevice.SetVertexBuffer(sharedData.VertexBuffer);
+            GraphicsDevice.SetVertexBuffer(fullScreenTriangle ? sharedData.VertexBufferFullQuad : sharedData.VertexBuffer);
             GraphicsDevice.SetVertexInputLayout(sharedData.VertexInputLayout);
 
             ResetShaderStages();
@@ -134,7 +153,7 @@ namespace SharpDX.Toolkit.Graphics
             textureParameter.SetResource(texture);
             textureSamplerParameter.SetResource(samplerState ?? GraphicsDevice.SamplerStates.LinearClamp);
             textureCopyPass.Apply();
-            GraphicsDevice.Draw(PrimitiveType.TriangleStrip, 4);
+            GraphicsDevice.Draw(PrimitiveType.TriangleStrip, fullScreenTriangle ? 3 : 4);
 
             // Reset the vertex buffer
             GraphicsDevice.SetVertexBuffer(0, null, 0);
@@ -146,9 +165,10 @@ namespace SharpDX.Toolkit.Graphics
         /// Draws the specified effect onto the quad. The effect must have a pixel shader with the signature float2:TEXCOORD.
         /// </summary>
         /// <param name="effect">The effect.</param>
-        public void Draw(Effect effect)
+        /// <param name="fullScreenTriangle">if set to <c>true</c> to draw an optimized full screen triangle as a full screen quad.</param>
+        public void Draw(Effect effect, bool fullScreenTriangle = false)
         {
-            GraphicsDevice.SetVertexBuffer(sharedData.VertexBuffer);
+            GraphicsDevice.SetVertexBuffer(fullScreenTriangle ? sharedData.VertexBufferFullQuad : sharedData.VertexBuffer);
             GraphicsDevice.SetVertexInputLayout(sharedData.VertexInputLayout);
             ResetShaderStages();
 
@@ -160,7 +180,7 @@ namespace SharpDX.Toolkit.Graphics
                 // Make sure that we are using our vertex shader
                 quadPass.Apply();
 
-                GraphicsDevice.Draw(PrimitiveType.TriangleStrip, 4);
+                GraphicsDevice.Draw(PrimitiveType.TriangleStrip, fullScreenTriangle ? 3 : 4);
 
                 // Reset the quadPass and custom pass
                 quadPass.UnApply();
@@ -176,13 +196,14 @@ namespace SharpDX.Toolkit.Graphics
         /// Draws the specified effect pass onto the quad. The effect pass must have a pixel shader with the signature float2:TEXCOORD.
         /// </summary>
         /// <param name="effectPass">The effect pass.</param>
-        public void Draw(EffectPass effectPass)
+        /// <param name="fullScreenTriangle">if set to <c>true</c> to draw an optimized full screen triangle as a full screen quad.</param>
+        public void Draw(EffectPass effectPass, bool fullScreenTriangle = false)
         {
             ResetShaderStages();
 
             // Apply the Effect pass
             effectPass.Apply();
-            Draw();
+            Draw(fullScreenTriangle);
 
             // Unapply this effect
             effectPass.UnApply();
@@ -207,6 +228,11 @@ namespace SharpDX.Toolkit.Graphics
             public readonly Buffer<VertexPositionTexture> VertexBuffer;
 
             /// <summary>
+            /// The vertex buffer
+            /// </summary>
+            public readonly Buffer<VertexPositionTexture> VertexBufferFullQuad;
+
+            /// <summary>
             /// The vertex input layout
             /// </summary>
             public readonly VertexInputLayout VertexInputLayout;
@@ -219,9 +245,17 @@ namespace SharpDX.Toolkit.Graphics
                 new VertexPositionTexture(new Vector3(1, -1, 0), new Vector2(1, 1)),
             };
 
+            private static readonly VertexPositionTexture[] FullQuadsVertices = new VertexPositionTexture[]
+            {
+                new VertexPositionTexture(new Vector3(-1, 1, 0), new Vector2(0, 0)),
+                new VertexPositionTexture(new Vector3( 3, 1, 0), new Vector2(2, 0)),
+                new VertexPositionTexture(new Vector3(-1,-3, 0), new Vector2(0, 2)),
+            };
+
             public SharedData(GraphicsDevice device)
             {
                 VertexBuffer = ToDispose(Buffer.Vertex.New(device, QuadsVertices));
+                VertexBufferFullQuad = ToDispose(Buffer.Vertex.New(device, FullQuadsVertices));
                 VertexInputLayout = VertexInputLayout.FromBuffer(0, VertexBuffer);
             }
         }

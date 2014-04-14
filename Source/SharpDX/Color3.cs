@@ -45,7 +45,6 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using System.ComponentModel;
 using SharpDX.Serialization;
 
 namespace SharpDX
@@ -53,9 +52,6 @@ namespace SharpDX
     /// <summary>
     /// Represents a color in the form of rgb.
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     [DynamicSerializer("TKC3")]
     public struct Color3 : IEquatable<Color3>, IFormattable, IDataSerializable
@@ -569,6 +565,32 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Computes the premultiplied value of the provided color.
+        /// </summary>
+        /// <param name="value">The non-premultiplied value.</param>
+        /// <param name="alpha">The color alpha.</param>
+        /// <param name="result">The premultiplied result.</param>
+        public static void Premultiply(ref Color3 value, float alpha, out Color3 result)
+        {
+            result.Red = value.Red * alpha;
+            result.Green = value.Green * alpha;
+            result.Blue = value.Blue * alpha;
+        }
+
+        /// <summary>
+        /// Computes the premultiplied value of the provided color.
+        /// </summary>
+        /// <param name="value">The non-premultiplied value.</param>
+        /// <param name="alpha">The color alpha.</param>
+        /// <returns>The premultiplied color.</returns>
+        public static Color3 Premultiply(Color3 value, float alpha)
+        {
+            Color3 result;
+            Premultiply(ref value, alpha, out result);
+            return result;
+        }
+
+        /// <summary>
         /// Adds two colors.
         /// </summary>
         /// <param name="left">The first color to add.</param>
@@ -768,7 +790,13 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return Red.GetHashCode() + Green.GetHashCode() + Blue.GetHashCode();
+            unchecked
+            {
+                var hashCode = Red.GetHashCode();
+                hashCode = (hashCode * 397) ^ Green.GetHashCode();
+                hashCode = (hashCode * 397) ^ Blue.GetHashCode();
+                return hashCode;
+            }
         }
 
         /// <summary>

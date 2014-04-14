@@ -43,7 +43,6 @@
 * THE SOFTWARE.
 */
 using System;
-using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Serialization;
@@ -55,10 +54,6 @@ namespace SharpDX
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     [DynamicSerializer("TKV4")]
-#if !W8CORE
-    [Serializable]
-    [TypeConverter(typeof(SharpDX.Design.Vector4Converter))]
-#endif
     public struct Vector4 : IEquatable<Vector4>, IFormattable, IDataSerializable
     {
         /// <summary>
@@ -194,7 +189,15 @@ namespace SharpDX
         /// </summary>
         public bool IsNormalized
         {
-            get { return Math.Abs((X * X) + (Y * Y) + (Z * Z) + (W * W) - 1f) < MathUtil.ZeroTolerance; }
+            get { return MathUtil.IsOne((X * X) + (Y * Y) + (Z * Z) + (W * W)); }
+        }
+
+        /// <summary>
+        /// Gets a value indicting whether this vector is zero
+        /// </summary>
+        public bool IsZero
+        {
+            get { return X == 0 && Y == 0 && Z == 0 && W == 0; }
         }
 
         /// <summary>
@@ -264,7 +267,7 @@ namespace SharpDX
         public void Normalize()
         {
             float length = Length();
-            if (length > MathUtil.ZeroTolerance)
+            if (!MathUtil.IsZero(length))
             {
                 float inverse = 1.0f / length;
                 X *= inverse;
@@ -306,6 +309,28 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Perform a component-wise addition
+        /// </summary>
+        /// <param name="left">The input vector</param>
+        /// <param name="right">The scalar value to be added to elements</param>
+        /// <param name="result">The vector with added scalar for each element.</param>
+        public static void Add(ref Vector4 left, ref float right, out Vector4 result)
+        {
+            result = new Vector4(left.X + right, left.Y + right, left.Z + right, left.W + right);
+        }
+
+        /// <summary>
+        /// Perform a component-wise addition
+        /// </summary>
+        /// <param name="left">The input vector</param>
+        /// <param name="right">The scalar value to be added to elements</param>
+        /// <returns>The vector with added scalar for each element.</returns>
+        public static Vector4 Add(Vector4 left, float right)
+        {
+            return new Vector4(left.X + right, left.Y + right, left.Z + right, left.W + right);
+        }
+
+        /// <summary>
         /// Subtracts two vectors.
         /// </summary>
         /// <param name="left">The first vector to subtract.</param>
@@ -325,6 +350,50 @@ namespace SharpDX
         public static Vector4 Subtract(Vector4 left, Vector4 right)
         {
             return new Vector4(left.X - right.X, left.Y - right.Y, left.Z - right.Z, left.W - right.W);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="left">The input vector</param>
+        /// <param name="right">The scalar value to be subtraced from elements</param>
+        /// <param name="result">The vector with subtracted scalar for each element.</param>
+        public static void Subtract(ref Vector4 left, ref float right, out Vector4 result)
+        {
+            result = new Vector4(left.X - right, left.Y - right, left.Z - right, left.W - right);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="left">The input vector</param>
+        /// <param name="right">The scalar value to be subtraced from elements</param>
+        /// <returns>The vector with subtracted scalar for each element.</returns>
+        public static Vector4 Subtract(Vector4 left, float right)
+        {
+            return new Vector4(left.X - right, left.Y - right, left.Z - right, left.W - right);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="left">The scalar value to be subtraced from elements</param>
+        /// <param name="right">The input vector.</param>
+        /// <param name="result">The vector with subtracted scalar for each element.</param>
+        public static void Subtract(ref float left, ref Vector4 right, out Vector4 result)
+        {
+            result = new Vector4(left - right.X, left - right.Y, left - right.Z, left - right.W);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="left">The scalar value to be subtraced from elements</param>
+        /// <param name="right">The input vector.</param>
+        /// <returns>The vector with subtracted scalar for each element.</returns>
+        public static Vector4 Subtract(float left, Vector4 right)
+        {
+            return new Vector4(left - right.X, left - right.Y, left - right.Z, left - right.W);
         }
 
         /// <summary>
@@ -350,23 +419,23 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Modulates a vector with another by performing component-wise multiplication.
+        /// Multiplies a vector with another by performing component-wise multiplication.
         /// </summary>
-        /// <param name="left">The first vector to modulate.</param>
-        /// <param name="right">The second vector to modulate.</param>
-        /// <param name="result">When the method completes, contains the modulated vector.</param>
-        public static void Modulate(ref Vector4 left, ref Vector4 right, out Vector4 result)
+        /// <param name="left">The first vector to multiply.</param>
+        /// <param name="right">The second vector to multiply.</param>
+        /// <param name="result">When the method completes, contains the multiplied vector.</param>
+        public static void Multiply(ref Vector4 left, ref Vector4 right, out Vector4 result)
         {
             result = new Vector4(left.X * right.X, left.Y * right.Y, left.Z * right.Z, left.W * right.W);
         }
 
         /// <summary>
-        /// Modulates a vector with another by performing component-wise multiplication.
+        /// Multiplies a vector with another by performing component-wise multiplication.
         /// </summary>
-        /// <param name="left">The first vector to modulate.</param>
-        /// <param name="right">The second vector to modulate.</param>
-        /// <returns>The modulated vector.</returns>
-        public static Vector4 Modulate(Vector4 left, Vector4 right)
+        /// <param name="left">The first vector to multiply.</param>
+        /// <param name="right">The second vector to multiply.</param>
+        /// <returns>The multiplied vector.</returns>
+        public static Vector4 Multiply(Vector4 left, Vector4 right)
         {
             return new Vector4(left.X * right.X, left.Y * right.Y, left.Z * right.Z, left.W * right.W);
         }
@@ -391,6 +460,28 @@ namespace SharpDX
         public static Vector4 Divide(Vector4 value, float scale)
         {
             return new Vector4(value.X / scale, value.Y / scale, value.Z / scale, value.W / scale);
+        }
+
+        /// <summary>
+        /// Scales a vector by the given value.
+        /// </summary>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="result">When the method completes, contains the scaled vector.</param>
+        public static void Divide(float scale, ref Vector4 value, out Vector4 result)
+        {
+            result = new Vector4(scale / value.X, scale / value.Y, scale / value.Z, scale / value.W);
+        }
+
+        /// <summary>
+        /// Scales a vector by the given value.
+        /// </summary>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <returns>The scaled vector.</returns>
+        public static Vector4 Divide(float scale, Vector4 value)
+        {
+            return new Vector4(scale / value.X, scale / value.Y, scale / value.Z, scale / value.W);
         }
 
         /// <summary>
@@ -1088,7 +1179,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Modulates a vector with another by performing component-wise multiplication equivalent to <see cref="Modulate(ref SharpDX.Vector4,ref SharpDX.Vector4,out SharpDX.Vector4)"/>.
+        /// Multiplies a vector with another by performing component-wise multiplication equivalent to <see cref="Multiply(ref SharpDX.Vector4,ref SharpDX.Vector4,out SharpDX.Vector4)"/>.
         /// </summary>
         /// <param name="left">The first vector to multiply.</param>
         /// <param name="right">The second vector to multiply.</param>
@@ -1165,12 +1256,67 @@ namespace SharpDX
         /// <summary>
         /// Scales a vector by the given value.
         /// </summary>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <param name="value">The vector to scale.</param>        
+        /// <returns>The scaled vector.</returns>
+        public static Vector4 operator /(float scale,Vector4 value)
+        {
+            return new Vector4(scale / value.X, scale / value.Y, scale / value.Z, scale / value.W);
+        }
+
+        /// <summary>
+        /// Scales a vector by the given value.
+        /// </summary>
         /// <param name="value">The vector to scale.</param>
         /// <param name="scale">The amount by which to scale the vector.</param>
         /// <returns>The scaled vector.</returns>
         public static Vector4 operator /(Vector4 value, Vector4 scale)
         {
             return new Vector4(value.X / scale.X, value.Y / scale.Y, value.Z / scale.Z, value.W / scale.W);
+        }
+
+        /// <summary>
+        /// Perform a component-wise addition
+        /// </summary>
+        /// <param name="value">The input vector.</param>
+        /// <param name="scalar">The scalar value to be added on elements</param>
+        /// <returns>The vector with added scalar for each element.</returns>
+        public static Vector4 operator +(Vector4 value, float scalar)
+        {
+            return new Vector4(value.X + scalar, value.Y + scalar, value.Z + scalar, value.W + scalar);
+        }
+
+        /// <summary>
+        /// Perform a component-wise addition
+        /// </summary>
+        /// <param name="value">The input vector.</param>
+        /// <param name="scalar">The scalar value to be added on elements</param>
+        /// <returns>The vector with added scalar for each element.</returns>
+        public static Vector4 operator +(float scalar, Vector4 value)
+        {
+            return new Vector4(scalar + value.X, scalar + value.Y, scalar + value.Z, scalar + value.W);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="value">The input vector.</param>
+        /// <param name="scalar">The scalar value to be subtraced from elements</param>
+        /// <returns>The vector with subtraced scalar from each element.</returns>
+        public static Vector4 operator -(Vector4 value, float scalar)
+        {
+            return new Vector4(value.X - scalar, value.Y - scalar, value.Z - scalar, value.W - scalar);
+        }
+
+        /// <summary>
+        /// Perform a component-wise subtraction
+        /// </summary>
+        /// <param name="value">The input vector.</param>
+        /// <param name="scalar">The scalar value to be subtraced from elements</param>
+        /// <returns>The vector with subtraced scalar from each element.</returns>
+        public static Vector4 operator -(float scalar, Vector4 value)
+        {
+            return new Vector4(scalar - value.X, scalar - value.Y, scalar - value.Z, scalar - value.W);
         }
 
         /// <summary>
@@ -1181,7 +1327,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator ==(Vector4 left, Vector4 right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -1192,7 +1338,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator !=(Vector4 left, Vector4 right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>
@@ -1279,7 +1425,14 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode() + W.GetHashCode();
+            unchecked
+            {
+                var hashCode = X.GetHashCode();
+                hashCode = (hashCode * 397) ^ Y.GetHashCode();
+                hashCode = (hashCode * 397) ^ Z.GetHashCode();
+                hashCode = (hashCode * 397) ^ W.GetHashCode();
+                return hashCode;
+            }
         }
 
         /// <inheritdoc/>
@@ -1309,12 +1462,24 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref="SharpDX.Vector4"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
+        public bool Equals(ref Vector4 other)
+        {
+            return (MathUtil.NearEqual(other.X, X) &&
+                MathUtil.NearEqual(other.Y, Y) &&
+                MathUtil.NearEqual(other.Z, Z) &&
+                MathUtil.NearEqual(other.W, W));
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="SharpDX.Vector4"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="SharpDX.Vector4"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="SharpDX.Vector4"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
         public bool Equals(Vector4 other)
         {
-            return ((float)Math.Abs(other.X - X) < MathUtil.ZeroTolerance &&
-                (float)Math.Abs(other.Y - Y) < MathUtil.ZeroTolerance &&
-                (float)Math.Abs(other.Z - Z) < MathUtil.ZeroTolerance &&
-                (float)Math.Abs(other.W - W) < MathUtil.ZeroTolerance);
+            return Equals(ref other);
         }
 
         /// <summary>
@@ -1326,13 +1491,11 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
+            if (!(value is Vector4))
                 return false;
 
-            if (!ReferenceEquals(value.GetType(), typeof(Vector4)))
-                return false;
-
-            return Equals((Vector4)value);
+            var strongValue = (Vector4)value;
+            return Equals(ref strongValue);
         }
     }
 }

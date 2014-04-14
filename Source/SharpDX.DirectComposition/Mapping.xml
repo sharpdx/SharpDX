@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-dcomp" xmlns="urn:SharpGen.Config">
+  <depends>sharpdx</depends>
+  <depends>sharpdx-dxgi</depends>
+
+  <namespace>SharpDX.DirectComposition</namespace>
+  <assembly>SharpDX.DirectComposition</assembly>
+
+  <include file="dcomp.h" attach="true"/>
+  <include file="dcompanimation.h" attach="true" />
+  <include file="dcomptypes.h" attach="true" />
+
+  <naming />
+
+  <extension>
+    <context>sharpdx-dcomp-ext</context>
+    <context>dcomp</context>
+    <context>dcompanimation</context>
+    <context>dcomptypes</context>
+
+		<create class="ResultCode" visibility="public"/>
+		<const from-macro="DCOMPOSITION_ERROR_(.*)" type="SharpDX.ResultDescriptor" cpp-type="int" name="$1" class="SharpDX.DirectComposition.ResultCode" visibility="public static readonly">new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+
+		<create class="DComp" visibility="public" />
+    <context-clear />
+  </extension>
+
+  <bindings>
+    <!--<binding from="IDCompositionAnimation" to="SharpDx.DirectComposition.Animation" />-->
+  </bindings>
+
+  <mapping>
+    <context>sharpdx-dcomp-ext</context>
+    <context>dcomp</context>
+    <context>dcompanimation</context>
+    <context>dcomptypes</context>
+
+    <!--
+    // *****************************************************************
+    // DComp Enumerations
+    // *****************************************************************
+    -->
+    <map enum="DCOMPOSITION_(.*)" name-tmp="$1" />
+		<map enum="DCOMPOSITION_BACKFACE_VISIBILITY" name-tmp="BackFaceVisibility" />
+
+    <!--
+    // *****************************************************************
+    // DComp Structures
+    // *****************************************************************
+    -->
+    <map struct="DCOMPOSITION(.*)" name-tmp="$1" />
+
+    <!--
+    // *****************************************************************
+    // DComp Interfaces
+    // *****************************************************************
+    -->
+    <map interface="IDComposition(.+)" name-tmp="$1" />
+    <map interface="IDCompositionAnimation" name-tmp="Animation" />
+
+		<map method="IDCompositionDevice2?::Create.*" visibility="internal" />
+		<map param="IDCompositionDevice2?::CreateAnimation::animation" attribute="out fast" />
+		<map param="IDCompositionDevice2?::CreateEffectGroup::effectGroup" attribute="out fast" />
+		<map param="IDCompositionDevice2?::CreateMatrixTransform::matrixTransform" attribute="out fast" />
+		<map param="IDCompositionDevice2?::CreateMatrixTransform3D::matrixTransform3D" attribute="out fast" />
+		<map param="IDCompositionDevice2?::CreateRectangleClip::clip" attribute="out fast" />
+		<map param="IDCompositionDevice2?::CreateRotateTransform::rotateTransform" attribute="out fast" />
+		<map param="IDCompositionDevice2?::CreateRotateTransform3D::rotateTransform3D" attribute="out fast" />
+		<map param="IDCompositionDevice2?::CreateScaleTransform::scaleTransform" attribute="out fast" />
+		<map param="IDCompositionDevice2?::CreateScaleTransform3D::scaleTransform3D" attribute="out fast" />
+		<map param="IDCompositionDevice2?::CreateSkewTransform::skewTransform" attribute="out fast" />
+		<map param="IDCompositionDevice2?::CreateSurface::surface" attribute="out fast" />
+		<map param="IDCompositionDevice2?::CreateSurfaceFactory::surfaceFactory" attribute="out fast" />
+		<map param="IDCompositionDevice2?::CreateTransform3DGroup::transform3DGroup" attribute="out fast" />
+		<map param="IDCompositionDevice2?::CreateTransformGroup::transformGroup" attribute="out fast" />
+		<map param="IDCompositionDevice2?::CreateTranslateTransform::translateTransform" attribute="out fast" />
+		<map param="IDCompositionDevice2?::CreateTranslateTransform3D::translateTransform3D" attribute="out fast" />
+		<map param="IDCompositionDevice2?::CreateVirtualSurface::(virtualS|s)urface" attribute="out fast" />
+		<map param="IDCompositionDevice2?::CreateVisual::visual" attribute="out fast" />
+		
+		<map method="IDCompositionDesktopDevice::CreateTargetForHwnd" visibility="internal" />
+		<map param="IDCompositionDesktopDevice::CreateTargetForHwnd::target" return="true" />
+		<map param="IDCompositionDesktopDevice::CreateSurfaceFromHandle::surface" return="true" />
+		<map param="IDCompositionDesktopDevice::CreateSurfaceFromHwnd::surface" return="true" />
+
+		<map method="IDCompositionRectangleClip::.*" property="false" />
+		<map method="IDCompositionEffectGroup::SetOpacity.*" property="false" />
+		<map method="IDCompositionVisual::Set(Clip|Offset|Transform).*" property="false" />
+
+		<map method="IDCompositionSurfaceFactory::Create(Virtual)?Surface" visibility="internal" />
+		<map param="IDCompositionSurfaceFactory::Create(Virtual)?Surface::(virtualS|s)urface" attribute="out fast" />
+
+		<map method="IDComposition(Rotate|Translate|Scale|Skew|Matrix)Transform(3D)?::Set.*" property="false" />
+
+		<!--
+    // *****************************************************************
+    // DComp Functions
+    // *****************************************************************
+    -->
+    <map function="DComposition(.+)" name-tmp="$1" visibility="internal" />
+    <map function="DComposition.*" dll='"dcomp.dll"' group="SharpDX.DirectComposition.DComp" />
+		<map function="DCompositionCreateSurfaceHandle" visibility="public" />
+
+    <context-clear />
+  </mapping>
+</config>

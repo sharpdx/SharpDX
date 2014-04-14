@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.ComponentModel;
 using System.Runtime.InteropServices;
 using SharpDX.Serialization;
 
@@ -29,10 +28,6 @@ namespace SharpDX
     /// Defines a three component vector, using half precision floating point coordinates.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-#if !W8CORE
-    [Serializable]
-    [TypeConverter(typeof(SharpDX.Design.Half3Converter))]
-#endif
     [DynamicSerializer("TKH3")]
     public struct Half3 : IEquatable<Half3>, IDataSerializable
     {
@@ -173,8 +168,13 @@ namespace SharpDX
         /// <returns>A 32-bit signed integer hash code.</returns>
         public override int GetHashCode()
         {
-            int num = this.Z.GetHashCode() + this.Y.GetHashCode();
-            return (this.X.GetHashCode() + num);
+            unchecked
+            {
+                var hashCode = X.GetHashCode();
+                hashCode = (hashCode * 397) ^ Y.GetHashCode();
+                hashCode = (hashCode * 397) ^ Z.GetHashCode();
+                return hashCode;
+            }
         }
 
         /// <inheritdoc/>

@@ -160,7 +160,7 @@ namespace SharpDX.Tests
         }
 
         [Test]
-        [ExpectedException("System.IO.IOException")]
+        [ExpectedException(typeof(FileNotFoundException))]
         public void CheckFileStreamException()
         {            
             var test = new NativeFileStream("blabla", NativeFileMode.Open, NativeFileAccess.Read);

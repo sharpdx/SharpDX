@@ -69,20 +69,19 @@ namespace SharpGen.Config
             foreach (var ifdef in list)
             {
                 var attr = ifdef.Attribute("name");
-                if (attr == null || !macros.Contains(attr.Value))
+                if(attr != null && !string.IsNullOrWhiteSpace(attr.Value))
                 {
-                    ifdef.Remove();
-                } 
-                else
-                {
-                    foreach(var element in ifdef.Elements())
+                    var values = attr.Value.Split(new []{ "|" }, StringSplitOptions.RemoveEmptyEntries);
+                    if(values.Any(macros.Contains))
                     {
-                        //Console.WriteLine("=============== ifdef Add element {0}", element);
-                        ifdef.AddBeforeSelf(element);
+                        foreach(var element in ifdef.Elements())
+                        {
+                            //Console.WriteLine("=============== ifdef Add element {0}", element);
+                            ifdef.AddBeforeSelf(element);
+                        }
                     }
-
-                    ifdef.Remove();
                 }
+                ifdef.Remove();
             }
 
             var writer = new StringWriter();

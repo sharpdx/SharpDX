@@ -27,12 +27,14 @@ namespace SharpDX
     /// <summary>
     /// Structure using the same layout than <see cref="System.Drawing.Point"/>.
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential)]
     public struct Point : IEquatable<Point>, IDataSerializable
     {
+        /// <summary>
+        /// A point with (0,0) coordinates.
+        /// </summary>
+        public static readonly Point Zero = new Point(0, 0);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Point"/> struct.
         /// </summary>
@@ -115,7 +117,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Vector2"/> to <see cref="Point"/>.
+        /// Performs an explicit conversion from <see cref="SharpDX.Vector2"/> to <see cref="Point"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -125,7 +127,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Point"/> to <see cref="SharpDX.Vector2"/>.
+        /// Performs an implicit conversion from <see cref="Point"/> to <see cref="SharpDX.Vector2"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>

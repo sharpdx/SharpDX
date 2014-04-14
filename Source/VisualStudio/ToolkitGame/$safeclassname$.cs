@@ -123,8 +123,8 @@ $endif$
             base.Update(gameTime);
 $if$ ($sharpdx_feature_3d$ == true)
             // Calculates the world and the view based on the model size
-            view = Matrix.LookAtLH(new Vector3(0.0f, 0.0f, -7.0f), new Vector3(0, 0.0f, 0), Vector3.UnitY);
-            projection = Matrix.PerspectiveFovLH(0.9f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, 100.0f);
+            view = Matrix.LookAtRH(new Vector3(0.0f, 0.0f, 7.0f), new Vector3(0, 0.0f, 0), Vector3.UnitY);
+            projection = Matrix.PerspectiveFovRH(0.9f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, 100.0f);
 $endif$
 $if$ ($sharpdx_feature_primitive3d$ == true)            // Update basic effect for rendering the Primitive
             basicEffect.View = view;

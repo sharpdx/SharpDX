@@ -29,49 +29,39 @@ namespace SharpDX.Toolkit
     public partial class GameContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GameContext" /> class.
+        /// Initializes a new instance of the <see cref="GameContext"/> class.
         /// </summary>
-        /// <param name="control">The control.</param>
+        /// <param name="control">The control, platform dependent. See remarks for supported controls.</param>
         /// <param name="requestedWidth">Width of the requested.</param>
         /// <param name="requestedHeight">Height of the requested.</param>
-        /// <exception cref="NotSupportedException">Is thrown when <paramref name="control"/> is not supported.</exception>
-        public GameContext(global::Windows.UI.Xaml.Controls.Grid control, int requestedWidth = 0, int requestedHeight = 0)
+        /// <exception cref="System.ArgumentException">Control is not supported. Must inherit from System.Windows.Forms.Control (WinForm) or System.Windows.Controls.Border (WPF hosting WinForm) or SharpDX.Toolkit.SharpDXElement (WPF)</exception>
+        /// <remarks>
+        /// On Windows Desktop, the Toolkit supports the following controls:
+        /// <ul>
+        /// <li>XAML grid SwapChainBackgroundPanel</li>
+        /// <li>XAML grid SwapChainPanel (Only Windows8.1+)</li>
+        /// </ul>
+        /// </remarks>
+        public GameContext(object control = null, int requestedWidth = 0, int requestedHeight = 0)
         {
-            if(control == null)
-                throw new ArgumentNullException("control");
-
-            ValidateControl(control);
+            if(control != null)
+            {
+                ValidateControl(control);
+            }
 
             Control = control;
             RequestedWidth = requestedWidth;
             RequestedHeight = requestedHeight;
-            ContextType = GameContextType.WinRTBackgroundXaml;
+            ContextType = control != null ? GameContextType.WinRTXaml : GameContextType.WinRT;
         }
 
-        /// <summary>
-        /// The control used as a GameWindow context (either an instance of <see cref="System.Windows.Forms.Control"/> or <see cref="System.Windows.Controls.Control"/>.
-        /// </summary>
-        public readonly object Control;
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="Control"/> to <see cref="GameContext"/>.
-        /// </summary>
-        /// <param name="control">The control.</param>
-        /// <returns>The result of the conversion.</returns>
-        /// <exception cref="NotSupportedException">Is thrown when <paramref name="control"/> is not supported.</exception>
-        public static implicit operator GameContext(global::Windows.UI.Xaml.Controls.Grid control)
-        {
-            ValidateControl(control);
-
-            return new GameContext(control);
-        }
 
         /// <summary>
         /// Checks if the provided control supports any of the native interfaces for Direct3D interop.
         /// </summary>
         /// <param name="control">The control to check.</param>
         /// <exception cref="NotSupportedException">Is thrown when <paramref name="control"/> is not supported.</exception>
-        private static void ValidateControl(global::Windows.UI.Xaml.FrameworkElement control)
+        private static void ValidateControl(object control)
         {
             using (var comObject = new ComObject(control))
             {

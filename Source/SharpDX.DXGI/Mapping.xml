@@ -252,7 +252,7 @@
     </ifndef>
 
     <ifdef name="DIRECTX11_1">
-      <map param="ISurfaceImageSourceNative::BeginDraw::pSurface" return="true"/>
+      <map param="ISurfaceImageSourceNative::BeginDraw::surface" return="true"/>
 
       <map interface="IVirtualSurfaceUpdatesCallbackNative" visibility="internal" callback="true" callback-dual="true" />
       <map method="IVirtualSurfaceImageSourceNative::RegisterForUpdatesNeeded" visibility="internal"/>

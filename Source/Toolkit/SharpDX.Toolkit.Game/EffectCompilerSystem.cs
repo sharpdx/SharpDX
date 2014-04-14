@@ -40,7 +40,7 @@ namespace SharpDX.Toolkit
     {
         #region Fields
 
-        private readonly IEffectCompiler compiler;
+        private IEffectCompiler compiler;
 
         private readonly List<Effect> effectsCompilable;
 
@@ -80,9 +80,7 @@ namespace SharpDX.Toolkit
             resetEvent = new AutoResetEvent(false);
             endThreadCompilerEvent = new AutoResetEvent(false);
             Enabled = true;
-#if !W8CORE
-            compiler = new EffectCompiler();
-#endif
+            InitializeCompiler();
         }
 
         #endregion

@@ -17,27 +17,29 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if !W8CORE && NET35Plus && !DIRECTX11_1
+#if !W8CORE && NET35Plus
 
 using SharpDX.Toolkit.Graphics;
 using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
+using SharpDX.Direct3D11;
+using Device = SharpDX.Direct3D11.Device;
 
 namespace SharpDX.Toolkit
 {
-    using System.Threading;
-    using System.Threading.Tasks;
-    using System.Windows.Threading;
-    using Direct3D11;
-    using Device = Direct3D11.Device;
-
+    /// <summary>
+    /// An implementation of <see cref="GameWindow"/> for the Desktop/WPF platform.
+    /// </summary>
     internal class GameWindowDesktopWpf : GameWindow
     {
         private SharpDXElement element;
-        private DispatcherOperation previousRenderCall;
+        private Window window;
+        private DispatcherOperation previousRenderCall; // keep previous render call to avoid calling it again if prev one is not finished yet
         private readonly Action renderDelegate; //delegate cache to avoid garbage generation
 
         private bool isMouseVisible;
@@ -45,22 +47,35 @@ namespace SharpDX.Toolkit
         private bool isVisible;
         private Cursor oldCursor;
         private RenderTargetGraphicsPresenter presenter;
-        private Query queryForCompletion;
+        private Query queryForCompletion; // used to syncronize draw calls with WPF presenter
 
-        private TimeSpan lastRenderTime;
+        private TimeSpan lastRenderTime; // WPF may ask for rendering two times in a row, keep last render time to avoid this
         private DeviceContext deviceContext;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GameWindowDesktopWpf"/> class.
+        /// </summary>
         public GameWindowDesktopWpf()
         {
             renderDelegate = RenderLoopCallback;
         }
 
+        /// <inheritdoc />
         public override bool AllowUserResizing { get { return false; } set { /* ignore, WPF will resize everything itself */ } }
+
+        /// <inheritdoc />
         public override Rectangle ClientBounds { get { return new Rectangle(0, 0, (int)element.ActualWidth, (int)element.ActualHeight); } }
+
+        /// <inheritdoc />
         public override DisplayOrientation CurrentOrientation { get { return DisplayOrientation.Default; } }
+
+        /// <inheritdoc />
         public override bool IsMinimized { get { return false; } }
+
+        /// <inheritdoc />
         public override object NativeWindow { get { return element; } }
 
+        /// <inheritdoc />
         public override bool IsMouseVisible
         {
             get { return isMouseVisible; }
@@ -76,6 +91,7 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <inheritdoc />
         public override bool Visible
         {
             get { return isVisible; }
@@ -87,19 +103,28 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>
+        /// For Desktop/WPF platform the <see cref="GameWindow.Run"/> call is non-blocking because rendering is bound to <see cref="CompositionTarget.Rendering"/> event.
+        /// </summary>
+        /// <returns>false</returns>
+        internal override bool IsBlockingRun { get { return false; } }
+
+        /// <inheritdoc />
         public override void BeginScreenDeviceChange(bool willBeFullScreen)
         {
         }
 
+        /// <inheritdoc />
         public override void EndScreenDeviceChange(int clientWidth, int clientHeight)
         {
-            if (element != null)
+            if (element != null && !element.IsDisposed)
             {
                 element.TrySetSize(clientWidth, clientHeight);
                 element.SetBackbuffer(presenter.BackBuffer);
             }
         }
 
+        /// <inheritdoc />
         internal override bool CanHandle(GameContext gameContext)
         {
             if (gameContext == null) throw new ArgumentNullException("gameContext");
@@ -107,6 +132,21 @@ namespace SharpDX.Toolkit
             return gameContext.ContextType == GameContextType.DesktopWpf;
         }
 
+        /// <inheritdoc />
+        internal override void Switch(GameContext context)
+        {
+            element.ResizeCompleted -= OnClientSizeChanged;
+            element.MouseEnter -= OnMouseEnter;
+            element.MouseLeave -= OnMouseLeave;
+            element.Loaded -= HandleElementLoaded;
+            element.Unloaded -= HandleElementUnloaded;
+
+            element = null;
+
+            Initialize(context);
+        }
+
+        /// <inheritdoc />
         internal override GraphicsPresenter CreateGraphicsPresenter(GraphicsDevice device, PresentationParameters parameters)
         {
             var backbufferDesc = RenderTarget2D.CreateDescription(device,
@@ -120,16 +160,20 @@ namespace SharpDX.Toolkit
             RemoveAndDispose(ref presenter);
             RemoveAndDispose(ref queryForCompletion);
 
-            presenter = ToDispose(new RenderTargetGraphicsPresenter(device, backbufferDesc, parameters.DepthStencilFormat, false, true));
+            presenter = ToDispose(new RenderTargetGraphicsPresenter(device, backbufferDesc, parameters.DepthStencilFormat, false, true, parameters.DepthBufferShaderResource));
             // used to indicate if all drawing operations have completed
             queryForCompletion = ToDispose(new Query(presenter.GraphicsDevice, new QueryDescription { Type = QueryType.Event, Flags = QueryFlags.None }));
 
             // device context will be used to query drawing operations status
             deviceContext = ((Device)presenter.GraphicsDevice).ImmediateContext;
-            element.SetBackbuffer(presenter.BackBuffer);
+
+            if (!element.IsDisposed)
+                element.SetBackbuffer(presenter.BackBuffer);
+
             return presenter;
         }
 
+        /// <inheritdoc />
         internal override void Initialize(GameContext gameContext)
         {
             if (gameContext == null) throw new ArgumentNullException("gameContext");
@@ -150,8 +194,11 @@ namespace SharpDX.Toolkit
             element.ResizeCompleted += OnClientSizeChanged;
             element.MouseEnter += OnMouseEnter;
             element.MouseLeave += OnMouseLeave;
+            element.Loaded += HandleElementLoaded;
+            element.Unloaded += HandleElementUnloaded;
         }
 
+        /// <inheritdoc />
         internal override void Run()
         {
             Debug.Assert(InitCallback != null);
@@ -162,21 +209,34 @@ namespace SharpDX.Toolkit
             CompositionTarget.Rendering += OnCompositionTargetRendering;
         }
 
+        /// <inheritdoc />
         internal override void Resize(int width, int height)
         {
-            element.TrySetSize(width, height);
+            if (!element.IsDisposed)
+                element.TrySetSize(width, height);
         }
 
+        /// <inheritdoc />
         protected internal override void SetSupportedOrientations(DisplayOrientation orientations)
         {
             // orientations are not supported on Desktop platform
         }
 
+        /// <inheritdoc />
         protected override void SetTitle(string title)
         {
+            if(window != null)
+            {
+                window.Title = title;
+            }
             // ignore. SharpDXElement doesn't have title
         }
 
+        /// <summary>
+        /// Handles the <see cref="CompositionTarget.Rendering"/> event. Checks whether it is time for the next render call.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">Should be an instance of <see cref="RenderingEventArgs"/> to determine last render time.</param>
         private void OnCompositionTargetRendering(object sender, EventArgs e)
         {
             var args = (RenderingEventArgs)e;
@@ -206,6 +266,9 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>
+        /// The main render loop callback that is cached in a delegate and is invoked to process main game loop.
+        /// </summary>
         private void RenderLoopCallback()
         {
             if (Exiting)
@@ -230,19 +293,65 @@ namespace SharpDX.Toolkit
                    && completed)) Thread.Yield();
 
             // syncronize D3D surface with WPF
-            element.InvalidateRendering();
+            if (!element.IsDisposed)
+                element.InvalidateRendering();
         }
 
+        /// <summary>
+        /// Handles the <see cref="FrameworkElement.Loaded"/> event and raises the <see cref="GameWindow.Activated"/> event, in order to correctly enable game loop processing.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">Ignored.</param>
+        private void HandleElementLoaded(object sender, RoutedEventArgs e)
+        {
+            var searchWindow = (FrameworkElement)element;
+            while (searchWindow != null && searchWindow.Parent != null || searchWindow.TemplatedParent != null)
+            {
+                searchWindow = (searchWindow.Parent ?? searchWindow.TemplatedParent) as FrameworkElement;
+                if (searchWindow is Window)
+                {
+                    window = (Window)searchWindow;
+                    break;
+                }
+            }
+
+            OnActivated(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Handles the <see cref="FrameworkElement.Unloaded"/> event and raises the <see cref="GameWindow.Deactivated"/> event, in order to correctly disable game loop processing.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">Ignored.</param>
+        private void HandleElementUnloaded(object sender, RoutedEventArgs e)
+        {
+            OnDeactivated(this, EventArgs.Empty);
+            window = null;
+        }
+
+        /// <summary>
+        /// Handles the <see cref="UIElement.MouseEnter"/> event in order to adjust mouse cursor visibility based on <see cref="GameWindow.IsMouseVisible"/> value.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">Ignored.</param>
         private void OnMouseEnter(object sender, MouseEventArgs e)
         {
             TryHideMouse();
         }
 
+        /// <summary>
+        /// Handles the <see cref="UIElement.MouseEnter"/> event in order to adjust mouse cursor visibility based on <see cref="GameWindow.IsMouseVisible"/> value.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">Ignored.</param>
         private void OnMouseLeave(object sender, MouseEventArgs e)
         {
             TryShowMouse();
         }
 
+        /// <summary>
+        /// Tries to hide mouse cursor if <see cref="GameWindow.IsMouseVisible"/> returns false.
+        /// </summary>
         private void TryHideMouse()
         {
             if (isMouseVisible || isMouseCurrentlyHidden) return;
@@ -251,6 +360,9 @@ namespace SharpDX.Toolkit
             isMouseCurrentlyHidden = true;
         }
 
+        /// <summary>
+        /// Tries to show mouse cursor if it was previously hidden.
+        /// </summary>
         private void TryShowMouse()
         {
             if (!isMouseVisible || !isMouseCurrentlyHidden) return;

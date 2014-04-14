@@ -141,8 +141,8 @@ namespace SharpDX
         /// </returns>
         public bool Equals(ViewportF other)
         {
-            return MathUtil.WithinEpsilon(X, other.X) && MathUtil.WithinEpsilon(Y, other.Y) && MathUtil.WithinEpsilon(Width, other.Width) && MathUtil.WithinEpsilon(Height, other.Height) && MathUtil.WithinEpsilon(MinDepth, other.MinDepth)
-                   && MathUtil.WithinEpsilon(MaxDepth, other.MaxDepth);
+            return MathUtil.NearEqual(X, other.X) && MathUtil.NearEqual(Y, other.Y) && MathUtil.NearEqual(Width, other.Width) && MathUtil.NearEqual(Height, other.Height) && MathUtil.NearEqual(MinDepth, other.MinDepth)
+                   && MathUtil.NearEqual(MaxDepth, other.MaxDepth);
         }
 	
         /// <summary>
@@ -219,14 +219,30 @@ namespace SharpDX
         /// <param name="projection">The projection matrix.</param>
         /// <param name="view">The view matrix.</param>
         /// <param name="world">The world matrix.</param>
-        /// <returns>Vector3.</returns>
+        /// <returns>The projected vector./returns>
         public Vector3 Project(Vector3 source, Matrix projection, Matrix view, Matrix world)
         {
-            var matrix = Matrix.Multiply(Matrix.Multiply(world, view), projection);
-            var vector = (Vector3)Vector3.Transform(source, matrix);
+            Matrix matrix;
+            Matrix.Multiply(ref world, ref view, out matrix);
+            Matrix.Multiply(ref matrix, ref projection, out matrix);
+
+            Vector3 vector;
+            Project(ref source, ref matrix, out vector);
+            return vector;
+        }
+
+        /// <summary>
+        /// Projects a 3D vector from object space into screen space.
+        /// </summary>
+        /// <param name="source">The vector to project.</param>
+        /// <param name="matrix">A combined WorldViewProjection matrix.</param>
+        /// <param name="vector">The projected vector.</param>
+        public void Project(ref Vector3 source, ref Matrix matrix, out Vector3 vector)
+        {
+            Vector3.Transform(ref source, ref matrix, out vector);
             float a = (((source.X * matrix.M14) + (source.Y * matrix.M24)) + (source.Z * matrix.M34)) + matrix.M44;
 
-            if (!MathUtil.WithinEpsilon(a, 1f))
+            if (!MathUtil.IsOne(a))
             {
                 vector = (vector / a);
             }
@@ -234,8 +250,6 @@ namespace SharpDX
             vector.X = (((vector.X + 1f) * 0.5f) * Width) + X;
             vector.Y = (((-vector.Y + 1f) * 0.5f) * Height) + Y;
             vector.Z = (vector.Z * (MaxDepth - MinDepth)) + MinDepth;
-
-            return vector;
         }
 
         /// <summary>
@@ -245,22 +259,38 @@ namespace SharpDX
         /// <param name="projection">The projection matrix.</param>
         /// <param name="view">The view matrix.</param>
         /// <param name="world">The world matrix.</param>
-        /// <returns>Vector3.</returns>
+        /// <returns>The unprojected Vector.</returns>
         public Vector3 Unproject(Vector3 source, Matrix projection, Matrix view, Matrix world)
         {
-            var matrix = Matrix.Invert(Matrix.Multiply(Matrix.Multiply(world, view), projection));
-            source.X = (((source.X - X) / (Width)) * 2f) - 1f;
-            source.Y = -((((source.Y - Y) / (Height)) * 2f) - 1f);
-            source.Z = (source.Z - MinDepth) / (MaxDepth - MinDepth);
-            var vector = (Vector3)Vector3.Transform(source, matrix);
+            Matrix matrix;
+            Matrix.Multiply(ref world, ref view, out matrix);
+            Matrix.Multiply(ref matrix, ref projection, out matrix);
+            Matrix.Invert(ref matrix, out matrix);
 
-            float a = (((source.X * matrix.M14) + (source.Y * matrix.M24)) + (source.Z * matrix.M34)) + matrix.M44;
-            if (!MathUtil.WithinEpsilon(a, 1f))
+            Vector3 vector;
+            Unproject(ref source, ref matrix, out vector);
+            return vector;
+        }
+
+        /// <summary>
+        /// Converts a screen space point into a corresponding point in world space.
+        /// </summary>
+        /// <param name="source">The vector to project.</param>
+        /// <param name="matrix">An inverted combined WorldViewProjection matrix.</param>
+        /// <param name="vector">The unprojected vector.</param>
+        public void Unproject(ref Vector3 source, ref Matrix matrix, out Vector3 vector)
+        {
+            vector.X = (((source.X - X) / (Width)) * 2f) - 1f;
+            vector.Y = -((((source.Y - Y) / (Height)) * 2f) - 1f);
+            vector.Z = (source.Z - MinDepth) / (MaxDepth - MinDepth);
+
+            float a = (((vector.X * matrix.M14) + (vector.Y * matrix.M24)) + (vector.Z * matrix.M34)) + matrix.M44;
+            Vector3.Transform(ref vector, ref matrix, out vector);
+
+            if (!MathUtil.IsOne(a))
             {
                 vector = (vector / a);
             }
-
-            return vector;
         }
 
         /// <summary>
@@ -271,7 +301,7 @@ namespace SharpDX
         {
             get
             {
-                if (!MathUtil.WithinEpsilon(Height, 0.0f))
+                if (!MathUtil.IsZero(Height))
                 {
                     return Width / Height;
                 }

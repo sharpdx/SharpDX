@@ -141,6 +141,34 @@ namespace SharpDX.Direct2D1
             renderTarget.CreateSharedBitmap(Utilities.GetGuidFromType(typeof(Surface)), surface.NativePointer, bitmapProperties, this);
         }
 
+        /// <summary>
+        /// Creates an <see cref="Bitmap"/> that points to the bitmap data already stored in the <see cref="WIC.BitmapLock"/>. 
+        /// </summary>
+        /// <param name="renderTarget">An instance of <see cref="SharpDX.Direct2D1.RenderTarget" />.</param>
+        /// <param name="bitmapLock">An <see cref="SharpDX.Direct2D1.RenderTarget" /> that contains the data to share with the new <see cref="Bitmap"/>.</param>
+        /// <msdn-id>dd371865</msdn-id>	
+        /// <unmanaged>HRESULT ID2D1RenderTarget::CreateSharedBitmap([In] const GUID&amp; riid,[In] void* data,[In, Optional] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out, Fast] ID2D1Bitmap** bitmap)</unmanaged>	
+        /// <unmanaged-short>ID2D1RenderTarget::CreateSharedBitmap</unmanaged-short>	
+        public Bitmap(RenderTarget renderTarget, WIC.BitmapLock bitmapLock)
+            : this(renderTarget, bitmapLock, null)
+        {
+        }
+
+        /// <summary>
+        /// Creates an <see cref="Bitmap"/> that points to the bitmap data already stored in the <see cref="WIC.BitmapLock"/>. 
+        /// </summary>
+        /// <param name="renderTarget">An instance of <see cref="SharpDX.Direct2D1.RenderTarget" />.</param>
+        /// <param name="bitmapLock">An <see cref="SharpDX.Direct2D1.RenderTarget" /> that contains the data to share with the new <see cref="Bitmap"/>.</param>
+        /// <param name="bitmapProperties">The pixel format  and DPI of the bitmap to create . The <see cref="SharpDX.DXGI.Format"/> portion of the pixel format  must match the <see cref="SharpDX.DXGI.Format"/> of data or the method will fail, but the alpha modes don't have to match. To prevent a  mismatch, you can pass NULL or the value obtained from the {{D2D1::PixelFormat}} helper function. The DPI settings do not have to match those of data. If both dpiX and dpiY are  0.0f, the default DPI, 96, is used.</param>
+        /// <msdn-id>dd371865</msdn-id>	
+        /// <unmanaged>HRESULT ID2D1RenderTarget::CreateSharedBitmap([In] const GUID&amp; riid,[In] void* data,[In, Optional] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out, Fast] ID2D1Bitmap** bitmap)</unmanaged>	
+        /// <unmanaged-short>ID2D1RenderTarget::CreateSharedBitmap</unmanaged-short>	
+        public Bitmap(RenderTarget renderTarget, WIC.BitmapLock bitmapLock, BitmapProperties? bitmapProperties)
+            : base(IntPtr.Zero)
+        {
+            renderTarget.CreateSharedBitmap(Utilities.GetGuidFromType(typeof(WIC.BitmapLock)), bitmapLock.NativePointer, bitmapProperties, this);
+        }
+
         /// <summary>	
         /// Creates a Direct2D bitmap from a pointer to in-memory source data.	
         /// </summary>	

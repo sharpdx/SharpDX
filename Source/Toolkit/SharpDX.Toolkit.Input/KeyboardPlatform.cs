@@ -63,14 +63,14 @@ namespace SharpDX.Toolkit.Input
         }
 
         /// <summary>
-        /// Raised when a key pressed
+        /// Raised when a key down.
         /// </summary>
-        internal event Action<Keys> KeyPressed;
+        internal event Action<Keys> KeyDown;
 
         /// <summary>
-        /// Raised when a key is released
+        /// Raised when a key is up.
         /// </summary>
-        internal event Action<Keys> KeyReleased;
+        internal event Action<Keys> KeyUp;
 
         /// <summary>
         /// Derived classes should implement platform-specific event bindings in this method
@@ -79,23 +79,23 @@ namespace SharpDX.Toolkit.Input
         protected abstract void BindWindow(object nativeWindow);
 
         /// <summary>
-        /// Raises the <see cref="KeyPressed"/> event.
+        /// Raises the <see cref="KeyDown"/> event.
         /// </summary>
         /// <param name="key">The key that was pressed</param>
         protected void RaiseKeyPressed(Keys key)
         {
             if (key == Keys.None) return;
-            Raise(KeyPressed, key);
+            Raise(KeyDown, key);
         }
 
         /// <summary>
-        /// Raises the <see cref="KeyReleased"/> event.
+        /// Raises the <see cref="KeyUp"/> event.
         /// </summary>
         /// <param name="key">The key that was released</param>
         protected void RaiseKeyReleased(Keys key)
         {
             if (key == Keys.None) return;
-            Raise(KeyReleased, key);
+            Raise(KeyUp, key);
         }
 
         /// <summary>

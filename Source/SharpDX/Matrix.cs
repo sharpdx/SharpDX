@@ -44,7 +44,6 @@
 */
 
 using System;
-using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Serialization;
@@ -56,10 +55,6 @@ namespace SharpDX
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     [DynamicSerializer("TKMX")]
-#if !W8CORE
-    [Serializable]
-    [TypeConverter(typeof(SharpDX.Design.MatrixConverter))]
-#endif
     public struct Matrix : IEquatable<Matrix>, IFormattable, IDataSerializable
     {
         /// <summary>
@@ -702,9 +697,9 @@ namespace SharpDX
             scale.Z = (float)Math.Sqrt((M31 * M31) + (M32 * M32) + (M33 * M33));
 
             //If any of the scaling factors are zero, than the rotation matrix can not exist.
-            if (Math.Abs(scale.X) < MathUtil.ZeroTolerance ||
-                Math.Abs(scale.Y) < MathUtil.ZeroTolerance ||
-                Math.Abs(scale.Z) < MathUtil.ZeroTolerance)
+            if (MathUtil.IsZero(scale.X) ||
+                MathUtil.IsZero(scale.Y) ||
+                MathUtil.IsZero(scale.Z))
             {
                 rotation = Quaternion.Identity;
                 return false;
@@ -723,6 +718,54 @@ namespace SharpDX
             rotationmatrix.M31 = M31 / scale.Z;
             rotationmatrix.M32 = M32 / scale.Z;
             rotationmatrix.M33 = M33 / scale.Z;
+
+            rotationmatrix.M44 = 1f;
+
+            Quaternion.RotationMatrix(ref rotationmatrix, out rotation);
+            return true;
+        }
+
+        /// <summary>
+        /// Decomposes a uniform scale matrix into a scale, rotation, and translation.
+        /// A uniform scale matrix has the same scale in every axis.
+        /// </summary>
+        /// <param name="scale">When the method completes, contains the scaling component of the decomposed matrix.</param>
+        /// <param name="rotation">When the method completes, contains the rotation component of the decomposed matrix.</param>
+        /// <param name="translation">When the method completes, contains the translation component of the decomposed matrix.</param>
+        /// <remarks>
+        /// This method is designed to decompose only an SRT transformation matrix that has the same scale in every axis.
+        /// </remarks>
+        public bool DecomposeUniformScale(out float scale, out Quaternion rotation, out Vector3 translation)
+        {
+            //Get the translation.
+            translation.X = this.M41;
+            translation.Y = this.M42;
+            translation.Z = this.M43;
+
+            //Scaling is the length of the rows. ( just take one row since this is a uniform matrix)
+            scale = (float)Math.Sqrt((M11 * M11) + (M12 * M12) + (M13 * M13));
+            var inv_scale = 1f / scale;
+
+            //If any of the scaling factors are zero, then the rotation matrix can not exist.
+            if (Math.Abs(scale) < MathUtil.ZeroTolerance)
+            {
+                rotation = Quaternion.Identity;
+                return false;
+            }
+
+            //The rotation is the left over matrix after dividing out the scaling.
+            Matrix rotationmatrix = new Matrix();
+            rotationmatrix.M11 = M11 * inv_scale;
+            rotationmatrix.M12 = M12 * inv_scale;
+            rotationmatrix.M13 = M13 * inv_scale;
+
+            rotationmatrix.M21 = M21 * inv_scale;
+            rotationmatrix.M22 = M22 * inv_scale;
+            rotationmatrix.M23 = M23 * inv_scale;
+
+            rotationmatrix.M31 = M31 * inv_scale;
+            rotationmatrix.M32 = M32 * inv_scale;
+            rotationmatrix.M33 = M33 * inv_scale;
 
             rotationmatrix.M44 = 1f;
 
@@ -1507,7 +1550,7 @@ namespace SharpDX
 
                 int i = r;
 
-                while (Math.Abs(result[i, lead]) < MathUtil.ZeroTolerance)
+                while (MathUtil.IsZero(result[i, lead]))
                 {
                     i++;
 
@@ -1589,7 +1632,7 @@ namespace SharpDX
 
                 int i = r;
 
-                while (Math.Abs(result[i, lead]) < MathUtil.ZeroTolerance)
+                while (MathUtil.IsZero(result[i, lead]))
                 {
                     i++;
 
@@ -1667,7 +1710,7 @@ namespace SharpDX
 
                 int i = r;
 
-                while (Math.Abs(result[i, lead]) < MathUtil.ZeroTolerance)
+                while (MathUtil.IsZero(result[i, lead]))
                 {
                     i++;
 
@@ -1845,21 +1888,21 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a spherical billboard that rotates around a specified object position.
+        /// Creates a left-handed spherical billboard that rotates around a specified object position.
         /// </summary>
         /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
         /// <param name="cameraPosition">The position of the camera.</param>
         /// <param name="cameraUpVector">The up vector of the camera.</param>
         /// <param name="cameraForwardVector">The forward vector of the camera.</param>
         /// <param name="result">When the method completes, contains the created billboard matrix.</param>
-        public static void Billboard(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Matrix result)
+        public static void BillboardLH(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Matrix result)
         {
             Vector3 crossed;
             Vector3 final;
             Vector3 difference = objectPosition - cameraPosition;
 
             float lengthSq = difference.LengthSquared();
-            if (lengthSq < MathUtil.ZeroTolerance)
+            if (MathUtil.IsZero(lengthSq))
                 difference = -cameraForwardVector;
             else
                 difference *= (float)(1.0 / Math.Sqrt(lengthSq));
@@ -1887,17 +1930,72 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a spherical billboard that rotates around a specified object position.
+        /// Creates a left-handed spherical billboard that rotates around a specified object position.
         /// </summary>
         /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
         /// <param name="cameraPosition">The position of the camera.</param>
         /// <param name="cameraUpVector">The up vector of the camera.</param>
         /// <param name="cameraForwardVector">The forward vector of the camera.</param>
         /// <returns>The created billboard matrix.</returns>
-        public static Matrix Billboard(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector)
+        public static Matrix BillboardLH(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector)
         {
             Matrix result;
-            Billboard(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
+            BillboardLH(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a right-handed spherical billboard that rotates around a specified object position.
+        /// </summary>
+        /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
+        /// <param name="cameraPosition">The position of the camera.</param>
+        /// <param name="cameraUpVector">The up vector of the camera.</param>
+        /// <param name="cameraForwardVector">The forward vector of the camera.</param>
+        /// <param name="result">When the method completes, contains the created billboard matrix.</param>
+        public static void BillboardRH(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Matrix result) {
+            Vector3 crossed;
+            Vector3 final;
+            Vector3 difference = cameraPosition - objectPosition;
+
+            float lengthSq = difference.LengthSquared();
+            if (MathUtil.IsZero(lengthSq))
+                difference = -cameraForwardVector;
+            else
+                difference *= (float)(1.0 / Math.Sqrt(lengthSq));
+
+            Vector3.Cross(ref cameraUpVector, ref difference, out crossed);
+            crossed.Normalize();
+            Vector3.Cross(ref difference, ref crossed, out final);
+
+            result.M11 = crossed.X;
+            result.M12 = crossed.Y;
+            result.M13 = crossed.Z;
+            result.M14 = 0.0f;
+            result.M21 = final.X;
+            result.M22 = final.Y;
+            result.M23 = final.Z;
+            result.M24 = 0.0f;
+            result.M31 = difference.X;
+            result.M32 = difference.Y;
+            result.M33 = difference.Z;
+            result.M34 = 0.0f;
+            result.M41 = objectPosition.X;
+            result.M42 = objectPosition.Y;
+            result.M43 = objectPosition.Z;
+            result.M44 = 1.0f;
+        }
+
+        /// <summary>
+        /// Creates a right-handed spherical billboard that rotates around a specified object position.
+        /// </summary>
+        /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
+        /// <param name="cameraPosition">The position of the camera.</param>
+        /// <param name="cameraUpVector">The up vector of the camera.</param>
+        /// <param name="cameraForwardVector">The forward vector of the camera.</param>
+        /// <returns>The created billboard matrix.</returns>
+        public static Matrix BillboardRH(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector) {
+            Matrix result;
+            BillboardRH(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
             return result;
         }
 
@@ -3090,7 +3188,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator ==(Matrix left, Matrix right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -3101,7 +3199,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator !=(Matrix left, Matrix right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>
@@ -3179,10 +3277,26 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return M11.GetHashCode() + M12.GetHashCode() + M13.GetHashCode() + M14.GetHashCode() +
-               M21.GetHashCode() + M22.GetHashCode() + M23.GetHashCode() + M24.GetHashCode() +
-               M31.GetHashCode() + M32.GetHashCode() + M33.GetHashCode() + M34.GetHashCode() +
-               M41.GetHashCode() + M42.GetHashCode() + M43.GetHashCode() + M44.GetHashCode();
+            unchecked
+            {
+                var hashCode = M11.GetHashCode();
+                hashCode = (hashCode * 397) ^ M12.GetHashCode();
+                hashCode = (hashCode * 397) ^ M13.GetHashCode();
+                hashCode = (hashCode * 397) ^ M14.GetHashCode();
+                hashCode = (hashCode * 397) ^ M21.GetHashCode();
+                hashCode = (hashCode * 397) ^ M22.GetHashCode();
+                hashCode = (hashCode * 397) ^ M23.GetHashCode();
+                hashCode = (hashCode * 397) ^ M24.GetHashCode();
+                hashCode = (hashCode * 397) ^ M31.GetHashCode();
+                hashCode = (hashCode * 397) ^ M32.GetHashCode();
+                hashCode = (hashCode * 397) ^ M33.GetHashCode();
+                hashCode = (hashCode * 397) ^ M34.GetHashCode();
+                hashCode = (hashCode * 397) ^ M41.GetHashCode();
+                hashCode = (hashCode * 397) ^ M42.GetHashCode();
+                hashCode = (hashCode * 397) ^ M43.GetHashCode();
+                hashCode = (hashCode * 397) ^ M44.GetHashCode();
+                return hashCode;
+            }
         }
 
         /// <inheritdoc/>
@@ -3228,6 +3342,34 @@ namespace SharpDX
                 M44 = serializer.Reader.ReadSingle();
             }
         }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="SharpDX.Matrix"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="SharpDX.Matrix"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="SharpDX.Matrix"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(ref Matrix other)
+        {
+            return (MathUtil.NearEqual(other.M11, M11) &&
+                MathUtil.NearEqual(other.M12, M12) &&
+                MathUtil.NearEqual(other.M13, M13) &&
+                MathUtil.NearEqual(other.M14, M14) &&
+                MathUtil.NearEqual(other.M21, M21) &&
+                MathUtil.NearEqual(other.M22, M22) &&
+                MathUtil.NearEqual(other.M23, M23) &&
+                MathUtil.NearEqual(other.M24, M24) &&
+                MathUtil.NearEqual(other.M31, M31) &&
+                MathUtil.NearEqual(other.M32, M32) &&
+                MathUtil.NearEqual(other.M33, M33) &&
+                MathUtil.NearEqual(other.M34, M34) &&
+                MathUtil.NearEqual(other.M41, M41) &&
+                MathUtil.NearEqual(other.M42, M42) &&
+                MathUtil.NearEqual(other.M43, M43) &&
+                MathUtil.NearEqual(other.M44, M44));
+        }
+
         /// <summary>
         /// Determines whether the specified <see cref="SharpDX.Matrix"/> is equal to this instance.
         /// </summary>
@@ -3237,25 +3379,7 @@ namespace SharpDX
         /// </returns>
         public bool Equals(Matrix other)
         {
-            return (Math.Abs(other.M11 - M11) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M12 - M12) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M13 - M13) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M14 - M14) < MathUtil.ZeroTolerance &&
-
-                Math.Abs(other.M21 - M21) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M22 - M22) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M23 - M23) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M24 - M24) < MathUtil.ZeroTolerance &&
-
-                Math.Abs(other.M31 - M31) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M32 - M32) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M33 - M33) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M34 - M34) < MathUtil.ZeroTolerance &&
-
-                Math.Abs(other.M41 - M41) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M42 - M42) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M43 - M43) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M44 - M44) < MathUtil.ZeroTolerance);
+            return Equals(ref other);
         }
 
         /// <summary>
@@ -3267,13 +3391,11 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
+            if (!(value is Matrix))
                 return false;
 
-            if (!ReferenceEquals(value.GetType(), typeof(Matrix)))
-                return false;
-
-            return Equals((Matrix)value);
+            var strongValue = (Matrix)value;
+            return Equals(ref strongValue);
         }
 
 #if SlimDX1xInterop

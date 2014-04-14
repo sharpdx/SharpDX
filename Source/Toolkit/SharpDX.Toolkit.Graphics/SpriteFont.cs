@@ -118,9 +118,17 @@ namespace SharpDX.Toolkit.Graphics
                                                                         new Vector2(1, 1),
                                                                     };
 
-        public static SpriteFont New(GraphicsDevice device, SpriteFontData spriteFontData)
+        /// <summary>
+        /// Creates a new instance of the <see cref="SpriteFont"/> class from the specified <see cref="SpriteFontData"/>.
+        /// </summary>
+        /// <param name="device">The graphics device which will manage graphics resources of the created instance.</param>
+        /// <param name="spriteFontData">The font data to load from.</param>
+        /// <param name="disposeSpriteFontDataResources">true - if disposal of the created instance should dispose the unmanaged resources from the <paramref name="spriteFontData"/>,
+        ///  false - if the unmanaged resources should be disposed manually, default is false.</param>
+        /// <returns>The loaded <see cref="SpriteFont"/> instance.</returns>
+        public static SpriteFont New(GraphicsDevice device, SpriteFontData spriteFontData, bool disposeSpriteFontDataResources = false)
         {
-            return new SpriteFont(device, spriteFontData);
+            return new SpriteFont(device, spriteFontData, disposeSpriteFontDataResources);
         }
 
 
@@ -138,7 +146,9 @@ namespace SharpDX.Toolkit.Graphics
             var spriteFontData = SpriteFontData.Load(stream, bitmapDataLoader);
             if (spriteFontData == null)
                 return null;
-            return New(device, spriteFontData);
+            // the SpriteFontData is loaded here and will be used only in the current SpriteFont instance
+            // therefore it is safe to dispose it's Texture2D instances, if any.
+            return New(device, spriteFontData, true);
         }
 
         /// <summary>
@@ -166,7 +176,7 @@ namespace SharpDX.Toolkit.Graphics
                 return Load(device, stream, bitmapName => Texture2D.Load(device, Path.Combine(fileDirectory, bitmapName)));
         }
        
-        internal SpriteFont(GraphicsDevice device, SpriteFontData spriteFontData)
+        internal SpriteFont(GraphicsDevice device, SpriteFontData spriteFontData, bool disposeSpriteFontDataResources)
             : base(device)
         {
             drawGlyphDelegate = InternalDrawGlyph;
@@ -225,6 +235,8 @@ namespace SharpDX.Toolkit.Graphics
                 else if (bitmap.Data is Texture2D)
                 {
                     textures[i] = (Texture2D) bitmap.Data;
+                    if(disposeSpriteFontDataResources)
+                        ToDispose(textures[i]);
                 }
                 else
                 {
@@ -247,20 +259,26 @@ namespace SharpDX.Toolkit.Graphics
             ForEachGlyph(ref text, drawGlyphDelegate, ref drawCommand);
         }
 
-        internal void InternalDrawGlyph(ref InternalDrawCommand parameters, ref SpriteFontData.Glyph glyph, float x, float y)
+        internal void InternalDrawGlyph(ref InternalDrawCommand parameters, ref SpriteFontData.Glyph glyph, float x, float y, float nextx)
         {
+            if(char.IsWhiteSpace((char)glyph.Character))
+            {
+                return;
+            }
+
             var spriteEffects = parameters.spriteEffects;
 
             var offset = new Vector2(x, y + glyph.Offset.Y);
-            Vector2.Modulate(ref offset, ref axisDirectionTable[(int)spriteEffects & 3], out offset);
+            Vector2.Multiply(ref offset, ref axisDirectionTable[(int)spriteEffects & 3], out offset);
             Vector2.Add(ref offset, ref parameters.origin, out offset);
-
+            offset.X = (float)Math.Round(offset.X);
+            offset.Y = (float)Math.Round(offset.Y);
 
             if (spriteEffects != SpriteEffects.None)
             {
                 // For mirrored characters, specify bottom and/or right instead of top left.
                 var glyphRect = new Vector2(glyph.Subrect.Right - glyph.Subrect.Left, glyph.Subrect.Top - glyph.Subrect.Bottom);
-                Vector2.Modulate(ref glyphRect, ref axisIsMirroredTable[(int)spriteEffects & 3], out offset);
+                Vector2.Multiply(ref glyphRect, ref axisIsMirroredTable[(int)spriteEffects & 3], out offset);
             }
             var destination = new RectangleF(parameters.position.X, parameters.position.Y, parameters.scale.X, parameters.scale.Y);
             Rectangle? sourceRectangle = glyph.Subrect;
@@ -300,13 +318,12 @@ namespace SharpDX.Toolkit.Graphics
             return result;
         }
 
-        private void MeasureStringGlyph(ref Vector2 result, ref SpriteFontData.Glyph glyph, float x, float y)
+        private void MeasureStringGlyph(ref Vector2 result, ref SpriteFontData.Glyph glyph, float x, float y, float nextx)
         {
-            float w = x + (glyph.Subrect.Right - glyph.Subrect.Left) + Spacing;
-            float h = y + Math.Max((glyph.Subrect.Bottom - glyph.Subrect.Top) + glyph.Offset.Y, LineSpacing);
-            if (w > result.X)
+            float h = y + LineSpacing;
+            if (nextx > result.X)
             {
-                result.X = w;
+                result.X = nextx;
             }
             if (h > result.Y)
             {
@@ -329,7 +346,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>Gets or sets the spacing of the font characters.</summary>
         public float Spacing { get; set; }
 
-        private delegate void GlyphAction<T>(ref T parameters, ref SpriteFontData.Glyph glyph, float x, float y);
+        private delegate void GlyphAction<T>(ref T parameters, ref SpriteFontData.Glyph glyph, float x, float y, float nextx);
 
         private unsafe void ForEachGlyph<T>(ref StringProxy text, GlyphAction<T> action, ref T parameters)
         {
@@ -355,7 +372,7 @@ namespace SharpDX.Toolkit.Graphics
                             // New line.
                             x = 0;
                             y += LineSpacing;
-                            key |= character;
+                            key = 0;
                             break;
 
                         default:
@@ -382,24 +399,16 @@ namespace SharpDX.Toolkit.Graphics
 
                             var glyph = (SpriteFontData.Glyph*) pGlyph + glyphIndex;
 
-                            // do not offset the first character, otherwise it is impossible to compute correct alignment
-                            // using MeasureString results
-                            if (x > 0f) x += glyph->Offset.X;
+                            float dx = glyph->Offset.X;
 
-                            // reset negative offset (it can happen only for first character)
-                            if(x < 0f) x = 0f;
-
-                            // Offset the kerning
                             float kerningOffset;
                             if (kerningMap != null && kerningMap.TryGetValue(key, out kerningOffset))
-                                x += kerningOffset;
+                                dx += kerningOffset;
 
-                            if (!char.IsWhiteSpace(character))
-                            {
-                                action(ref parameters, ref *glyph, x, y);
-                            }
+                            float nextX = x + glyph->XAdvance + Spacing;
+                            action(ref parameters, ref *glyph, x + dx, y, nextX);
+                            x = nextX;
 
-                            x += glyph->XAdvance + Spacing;
                             break;
                     }
 

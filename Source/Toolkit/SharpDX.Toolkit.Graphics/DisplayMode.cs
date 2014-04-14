@@ -126,5 +126,23 @@ namespace SharpDX.Toolkit.Graphics
         {
             return string.Format(CultureInfo.CurrentCulture, "Width:{0} Height:{1} Format:{2} AspectRatio:{3} RefreshRate:{4}", new object[] { Width, Height, Format, AspectRatio, (float)RefreshRate.Numerator / RefreshRate.Denominator });
         }
+
+        public ModeDescription ToDescription()
+        {
+            return new ModeDescription(Width, Height, RefreshRate, Format);
+        }
+
+        public static DisplayMode FromDescription(ModeDescription description)
+        {
+            return new DisplayMode(description.Format, description.Width, description.Height, description.RefreshRate);
+        }
+
+#if DIRECTX11_1
+        public static DisplayMode FromDescription(ModeDescription1 description)
+        {
+            return new DisplayMode(description.Format, description.Width, description.Height, description.RefreshRate);
+        }
+#endif
+
     }
 }

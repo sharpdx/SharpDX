@@ -75,6 +75,8 @@ namespace SharpDX.Toolkit
             }
         }
 
+        internal override bool IsBlockingRun { get { return false; } }
+
         public override bool IsMouseVisible { get; set; }
 
         public override object NativeWindow
@@ -186,6 +188,11 @@ namespace SharpDX.Toolkit
             CoreApplication.Run(this);
         }
 
+        internal override void Switch(GameContext context)
+        {
+            // Nothing to switch here, GameContext is not used in this implementation.
+        }
+
         protected internal override void SetSupportedOrientations(DisplayOrientation orientations)
         {
             // Desktop doesn't have orientation (unless on Windows 8?)
@@ -205,7 +212,7 @@ namespace SharpDX.Toolkit
                     CoreWindow = null;
                 }
             }
-            
+
             base.Dispose(disposeManagedResources);
         }
 

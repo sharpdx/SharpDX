@@ -110,8 +110,16 @@ namespace SharpDX.Toolkit
         }
     }
 
+    /// <summary>
+    /// A typed <see cref="PropertyKey"/>
+    /// </summary>
+    /// <typeparam name="T">Type of the value to associate with the key</typeparam>
     public class PropertyKey<T> : PropertyKey
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertyKey" /> class.
+        /// </summary>
+        /// <param name="name">The Name.</param>
         public PropertyKey(string name) : base(name)
         {
         }

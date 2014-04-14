@@ -26,12 +26,12 @@ namespace SharpDX.Toolkit.Graphics
     public class Material : ComponentBase
     {
         /// <summary>
-        /// Gets the properties attached to this material. A list of standard keys are accessible from <see cref="MaterialKeys"/>.
+        /// Gets the properties attached to this material. A list of standard keys are accessible from <see cref="TextureKeys"/>.
         /// </summary>
         public PropertyCollection Properties;
 
         /// <summary>
-        /// Sets a property attached to this material. A list of standard keys are accessible from <see cref="MaterialKeys"/>.
+        /// Sets a property attached to this material. A list of standard keys are accessible from <see cref="TextureKeys"/>.
         /// </summary>
         /// <typeparam name="T">Type of the property.</typeparam>
         /// <param name="key">The key.</param>
@@ -42,7 +42,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Determines whether the specified key has property value. A list of standard keys are accessible from <see cref="MaterialKeys"/>.
+        /// Determines whether the specified key has property value. A list of standard keys are accessible from <see cref="TextureKeys"/>.
         /// </summary>
         /// <typeparam name="T">Type of the property.</typeparam>
         /// <param name="key">The key.</param>
@@ -53,7 +53,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Gets the property value for the specified key. A list of standard keys are accessible from <see cref="MaterialKeys"/>.
+        /// Gets the property value for the specified key. A list of standard keys are accessible from <see cref="TextureKeys"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="key">The key.</param>

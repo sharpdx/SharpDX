@@ -17,7 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if !W8CORE && NET35Plus && !DIRECTX11_1
+#if !W8CORE && NET35Plus
 using System;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -37,6 +37,7 @@ namespace SharpDX.Toolkit
         private readonly DeviceEx device9;
         private readonly DispatcherTimer resizeDelayTimer;
         private Texture texture;
+        private IntPtr textureSurfaceHandle;
 
         private bool isDisposed;
 
@@ -86,6 +87,7 @@ namespace SharpDX.Toolkit
         public SharpDXElement()
         {
             image = new D3DImage();
+            image.IsFrontBufferAvailableChanged += HandleIsFrontBufferAvailableChanged;
 
             var presentparams = new PresentParameters
                 {
@@ -107,6 +109,8 @@ namespace SharpDX.Toolkit
             resizeDelayTimer = new DispatcherTimer(DispatcherPriority.Normal);
             resizeDelayTimer.Interval = SendResizeDelay;
             resizeDelayTimer.Tick += HandleResizeDelayTimerTick;
+
+            Focusable = true;
 
             SizeChanged += HandleSizeChanged;
             Unloaded += HandleUnloaded;
@@ -164,6 +168,11 @@ namespace SharpDX.Toolkit
         }
 
         /// <summary>
+        /// Gets a value indicating whether this instance is disposed or not.
+        /// </summary>
+        public bool IsDisposed { get { return isDisposed; } }
+
+        /// <summary>
         /// Converts an <see cref="SharpDXElement"/> to <see cref="GameContext"/>.
         /// Operator is placed here to avoid WPF references when only WinForms is used.
         /// </summary>
@@ -171,7 +180,7 @@ namespace SharpDX.Toolkit
         /// <returns>An <see cref="GameContextWpf"/> instance derived from <see cref="GameContext"/>.</returns>
         public static implicit operator GameContext(SharpDXElement element)
         {
-            return new GameContextWpf(element);
+            return new GameContext(element);
         }
 
         internal event EventHandler ResizeCompleted;
@@ -182,6 +191,8 @@ namespace SharpDX.Toolkit
         /// <param name="renderTarget">An valid D3D11 render target. It must be created with the "Shared" flag.</param>
         internal void SetBackbuffer(Direct3D11.Texture2D renderTarget)
         {
+            DisposedGuard();
+
             DisposeD3D9Backbuffer();
 
             using (var resource = renderTarget.QueryInterface<DXGI.Resource>())
@@ -198,7 +209,10 @@ namespace SharpDX.Toolkit
             }
 
             using (var surface = texture.GetSurfaceLevel(0))
-                TrySetBackbufferPointer(surface.NativePointer);
+            {
+                textureSurfaceHandle = surface.NativePointer;
+                TrySetBackbufferPointer(textureSurfaceHandle);
+            }
         }
 
         /// <summary>
@@ -206,6 +220,8 @@ namespace SharpDX.Toolkit
         /// </summary>
         internal void InvalidateRendering()
         {
+            DisposedGuard();
+
             image.Lock();
             image.AddDirtyRect(new Int32Rect(0, 0, image.PixelWidth, image.PixelHeight));
             image.Unlock();
@@ -220,6 +236,8 @@ namespace SharpDX.Toolkit
         {
             if (!ReceiveResizeFromGame || isResizeCompletedBeingRaised) return;
 
+            DisposedGuard();
+
             Width = width;
             Height = height;
         }
@@ -230,6 +248,21 @@ namespace SharpDX.Toolkit
 
             if (image != null && image.IsFrontBufferAvailable)
                 drawingContext.DrawImage(image, new Rect(new System.Windows.Point(), RenderSize));
+        }
+
+        /// <summary>
+        /// Throws <see cref="ObjectDisposedException"/> if the current instance is already disposed.
+        /// </summary>
+        private void DisposedGuard()
+        {
+            if (isDisposed)
+                throw new ObjectDisposedException("SharpDXElement", "The element is disposed - either explicitly or via Unloaded event, it cannot be reused.");
+        }
+
+        private void HandleIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (image.IsFrontBufferAvailable)
+                TrySetBackbufferPointer(textureSurfaceHandle);
         }
 
         private void HandleUnloaded(object sender, RoutedEventArgs e)

@@ -217,7 +217,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             {
                 for (int col = 0; col < colCount; col++)
                 {
-                    if (!MathUtil.WithinEpsilon(left[row, col], right[row, col]))
+                    if (!MathUtil.NearEqual(left[row, col], right[row, col]))
                     {
                         return false;
 

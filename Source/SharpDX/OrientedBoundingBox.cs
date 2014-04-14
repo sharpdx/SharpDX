@@ -27,9 +27,6 @@ namespace SharpDX
     /// <summary>
     /// OrientedBoundingBox (OBB) is a rectangular block, much like an AABB (BoundingBox) but with an arbitrary orientation.
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct OrientedBoundingBox : IEquatable<OrientedBoundingBox>, IFormattable, IDataSerializable
     {
@@ -282,9 +279,7 @@ namespace SharpDX
             locPoint.Z = Math.Abs(locPoint.Z);
 
             //Simple axes-aligned BB check
-            if (Math.Abs(locPoint.X - Extents.X) < MathUtil.ZeroTolerance &&
-                Math.Abs(locPoint.Y - Extents.Y) < MathUtil.ZeroTolerance &&
-                Math.Abs(locPoint.Z - Extents.Z) < MathUtil.ZeroTolerance)
+            if (MathUtil.NearEqual(locPoint.X, Extents.X) && MathUtil.NearEqual(locPoint.Y, Extents.Y) && MathUtil.NearEqual(locPoint.Z, Extents.Z))
                 return ContainmentType.Intersects;
             if (locPoint.X < Extents.X && locPoint.Y < Extents.Y && locPoint.Z < Extents.Z)
                 return ContainmentType.Contains;
@@ -325,9 +320,9 @@ namespace SharpDX
                 locPoint.Z = Math.Abs(locPoint.Z);
 
                 //Simple axes-aligned BB check
-                if (Math.Abs(locPoint.X - Extents.X) < MathUtil.ZeroTolerance &&
-                    Math.Abs(locPoint.Y - Extents.Y) < MathUtil.ZeroTolerance &&
-                    Math.Abs(locPoint.Z - Extents.Z) < MathUtil.ZeroTolerance)
+                if (MathUtil.NearEqual(locPoint.X, Extents.X) &&
+                    MathUtil.NearEqual(locPoint.Y, Extents.Y) &&
+                    MathUtil.NearEqual(locPoint.Z, Extents.Z))
                     containsAny = true;
                 if (locPoint.X < Extents.X && locPoint.Y < Extents.Y && locPoint.Z < Extents.Z)
                     containsAny = true;

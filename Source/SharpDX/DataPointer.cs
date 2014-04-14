@@ -66,6 +66,15 @@ namespace SharpDX
         /// </summary>
         public int Size;
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is empty (zeroed).
+        /// </summary>
+        /// <value><c>true</c> if this instance is empty; otherwise, <c>false</c>.</value>
+        public bool IsEmpty
+        {
+            get { return Equals(Zero); }
+        }
+
         public bool Equals(DataPointer other)
         {
             return Pointer.Equals(other.Pointer) && Size == other.Size;

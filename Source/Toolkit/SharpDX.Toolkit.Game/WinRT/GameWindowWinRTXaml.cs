@@ -58,7 +58,12 @@ namespace SharpDX.Toolkit
         {
             get
             {
-                return new Rectangle(0, 0, (int)(this.surfaceControl.ActualWidth * DisplayProperties.LogicalDpi / 96.0), (int)(this.surfaceControl.ActualHeight * DisplayProperties.LogicalDpi / 96.0));
+                var swapChainPanel = surfaceControl as SwapChainPanel;
+                if (swapChainPanel != null)
+                {
+                    return new Rectangle(0, 0, (int)(this.surfaceControl.ActualWidth * swapChainPanel.CompositionScaleX + 0.5f), (int)(this.surfaceControl.ActualHeight * swapChainPanel.CompositionScaleY + 0.5f));
+                }
+                return new Rectangle(0, 0, (int)(this.surfaceControl.ActualWidth * DisplayProperties.LogicalDpi / 96.0 + 0.5f), (int)(this.surfaceControl.ActualHeight * DisplayProperties.LogicalDpi / 96.0 + 0.5f));
             }
         }
 
@@ -77,6 +82,8 @@ namespace SharpDX.Toolkit
                 return false;
             }
         }
+
+        internal override bool IsBlockingRun { get { return false; } }
 
         public override bool IsMouseVisible { get; set; }
 
@@ -121,19 +128,14 @@ namespace SharpDX.Toolkit
 
         internal override bool CanHandle(GameContext windowContext)
         {
-            return windowContext.ContextType == GameContextType.WinRTBackgroundXaml;
+            return windowContext.ContextType == GameContextType.WinRTXaml;
         }
 
         internal override void Initialize(GameContext windowContext)
         {
             if (windowContext != null)
             {
-                surfaceControl = windowContext.Control as FrameworkElement;
-                if (surfaceControl == null)
-                    throw new ArgumentException("A FrameworkElement expected.");
-
-                surfaceControl.SizeChanged += SurfaceControlSizeChanged;
-
+                BindSurfaceControl(windowContext);
             }
         }
 
@@ -154,6 +156,35 @@ namespace SharpDX.Toolkit
 
             // Perform the rendering loop
             CompositionTarget.Rendering += CompositionTarget_Rendering;
+        }
+
+        internal override void Switch(GameContext context)
+        {
+            surfaceControl.SizeChanged -= SurfaceControlSizeChanged;
+
+            var swapChainPanel = surfaceControl as SwapChainPanel;
+            if (swapChainPanel != null)
+                swapChainPanel.CompositionScaleChanged -= SwapChainPanelCompositionScaleChanged;
+
+            BindSurfaceControl(context);
+        }
+
+        private void BindSurfaceControl(GameContext windowContext)
+        {
+            surfaceControl = windowContext.Control as FrameworkElement;
+            if (surfaceControl == null)
+                throw new ArgumentException("A FrameworkElement expected.");
+
+            surfaceControl.SizeChanged += SurfaceControlSizeChanged;
+
+            var swapChainPanel = surfaceControl as SwapChainPanel;
+            if (swapChainPanel != null)
+                swapChainPanel.CompositionScaleChanged += SwapChainPanelCompositionScaleChanged;
+        }
+
+        private void SwapChainPanelCompositionScaleChanged(SwapChainPanel sender, object args)
+        {
+            OnClientSizeChanged(sender, EventArgs.Empty);
         }
 
         void CompositionTarget_Rendering(object sender, object e)

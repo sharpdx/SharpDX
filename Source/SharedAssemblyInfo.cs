@@ -40,3 +40,11 @@ using System.Runtime.InteropServices;
 #endif
 
 [assembly:ComVisible(false)]
+
+[assembly: Obfuscation(Feature = "Apply to type SharpDX.* when public and interface: renaming", Exclude = false, ApplyToMembers = true)]
+[assembly: Obfuscation(Feature = "Apply to type SharpDX.* when struct: renaming", Exclude = false, ApplyToMembers = true)]
+[assembly: Obfuscation(Feature = "Apply to type SharpDX.*: INotifyPropertyChanged heuristics", Exclude = true)]
+[assembly: Obfuscation(Feature = "Apply to type SharpDX.* when enum: forced rename", Exclude = false)]
+[assembly: Obfuscation(Feature = "Apply to type SharpDX.* when enum: enum values pruning", Exclude = false)]
+[assembly: Obfuscation(Feature = "legacy xml serialization heuristics", Exclude = true)]
+[assembly: Obfuscation(Feature = "ignore InternalsVisibleToAttribute", Exclude = false)]

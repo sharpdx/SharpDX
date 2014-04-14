@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Serialization;
 
@@ -28,10 +29,6 @@ namespace SharpDX
     /// Define a RectangleF. This structure is slightly different from System.Drawing.RectangleF as it is
     /// internally storing Left,Top,Right,Bottom instead of Left,Top,Width,Height.
     /// </summary>
-#if !W8CORE
-
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential)]
     public struct RectangleF : IEquatable<RectangleF>, IDataSerializable
     {
@@ -41,13 +38,30 @@ namespace SharpDX
         private float _bottom;
 
         /// <summary>
-        /// An empty rectangle
+        /// An empty rectangle.
         /// </summary>
         public static readonly RectangleF Empty;
+
+        /// <summary>
+        /// An infinite rectangle. See remarks.
+        /// </summary>
+        /// <remarks>
+        /// http://msdn.microsoft.com/en-us/library/windows/desktop/dd372261%28v=vs.85%29.aspx
+        /// Any properties that involve computations, like <see cref="Center"/>, <see cref="Width"/> or <see cref="Height"/>
+        /// may return incorrect results - <see cref="float.NaN"/>.
+        /// </remarks>
+        public static readonly RectangleF Infinite;
 
         static RectangleF()
         {
             Empty = new RectangleF();
+            Infinite = new RectangleF
+                       {
+                           Left = float.NegativeInfinity,
+                           Top = float.NegativeInfinity,
+                           Right = float.PositiveInfinity,
+                           Bottom = float.PositiveInfinity
+                       };
         }
 
         /// <summary>
@@ -432,10 +446,10 @@ namespace SharpDX
         /// <inheritdoc/>
         public bool Equals(RectangleF other)
         {
-            return (float)Math.Abs(other.Left - Left) < MathUtil.ZeroTolerance &&
-                   (float)Math.Abs(other.Right - Right) < MathUtil.ZeroTolerance &&
-                   (float)Math.Abs(other.Top - Top) < MathUtil.ZeroTolerance &&
-                   (float)Math.Abs(other.Bottom - Bottom) < MathUtil.ZeroTolerance;
+            return MathUtil.NearEqual(other.Left, Left) &&
+                   MathUtil.NearEqual(other.Right, Right) &&
+                   MathUtil.NearEqual(other.Top, Top) &&
+                   MathUtil.NearEqual(other.Bottom, Bottom);
         }
 
         /// <summary>
@@ -454,6 +468,11 @@ namespace SharpDX
                 result = (result * 397) ^ _bottom.GetHashCode();
                 return result;
             }
+        }
+
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.InvariantCulture, "X:{0} Y:{1} Width:{2} Height:{3}", X, Y, Width, Height);
         }
 
         /// <summary>
@@ -476,6 +495,17 @@ namespace SharpDX
         public static bool operator !=(RectangleF left, RectangleF right)
         {
             return !(left == right);
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion to <see cref="Rectangle"/> structure.
+        /// </summary>
+        /// <remarks>Performs direct float to int conversion, any fractional data is truncated.</remarks>
+        /// <param name="value">The source <see cref="RectangleF"/> value.</param>
+        /// <returns>A converted <see cref="Rectangle"/> structure.</returns>
+        public static explicit operator Rectangle(RectangleF value)
+        {
+            return new Rectangle((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);
         }
 
         /// <inheritdoc/>

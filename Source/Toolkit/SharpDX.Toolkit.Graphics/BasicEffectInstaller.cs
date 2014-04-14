@@ -79,9 +79,9 @@ namespace SharpDX.Toolkit.Graphics
                 effect.EmissiveColor = material.GetProperty(MaterialKeys.ColorEmissive);
             }
 
-            if (material.HasProperty(MaterialKeys.DiffuseTexture))
+            if (material.HasProperty(TextureKeys.DiffuseTexture))
             {
-                var diffuseTextureStack = material.GetProperty(MaterialKeys.DiffuseTexture);
+                var diffuseTextureStack = material.GetProperty(TextureKeys.DiffuseTexture);
                 if (diffuseTextureStack.Count > 0)
                 {
                     var diffuseTexture = diffuseTextureStack[0];

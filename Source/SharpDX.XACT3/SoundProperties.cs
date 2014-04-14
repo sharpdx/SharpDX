@@ -57,13 +57,18 @@ namespace SharpDX.XACT3
             this.Pitch = @ref.Pitch;
             this.Volume = @ref.Volume;
             this.TrackProperties = new TrackProperties[@ref.NumTracks];
-            fixed (void* ptr = &@ref.TrackPropertiesPointer)
-                Utilities.Read((IntPtr) ptr, this.TrackProperties, 0, @ref.NumTracks);
+
+            // if there are no tracks - don't read the properties, otherwise a IndexOutOfRangeException is thrown.
+            if (@ref.NumTracks > 0)
+            {
+                fixed (void* ptr = &@ref.TrackPropertiesPointer)
+                    Utilities.Read((IntPtr)ptr, this.TrackProperties, 0, @ref.NumTracks);
+            }
         }
-        // Method to marshal from managed struct tot native
+        // Method to marshal from managed struct to native
         internal unsafe void __MarshalTo(ref __Native @ref)
         {
             throw new NotImplementedException();
-        }        
+        }
     }
 }

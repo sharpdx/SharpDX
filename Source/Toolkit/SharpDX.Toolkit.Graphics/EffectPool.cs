@@ -306,7 +306,13 @@ namespace SharpDX.Toolkit.Graphics
             return string.Format("EffectPool [{0}]", Name);
         }
 
+        protected override void Dispose(bool disposeManagedResources)
+        {
+            base.Dispose(disposeManagedResources);
 
+            if(disposeManagedResources)
+                graphicsDevice.EffectPools.Remove(this);
+        }
 
         /// <summary>
         /// Merges an existing <see cref="EffectData" /> into this instance.

@@ -22,6 +22,8 @@
     <Compile Include="EngineCallback.cs" />
     <Compile Include="EngineShadow.cs" />
     <Compile Include="ErrorEventArgs.cs" />
+    <Compile Include="Fx\ReverbI3DL2Parameters.cs" />
+    <Compile Include="Fx\ReverbParameters.cs" />
     <Compile Include="Fx\XAudio2FxContants.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />

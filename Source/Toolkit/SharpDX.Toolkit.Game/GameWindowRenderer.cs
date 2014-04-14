@@ -188,7 +188,7 @@ namespace SharpDX.Toolkit
                 PixelFormat resizeFormat;
                 var size = GetRequestedSize(out resizeFormat);
                 var presentationParameters = new PresentationParameters(size.Width, size.Height, Window.NativeWindow, resizeFormat) { DepthStencilFormat = PreferredDepthStencilFormat };
-                presentationParameters.PresentationInterval = PresentInterval.Immediate;
+                presentationParameters.PresentationInterval = PresentInterval.One;
                 Presenter = new SwapChainGraphicsPresenter(GraphicsDevice, presentationParameters);
                 isBackBufferToResize = false;
             }

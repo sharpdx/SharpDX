@@ -42,6 +42,8 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+
+using System.Diagnostics;
 #if !W8CORE
 using System;
 using System.ComponentModel;
@@ -73,9 +75,10 @@ namespace SharpDX.Windows
         private System.Drawing.Size cachedSize;
         private FormWindowState previousWindowState;
         //private DisplayMonitor monitor;
-        private bool sizeMove;
+        private bool isUserResizing;
         private bool allowUserResizing;
         private bool isBackgroundFirstDraw;
+        private bool isSizeChangedWithoutResizeBegin;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RenderForm"/> class.
@@ -92,7 +95,7 @@ namespace SharpDX.Windows
         {
             Text = text;
             ClientSize = new System.Drawing.Size(800, 600);
-            MinimumSize = new System.Drawing.Size(200, 200);
+            //MinimumSize = new System.Drawing.Size(200, 200);
 
             ResizeRedraw = true;
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
@@ -149,8 +152,13 @@ namespace SharpDX.Windows
         public event EventHandler<EventArgs> UserResized;
 
         /// <summary>
-        /// Gets or sets a value indicating whether this form can be resized by the user. 
+        /// Gets or sets a value indicating whether this form can be resized by the user. See remarks.
         /// </summary>
+        /// <remarks>
+        /// This property alters <see cref="Form.FormBorderStyle"/>, 
+        /// for <c>true</c> value it is <see cref="FormBorderStyle.Sizable"/>, 
+        /// for <c>false</c> - <see cref="FormBorderStyle.FixedSingle"/>.
+        /// </remarks>
         /// <value><c>true</c> if this form can be resized by the user (by default); otherwise, <c>false</c>.</value>
         public bool AllowUserResizing
         {
@@ -164,10 +172,21 @@ namespace SharpDX.Windows
                 {
                     allowUserResizing = value;
                     MaximizeBox = allowUserResizing;
-                    FormBorderStyle = allowUserResizing ? FormBorderStyle.Sizable : FormBorderStyle.FixedSingle;
+                    FormBorderStyle = IsFullscreen
+                        ? FormBorderStyle.None
+                        : allowUserResizing ? FormBorderStyle.Sizable : FormBorderStyle.FixedSingle;
                 }
             }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicationg whether the current render form is in fullscreen mode. See remarks.
+        /// </summary>
+        /// <remarks>
+        /// If Toolkit is used, this property is set automatically,
+        /// otherwise user should maintain it himself as it affects the behavior of <see cref="AllowUserResizing"/> property.
+        /// </remarks>
+        public bool IsFullscreen { get; set; }
 
         /// <summary>
         /// Raises the <see cref="E:System.Windows.Forms.Form.ResizeBegin"/> event.
@@ -175,9 +194,9 @@ namespace SharpDX.Windows
         /// <param name="e">A <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnResizeBegin(EventArgs e)
         {
-            base.OnResizeBegin(e);
+            isUserResizing = true;
 
-            sizeMove = true;
+            base.OnResizeBegin(e);
             cachedSize = Size;
             OnPauseRendering(e);
         }
@@ -190,13 +209,13 @@ namespace SharpDX.Windows
         {
             base.OnResizeEnd(e);
 
-            if (sizeMove && cachedSize != Size)
+            if (isUserResizing && cachedSize != Size)
             {
                 OnUserResized(e);
-                UpdateScreen();
+                // UpdateScreen();
             }
 
-            sizeMove = false;
+            isUserResizing = false;
             OnResumeRendering(e);
         }
 
@@ -207,7 +226,7 @@ namespace SharpDX.Windows
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            UpdateScreen();
+            // UpdateScreen();
         }
 
         /// <summary>
@@ -309,6 +328,18 @@ namespace SharpDX.Windows
                 Screensaver(this, e);
         }
 
+        protected override void OnClientSizeChanged(EventArgs e)
+        {
+            base.OnClientSizeChanged(e);
+            if (!isUserResizing && (isSizeChangedWithoutResizeBegin || cachedSize != Size))
+            {
+                isSizeChangedWithoutResizeBegin = false;
+                cachedSize = Size;
+                OnUserResized(EventArgs.Empty);
+                //UpdateScreen();
+            }
+        }
+
         /// <summary>
         /// Override windows message loop handling.
         /// </summary>
@@ -345,7 +376,7 @@ namespace SharpDX.Windows
                             previousWindowState = FormWindowState.Maximized;
 
                             OnUserResized(EventArgs.Empty);
-                            UpdateScreen();
+                            //UpdateScreen();
                             cachedSize = Size;
                         }
                         else if (wparam == SIZE_RESTORED)
@@ -353,17 +384,15 @@ namespace SharpDX.Windows
                             if (previousWindowState == FormWindowState.Minimized)
                                 OnResumeRendering(EventArgs.Empty);
 
-                            if (!sizeMove && (Size != cachedSize || previousWindowState == FormWindowState.Maximized))
+                            if (!isUserResizing && (Size != cachedSize || previousWindowState == FormWindowState.Maximized))
                             {
                                 previousWindowState = FormWindowState.Normal;
 
                                 // Only update when cachedSize is != 0
                                 if (cachedSize != Size.Empty)
                                 {
-                                    OnUserResized(EventArgs.Empty);
-                                    UpdateScreen();
+                                    isSizeChangedWithoutResizeBegin = true;
                                 }
-                                cachedSize = Size;
                             }
 
                             previousWindowState = FormWindowState.Normal;
@@ -415,23 +444,8 @@ namespace SharpDX.Windows
         {
             if (keyData == (Keys.Menu | Keys.Alt) || keyData == Keys.F10)
                 return true;
-            else
-                return base.ProcessDialogKey(keyData);
-        }
 
-        /// <summary>
-        /// Updates the screen.
-        /// </summary>
-        private void UpdateScreen()
-        {
-            //DisplayMonitor current = DisplayMonitor.FromWindow(Handle);
-            //if (monitor != null && monitor->DeviceName != current->DeviceName)
-            //{
-            //    monitor = current;
-            //    OnMonitorChanged(System.EventArgs.Empty);
-            //}
-
-            //monitor = current;
+            return base.ProcessDialogKey(keyData);
         }
     }
 }

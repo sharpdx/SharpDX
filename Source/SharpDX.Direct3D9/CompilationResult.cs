@@ -45,7 +45,7 @@ namespace SharpDX.Direct3D9
         /// </returns>
         public static implicit operator ShaderBytecode(CompilationResult input)
         {
-            return input.Bytecode;
+            return (input != null) ? input.Bytecode : null;
         }
     }
 }

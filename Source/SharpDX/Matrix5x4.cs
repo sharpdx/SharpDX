@@ -28,9 +28,6 @@ namespace SharpDX
     /// Represents a 4x4 mathematical Matrix5x4.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-#if !W8CORE
-    [Serializable]
-#endif
     public struct Matrix5x4 : IEquatable<Matrix5x4>, IFormattable, IDataSerializable
     {
         /// <summary>
@@ -993,11 +990,30 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return M11.GetHashCode() + M12.GetHashCode() + M13.GetHashCode() + M14.GetHashCode() +
-               M21.GetHashCode() + M22.GetHashCode() + M23.GetHashCode() + M24.GetHashCode() +
-               M31.GetHashCode() + M32.GetHashCode() + M33.GetHashCode() + M34.GetHashCode() +
-               M41.GetHashCode() + M42.GetHashCode() + M43.GetHashCode() + M44.GetHashCode() +
-               M51.GetHashCode() + M52.GetHashCode() + M53.GetHashCode() + M54.GetHashCode();
+            unchecked
+            {
+                var hashCode = M11.GetHashCode();
+                hashCode = (hashCode * 397) ^ M12.GetHashCode();
+                hashCode = (hashCode * 397) ^ M13.GetHashCode();
+                hashCode = (hashCode * 397) ^ M14.GetHashCode();
+                hashCode = (hashCode * 397) ^ M21.GetHashCode();
+                hashCode = (hashCode * 397) ^ M22.GetHashCode();
+                hashCode = (hashCode * 397) ^ M23.GetHashCode();
+                hashCode = (hashCode * 397) ^ M24.GetHashCode();
+                hashCode = (hashCode * 397) ^ M31.GetHashCode();
+                hashCode = (hashCode * 397) ^ M32.GetHashCode();
+                hashCode = (hashCode * 397) ^ M33.GetHashCode();
+                hashCode = (hashCode * 397) ^ M34.GetHashCode();
+                hashCode = (hashCode * 397) ^ M41.GetHashCode();
+                hashCode = (hashCode * 397) ^ M42.GetHashCode();
+                hashCode = (hashCode * 397) ^ M43.GetHashCode();
+                hashCode = (hashCode * 397) ^ M44.GetHashCode();
+                hashCode = (hashCode * 397) ^ M51.GetHashCode();
+                hashCode = (hashCode * 397) ^ M52.GetHashCode();
+                hashCode = (hashCode * 397) ^ M53.GetHashCode();
+                hashCode = (hashCode * 397) ^ M54.GetHashCode();
+                return hashCode;
+            }
         }
 
         /// <summary>
@@ -1009,30 +1025,26 @@ namespace SharpDX
         /// </returns>
         public bool Equals(Matrix5x4 other)
         {
-            return (Math.Abs(other.M11 - M11) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M12 - M12) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M13 - M13) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M14 - M14) < MathUtil.ZeroTolerance &&
-
-                Math.Abs(other.M21 - M21) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M22 - M22) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M23 - M23) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M24 - M24) < MathUtil.ZeroTolerance &&
-
-                Math.Abs(other.M31 - M31) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M32 - M32) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M33 - M33) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M34 - M34) < MathUtil.ZeroTolerance &&
-
-                Math.Abs(other.M41 - M41) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M42 - M42) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M43 - M43) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M44 - M44) < MathUtil.ZeroTolerance &&
-
-                Math.Abs(other.M51 - M51) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M52 - M52) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M53 - M53) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M54 - M54) < MathUtil.ZeroTolerance);
+            return (MathUtil.NearEqual(other.M11, M11) &&
+                MathUtil.NearEqual(other.M12, M12) &&
+                MathUtil.NearEqual(other.M13, M13) &&
+                MathUtil.NearEqual(other.M14, M14) &&
+                MathUtil.NearEqual(other.M21, M21) &&
+                MathUtil.NearEqual(other.M22, M22) &&
+                MathUtil.NearEqual(other.M23, M23) &&
+                MathUtil.NearEqual(other.M24, M24) &&
+                MathUtil.NearEqual(other.M31, M31) &&
+                MathUtil.NearEqual(other.M32, M32) &&
+                MathUtil.NearEqual(other.M33, M33) &&
+                MathUtil.NearEqual(other.M34, M34) &&
+                MathUtil.NearEqual(other.M41, M41) &&
+                MathUtil.NearEqual(other.M42, M42) &&
+                MathUtil.NearEqual(other.M43, M43) &&
+                MathUtil.NearEqual(other.M44, M44) &&
+                MathUtil.NearEqual(other.M51, M51) &&
+                MathUtil.NearEqual(other.M52, M52) &&
+                MathUtil.NearEqual(other.M53, M53) &&
+                MathUtil.NearEqual(other.M54, M54));
         }
 
         /// <summary>

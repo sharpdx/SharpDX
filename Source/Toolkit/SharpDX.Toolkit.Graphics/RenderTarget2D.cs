@@ -323,6 +323,15 @@ namespace SharpDX.Toolkit.Graphics
             return from == null ? null : from.Resource;
         }
 
+        /// <summary>
+        /// Implicit casting operator to <see cref="Direct3D11.Resource"/>
+        /// </summary>
+        /// <param name="from">The GraphicsResource to convert from.</param>
+        public static implicit operator SharpDX.Direct3D11.Resource(RenderTarget2D from)
+        {
+            return from == null ? null : (SharpDX.Direct3D11.Resource)from.Resource;
+        }
+
         internal static Texture2DDescription CreateDescription(GraphicsDevice device, int width, int height, PixelFormat format, TextureFlags textureFlags, int mipCount, int arraySize, MSAALevel multiSampleCount)
         {
             // Make sure that the texture to create is a render target

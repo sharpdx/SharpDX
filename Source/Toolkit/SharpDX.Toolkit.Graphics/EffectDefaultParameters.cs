@@ -38,10 +38,12 @@ namespace SharpDX.Toolkit.Graphics
             // Initialize predefined parameters used by Model.Draw (to speedup things internally)
             WorldParameter = effect.Parameters["World"];
             ViewParameter = effect.Parameters["View"];
+            ViewInverseParameter = effect.Parameters["ViewInverse"];
             ProjectionParameter = effect.Parameters["Projection"];
             WorldViewParameter = effect.Parameters["WorldView"];
             ViewProjectionParameter = effect.Parameters["ViewProjection"] ?? effect.Parameters["ViewProj"];
             WorldInverseTransposeParameter = effect.Parameters["WorldInverseTranspose"];
+            WorldInverseTransposeViewParameter = effect.Parameters["WorldInverseTransposeView"];
             WorldViewProjectionParameter = effect.Parameters["WorldViewProj"] ?? effect.Parameters["WorldViewProjection"];
         }
 
@@ -62,6 +64,15 @@ namespace SharpDX.Toolkit.Graphics
         /// This parameter can be null if not present in the effect.
         /// </remarks>
         public readonly EffectParameter ViewParameter;
+
+        /// <summary>
+        /// The view inverse parameter defined as "float4x4 ViewInverse" in an effect.
+        /// </summary>
+        /// <remarks>
+        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref SharpDX.Matrix,ref SharpDX.Matrix,ref SharpDX.Matrix)"/>, this parameter will receive the matrix <c>view</c>.
+        /// This parameter can be null if not present in the effect.
+        /// </remarks>
+        public readonly EffectParameter ViewInverseParameter;
 
         /// <summary>
         /// The projection parameter defined as "float4x4 Projection" in an effect.
@@ -98,6 +109,15 @@ namespace SharpDX.Toolkit.Graphics
         /// This parameter can be null if not present in the effect.
         /// </remarks>
         public readonly EffectParameter WorldInverseTransposeParameter;
+
+        /// <summary>
+        /// The world inverse transpose * view parameter defined as "float4x4 WorldInverseTransposeView"
+        /// </summary>
+        /// <remarks>
+        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref SharpDX.Matrix,ref SharpDX.Matrix,ref SharpDX.Matrix)"/>, this parameter will receive the matrix <c>world.Invert().Transpose()</c>.
+        /// This parameter can be null if not present in the effect.
+        /// </remarks>
+        public readonly EffectParameter WorldInverseTransposeViewParameter;
 
         /// <summary>
         /// The world view projection parameter defined as "float4x4 WorldViewProjection" or "float4x4 WorldViewProj" in an effect.
@@ -140,6 +160,16 @@ namespace SharpDX.Toolkit.Graphics
             if (ProjectionParameter != null)
                 ProjectionParameter.SetValue(ref projection);
 
+            if(ViewInverseParameter != null)
+            {
+                if(!context.IsViewInverseCalculated)
+                {
+                    Matrix.Invert(ref view, out context.ViewInverse);
+                    context.IsViewInverseCalculated = true;
+                }
+                ViewInverseParameter.SetValue(ref context.ViewInverse);
+            }
+
             if (WorldViewParameter != null)
             {
                 Matrix worldView;
@@ -157,13 +187,24 @@ namespace SharpDX.Toolkit.Graphics
                 ViewProjectionParameter.SetValue(ref context.ViewProjection);
             }
 
-            if (WorldInverseTransposeParameter != null)
+            if (WorldInverseTransposeParameter != null || WorldInverseTransposeViewParameter != null)
             {
                 Matrix worldTranspose;
                 Matrix worldInverseTranspose;
                 Matrix.Invert(ref world, out worldTranspose);
                 Matrix.Transpose(ref worldTranspose, out worldInverseTranspose);
-                WorldInverseTransposeParameter.SetValue(ref worldInverseTranspose);
+
+                if(WorldInverseTransposeParameter != null)
+                {
+                    WorldInverseTransposeParameter.SetValue(ref worldInverseTranspose);
+                }
+
+                if(WorldInverseTransposeViewParameter != null)
+                {
+                    Matrix worldInverseViewTranspose;
+                    Matrix.Multiply(ref worldInverseTranspose, ref view, out worldInverseViewTranspose);
+                    WorldInverseTransposeViewParameter.SetValue(ref worldInverseViewTranspose);
+                }
             }
 
             if (WorldViewProjectionParameter != null)

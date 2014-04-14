@@ -117,15 +117,15 @@ namespace ModelRendering
             // Calculates the world and the view based on the model size
             const float MaxModelSize = 10.0f;
             var scaling = MaxModelSize / modelBounds.Radius;
-            view = Matrix.LookAtLH(new Vector3(0, 0, - MaxModelSize * 2.5f), new Vector3(0, 0, 0), Vector3.UnitY);
-            projection = Matrix.PerspectiveFovLH(0.9f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, MaxModelSize * 10.0f);
+            view = Matrix.LookAtRH(new Vector3(0, 0, MaxModelSize * 2.5f), new Vector3(0, 0, 0), Vector3.UnitY);
+            projection = Matrix.PerspectiveFovRH(0.9f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, MaxModelSize * 10.0f);
             world = Matrix.Translation(-modelBounds.Center.X, -modelBounds.Center.Y, -modelBounds.Center.Z) * Matrix.Scaling(scaling) * Matrix.RotationY((float)gameTime.TotalGameTime.TotalSeconds);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             // Clears the screen with the Color.CornflowerBlue
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.CornflowerBlue);            
 
             // Draw the model
             model.Draw(GraphicsDevice, world, view, projection);

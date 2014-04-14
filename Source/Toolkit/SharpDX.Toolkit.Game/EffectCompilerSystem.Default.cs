@@ -26,6 +26,10 @@ namespace SharpDX.Toolkit
     {
         #region Methods
 
+        private void InitializeCompiler()
+        {
+        }
+
         protected virtual void TrackEffect(Effect effect)
         {
             if (!effectsToAlwaysCheck.Contains(effect))

@@ -90,7 +90,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="toLeftHanded">if set to <c>true</c> vertices and indices will be transformed to left handed. Default is true.</param>
             /// <returns>A sphere primitive.</returns>
             /// <exception cref="System.ArgumentOutOfRangeException">tessellation;Must be >= 3</exception>
-            public static GeometricPrimitive New(GraphicsDevice device, float diameter = 1.0f, int tessellation = 16, bool toLeftHanded = true)
+            public static GeometricPrimitive New(GraphicsDevice device, float diameter = 1.0f, int tessellation = 16, bool toLeftHanded = false)
             {
                 if (tessellation < 3) throw new ArgumentOutOfRangeException("tessellation", "Must be >= 3");
 

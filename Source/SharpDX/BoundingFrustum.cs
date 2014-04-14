@@ -27,9 +27,6 @@ namespace SharpDX
     /// Defines a frustum which can be used in frustum culling, zoom to Extents (zoom to fit) operations, 
     /// (matrix, frustum, camera) interchange, and many kind of intersection testing.
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct BoundingFrustum : IEquatable<BoundingFrustum>, IDataSerializable
     {

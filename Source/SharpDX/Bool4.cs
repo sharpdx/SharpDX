@@ -27,9 +27,6 @@ namespace SharpDX
     /// <summary>
     /// Represents a four dimensional mathematical vector of bool (32 bits per bool value).
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     [DynamicSerializer("TKB4")]
     public struct Bool4 : IEquatable<Bool4>, IFormattable, IDataSerializable
@@ -309,10 +306,15 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return iX.GetHashCode() + iY.GetHashCode() + iZ.GetHashCode() + iW.GetHashCode();
+            unchecked
+            {
+                var hashCode = iX;
+                hashCode = (hashCode * 397) ^ iY;
+                hashCode = (hashCode * 397) ^ iZ;
+                hashCode = (hashCode * 397) ^ iW;
+                return hashCode;
+            }
         }
-
-
 
         /// <summary>
         /// Determines whether the specified <see cref = "Bool4" /> is equal to this instance.

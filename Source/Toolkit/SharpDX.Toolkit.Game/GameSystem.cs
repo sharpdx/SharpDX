@@ -49,6 +49,7 @@ namespace SharpDX.Toolkit
         /// <param name="registry">The registry.</param>
         public GameSystem(IServiceRegistry registry)
         {
+            if(registry == null) throw new ArgumentNullException("registry");
             this.registry = registry;
         }
 
@@ -57,9 +58,10 @@ namespace SharpDX.Toolkit
         /// </summary>
         /// <param name="game">The game.</param>
         public GameSystem(Game game)
-            : this(game.Services)
         {
+            if(game == null) throw new ArgumentNullException("game");
             this.game = game;
+            this.registry = game.Services;
         }
 
         /// <summary>

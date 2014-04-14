@@ -30,31 +30,31 @@ namespace SharpDX.Toolkit.Input
     [StructLayout(LayoutKind.Sequential)]
     public struct MouseState : IEquatable<MouseState>
     {
-        private readonly ButtonState left;
-        private readonly ButtonState middle;
-        private readonly ButtonState right;
-        private readonly ButtonState xButton1;
-        private readonly ButtonState xButton2;
-        private readonly float x;
-        private readonly float y;
-        private readonly int wheelDelta;
+        internal ButtonState leftButton;
+        internal ButtonState middleButton;
+        internal ButtonState rightButton;
+        internal ButtonState xButton1;
+        internal ButtonState xButton2;
+        internal float x;
+        internal float y;
+        internal int wheelDelta;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MouseState"/> structure.
         /// </summary>
-        /// <param name="left">State of the left button</param>
-        /// <param name="middle">State of the middle button</param>
-        /// <param name="right">State of the right button</param>
+        /// <param name="leftButton">State of the left button</param>
+        /// <param name="middleButton">State of the middle button</param>
+        /// <param name="rightButton">State of the right button</param>
         /// <param name="xButton1">State of the X-Button 1</param>
         /// <param name="xButton2">State of the X-Button 2</param>
         /// <param name="x">X-position of the mouse cursor</param>
         /// <param name="y">Y-position of the mouse cursor</param>
         /// <param name="wheelDelta">Delta of mouse wheel relative to previous input event</param>
-        public MouseState(ButtonState left, ButtonState middle, ButtonState right, ButtonState xButton1, ButtonState xButton2, float x, float y, int wheelDelta)
+        public MouseState(ButtonState leftButton, ButtonState middleButton, ButtonState rightButton, ButtonState xButton1, ButtonState xButton2, float x, float y, int wheelDelta)
         {
-            this.left = left;
-            this.middle = middle;
-            this.right = right;
+            this.leftButton = leftButton;
+            this.middleButton = middleButton;
+            this.rightButton = rightButton;
             this.xButton1 = xButton1;
             this.xButton2 = xButton2;
             this.x = x;
@@ -65,17 +65,17 @@ namespace SharpDX.Toolkit.Input
         /// <summary>
         /// State of the left button
         /// </summary>
-        public ButtonState Left { get { return left; } }
+        public ButtonState LeftButton { get { return leftButton; } }
 
         /// <summary>
         /// State of the middle button
         /// </summary>
-        public ButtonState Middle { get { return middle; } }
+        public ButtonState MiddleButton { get { return middleButton; } }
 
         /// <summary>
         /// State of the right button
         /// </summary>
-        public ButtonState Right { get { return right; } }
+        public ButtonState RightButton { get { return rightButton; } }
 
         /// <summary>
         /// State of the X-Button 1
@@ -102,22 +102,14 @@ namespace SharpDX.Toolkit.Input
         /// </summary>
         public int WheelDelta { get { return wheelDelta; } }
 
-        /// <summary>
-        /// Indicates whether the current object is equal to another object of the same type.
-        /// </summary>
-        /// <param name="other">An object to compare with this object.</param>
-        /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
         public bool Equals(MouseState other)
         {
-            return left == other.left && middle == other.middle && right == other.right && xButton1 == other.xButton1 && xButton2 == other.xButton2 && MathUtil.WithinEpsilon(x, other.x) && MathUtil.WithinEpsilon(y, other.y) && wheelDelta == other.wheelDelta;
+            return leftButton.Equals(other.leftButton) && middleButton.Equals(other.middleButton) && rightButton.Equals(other.rightButton) && xButton1.Equals(other.xButton1) && xButton2.Equals(other.xButton2) && x.Equals(other.x) && y.Equals(other.y) && wheelDelta == other.wheelDelta;
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
+            if(ReferenceEquals(null, obj)) return false;
             return obj is MouseState && Equals((MouseState)obj);
         }
 
@@ -125,11 +117,11 @@ namespace SharpDX.Toolkit.Input
         {
             unchecked
             {
-                int hashCode = (int)left;
-                hashCode = (hashCode * 397) ^ (int)middle;
-                hashCode = (hashCode * 397) ^ (int)right;
-                hashCode = (hashCode * 397) ^ (int)xButton1;
-                hashCode = (hashCode * 397) ^ (int)xButton2;
+                var hashCode = leftButton.GetHashCode();
+                hashCode = (hashCode * 397) ^ middleButton.GetHashCode();
+                hashCode = (hashCode * 397) ^ rightButton.GetHashCode();
+                hashCode = (hashCode * 397) ^ xButton1.GetHashCode();
+                hashCode = (hashCode * 397) ^ xButton2.GetHashCode();
                 hashCode = (hashCode * 397) ^ x.GetHashCode();
                 hashCode = (hashCode * 397) ^ y.GetHashCode();
                 hashCode = (hashCode * 397) ^ wheelDelta;

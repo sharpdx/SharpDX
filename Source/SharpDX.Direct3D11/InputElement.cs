@@ -21,7 +21,9 @@ using SharpDX.DXGI;
 
 namespace SharpDX.Direct3D11
 {
-    public partial struct InputElement
+    using System;
+
+    public partial struct InputElement : IEquatable<InputElement>
     {
         /// <summary>
         ///   Returns a value that can be used for the offset parameter of an InputElement to indicate that the element

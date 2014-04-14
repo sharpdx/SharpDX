@@ -1,0 +1,13 @@
+!MyData
+Name: This text was loaded from MyData.yml
+SimpleValue: 1.0
+Color: { R: 128, G: 128, B: 128, A: 128}
+Vectors:
+ - {X: 0, Y: 0, Z: 0, W: 1}
+ - {X: 1, Y: 0, Z: 0, W: 1}
+ - {X: 2, Y: 0, Z: 0, W: 1}
+ - {X: 3, Y: 0, Z: 0, W: 1}
+ - {X: 4, Y: 0, Z: 0, W: 1}
+ - {X: 5, Y: 0, Z: 0, W: 1}
+#Example of loading related asset.
+Font: !asset Arial16 

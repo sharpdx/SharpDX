@@ -20,6 +20,8 @@
 
 using System;
 using System.Globalization;
+using System.Runtime.InteropServices;
+using System.Text;
 using SharpDX.DirectWrite;
 
 namespace FontEnumeration
@@ -50,6 +52,23 @@ namespace FontEnumeration
 
                 string name = familyNames.GetString(index);
                 Console.WriteLine(name);
+
+                var fontCount = fontFamily.FontCount;
+                for (int fontIndex = 0; fontIndex < fontCount; fontIndex++)
+                {
+                    var font = fontFamily.GetFont(fontIndex);
+                    var fontFace = new FontFace(font);
+                    var files = fontFace.GetFiles();
+                    foreach (var file in files)
+                    {
+                        var referenceKey = file.GetReferenceKey();
+                        var originalLoader = (FontFileLoaderNative)file.Loader;
+                        var loader = originalLoader.QueryInterface<LocalFontFileLoader>();
+
+                        var fontFilePath = loader.GetFilePath(referenceKey);
+                        Console.WriteLine("\tFile path: {0}", fontFilePath);
+                    }
+                }
             }
 
             Console.WriteLine("Press enter to exit");

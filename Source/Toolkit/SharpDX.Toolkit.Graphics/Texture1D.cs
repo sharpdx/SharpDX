@@ -129,7 +129,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
         public static Texture1D New(GraphicsDevice device, int width, MipMapCount mipCount, PixelFormat format, TextureFlags flags = TextureFlags.ShaderResource, int arraySize = 1, ResourceUsage usage = ResourceUsage.Default)
         {
-            return new Texture1D(device, NewDescription(width, format, flags | TextureFlags.ShaderResource, mipCount, arraySize, usage));
+            return new Texture1D(device, NewDescription(width, format, flags, mipCount, arraySize, usage));
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </remarks>
         public unsafe static Texture1D New<T>(GraphicsDevice device, int width, PixelFormat format, T[] textureData, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
         {
-            return new Texture1D(device, NewDescription(width, format, flags | TextureFlags.ShaderResource, 1, 1, usage), GetDataBox(format, width, 1, 1, textureData, (IntPtr)Interop.Fixed(textureData)));
+            return new Texture1D(device, NewDescription(width, format, flags, 1, 1, usage), GetDataBox(format, width, 1, 1, textureData, (IntPtr)Interop.Fixed(textureData)));
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace SharpDX.Toolkit.Graphics
             if (image.Description.Dimension != TextureDimension.Texture1D)
                 throw new ArgumentException("Invalid image. Must be 1D", "image");
 
-            return new Texture1D(device, CreateTextureDescriptionFromImage(image, flags | TextureFlags.ShaderResource, usage), image.ToDataBox());
+            return new Texture1D(device, CreateTextureDescriptionFromImage(image, flags, usage), image.ToDataBox());
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>A texture</returns>
         public static new Texture1D Load(GraphicsDevice device, Stream stream, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
         {
-            var texture = Texture.Load(device, stream, flags | TextureFlags.ShaderResource, usage);
+            var texture = Texture.Load(device, stream, flags, usage);
             if (!(texture is Texture1D))
                 throw new ArgumentException(string.Format("Texture is not type of [Texture1D] but [{0}]", texture.GetType().Name));
             return (Texture1D)texture;

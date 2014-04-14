@@ -40,6 +40,10 @@
     <include file="d2d1_1.h" attach="true" />
     <include file="d2d1effectauthor.h" attach="true" />
   </ifdef>
+  <ifdef name="DIRECTX11_2">
+    <include file="d2d1_2.h" attach="true" />
+    <include file="d2d1effects_1.h" attach="true" />
+  </ifdef>
 
   <naming />
   
@@ -49,7 +53,9 @@
     <context>d2d1</context>
     <context>d2derr</context>
     <context>d2d1_1</context>
+    <context>d2d1_2</context>
     <context>d2d1effects</context>
+    <context>d2d1effects_1</context>
     <context>d2d1effectauthor</context>
     
     <const from-guid="CLSID_D2D1([A-Z].*)" class="SharpDX.Direct2D1.Effect" type="System.Guid" name="$1">new System.Guid("$1")</const>
@@ -83,7 +89,9 @@
     <context>d2derr</context>
     <context>d2d1</context>
     <context>d2d1_1</context>
+    <context>d2d1_2</context>
     <context>d2d1effects</context>
+    <context>d2d1effects_1</context>
     <context>d2d1effectauthor</context>
 
     <!--
@@ -163,6 +171,8 @@
     <map enum="D2D1_TABLETRANSFER_PROP" name="TableTransferProperties"/>
     <map enum="D2D1_TILE_PROP" name="TileProperties"/>
     <map enum="D2D1_TURBULENCE_PROP" name="TurbulenceProperties"/>
+    <map enum="D2D1_OPACITYMETADATA_PROP" name="OpacityMetadataProperties"/>
+    <map enum="D2D1_YCBCR_PROP" name="YCbCrProperties"/>
 
     <map enum="D2D1_.*_OPTIONS1?" flags="true"/>
 
@@ -170,6 +180,15 @@
 
     <!-- For dcommon -->
     <map enum="DWRITE(.+)" name-tmp="$1" />
+
+    <!-- Added in DX11.2 -->
+    <map enum="D2D1_YCBCR_CHROMA_SUBSAMPLING" name="YcbcrChromaSubSampling" />
+    <map enum-item="D2D1_YCBCR_CHROMA_SUBSAMPLING_420" name-tmp="Both" />
+    <map enum-item="D2D1_YCBCR_CHROMA_SUBSAMPLING_422" name-tmp="Horizontal" />
+    <map enum-item="D2D1_YCBCR_CHROMA_SUBSAMPLING_444" name-tmp="None" />
+    <map enum-item="D2D1_YCBCR_CHROMA_SUBSAMPLING_440" name-tmp="Vertical" />
+
+    <map enum="D2D1_YCBCR_INTERPOLATION_MODE" name="YcbcrInterpolationMode" />
 
     <!--
     // *****************************************************************
@@ -235,7 +254,7 @@
     <map method="ID2D1Factory::GetDesktopDpi" visibility="internal" />
     <map method="ID2D(\d+)Factory\d?::Create.*" visibility="internal" />
 
-    <map param="ID2D1Factory1::CreateDevice::d2dDevice" attribute="out fast"/>
+    <map param="ID2D1Factory[12]::CreateDevice::d2dDevice1?" attribute="out fast"/>
     <map param="ID2D1Factory1::CreateStrokeStyle::strokeStyle" attribute="out fast"/>
     <map param="ID2D1Factory1::CreatePathGeometry::pathGeometry" attribute="out fast"/>
     <map param="ID2D1Factory1::CreateDrawingStateBlock::drawingStateBlock" attribute="out fast"/>
@@ -257,8 +276,8 @@
     <map param="ID2D(\d+)Factory::CreateDCRenderTarget::dcRenderTarget" attribute="out fast"/>
     <map param="ID2D(\d+)Factory::CreateWicBitmapRenderTarget::renderTarget" attribute="out fast"/>
 
-    <map method="ID2D\dDevice::Create.*" visibility="internal"/>
-    <map param="ID2D\dDevice::CreateDeviceContext::deviceContext" attribute="out fast"/>
+    <map method="ID2D\dDevice1?::Create.*" visibility="internal"/>
+    <map param="ID2D\dDevice1?::CreateDeviceContext::deviceContext1?" attribute="out fast"/>
     <map param="ID2D\dDevice::CreatePrintControl::printControl" attribute="out fast"/>
 
     <map method="ID2D\dDeviceContext::Create.*" visibility="internal"/>
@@ -309,7 +328,7 @@
     <map method="ID2D1RenderTarget::DrawTextA" visibility="internal" name="DrawText" />
     <map method="ID2D1RenderTarget::(.*)Dpi" visibility="internal" />
     <map method="ID2D(\d+)Mesh::Open" visibility="internal" name="Open_" />
-    <map interface="ID2D(\d+).*Sink" callback="true" callback-dual="true" />
+    <map interface="ID2D(\d+).*Sink1?" callback="true" callback-dual="true" />
 
     <!--<map param="ID2D1DeviceContext::CreateColorContextFromWicColorContext::wicColorContext" type="IUnknown"/>
     <map param="ID2D1DeviceContext::CreateColorContextFromWicColorContext::colorContext" type="IUnknown"/>-->
@@ -412,9 +431,12 @@
     -->
     <map function="D2D1(.+)" name-tmp="$1" />
     <map function="D2D1.*" dll='"d2d1.dll"' group="SharpDX.Direct2D1.D2D1" />
-
+    
     <map param="D2D1CreateDevice::d2dDevice" attribute="out fast"/>
     <map param="D2D1CreateDeviceContext::d2dDeviceContext" attribute="out fast"/>
+
+    <!-- Added in DX11.2 -->
+    <map function="D2D1ComputeMaximumScaleFactor" dll='"d2d1.dll"' group="SharpDX.Direct2D1.D2D1" />
 
     <context-clear />
   </mapping>

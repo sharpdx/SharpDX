@@ -30,8 +30,26 @@ namespace SharpDX.Toolkit.Content
         /// <summary>
         /// Initializes a new instance of the <see cref="AssetNotFoundException" /> class.
         /// </summary>
-        /// <param name="message">The message.</param>
-        public AssetNotFoundException(string message) : base(message)
+        public AssetNotFoundException()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssetNotFoundException" /> class with the specified message.
+        /// </summary>
+        /// <param name="message">The exception message.</param>
+        public AssetNotFoundException(string message)
+            : base(message)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssetNotFoundException" /> class with the specified message and inner exception.
+        /// </summary>
+        /// <param name="message">The exception message.</param>
+        /// <param name="innerException">The inner exception.</param>
+        public AssetNotFoundException(string message, Exception innerException)
+            : base(message, innerException)
         {
         }
     }

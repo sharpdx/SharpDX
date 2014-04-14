@@ -56,9 +56,11 @@ namespace SharpDX.Direct2D1
             int length = GetPropertyNameLength(index);
             if (length == 0)
                 return null;
-            var pText = stackalloc char[length];
-            GetPropertyName(index, new IntPtr(pText), length);
-            return new string(pText);
+            // D2D runtime returns the property name as a null-terminated string, so we need an additional char at the end
+            var bufferLength = length + 1;
+            var pText = stackalloc char[bufferLength];
+            GetPropertyName(index, new IntPtr(pText), bufferLength);
+            return new string(pText, 0, length); // do not use the last '\0' char
         }
 
         /// <summary>	
@@ -270,7 +272,7 @@ namespace SharpDX.Direct2D1
             this.GetValue(index, PropertyType.IUnknown, new IntPtr(&ptr), Utilities.SizeOf<IntPtr>());
             return ptr == IntPtr.Zero ? null : As<T>(ptr);
         }
-        
+
         /// <summary>	
         /// Gets the value of the specified property by index.
         /// </summary>	

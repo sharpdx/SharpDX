@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using SharpDX.DXGI;
 using SharpDX.Direct3D11;
@@ -72,7 +73,8 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         internal readonly int DepthStride;
 
-        internal TextureView[] shaderResourceViews;
+        internal TextureView defaultShaderResourceView;
+        internal Dictionary<TextureViewKey, TextureView> shaderResourceViews;
         internal TextureView[] renderTargetViews;
         internal UnorderedAccessView[] unorderedAccessViews;
         private MipMapDescription[] mipmapDescriptions;
@@ -368,6 +370,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="toData">The destination buffer to receive a copy of the texture data.</param>
         /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
         /// <param name="mipSlice">The mip slice index.</param>
+        /// <param name="doNotWait">if set to <c>true</c> this method will return immediately if the resource is still being used by the GPU for writing. Default is false</param>
+        /// <returns><c>true</c> if data was correctly retrieved, <c>false</c> if <see cref="doNotWait"/> flag was true and the resource is still being used by the GPU for writing.</returns>
         /// <msdn-id>ff476457</msdn-id>
         ///   <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
         ///   <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
@@ -375,19 +379,19 @@ namespace SharpDX.Toolkit.Graphics
         /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>.
         /// This method creates internally a staging resource if this texture is not already a staging resource, copies to it and map it to memory. Use method with explicit staging resource
         /// for optimal performances.</remarks>
-        public void GetData<TData>(TData[] toData, int arraySlice = 0, int mipSlice = 0) where TData : struct
+        public bool GetData<TData>(TData[] toData, int arraySlice = 0, int mipSlice = 0, bool doNotWait = false) where TData : struct
         {
             // Get data from this resource
             if (Description.Usage == ResourceUsage.Staging)
             {
                 // Directly if this is a staging resource
-                GetData(this, toData, arraySlice, mipSlice);
+                return GetData(this, toData, arraySlice, mipSlice, doNotWait);
             }
             else
             {
                 // Inefficient way to use the Copy method using dynamic staging texture
                 using (var throughStaging = this.ToStaging())
-                    GetData(throughStaging, toData, arraySlice, mipSlice);
+                    return GetData(throughStaging, toData, arraySlice, mipSlice, doNotWait);
             }
         }
 
@@ -448,6 +452,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="toData">To data.</param>
         /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
         /// <param name="mipSlice">The mip slice index.</param>
+        /// <param name="doNotWait">if set to <c>true</c> this method will return immediately if the resource is still being used by the GPU for writing. Default is false</param>
+        /// <returns><c>true</c> if data was correctly retrieved, <c>false</c> if <see cref="doNotWait"/> flag was true and the resource is still being used by the GPU for writing.</returns>
         /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
         /// <msdn-id>ff476457</msdn-id>	
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
@@ -455,9 +461,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>.
         /// </remarks>
-        public unsafe void GetData<TData>(Texture stagingTexture, TData[] toData, int arraySlice = 0, int mipSlice = 0) where TData : struct
+        public unsafe bool GetData<TData>(Texture stagingTexture, TData[] toData, int arraySlice = 0, int mipSlice = 0, bool doNotWait = false) where TData : struct
         {
-            GetData(stagingTexture, new DataPointer((IntPtr)Interop.Fixed(toData), toData.Length * Utilities.SizeOf<TData>()), arraySlice, mipSlice);
+            return GetData(stagingTexture, new DataPointer((IntPtr)Interop.Fixed(toData), toData.Length * Utilities.SizeOf<TData>()), arraySlice, mipSlice, doNotWait);
         }
 
         /// <summary>
@@ -467,14 +473,14 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="toData">The pointer to data in CPU memory.</param>
         /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
         /// <param name="mipSlice">The mip slice index.</param>
+        /// <param name="doNotWait">if set to <c>true</c> this method will return immediately if the resource is still being used by the GPU for writing. Default is false</param>
+        /// <returns><c>true</c> if data was correctly retrieved, <c>false</c> if <see cref="doNotWait"/> flag was true and the resource is still being used by the GPU for writing.</returns>
         /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
-        /// <msdn-id>ff476457</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
-        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
-        /// <remarks>
-        /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>.
-        /// </remarks>
-        public unsafe void GetData(Texture stagingTexture, DataPointer toData, int arraySlice = 0, int mipSlice = 0)
+        /// <msdn-id>ff476457</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        ///   <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
+        /// <remarks>This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice" />.</remarks>
+        public unsafe bool GetData(Texture stagingTexture, DataPointer toData, int arraySlice = 0, int mipSlice = 0, bool doNotWait = false)
         {
             var device = GraphicsDevice;
             var deviceContext = (Direct3D11.DeviceContext)device;
@@ -505,46 +511,49 @@ namespace SharpDX.Toolkit.Graphics
 
             // Calculate the subResourceIndex for a Texture2D
             int subResourceIndex = this.GetSubResourceIndex(arraySlice, mipSlice);
-            try
+
+            // Map the staging resource to a CPU accessible memory
+            var box = deviceContext.MapSubresource(stagingTexture, subResourceIndex, MapMode.Read, doNotWait ? MapFlags.DoNotWait : MapFlags.None);
+
+            // Box can be empty if DoNotWait is set to true, return false if empty
+            if(box.IsEmpty)
             {
-                // Map the staging resource to a CPU accessible memory
-                var box = deviceContext.MapSubresource(stagingTexture, subResourceIndex, MapMode.Read, MapFlags.None);
+                return false;
+            }
 
-                // If depth == 1 (Texture1D, Texture2D or TextureCube), then depthStride is not used
-                var boxDepthStride = this.Description.Depth == 1 ? box.SlicePitch : textureDepthStride;
+            // If depth == 1 (Texture1D, Texture2D or TextureCube), then depthStride is not used
+            var boxDepthStride = this.Description.Depth == 1 ? box.SlicePitch : textureDepthStride;
 
-                // The fast way: If same stride, we can directly copy the whole texture in one shot
-                if (box.RowPitch == rowStride && boxDepthStride == textureDepthStride)
+            // The fast way: If same stride, we can directly copy the whole texture in one shot
+            if(box.RowPitch == rowStride && boxDepthStride == textureDepthStride)
+            {
+                Utilities.CopyMemory(toData.Pointer, box.DataPointer, mipMapSize);
+            }
+            else
+            {
+                // Otherwise, the long way by copying each scanline
+                var sourcePerDepthPtr = (byte*)box.DataPointer;
+                var destPtr = (byte*)toData.Pointer;
+
+                // Iterate on all depths
+                for(int j = 0; j < depth; j++)
                 {
-                    Utilities.CopyMemory(toData.Pointer, box.DataPointer, mipMapSize);
-                }
-                else
-                {
-                    // Otherwise, the long way by copying each scanline
-                    var sourcePerDepthPtr = (byte*)box.DataPointer;
-                    var destPtr = (byte*)toData.Pointer;
-
-                    // Iterate on all depths
-                    for (int j = 0; j < depth; j++)
+                    var sourcePtr = sourcePerDepthPtr;
+                    // Iterate on each line
+                    for(int i = 0; i < height; i++)
                     {
-                        var sourcePtr = sourcePerDepthPtr;
-                        // Iterate on each line
-                        for (int i = 0; i < height; i++)
-                        {
-                            // Copy a single row
-                            Utilities.CopyMemory(new IntPtr(destPtr), new IntPtr(sourcePtr), rowStride);
-                            sourcePtr += box.RowPitch;
-                            destPtr += rowStride;
-                        }
-                        sourcePerDepthPtr += box.SlicePitch;
+                        // Copy a single row
+                        Utilities.CopyMemory(new IntPtr(destPtr), new IntPtr(sourcePtr), rowStride);
+                        sourcePtr += box.RowPitch;
+                        destPtr += rowStride;
                     }
+                    sourcePerDepthPtr += box.SlicePitch;
                 }
             }
-            finally
-            {
-                // Make sure that we unmap the resource in case of an exception
-                deviceContext.UnmapSubresource(stagingTexture, subResourceIndex);
-            }
+
+            // Make sure that we unmap the resource in case of an exception
+            deviceContext.UnmapSubresource(stagingTexture, subResourceIndex);
+            return true;
         }
 
         /// <summary>
@@ -811,11 +820,12 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Gets a specific <see cref="ShaderResourceView" /> from this texture.
         /// </summary>
+        /// <param name="viewFormat"></param>
         /// <param name="viewType">Type of the view slice.</param>
         /// <param name="arrayOrDepthSlice">The texture array slice index.</param>
         /// <param name="mipIndex">The mip map slice index.</param>
         /// <returns>An <see cref="ShaderResourceView" /></returns>
-        internal abstract TextureView GetShaderResourceView(ViewType viewType, int arrayOrDepthSlice, int mipIndex);
+        internal abstract TextureView GetShaderResourceView(Format viewFormat, ViewType viewType, int arrayOrDepthSlice, int mipIndex);
 
         /// <summary>
         /// Gets a specific <see cref="RenderTargetView" /> from this texture.
@@ -840,7 +850,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">Source for the.</param>
         public static implicit operator ShaderResourceView(Texture from)
         {
-            return @from == null ? null : @from.shaderResourceViews != null ? @from.shaderResourceViews[0] : null;
+            return @from == null ? null : from.defaultShaderResourceView;
         }
 
         /// <summary>
@@ -1005,7 +1015,7 @@ namespace SharpDX.Toolkit.Graphics
         internal static int CalculateMipMapCount(MipMapCount requestedLevel, int width, int height = 0, int depth = 0)
         {
             int size = Math.Max(Math.Max(width, height), depth);
-            int maxMipMap = 1 + (int)Math.Ceiling(Math.Log(size) / Math.Log(2.0));
+            int maxMipMap = 1 + (int)Math.Log(size, 2);
 
             return requestedLevel  == 0 ? maxMipMap : Math.Min(requestedLevel, maxMipMap);
         }
@@ -1093,10 +1103,12 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     if (this.shaderResourceViews != null)
                     {
-                        for (int i = 0; i < this.shaderResourceViews.Length; i++)
+                        int i = 0;
+                        foreach(var shaderResourceViewItem in shaderResourceViews)
                         {
-                            var shaderResourceView = this.shaderResourceViews[i];
+                            var shaderResourceView = shaderResourceViewItem.Value;
                             if (shaderResourceView != null) shaderResourceView.View.DebugName = Name == null ? null : String.Format("{0} SRV[{1}]", i, Name);
+                            i++;
                         }
                     }
 
@@ -1198,6 +1210,58 @@ namespace SharpDX.Toolkit.Graphics
                 bindFlags |= BindFlags.RenderTarget;
 
             return bindFlags;
+        }
+
+        internal struct TextureViewKey : IEquatable<TextureViewKey>
+        {
+            public TextureViewKey(Format viewFormat, ViewType viewType, int arrayOrDepthSlice, int mipIndex)
+            {
+                ViewFormat = viewFormat;
+                ViewType = viewType;
+                ArrayOrDepthSlice = arrayOrDepthSlice;
+                MipIndex = mipIndex;
+            }
+
+            public readonly DXGI.Format ViewFormat;
+
+            public readonly ViewType ViewType;
+
+            public readonly int ArrayOrDepthSlice;
+
+            public readonly int MipIndex;
+
+            public bool Equals(TextureViewKey other)
+            {
+                return ViewFormat == other.ViewFormat && ViewType == other.ViewType && ArrayOrDepthSlice == other.ArrayOrDepthSlice && MipIndex == other.MipIndex;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if(ReferenceEquals(null, obj)) return false;
+                return obj is TextureViewKey && Equals((TextureViewKey)obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    var hashCode = (int)ViewFormat;
+                    hashCode = (hashCode * 397) ^ (int)ViewType;
+                    hashCode = (hashCode * 397) ^ ArrayOrDepthSlice;
+                    hashCode = (hashCode * 397) ^ MipIndex;
+                    return hashCode;
+                }
+            }
+
+            public static bool operator ==(TextureViewKey left, TextureViewKey right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(TextureViewKey left, TextureViewKey right)
+            {
+                return !left.Equals(right);
+            }
         }
     }
 }

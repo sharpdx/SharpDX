@@ -109,8 +109,6 @@ namespace SharpDX.Toolkit.Graphics
             while ((glyph.Subrect.Width > 1) && BitmapUtils.IsAlphaEntirely(0, glyph.Bitmap, new Rectangle(glyph.Subrect.Right - 1, glyph.Subrect.Y, 1, glyph.Subrect.Height)))
             {
                 glyph.Subrect.Width--;
-
-                glyph.XAdvance++;
             }
         }
     }

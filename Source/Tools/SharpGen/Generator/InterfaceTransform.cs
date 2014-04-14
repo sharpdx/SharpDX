@@ -156,7 +156,13 @@ namespace SharpGen.Generator
                 //MapMethod(cSharpMethod);
                 //RegisterNativeInterop(cSharpMethod);
 
-                Manager.BindType(cppInterface.Name + "::" + cppMethod.Name, cSharpMethod);
+				// Allow overloads by changing the name to <name>#
+				string origCppName = cppInterface.Name + "::" + cppMethod.Name;
+				string chosenCppName = origCppName;
+				for (int i = 0; Manager.FindBindType(chosenCppName) != null; i++)
+					chosenCppName = origCppName + i.ToString();
+					
+                Manager.BindType(chosenCppName, cSharpMethod);
             }
 
             // Dispatch method to inner interface if any

@@ -108,28 +108,28 @@ namespace SharpDX.Toolkit.Graphics
                 outputFile = outputFile ?? defaultOutputFile;
 
                 result.IsContentGenerated = true;
-                if (dependencyFile != null)
+                if(dependencyFile != null)
                 {
-                    if (!FileDependencyList.CheckForChanges(dependencyFile))
+                    if(!FileDependencyList.CheckForChanges(dependencyFile))
                     {
                         result.IsContentGenerated = false;
                     }
                 }
 
-                if (result.IsContentGenerated)
+                if(result.IsContentGenerated)
                 {
                     // Make sure that directory name doesn't collide with filename
                     var directoryName = Path.GetDirectoryName(outputFile + ".tmp");
-                    if (!string.IsNullOrEmpty(directoryName) && !Directory.Exists(directoryName))
+                    if(!string.IsNullOrEmpty(directoryName) && !Directory.Exists(directoryName))
                     {
                         Directory.CreateDirectory(directoryName);
                     }
 
-                    using (var stream = new NativeFileStream(outputFile, NativeFileMode.Create, NativeFileAccess.Write))
+                    using(var stream = new NativeFileStream(outputFile, NativeFileMode.Create, NativeFileAccess.Write))
                     {
                         Compile(fontDescription, stream);
 
-                        if (dependencyFile != null)
+                        if(dependencyFile != null)
                         {
                             var dependencies = new FileDependencyList();
                             dependencies.AddDefaultDependencies();
@@ -138,6 +138,10 @@ namespace SharpDX.Toolkit.Graphics
                         }
                     }
                 }
+            }
+            catch(FontException ex)
+            {
+                logger.Error(ex.Message);
             }
             catch (Exception ex)
             {
@@ -182,6 +186,11 @@ namespace SharpDX.Toolkit.Graphics
             // Optimize.
             foreach (Glyph glyph in glyphs)
             {
+                // Output cleartype texture
+                if (options.AntiAlias != FontAntiAliasMode.ClearType)
+                {
+                    BitmapUtils.ConvertGreyToAlpha(glyph.Bitmap);
+                }
                 GlyphCropper.Crop(glyph);
             }
 
@@ -207,8 +216,16 @@ namespace SharpDX.Toolkit.Graphics
             // Convert to premultiplied alpha format.
             if (!options.NoPremultiply)
             {
-                BitmapUtils.PremultiplyAlpha(bitmap);
+                if (options.AntiAlias == FontAntiAliasMode.ClearType)
+                {
+                    BitmapUtils.PremultiplyAlphaClearType(bitmap);
+                }
+                else
+                {
+                    BitmapUtils.PremultiplyAlpha(bitmap);
+                }
             }
+
 
             SpriteFontWriter.WriteSpriteFont(options, stream, glyphs, lineSpacing, bitmap);
         }
@@ -242,7 +259,7 @@ namespace SharpDX.Toolkit.Graphics
             // Validate.
             if (glyphs.Count == 0)
             {
-                throw new Exception("Font does not contain any glyphs.");
+                throw new FontException("Font does not contain any glyphs.");
             }
 
             // Sort the glyphs
@@ -263,7 +280,7 @@ namespace SharpDX.Toolkit.Graphics
                 }
                 if (!defaultCharacterFound)
                 {
-                    throw new InvalidOperationException("The specified DefaultCharacter is not part of this font.");
+                    throw new FontException("The specified DefaultCharacter is not part of this font.");
                 }
             }
 

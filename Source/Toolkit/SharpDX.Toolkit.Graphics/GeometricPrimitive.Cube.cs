@@ -107,7 +107,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="size">The size.</param>
             /// <param name="toLeftHanded">if set to <c>true</c> vertices and indices will be transformed to left handed. Default is true.</param>
             /// <returns>A cube.</returns>
-            public static GeometricPrimitive New(GraphicsDevice device, float size = 1.0f, bool toLeftHanded = true)
+            public static GeometricPrimitive New(GraphicsDevice device, float size = 1.0f, bool toLeftHanded = false)
             {
                 var vertices = new VertexPositionNormalTexture[CubeFaceCount * 4];
                 var indices = new int[CubeFaceCount * 6];

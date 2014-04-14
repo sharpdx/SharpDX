@@ -37,6 +37,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
     <!--But a future version may provide compression/rescale on the fly, so we need to introduce it now -->
     <!--in order to keep project compatible-->
     <AvailableItemName Include="ToolkitTexture"></AvailableItemName>
+    <AvailableItemName Include="ToolkitAudio"></AvailableItemName>
   </ItemGroup>
 
   <!-- Global property most of them are overridable in the project including this project file -->
@@ -44,9 +45,9 @@ It compiles all files of type ToolkitFxc/ToolkitFont
   <PropertyGroup>
     <!--Detect SharpDX Platform based on .NETFramework version-->
 
-    <!--By default DX11 is used for Desktop platform and DX11.1 for WinRT-->
+    <!--By default DX11 is used for Desktop platform and DX11.2 for WinRT-->
     <SharpDXDirectXVersion Condition="'$(SharpDXDirectXVersion)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework'">DirectX11</SharpDXDirectXVersion>
-    <SharpDXDirectXVersion Condition="'$(SharpDXDirectXVersion)' == '' and '$(TargetFrameworkIdentifier)' == '.NETCore'">DirectX11_1</SharpDXDirectXVersion>
+    <SharpDXDirectXVersion Condition="'$(SharpDXDirectXVersion)' == '' and '$(TargetFrameworkIdentifier)' == '.NETCore'">DirectX11_2</SharpDXDirectXVersion>
 
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework' and ('$(TargetFrameworkVersion)' == 'v2.0' or '$(TargetFrameworkVersion)' == 'v3.5') ">DirectX11-net20</SharpDXPlatform>
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework' and $(TargetFrameworkVersion.Contains('v4'))">$(SharpDXDirectXVersion)-net40</SharpDXPlatform>
@@ -60,7 +61,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
     <SharpDXIsPlatformDesktop Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">true</SharpDXIsPlatformDesktop>
     
     <!--Root SharpDX SDK Directory where assemblies are stored. This variable should be set as a Global System Environement Variable -->
-    <SharpDXSdkDir Condition="'$(SharpDXSdkDir)' == ''">$(MSBuildThisFileDirectory)</SharpDXSdkDir>
+    <SharpDXSdkDir>$(MSBuildThisFileDirectory)</SharpDXSdkDir>
 
     <!--SharpDX Directory to link against - based on platform-->
     <SharpDXSdkBinDir Condition="'$(SharpDXSdkBinDir)' == ''">$(SharpDXSdkDir)\Bin\$(SharpDXPlatform)</SharpDXSdkBinDir>
@@ -91,9 +92,19 @@ It compiles all files of type ToolkitFxc/ToolkitFont
     <Reference Include="SharpDX.Toolkit.Input">
       <HintPath>$(SharpDXSdkBinDir)\SharpDX.Toolkit.Input.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDX.Toolkit.Yaml">
+      <HintPath>$(SharpDXSdkBinDir)\SharpDX.Toolkit.Yaml.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Toolkit.Audio">
+      <HintPath>$(SharpDXSdkBinDir)\SharpDX.Toolkit.Audio.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX.Direct3D11">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SharpDXSdkBinDir)\SharpDX.Direct3D11.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.XAudio2.dll">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(SharpDXSdkBinDir)\SharpDX.XAudio2.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI">
       <SpecificVersion>False</SpecificVersion>
@@ -158,20 +169,15 @@ It compiles all files of type ToolkitFxc/ToolkitFont
   <UsingTask TaskName="SharpDX.Toolkit.CompilerDependencyTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
   <UsingTask TaskName="SharpDX.Toolkit.ModelCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
   <UsingTask TaskName="SharpDX.Toolkit.TextureCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
+  <UsingTask TaskName="SharpDX.Toolkit.AudioCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
 
-  <!-- Plugs all compilers in BuildDependsOn --> 
+  <!-- Plugs all dependency listing in AssignTargetPathsDependsOn - in order to support generated output to be copied as part of the build  --> 
   <PropertyGroup>
     <BuildDependsOn>
       TkCompileTarget;
       $(BuildDependsOn);
     </BuildDependsOn>
 
-    <ToolkitFxcDebugOption>true</ToolkitFxcDebugOption>
-    <ToolkitFxcDebugOption Condition="$(Optimize) == 'true'">false</ToolkitFxcDebugOption>
-  </PropertyGroup>
-
-  <!-- Plugs all dependency listing in AssignTargetPathsDependsOn - in order to support generated output to be copied as part of the build  --> 
-  <PropertyGroup>
     <AssignTargetPathsDependsOn>
       $(AssignTargetPathsDependsOn);
       TkListContentAndCompileTarget;
@@ -195,7 +201,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
         ProjectDirectory="$(ProjectDir)"
         IntermediateDirectory="$(IntermediateOutputPath)"
         Debug="$(ToolkitFxcDebugOption)"
-        Files="@(ToolkitFxc);@(ToolkitFont);@(ToolkitModel);@(ToolkitTexture)"
+        Files="@(ToolkitFxc);@(ToolkitFont);@(ToolkitModel);@(ToolkitTexture);@(ToolkitAudio)"
         RootNamespace="$(RootNamespace)"
         >
         <Output TaskParameter="ContentFiles" ItemName="TkContent"/>
@@ -255,5 +261,15 @@ It compiles all files of type ToolkitFxc/ToolkitFont
         RootNamespace="$(RootNamespace)"
         >
     </TextureCompilerTask>
+
+    <AudioCompilerTask
+        ProjectDirectory="$(ProjectDir)"
+        IntermediateDirectory="$(IntermediateOutputPath)"
+        DynamicCompiling="$(ToolkitFxcDynamicCompilingOption)"
+        Debug="$(ToolkitFxcDebugOption)"
+        Files="@(ToolkitAudio)"
+        RootNamespace="$(RootNamespace)"
+        >
+    </AudioCompilerTask>
   </Target>
 </Project>

@@ -28,9 +28,6 @@ namespace SharpDX
     /// <summary>
     /// Direct2D Matrix3x2. Supports implicit cast from <see cref="SharpDX.Matrix"/>.
     /// </summary>
-#if !W8CORE
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Matrix3x2 : IDataSerializable
     {
@@ -850,7 +847,7 @@ namespace SharpDX
         {
             float determinant = value.Determinant();
 
-            if (MathUtil.WithinEpsilon(determinant, 0.0f))
+            if (MathUtil.IsZero(determinant))
             {
                 result = Identity;
                 return;
@@ -1076,9 +1073,16 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return M11.GetHashCode() + M12.GetHashCode() + 
-               M21.GetHashCode() + M22.GetHashCode() +
-               M31.GetHashCode() + M32.GetHashCode();
+            unchecked
+            {
+                var hashCode = M11.GetHashCode();
+                hashCode = (hashCode * 397) ^ M12.GetHashCode();
+                hashCode = (hashCode * 397) ^ M21.GetHashCode();
+                hashCode = (hashCode * 397) ^ M22.GetHashCode();
+                hashCode = (hashCode * 397) ^ M31.GetHashCode();
+                hashCode = (hashCode * 397) ^ M32.GetHashCode();
+                return hashCode;
+            }
         }
 
         /// <inheritdoc/>
@@ -1114,14 +1118,12 @@ namespace SharpDX
         /// </returns>
         public bool Equals(Matrix3x2 other)
         {
-            return (Math.Abs(other.M11 - M11) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M12 - M12) < MathUtil.ZeroTolerance &&
-
-                Math.Abs(other.M21 - M21) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M22 - M22) < MathUtil.ZeroTolerance &&
-
-                Math.Abs(other.M31 - M31) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M32 - M32) < MathUtil.ZeroTolerance);
+            return (MathUtil.NearEqual(other.M11, M11) &&
+                MathUtil.NearEqual(other.M12, M12) &&
+                MathUtil.NearEqual(other.M21, M21) &&
+                MathUtil.NearEqual(other.M22, M22) &&
+                MathUtil.NearEqual(other.M31, M31) &&
+                MathUtil.NearEqual(other.M32, M32));
         }
 
         /// <summary>

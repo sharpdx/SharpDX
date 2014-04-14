@@ -261,10 +261,41 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// Before making any calls to Draw, you must call Begin. Once all calls to Draw are complete, call End. 
         /// </remarks>
-        public void Draw(ShaderResourceView texture, Rectangle destinationRectangle, Color color)
+        public void Draw(ShaderResourceView texture, RectangleF destinationRectangle, Color color)
         {
-            var destination = new RectangleF(destinationRectangle.X, destinationRectangle.Y, destinationRectangle.Width, destinationRectangle.Height);
-            DrawSprite(texture, ref destination, false, ref nullRectangle, color, 0f, ref vector2Zero, SpriteEffects.None, 0f);
+            DrawSprite(texture, ref destinationRectangle, false, ref nullRectangle, color, 0f, ref vector2Zero, SpriteEffects.None, 0f);
+        }
+
+        /// <summary>
+        /// Adds a sprite to a batch of sprites for rendering using the specified texture, destination rectangle, source rectangle, color, rotation, origin, effects and layer. 
+        /// </summary>
+        /// <param name="texture">A texture.</param>
+        /// <param name="destinationRectangle">A rectangle that specifies (in screen coordinates) the destination for drawing the sprite. If this rectangle is not the same size as the source rectangle, the sprite will be scaled to fit.</param>
+        /// <param name="sourceRectangle">A rectangle that specifies (in texels) the source texels from a texture. Use null to draw the entire texture. </param>
+        /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
+        /// <param name="rotation">Specifies the angle (in radians) to rotate the sprite about its center.</param>
+        /// <param name="origin">The sprite origin; the default is (0,0) which represents the upper-left corner.</param>
+        /// <param name="effects">Effects to apply.</param>
+        /// <param name="layerDepth">The depth of a layer. By default, 0 represents the front layer and 1 represents a back layer. Use SpriteSortMode if you want sprites to be sorted during drawing.</param>
+        public void Draw(ShaderResourceView texture, RectangleF destinationRectangle, Rectangle? sourceRectangle, Color color)
+        {
+            DrawSprite(texture, ref destinationRectangle, false, ref sourceRectangle, color, 0f, ref vector2Zero, SpriteEffects.None, 0f);
+        }
+
+        /// <summary>
+        /// Adds a sprite to a batch of sprites for rendering using the specified texture, destination rectangle, source rectangle, color, rotation, origin, effects and layer. 
+        /// </summary>
+        /// <param name="texture">A texture.</param>
+        /// <param name="destinationRectangle">A rectangle that specifies (in screen coordinates) the destination for drawing the sprite. If this rectangle is not the same size as the source rectangle, the sprite will be scaled to fit.</param>
+        /// <param name="sourceRectangle">A rectangle that specifies (in texels) the source texels from a texture. Use null to draw the entire texture. </param>
+        /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
+        /// <param name="rotation">Specifies the angle (in radians) to rotate the sprite about its center.</param>
+        /// <param name="origin">The sprite origin; the default is (0,0) which represents the upper-left corner.</param>
+        /// <param name="effects">Effects to apply.</param>
+        /// <param name="layerDepth">The depth of a layer. By default, 0 represents the front layer and 1 represents a back layer. Use SpriteSortMode if you want sprites to be sorted during drawing.</param>
+        public void Draw(ShaderResourceView texture, RectangleF destinationRectangle, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth) 
+        {
+            DrawSprite(texture, ref destinationRectangle, false, ref sourceRectangle, color, rotation, ref origin, effects, layerDepth);
         }
 
         /// <summary>
@@ -277,38 +308,6 @@ namespace SharpDX.Toolkit.Graphics
         {
             var destination = new RectangleF(position.X, position.Y, 1f, 1f);
             DrawSprite(texture, ref destination, true, ref nullRectangle, color, 0f, ref vector2Zero, SpriteEffects.None, 0f);
-        }
-
-        /// <summary>
-        /// Adds a sprite to a batch of sprites for rendering using the specified texture, destination rectangle, source rectangle, color, rotation, origin, effects and layer. 
-        /// </summary>
-        /// <param name="texture">A texture.</param>
-        /// <param name="destinationRectangle">A rectangle that specifies (in screen coordinates) the destination for drawing the sprite. If this rectangle is not the same size as the source rectangle, the sprite will be scaled to fit.</param>
-        /// <param name="sourceRectangle">A rectangle that specifies (in texels) the source texels from a texture. Use null to draw the entire texture. </param>
-        /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
-        /// <param name="rotation">Specifies the angle (in radians) to rotate the sprite about its center.</param>
-        /// <param name="origin">The sprite origin; the default is (0,0) which represents the upper-left corner.</param>
-        /// <param name="effects">Effects to apply.</param>
-        /// <param name="layerDepth">The depth of a layer. By default, 0 represents the front layer and 1 represents a back layer. Use SpriteSortMode if you want sprites to be sorted during drawing.</param>
-        public void Draw(ShaderResourceView texture, Rectangle destinationRectangle, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth)
-        {
-            var destination = new RectangleF(destinationRectangle.X, destinationRectangle.Y, destinationRectangle.Width, destinationRectangle.Height);
-            DrawSprite(texture, ref destination, false, ref sourceRectangle, color, rotation, ref origin, effects, layerDepth);
-        }
-
-        /// <summary>
-        /// Adds a sprite to a batch of sprites for rendering using the specified texture, destination rectangle, source rectangle, color, rotation, origin, effects and layer. 
-        /// </summary>
-        /// <param name="texture">A texture.</param>
-        /// <param name="destinationRectangle">A rectangle that specifies (in screen coordinates) the destination for drawing the sprite. If this rectangle is not the same size as the source rectangle, the sprite will be scaled to fit.</param>
-        /// <param name="sourceRectangle">A rectangle that specifies (in texels) the source texels from a texture. Use null to draw the entire texture. </param>
-        /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
-        /// <param name="rotation">Specifies the angle (in radians) to rotate the sprite about its center.</param>
-        /// <param name="origin">The sprite origin; the default is (0,0) which represents the upper-left corner.</param>
-        /// <param name="effects">Effects to apply.</param>
-        /// <param name="layerDepth">The depth of a layer. By default, 0 represents the front layer and 1 represents a back layer. Use SpriteSortMode if you want sprites to be sorted during drawing.</param>
-        public void Draw(ShaderResourceView texture, RectangleF destinationRectangle, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth) {
-            DrawSprite(texture, ref destinationRectangle, false, ref sourceRectangle, color, rotation, ref origin, effects, layerDepth);
         }
 
         /// <summary>
@@ -918,30 +917,54 @@ namespace SharpDX.Toolkit.Graphics
 
         private unsafe void UpdateVertexFromSpriteInfo(ref SpriteInfo spriteInfo, ref VertexPositionColorTexture* vertex, float deltaX, float deltaY)
         {
-            var rotation = spriteInfo.Rotation != 0f ? new Vector2((float) Math.Cos(spriteInfo.Rotation), (float) Math.Sin(spriteInfo.Rotation)) : Vector2.UnitX;
 
             // Origin scale down to the size of the source texture 
             var origin = spriteInfo.Origin;
             origin.X /= spriteInfo.Source.Width == 0f ? float.Epsilon : spriteInfo.Source.Width;
             origin.Y /= spriteInfo.Source.Height == 0f ? float.Epsilon : spriteInfo.Source.Height;
 
-            for (int j = 0; j < 4; j++)
+            if(spriteInfo.Rotation != 0f)
             {
-                // Gets the corner and take into account the Flip mode.
-                var corner = CornerOffsets[j];
-                // Calculate position on destination
-                var position = new Vector2((corner.X - origin.X) * spriteInfo.Destination.Width, (corner.Y - origin.Y) * spriteInfo.Destination.Height);
+                var rotation = new Vector2((float)Math.Cos(spriteInfo.Rotation), (float)Math.Sin(spriteInfo.Rotation));
+                for(int j = 0; j < 4; j++)
+                {
+                    // Gets the corner and take into account the Flip mode.
+                    var corner = CornerOffsets[j];
+                    // Calculate position on destination
+                    var position = new Vector2((corner.X - origin.X) * spriteInfo.Destination.Width, (corner.Y - origin.Y) * spriteInfo.Destination.Height);
 
-                // Apply rotation and destination offset
-                vertex->Position.X = spriteInfo.Destination.X + (position.X * rotation.X) - (position.Y * rotation.Y);
-                vertex->Position.Y = spriteInfo.Destination.Y + (position.X * rotation.Y) + (position.Y * rotation.X);
-                vertex->Position.Z = spriteInfo.Depth;
-                vertex->Color = spriteInfo.Color;
+                    // Apply rotation and destination offset
+                    vertex->Position.X = spriteInfo.Destination.X + (position.X * rotation.X) - (position.Y * rotation.Y);
+                    vertex->Position.Y = spriteInfo.Destination.Y + (position.X * rotation.Y) + (position.Y * rotation.X);
+                    vertex->Position.Z = spriteInfo.Depth;
+                    vertex->Color = spriteInfo.Color;
 
-                corner = CornerOffsets[j ^ (int)spriteInfo.SpriteEffects];
-                vertex->TextureCoordinate.X = (spriteInfo.Source.X + corner.X * spriteInfo.Source.Width) * deltaX;
-                vertex->TextureCoordinate.Y = (spriteInfo.Source.Y + corner.Y * spriteInfo.Source.Height) * deltaY;
-                vertex++;
+                    corner = CornerOffsets[j ^ (int)spriteInfo.SpriteEffects];
+                    vertex->TextureCoordinate.X = (spriteInfo.Source.X + corner.X * spriteInfo.Source.Width) * deltaX;
+                    vertex->TextureCoordinate.Y = (spriteInfo.Source.Y + corner.Y * spriteInfo.Source.Height) * deltaY;
+                    vertex++;
+                }
+            }
+            else
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    // Gets the corner and take into account the Flip mode.
+                    var corner = CornerOffsets[j];
+                    // Calculate position on destination
+                    var position = new Vector2((corner.X - origin.X) * spriteInfo.Destination.Width, (corner.Y - origin.Y) * spriteInfo.Destination.Height);
+
+                    // Apply rotation and destination offset
+                    vertex->Position.X = spriteInfo.Destination.X + position.X;
+                    vertex->Position.Y = spriteInfo.Destination.Y + position.Y;
+                    vertex->Position.Z = spriteInfo.Depth;
+                    vertex->Color = spriteInfo.Color;
+
+                    corner = CornerOffsets[j ^ (int)spriteInfo.SpriteEffects];
+                    vertex->TextureCoordinate.X = (spriteInfo.Source.X + corner.X * spriteInfo.Source.Width) * deltaX;
+                    vertex->TextureCoordinate.Y = (spriteInfo.Source.Y + corner.Y * spriteInfo.Source.Height) * deltaY;
+                    vertex++;
+                }
             }
         }
 
