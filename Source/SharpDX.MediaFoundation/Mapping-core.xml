@@ -764,6 +764,11 @@
 
     <map interface="IMFMediaEngineNotify" callback="true" visibility="internal"/>
 
+    <map interface="IMFClockStateSink" callback="true"/>
+    <map interface="IMFSampleGrabberSinkCallback" callback="true"/>
+    <map interface="IMFSampleGrabberSinkCallback2" callback="true"/>
+    <map interface="IMFVideoPresenter" callback="true"/>
+    
     <map method="IMFDXGIDeviceManager::ResetDevice" visibility="internal"/>
     <map param="IMFDXGIDeviceManager::OpenDeviceHandle::phDevice" return="true"/>
     <map method="IMFDXGIDeviceManager::UnlockDevice" visibility="internal"/>
@@ -877,7 +882,7 @@
     <map param="MFCreateWaveFormatExFromMFMediaType::ppWF" type="void"/>
     
     <map param="MFCreateMediaType::ppMFType" attribute="out fast"/>
-
+    
     <map function="MFTranscodeGetAudioOutputAvailableTypes" dll='"mf.dll"'/>
     <map function="MFShutdownObject" dll='"mf.dll"'/>
     <map function="MFRR_CreateActivate" dll='"mf.dll"'/>
@@ -912,7 +917,7 @@
     <map function="MFCreateSequencerSource" dll='"mf.dll"'/>
     <map function="MFCreateSequencerSegmentOffset" dll='"mf.dll"'/>
     <map function="MFCreateSecureHttpSchemePlugin" dll='"mf.dll"'/>
-    <map function="MFCreateSampleGrabberSinkActivate" dll='"mf.dll"'/>
+    <map function="MFCreateSampleGrabberSinkActivate" visibility="internal" dll='"mf.dll"'/>
     <map function="MFCreateSampleCopierMFT" dll='"mf.dll"'/>
     <map function="MFCreateSAMIByteStreamPlugin" dll='"mf.dll"'/>
     <map function="MFCreateRemoteDesktopPlugin" dll='"mf.dll"'/>
