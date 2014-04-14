@@ -38,6 +38,8 @@ namespace SharpDX.MediaFoundation
 
         protected class SampleGrabberSinkCallbackVtbl : ClockStateSinkVtbl
         {
+            protected static object _lockObject = new object();
+
             public SampleGrabberSinkCallbackVtbl(int numOfMethods)
                 : base(numOfMethods + 3)
             {
@@ -69,7 +71,7 @@ namespace SharpDX.MediaFoundation
                 return Result.Ok.Code;
             }
 
-            private static byte[] _data;
+            protected static byte[] _data;
             /// <unmanaged>HRESULT OnProcessSample([in] REFGUID guidMajorMediaType, [in] DWORD dwSampleFlags, [in] LONGLONG llSampleTime, [in] LONGLONG llSampleDuration, [in] const BYTE *pSampleBuffer, [in] DWORD dwSampleSize);</unmanaged>	
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
             private unsafe delegate int OnProcessSampleDelegate(IntPtr thisObject, Guid* guidMajorMediaType, int dwSampleFlags, long llSampleTime, long llSampleDuration, IntPtr sampleBufferRef, int dwSampleSize);
@@ -80,11 +82,16 @@ namespace SharpDX.MediaFoundation
                     var shadow = ToShadow<SampleGrabberSinkCallbackShadow>(thisObject);
                     var callback = (SampleGrabberSinkCallback)shadow.Callback;
 
-                    if (_data == null || _data.Length != dwSampleSize)
-                        _data = new byte[dwSampleSize];
+                    lock (_lockObject)
+                    {
+                        // Prevent a large performance overhead of
+                        // constantly allocating temporary arrays
+                        if (_data == null || _data.Length < dwSampleSize)
+                            _data = new byte[dwSampleSize];
 
-                    Marshal.Copy(sampleBufferRef, _data, 0, dwSampleSize);
-                    callback.OnProcessSample(*guidMajorMediaType, dwSampleFlags, llSampleTime, llSampleDuration, _data, dwSampleSize);
+                        Marshal.Copy(sampleBufferRef, _data, 0, dwSampleSize);
+                        callback.OnProcessSample(*guidMajorMediaType, dwSampleFlags, llSampleTime, llSampleDuration, _data, dwSampleSize);
+                    }
                 }
                 catch (Exception exception)
                 {

@@ -47,7 +47,6 @@ namespace SharpDX.MediaFoundation
                 }
             }
 
-            private static byte[] _data;
             /// <unmanaged>HRESULT IMFSampleGrabberSinkCallback2::OnProcessSampleEx([In] const GUID& guidMajorMediaType,[In] unsigned int dwSampleFlags,[In] longlong llSampleTime,[In] longlong llSampleDuration,[In, Buffer] const unsigned char* pSampleBuffer,[In] unsigned int dwSampleSize,[In] IMFAttributes* pAttributes)</unmanaged>	
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
             private unsafe delegate int ProcessSampleExDelegate(IntPtr thisObject, Guid* guidMajorMediaType, int dwSampleFlags, long llSampleTime, long llSampleDuration, IntPtr sampleBufferRef, int dwSampleSize, IntPtr attributesRef);
@@ -58,11 +57,16 @@ namespace SharpDX.MediaFoundation
                     var shadow = ToShadow<SampleGrabberSinkCallback2Shadow>(thisObject);
                     var callback = (SampleGrabberSinkCallback2)shadow.Callback;
 
-                    if (_data == null || _data.Length != dwSampleSize)
-                        _data = new byte[dwSampleSize];
+                    lock (_lockObject)
+                    {
+                        // Avoid the overhead of constantly allocating and releasing
+                        // temporary data arrays. Only reallocate when the data wouldn't fit.
+                        if (_data == null || _data.Length < dwSampleSize)
+                            _data = new byte[dwSampleSize];
 
-                    Marshal.Copy(sampleBufferRef, _data, 0, dwSampleSize);
-                    callback.OnProcessSampleEx(*guidMajorMediaType, dwSampleFlags, llSampleTime, llSampleDuration, _data, dwSampleSize, new MediaAttributes(attributesRef));
+                        Marshal.Copy(sampleBufferRef, _data, 0, dwSampleSize);
+                        callback.OnProcessSampleEx(*guidMajorMediaType, dwSampleFlags, llSampleTime, llSampleDuration, _data, dwSampleSize, new MediaAttributes(attributesRef));
+                    }
                 }
                 catch (Exception exception)
                 {
