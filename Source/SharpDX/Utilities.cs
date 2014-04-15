@@ -1405,8 +1405,13 @@ namespace SharpDX
             get { return closeHandle ?? (closeHandle = (CloseHandleDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.CloseHandle()), typeof(CloseHandleDelegate))); }
         }
 #else
+#if W8CORE
+        [DllImport("api-ms-win-core-handle-l1-1-0.dll", EntryPoint = "CloseHandle", SetLastError = true)]
+        internal static extern bool CloseHandle(IntPtr handle);
+#else
         [DllImport("kernel32.dll", EntryPoint = "CloseHandle", SetLastError = true)]
         internal static extern bool CloseHandle(IntPtr handle);
+#endif
 #endif
 
         /// <summary>
@@ -1464,10 +1469,16 @@ namespace SharpDX
             get { return getProcAddress_ ?? (getProcAddress_ = (GetProcAddressDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.GetProcAddress()), typeof(GetProcAddressDelegate))); }
         }
 #else
+#if W8CORE
+        [DllImport("api-ms-win-core-libraryloader-l1-1-1.dll", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+        static extern IntPtr GetProcAddress_(IntPtr hModule, string procName);
+#else
         // http://www.pinvoke.net/default.aspx/kernel32.getprocaddress
         // http://stackoverflow.com/questions/3754264/c-sharp-getprocaddress-returns-zero
         [DllImport("kernel32", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
         static extern IntPtr GetProcAddress_(IntPtr hModule, string procName);
+#endif
+
 #endif
 
         /// <summary>
