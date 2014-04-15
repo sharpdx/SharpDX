@@ -42,7 +42,7 @@ namespace SharpDX.MediaFoundation
         /// </remarks>	
         /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFSampleGrabberSinkCallback2::OnProcessSampleEx']/*"/>	
         /// <unmanaged>HRESULT IMFSampleGrabberSinkCallback2::OnProcessSampleEx([In] const GUID& guidMajorMediaType,[In] unsigned int dwSampleFlags,[In] longlong llSampleTime,[In] longlong llSampleDuration,[In, Buffer] const unsigned char* pSampleBuffer,[In] unsigned int dwSampleSize,[In] IMFAttributes* pAttributes)</unmanaged>
-        void OnProcessSampleEx(Guid guidMajorMediaType, int dwSampleFlags, long llSampleTime, long llSampleDuration, byte[] sampleBufferRef, int dwSampleSize, MediaAttributes attributesRef);
+        void OnProcessSampleEx(Guid guidMajorMediaType, int dwSampleFlags, long llSampleTime, long llSampleDuration, IntPtr pSampleBuffer, int dwSampleSize, MediaAttributes attributesRef);
     }
 }
 

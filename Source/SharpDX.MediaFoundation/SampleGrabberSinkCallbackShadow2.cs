@@ -60,16 +60,8 @@ namespace SharpDX.MediaFoundation
                     var shadow = ToShadow<SampleGrabberSinkCallback2Shadow>(thisObject);
                     var callback = (SampleGrabberSinkCallback2)shadow.Callback;
 
-                    lock (_lockObject)
-                    {
-                        // Avoid the overhead of constantly allocating and releasing
-                        // temporary data arrays. Only reallocate when the data wouldn't fit.
-                        if (_data == null || _data.Length < dwSampleSize)
-                            _data = new byte[dwSampleSize];
-
-                        Marshal.Copy(sampleBufferRef, _data, 0, dwSampleSize);
-                        callback.OnProcessSampleEx(*guidMajorMediaType, dwSampleFlags, llSampleTime, llSampleDuration, _data, dwSampleSize, new MediaAttributes(attributesRef));
-                    }
+                    callback.OnProcessSampleEx(*guidMajorMediaType, dwSampleFlags, llSampleTime, llSampleDuration, sampleBufferRef, dwSampleSize, new MediaAttributes(attributesRef));
+                    
                 }
                 catch (Exception exception)
                 {
