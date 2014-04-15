@@ -1436,8 +1436,11 @@ namespace SharpDX
         {
             get { return loadLibrary_ ?? (loadLibrary_ = (LoadLibraryDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.LoadPackagedLibrary()), typeof(LoadLibraryDelegate))); }
         }
-#elif WIN8METRO
+#elif WIN8METRO && !WP81
         [DllImport("kernel32", EntryPoint = "LoadPackagedLibrary", SetLastError = true)]
+        static extern IntPtr LoadLibrary_(string lpFileName, int reserved = 0);
+#elif WP81
+        [DllImport("PhoneAppModelHost", EntryPoint = "LoadPackagedLibrary", SetLastError = true)]
         static extern IntPtr LoadLibrary_(string lpFileName, int reserved = 0);
 #else
         [DllImport("kernel32", EntryPoint = "LoadLibrary", SetLastError = true, CharSet = CharSet.Unicode)]
