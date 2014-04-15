@@ -1324,7 +1324,7 @@ namespace SharpDX
         }
 #else
         #if W8CORE
-        [DllImport("Combase.dll", ExactSpelling = true, EntryPoint = "CoCreateInstanceFromApp", PreserveSig = true)]
+        [DllImport("api-ms-win-core-com-l1-1-0.dll", ExactSpelling = true, EntryPoint = "CoCreateInstanceFromApp", PreserveSig = true)]
         private static extern Result CoCreateInstanceFromApp([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, 
             IntPtr pUnkOuter, 
             CLSCTX dwClsContext, 
