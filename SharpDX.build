@@ -59,6 +59,7 @@
 	<CallTarget Targets="DesktopNet40" />
 	<CallTarget Targets="MetroWin8" />
 	<CallTarget Targets="DesktopDx112" />
+	<CallTarget Targets="WP81" />
 	<CallTarget Targets="CopyD3DRedistributionFiles" />
 
   </Target>
@@ -97,6 +98,10 @@
   
   <Target Name="WP8ARM">
 	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolutionWP8)" Properties="Configuration=WP8Release;Platform=ARM"/>
+  </Target>
+
+  <Target Name="WP81">
+	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=WP81Release;Platform=Any CPU"/>
   </Target>
   
   <Target Name="CopyD3DRedistributionFiles">

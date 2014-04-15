@@ -53,6 +53,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework' and $(TargetFrameworkVersion.Contains('v4'))">$(SharpDXDirectXVersion)-net40</SharpDXPlatform>
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETCore'">$(SharpDXDirectXVersion)-winrt</SharpDXPlatform>
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == 'WindowsPhone' and $(TargetFrameworkVersion.Contains('v8'))">DirectX11_1-wp8-$(Platform)</SharpDXPlatform>
+    <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetPlatformIdentifier)' == 'WindowsPhoneApp' and '$(TargetPlatformVersion)' == '8.1'">DirectX11_2-wp81</SharpDXPlatform>
 
     <!-- Variable used to select the platform used for the tool at compile time - default to Win8Desktop-net40 -->
     <SharpDXPlatformTool Condition="'$(SharpDXPlatformTool)' == ''">DirectX11-net40</SharpDXPlatformTool>
@@ -143,7 +144,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
   </ItemGroup>
 
   <!-- If we are on desktop or WinRT, we can safely add a reference to Direct2D1 -->
-  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\SharpDX.Direct2D1.dll') and ('$(TargetFrameworkIdentifier)' == '.NETFramework' or '$(TargetFrameworkIdentifier)' == '.NETCore')">
+  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\SharpDX.Direct2D1.dll') and ('$(TargetFrameworkIdentifier)' == '.NETFramework' or '$(TargetFrameworkIdentifier)' == '.NETCore' or '$(TargetPlatformIdentifier)' == 'WindowsPhoneApp')">
     <Reference Include="SharpDX.Direct2D1">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SharpDXSdkBinDir)\SharpDX.Direct2D1.dll</HintPath>

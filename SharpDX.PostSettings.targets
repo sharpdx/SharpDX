@@ -8,7 +8,6 @@
   <!--Include automatically SharpDXWP8 interop assembly-->
   <ItemGroup>
     <ProjectReference Condition="'$(SharpDXWP8)' == 'true'" Include="$(SolutionDir)Source\SharpDX.WP8\SharpDX.WP8.vcxproj">
-      <!--<Project>{c6ae9847-3089-4fe4-91df-b1a3ee115cf4}</Project>-->
       <Name>SharpDX.WP8</Name>
     </ProjectReference>
   </ItemGroup>
@@ -19,6 +18,13 @@
   <!--Import Windows Phone 8 targets only for WP8 -->
   <Import Condition="'$(SharpDXWP8)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Condition="'$(SharpDXWP8)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
+
+  <PropertyGroup Condition="'$(SharpDXWP81)' == 'true'">
+    <TargetPlatformIdentifier>WindowsPhoneApp</TargetPlatformIdentifier>
+  </PropertyGroup>
+  
+  <!--Import Windows Phone 8.1 targets only for WP81 -->
+  <Import Condition="'$(SharpDXWP81)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
 
   <!--Import standard targets for all non-Windows(Phone) 8 platforms-->
   <Import Condition="'$(SharpDXWin8Core)' == 'false'" Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -51,14 +57,14 @@
     <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP81Release|AnyCPU'">
+    <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
   <ProjectExtensions/>
-  
-  <!-- Don't use anymore task, as msbuild is keeping a lock on the file on the 1st build and we are not able to reapply SharpCLI once it is created
-   <UsingTask AssemblyFile="$(SolutionDir)Source\Bin\SharpCli.exe" TaskName="SharpCli.InteropBuilderTask" /> -->
 
   <Target Name="AfterBuild">
     <Exec Command='"$(SolutionDir)\Source\Bin\SharpCLI.exe" "$(TargetPath)"'/>
-    <!-- <InteropBuilderTask FileName="$(TargetPath)"/> -->
 
     <GetFrameworkSdkPath>
       <Output TaskParameter="Path" PropertyName="FrameworkSdkPath" />
