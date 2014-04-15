@@ -29,6 +29,15 @@ namespace SharpDX.IO
     /// </summary>
     public static class NativeFile 
     {
+#if W8CORE
+        private const string KERNEL_FILE = "api-ms-win-core-file-l1-2-0.dll";
+#else
+        private const string KERNEL_FILE = "kernel32.dll";
+#endif
+
+
+
+
         /// <summary>
         /// Checks if the specified file path exists.
         /// </summary>
@@ -285,11 +294,11 @@ namespace SharpDX.IO
         /// <param name="overlapped">The overlapped.</param>
         /// <returns>A Result</returns>
         /// <unmanaged>ReadFile</unmanaged>
-        [DllImport("kernel32.dll", EntryPoint = "ReadFile", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport(KERNEL_FILE, EntryPoint = "ReadFile", SetLastError = true, CharSet = CharSet.Unicode)]
         internal static extern bool ReadFile(IntPtr fileHandle, IntPtr buffer, int numberOfBytesToRead, out int numberOfBytesRead, IntPtr overlapped);
 
 
-        [DllImport("kernel32.dll", EntryPoint = "FlushFileBuffers", SetLastError = true)]
+        [DllImport(KERNEL_FILE, EntryPoint = "FlushFileBuffers", SetLastError = true)]
         internal static extern bool FlushFileBuffers(IntPtr hFile);
 
         /// <summary>
@@ -302,7 +311,7 @@ namespace SharpDX.IO
         /// <param name="overlapped">The overlapped.</param>
         /// <returns>A Result</returns>
         /// <unmanaged>WriteFile</unmanaged>
-        [DllImport("kernel32.dll", EntryPoint = "WriteFile", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport(KERNEL_FILE, EntryPoint = "WriteFile", SetLastError = true, CharSet = CharSet.Unicode)]
         internal static extern bool WriteFile(IntPtr fileHandle, IntPtr buffer, int numberOfBytesToRead, out int numberOfBytesRead, IntPtr overlapped);
 
         /// <summary>
@@ -314,7 +323,7 @@ namespace SharpDX.IO
         /// <param name="seekOrigin">The seek origin.</param>
         /// <returns></returns>
         /// <unmanaged>SetFilePointerEx</unmanaged>
-        [DllImport("kernel32.dll", EntryPoint = "SetFilePointerEx", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport(KERNEL_FILE, EntryPoint = "SetFilePointerEx", SetLastError = true, CharSet = CharSet.Unicode)]
         internal static extern bool SetFilePointerEx(IntPtr handle, long distanceToMove, out long distanceToMoveHigh, SeekOrigin seekOrigin);
 
         /// <summary>
@@ -323,10 +332,10 @@ namespace SharpDX.IO
         /// <param name="handle">The handle.</param>
         /// <returns></returns>
         /// <unmanaged>SetEndOfFile</unmanaged>
-        [DllImport("kernel32.dll", EntryPoint = "SetEndOfFile", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport(KERNEL_FILE, EntryPoint = "SetEndOfFile", SetLastError = true, CharSet = CharSet.Unicode)]
         internal static extern bool SetEndOfFile(IntPtr handle);
 
-        [DllImport("kernel32.dll", EntryPoint="GetFileAttributesExW", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(KERNEL_FILE, EntryPoint = "GetFileAttributesExW", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern bool GetFileAttributesEx(string name, int fileInfoLevel, out WIN32_FILE_ATTRIBUTE_DATA lpFileInformation);
 
 #if W8CORE
@@ -341,7 +350,7 @@ namespace SharpDX.IO
         /// <param name="extendedParameters">The extended parameters.</param>
         /// <returns>A handle to the created file. IntPtr.Zero if failed.</returns>
         /// <unmanaged>CreateFile2</unmanaged>
-        [DllImport("kernel32.dll", EntryPoint = "CreateFile2", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport(KERNEL_FILE, EntryPoint = "CreateFile2", SetLastError = true, CharSet = CharSet.Unicode)]
         internal static extern IntPtr Create(
             string fileName,
             NativeFileAccess desiredAccess,
@@ -350,7 +359,7 @@ namespace SharpDX.IO
             IntPtr extendedParameters);
 
 
-        [DllImport("kernel32.dll", EntryPoint = "GetFileInformationByHandleEx", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport("api-ms-win-core-file-l2-1-0.dll", EntryPoint = "GetFileInformationByHandleEx", SetLastError = true, CharSet = CharSet.Unicode)]
         private static extern bool GetFileInformationByHandleEx(IntPtr handle, FILE_INFO_BY_HANDLE_CLASS FileInformationClass, IntPtr lpFileInformation, int dwBufferSize);
 #else
         /// <summary>
