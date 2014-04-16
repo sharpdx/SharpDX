@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#if !W8CORE
+#if !WP8
 
 using System;
 using System.Runtime.InteropServices;
