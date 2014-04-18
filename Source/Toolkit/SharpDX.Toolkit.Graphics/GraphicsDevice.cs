@@ -770,7 +770,7 @@ namespace SharpDX.Toolkit.Graphics
             SetupInputLayout();
 
             PrimitiveType = primitiveType;
-            Context.DrawIndexedInstancedIndirect(argumentsBuffer, alignedByteOffsetForArgs);
+            Context.DrawInstancedIndirect(argumentsBuffer, alignedByteOffsetForArgs);
         }
 
         /// <summary>	
