@@ -33,6 +33,11 @@ namespace SharpDX
         private IntPtr _size;
 
         /// <summary>
+        /// An empty pointer size initialized to zero.
+        /// </summary>
+        public static readonly PointerSize Zero = new PointerSize(0);
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PointerSize"/> struct.
         /// </summary>
         /// <param name="size">The size.</param>
