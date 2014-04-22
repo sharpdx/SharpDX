@@ -24,16 +24,22 @@ namespace SharpDX.Direct3D11
     public partial class InfoQueue
     {
         /// <summary>	
-        /// No documentation.	
+        /// <p>Get a message from the message queue.</p>	
         /// </summary>	
-        /// <param name="messageIndex">No documentation.</param>	
-        /// <returns>No documentation.</returns>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D11InfoQueue::GetMessageW']/*"/>	
-        /// <unmanaged>HRESULT ID3D11InfoQueue::GetMessageW([In] unsigned longlong MessageIndex,[Out, Buffer, Optional] D3D11_MESSAGE* pMessage,[InOut] SIZE_T* pMessageByteLength)</unmanaged>	
+        /// <param name="messageIndex"><dd>  <p>Index into message queue after an optional retrieval filter has been applied. This can be between 0 and the number of messages in the message queue that pass through the retrieval filter (which can be obtained with <strong><see cref="SharpDX.Direct3D11.InfoQueue.GetNumStoredMessagesAllowedByRetrievalFilter"/></strong>). 0 is the message at the front of the message queue.</p> </dd></param>	
+        /// <returns>Returned message (see <strong><see cref="SharpDX.Direct3D11.Message"/></strong>)</returns>	
+        /// <msdn-id>ff476549</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11InfoQueue::GetMessageW([In] unsigned longlong MessageIndex,[In] void* pMessage,[InOut] SIZE_T* pMessageByteLength)</unmanaged>	
+        /// <unmanaged-short>ID3D11InfoQueue::GetMessageW</unmanaged-short>	
         public unsafe Message GetMessage(long messageIndex)
         {
             PointerSize messageSize = 0;
             GetMessage(messageIndex, IntPtr.Zero, ref messageSize);
+
+            if(messageSize == 0)
+            {
+                return new Message();
+            }
 
             var messagePtr = stackalloc byte[(int)messageSize];
             GetMessage(messageIndex, new IntPtr(messagePtr), ref messageSize);
@@ -44,25 +50,53 @@ namespace SharpDX.Direct3D11
         }
 
         /// <summary>	
-        /// No documentation.	
+        /// <p>Get the storage filter at the top of the storage-filter stack.</p>	
         /// </summary>	
-        /// <returns>No documentation.</returns>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D11InfoQueue::GetStorageFilter']/*"/>	
-        /// <unmanaged>HRESULT ID3D11InfoQueue::GetStorageFilter([Out, Buffer, Optional] D3D11_INFO_QUEUE_FILTER* pFilter,[InOut] SIZE_T* pFilterByteLength)</unmanaged>	
-        public SharpDX.Direct3D11.InfoQueueFilter GetStorageFilter()
+        /// <returns>The storage filter at the top of the storage-filter stack.</returns>	
+        /// <msdn-id>ff476560</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11InfoQueue::GetStorageFilter([In] void* pFilter,[InOut] SIZE_T* pFilterByteLength)</unmanaged>	
+        /// <unmanaged-short>ID3D11InfoQueue::GetStorageFilter</unmanaged-short>	
+        public unsafe SharpDX.Direct3D11.InfoQueueFilter GetStorageFilter()
         {
-            throw new NotImplementedException();
+            var sizeFilter = PointerSize.Zero;
+            GetStorageFilter(IntPtr.Zero, ref sizeFilter);
+
+            if(sizeFilter == 0)
+            {
+                return null;
+            }
+            var filter = stackalloc byte[(int)sizeFilter];
+            GetStorageFilter((IntPtr)filter, ref sizeFilter);
+
+            var queueNative = new InfoQueueFilter();
+            queueNative.__MarshalFrom(ref *(InfoQueueFilter.__Native*)filter);
+
+            return queueNative;
         }
 
         /// <summary>	
-        /// No documentation.	
+        /// <p>Get the retrieval filter at the top of the retrieval-filter stack.</p>	
         /// </summary>	
-        /// <returns>No documentation.</returns>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D11InfoQueue::GetRetrievalFilter']/*"/>	
-        /// <unmanaged>HRESULT ID3D11InfoQueue::GetRetrievalFilter([Out, Buffer, Optional] D3D11_INFO_QUEUE_FILTER* pFilter,[InOut] SIZE_T* pFilterByteLength)</unmanaged>	
-        public SharpDX.Direct3D11.InfoQueueFilter GetRetrievalFilter()
+        /// <returns>The retrieval filter at the top of the retrieval-filter stack.</returns>	
+        /// <msdn-id>ff476558</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11InfoQueue::GetRetrievalFilter([In] void* pFilter,[InOut] SIZE_T* pFilterByteLength)</unmanaged>	
+        /// <unmanaged-short>ID3D11InfoQueue::GetRetrievalFilter</unmanaged-short>	
+        public unsafe SharpDX.Direct3D11.InfoQueueFilter GetRetrievalFilter()
         {
-            throw new NotImplementedException();
+            var sizeFilter = PointerSize.Zero;
+            GetRetrievalFilter(IntPtr.Zero, ref sizeFilter);
+
+            if (sizeFilter == 0)
+            {
+                return null;
+            }
+            var filter = stackalloc byte[(int)sizeFilter];
+            GetRetrievalFilter((IntPtr)filter, ref sizeFilter);
+
+            var queueNative = new InfoQueueFilter();
+            queueNative.__MarshalFrom(ref *(InfoQueueFilter.__Native*)filter);
+
+            return queueNative;
         }
     }
 }
