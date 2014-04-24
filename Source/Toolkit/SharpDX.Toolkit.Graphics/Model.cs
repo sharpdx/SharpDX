@@ -34,10 +34,11 @@ namespace SharpDX.Toolkit.Graphics
 
         public ModelBoneCollection Bones;
 
-        //// DISABLE_SKINNED_BONES
-        //public ModelBoneCollection SkinnedBones;
+        public ModelSkinnedBoneCollection SkinnedBones;
 
         public ModelMeshCollection Meshes;
+
+        public ModelAnimationCollection Animations;
 
         public PropertyCollection Properties;
 

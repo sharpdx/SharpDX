@@ -44,9 +44,9 @@ namespace SharpDX.Toolkit.Graphics
             Textures = new List<byte[]>();
             Materials = new List<Material>();
             Bones = new List<Bone>();
-            // DISABLE_SKINNED_BONES
-            //SkinnedBones = new List<Bone>();
+            SkinnedBones = new List<SkinnedBone>();
             Meshes = new List<Mesh>();
+            Animations = new List<Animation>();
             Attributes = new PropertyCollection();
         }
 
@@ -70,16 +70,20 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public List<Bone> Bones;
 
-        // DISABLE_SKINNED_BONES
-        ///// <summary>
-        ///// Gets the bones used to perform skinning animation with this model.
-        ///// </summary>
-        //public List<Bone> SkinnedBones;
+        /// <summary>
+        /// Gets the bones used to perform skinning animation with this model.
+        /// </summary>
+        public List<SkinnedBone> SkinnedBones;
 
         /// <summary>
         /// Gets the mesh of this model.
         /// </summary>
         public List<Mesh> Meshes;
+
+        /// <summary>
+        /// Gets the mesh of this model.
+        /// </summary>
+        public List<Animation> Animations;
 
         /// <summary>
         /// Gets the attributes attached to this instance.
@@ -222,15 +226,19 @@ namespace SharpDX.Toolkit.Graphics
             serializer.Serialize(ref Bones);
             serializer.EndChunk();
 
-            //// DISABLE_SKINNED_BONES
-            //// Skinned Bones section
-            //serializer.BeginChunk("SKIN");
-            //serializer.Serialize(ref SkinnedBones);
-            //serializer.EndChunk();
+            // Skinned Bones section
+            serializer.BeginChunk("SKIN");
+            serializer.Serialize(ref SkinnedBones);
+            serializer.EndChunk();
 
             // Mesh section
             serializer.BeginChunk("MESH");
             serializer.Serialize(ref Meshes);
+            serializer.EndChunk();
+
+            // Animation section
+            serializer.BeginChunk("ANIM");
+            serializer.Serialize(ref Animations);
             serializer.EndChunk();
 
             // Serialize attributes

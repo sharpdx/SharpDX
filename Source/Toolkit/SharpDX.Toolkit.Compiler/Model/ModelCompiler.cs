@@ -665,7 +665,7 @@ namespace SharpDX.Toolkit.Graphics
                 if (hasWeights)
                 {
                     layout.Add(VertexElement.BlendIndices(Format.R16G16B16A16_SInt, vertexBufferElementSize));
-                    vertexBufferElementSize += Utilities.SizeOf<SharpDX.Int4>();
+                    vertexBufferElementSize += 8;
 
                     layout.Add(VertexElement.BlendWeights(Format.R32G32B32A32_Float, vertexBufferElementSize));
                     vertexBufferElementSize += Utilities.SizeOf<SharpDX.Vector4>();
@@ -743,7 +743,11 @@ namespace SharpDX.Toolkit.Graphics
                 // Add Skinning Indices/Weights
                 if (assimpMesh.HasBones && hasWeights)
                 {
-                    vertexStream.Write(skinningIndices[i]);
+                    var vertexSkinndingIndices = skinningIndices[i];
+                    vertexStream.Write((short)vertexSkinndingIndices.X);
+                    vertexStream.Write((short)vertexSkinndingIndices.Y);
+                    vertexStream.Write((short)vertexSkinndingIndices.Z);
+                    vertexStream.Write((short)vertexSkinndingIndices.W);
                     vertexStream.Write(skinningWeights[i]);
                 }
             }
@@ -794,7 +798,14 @@ namespace SharpDX.Toolkit.Graphics
 
         private unsafe static Matrix ConvertMatrix(Matrix4x4 sourceMatrix)
         {
-            return *(Matrix*)&sourceMatrix;
+            // Assimp uses column vectors
+            return Matrix.Transpose(*(Matrix*)&sourceMatrix);
+        }
+
+        private static SharpDX.Quaternion ConvertQuaternion(Assimp.Quaternion value)
+        {
+            // Assimp quaternions are stored in wxyz order
+            return new SharpDX.Quaternion(value.X, value.Y, value.Z, value.W);
         }
 
         private TextureAddressMode ConvertWrapMode(TextureWrapMode wrapMode)

@@ -37,7 +37,12 @@
     <Compile Include="GraphicsOutput.cs" />
     <Compile Include="GraphicsPerformance.cs" />
     <Compile Include="IEffectInstaller.cs" />
+    <Compile Include="ModelAnimation.cs" />
+    <Compile Include="ModelAnimationCollection.cs" />
     <Compile Include="ModelContentReader.cs" />
+    <Compile Include="ModelSkinnedBone.cs" />
+    <Compile Include="ModelSkinnedBoneCollection.cs" />
+    <Compile Include="SkinnedEffectInstaller.cs" />
     <Compile Include="OcclusionQuery.cs" />
     <Compile Include="TextureKeys.cs" />
     <Compile Include="MaterialTexture.cs" />

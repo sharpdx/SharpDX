@@ -31,6 +31,8 @@
     <Compile Include="Graphics\CommonData.PropertyCollection.cs" />
     <Compile Include="Graphics\MaterialBlendMode.cs" />
     <Compile Include="Graphics\MaterialKeys.cs" />
+    <Compile Include="Graphics\ModelData.Animation.cs" />
+    <Compile Include="Graphics\ModelData.SkinnedBone.cs" />
     <Compile Include="PropertyKey.cs" />
     <Compile Include="PropertyCollection.cs" />
     <Compile Include="Graphics\MaterialShadingMode.cs" />

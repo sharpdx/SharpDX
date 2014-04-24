@@ -56,6 +56,11 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public PropertyCollection Properties;
 
+        /// <summary>
+        /// Indices of the models skinned bones that are affecting this part.
+        /// </summary>
+        public int[] SkinnedBones;
+
         private Effect effect;
 
         /// <summary>Gets or sets the material Effect for this mesh part.  Reference page contains code sample.</summary>
