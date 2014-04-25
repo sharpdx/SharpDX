@@ -19,9 +19,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.Globalization;
-
-using SharpDX.Win32;
 
 namespace SharpDX.MediaFoundation
 {
@@ -33,44 +30,61 @@ namespace SharpDX.MediaFoundation
         /// <summary>
         /// Initializes a new instance of the <see cref="MediaAttributeKey"/> struct.
         /// </summary>
-        /// <param name="guid">The GUID.</param>
-        /// <param name="type">The type.</param>
+        /// <param name="guid">The attribute GUID.</param>
+        /// <param name="type">The attribute type.</param>
         public MediaAttributeKey(Guid guid, Type type)
+            : this(guid, type, string.Empty)
         {
-            Guid = guid;
-            Type = type;
         }
 
         /// <summary>
-        /// Gets or sets the GUID.
+        /// Initializes a new instance of the <see cref="MediaAttributeKey"/> struct.
+        /// </summary>
+        /// <param name="guid">The attribute GUID.</param>
+        /// <param name="type">The attribute type.</param>
+        /// <param name="name">The attribute name, useful for debugging.</param>
+        public MediaAttributeKey(Guid guid, Type type, string name)
+        {
+            Guid = guid;
+            Type = type;
+            Name = name;
+        }
+
+        /// <summary>
+        /// Gets  the attribute GUID.
         /// </summary>
         /// <value>
-        /// The GUID.
+        /// The attribute GUID.
         /// </value>
         public Guid Guid { get; private set; }
 
         /// <summary>
-        /// Gets or sets the type.
+        /// Gets  the attribute type.
         /// </summary>
         /// <value>
-        /// The type.
+        /// The attribute type.
         /// </value>
         public Type Type { get; private set; }
+
+        /// <summary>
+        /// Gets the attribute name.
+        /// </summary>
+        public string Name { get; private set; }
     }
 
 
     /// <summary>
-    /// Generic version of <see cref="MediaAttributeKey"/>
+    /// Generic version of <see cref="MediaAttributeKey"/>.
     /// </summary>
-    /// <typeparam name="T">Type of the value of this key</typeparam>
+    /// <typeparam name="T">Type of the value of this key.</typeparam>
     public class MediaAttributeKey<T> : MediaAttributeKey
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MediaAttributeKey&lt;T&gt;"/> class.
         /// </summary>
-        /// <param name="guid">The GUID.</param>
+        /// <param name="guid">The attribute GUID.</param>
         public MediaAttributeKey(string guid)
-            : base(new Guid(guid), typeof(T))
+            : this(guid, string.Empty)
         {
         }
 
@@ -78,7 +92,28 @@ namespace SharpDX.MediaFoundation
         /// Initializes a new instance of the <see cref="MediaAttributeKey&lt;T&gt;"/> class.
         /// </summary>
         /// <param name="guid">The GUID.</param>
-        public MediaAttributeKey(Guid guid) : base(guid, typeof(T))
+        /// <param name="name">The attribute name, useful for debugging.</param>
+        public MediaAttributeKey(string guid, string name)
+            : this(new Guid(guid), name)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MediaAttributeKey&lt;T&gt;"/> class.
+        /// </summary>
+        /// <param name="guid">The GUID.</param>
+        public MediaAttributeKey(Guid guid)
+            : this(guid, string.Empty)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MediaAttributeKey&lt;T&gt;"/> class.
+        /// </summary>
+        /// <param name="guid">The GUID.</param>
+        /// /// <param name="name">The attribute name, useful for debugging.</param>
+        public MediaAttributeKey(Guid guid, string name)
+            : base(guid, typeof(T), name)
         {
         }
     }
