@@ -29,35 +29,7 @@
   <!--Import standard targets for all non-Windows(Phone) 8 platforms-->
   <Import Condition="'$(SharpDXWin8Core)' == 'false'" Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Net20Release|AnyCPU' ">
-    <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-    
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Net40Release|AnyCPU' ">
-    <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DIRECTX11_2Release|AnyCPU' ">
-    <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
-    <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|x86'">
-    <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|ARM'">
-    <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP81Release|AnyCPU'">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 

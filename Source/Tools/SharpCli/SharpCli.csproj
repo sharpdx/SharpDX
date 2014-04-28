@@ -17,7 +17,7 @@
     Related to this issue http://connect.microsoft.com/VisualStudio/feedback/details/735718/visual-studio-2011-beta-is-incorrectly-building-solution -->
     <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -25,7 +25,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <OutputPath>Bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
@@ -40,27 +40,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>SharpCli.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Cecil">
@@ -98,11 +77,6 @@
     <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(TargetTaskPath)" />
     <Message Importance="high" Text="Copying SharpCli Task from $(TargetPath) to $(TargetTaskPath)" />
   </Target>
-  <PropertyGroup>
-    <PostBuildEvent>mkdir "$(SolutionDir)Build\Tools\Bin\"
-copy  "$(TargetDir)*.exe" "$(SolutionDir)Build\Tools\Bin\"
-copy  "$(TargetDir)*.dll" "$(SolutionDir)Build\Tools\Bin\"</PostBuildEvent>
-  </PropertyGroup>
   <!-- Custom target to copy InteropBuilder to another path, used by all subsequent tasks -->
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
