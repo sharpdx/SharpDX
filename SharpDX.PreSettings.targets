@@ -1,5 +1,5 @@
 <!-- Common Settings used by SharpDX projects -->
-<Project InitialTargets="SharpDXPreparePlatform" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project InitialTargets="SharpDXForcePlatform" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!--
   *************************************************************************************************************
   Global Configuration
@@ -25,7 +25,7 @@
     <DirectX11_1>false</DirectX11_1>
     <DirectX11_2>false</DirectX11_2>
 
-    <!-- Save the Platform, as we are overriding it in SharpDXPreparePlatform  -->
+    <!-- Save the Platform, as we are overriding it in SharpDXForcePlatform  -->
     <ProjectPlatform>$(Platform)</ProjectPlatform>
   </PropertyGroup>
   
@@ -106,24 +106,6 @@
     <DirectX11_1>true</DirectX11_1>
     <DirectX11_2>true</DirectX11_2>
   </PropertyGroup>
-
-  <Target Name="SharpDXPreparePlatform">
-    <CreateProperty Condition=" '$(Platform)' == 'Win8' or '$(Platform)' == 'WP81'" Value="AnyCPU">
-            <Output
-                TaskParameter="Value"
-                PropertyName="Platform" />      
-    </CreateProperty>
-    <CreateProperty Condition=" '$(Platform)' == 'WP8-x86'" Value="x86">
-      <Output
-          TaskParameter="Value"
-          PropertyName="Platform" />
-    </CreateProperty>
-    <CreateProperty Condition=" '$(Platform)' == 'WP8-ARM'" Value="ARM">
-      <Output
-          TaskParameter="Value"
-          PropertyName="Platform" />
-    </CreateProperty>
-  </Target>
   
   <!--<Import Condition="'$(SharpDXWP8)' != 'false'"  Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />-->
   <PropertyGroup>
@@ -362,5 +344,61 @@
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
+
+  <!--
+  *************************************************************************************************************
+  Target SharpDXForcePlatform
+  *************************************************************************************************************
+  
+  This target is called automatically when importing this file into a SharpDX project (as it is specified as a 
+  InitialTargets on this project file, see beginning of this file).
+  
+  This target provides a workaround to a bug in some Microsoft build files that are relying/checking the Platform variable.
+  In SharpDX, we would like to target all platforms from the same solution file. Hence we are using the Platform variable
+  (which is configured/remapped in the Solution (sln)), once we are compiling a project, the Platform variable is a Global 
+  property that is immutable, unfortunately, the usage of this variable is hardcoded in some msbuild files and they are 
+  checking that for example the Platform equals "AnyCPU" which makes it impossible to build a multi-platform solution.
+  
+  The workaround is to force the Platform variable to be overwritten when executing a Build target. The only way to do this 
+  is to call the CreateProperty task that allow to override a property but as it must be executed from a msbuild target, we 
+  are calling it automatically and prior any other targets by using InitialTargets="SharpDXForcePlatform" on this sam project 
+  file.
+  
+  Currently, we need to remap the platform for the following solution platform:
+  - Windows 8 App Store => AnyCPU
+  - Windows Phone 8.1 => AnyCPU
+  - Windows Phone 8 - x86 => x86
+  - Windows Phone 8 - ARM => ARM
+  
+  We are a bit lucky, because the Platform variable could be stored into a new property via a PropertyGroup and reused later, 
+  but it seems that this is not much the case in current Microsoft build files.
+  -->
+  <Target Name="SharpDXForcePlatform">
+    <!--
+    Windows 8 App Store => AnyCPU 
+    Windows Phone 8.1 => AnyCPU
+    -->
+    <CreateProperty Condition=" '$(Platform)' == 'Win8' or '$(Platform)' == 'WP81'" Value="AnyCPU">
+      <Output
+          TaskParameter="Value"
+          PropertyName="Platform" />
+    </CreateProperty>
+    <!--
+    Windows Phone 8 - x86 => x86
+    -->
+    <CreateProperty Condition=" '$(Platform)' == 'WP8-x86'" Value="x86">
+      <Output
+          TaskParameter="Value"
+          PropertyName="Platform" />
+    </CreateProperty>
+    <!--
+    Windows Phone 8 - ARM => ARM
+    -->
+    <CreateProperty Condition=" '$(Platform)' == 'WP8-ARM'" Value="ARM">
+      <Output
+          TaskParameter="Value"
+          PropertyName="Platform" />
+    </CreateProperty>
+  </Target>
 
 </Project>
