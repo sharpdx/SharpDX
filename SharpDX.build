@@ -24,7 +24,6 @@
 
   <PropertyGroup>
     <SharpDXSolution>SharpDX.sln</SharpDXSolution>
-    <SharpDXSolutionWP8>SharpDXWP8.sln</SharpDXSolutionWP8>
     <SamplesDirectory>Samples</SamplesDirectory>
     <GitExe>"C:\Program Files (x86)\Git\bin\git.exe"</GitExe>
     <SharpDXDevZip>SharpDX-SDK-LatestDev.exe</SharpDXDevZip>
@@ -59,16 +58,12 @@
 	<CallTarget Targets="DesktopNet40" />
 	<CallTarget Targets="MetroWin8" />
 	<CallTarget Targets="DesktopDx112" />
+	<CallTarget Targets="WP8-x86" />
+ 	<CallTarget Targets="WP8-ARM" />
 	<CallTarget Targets="WP81" />
 	<CallTarget Targets="CopyD3DRedistributionFiles" />
-
   </Target>
 
-  <Target Name="BuildForVS2012">
-	<CallTarget Targets="WP8-x86" />
-	<CallTarget Targets="WP8-ARM" />
-  </Target>
-  
   <Target Name="BuildSigned">
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=Net20;SharpDXSign=true"/>
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=Net40;SharpDXSign=true"/>
@@ -93,11 +88,11 @@
   </Target>
   
   <Target Name="WP8-x86">
-	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolutionWP8)" Properties="Configuration=Release;Platform=WP8-x86"/>
+	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=WP8-x86"/>
   </Target>
   
   <Target Name="WP8-ARM">
-	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolutionWP8)" Properties="Configuration=Release;Platform=WP8-ARM"/>
+	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=WP8-ARM"/>
   </Target>
 
   <Target Name="WP81">
