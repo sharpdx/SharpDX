@@ -350,8 +350,11 @@
   Target SharpDXForcePlatform
   *************************************************************************************************************
   
-  This target is called automatically when importing this file into a SharpDX project (as it is specified as a 
-  InitialTargets on this project file, see beginning of this file).
+  This target is called automatically when building a SharpDX project that is importing this file 
+  (as it is specified as a InitialTargets on this project file, see beginning of this file). This target is not called
+  when importing (initialization time), so the variable $(Platform) will remain equal to the one defined in the .sln
+  But when building a project (build time), the $(Platform) variable will be remapped to a compatible platform understood 
+  by Microsoft build files.
   
   This target provides a workaround to a bug in some Microsoft build files that are relying/checking the Platform variable.
   In SharpDX, we would like to target all platforms from the same solution file. Hence we are using the Platform variable
