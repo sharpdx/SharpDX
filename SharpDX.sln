@@ -69,10 +69,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDX.XInput", "Source\Sh
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{E462D87D-C180-4114-B8C8-914E6735BF44}"
 	ProjectSection(SolutionItems) = preProject
+		Source\Install.ps1 = Source\Install.ps1
 		SharpDX.build = SharpDX.build
 		SharpDX.PostSettings.targets = SharpDX.PostSettings.targets
 		SharpDX.PreSettings.targets = SharpDX.PreSettings.targets
+		Source\SharpDX.Setup.targets = Source\SharpDX.Setup.targets
 		SharpDX.targets = SharpDX.targets
+		Source\SharpDX.Toolkit.targets = Source\SharpDX.Toolkit.targets
+		Source\uninstall.ps1 = Source\uninstall.ps1
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDX.Tests", "Source\Tests\SharpDX.Tests\SharpDX.Tests.csproj", "{931FA266-E756-41CA-9736-8B29235DC999}"

@@ -44,19 +44,9 @@
   </metadata>
 
   <files>
-    <file src="..\..\Bin\DirectX11-Signed-net20\SharpDX.Direct3D11.dll" target="lib\net20" />
-    <file src="..\..\Bin\DirectX11-Signed-net20\SharpDX.Direct3D11.pdb" target="lib\net20" />
-    <file src="..\..\Bin\DirectX11-Signed-net20\SharpDX.Direct3D11.xml" target="lib\net20" />
-
-    <file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.Direct3D11.dll" target="lib\net40" />
-    <file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.Direct3D11.pdb" target="lib\net40" />
-    <file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.Direct3D11.xml" target="lib\net40" />
-
-    <file src="..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.Direct3D11.dll" target="lib\win8" />
-    <file src="..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.Direct3D11.pdb" target="lib\win8" />
-    <file src="..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.Direct3D11.xml" target="lib\win8" />
-
-    <file src="**\*.cs" target="src" />
+    <file src="..\dummy.txt" target="lib" />
+    <file src="..\Install.ps1" target="tools\Install.ps1" />
+    <file src="..\UnInstall.ps1" target="tools\UnInstall.ps1" />
   </files>
   
 </package>

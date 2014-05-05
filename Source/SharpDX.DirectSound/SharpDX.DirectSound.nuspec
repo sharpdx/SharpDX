@@ -42,14 +42,8 @@
   </metadata>
 
   <files>
-    <file src="..\..\Bin\DirectX11-Signed-net20\SharpDX.DirectSound.dll" target="lib\net20" />
-    <file src="..\..\Bin\DirectX11-Signed-net20\SharpDX.DirectSound.pdb" target="lib\net20" />
-    <file src="..\..\Bin\DirectX11-Signed-net20\SharpDX.DirectSound.xml" target="lib\net20" />
-
-    <file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.DirectSound.dll" target="lib\net40" />
-    <file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.DirectSound.pdb" target="lib\net40" />
-    <file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.DirectSound.xml" target="lib\net40" />
-
-    <file src="**\*.cs" target="src" />
+    <file src="..\dummy.txt" target="lib" />
+    <file src="..\Install.ps1" target="tools\Install.ps1" />
+    <file src="..\UnInstall.ps1" target="tools\UnInstall.ps1" />
   </files>
 </package>

@@ -46,22 +46,10 @@
   </metadata>
 
   <files>
-    <file src="..\..\..\Bin\DirectX11-Signed-net20\SharpDX.Toolkit.dll" target="lib\net20" />
-    <file src="..\..\..\Bin\DirectX11-Signed-net20\SharpDX.Toolkit.pdb" target="lib\net20" />
-    <file src="..\..\..\Bin\DirectX11-Signed-net20\SharpDX.Toolkit.xml" target="lib\net20" />
-
-    <file src="..\..\..\Bin\DirectX11-Signed-net40\SharpDX.Toolkit.dll" target="lib\net40" />
-    <file src="..\..\..\Bin\DirectX11-Signed-net40\SharpDX.Toolkit.pdb" target="lib\net40" />
-    <file src="..\..\..\Bin\DirectX11-Signed-net40\SharpDX.Toolkit.xml" target="lib\net40" />
-
-    <!--<file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.dll" target="lib\net40" />-->
-    <!--<file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.xml" target="lib\net40" />-->
-
-    <file src="..\..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.Toolkit.dll" target="lib\win8" />
-    <file src="..\..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.Toolkit.pdb" target="lib\win8" />
-    <file src="..\..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.Toolkit.xml" target="lib\win8" />
-
-    <file src="**\*.cs" target="src" />
+    <file src="..\dummy.txt" target="lib" />
+    <file src="..\SharpDX.Toolkit.targets" target="build" />
+    <file src="..\Install.ps1" target="tools\Install.ps1" />
+    <file src="..\UnInstall.ps1" target="tools\UnInstall.ps1" />
   </files>
 
 </package>

@@ -48,22 +48,9 @@
   </metadata>
 
   <files>
-    <file src="..\..\..\Bin\DirectX11-Signed-net20\SharpDX.Toolkit.Game.dll" target="lib\net20" />
-    <file src="..\..\..\Bin\DirectX11-Signed-net20\SharpDX.Toolkit.Game.pdb" target="lib\net20" />
-    <file src="..\..\..\Bin\DirectX11-Signed-net20\SharpDX.Toolkit.Game.xml" target="lib\net20" />
-
-    <file src="..\..\..\Bin\DirectX11-Signed-net40\SharpDX.Toolkit.Game.dll" target="lib\net40" />
-    <file src="..\..\..\Bin\DirectX11-Signed-net40\SharpDX.Toolkit.Game.pdb" target="lib\net40" />
-    <file src="..\..\..\Bin\DirectX11-Signed-net40\SharpDX.Toolkit.Game.xml" target="lib\net40" />
-
-    <!--<file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.dll" target="lib\net40" />-->
-    <!--<file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.xml" target="lib\net40" />-->
-
-    <file src="..\..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.Toolkit.Game.dll" target="lib\win8" />
-    <file src="..\..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.Toolkit.Game.pdb" target="lib\win8" />
-    <file src="..\..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.Toolkit.Game.xml" target="lib\win8" />
-
-    <file src="**\*.cs" target="src" />
+    <file src="..\dummy.txt" target="lib" />
+    <file src="..\Install.ps1" target="tools\Install.ps1" />
+    <file src="..\UnInstall.ps1" target="tools\UnInstall.ps1" />
   </files>
 
 </package>
