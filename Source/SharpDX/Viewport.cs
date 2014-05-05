@@ -218,7 +218,7 @@ namespace SharpDX
         /// <param name="projection">The projection matrix.</param>
         /// <param name="view">The view matrix.</param>
         /// <param name="world">The world matrix.</param>
-        /// <returns>The projected vector./returns>
+        /// <returns>The projected vector.</returns>
         public Vector3 Project(Vector3 source, Matrix projection, Matrix view, Matrix world)
         {
             Matrix matrix;
