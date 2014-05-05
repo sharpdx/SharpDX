@@ -150,7 +150,7 @@ namespace SharpDX.Toolkit.Graphics
                     offset = vertexElements[i].AlignedByteOffset;
 
                 // Move to the next field.
-                offset += (int)FormatHelper.SizeOfInBytes(vertexElements[i].Format);
+                offset += FormatHelper.SizeOfInBytes(vertexElements[i].Format);
             }
             return vertexElements;
         }

@@ -69,7 +69,7 @@ namespace SharpDX.Toolkit.Graphics
             this.rowStride = rowStride;
             this.bufferStride = bufferStride;
             this.dataPointer = dataPointer;
-            this.pixelSize = (int)FormatHelper.SizeOfInBytes(this.format);
+            this.pixelSize = FormatHelper.SizeOfInBytes(this.format);
             this.isStrictRowStride = (pixelSize * width) == rowStride;
         }
 
@@ -142,7 +142,7 @@ namespace SharpDX.Toolkit.Graphics
             // Check that buffers are identical
             if (this.Width != pixelBuffer.Width
                 || this.Height != pixelBuffer.Height
-                || PixelSize != (int)FormatHelper.SizeOfInBytes(pixelBuffer.Format))
+                || PixelSize != FormatHelper.SizeOfInBytes(pixelBuffer.Format))
             {
                 throw new ArgumentException("Invalid destination pixelBufferArray. Mush have same Width, Height and Format", "pixelBuffer");
             }

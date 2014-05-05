@@ -666,7 +666,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             // Size per pixel
-            var sizePerElement = (int)FormatHelper.SizeOfInBytes(this.Description.Format);
+            var sizePerElement = FormatHelper.SizeOfInBytes(this.Description.Format);
 
             // Calculate depth stride based on mipmap level
             int rowStride;

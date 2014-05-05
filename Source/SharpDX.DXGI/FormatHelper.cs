@@ -37,9 +37,12 @@ namespace SharpDX.DXGI
         /// </summary>
         /// <param name="format">The DXGI format.</param>
         /// <returns>size of in bytes</returns>
-        public static float SizeOfInBytes(Format format)
+        public static int SizeOfInBytes(Format format)
         {
-            return (float) SizeOfInBits(format)/8;
+            var sizeInBits = SizeOfInBits(format);
+            if(sizeInBits < 8) throw new ArgumentException(string.Format("Format not supported for individual size in bytes [{0}]", format), "format");
+
+            return sizeInBits >> 3;
         }
 
         /// <summary>

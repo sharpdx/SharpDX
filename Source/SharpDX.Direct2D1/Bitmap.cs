@@ -182,11 +182,11 @@ namespace SharpDX.Direct2D1
         public unsafe static Bitmap New<T>(RenderTarget renderTarget, Size2 size, T[] pixelDatas, SharpDX.Direct2D1.BitmapProperties bitmapProperties) where T : struct
         {
             var sizeOfBitmap = pixelDatas.Length*Utilities.SizeOf<T>();
-            var expectedSize = size.Width*size.Height*(int) FormatHelper.SizeOfInBytes(bitmapProperties.PixelFormat.Format);
+            var expectedSize = size.Width*size.Height* FormatHelper.SizeOfInBytes(bitmapProperties.PixelFormat.Format);
             if (sizeOfBitmap != expectedSize)
                 throw new ArgumentException("Invalid size of pixelDatas. Must be equal to sizeof(T) == sizeof(PixelFormat.Format) and  Width * Height elements");
 
-            return new Bitmap(renderTarget, size, new DataPointer((IntPtr)Interop.Fixed(pixelDatas), sizeOfBitmap), size.Width * (int)FormatHelper.SizeOfInBytes(bitmapProperties.PixelFormat.Format), bitmapProperties);
+            return new Bitmap(renderTarget, size, new DataPointer((IntPtr)Interop.Fixed(pixelDatas), sizeOfBitmap), size.Width * FormatHelper.SizeOfInBytes(bitmapProperties.PixelFormat.Format), bitmapProperties);
         }
 
         /// <summary>
