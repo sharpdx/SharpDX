@@ -41,40 +41,40 @@ It compiles all files of type ToolkitFxc/ToolkitFont
   </ItemGroup>
 
   <!-- If we are on desktop, we can safely add a reference to Compiler -->
-  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\SharpDX.Toolkit.Compiler.dll') and '$(TargetFrameworkIdentifier)' == '.NETFramework'">
+  <ItemGroup Condition="Exists('$(SharpDXPackageBinDir)\SharpDX.Toolkit.Compiler.dll') and '$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="SharpDX.Toolkit.Compiler">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(SharpDXSdkBinDir)\SharpDX.Toolkit.Compiler.dll</HintPath>
+      <HintPath>$(SharpDXPackageBinDir)\SharpDX.Toolkit.Compiler.dll</HintPath>
     </Reference>
   </ItemGroup>
 
-  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\SharpDX.D3DCompiler.dll') and '$(TargetFrameworkIdentifier)' == '.NETFramework'">
+  <ItemGroup Condition="Exists('$(SharpDXPackageBinDir)\SharpDX.D3DCompiler.dll') and '$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="SharpDX.D3DCompiler">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(SharpDXSdkBinDir)\SharpDX.D3DCompiler.dll</HintPath>
+      <HintPath>$(SharpDXPackageBinDir)\SharpDX.D3DCompiler.dll</HintPath>
     </Reference>
   </ItemGroup>
 
   <!--Copy Assimp32 / Assimp64 dll on desktop-->
-  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\Assimp32.dll') and '$(TargetFrameworkIdentifier)' == '.NETFramework'">
-    <Content Include="$(SharpDXSdkBinDir)\Assimp32.dll">
+  <ItemGroup Condition="Exists('$(SharpDXPackageBinDir)\Assimp32.dll') and '$(TargetFrameworkIdentifier)' == '.NETFramework'">
+    <Content Include="$(SharpDXPackageBinDir)\Assimp32.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Link>Assimp32.dll</Link>
     </Content>
   </ItemGroup>
 
-  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\Assimp64.dll') and '$(TargetFrameworkIdentifier)' == '.NETFramework'">
-    <Content Include="$(SharpDXSdkBinDir)\Assimp64.dll">
+  <ItemGroup Condition="Exists('$(SharpDXPackageBinDir)\Assimp64.dll') and '$(TargetFrameworkIdentifier)' == '.NETFramework'">
+    <Content Include="$(SharpDXPackageBinDir)\Assimp64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Link>Assimp64.dll</Link>
     </Content>
   </ItemGroup>
 
   <!-- If we are on desktop or WinRT, we can safely add a reference to Direct2D1 -->
-  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\SharpDX.Direct2D1.dll') and ('$(TargetFrameworkIdentifier)' == '.NETFramework' or '$(TargetFrameworkIdentifier)' == '.NETCore' or '$(TargetPlatformIdentifier)' == 'WindowsPhoneApp')">
+  <ItemGroup Condition="Exists('$(SharpDXPackageBinDir)\SharpDX.Direct2D1.dll') and ('$(TargetFrameworkIdentifier)' == '.NETFramework' or '$(TargetFrameworkIdentifier)' == '.NETCore' or '$(TargetPlatformIdentifier)' == 'WindowsPhoneApp')">
     <Reference Include="SharpDX.Direct2D1">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(SharpDXSdkBinDir)\SharpDX.Direct2D1.dll</HintPath>
+      <HintPath>$(SharpDXPackageBinDir)\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
   </ItemGroup>
 

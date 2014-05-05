@@ -49,9 +49,9 @@
   </metadata>
 
   <files>
-    <file src="..\dummy.txt" target="lib" />
-    <file src="..\Install.ps1" target="tools\Install.ps1" />
-    <file src="..\UnInstall.ps1" target="tools\UnInstall.ps1" />
+    <file src="..\..\dummy.txt" target="lib" />
+    <file src="..\..\Install.ps1" target="tools\Install.ps1" />
+    <file src="..\..\UnInstall.ps1" target="tools\UnInstall.ps1" />
   </files>
 
 </package>

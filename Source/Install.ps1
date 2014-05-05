@@ -3,11 +3,11 @@ param($installPath, $toolsPath, $package, $project)
 "Installing [{0}] to project [{1}]" -f $package.Id, $project.FullName | Write-Host
 
 # Load MSBuild assembly if it’s not loaded yet.
-Add-Type -AssemblyName ‘Microsoft.Build, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a’
+Add-Type -AssemblyName "Microsoft.Build, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
 
 # Check that SharpDX.targets was correctly imported
 $buildProject = [Microsoft.Build.Evaluation.ProjectCollection]::GlobalProjectCollection.GetLoadedProjects($project.FullName) | Select-Object -First 1
-$importsToRemove = $buildProject.Xml.Imports | Where-Object { $_.Project.Endswith('SharpDX.Setup.targets') }
+$importsToRemove = $buildProject.Xml.Imports | Where-Object { $_.Project.Endswith('SharpDX.targets') }
 if (!$importsToRemove)
 {
 	throw ("SharpDX.targets import not found in project [{0}]" -f $project.FullName)

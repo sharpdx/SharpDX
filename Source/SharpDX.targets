@@ -25,11 +25,11 @@ It adds automatically references to SharpDX assemblies
     <SharpDXNETFramework Condition="'$(SharpDXNETFramework)' == '' and '$(TargetPlatformIdentifier)' == 'WindowsPhoneApp'">wp81</SharpDXNETFramework>
 
     <!-- Select Signed or not signed assemblies -->
-    <SharpDXSigned Condition="'$(SharpDXNoSigned)' == ''">-Signed</SharpDXSigned>
+    <SharpDXSigned Condition="'$(SharpDXNoSigned)' == '' and '$(TargetFrameworkIdentifier)' != 'WindowsPhone'">Signed-</SharpDXSigned>
     <SharpDXSigned Condition="'$(SharpDXNoSigned)' == 'true'"></SharpDXSigned>
 
     <!-- Compute the full version number -->
-    <SharpDXPlatform Condition="'$(SharpDXPlatform)' == ''">$(SharpDXDirectXVersion)-$(SharpDXNETFramework)$(SharpDXSigned)</SharpDXPlatform>
+    <SharpDXPlatform Condition="'$(SharpDXPlatform)' == ''">$(SharpDXDirectXVersion)-$(SharpDXSigned)$(SharpDXNETFramework)</SharpDXPlatform>
     
     <!-- Variable used to select the platform used for the tool at compile time - default to Win8Desktop-net40 -->
     <SharpDXPlatformTool Condition="'$(SharpDXPlatformTool)' == ''">DirectX11-net40</SharpDXPlatformTool>

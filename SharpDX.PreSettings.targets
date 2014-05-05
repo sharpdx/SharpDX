@@ -329,7 +329,7 @@
     <DelaySign>true</DelaySign>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|WP81' And '$(SharpDXSign)' == 'true'">
-    <DefineConstants>TRACE;WP81;W8CORE;WIN8METRO;DIRECTX11_1;DIRECTX11_2;NETFX_CORE;WINDOWS_PHONE_APP;NET35Plus</DefineConstants>
+    <DefineConstants>TRACE;WP81;W8CORE;WIN8METRO;DIRECTX11_1;DIRECTX11_2;NETFX_CORE;WINDOWS_PHONE_APP;NET35Plus;SHARPDX_SIGNED</DefineConstants>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
     <DelaySign>true</DelaySign>

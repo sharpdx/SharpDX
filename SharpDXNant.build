@@ -183,8 +183,8 @@
   <target name="nuget" description="Build NuGet Packages">
     <!-- Setup based on config -->
     <call target="setup"/>
-    <delete dir="Packages"/>
-    <mkdir dir="Packages"/>
+    <delete dir="NugetPackages"/>
+    <mkdir dir="NugetPackages"/>
     <foreach item="File" property="filename">
       <in>
         <items>
@@ -196,10 +196,10 @@
         <echo message="Nuget on ${path::get-directory-name(filename)}"/>
         <exec program="nuget.exe" workingdir="${path::get-directory-name(filename)}">
           <arg value="pack" />
-          <arg value="-Symbols" />
+          <!-- <arg value="-Symbols" /> -->
           <!-- <arg value="-Verbose" /> -->
           <arg value="-OutputDirectory" />
-          <arg value="${project::get-base-directory()}\Packages" />
+          <arg value="${project::get-base-directory()}\NugetPackages" />
           <arg value="-Properties" />
           <arg value="version=${assembly_version}" />
           <arg value="${filename}" />
