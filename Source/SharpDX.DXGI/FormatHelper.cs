@@ -33,15 +33,13 @@ namespace SharpDX.DXGI
         private static readonly bool[] typelessFormats = new bool[256];
 
         /// <summary>
-        /// Calculates the size of a <see cref="Format"/> in bytes.
+        /// Calculates the size of a <see cref="Format"/> in bytes. Can be 0 for compressed format (as they are less than 1 byte)
         /// </summary>
         /// <param name="format">The DXGI format.</param>
         /// <returns>size of in bytes</returns>
         public static int SizeOfInBytes(Format format)
         {
             var sizeInBits = SizeOfInBits(format);
-            if(sizeInBits < 8) throw new ArgumentException(string.Format("Format not supported for individual size in bytes [{0}]", format), "format");
-
             return sizeInBits >> 3;
         }
 
