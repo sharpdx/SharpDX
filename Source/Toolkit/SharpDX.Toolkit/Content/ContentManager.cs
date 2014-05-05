@@ -34,10 +34,10 @@ namespace SharpDX.Toolkit.Content
     public class ContentManager : Component, IContentManager
     {
         private readonly Dictionary<AssetKey, object> assetLockers;
-        private readonly Dictionary<AssetKey, object> loadedAssets;
         private readonly List<IContentResolver> registeredContentResolvers;
         private readonly Dictionary<Type, IContentReader> registeredContentReaders;
         private readonly List<IContentReaderFactory> registeredContentReaderFactories;
+        protected readonly Dictionary<AssetKey, object> loadedAssets;
 
         private string rootDirectory;
 
@@ -125,7 +125,7 @@ namespace SharpDX.Toolkit.Content
         /// <returns><c>true</c> if the specified assets exists, <c>false</c> otherwise</returns>
         public virtual bool Exists(string assetName)
         {
-            if(assetName == null) throw new ArgumentNullException("assetName");
+            if (assetName == null) throw new ArgumentNullException("assetName");
 
             // First, resolve the stream for this asset.
             List<IContentResolver> resolvers;
@@ -222,14 +222,14 @@ namespace SharpDX.Toolkit.Content
         /// </remarks>
         public virtual void Unload()
         {
-            lock(assetLockers)
+            lock (assetLockers)
             {
-                lock(loadedAssets)
+                lock (loadedAssets)
                 {
-                    foreach(var loadedAsset in loadedAssets.Values)
+                    foreach (var loadedAsset in loadedAssets.Values)
                     {
                         var disposable = loadedAsset as IDisposable;
-                        if(disposable != null)
+                        if (disposable != null)
                             disposable.Dispose();
                     }
 
@@ -246,11 +246,23 @@ namespace SharpDX.Toolkit.Content
         /// <returns><c>true</c> if the asset exists and was unloaded, <c>false</c> otherwise.</returns>
         public virtual bool Unload<T>(string assetName)
         {
-            if(assetName == null) throw new ArgumentNullException("assetName");
+            return Unload(typeof(T), assetName);
+        }
+
+        /// <summary>
+        /// Unloads and disposes an asset.
+        /// </summary>
+        /// <param name="assetType">The asset type</param>
+        /// <param name="assetName">The asset name</param>
+        /// <returns><c>true</c> if the asset exists and was unloaded, <c>false</c> otherwise.</returns>
+        public virtual bool Unload(Type assetType, string assetName)
+        {
+            if (assetType == null) throw new ArgumentNullException("assetType");
+            if (assetName == null) throw new ArgumentNullException("assetName");
             object asset;
 
             // Build asset key
-            var assetKey = new AssetKey(typeof(T), assetName);
+            var assetKey = new AssetKey(assetType, assetName);
 
             object assetLockerRead = GetAssetLocker(assetKey, false);
             if (assetLockerRead == null)
@@ -276,7 +288,7 @@ namespace SharpDX.Toolkit.Content
             return true;
         }
 
-        private object GetAssetLocker(AssetKey assetKey, bool create)
+        protected object GetAssetLocker(AssetKey assetKey, bool create)
         {
             object assetLockerRead;
             lock (assetLockers)
@@ -310,14 +322,14 @@ namespace SharpDX.Toolkit.Content
             {
                 try
                 {
-                    if(contentResolver.Exists(assetName))
+                    if (contentResolver.Exists(assetName))
                     {
                         stream = contentResolver.Resolve(assetName);
-                        if(stream != null)
+                        if (stream != null)
                             break;
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     System.Diagnostics.Debug.WriteLine(ex);
                     lastException = ex;
@@ -337,11 +349,11 @@ namespace SharpDX.Toolkit.Content
 
             var parameters = new ContentReaderParameters
                              {
-                                     AssetName = assetName,
-                                     AssetType = assetType,
-                                     Stream = stream,
-                                     Options = options
-                                 };
+                                 AssetName = assetName,
+                                 AssetType = assetType,
+                                 Stream = stream,
+                                 Options = options
+                             };
 
             try
             {
@@ -351,12 +363,12 @@ namespace SharpDX.Toolkit.Content
                     if (!registeredContentReaders.TryGetValue(assetType, out contentReader))
                     {
                         // Use registered factories to handle a type
-                        lock(registeredContentReaderFactories)
+                        lock (registeredContentReaderFactories)
                         {
-                            foreach(var factory in registeredContentReaderFactories)
+                            foreach (var factory in registeredContentReaderFactories)
                             {
                                 contentReader = factory.TryCreate(assetType);
-                                if(contentReader != null)
+                                if (contentReader != null)
                                 {
                                     registeredContentReaders.Add(assetType, contentReader);
                                     break;
@@ -365,7 +377,7 @@ namespace SharpDX.Toolkit.Content
                         }
 
                         // Else tries to get a ContentReaderAttribute to resolve the type
-                        if(contentReader == null)
+                        if (contentReader == null)
                         {
 #if WIN8METRO
                             var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(assetType.GetTypeInfo(), true);
@@ -373,10 +385,10 @@ namespace SharpDX.Toolkit.Content
                             var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(assetType, true);
 #endif
 
-                            if(contentReaderAttribute != null)
+                            if (contentReaderAttribute != null)
                             {
                                 contentReader = Activator.CreateInstance(contentReaderAttribute.ContentReaderType) as IContentReader;
-                                if(contentReader != null)
+                                if (contentReader != null)
                                     Readers.Add(assetType, contentReader);
                             }
                         }
@@ -476,7 +488,7 @@ namespace SharpDX.Toolkit.Content
         /// <summary>
         /// Use this key to store loaded assets.
         /// </summary>
-        private struct AssetKey : IEquatable<AssetKey>
+        protected struct AssetKey : IEquatable<AssetKey>
         {
             public AssetKey(Type assetType, string assetName)
             {
@@ -495,7 +507,7 @@ namespace SharpDX.Toolkit.Content
 
             public override bool Equals(object obj)
             {
-                if(ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(null, obj)) return false;
                 return obj is AssetKey && Equals((AssetKey)obj);
             }
 

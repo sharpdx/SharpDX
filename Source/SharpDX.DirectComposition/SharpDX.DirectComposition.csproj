@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\SharpDX.PreSettings.targets" />
+  <PropertyGroup>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FBE5DD99-00A0-4FED-A116-941A46A0C0D0}</ProjectGuid>
+    <RootNamespace>SharpDX.DirectComposition</RootNamespace>
+    <AssemblyName>SharpDX.DirectComposition</AssemblyName>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(SharpDXWin8)' == 'false'">
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Animation.cs" />
+    <Compile Include="DesktopDevice.cs" />
+    <Compile Include="Device.cs" />
+    <Compile Include="Device2.cs" />
+    <Compile Include="EffectGroup.cs" />
+    <Compile Include="MatrixTransform.cs" />
+    <Compile Include="MatrixTransform3D.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Generated\Enumerations.cs" />
+    <Compile Include="Generated\Functions.cs" />
+    <Compile Include="Generated\Interfaces.cs" />
+    <Compile Include="Generated\LocalInterop.cs" />
+    <Compile Include="Generated\Structures.cs" />
+    <Compile Include="RectangleClip.cs" />
+    <Compile Include="RotateTransform.cs" />
+    <Compile Include="RotateTransform3D.cs" />
+    <Compile Include="ScaleTransform.cs" />
+    <Compile Include="ScaleTransform3D.cs" />
+    <Compile Include="SkewTransform.cs" />
+    <Compile Include="Surface.cs" />
+    <Compile Include="SurfaceFactory.cs" />
+    <Compile Include="Target.cs" />
+    <Compile Include="Transform.cs" />
+    <Compile Include="Transform3D.cs" />
+    <Compile Include="TranslateTransform.cs" />
+    <Compile Include="TranslateTransform3D.cs" />
+    <Compile Include="VirtualSurface.cs" />
+    <Compile Include="Visual.cs" />
+    <Compile Include="Visual2.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Mapping.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SharpDX.DirectComposition.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj">
+      <Project>{3fc6de77-b412-4101-9e64-6b9aa831179b}</Project>
+      <Name>SharpDX.DXGI</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
+      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
+      <Name>SharpDX</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Documentation\CodeComments.xml" />
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+			 Other similar extension points exist, see Microsoft.Common.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+</Project>

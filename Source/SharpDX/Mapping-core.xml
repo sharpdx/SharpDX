@@ -493,6 +493,7 @@
     <define interface="SharpDX.Direct3D.Blob"/>
     <define interface="SharpDX.Win32.PropertyBag"/>
     <define struct="SharpDX.Win32.SecurityAttributes" sizeof="16" />
+		<define struct="SharpDX.Win32.NativeMessage" sizeof="28" />
 
     <define struct="SharpDX.Win32.Variant" sizeof="16"/>
     <define struct="SharpDX.Win32.BitmapInfoHeader" sizeof="40"/>
@@ -586,6 +587,7 @@
     <bind from="SIZE" to="SharpDX.Size2" />
     <bind from="SIZE_T" to="SharpDX.PointerSize" marshal="System.IntPtr"/>
     <bind from="SSIZE_T" to="SharpDX.PointerSize" marshal="System.IntPtr"/>
+		<bind from="MSG" to="SharpDX.Win32.NativeMessage" />
 
     <bind from="SECURITY_ATTRIBUTES" to="SharpDX.Win32.SecurityAttributes"/>
     

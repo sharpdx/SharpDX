@@ -1,4 +1,6 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,23 +19,5 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
-#if WIN8METRO
-using System.IO;
-using Windows.Storage.Streams;
-
-namespace SharpDX.IO
-{
-    public static class StreamExtensions
-    {
-        public static IRandomAccessStream AsRandomAccessStream(this Stream stream)
-        {
-            // This is bad, as we are reading the whole input stream in memory, but better than nothing.
-            var randomStream = new InMemoryRandomAccessStream();
-            stream.CopyTo(randomStream.AsStream());
-            randomStream.Seek(0);
-            return randomStream;
-        }
-    }
-}
-#endif
+-->
+<comments></comments>

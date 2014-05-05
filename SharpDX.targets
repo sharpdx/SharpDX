@@ -37,6 +37,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
     <!--But a future version may provide compression/rescale on the fly, so we need to introduce it now -->
     <!--in order to keep project compatible-->
     <AvailableItemName Include="ToolkitTexture"></AvailableItemName>
+    <AvailableItemName Include="ToolkitAudio"></AvailableItemName>
   </ItemGroup>
 
   <!-- Global property most of them are overridable in the project including this project file -->
@@ -52,6 +53,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework' and $(TargetFrameworkVersion.Contains('v4'))">$(SharpDXDirectXVersion)-net40</SharpDXPlatform>
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETCore'">$(SharpDXDirectXVersion)-winrt</SharpDXPlatform>
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == 'WindowsPhone' and $(TargetFrameworkVersion.Contains('v8'))">DirectX11_1-wp8-$(Platform)</SharpDXPlatform>
+    <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetPlatformIdentifier)' == 'WindowsPhoneApp' and '$(TargetPlatformVersion)' == '8.1'">DirectX11_2-wp81</SharpDXPlatform>
 
     <!-- Variable used to select the platform used for the tool at compile time - default to Win8Desktop-net40 -->
     <SharpDXPlatformTool Condition="'$(SharpDXPlatformTool)' == ''">DirectX11-net40</SharpDXPlatformTool>
@@ -142,7 +144,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
   </ItemGroup>
 
   <!-- If we are on desktop or WinRT, we can safely add a reference to Direct2D1 -->
-  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\SharpDX.Direct2D1.dll') and ('$(TargetFrameworkIdentifier)' == '.NETFramework' or '$(TargetFrameworkIdentifier)' == '.NETCore')">
+  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\SharpDX.Direct2D1.dll') and ('$(TargetFrameworkIdentifier)' == '.NETFramework' or '$(TargetFrameworkIdentifier)' == '.NETCore' or '$(TargetPlatformIdentifier)' == 'WindowsPhoneApp')">
     <Reference Include="SharpDX.Direct2D1">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SharpDXSdkBinDir)\SharpDX.Direct2D1.dll</HintPath>
@@ -168,6 +170,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
   <UsingTask TaskName="SharpDX.Toolkit.CompilerDependencyTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
   <UsingTask TaskName="SharpDX.Toolkit.ModelCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
   <UsingTask TaskName="SharpDX.Toolkit.TextureCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
+  <UsingTask TaskName="SharpDX.Toolkit.AudioCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
 
   <!-- Plugs all dependency listing in AssignTargetPathsDependsOn - in order to support generated output to be copied as part of the build  --> 
   <PropertyGroup>
@@ -199,7 +202,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
         ProjectDirectory="$(ProjectDir)"
         IntermediateDirectory="$(IntermediateOutputPath)"
         Debug="$(ToolkitFxcDebugOption)"
-        Files="@(ToolkitFxc);@(ToolkitFont);@(ToolkitModel);@(ToolkitTexture)"
+        Files="@(ToolkitFxc);@(ToolkitFont);@(ToolkitModel);@(ToolkitTexture);@(ToolkitAudio)"
         RootNamespace="$(RootNamespace)"
         >
         <Output TaskParameter="ContentFiles" ItemName="TkContent"/>
@@ -259,5 +262,15 @@ It compiles all files of type ToolkitFxc/ToolkitFont
         RootNamespace="$(RootNamespace)"
         >
     </TextureCompilerTask>
+
+    <AudioCompilerTask
+        ProjectDirectory="$(ProjectDir)"
+        IntermediateDirectory="$(IntermediateOutputPath)"
+        DynamicCompiling="$(ToolkitFxcDynamicCompilingOption)"
+        Debug="$(ToolkitFxcDebugOption)"
+        Files="@(ToolkitAudio)"
+        RootNamespace="$(RootNamespace)"
+        >
+    </AudioCompilerTask>
   </Target>
 </Project>

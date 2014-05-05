@@ -219,10 +219,13 @@ namespace SharpDX.Toolkit
             if (deviceChangeChangedVisible)
                 Visible = oldVisible;
 
-            deviceChangeWillBeFullScreen = new bool?();
-
             if (gameForm != null)
+            {
                 gameForm.ClientSize = new Size(clientWidth, clientHeight);
+                gameForm.IsFullscreen = deviceChangeWillBeFullScreen.Value;
+            }
+
+            deviceChangeWillBeFullScreen = null;
         }
 
         /// <inheritdoc />

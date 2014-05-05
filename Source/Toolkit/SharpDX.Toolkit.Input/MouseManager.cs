@@ -93,6 +93,23 @@ namespace SharpDX.Toolkit.Input
         }
 
         /// <summary>
+        /// Updates the mouse states.
+        /// </summary>
+        /// <param name="gameTime">Not used.</param>
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            state = nextState;
+
+            nextState.leftButton.ResetEvents();
+            nextState.middleButton.ResetEvents();
+            nextState.rightButton.ResetEvents();
+            nextState.xButton1.ResetEvents();
+            nextState.xButton2.ResetEvents();
+        }
+
+        /// <summary>
         /// Handler for <see cref="MousePlatform.MouseDown"/> event
         /// </summary>
         /// <param name="button">The pressed button</param>
@@ -152,6 +169,11 @@ namespace SharpDX.Toolkit.Input
             }
         }
 
+        /// <summary>
+        /// Computes the next state from the provided button sate.
+        /// </summary>
+        /// <param name="state">The current button state.</param>
+        /// <param name="isDown">A value indicating whether the button is pressed or not.</param>
         private static void HandleState(ref ButtonState state, bool isDown)
         {
             if(isDown)
@@ -169,19 +191,6 @@ namespace SharpDX.Toolkit.Input
                 state.Down = false;
                 state.Pressed = false;
             }
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-
-            state = nextState;
-
-            nextState.leftButton.ResetEvents();
-            nextState.middleButton.ResetEvents();
-            nextState.rightButton.ResetEvents();
-            nextState.xButton1.ResetEvents();
-            nextState.xButton2.ResetEvents();
         }
     }
 }

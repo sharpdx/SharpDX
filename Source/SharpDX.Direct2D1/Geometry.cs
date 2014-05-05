@@ -335,7 +335,7 @@ namespace SharpDX.Direct2D1
         /// <param name="geometrySink"> The <see cref="SharpDX.Direct2D1.SimplifiedGeometrySink"/> to which the simplified geometry is appended. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
         /// <unmanaged>HRESULT Simplify([None] D2D1_GEOMETRY_SIMPLIFICATION_OPTION simplificationOption,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] FLOAT flatteningTolerance,[In] ID2D1SimplifiedGeometrySink* geometrySink)</unmanaged>
-        public void Simplify(SharpDX.Direct2D1.GeometrySimplificationOption simplificationOption, GeometrySink geometrySink)
+        public void Simplify(SharpDX.Direct2D1.GeometrySimplificationOption simplificationOption, SimplifiedGeometrySink geometrySink)
         {
             Simplify(simplificationOption, null, FlatteningTolerance, geometrySink);
         }
@@ -348,7 +348,7 @@ namespace SharpDX.Direct2D1
         /// <param name="geometrySink"> The <see cref="SharpDX.Direct2D1.SimplifiedGeometrySink"/> to which the simplified geometry is appended. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
         /// <unmanaged>HRESULT Simplify([None] D2D1_GEOMETRY_SIMPLIFICATION_OPTION simplificationOption,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] FLOAT flatteningTolerance,[In] ID2D1SimplifiedGeometrySink* geometrySink)</unmanaged>
-        public void Simplify(SharpDX.Direct2D1.GeometrySimplificationOption simplificationOption, float flatteningTolerance, GeometrySink geometrySink)
+        public void Simplify(SharpDX.Direct2D1.GeometrySimplificationOption simplificationOption, float flatteningTolerance, SimplifiedGeometrySink geometrySink)
         {
             Simplify(simplificationOption, null, flatteningTolerance, geometrySink);
         }
@@ -362,7 +362,7 @@ namespace SharpDX.Direct2D1
         /// <param name="geometrySink"> The <see cref="SharpDX.Direct2D1.SimplifiedGeometrySink"/> to which the simplified geometry is appended. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
         /// <unmanaged>HRESULT Simplify([None] D2D1_GEOMETRY_SIMPLIFICATION_OPTION simplificationOption,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] FLOAT flatteningTolerance,[In] ID2D1SimplifiedGeometrySink* geometrySink)</unmanaged>
-        public void Simplify(SharpDX.Direct2D1.GeometrySimplificationOption simplificationOption, SharpDX.Matrix3x2? worldTransform, float flatteningTolerance, GeometrySink geometrySink)
+        public void Simplify(SharpDX.Direct2D1.GeometrySimplificationOption simplificationOption, SharpDX.Matrix3x2? worldTransform, float flatteningTolerance, SimplifiedGeometrySink geometrySink)
         {
             this.Simplify_(simplificationOption, worldTransform, flatteningTolerance, GeometrySinkShadow.ToIntPtr(geometrySink));
         }

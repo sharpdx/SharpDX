@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -14,6 +14,9 @@
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>Audio.WinRT_TemporaryKey.pfx</PackageCertificateKeyFile>
     <PackageCertificateThumbprint>42356864C79E0681298576D795E9BC80AB4805C6</PackageCertificateThumbprint>
+    <TargetPlatformVersion>8.1</TargetPlatformVersion>
+    <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
+    <TargetFrameworkVersion />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -123,14 +126,13 @@
     <Content Include="Assets\StoreLogo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\XAudio2\PlaySound\ergon.adpcm.wav">
+    <ToolkitAudio Include="..\..\..\XAudio2\PlaySound\ergon.adpcm.wav">
       <Link>Content\ergon.adpcm.wav</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\XAudio2\PlaySound\ergon.wav">
+    </ToolkitAudio>
+    <ToolkitAudio Include="..\..\..\XAudio2\PlaySound\ergon.wav">
       <Link>Content\ergon.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </ToolkitAudio>
     <ToolkitFont Include="..\..\Common\Audio\Content\Arial16.xml">
       <Link>Content\Arial16.xml</Link>
     </ToolkitFont>
@@ -142,17 +144,16 @@
     </ToolkitTexture>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\Common\Audio\Content\TestBank.xwb">
+    <ToolkitAudio Include="..\..\Common\Audio\Content\TestBank.xwb">
       <Link>Content\TestBank.xwb</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\Common\Audio\Content\TestBankXbox.xwb">
+    </ToolkitAudio>
+    <ToolkitAudio Include="..\..\Common\Audio\Content\TestBankXbox.xwb">
       <Link>Content\TestBankXbox.xwb</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </ToolkitAudio>
   </ItemGroup>
-  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
-    <VisualStudioVersion>11.0</VisualStudioVersion>
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
+    <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <Import Project="..\..\..\..\SharpDX.targets" />

@@ -1323,7 +1323,15 @@ namespace SharpDX
             comObject.NativePointer = localQuery.IUnknownPointer;
         }
 #else
-        // TODO THIS IS NOT TESTED under W8CORE
+        #if W8CORE
+        [DllImport("api-ms-win-core-com-l1-1-0.dll", ExactSpelling = true, EntryPoint = "CoCreateInstanceFromApp", PreserveSig = true)]
+        private static extern Result CoCreateInstanceFromApp([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, 
+            IntPtr pUnkOuter, 
+            CLSCTX dwClsContext, 
+            IntPtr reserved,
+            int countMultiQuery,
+            ref MultiQueryInterface query);
+        #else
         [DllImport("ole32.dll", ExactSpelling = true, EntryPoint = "CoCreateInstanceFromApp", PreserveSig = true)]
         private static extern Result CoCreateInstanceFromApp([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, 
             IntPtr pUnkOuter, 
@@ -1331,6 +1339,7 @@ namespace SharpDX
             IntPtr reserved,
             int countMultiQuery,
             ref MultiQueryInterface query);
+         #endif
 
         internal unsafe static void CreateComInstance(Guid clsid, CLSCTX clsctx, Guid riid, ComObject comObject)
         {
@@ -1396,8 +1405,13 @@ namespace SharpDX
             get { return closeHandle ?? (closeHandle = (CloseHandleDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.CloseHandle()), typeof(CloseHandleDelegate))); }
         }
 #else
+#if W8CORE
+        [DllImport("api-ms-win-core-handle-l1-1-0.dll", EntryPoint = "CloseHandle", SetLastError = true)]
+        internal static extern bool CloseHandle(IntPtr handle);
+#else
         [DllImport("kernel32.dll", EntryPoint = "CloseHandle", SetLastError = true)]
         internal static extern bool CloseHandle(IntPtr handle);
+#endif
 #endif
 
         /// <summary>
@@ -1422,8 +1436,11 @@ namespace SharpDX
         {
             get { return loadLibrary_ ?? (loadLibrary_ = (LoadLibraryDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.LoadPackagedLibrary()), typeof(LoadLibraryDelegate))); }
         }
-#elif WIN8METRO
+#elif WIN8METRO && !WP81
         [DllImport("kernel32", EntryPoint = "LoadPackagedLibrary", SetLastError = true)]
+        static extern IntPtr LoadLibrary_(string lpFileName, int reserved = 0);
+#elif WP81
+        [DllImport("PhoneAppModelHost", EntryPoint = "LoadPackagedLibrary", SetLastError = true)]
         static extern IntPtr LoadLibrary_(string lpFileName, int reserved = 0);
 #else
         [DllImport("kernel32", EntryPoint = "LoadLibrary", SetLastError = true, CharSet = CharSet.Unicode)]
@@ -1455,10 +1472,16 @@ namespace SharpDX
             get { return getProcAddress_ ?? (getProcAddress_ = (GetProcAddressDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.GetProcAddress()), typeof(GetProcAddressDelegate))); }
         }
 #else
+#if W8CORE
+        [DllImport("api-ms-win-core-libraryloader-l1-1-1.dll", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+        static extern IntPtr GetProcAddress_(IntPtr hModule, string procName);
+#else
         // http://www.pinvoke.net/default.aspx/kernel32.getprocaddress
         // http://stackoverflow.com/questions/3754264/c-sharp-getprocaddress-returns-zero
         [DllImport("kernel32", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
         static extern IntPtr GetProcAddress_(IntPtr hModule, string procName);
+#endif
+
 #endif
 
         /// <summary>

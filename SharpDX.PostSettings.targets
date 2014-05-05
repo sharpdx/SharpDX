@@ -8,7 +8,6 @@
   <!--Include automatically SharpDXWP8 interop assembly-->
   <ItemGroup>
     <ProjectReference Condition="'$(SharpDXWP8)' == 'true'" Include="$(SolutionDir)Source\SharpDX.WP8\SharpDX.WP8.vcxproj">
-      <!--<Project>{c6ae9847-3089-4fe4-91df-b1a3ee115cf4}</Project>-->
       <Name>SharpDX.WP8</Name>
     </ProjectReference>
   </ItemGroup>
@@ -20,51 +19,30 @@
   <Import Condition="'$(SharpDXWP8)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Condition="'$(SharpDXWP8)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
 
+  <PropertyGroup Condition="'$(SharpDXWP81)' == 'true'">
+    <TargetPlatformIdentifier>WindowsPhoneApp</TargetPlatformIdentifier>
+  </PropertyGroup>
+  
+  <!--Import Windows Phone 8.1 targets only for WP81 -->
+  <Import Condition="'$(SharpDXWP81)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+
   <!--Import standard targets for all non-Windows(Phone) 8 platforms-->
   <Import Condition="'$(SharpDXWin8Core)' == 'false'" Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Net20Release|AnyCPU' ">
-    <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-    
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Net40Release|AnyCPU' ">
-    <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DIRECTX11_2Release|AnyCPU' ">
-    <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
-    <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|x86'">
-    <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|ARM'">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
   <ProjectExtensions/>
-  
-  <!-- Don't use anymore task, as msbuild is keeping a lock on the file on the 1st build and we are not able to reapply SharpCLI once it is created
-   <UsingTask AssemblyFile="$(SolutionDir)Source\Bin\SharpCli.exe" TaskName="SharpCli.InteropBuilderTask" /> -->
 
   <Target Name="AfterBuild">
     <Exec Command='"$(SolutionDir)\Source\Bin\SharpCLI.exe" "$(TargetPath)"'/>
-    <!-- <InteropBuilderTask FileName="$(TargetPath)"/> -->
 
     <GetFrameworkSdkPath>
       <Output TaskParameter="Path" PropertyName="FrameworkSdkPath" />
     </GetFrameworkSdkPath>
 
-    <Exec Command='"$(FrameworkSdkPath)\bin\NETFX 4.0 Tools\x64\sn.exe" -Ra $(TargetPath) $(SolutionDir)sharpdx.snk' Condition="'$(SharpDXSign)' == 'true'"/>
+    <Exec Command='"$(FrameworkSdkPath)\bin\NETFX 4.5.1 Tools\x64\sn.exe" -Ra $(TargetPath) $(SolutionDir)sharpdx.snk' Condition="'$(SharpDXSign)' == 'true'"/>
 
     <!-- Copy back *.dll from bin/Debug|Release to obj/Debug/Release directory -->
     <Copy SourceFiles="@(MainAssembly)" DestinationFolder="$(IntermediateOutputPath)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"/>

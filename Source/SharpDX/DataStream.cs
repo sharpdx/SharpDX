@@ -145,6 +145,14 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="DataStream"/> class.
+        /// </summary>
+        /// <param name="dataPointer">The data pointer.</param>
+        public DataStream(DataPointer dataPointer) : this(dataPointer.Pointer, dataPointer.Size, true, true)
+        {
+        }
+
+        /// <summary>
         ///   Initializes a new instance of the <see cref = "SharpDX.DataStream" /> class, using an unmanaged buffer as a backing store.
         /// </summary>
         /// <param name = "userBuffer">A pointer to the buffer to be used as a backing store.</param>

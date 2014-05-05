@@ -272,7 +272,8 @@ namespace SharpDX.Toolkit.Graphics
                 // Recalculate parameter resource index
                 if (!parameter.IsValueType)
                 {
-                    parameter.Offset = resourceIndex++;
+                    parameter.Offset = resourceIndex;
+                    resourceIndex += parameter.ElementCount;
                 }
 
                 // Set the default values 

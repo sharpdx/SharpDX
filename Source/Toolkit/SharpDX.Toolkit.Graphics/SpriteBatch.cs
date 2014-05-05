@@ -717,6 +717,9 @@ namespace SharpDX.Toolkit.Graphics
                     var mipIndex = shaderResourceView.Description.Texture1D.MostDetailedMip;
                     textureInfo.Width = Math.Max(1, textureInfo.Width >> mipIndex);
                     textureInfo.Height = Math.Max(1, textureInfo.Height >> mipIndex);
+
+                    // Release the resource retrieved by shaderResourceView.GetResource(out resourcePtr);
+                    Marshal.Release(resourcePtr);
                 }
 
                 textureInfos.Add(shaderResourceView, textureInfo);
