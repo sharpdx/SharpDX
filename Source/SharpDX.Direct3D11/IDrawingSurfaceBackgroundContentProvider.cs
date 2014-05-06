@@ -78,6 +78,14 @@ namespace SharpDX.Direct3D11
         private DeviceContext context;
         private RenderTargetView renderTargetView;
 
+        private void ClearPointers()
+        {
+            CleanPointer(ref host);
+            CleanPointer(ref device);
+            CleanPointer(ref context);
+            CleanPointer(ref renderTargetView);
+        }
+
         /// <summary>
         /// Return a pointer to the unmanaged version of this callback.
         /// </summary>
@@ -109,9 +117,9 @@ namespace SharpDX.Direct3D11
                     var callback = (IDrawingSurfaceBackgroundContentProviderNative)shadow.Callback;
 
                     // Precache values.
+                    shadow.ClearPointers();
                     shadow.host = new DrawingSurfaceRuntimeHost(hostPtr);
                     shadow.device = new Device(hostDevicePtr);
-                    shadow.context = shadow.device.ImmediateContext;
 
                     callback.Connect(shadow.host, shadow.device);
                 }
@@ -130,6 +138,7 @@ namespace SharpDX.Direct3D11
                 var shadow = ToShadow<DrawingSurfaceBackgroundContentProviderShadow>(thisPtr);
                 var callback = (IDrawingSurfaceBackgroundContentProviderNative)shadow.Callback;
                 callback.Disconnect();
+                shadow.ClearPointers();
             }
 
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
@@ -161,14 +170,23 @@ namespace SharpDX.Direct3D11
                     if (hostDevice == IntPtr.Zero || hostDeviceContext == IntPtr.Zero || hostRenderTargetView == IntPtr.Zero)
                         throw new ArgumentException();
 
-                    if (shadow.device.NativePointer != hostDevice)
+                    if(shadow.device == null || shadow.device.NativePointer != hostDevice)
+                    {
+                        CleanPointer(ref shadow.device);
                         shadow.device = new Device(hostDevice);
+                    }
 
-                    if (shadow.context.NativePointer != hostDeviceContext)
+                    if(shadow.context == null || shadow.context.NativePointer != hostDeviceContext)
+                    {
+                        CleanPointer(ref shadow.context);
                         shadow.context = new DeviceContext(hostDeviceContext);
+                    }
 
-                    if (shadow.renderTargetView == null || shadow.renderTargetView.NativePointer != hostRenderTargetView)
+                    if(shadow.renderTargetView == null || shadow.renderTargetView.NativePointer != hostRenderTargetView)
+                    {
+                        CleanPointer(ref shadow.renderTargetView);
                         shadow.renderTargetView = new RenderTargetView(hostRenderTargetView);
+                    }
 
                     callback.Draw(shadow.device, shadow.context, shadow.renderTargetView);
                 }
@@ -178,6 +196,16 @@ namespace SharpDX.Direct3D11
                 }
                 return Result.Ok.Code;
             }
+
+        }
+
+        private static void CleanPointer<T>(ref T comObject) where T : ComObject
+        {
+            if (comObject != null)
+            {
+                comObject.NativePointer = IntPtr.Zero;
+            }
+            comObject = null;
         }
 
         protected override CppObjectVtbl GetVtbl

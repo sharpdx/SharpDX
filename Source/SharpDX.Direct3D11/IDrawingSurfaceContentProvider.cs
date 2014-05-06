@@ -77,10 +77,13 @@ namespace SharpDX.Direct3D11
         private static readonly DrawingSurfaceContentProviderVtbl Vtbl = new DrawingSurfaceContentProviderVtbl();
 
         private DrawingSurfaceRuntimeHost host;
-        //private Device device;
-        //private DeviceContext context;
-        //private RenderTargetView renderTargetView;
         private DrawingSurfaceSynchronizedTexture synchronizedTexture;
+
+        private void ClearPointers()
+        {
+            ClearPointer(ref host);
+            ClearPointer(ref synchronizedTexture);
+        }
 
         /// <summary>
         /// Return a pointer to the unmanaged version of this callback.
@@ -113,9 +116,8 @@ namespace SharpDX.Direct3D11
                     var callback = (IDrawingSurfaceContentProviderNative)shadow.Callback;
 
                     // Precache values.
+                    shadow.ClearPointers();
                     shadow.host = new DrawingSurfaceRuntimeHost(hostPtr);
-                    //shadow.device = new Device(hostDevicePtr);
-                    //shadow.context = shadow.device.ImmediateContext;
 
                     callback.Connect(shadow.host);
                 }
@@ -134,6 +136,7 @@ namespace SharpDX.Direct3D11
                 var shadow = ToShadow<DrawingSurfaceContentProviderShadow>(thisPtr);
                 var callback = (IDrawingSurfaceContentProviderNative)shadow.Callback;
                 callback.Disconnect();
+                shadow.ClearPointers();
             }
 
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
@@ -184,6 +187,15 @@ namespace SharpDX.Direct3D11
                 }
                 return Result.Ok.Code;
             }
+        }
+
+        private static void ClearPointer<T>(ref T comObject) where T : ComObject
+        {
+            if (comObject != null)
+            {
+                comObject.NativePointer = IntPtr.Zero;
+            }
+            comObject = null;
         }
 
         protected override CppObjectVtbl GetVtbl
