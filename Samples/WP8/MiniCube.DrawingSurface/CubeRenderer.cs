@@ -31,7 +31,7 @@ namespace MiniTriApp
 {
     /// <summary>
     /// This is a port of Direct3D C++ WP8 sample. This port is not clean and complete. 
-    /// The preferred way to access Direct3D on WP8 is by using SharpDX.Toolkit.
+    /// DO NOT USE IT AS A STARTING POINT FOR DEVELOPING A PRODUCTION QUALITY APPLICATION
     /// </summary>
     class CubeRenderer : SharpDXBase
     {
@@ -54,6 +54,11 @@ namespace MiniTriApp
         public override void CreateDeviceResources()
         {
             base.CreateDeviceResources();
+
+            Utilities.Dispose(ref _vertexShader);
+            Utilities.Dispose(ref _pixelShader);
+            Utilities.Dispose(ref _vertexLayout);
+            Utilities.Dispose(ref _constantBuffer);
 
             var path = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
 

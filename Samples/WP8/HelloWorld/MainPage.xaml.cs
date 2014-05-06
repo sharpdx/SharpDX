@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System.Security;
+using System.Windows;
 
 namespace MiniTriApp
 {
@@ -28,7 +29,7 @@ namespace MiniTriApp
     /// </summary>
     public partial class MainPage
     {
-        private readonly SimpleRenderer d3dRenderer = new SimpleRenderer();
+        private SimpleRenderer d3dRenderer;
 
         // Constructor
         [SecuritySafeCritical]
@@ -36,8 +37,17 @@ namespace MiniTriApp
         {
             InitializeComponent();
 
-            // Use the Direct3D SimpleRenderer class to display a content into the DrawingSurface
-            DrawingSurfaceBackground.SetBackgroundContentProvider(d3dRenderer);
+        }
+
+        private void DrawingSurfaceBackground_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (d3dRenderer == null)
+            {
+                d3dRenderer = new SimpleRenderer();
+
+                // Use the Direct3D SimpleRenderer class to display a content into the DrawingSurface
+                DrawingSurfaceBackground.SetBackgroundContentProvider(d3dRenderer);
+            }
         }
     }
 }

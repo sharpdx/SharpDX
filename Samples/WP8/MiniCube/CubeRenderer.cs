@@ -31,7 +31,7 @@ namespace MiniTriApp
 {
     /// <summary>
     /// This is a port of Direct3D C++ WP8 sample. This port is not clean and complete. 
-    /// The preferred way to access Direct3D on WP8 is by using SharpDX.Toolkit.
+    /// DO NOT USE IT AS A STARTING POINT FOR DEVELOPING A PRODUCTION QUALITY APPLICATION
     /// </summary>
     class CubeRenderer : SharpDXBase
     {
@@ -54,6 +54,11 @@ namespace MiniTriApp
         {
             base.CreateDeviceResources();
 
+            Utilities.Dispose(ref _vertexShader);
+            Utilities.Dispose(ref _pixelShader);
+            Utilities.Dispose(ref _vertexLayout);
+            Utilities.Dispose(ref _constantBuffer);
+
             var path = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
 
             // Loads vertex shader bytecode
@@ -69,7 +74,6 @@ namespace MiniTriApp
                         new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                         new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
                     });
-
 
             // Instantiate Vertex buffer from vertex data
             var vertices = SharpDX.Direct3D11.Buffer.Create(_device, BindFlags.VertexBuffer, new[]
@@ -120,7 +124,7 @@ namespace MiniTriApp
             _vertexBufferBinding = new VertexBufferBinding(vertices, Utilities.SizeOf<Vector4>() * 2, 0);
 
             // Create Constant Buffer
-            _constantBuffer = ToDispose(new SharpDX.Direct3D11.Buffer(_device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0));
+            _constantBuffer = new SharpDX.Direct3D11.Buffer(_device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
 
             _clock = new Stopwatch();
             _clock.Start();

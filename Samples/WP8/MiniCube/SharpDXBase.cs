@@ -17,11 +17,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
@@ -31,7 +26,7 @@ namespace MiniTriApp
     /// <summary>
     /// Helper class that initializes SharpDX APIs for 3D rendering.
     /// This is a port of Direct3D C++ WP8 sample. This port is not clean and complete. 
-    /// The preferred way to access Direct3D on WP8 is by using SharpDX.Toolkit.
+    /// DO NOT USE IT AS A STARTING POINT FOR DEVELOPING A PRODUCTION QUALITY APPLICATION
     /// </summary>
     internal abstract class SharpDXBase : Component
     {
@@ -42,23 +37,26 @@ namespace MiniTriApp
 
         public void Update(Device device, DeviceContext context, RenderTargetView renderTargetView)
         {
+            bool isNewDevice = false;
             if (device != _device)
             {
                 _device = device;
                 CreateDeviceResources();
+                isNewDevice = true;
             }
+            _deviceContext.ClearState();
 
             _deviceContext = context;
             _renderTargetview = renderTargetView;
 
-            CreateWindowSizeDependentResources();
+            CreateWindowSizeDependentResources(isNewDevice);
         }
 
         public virtual void CreateDeviceResources()
         {
         }
 
-        public virtual void CreateWindowSizeDependentResources()
+        public virtual void CreateWindowSizeDependentResources(bool isNewDevice)
         {
             var resource = _renderTargetview.Resource;
             using (var texture2D = new Texture2D(resource.NativePointer))
@@ -67,8 +65,8 @@ namespace MiniTriApp
                 var currentWidth = (int) _renderTargetSize.Width;
                 var currentHeight = (int) _renderTargetSize.Height;
 
-                if (currentWidth != texture2D.Description.Width &&
-                    currentHeight != texture2D.Description.Height)
+                if ((currentWidth != texture2D.Description.Width &&
+                    currentHeight != texture2D.Description.Height) || isNewDevice)
                 {
                     _renderTargetSize.Width = texture2D.Description.Width;
                     _renderTargetSize.Height = texture2D.Description.Height;
@@ -115,7 +113,7 @@ namespace MiniTriApp
 	        _depthStencilView = null;
 	        _deviceContext.Flush();
 
-	        CreateWindowSizeDependentResources();
+	        CreateWindowSizeDependentResources(false);
         }
 
         public abstract void Render();

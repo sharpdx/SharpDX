@@ -26,7 +26,7 @@ namespace MiniTriApp
 {
     /// <summary>
     /// This is a port of Direct3D C++ WP8 sample. This port is not clean and complete. 
-    /// The preferred way to access Direct3D on WP8 is by using SharpDX.Toolkit.
+    /// DO NOT USE IT AS A STARTING POINT FOR DEVELOPING A PRODUCTION QUALITY APPLICATION
     /// </summary>
     class BasicTimer
     {

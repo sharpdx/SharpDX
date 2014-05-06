@@ -30,8 +30,7 @@ namespace MiniTriApp
 {
     /// <summary>
     /// Helper class that initializes SharpDX APIs for 3D rendering.
-    /// This is a port of Direct3D C++ WP8 sample. This port is not clean and complete. 
-    /// The preferred way to access Direct3D on WP8 is by using SharpDX.Toolkit.
+    /// DO NOT USE IT AS A STARTING POINT FOR DEVELOPING A PRODUCTION QUALITY APPLICATION
     /// </summary>
     internal abstract class SharpDXBase : Component
     {

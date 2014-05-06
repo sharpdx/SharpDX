@@ -22,13 +22,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Phone.Info;
 using SharpDX.Direct3D11;
 
 namespace MiniTriApp
 {
     /// <summary>
     /// This is a port of Direct3D C++ WP8 sample. This port is not clean and complete. 
-    /// The preferred way to access Direct3D on WP8 is by using SharpDX.Toolkit.
+    /// DO NOT USE IT AS A STARTING POINT FOR DEVELOPING A PRODUCTION QUALITY APPLICATION
     /// </summary>
     internal class SharpDXContentProvider : DrawingSurfaceContentProviderNativeBase
     {
@@ -86,10 +87,7 @@ namespace MiniTriApp
             _textureSubRectangle.Bottom = surfaceSize.Height;
 
 
-            //HOW DO YOU DO A Microsoft::WRL::ComPtr<T>   CopyTo ?????
-            //m_synchronizedTexture.CopyTo(synchronizedTexture);
             synchronizedTexture = _synchronizedTexture;
-
             textureSubRectangle = _textureSubRectangle;     
 
             //something is going wrong here as the second time thru the BeginDraw consumes 
