@@ -40,17 +40,14 @@
     <ifndef name="WP8">
 
       <ifdef name="WP81">
-        <!--<include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides\shared</include-dir>
-        <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides\um</include-dir>
-        <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides</include-dir>-->
-        <!--<include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides\wp8</include-dir>-->
         <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides</include-dir>
-        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\Setup\VC\ProductDir;Include</include-dir>
-        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows Phone\v8.1\InstallationFolder;Include</include-dir>
-        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows Phone\v8.1\InstallationFolder;Include\abi</include-dir>
-        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows Phone\v8.1\InstallationFolder;Include\mincore</include-dir>
-        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows Phone\v8.1\InstallationFolder;Include\minwin</include-dir>
-        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows Phone\v8.1\InstallationFolder;Include\wrl</include-dir>
+        <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides\wp81</include-dir>
+        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\Setup\VC\ProductDir;include</include-dir>
+        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include</include-dir>
+        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include\abi</include-dir>
+        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include\mincore</include-dir>
+        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include\minwin</include-dir>
+        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include\wrl</include-dir>
       </ifdef>
 
       <ifndef name="WP81">
@@ -119,6 +116,13 @@
     </include-prolog>
   </ifdef>
 
+  <ifdef name="WP81">
+    <include-prolog>
+      // For WP8.1 we need to force to use include headers for MetroApp only
+      #define WINAPI_FAMILY WINAPI_FAMILY_PHONE_APP
+    </include-prolog>
+  </ifdef>
+
   <!-- Include prolog for GCC-XML -->
   <include-prolog>
     // Use unicode
@@ -138,7 +142,7 @@
       enum __SAL_YesNo {};
     </include-prolog>
   </ifndef>
-  
+
   <!-- Reference Mapping Files -->
 
   <file>SharpDX\Mapping.xml</file>
@@ -146,7 +150,7 @@
   <ifndef name="WP8">
     <file>SharpDX.D3DCompiler\Mapping.xml</file>
   </ifndef>
-  
+
   <file>Mapping.Direct3D1x.xml</file>
 
   <ifndef name="WP8">
@@ -154,7 +158,7 @@
       <file>SharpDX.Direct3D10\Mapping.xml</file>
     </ifndef>
   </ifndef>
-  
+
   <file>SharpDX.Direct3D11\Mapping.xml</file>
 
   <ifdef name="WP8">
@@ -170,7 +174,7 @@
       <file>SharpDX.DirectManipulation\Mapping.xml</file>
     </ifdef>
   </ifndef>
-  
+
   <ifndef name="WP8">
     <file>SharpDX.Direct2D1\Mapping.xml</file>
     <ifndef name="DIRECTX11_1">
@@ -180,8 +184,10 @@
       <file>SharpDX.XACT3\Mapping.xml</file>
     </ifndef>
     <file>SharpDX.XAudio2\Mapping.xml</file>
-    <file>SharpDX.XInput\Mapping.xml</file>
-    <file>SharpDX.RawInput\Mapping.xml</file>
+    <ifndef name="WP81">
+      <file>SharpDX.XInput\Mapping.xml</file>
+      <file>SharpDX.RawInput\Mapping.xml</file>
+    </ifndef>
     <file>SharpDX.MediaFoundation\Mapping.xml</file>
   </ifndef>
 </config>

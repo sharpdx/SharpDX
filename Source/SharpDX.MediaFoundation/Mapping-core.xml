@@ -35,26 +35,31 @@
   <assembly>SharpDX.MediaFoundation</assembly>
 
   <ifndef name="WP8">
-    <include file="evr.h" attach="true">
-      <pre>
-        #define __AUDIODEFS_INCLUDED__
-      </pre>
-    </include>
-
     <ifndef name="DIRECTX11_1">
       <include file="evr9.h" attach="true"/>
     </ifndef>
 
-    <include file="mferror.h" attach="true"/>
-    <include file="mfmp2dlna.h" attach="true"/>
-    <include file="mfplay.h" attach="true"/>
-    <include file="mfreadwrite.h" attach="true"/>
-    <include file="uuids.h" attach="true"/>
-    <include file="wmcontainer.h" attach="true"/>
+    <ifndef name="WP81">
+      <include file="evr.h" attach="true">
+        <pre>
+          #define __AUDIODEFS_INCLUDED__
+        </pre>
+      </include>
+      <include file="mfmp2dlna.h" attach="true"/>
+      <include file="mfplay.h" attach="true"/>
+      <include file="uuids.h" attach="true"/>
+      <include file="wmcontainer.h" attach="true"/>
+    </ifndef>
   </ifndef>
 
   <include file="mfapi.h" attach="true"/>
   <include file="mfidl.h" attach="true"/>
+
+  <ifndef name="WP8">
+    <include file="mferror.h" attach="true"/>
+    <include file="mfreadwrite.h" attach="true"/>
+  </ifndef>
+  
   <include file="mfobjects.h" attach="true"/>
   <include file="mftransform.h" attach="true"/>
   <include file="mediaobj.h" attach="true"/>
@@ -79,10 +84,10 @@
     <context>uuids</context>
     <context>mferror</context>
   </context-set>
-  
+
   <extension>
     <context id="mediafoundation-all"/>
-    
+
     <define struct="SharpDX.MediaFoundation.Mpeg1VideoInformation" sizeof="32" />
     <define struct="SharpDX.MediaFoundation.Mpeg2VideoInformation" sizeof="32" />
     <define struct="SharpDX.MediaFoundation.VideoInformationHeader2" sizeof="32" />
@@ -600,14 +605,11 @@
 
     <create-cpp enum="MFASYNC_CALLBACK_FLAGS" macro="MFASYNC_.*_CALLBACK"/>
     <create-cpp enum="MFASYNC_CALLBACK_QUEUE" macro="MFASYNC_CALLBACK_QUEUE_.*"/>
-    
+
     <define enum="SharpDX.MediaFoundation.MediaEventTypes" sizeof="4" />
     <context-clear />
   </extension>
 
-  
-  
-  
   <bindings>
     <bind from="MEDIA_EVENT_TYPES" to="SharpDX.MediaFoundation.MediaEventTypes"/>
     <bind from="MPEG1VIDEOINFO" to="SharpDX.MediaFoundation.Mpeg1VideoInformation"/>
@@ -627,12 +629,12 @@
     <map enum="MF(.*)" name-tmp="$1"/>
 
     <remove enum-item=".*_Mask"/>
-    
+
     <map enum="MF_TOPOSTATUS" name="TopologyStatus"/>
-    
+
     <map enum="MFASYNC_CALLBACK_FLAGS" name="AsyncCallbackFlags" none="true" flags="true"/>
     <map enum-item="MFASYNC_(.*)_CALLBACK" name-tmp="$1"/>
-         
+
     <map enum="MFASYNC_CALLBACK_QUEUE" name="WorkQueueType"/>
     <map enum-item="MFASYNC_CALLBACK_QUEUE_(.*)" name-tmp="$1"/>
 
@@ -667,7 +669,7 @@
     <remove enum-item="MF2DBuffer_LockFlags_ForceDWORD"/>
 
     <map enum="MF3DVideoOutputType" name="Video3DOutputType"/>
-    
+
     <map enum="ASF_SELECTION_STATUS" name="AsfSelectionStatus"/>
     <map enum-item="ASF_STATUS_(.*)" name-tmp="$1"/>
 
@@ -694,7 +696,7 @@
     -->
     <map interface="IMF(.*)" name="$1"/>
     <remove inteface="MFASYNCRESULT" />
-    
+
     <map interface="IDMOQualityControl" name="QualityControl"/>
     <map interface="IDMOVideoOutputOptimizations" name="VideoOutputOptimizations"/>
 
@@ -768,7 +770,7 @@
     <map interface="IMFSampleGrabberSinkCallback" callback="true"/>
     <map interface="IMFSampleGrabberSinkCallback2" callback="true"/>
     <map interface="IMFVideoPresenter" callback="true"/>
-    
+
     <map method="IMFDXGIDeviceManager::ResetDevice" visibility="internal"/>
     <map param="IMFDXGIDeviceManager::OpenDeviceHandle::phDevice" return="true"/>
     <map method="IMFDXGIDeviceManager::UnlockDevice" visibility="internal"/>
@@ -776,7 +778,7 @@
     <map param="IMFDXGIDeviceManager::GetVideoService::ppService" return="true"/>
 
     <map interface="IMFByteStream" name="IByteStream" callback-visibility="public" callback="true" callback-dual="true" callback-name="ByteStream"/>
-    
+
     <map interface="IMFAsyncCallback" name="IAsyncCallback" callback="true"/>
 
     <map interface="IMFAsyncCallbackLogging" name="IAsyncCallbackLogging" callback="true"/>
@@ -825,7 +827,7 @@
     <map method="IMFAsyncResult::.*" property="false" visibility="internal"/>
     <map param="IMFAsyncResult::GetState::ppunkState" type="void"/>
     <map method="IMFAsyncResult::GetObjectW" name="GetObject"/>
-    
+
     <map param="IMFMediaSession::SetTopology::dwSetTopologyFlags" type="MFSESSION_SETTOPOLOGY_FLAGS"/>
     <map param="IMFMediaEvent::GetType::pmet" type="MEDIA_EVENT_TYPES"/>
 
@@ -842,7 +844,7 @@
     <remove function="LPSAFEARRAY_.*"/>
 
     <map param="MFCreateSourceReader.*::pp.*" attribute="out fast"/>
-    
+
     <!-- Remove some functions with unsupported structs -->
     <remove function="MFInitMediaTypeFromVideoInfoHeader" />
     <remove function="MFInitMediaTypeFromMPEG1VideoInfo" />
@@ -871,7 +873,7 @@
     <map param="MFCreateAttributes::ppMFAttributes" attribute="out fast"/>
     <map param="MFCreateDXGIDeviceManager::ppDeviceManager" attribute="out fast"/>
     <map param="MFCreateMFByteStreamOnStreamEx::ppByteStream" attribute="out fast"/>
-    
+
     <map function="MFCreateSourceResolver" visibility="internal"/>
     <map param="MFCreateSourceResolver::ppISourceResolver" attribute="out fast"/>
 
@@ -886,9 +888,9 @@
 
     <map function="MFCreateWaveFormatExFromMFMediaType" visibility="internal"/>
     <map param="MFCreateWaveFormatExFromMFMediaType::ppWF" type="void"/>
-    
+
     <map param="MFCreateMediaType::ppMFType" attribute="out fast"/>
-    
+
     <map param="MFCreateSample::ppIMFSample" return="true"/>
     <map param="MFCreateMemoryBuffer::ppBuffer" return="true"/>
     <map param="MFCreateSinkWriterFromURL::ppSinkWriter" return="true"/>
@@ -993,7 +995,7 @@
 
     <map function="MFTEnumEx" visibility="internal"/>
     <map param="MFTEnumEx::pppMFTActivate" type="void" attribute="out"/>
-    
+
     <map param="IMFASFMultiplexer::GetNextPacket::pdwStatusFlags" type="ASF_STATUSFLAGS" attribute="out"/>
 
     <map method="IMFTransform::GetStreamIDs" visibility="internal" check ="false"/>
@@ -1003,7 +1005,7 @@
     <map method="IMFTransform::ProcessOutput" visibility="internal" check ="false"/>
     <map param="IMFTransform::ProcessOutput::dwFlags" type="_MFT_PROCESS_OUTPUT_FLAGS"/>
     <map param="IMFTransform::ProcessOutput::pdwStatus" type="_MFT_PROCESS_OUTPUT_STATUS" attribute="out"/>
-    
+
     <context-clear />
   </mapping>
 </config>

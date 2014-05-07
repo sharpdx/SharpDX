@@ -157,6 +157,9 @@ namespace SharpGen
             Macros.Add("WIN8METRO");
             Macros.Add("W8CORE");
 #endif
+#if WP81
+            Macros.Add("WP81");
+#endif
 #if WP8
             // Load configuration
             Macros.Add("WP8");
