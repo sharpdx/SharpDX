@@ -60,7 +60,7 @@ namespace SharpDX.Toolkit
         internal override GameWindow[] GetSupportedGameWindows()
         {
             return new GameWindow[] { new GameWindowDesktop()
-#if !W8CORE && NET35Plus && !DIRECTX11_1
+#if !W8CORE && NET35Plus
                 , new GameWindowDesktopWpf() 
 #endif
             };
