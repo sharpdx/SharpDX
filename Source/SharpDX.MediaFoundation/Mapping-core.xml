@@ -828,7 +828,9 @@
     
     <map param="IMFMediaSession::SetTopology::dwSetTopologyFlags" type="MFSESSION_SETTOPOLOGY_FLAGS"/>
     <map param="IMFMediaEvent::GetType::pmet" type="MEDIA_EVENT_TYPES"/>
-    
+
+    <map method="IMFSourceResolver::CreateObjectFromURL" visibility="internal"/>
+
     <!--
     // *****************************************************************
     // MediaFoundation Functions
@@ -869,6 +871,9 @@
     <map param="MFCreateAttributes::ppMFAttributes" attribute="out fast"/>
     <map param="MFCreateDXGIDeviceManager::ppDeviceManager" attribute="out fast"/>
     <map param="MFCreateMFByteStreamOnStreamEx::ppByteStream" attribute="out fast"/>
+    
+    <map function="MFCreateSourceResolver" visibility="internal"/>
+    <map param="MFCreateSourceResolver::ppISourceResolver" attribute="out fast"/>
 
     <map function="MFAddPeriodicCallback" visibility="internal"/>
 
