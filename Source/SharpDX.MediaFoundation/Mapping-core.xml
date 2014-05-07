@@ -59,7 +59,7 @@
     <include file="mferror.h" attach="true"/>
     <include file="mfreadwrite.h" attach="true"/>
   </ifndef>
-  
+
   <include file="mfobjects.h" attach="true"/>
   <include file="mftransform.h" attach="true"/>
   <include file="mediaobj.h" attach="true"/>
@@ -874,8 +874,14 @@
     <map param="MFCreateDXGIDeviceManager::ppDeviceManager" attribute="out fast"/>
     <map param="MFCreateMFByteStreamOnStreamEx::ppByteStream" attribute="out fast"/>
 
-    <map function="MFCreateSourceResolver" visibility="internal"/>
-    <map param="MFCreateSourceResolver::ppISourceResolver" attribute="out fast"/>
+    <ifndef name="WP81">
+      <map function="MFCreateSourceResolver" visibility="internal"/>
+      <map param="MFCreateSourceResolver::ppISourceResolver" attribute="out fast"/>
+      <map function="MFCreateSourceResolver" dll='"mf.dll"'/>
+    </ifndef>
+    <ifdef name="WP81">
+      <remove function="MFCreateSourceResolver"/>
+    </ifdef>
 
     <map function="MFAddPeriodicCallback" visibility="internal"/>
 
@@ -925,7 +931,7 @@
     <map function="MFCreateTopology" dll='"mf.dll"'/>
     <map function="MFCreateTopoLoader" dll='"mf.dll"'/>
     <map function="MFCreateStandardQualityManager" dll='"mf.dll"'/>
-    <map function="MFCreateSourceResolver" dll='"mf.dll"'/>
+
     <map function="MFCreateSoundEventSchemePlugin" dll='"mf.dll"'/>
     <map function="MFCreateSimpleTypeHandler" dll='"mf.dll"'/>
     <map function="MFCreateSequencerSourceRemoteStream" dll='"mf.dll"'/>
