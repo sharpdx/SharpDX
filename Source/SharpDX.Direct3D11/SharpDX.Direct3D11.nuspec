@@ -38,7 +38,6 @@
     <releaseNotes></releaseNotes>
     <dependencies>
       <dependency id="SharpDX" version="$version$"/>
-      <dependency id="SharpDX.D3DCompiler" version="$version$"/>
       <dependency id="SharpDX.DXGI" version="$version$"/>
     </dependencies>
   </metadata>

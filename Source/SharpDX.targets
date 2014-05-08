@@ -35,7 +35,7 @@ It adds automatically references to SharpDX assemblies
     <SharpDXPlatformTool Condition="'$(SharpDXPlatformTool)' == ''">DirectX11-net40</SharpDXPlatformTool>
 
     <!--Root SharpDX SDK Directory where assemblies are stored. This variable should be set as a Global System Environement Variable -->
-    <SharpDXPackageDir>$(MSBuildThisFileDirectory)..</SharpDXPackageDir>
+    <SharpDXPackageDir Condition="'$(SharpDXPackageDir)' == ''">$(MSBuildThisFileDirectory)..</SharpDXPackageDir>
 
     <!--SharpDX Directory to link against - based on platform-->
     <SharpDXPackageBinDir Condition="'$(SharpDXPackageBinDir)' == ''">$(SharpDXPackageDir)\Bin\$(SharpDXPlatform)</SharpDXPackageBinDir>
