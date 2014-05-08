@@ -74,6 +74,33 @@ namespace SharpDX.MediaFoundation
         {
             MediaFactory.CreateSampleGrabberSinkActivate(mediaType, SampleGrabberSinkCallbackShadow.ToIntPtr(callback), out activate);
         }
+
+        /// <summary>	
+        /// <p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p> Copies an image or image plane from one buffer to another. </p>	
+        /// </summary>	
+        /// <param name="destRef"><dd> <p> Pointer to the start of the first row of pixels in the destination buffer. </p> </dd></param>	
+        /// <param name="lDestStride"><dd> <p> Stride of the destination buffer, in bytes. </p> </dd></param>	
+        /// <param name="srcRef"><dd> <p> Pointer to the start of the first row of pixels in the source image. </p> </dd></param>	
+        /// <param name="lSrcStride"><dd> <p> Stride of the source image, in bytes. </p> </dd></param>	
+        /// <param name="dwWidthInBytes"><dd> <p> Width of the image, in bytes. </p> </dd></param>	
+        /// <param name="dwLines"><dd> <p> Number of rows of pixels to copy. </p> </dd></param>	
+        /// <returns><p>If this function succeeds, it returns <strong><see cref="SharpDX.Result.Ok"/></strong>. Otherwise, it returns an <strong><see cref="SharpDX.Result"/></strong> error code.</p></returns>	
+        /// <remarks>	
+        /// <p> This function copies a single plane of the image. For planar YUV formats, you must call the function once for each plane. In this case, <em>pDest</em> and <em>pSrc</em> must point to the start of each plane. </p><p> This function is optimized if the MMX, SSE, or SSE2 instruction sets are available on the processor. The function performs a non-temporal store (the data is written to memory directly without polluting the cache). </p><p><strong>Note</strong>??Prior to Windows?7, this function was exported from evr.dll. Starting in Windows?7, this function is exported from mfplat.dll, and evr.dll exports a stub function that calls into mfplat.dll. For more information, see Library Changes in Windows?7.</p>	
+        /// </remarks>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='MFCopyImage']/*"/>	
+        /// <msdn-id>bb970554</msdn-id>	
+        /// <unmanaged>HRESULT MFCopyImage([Out, Buffer] unsigned char* pDest,[In] int lDestStride,[In, Buffer] const unsigned char* pSrc,[In] int lSrcStride,[In] unsigned int dwWidthInBytes,[In] unsigned int dwLines)</unmanaged>	
+        /// <unmanaged-short>MFCopyImage</unmanaged-short>	
+        public static void CopyImage(IntPtr destRef, int lDestStride, IntPtr srcRef, int lSrcStride, int dwWidthInBytes, int dwLines)
+        {
+            unsafe
+            {
+                SharpDX.Result __result__;
+                    __result__ = MFCopyImage_(destRef.ToPointer(), lDestStride, srcRef.ToPointer(), lSrcStride, dwWidthInBytes, dwLines);
+                __result__.CheckError();
+            }
+        }
     }
 }
 #endif
