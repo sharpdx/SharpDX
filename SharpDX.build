@@ -33,35 +33,35 @@
   </PropertyGroup>
 
   <Import Project="$(ExtensionTasksPath)MSBuild.ExtensionPack.tasks"/>
-  
+
   <Target Name="Help">
-	<Message Importance="high" Text="Use parameter /t:Pre-Build;Build to build SharpDX assemblies for non WP8 platforms. And /t:BuildForVS2012 for WP8"/>
+    <Message Importance="high" Text="Use parameter /t:Pre-Build;Build to build SharpDX assemblies for non WP8 platforms. And /t:BuildForVS2012 for WP8"/>
   </Target>
 
   <Target Name="Pre-Build">
-	<CallTarget Targets="GitCheckout"/>
+    <CallTarget Targets="GitCheckout"/>
   </Target>
-  
-  <Target Name="Post-Build">
-	<CallTarget Targets="GitUpdate"/>
-	<CallTarget Targets="ZipBuild"/>
-	<CallTarget Targets="FtpZip"/>
-  </Target>
-  
-  <Target Name="Build">
-	<!--Build all targets / platforms-->
 
-	<Exec Command="RMDIR /Q /S $(MSBuildThisFileDirectory)\Bin"/>
-	
-	<CallTarget Targets="BuildSigned" Condition="'$(BuildSignedSharpDX)' == 'true'"/>
-	<CallTarget Targets="DesktopNet20" />
-	<CallTarget Targets="DesktopNet40" />
-	<CallTarget Targets="MetroWin8" />
-	<CallTarget Targets="DesktopDx112" />
-	<CallTarget Targets="WP8-x86" />
- 	<CallTarget Targets="WP8-ARM" />
-	<CallTarget Targets="WP81" />
-	<CallTarget Targets="CopyD3DRedistributionFiles" />
+  <Target Name="Post-Build">
+    <CallTarget Targets="GitUpdate"/>
+    <CallTarget Targets="ZipBuild"/>
+    <CallTarget Targets="FtpZip"/>
+  </Target>
+
+  <Target Name="Build">
+    <!--Build all targets / platforms-->
+
+    <Exec Command="RMDIR /Q /S $(MSBuildThisFileDirectory)\Bin"/>
+
+    <CallTarget Targets="BuildSigned" Condition="'$(BuildSignedSharpDX)' == 'true'"/>
+    <CallTarget Targets="DesktopNet20" />
+    <CallTarget Targets="DesktopNet40" />
+    <CallTarget Targets="MetroWin8" />
+    <CallTarget Targets="DesktopDx112" />
+    <CallTarget Targets="WP8-x86" />
+    <CallTarget Targets="WP8-ARM" />
+    <CallTarget Targets="WP81" />
+    <CallTarget Targets="CopyD3DRedistributionFiles" />
   </Target>
 
   <Target Name="BuildSigned">
@@ -69,39 +69,88 @@
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=Net40;SharpDXSign=true"/>
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=Win8;SharpDXSign=true"/>
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=DIRECTX11_2;SharpDXSign=true"/>
-	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=WP81;SharpDXSign=true"/>
+    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=WP81;SharpDXSign=true"/>
+  </Target>
+
+  <!--Custom task for checking certification result (fail or pass), the project is excluded from solution build - needs to be rebuilt manually when needed-->
+  <UsingTask TaskName="Certification.Tasks.VerifyCertificationResultTask" AssemblyFile="$(MSBuildThisFileDirectory)\Source\CertificationTests\Tasks\Certification.Tasks.dll"/>
+  
+  <!--Runs the certification verification-->
+  <Target Name="RunCertificationTests">
+    <PropertyGroup>
+      
+      <!--The main folder for all certification tests-->
+      <SharpDXCertificationTestDir>$(MSBuildThisFileDirectory)\Source\CertificationTests\</SharpDXCertificationTestDir>
+      
+      <!--The solution which contains projects that require certification verification-->
+      <SharpDXCertificationTestSolution>$(SharpDXCertificationTestDir)CertificationTests.sln</SharpDXCertificationTestSolution>
+      
+      <!--The path to the WACK executable-->
+      <AppCertExe>&quot;C:\Program Files (x86)\Windows Kits\8.1\App Certification Kit\appcert.exe&quot;</AppCertExe>
+      
+    <!--The path to store certification results XML-->
+      <AppCertResultsDir>$(SharpDXCertificationTestDir)Results</AppCertResultsDir>
+    </PropertyGroup>
+
+    <!--Clean the result folder, we neeed to remove only its contents and not the folder itself-->
+    <ItemGroup>
+      <FilesToClean Include="$(AppCertResultsDir)\**\*"/>
+      <Directories Include="$([System.IO.Directory]::GetDirectories('$(AppCertResultsDir)', '*', System.IO.SearchOption.AllDirectories))"
+                   Exclude="$(AppCertResultsDir)"/>
+    </ItemGroup>
+    <Delete Files="@(FilesToClean)" ContinueOnError="true"/>
+    <RemoveDir Directories="@(Directories)" />
+
+    <!--Remove the existsing packages (if any)-->
+    <RemoveDir Directories="$(SharpDXCertificationTestDir)Test.WP81\AppPackages" />
+    <RemoveDir Directories="$(SharpDXCertificationTestDir)Test.WinRT\AppPackages" />
+
+    <!--Build the solution - this will build the necessary packages-->
+    <MSBuild Targets="Clean;Build" Projects="$(SharpDXCertificationTestSolution)" />
+
+    <!--Run the certification test for WP81 platform dummy project-->
+    <Exec Command="$(AppCertExe) reset"/>
+    <Exec Command="$(AppCertExe) test -apptype windowsphoneapp -testid [72] -AppxPackagePath &quot;$(SharpDXCertificationTestDir)Test.WP81\AppPackages\Test.WP81_1.0.0.0_AnyCPU_Test\Test.WP81_1.0.0.0_AnyCPU.appx&quot; -reportoutputpath &quot;$(SharpDXCertificationTestDir)Results\Test.WP81.xml&quot;" />
+
+    <!--Run the certification test for WinRT platform dummy project-->
+    <Exec Command="$(AppCertExe) reset"/>
+    <Exec Command="$(AppCertExe) test -apptype windowsstoreapp -testid [38] -AppxPackagePath &quot;$(SharpDXCertificationTestDir)Test.WinRT\AppPackages\Test.WinRT_1.0.0.0_AnyCPU_Test\Test.WinRT_1.0.0.0_AnyCPU.appx&quot; -reportoutputpath &quot;$(SharpDXCertificationTestDir)Results\Test.WinRT.xml&quot;" />
+
+    <!--Verify the certification results-->
+    <VerifyCertificationResultTask File="$(MSBuildThisFileDirectory)\Source\CertificationTests\Results\Test.WinRT.xml" />
+    <VerifyCertificationResultTask File="$(MSBuildThisFileDirectory)\Source\CertificationTests\Results\Test.WP81.xml" />
   </Target>
 
   <Target Name="DesktopNet20">
-	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=Net20"/>
+    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=Net20"/>
   </Target>
-  
+
   <Target Name="DesktopNet40">
-	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=Net40"/>
+    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=Net40"/>
   </Target>
-  
+
   <Target Name="MetroWin8">
-	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=Win8"/>
+    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=Win8"/>
   </Target>
-  
+
   <Target Name="DesktopDx112">
-	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=DIRECTX11_2"/>
+    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=DIRECTX11_2"/>
   </Target>
-  
+
   <Target Name="WP8-x86">
-	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=WP8-x86"/>
+    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=WP8-x86"/>
   </Target>
-  
+
   <Target Name="WP8-ARM">
-	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=WP8-ARM"/>
+    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=WP8-ARM"/>
   </Target>
 
   <Target Name="WP81">
-	<MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=WP81"/>
+    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=WP81"/>
   </Target>
-  
+
   <Target Name="CopyD3DRedistributionFiles">
-	<!--Copy redistribution D3D files to Bin-->
+    <!--Copy redistribution D3D files to Bin-->
     <ItemGroup>
       <RedistFiles Include="External\D3D\**\*.*"/>
     </ItemGroup>
@@ -109,7 +158,7 @@
     <MakeDir Directories="Bin\Redist\D3D"/>
     <Copy SourceFiles="@(RedistFiles)" DestinationFiles="@(RedistFiles->'Bin\Redist\D3D\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
-  
+
   <Target Name="CleanSamples">
     <ItemGroup>
       <CleanFiles Include="$(SamplesDirectory)\**\Bin\**\*"/>
@@ -119,7 +168,7 @@
       <CleanFiles Include="$(SamplesDirectory)\**\*.suo" />
       <CleanFiles Include="$(SamplesDirectory)\**\*.bak" />
       <CleanFiles Include="$(SamplesDirectory)\**\*.user" />
-    </ItemGroup> 
+    </ItemGroup>
 
     <Delete Files="@(CleanFiles)" />
   </Target>
@@ -135,59 +184,59 @@
 
     <CallTarget Targets="CleanSamples"/>
   </Target>
-  
+
   <Target Name="GitCheckout">
     <Exec Command='$(GitExe) checkout --merge "master_integration"'/>
     <Exec Command='$(GitExe) pull --rebase origin'/>
   </Target>
-  
+
   <Target Name="GitUpdate">
-	  <!-- Update master -->
-	  <Exec Command='$(GitExe) checkout --merge "master"'/>
-	  <Exec Command='$(GitExe) pull --rebase origin'/>
-	
-	  <!-- Merge master into master_integration -->
-	  <Exec Command='$(GitExe) checkout --merge "master_integration"'/>
+    <!-- Update master -->
+    <Exec Command='$(GitExe) checkout --merge "master"'/>
+    <Exec Command='$(GitExe) pull --rebase origin'/>
+
+    <!-- Merge master into master_integration -->
+    <Exec Command='$(GitExe) checkout --merge "master_integration"'/>
     <Exec Command='$(GitExe) pull --rebase origin'/>
     <Exec Command='$(GitExe) merge "master"'/>
-	
-	  <!-- Merge master_integration into master -->
-	  <Exec Command='$(GitExe) checkout --merge "master"'/>
-	  <Exec Command='$(GitExe) merge "master_integration"'/>
-	
-	  <!-- Push master to origin -->
-	  <Exec Command='$(GitExe) push "origin" master:master'/>
 
-	  <!-- Get logs from latest tags and push tags -->
-	  <Exec Command='$(GitExe) log latest_build.. > CommitLog.txt'/>
-	  <Exec Command='$(GitExe) tag -f latest_build'/>
-	  <Exec Command='$(GitExe) push -f "origin" tag latest_build'/>
-	
-	  <!-- Push master_integration to origin -->
+    <!-- Merge master_integration into master -->
+    <Exec Command='$(GitExe) checkout --merge "master"'/>
+    <Exec Command='$(GitExe) merge "master_integration"'/>
+
+    <!-- Push master to origin -->
+    <Exec Command='$(GitExe) push "origin" master:master'/>
+
+    <!-- Get logs from latest tags and push tags -->
+    <Exec Command='$(GitExe) log latest_build.. > CommitLog.txt'/>
+    <Exec Command='$(GitExe) tag -f latest_build'/>
+    <Exec Command='$(GitExe) push -f "origin" tag latest_build'/>
+
+    <!-- Push master_integration to origin -->
     <Exec Command='$(GitExe) checkout --merge "master_integration"'/>
     <Exec Command='$(GitExe) pull --rebase origin'/>
     <Exec Command='$(GitExe) push "origin" master_integration:master_integration'/>
   </Target>
-  
+
   <Target Name="ZipBuild">
-	<Delete Files="$(SharpDXDevZip)"/>
-	<Exec Command='External\7-Zip\7z.exe a -r -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.exp $(SharpDXDevZip) Bin\*.* Samples\*.* SharpDX.targets CommitLog.txt License.txt'/>
+    <Delete Files="$(SharpDXDevZip)"/>
+    <Exec Command='External\7-Zip\7z.exe a -r -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.exp $(SharpDXDevZip) Bin\*.* Samples\*.* SharpDX.targets CommitLog.txt License.txt'/>
   </Target>
-  
+
   <Target Name="FtpZip">
-	<!-- Get Last commit log from git  -->
-	<PropertyGroup>
-		<LastCommitPath>last_commit.txt</LastCommitPath>
-	</PropertyGroup>
-	<Exec Command='$(GitExe) log --format=%%H -1 > $(LastCommitPath)'/>
-  
+    <!-- Get Last commit log from git  -->
+    <PropertyGroup>
+      <LastCommitPath>last_commit.txt</LastCommitPath>
+    </PropertyGroup>
+    <Exec Command='$(GitExe) log --format=%%H -1 > $(LastCommitPath)'/>
+
     <ItemGroup>
       <FilesToUpload Include="$(SharpDXDevZip)" />
       <FilesToUpload Include="$(LastCommitPath)" />
-    </ItemGroup>  
-  
-	<!-- Upload Zip -->
-	<MSBuild.ExtensionPack.Communication.Ftp TaskAction="UploadFiles" Host="sharpdx.org" RemoteDirectoryName="/sharpdx/upload" FileNames="@(FilesToUpload)" UserName="$(SharpDXFtpUser)" UserPassword="$(SharpDXFtpPassword)" />
+    </ItemGroup>
+
+    <!-- Upload Zip -->
+    <MSBuild.ExtensionPack.Communication.Ftp TaskAction="UploadFiles" Host="sharpdx.org" RemoteDirectoryName="/sharpdx/upload" FileNames="@(FilesToUpload)" UserName="$(SharpDXFtpUser)" UserPassword="$(SharpDXFtpPassword)" />
   </Target>
-  
+
 </Project>
