@@ -35,11 +35,11 @@ namespace SharpDX.Toolkit
     {
         #region Fields
 
+        protected readonly GameTime gameTime;
         private readonly List<IDrawable> currentlyDrawingGameSystems;
         private readonly List<IUpdateable> currentlyUpdatingGameSystems;
         private readonly List<IContentable> currentlyContentGameSystems;
         private readonly List<IDrawable> drawableGameSystems;
-        private readonly GameTime gameTime;
         private readonly List<IGameSystem> pendingGameSystems;
         private readonly List<IUpdateable> updateableGameSystems;
         private readonly List<IContentable> contentableGameSystems;
