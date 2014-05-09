@@ -39,11 +39,15 @@
     <releaseNotes></releaseNotes>
 
     <dependencies>
-      <dependency id="SharpDX" version="$version$"/>
-      <dependency id="SharpDX.Direct2D1" version="$version$"/>
-      <dependency id="SharpDX.Direct3D11" version="$version$"/>
-      <dependency id="SharpDX.DXGI" version="$version$"/>
-      <dependency id="SharpDX.Toolkit" version="$version$"/>
+      <group>
+        <dependency id="SharpDX" version="$version$"/>
+        <dependency id="SharpDX.Direct3D11" version="$version$"/>
+        <dependency id="SharpDX.DXGI" version="$version$"/>
+        <dependency id="SharpDX.Toolkit" version="$version$"/>
+      </group>
+      <group targetFramework="net20, net40, wp81, win8">
+        <dependency id="SharpDX.Direct2D1" version="$version$"/>
+      </group>
     </dependencies>
   </metadata>
 
