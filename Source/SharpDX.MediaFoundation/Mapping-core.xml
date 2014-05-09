@@ -874,14 +874,14 @@
     <map param="MFCreateDXGIDeviceManager::ppDeviceManager" attribute="out fast"/>
     <map param="MFCreateMFByteStreamOnStreamEx::ppByteStream" attribute="out fast"/>
 
-    <ifndef name="WP81">
-      <map function="MFCreateSourceResolver" visibility="internal"/>
-      <map param="MFCreateSourceResolver::ppISourceResolver" attribute="out fast"/>
+    <map function="MFCreateSourceResolver" visibility="internal"/>
+    <map param="MFCreateSourceResolver::ppISourceResolver" attribute="out fast"/>
+    <ifdef name="DIRECTX11_1">
       <map function="MFCreateSourceResolver" dll='"mf.dll"'/>
-    </ifndef>
-    <ifdef name="WP81">
-      <remove function="MFCreateSourceResolver"/>
     </ifdef>
+    <ifndef name="DIRECTX11_1">
+      <map function="MFCreateSourceResolver" dll='"mfplat.dll"'/>
+    </ifndef>
 
     <map function="MFAddPeriodicCallback" visibility="internal"/>
 
