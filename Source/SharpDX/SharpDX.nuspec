@@ -47,12 +47,11 @@
   <files>
     <file src="..\..\Bin\**\*.exe" target="Bin" />
     <file src="..\..\Bin\**\*.dll" target="Bin" />
-    <file src="..\..\Bin\**\*.pdb" target="Bin" />
     <file src="..\..\Bin\**\*.xml" target="Bin" />
     <file src="..\..\Bin\**\*.winmd" target="Bin" />
 
     <file src="..\dummy.txt" target="lib" />
-    <file src="..\SharpDX.targets" target="build" />
+    <file src="..\..\Build\SharpDX.targets" target="build" />
     <file src="..\Install.ps1" target="tools\Install.ps1" />
     <file src="..\UnInstall.ps1" target="tools\UnInstall.ps1" />
   </files>

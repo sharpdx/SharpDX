@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sources", "Sources", "{CC8D
 		Source\Mapping.Direct3D1x.xml = Source\Mapping.Direct3D1x.xml
 		Source\Mapping.xml = Source\Mapping.xml
 		Source\SharedAssemblyInfo.cs = Source\SharedAssemblyInfo.cs
+		Source\SharedAssemblyInfo.cs = Source\SharedAssemblyInfo.cs
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{F1AF9A3B-7856-46C9-992A-391E5455BF1F}"
@@ -73,9 +74,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{E462D87D
 		SharpDX.build = SharpDX.build
 		SharpDX.PostSettings.targets = SharpDX.PostSettings.targets
 		SharpDX.PreSettings.targets = SharpDX.PreSettings.targets
-		Source\SharpDX.Setup.targets = Source\SharpDX.Setup.targets
-		SharpDX.targets = SharpDX.targets
-		Source\SharpDX.Toolkit.targets = Source\SharpDX.Toolkit.targets
+		Build\SharpDX.targets = Build\SharpDX.targets
+		Build\SharpDX.Toolkit.targets = Build\SharpDX.Toolkit.targets
 		Source\uninstall.ps1 = Source\uninstall.ps1
 	EndProjectSection
 EndProject
@@ -730,7 +730,7 @@ Global
 		{BCE106B4-0C81-4705-8A9C-C4C4F5EAB702}.Debug|Win8.ActiveCfg = Debug|Win8
 		{BCE106B4-0C81-4705-8A9C-C4C4F5EAB702}.Debug|WP81.ActiveCfg = Debug|WP81
 		{BCE106B4-0C81-4705-8A9C-C4C4F5EAB702}.Debug|WP8-ARM.ActiveCfg = Debug|WP8-ARM
-		{BCE106B4-0C81-4705-8A9C-C4C4F5EAB702}.Debug|WP8-x86.ActiveCfg = Debug|WP81
+		{BCE106B4-0C81-4705-8A9C-C4C4F5EAB702}.Debug|WP8-x86.ActiveCfg = Debug|WP8-x86
 		{BCE106B4-0C81-4705-8A9C-C4C4F5EAB702}.Release|DIRECTX11_2.ActiveCfg = Release|DIRECTX11_2
 		{BCE106B4-0C81-4705-8A9C-C4C4F5EAB702}.Release|DIRECTX11_2.Build.0 = Release|DIRECTX11_2
 		{BCE106B4-0C81-4705-8A9C-C4C4F5EAB702}.Release|Net20.ActiveCfg = Release|Net20
@@ -774,7 +774,7 @@ Global
 		{7329B02D-C504-482A-A156-181D48CE493C}.Debug|Win8.ActiveCfg = Debug|Win8
 		{7329B02D-C504-482A-A156-181D48CE493C}.Debug|WP81.ActiveCfg = Debug|WP81
 		{7329B02D-C504-482A-A156-181D48CE493C}.Debug|WP8-ARM.ActiveCfg = Debug|WP8-ARM
-		{7329B02D-C504-482A-A156-181D48CE493C}.Debug|WP8-x86.ActiveCfg = Debug|WP81
+		{7329B02D-C504-482A-A156-181D48CE493C}.Debug|WP8-x86.ActiveCfg = Debug|WP8-x86
 		{7329B02D-C504-482A-A156-181D48CE493C}.Release|DIRECTX11_2.ActiveCfg = Release|DIRECTX11_2
 		{7329B02D-C504-482A-A156-181D48CE493C}.Release|DIRECTX11_2.Build.0 = Release|DIRECTX11_2
 		{7329B02D-C504-482A-A156-181D48CE493C}.Release|Net20.ActiveCfg = Release|Net20
