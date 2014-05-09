@@ -71,9 +71,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{E462D87D-C180-4114-B8C8-914E6735BF44}"
 	ProjectSection(SolutionItems) = preProject
 		Source\Install.ps1 = Source\Install.ps1
-		SharpDX.build = SharpDX.build
-		SharpDX.PostSettings.targets = SharpDX.PostSettings.targets
-		SharpDX.PreSettings.targets = SharpDX.PreSettings.targets
+		Build\SharpDX.build = Build\SharpDX.build
+		Build\SharpDX.PostSettings.targets = Build\SharpDX.PostSettings.targets
+		Build\SharpDX.PreSettings.targets = Build\SharpDX.PreSettings.targets
 		Build\SharpDX.targets = Build\SharpDX.targets
 		Build\SharpDX.Toolkit.targets = Build\SharpDX.Toolkit.targets
 		Source\uninstall.ps1 = Source\uninstall.ps1
