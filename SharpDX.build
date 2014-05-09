@@ -24,7 +24,6 @@
 
   <PropertyGroup>
     <SharpDXSolution>SharpDX.sln</SharpDXSolution>
-    <SamplesDirectory>Samples</SamplesDirectory>
     <GitExe>"C:\Program Files (x86)\Git\bin\git.exe"</GitExe>
     <SharpDXDevZip>SharpDX-SDK-LatestDev.exe</SharpDXDevZip>
     <ExtensionTasksPath>$(MSBuildThisFileDirectory)\External\MSBuildExtensionPack\</ExtensionTasksPath>
@@ -159,32 +158,6 @@
     <Copy SourceFiles="@(RedistFiles)" DestinationFiles="@(RedistFiles->'Bin\Redist\D3D\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 
-  <Target Name="CleanSamples">
-    <ItemGroup>
-      <CleanFiles Include="$(SamplesDirectory)\**\Bin\**\*"/>
-      <CleanFiles Include="$(SamplesDirectory)\**\Obj\**\*"/>
-      <CleanFiles Include="$(SamplesDirectory)\**\_ReSharper*\**\*" />
-      <CleanFiles Include="$(SamplesDirectory)\**\AppPackages\**\*" />
-      <CleanFiles Include="$(SamplesDirectory)\**\*.suo" />
-      <CleanFiles Include="$(SamplesDirectory)\**\*.bak" />
-      <CleanFiles Include="$(SamplesDirectory)\**\*.user" />
-    </ItemGroup>
-
-    <Delete Files="@(CleanFiles)" />
-  </Target>
-
-  <Target Name="BuildSamples">
-
-    <!-- Build all samples -->
-    <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXSamples.sln"/>
-    <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXToolkitSamples.sln" Properties="Configuration=Debug;Platform=x86"/>
-    <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXWin8Samples.sln" Properties="Configuration=Debug;Platform=Any CPU"/>
-    <!-- <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXWin81Samples.sln" Properties="Configuration=Debug;Platform=Any CPU"/> -->
-    <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXWP8Samples.sln" Properties="Configuration=Debug;Platform=Any CPU"/>
-
-    <CallTarget Targets="CleanSamples"/>
-  </Target>
-
   <Target Name="GitCheckout">
     <Exec Command='$(GitExe) checkout --merge "master_integration"'/>
     <Exec Command='$(GitExe) pull --rebase origin'/>
@@ -220,7 +193,7 @@
 
   <Target Name="ZipBuild">
     <Delete Files="$(SharpDXDevZip)"/>
-    <Exec Command='External\7-Zip\7z.exe a -r -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.exp $(SharpDXDevZip) Bin\*.* Samples\*.* SharpDX.targets CommitLog.txt License.txt'/>
+    <Exec Command='External\7-Zip\7z.exe a -r -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.exp $(SharpDXDevZip) Bin\*.* Build\*.* CommitLog.txt License.txt'/>
   </Target>
 
   <Target Name="FtpZip">
