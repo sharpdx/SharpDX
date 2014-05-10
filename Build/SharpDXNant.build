@@ -41,7 +41,6 @@
 
     <regex pattern="AssemblyVersion\(.(?'assembly_version'\d+\.\d+.\d+)" input="${assembly_version_file}" />
     <property name="output_bin_zip" value="${project.name}-Bin-${assembly_version}${build-date}.exe"/>
-    <property name="output_bin_and_samples_zip" value="${project.name}-Full-${assembly_version}${build-date}.exe"/>
 
     <echo message="${project.name} version from file is ${assembly_version}"/>
   </target>
@@ -75,7 +74,6 @@
         <include name="**/*.bak" />
         <include name="**/*.user" />
         <exclude name="**/_ReSharper.*/**" />
-        <exclude name="**/Build/**" />
         <exclude name="**/External/**" />
         <exclude name="**/.git/**" />
       </fileset>
@@ -132,22 +130,9 @@
 
   <!-- Full clean and build -->
   <target name="help" description="Prints help about this build." >
-    <echo message="Usage MakeSharpDX.cmd target"/>
-    <echo message=""/>
-    <echo message="Target to prepare publish  before full, nightly-builds:"/>
-    <echo message="     publish = Prepare build for publish"/>
+    <echo message="Usage MakeSharpDXRelease.cmd target"/>
     <echo message=""/>
     <echo message="Target to call before build/zip:"/>
-    <echo message="      net20  = Prepare for net20  build (Framework .NET 2.0+)"/>
-    <echo message="      net40  = Prepare for net40  build (Framework .NET 4.0+)"/>
-    <echo message="signed-net20 = Prepare for signed build (Framework .NET 2.0+)"/>
-    <echo message="signed-net40 = Prepare for signed build (Framework .NET 4.0+)"/>
-    <echo message="        win8 = Prepare for DirectX11.1 Win8 Metro build (Framework .NET 4.5Core)"/>
-    <echo message=" signed-win8 = Prepare for Signed DirectX11.1 Win8 Metro build (Framework .NET 4.5Core)"/>
-    <echo message="         wp8 = Prepare for DirectX11.1 WP8 build (Framework .NET 4.5Core)"/>
-    <echo message="  signed-wp8 = Prepare for Signed DirectX11.1 WP8 build (Framework .NET 4.5Core)"/>
-    <echo message="      dx11_1 = Prepare for DirectX11.1 desktop build (Framework .NET 2.0+)"/>
-    <echo message=""/>
     <echo message="       clean = Full cleanup"/>
     <echo message="       build = Build Standard Assemblies"/>
     <echo message="         doc = Generates documentation (Run 'build' target before this)"/>
@@ -155,12 +140,8 @@
     <echo message="       nuget = Build Nuget Packages (Run 'build' target before this)"/>
     <echo message="  nuget-push = Publish Nuget packages (Run 'nuget' target before this)"/>
     <echo message=""/>
-    <echo message="        full = Run build+doc+zip for all targets (normal, signed, win8, dx11_1)"/>
+    <echo message="        full = Run build+zip for all targets (normal, signed, win8, dx11_1)"/>
     <echo message=""/>
-    <echo message="Example:"/>
-    <echo message="- Build Win8 build only = MakeSharpDX.cmd win8 build"/>
-    <echo message="- Build Full build only = MakeSharpDX.cmd full"/>
-    <echo message="- Build Nightly-builds Full build and publish = MakeSharpDX.cmd publish nightly-builds full"/>
   </target>
 
   <!-- Full clean and build -->
@@ -168,14 +149,9 @@
 
     <!-- Build Signed target first -->
     <call target="build"/>
-
     <!-- <call target="nuget"/> -->
-
     <!-- <call target="doc"/> -->
-    <call target="prepare-package"/>
     <call target="zip"/>
-    
-    <call target="fix-sharpdx-path-samples"/>
     <!-- TODO: Add call to AdvancedInstaller here -->
   </target>
 
@@ -215,7 +191,7 @@
     <foreach item="File" property="filename">
       <in>
         <items>
-          <include name="Packages/*.nupkg" />
+          <include name="NugetPackages/*.nupkg" />
         </items>
       </in>
       <do>
@@ -259,43 +235,13 @@
 
     <!-- Setup MSBuild -->
     <exec program="msbuild.exe" >
-      <arg value="/tv:4.0"/>
-      <arg value="/t:Build;BuildSamples"/>
+      <arg value="/tv:12.0"/>
+      <arg value="/t:Build"/>
       <arg value="/verbosity:quiet"/>
       <arg value="/clp:ErrorsOnly"/>
-      <arg value="SharpDX.build" />
+      <arg value="Build\SharpDX.build" />
     </exec>
   </target>
-
-  <target name="fix-sharpdx-path-samples">
-    <script language="C#">
-      <references>
-          <include name="System.dll" />
-      </references>
-      <imports>
-          <import namespace="System.Text.RegularExpressions" />
-      </imports>
-      <code>
-      <![CDATA[
-      public static void ScriptMain(Project project)
-      {
-          var regex = new Regex(@"HintPath>\.\..*Bin\\", RegexOptions.IgnoreCase);
-          var regexTargets = new Regex(@"Project="".*SharpDX.targets", RegexOptions.IgnoreCase);
-          var regexIncludes =new Regex(@"Include=""\.\..*Bin\\", RegexOptions.IgnoreCase);
-                foreach (var csproj in Directory.EnumerateFiles(Path.Combine(project.BaseDirectory, @"Build\Samples"), "*.csproj", SearchOption.AllDirectories))
-                {
-                    var text = File.ReadAllText(csproj);
-                    text = regex.Replace(text, @"HintPath>$(SharpDXSdkDir)\Bin\");
-                    text = regexTargets.Replace(text, @"Project=""$(SharpDXSdkDir)\SharpDX.targets");
-                    text = regexIncludes.Replace(text, @"Include=""$(SharpDXSdkDir)\Bin\");
-                    File.WriteAllText(csproj, text);
-                    Console.WriteLine("Fix project sample [{0}]", csproj);
-                }
-      }
-      ]]>
-      </code>
-    </script>
-  </target>  
   
   <!-- Documentation  -->
   <target name="doc" description="Generates documentation">
@@ -312,86 +258,26 @@
   </target>  
 
   <!-- Main zip task -->
-  <target name="prepare-package" description="Package all files into a single Build directory">
-    <!-- Setup based on config -->
-    <call target="setup"/>
-
-    <property name="cleandir" value="Samples/"/>
-    <property name="keeppdb" value="false"/>
-    <property name="keepexe" value="false"/>
-    <call target="clean"/>
-
-    <delete dir="Build"/>
-    <mkdir dir="Build"/>
-    
-    <copy todir="Build/" includeemptydirs="false">
-      <fileset>
-        <include name="Bin/**/*.exe"/>
-        <include name="Bin/**/*.dll"/>
-        <include name="Bin/**/*.winmd"/>
-        <include name="Bin/**/*.xml"/>
-        <include name="Samples/**"/>
-        <include name="*.html"/>
-        <include name="SharpDX.targets"/>
-        <include name="*.txt"/>
-        <exclude name="Samples/Win8/Win8Demos.sln"/>
-        <exclude name="**/*.sample.csproj"/>
-        <exclude name="**/_ReSharper.*/"/>
-        <exclude name="googlecode_password.txt"/>
-        <exclude name="Samples/Win8/**/AppPackages/**"/>
-      </fileset>
-    </copy>
-  </target>
-  
   <target name="zip" description="Build all targets.">
     <!-- Setup based on config -->
     <call target="setup"/>
-
-    <property name="cleandir" value="Samples/"/>
-    <property name="keeppdb" value="false"/>
-    <property name="keepexe" value="false"/>
-    <call target="clean"/>
-
-    <delete dir="Build"/>
-    <mkdir dir="Build"/>
-    
-    <copy todir="Build/" includeemptydirs="false">
-      <fileset>
-        <include name="Bin/**/*.exe"/>
-        <include name="Bin/**/*.dll"/>
-        <include name="Bin/**/*.winmd"/>
-        <include name="Bin/**/*.xml"/>
-        <include name="Samples/**"/>
-        <include name="*.html"/>
-        <include name="SharpDX.targets"/>
-        <include name="*.txt"/>
-        <exclude name="Samples/Win8/Win8Demos.sln"/>
-        <exclude name="**/*.sample.csproj"/>
-        <exclude name="**/_ReSharper.*/"/>
-        <exclude name="googlecode_password.txt"/>
-        <exclude name="Samples/Win8/**/AppPackages/**"/>
-      </fileset>
-    </copy>
     
     <delete file="${output_bin_zip}"/>
     <exec program="External/7-Zip/7z.exe" workingdir="Build">
       <arg value="a"/>
       <arg value="-r"/>
       <arg value="-sfx7z.sfx"/>
+      <arg value="-xr!*.check"/>
+      <arg value="-xr!*.pdb"/>
+      <arg value="-xr!*.lib"/>
+      <arg value="-xr!*.exp"/>
       <arg value="..\${output_bin_zip}"/>
       <arg value="Bin\*.*"/>
-      <arg value="ChangeLog.txt"/>
+      <arg value="Build\SharpDX.targets"/>
+      <arg value="Build\SharpDX.Toolkit.targets"/>
       <arg value="License.txt"/>
       <arg value="ReleaseNotes.html"/>
-    </exec>
-
-    <delete file="${output_bin_and_samples_zip}"/>
-    <exec program="External/7-Zip/7z.exe" workingdir="Build">
-      <arg value="a"/>
-      <arg value="-r"/>
-      <arg value="-sfx7z.sfx"/>
-      <arg value="..\${output_bin_and_samples_zip}"/>
-      <arg value="*.*"/>
+      <arg value="Readme.md"/>
     </exec>
   </target>
 

@@ -26,7 +26,7 @@
 	<SharpDXRepo>$(MSBuildThisFileDirectory)..</SharpDXRepo>
     <SharpDXSolution>$(SharpDXRepo)\SharpDX.sln</SharpDXSolution>
     <GitExe>"C:\Program Files (x86)\Git\bin\git.exe"</GitExe>
-    <SharpDXDevZip>SharpDX-SDK-LatestDev.exe</SharpDXDevZip>
+    <SharpDXDevZip>$(SharpDXRepo)\SharpDX-SDK-LatestDev.exe</SharpDXDevZip>
     <ExtensionTasksPath>$(SharpDXRepo)\External\MSBuildExtensionPack\</ExtensionTasksPath>
     <BuildSignedSharpDX>true</BuildSignedSharpDX>
   </PropertyGroup>
@@ -151,57 +151,57 @@
   <Target Name="CopyD3DRedistributionFiles">
     <!--Copy redistribution D3D files to Bin-->
     <ItemGroup>
-      <RedistFiles Include="External\D3D\**\*.*"/>
+      <RedistFiles Include="$(SharpDXRepo)\External\D3D\**\*.*"/>
     </ItemGroup>
 
-    <MakeDir Directories="Bin\Redist\D3D"/>
-    <Copy SourceFiles="@(RedistFiles)" DestinationFiles="@(RedistFiles->'Bin\Redist\D3D\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <MakeDir Directories="$(SharpDXRepo)\Bin\Redist\D3D"/>
+    <Copy SourceFiles="@(RedistFiles)" DestinationFiles="@(RedistFiles->'$(SharpDXRepo)\Bin\Redist\D3D\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 
   <Target Name="GitCheckout">
-    <Exec Command='$(GitExe) checkout --merge "master_integration"'/>
-    <Exec Command='$(GitExe) pull --rebase origin'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) checkout --merge "master_integration"'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) pull --rebase origin'/>
   </Target>
 
   <Target Name="GitUpdate">
     <!-- Update master -->
-    <Exec Command='$(GitExe) checkout --merge "master"'/>
-    <Exec Command='$(GitExe) pull --rebase origin'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) checkout --merge "master"'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) pull --rebase origin'/>
 
     <!-- Merge master into master_integration -->
-    <Exec Command='$(GitExe) checkout --merge "master_integration"'/>
-    <Exec Command='$(GitExe) pull --rebase origin'/>
-    <Exec Command='$(GitExe) merge "master"'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) checkout --merge "master_integration"'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) pull --rebase origin'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) merge "master"'/>
 
     <!-- Merge master_integration into master -->
-    <Exec Command='$(GitExe) checkout --merge "master"'/>
-    <Exec Command='$(GitExe) merge "master_integration"'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) checkout --merge "master"'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) merge "master_integration"'/>
 
     <!-- Push master to origin -->
-    <Exec Command='$(GitExe) push "origin" master:master'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) push "origin" master:master'/>
 
     <!-- Get logs from latest tags and push tags -->
-    <Exec Command='$(GitExe) log latest_build.. > CommitLog.txt'/>
-    <Exec Command='$(GitExe) tag -f latest_build'/>
-    <Exec Command='$(GitExe) push -f "origin" tag latest_build'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) log latest_build.. > CommitLog.txt'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) tag -f latest_build'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) push -f "origin" tag latest_build'/>
 
     <!-- Push master_integration to origin -->
-    <Exec Command='$(GitExe) checkout --merge "master_integration"'/>
-    <Exec Command='$(GitExe) pull --rebase origin'/>
-    <Exec Command='$(GitExe) push "origin" master_integration:master_integration'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) checkout --merge "master_integration"'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) pull --rebase origin'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) push "origin" master_integration:master_integration'/>
   </Target>
 
   <Target Name="ZipBuild">
     <Delete Files="$(SharpDXDevZip)"/>
-    <Exec Command='External\7-Zip\7z.exe a -r -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.exp $(SharpDXDevZip) Bin\*.* Build\*.* CommitLog.txt License.txt'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(SharpDXRepo)\External\7-Zip\7z.exe a -r -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.exp $(SharpDXDevZip) Bin\*.* Build\SharpDX.targets Build\SharpDX.Toolkit.targets CommitLog.txt License.txt Readme.md'/>
   </Target>
 
   <Target Name="FtpZip">
     <!-- Get Last commit log from git  -->
     <PropertyGroup>
-      <LastCommitPath>last_commit.txt</LastCommitPath>
+      <LastCommitPath>$(SharpDXRepo)\last_commit.txt</LastCommitPath>
     </PropertyGroup>
-    <Exec Command='$(GitExe) log --format=%%H -1 > $(LastCommitPath)'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) log --format=%%H -1 > $(LastCommitPath)'/>
 
     <ItemGroup>
       <FilesToUpload Include="$(SharpDXDevZip)" />
