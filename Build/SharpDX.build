@@ -24,7 +24,7 @@
 
   <PropertyGroup>
     <SharpDXRepo>$(MSBuildThisFileDirectory)..</SharpDXRepo>
-    <SharDXNugetPackages>$(MSBuildThisFileDirectory)\Packages</SharDXNugetPackages>
+    <SharDXNugetPackages>$(MSBuildThisFileDirectory)Packages</SharDXNugetPackages>
     <SharpDXSolution>$(SharpDXRepo)\SharpDX.sln</SharpDXSolution>
     <GitExe>"C:\Program Files (x86)\Git\bin\git.exe"</GitExe>
     <ExtensionTasksPath>$(SharpDXRepo)\External\MSBuildExtensionPack\</ExtensionTasksPath>
@@ -69,6 +69,13 @@
     <Exec Command="nuget.exe pack -OutputDirectory $(SharDXNugetPackages) -Properties version=$(SharpDXAssemblyVersion) %(SharpDXNuspecs.Identity)"/>
   </Target>
 
+  <Target Name="NugetPush">
+    <ItemGroup>
+      <SharpDXNupkg Include="$(SharDXNugetPackages)\*.nupkg"/>
+    </ItemGroup>
+    <Exec Command="nuget.exe push %(SharpDXNupkg.Identity)"/>
+  </Target>  
+  
   <Target Name="Build">
     <!--Build all targets / platforms-->
 
