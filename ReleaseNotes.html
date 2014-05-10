@@ -5,16 +5,17 @@
     <body>
         <p>Release Notes (2014-05-10)</p>
         <h2 class="title">General Information</h2>
-        <p><strong>A new version 2.6.0 of SharpDX is available today for download.</strong></p>
-        <p>This version is a maintenance version of legacy APIs (Direct3D1, Direct2D...etc.) and contains also <b>lots of improvements for the SharpDX Toolkit</b> with new features and several issues fixed.</p>
-        <p>Among the list of new features and fixes in this release for the Toolkit, It contains most notably:</p>
+        <p><strong>A new version 2.6.0 of SharpDX is available today for download!</strong></p>
+        <p>This version is a maintenance version of legacy APIs (Direct3D1, Direct2D...etc.) and contains also lots of new features and several issues fixed.</p>
+        <p>Among the list of new features and fixes in this release, It contains most notably:</p>
         <ul>
             <li>Distribution model is now embracing <b>nuget</b> to ease the installation of SharpDX across all .NET platforms. We are no longer releasing an installer, as nuget provides a much smoother integration into VisualStudio and your projects, making a SharpDX package a breeze to install.</li>
             <li>Samples are now released separately on a new github repository <a target="_blank" href="https://github.com/sharpdx/SharpDX-Samples">SharpDX-Samples</a> and they are using new nuget packages, check-it out!</li>
             <li>Add support for <b>Windows Phone 8.1 Developer Preview</b>. Note that SharpDX is only supporting <b>Windows Phone Store 8.1 Apps</b> and not WP81 Silverlight Apps, as the <code>[DllImport]</code> is only working on AppStore platform but not for Silverlight. You will still be able to develop on WP81 SL using SharpDX WP8 binaries</li>
+            <li>Add support for <b>Audio in the Toolkit</b> via the new assembly SharpDX.Toolkit.Audio - for Desktop, WinRT and WP8 (Thanks to dfkeenan for this contribution)</li>
+            <li>Add support for <b>DirectManipulation</b> and <b>DirectComposition</b> (Thanks to Zachary Northrup for this contribution)</li>
             <li>Add support for <b>Direct3D11.2</b></li>
-            <li>Add support for <b>Audio in the Toolkit</b> via the new assembly SharpDX.Toolkit.Audio - for Desktop, WinRT and WP8.</li>
-            <li>Several issues fixed, see below the detail change log for details.</li>
+            <li>Several issues fixed, see below the detail changelog for details.</li>
         </ul>
         <p>This release is integrating several patches and contribution made by the community on github. Thanks to all of them!</p>
         <p>
