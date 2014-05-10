@@ -28,8 +28,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly:AssemblyVersion("2.5.1")]
-[assembly:AssemblyFileVersion("2.5.1")]
+[assembly:AssemblyVersion("2.6.0")]
+[assembly:AssemblyFileVersion("2.6.0")]
 
 [assembly: NeutralResourcesLanguage("en-us")]
 
