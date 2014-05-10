@@ -48,15 +48,13 @@
     <CallTarget Targets="GitCheckout"/>
   </Target>
 
-  <Target Name="Post-Build">
+  <Target Name="PackageDev">
     <CallTarget Targets="GitUpdate"/>
     <CallTarget Targets="ZipBuild"/>
     <CallTarget Targets="FtpZip"/>
   </Target>
 
-  <Target Name="Release">
-    <CallTarget Targets="Build"/>
-    <CallTarget Targets="Post-Build"/>
+  <Target Name="PackageRelease">
     <CallTarget Targets="Nuget"/>
     <CallTarget Targets="ZipRelease"/>
     <CallTarget Targets="FtpReleaseZip"/>
