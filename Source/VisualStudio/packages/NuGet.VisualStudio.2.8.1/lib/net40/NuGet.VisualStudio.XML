@@ -1,0 +1,1552 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NuGet.VisualStudio</name>
+    </assembly>
+    <members>
+        <member name="M:NuGet.MSBuildProjectUtility.AddImportStatement(Microsoft.Build.Evaluation.Project,System.String,NuGet.ProjectImportLocation)">
+            <summary>
+            Adds an Import element to this project file if it doesn't already exist.            
+            </summary>
+            <param name="project">The project file.</param>
+            <param name="targetsPath">The path to the imported file.</param>
+            <param name="location">The location where the Import is added.</param>
+        </member>
+        <member name="M:NuGet.MSBuildProjectUtility.RemoveImportStatement(Microsoft.Build.Evaluation.Project,System.String)">
+            <summary>
+            Removes the Import element from the project file.
+            </summary>
+            <param name="project">The project file.</param>
+            <param name="targetsPath">The path to the imported file.</param>
+        </member>
+        <member name="M:NuGet.Common.PackageExtractor.InstallPackage(NuGet.IPackageManager,NuGet.IPackage)">
+            <summary>
+            Install a package with locking to allow multiple concurrent extractions to work without disk contention.
+            </summary>
+        </member>
+        <member name="M:NuGet.Common.PackageExtractor.GenerateUniqueToken(NuGet.IPackageManager,System.String,NuGet.SemanticVersion)">
+            <summary>
+            We want to base the lock name off of the full path of the package, however, the Mutex looks for files on disk if a path is given.
+            Additionally, it also fails if the string is longer than 256 characters. Therefore we obtain a base-64 encoded hash of the path.
+            </summary>
+            <seealso href="http://social.msdn.microsoft.com/forums/en-us/clr/thread/D0B3BF82-4D23-47C8-8706-CC847157AC81"/>
+        </member>
+        <member name="M:NuGet.VisualStudio.IDeleteOnRestartManager.GetPackageDirectoriesMarkedForDeletion">
+            <summary>
+            Gets the list of package directories that are still need to be deleted in the
+            local package repository.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.IDeleteOnRestartManager.MarkPackageDirectoryForDeletion(NuGet.IPackage)">
+            <summary>
+            Marks package directory for future removal if it was not fully deleted during the normal uninstall process
+            if the directory does not contain any added or modified files.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.IDeleteOnRestartManager.DeleteMarkedPackageDirectories">
+            <summary>
+            Attempts to remove marked package directories that were unable to be fully deleted during the original uninstall.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.DeleteOnRestartManager.MarkPackageDirectoryForDeletion(NuGet.IPackage)">
+            <summary>
+            Marks package directory for future removal if it was not fully deleted during the normal uninstall process
+            if the directory does not contain any added or modified files.
+            The package directory will be marked by an adjacent *directory name*.deleteme file.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.DeleteOnRestartManager.DeleteMarkedPackageDirectories">
+            <summary>
+            Attempts to remove package directories that were unable to be fully deleted during the original uninstall.
+            These directories will be marked by an adjacent *directory name*.deleteme files in the local package repository.
+            If the directory removal is successful, the .deleteme file will also be removed.
+            </summary>
+        </member>
+        <member name="T:NuGet.VisualStudio.RestartRequestBar">
+            <summary>
+            Interaction logic for RestartRequestBar.xaml
+            </summary>
+            <summary>
+            RestartRequestBar
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.RestartRequestBar.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:NuGet.VisualStudio.IVsPackageRestorer">
+            <summary>
+            Contains methods to restore packages installed in a project within the current solution.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.IVsPackageRestorer.IsUserConsentGranted">
+            <summary>
+            Returns a value indicating whether the user consent to download NuGet packages
+            has been granted.
+            </summary>
+            <returns>true if the user consent has been granted; otherwise, false.</returns>
+        </member>
+        <member name="M:NuGet.VisualStudio.IVsPackageRestorer.RestorePackages(EnvDTE.Project)">
+            <summary>
+            Restores NuGet packages installed in the given project within the current solution.
+            </summary>
+            <param name="project">The project whose NuGet packages to restore.</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsPackageRestorer.IsPackageInstalled(NuGet.IFileSystem,System.String,NuGet.SemanticVersion)">
+            <summary>
+            Returns true if the package is already installed in the local repository.
+            </summary>
+            <param name="fileSystem">The file system of the local repository.</param>
+            <param name="packageId">The package id.</param>
+            <param name="version">The package version</param>
+            <returns>True if the package is installed in the local repository.</returns>
+        </member>
+        <member name="T:NuGet.VisualStudio.IVsPackageUninstaller">
+            <summary>
+            Contains methods to uninstall packages from a project within the current solution.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.IVsPackageUninstaller.UninstallPackage(EnvDTE.Project,System.String,System.Boolean)">
+            <summary>
+            Uninstall the specified package from a project and specify whether to uninstall its dependency packages too.
+            </summary>
+            <param name="project">The project from which the package is uninstalled.</param>
+            <param name="packageId">The package to be uninstalled</param>
+            <param name="removeDependencies">A boolean to indicate whether the dependency packages should be uninstalled too.</param>
+        </member>
+        <member name="T:NuGet.VisualStudio.IVsPackageMetadata">
+            <summary>
+            Contains information about an installed package.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.IVsPackageMetadata.Id">
+            <summary>
+            Id of the package.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.IVsPackageMetadata.Version">
+            <summary>
+            Version of the package.
+            </summary>
+            <remarks>
+            Do not use this property because it will require referencing NuGet.Core.dll assembly. Use the VersionString property instead.
+            </remarks>
+        </member>
+        <member name="P:NuGet.VisualStudio.IVsPackageMetadata.Title">
+            <summary>
+            Title of the package.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.IVsPackageMetadata.Description">
+            <summary>
+            Description of the package.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.IVsPackageMetadata.Authors">
+            <summary>
+            The authors of the package.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.IVsPackageMetadata.InstallPath">
+            <summary>
+            The location where the package is installed on disk.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.IVsPackageMetadata.VersionString">
+            <summary>
+            The version of the package.
+            </summary>
+            <remarks>
+            Use this property instead of the Version property becase with the type string, 
+            it doesn't require referencing NuGet.Core.dll assembly.
+            </remarks>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectSystemExtensions.CreateRefreshFile(NuGet.IFileSystem,System.String)">
+            <summary>
+            Creates a .refresh file in bin directory of the IFileSystem that points to the assembly being installed. 
+            This works around issues in DTE's AddReference method when dealing with GACed binaries.
+            </summary>
+            <param name="fileSystem">The project system the assembly is being referenced by.</param>
+            <param name="assemblyPath">The relative path to the assembly being added</param>
+        </member>
+        <member name="T:NuGet.VisualStudio.FallbackRepository">
+            <summary>
+            Represents a package repository that implements a dependency provider. 
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.FrameworkAssemblyResolver.IsHigherAssemblyVersionInFramework(System.String,System.Version,System.Runtime.Versioning.FrameworkName,NuGet.VisualStudio.IFileSystemProvider)">
+            <summary>
+            This function checks if there is a framework assembly of assemblyName and of version > availableVersion
+            in targetFramework. NOTE that this function is only applicable for .NETFramework and returns false for 
+            all the other targetFrameworks
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.FrameworkAssemblyResolver.IsHigherAssemblyVersionInFramework(System.String,System.Version,System.Runtime.Versioning.FrameworkName,NuGet.VisualStudio.IFileSystemProvider,System.Func{System.Runtime.Versioning.FrameworkName,System.Collections.Generic.IList{System.String}},System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Collections.Generic.List{System.Reflection.AssemblyName}})">
+            <summary>
+            This function checks if there is a framework assembly of assemblyName and of version > availableVersion
+            in targetFramework. NOTE that this function is only applicable for .NETFramework and returns false for 
+            all the other targetFrameworks
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.FrameworkAssemblyResolver.GetFrameworkAssemblies(System.Collections.Generic.IList{System.String},NuGet.VisualStudio.IFileSystemProvider)">
+            <summary>
+            Returns the list of framework assemblies as specified in frameworklist.xml under the ReferenceAssemblies
+            for .NETFramework. If the file is not present, an empty list is returned
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.FrameworkAssemblyResolver.GetFrameworkAssemblies(NuGet.IFileSystem)">
+            <summary>
+            Given a fileSystem to the path containing RedistList\Frameworklist.xml file
+            return the list of assembly names read out from the xml file
+            </summary>
+        </member>
+        <member name="T:NuGet.VisualStudio.IVsPackageInstallerEvents">
+            <summary>
+            Contains events which are raised when packages are installed or uninstalled from projects and the current solution.
+            </summary>
+        </member>
+        <member name="E:NuGet.VisualStudio.IVsPackageInstallerEvents.PackageInstalling">
+            <summary>
+            Raised when a package is about to be installed into the current solution.
+            </summary>
+        </member>
+        <member name="E:NuGet.VisualStudio.IVsPackageInstallerEvents.PackageInstalled">
+            <summary>
+            Raised after a package has been installed into the current solution.
+            </summary>
+        </member>
+        <member name="E:NuGet.VisualStudio.IVsPackageInstallerEvents.PackageUninstalling">
+            <summary>
+            Raised when a package is about to be uninstalled from the current solution.
+            </summary>
+        </member>
+        <member name="E:NuGet.VisualStudio.IVsPackageInstallerEvents.PackageUninstalled">
+            <summary>
+            Raised after a package has been uninstalled from the current solution.
+            </summary>
+        </member>
+        <member name="E:NuGet.VisualStudio.IVsPackageInstallerEvents.PackageReferenceAdded">
+            <summary>
+            Raised after a package has been installed into a project within the current solution.
+            </summary>
+        </member>
+        <member name="E:NuGet.VisualStudio.IVsPackageInstallerEvents.PackageReferenceRemoved">
+            <summary>
+            Raised after a package has been uninstalled from a project within the current solution.
+            </summary>
+        </member>
+        <member name="T:NuGet.VisualStudio.IVsPackageInstallerServices">
+            <summary>
+            Contains methods to query for installed packages within the current solution.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.IVsPackageInstallerServices.GetInstalledPackages">
+            <summary>
+            Get the list of NuGet packages installed in the current solution.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.IVsPackageInstallerServices.IsPackageInstalled(EnvDTE.Project,System.String)">
+            <summary>
+            Checks if a NuGet package with the specified Id is installed in the specified project.
+            </summary>
+            <param name="project">The project to check for NuGet package.</param>
+            <param name="id">The id of the package to check.</param>
+            <returns><c>true</c> if the package is install. <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:NuGet.VisualStudio.IVsPackageInstallerServices.IsPackageInstalled(EnvDTE.Project,System.String,NuGet.SemanticVersion)">
+            <summary>
+            Checks if a NuGet package with the specified Id and version is installed in the specified project.
+            </summary>
+            <param name="project">The project to check for NuGet package.</param>
+            <param name="id">The id of the package to check.</param>
+            <param name="version">The version of the package to check.</param>
+            <returns><c>true</c> if the package is install. <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:NuGet.VisualStudio.IVsPackageInstallerServices.IsPackageInstalledEx(EnvDTE.Project,System.String,System.String)">
+            <summary>
+            Checks if a NuGet package with the specified Id and version is installed in the specified project.
+            </summary>
+            <param name="project">The project to check for NuGet package.</param>
+            <param name="id">The id of the package to check.</param>
+            <param name="versionString">The version of the package to check.</param>
+            <returns><c>true</c> if the package is install. <c>false</c> otherwise.</returns>
+            <remarks>
+            The reason this method is named IsPackageInstalledEx, instead of IsPackageInstalled, is that 
+            when client project compiles against this assembly, the compiler would attempt to bind against 
+            the other overload which accepts SemanticVersion and would require client project to reference NuGet.Core.
+            </remarks>
+        </member>
+        <member name="M:NuGet.VisualStudio.IVsPackageInstallerServices.GetInstalledPackages(EnvDTE.Project)">
+            <summary>
+            Get the list of NuGet packages installed in the specified project.
+            </summary>
+            <param name="project">The project to get NuGet packages from.</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.IVsWebsiteHandler.AddRefreshFilesForReferences(EnvDTE.Project,NuGet.IFileSystem,System.Collections.Generic.IEnumerable{NuGet.PackageName})">
+            <summary>
+            Adds refresh files to the specified project for all assemblies references belonging to the packages specified by packageNames.
+            </summary>
+            <param name="project">The project.</param>
+            <param name="packagesFileSystem">The file system pointing to 'packages' folder under the solution.</param>
+            <param name="packageNames">The package names.</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.IVsWebsiteHandler.CopyNativeBinaries(EnvDTE.Project,NuGet.IFileSystem,System.Collections.Generic.IEnumerable{NuGet.PackageName})">
+            <summary>
+            Copies the native binaries to the project's bin folder.
+            </summary>
+            <param name="project">The project.</param>
+            <param name="packagesFileSystem">The packages file system.</param>
+            <param name="packageNames">The package names.</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsProjectSystem.UpdateImportStamp(EnvDTE.Project)">
+            <summary>
+            Sets NuGetPackageImportStamp to a new random guid. This is a hack to let the project system know it is out of date.
+            The value does not matter, it just needs to change.
+            </summary>
+        </member>
+        <member name="T:NuGet.VisualStudio.SettingsHelper">
+            <summary>
+            This class is used by functional tests to change NuGet user settings.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.SettingsHelper.Set(System.String,System.String)">
+            <summary>
+            Sets a NuGet user settings property.
+            </summary>
+            <param name="property">The name of the settings property to set.</param>
+            <param name="value">The value of the settings property. 
+            If null, the settings property will be deleted.</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.SettingsHelper.GetVsSettings">
+            <summary>
+            Gets the VsSettings singleton object.
+            </summary>
+            <returns>The VsSettings object in the system.</returns>
+        </member>
+        <member name="M:NuGet.VisualStudio.SettingsHelper.AddSource(System.String,System.String)">
+            <summary>
+            Adds a new package source.
+            </summary>
+            <param name="name">Name of the new source.</param>
+            <param name="source">Value (uri) of the new source.</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.SettingsHelper.RemoveSource(System.String)">
+            <summary>
+            Removes a new package source.
+            </summary>
+            <param name="name">Name of the source.</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.IPackageRestoreManager.EnableCurrentSolutionForRestore(System.Boolean)">
+            <summary>
+            Configures the current solution for Package Restore mode.
+            </summary>
+            <param name="fromActivation">if set to <c>false</c>, the method will not show any error message, and will not set package restore consent.</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.IPackageRestoreManager.CheckForMissingPackages">
+            <summary>
+            Checks the current solution if there is any package missing.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NuGet.VisualStudio.IPackageRestoreManager.RestoreMissingPackages">
+            <summary>
+            Restores the missing packages for the current solution.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.IPackageRestoreManager.IsCurrentSolutionEnabledForRestore">
+            <summary>
+            Gets a value indicating whether the current solution is configured for Package Restore mode.
+            </summary>
+        </member>
+        <member name="E:NuGet.VisualStudio.IPackageRestoreManager.PackagesMissingStatusChanged">
+            <summary>
+            Occurs when it is detected that the packages are missing or restored for the current solution.
+            </summary>
+        </member>
+        <member name="T:NuGet.VisualStudio.PackageRestoreBar">
+            <summary>
+            Interaction logic for PackageRestoreBar.xaml
+            </summary>
+            <summary>
+            PackageRestoreBar
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.PackageRestoreBar.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.PackageRestoreManager.GetPackage(NuGet.IPackageRepository,System.String,System.Boolean)">
+            <summary>
+            Try to retrieve the package with the specified Id from machine cache first. 
+            If not found, download it from the specified repository and add to machine cache.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.PackageRestoreManager.GetAllPackageReferences(NuGet.VisualStudio.IVsPackageManager)">
+            <summary>
+            Gets all package references in all projects of the current solution plus package 
+            references specified in the solution packages.config
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.PackageRestoreManager.GetPackageReferences(NuGet.IProjectManager)">
+            <summary>
+            Gets the package references of the specified project.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.PackageRestoreManager.InvokeOnUIThread(System.Action)">
+            <summary>
+            Invokes the action on the UI thread if one exists.
+            </summary>
+        </member>
+        <member name="T:NuGet.VisualStudio.PreinstalledPackageInstaller">
+            <summary>
+            Provides functionality for installing packages already on disk from an installer (MSI or VSIX).
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.PreinstalledPackageInstaller.GetExtensionRepositoryPath(System.String,System.Object,System.Action{System.String})">
+            <summary>
+            Gets the folder location where packages have been laid down for the specified extension.
+            </summary>
+            <param name="extensionId">The installed extension.</param>
+            <param name="vsExtensionManager">The VS Extension manager instance.</param>
+            <param name="throwingErrorHandler">An error handler that accepts the error message string and then throws the appropriate exception.</param>
+            <returns>The absolute path to the extension's packages folder.</returns>
+        </member>
+        <member name="M:NuGet.VisualStudio.PreinstalledPackageInstaller.GetRegistryRepositoryPath(System.String,System.Collections.Generic.IEnumerable{NuGet.VisualStudio.IRegistryKey},System.Action{System.String})">
+            <summary>
+            Gets the folder location where packages have been laid down in a registry-specified location.
+            </summary>
+            <param name="keyName">The registry key name that specifies the packages location.</param>
+            <param name="registryKeys">The optional list of parent registry keys to look in (used for unit tests).</param>
+            <param name="throwingErrorHandler">An error handler that accepts the error message string and then throws the appropriate exception.</param>
+            <returns>The absolute path to the packages folder specified in the registry.</returns>
+        </member>
+        <member name="M:NuGet.VisualStudio.PreinstalledPackageInstaller.PerformPackageInstall(NuGet.VisualStudio.IVsPackageInstaller,EnvDTE.Project,NuGet.VisualStudio.PreinstalledPackageConfiguration,System.Lazy{NuGet.VisualStudio.IRepositorySettings},System.Action{System.String},System.Action{System.String})">
+            <summary>
+            Installs one or more packages into the specified project.
+            </summary>
+            <param name="packageInstaller">The package installer service that performs the actual package installation.</param>
+            <param name="project">The target project for installation.</param>
+            <param name="configuration">The packages to install, where to install them from, and additional options for their installation.</param>
+            <param name="repositorySettings">The repository settings for the packages being installed.</param>
+            <param name="warningHandler">An action that accepts a warning message and presents it to the user, allowing execution to continue.</param>
+            <param name="errorHandler">An action that accepts an error message and presents it to the user, allowing execution to continue.</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.PreinstalledPackageInstaller.CreateRefreshFilesInBin(EnvDTE.Project,System.String,System.Collections.Generic.IEnumerable{NuGet.VisualStudio.PreinstalledPackageInfo})">
+            <summary>
+            For Website projects, adds necessary "refresh" files in the bin folder for added references.
+            </summary>
+            <param name="project">The target Website project.</param>
+            <param name="repositoryPath">The local repository path.</param>
+            <param name="packageInfos">The packages that were installed.</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.PreinstalledPackageInstaller.CopyNativeBinariesToBin(EnvDTE.Project,System.String,System.Collections.Generic.IEnumerable{NuGet.VisualStudio.PreinstalledPackageInfo})">
+            <summary>
+            By convention, we copy all files under the NativeBinaries folder under package root to the bin folder of the Website.
+            </summary>
+            <param name="project">The target Website project.</param>
+            <param name="repositoryPath">The local repository path.</param>
+            <param name="packageInfos">The packages that were installed.</param>
+        </member>
+        <member name="T:NuGet.VisualStudio.ProductUpdateBar">
+            <summary>
+            ProductUpdateBar
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProductUpdateBar.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:NuGet.VisualStudio.ProjectCache">
+            <summary>
+            Cache that stores project based on multiple names. i.e. Project can be retrieved by name (if non conflicting), unique name and custom unique name.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectCache.TryGetProject(System.String,EnvDTE.Project@)">
+            <summary>
+            Finds a project by short name, unique name or custom unique name.
+            </summary>
+            <param name="name">name of the project to retrieve.</param>
+            <param name="project">project instance</param>
+            <returns>true if the project with the specified name is cached.</returns>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectCache.TryGetProjectName(System.String,NuGet.VisualStudio.ProjectName@)">
+            <summary>
+            Finds a project name by short name, unique name or custom unique name.
+            </summary>
+            <param name="name">name of the project</param>
+            <param name="projectName">project name instance</param>
+            <returns>true if the project name with the specified name is found.</returns>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectCache.RemoveProject(System.String)">
+            <summary>
+            Removes a project and returns the project name instance of the removed project.
+            </summary>
+            <param name="name">name of the project to remove.</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectCache.GetProjects">
+            <summary>
+            Returns all cached projects.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectCache.IsAmbiguous(System.String)">
+            <summary>
+            Determines if a short name is ambiguous
+            </summary>
+            <param name="shortName">short name of the project</param>
+            <returns>true if there are multiple projects with the specified short name.</returns>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectCache.AddProject(EnvDTE.Project)">
+            <summary>
+            Add a project to the cache.
+            </summary>
+            <param name="project">project to add to the cache.</param>
+            <returns>The project name of the added project.</returns>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectCache.TryGetProjectNameByShortName(System.String,NuGet.VisualStudio.ProjectName@)">
+            <summary>
+            Tries to find a project by short name. Returns the project name if and only if it is non-ambiguous.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectCache.AddShortName(NuGet.VisualStudio.ProjectName)">
+            <summary>
+            Adds an entry to the short name cache returning any conflicting project name.
+            </summary>
+            <returns>The first conflicting short name.</returns>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectCache.RemoveShortName(NuGet.VisualStudio.ProjectName)">
+            <summary>
+            Removes a project from the short name cache.
+            </summary>
+            <param name="projectName">The short name of the project.</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectCache.RemoveProjectName(NuGet.VisualStudio.ProjectName)">
+            <summary>
+            Removes a project from the project name dictionary.
+            </summary>
+        </member>
+        <member name="T:NuGet.VisualStudio.ProjectName">
+            <summary>
+            Represents a project name in the solution manager.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectName.Equals(NuGet.VisualStudio.ProjectName)">
+            <summary>
+            Two projects are equal if they share the same FullNames.
+            </summary>
+        </member>
+        <member name="T:NuGet.VisualStudio.JsProjectSystem">
+            <summary>
+            This project system represents the JavaScript project in Windows8
+            </summary>
+        </member>
+        <member name="T:NuGet.VisualStudio.VsHierarchyItem">
+            <summary>
+            Represent a particular tree node in the SolutionExplorer window.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.VCProjectHelper.DeleteAllParentFilters(System.Object)">
+            <summary>
+            Delete all parent, grand parent, etc. of this file if they are empty, after deleting this file.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.VCProjectHelper.GetFilter(Microsoft.VisualStudio.VCProjectEngine.VCProject,System.String,System.Boolean)">
+            <summary>
+            Get the filter that is represented by the specified path
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.VisualStudioCredentialProvider.GetCredentials(System.Uri,System.Net.IWebProxy,NuGet.CredentialType,System.Boolean)">
+            <summary>
+            Returns an ICredentials instance that the consumer would need in order
+            to properly authenticate to the given Uri.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.VisualStudioCredentialProvider.InitializeCredentialProxy(System.Uri,System.Net.IWebProxy)">
+            <summary>
+            THIS IS KINDA HACKISH: we are forcing the static property just so that the VsWebProxy can pick up the Uri.
+            This method is responsible for initializing the WebRequest.DefaultWebProxy to the correct
+            Uri based on the type of request that credentials are needed for before we prompt for credentials
+            because the VsWebProxy uses that static property as a way to display the Uri that we are connecting to.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.VisualStudioCredentialProvider.PromptForCredentials(System.Uri)">
+            <summary>
+            This method is responsible for retrieving either cached credentials
+            or forcing a prompt if we need the user to give us new credentials.
+            </summary>
+        </member>
+        <member name="F:NuGet.VisualStudio.VsTemplateWizard.RepositoryType.Template">
+            <summary>
+            Cache location relative to the template (inside the same folder as the vstemplate file)
+            </summary>
+        </member>
+        <member name="F:NuGet.VisualStudio.VsTemplateWizard.RepositoryType.Extension">
+            <summary>
+            Cache location relative to the VSIX that packages the project template
+            </summary>
+        </member>
+        <member name="F:NuGet.VisualStudio.VsTemplateWizard.RepositoryType.Registry">
+            <summary>
+            Cache location stored in the registry
+            </summary>
+        </member>
+        <member name="T:NuGet.VisualStudio.PreinstalledPackageConfiguration">
+            <summary>
+            Represents all necessary configuration for installing a list of preinstalled packages.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.PreinstalledPackageConfiguration.#ctor(System.String,System.Collections.Generic.IEnumerable{NuGet.VisualStudio.PreinstalledPackageInfo},System.Boolean)">
+            <summary>
+            Creates a preinstalled package configuration.
+            </summary>
+            <param name="repositoryPath">The absolute path to the packages repository on disk.</param>
+            <param name="packages">The list of packages to be installed.</param>
+            <param name="isPreunzipped">A boolean indicating whether the packages are preunzipped within the repository path.</param>
+        </member>
+        <member name="T:NuGet.VisualStudio.PreinstalledPackageInfo">
+            <summary>
+            The information that represents a single preinstalled package (already on disk).
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.PreinstalledPackageInfo.#ctor(System.String,System.String)">
+            <summary>
+            Information for a single preinstalled package that will have its assembly references added and its dependencies ignored.
+            </summary>
+            <param name="id">The package Id.</param>
+            <param name="version">The package version.</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.PreinstalledPackageInfo.#ctor(System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Information for a single preinstalled package.
+            </summary>
+            <param name="id">The package Id.</param>
+            <param name="version">The package version.</param>
+            <param name="skipAssemblyReferences">A boolean indicating whether assembly references from the package should be skipped.</param>
+            <param name="ignoreDependencies">A boolean indicating whether dependencies from the package should be ignored.</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsUtility.GetFullPath(EnvDTE.Project)">
+            <summary>
+            Returns the full path of the project directory.
+            </summary>
+            <param name="project">The project.</param>
+            <returns>The full path of the project directory.</returns>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsUtility.GetProjectFromHierarchy(Microsoft.VisualStudio.Shell.Interop.IVsHierarchy)">
+            <summary>
+            Gets the EnvDTE.Project instance from IVsHierarchy
+            </summary>
+            <param name="pHierarchy">pHierarchy is the IVsHierarchy instance from which the project instance is obtained</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsUtility.GetNuGetSolutionFolder(EnvDTE.Solution)">
+            <summary>
+            Gets the path to .nuget folder present in the solution
+            </summary>
+            <param name="solution">Solution from which .nuget folder's path is obtained</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsUtility.PackagesConfigExists(EnvDTE.Project)">
+            <summary>
+            Returns true if the project has the packages.config file
+            </summary>
+            <param name="project">Project under whose directory packages.config is searched for</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsUtility.GetPackageReferenceFileFullPaths(EnvDTE.Project)">
+            <summary>
+            Returns the full path of the packages config file associated with the project.
+            </summary>
+            <param name="project">The project.</param>
+            <returns>A tuple contains full path to packages.project_name.config and packages.config files.</returns>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsUtility.GetProperName(EnvDTE.Project)">
+            <summary>
+            This method is different from the GetName() method above in that for Website project, 
+            it will always return the project name, instead of the full path to the website, when it uses Casini server.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsWebsiteHandler.#ctor(NuGet.VisualStudio.IFileSystemProvider,NuGet.VisualStudio.IProjectSystemFactory)">
+            <summary>
+            This constructor is used by unit tests to inject custom IVsProjectSystem implementation
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsWebsiteHandler.AddRefreshFilesForReferences(EnvDTE.Project,NuGet.IFileSystem,System.Collections.Generic.IEnumerable{NuGet.PackageName})">
+            <summary>
+            Adds refresh files to the specified project for all assemblies references belonging to the packages specified by packageNames.
+            </summary>
+            <param name="project">The project.</param>
+            <param name="packagesFileSystem">The file system pointing to 'packages' folder under the solution.</param>
+            <param name="packageNames">The package names.</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsWebsiteHandler.CopyNativeBinaries(EnvDTE.Project,NuGet.IFileSystem,System.Collections.Generic.IEnumerable{NuGet.PackageName})">
+            <summary>
+            Copies the native binaries to the project's bin folder.
+            </summary>
+            <param name="project">The project.</param>
+            <param name="packagesFileSystem">The packages file system.</param>
+            <param name="packageNames">The package names.</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsWebsiteHandler.GetAssemblyReferences(NuGet.IFileSystem,System.String,NuGet.SemanticVersion,System.String@)">
+            <summary>
+            Gets all assembly references for a package
+            </summary>
+        </member>
+        <member name="T:NuGet.CommonResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:NuGet.CommonResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:NuGet.CommonResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:NuGet.CommonResources.Argument_Cannot_Be_Null_Or_Empty">
+            <summary>
+              Looks up a localized string similar to {0} cannot be null or an empty string.
+            </summary>
+        </member>
+        <member name="P:NuGet.CommonResources.Argument_Must_Be_Between">
+            <summary>
+              Looks up a localized string similar to {0} must be between {1} and {2}.
+            </summary>
+        </member>
+        <member name="P:NuGet.CommonResources.Argument_Must_Be_Enum_Member">
+            <summary>
+              Looks up a localized string similar to {0} must be a valid value from the {1} enumeration.
+            </summary>
+        </member>
+        <member name="P:NuGet.CommonResources.Argument_Must_Be_GreaterThan">
+            <summary>
+              Looks up a localized string similar to {0} must be greater than {1}.
+            </summary>
+        </member>
+        <member name="P:NuGet.CommonResources.Argument_Must_Be_GreaterThanOrEqualTo">
+            <summary>
+              Looks up a localized string similar to {0} must be greater than or equal to {1}.
+            </summary>
+        </member>
+        <member name="P:NuGet.CommonResources.Argument_Must_Be_LessThan">
+            <summary>
+              Looks up a localized string similar to {0} must be less than {1}.
+            </summary>
+        </member>
+        <member name="P:NuGet.CommonResources.Argument_Must_Be_LessThanOrEqualTo">
+            <summary>
+              Looks up a localized string similar to {0} must be less than or equal to {1}.
+            </summary>
+        </member>
+        <member name="P:NuGet.CommonResources.Argument_Must_Be_Null_Or_Non_Empty">
+            <summary>
+              Looks up a localized string similar to {0} cannot be an empty string, it must either be null or a non-empty string.
+            </summary>
+        </member>
+        <member name="P:NuGet.CommonResources.EnsureImportedMessage">
+            <summary>
+              Looks up a localized string similar to This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.
+            </summary>
+        </member>
+        <member name="T:NuGet.VisualStudio.IVsPackageInstaller">
+            <summary>
+            Contains methods to install packages into a project within the current solution.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.IVsPackageInstaller.InstallPackage(System.String,EnvDTE.Project,System.String,System.Version,System.Boolean)">
+            <summary>
+            Installs a single package from the specified package source.
+            </summary>
+            <param name="source">The package source to install the package from.</param>
+            <param name="project">The target project for package installation.</param>
+            <param name="packageId">The package id of the package to install.</param>
+            <param name="version">The version of the package to install</param>
+            <param name="ignoreDependencies">A boolean indicating whether or not to ignore the package's dependencies during installation.</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.IVsPackageInstaller.InstallPackage(System.String,EnvDTE.Project,System.String,System.String,System.Boolean)">
+            <summary>
+            Installs a single package from the specified package source.
+            </summary>
+            <param name="source">The package source to install the package from.</param>
+            <param name="project">The target project for package installation.</param>
+            <param name="packageId">The package id of the package to install.</param>
+            <param name="version">The version of the package to install</param>
+            <param name="ignoreDependencies">A boolean indicating whether or not to ignore the package's dependencies during installation.</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.IVsPackageInstaller.InstallPackage(NuGet.IPackageRepository,EnvDTE.Project,System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Installs a single package from the specified package source.
+            </summary>
+            <param name="repository">The package repository to install the package from.</param>
+            <param name="project">The target project for package installation.</param>
+            <param name="packageId">The package id of the package to install.</param>
+            <param name="version">The version of the package to install</param>
+            <param name="ignoreDependencies">A boolean indicating whether or not to ignore the package's dependencies during installation.</param>
+            <param name="skipAssemblyReferences">A boolean indicating if assembly references from the package should be skipped.</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.IVsPackageInstaller.InstallPackagesFromRegistryRepository(System.String,System.Boolean,System.Boolean,EnvDTE.Project,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Installs one or more packages that exist on disk in a folder defined in the registry.
+            </summary>
+            <param name="keyName">The registry key name (under NuGet's repository key) that defines the folder on disk containing the packages.</param>
+            <param name="isPreUnzipped">A boolean indicating whether the folder contains packages that are pre-unzipped.</param>
+            <param name="skipAssemblyReferences">A boolean indicating whether the assembly references from the packages should be skipped.</param>
+            <param name="project">The target project for package installation.</param>
+            <param name="packageVersions">A dictionary of packages/versions to install where the key is the package id and the value is the version.</param>
+            <remarks>
+            If any version of the package is already installed, no action will be taken.
+            <para>
+            Dependencies are always ignored.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:NuGet.VisualStudio.IVsPackageInstaller.InstallPackagesFromRegistryRepository(System.String,System.Boolean,System.Boolean,System.Boolean,EnvDTE.Project,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Installs one or more packages that exist on disk in a folder defined in the registry.
+            </summary>
+            <param name="keyName">The registry key name (under NuGet's repository key) that defines the folder on disk containing the packages.</param>
+            <param name="isPreUnzipped">A boolean indicating whether the folder contains packages that are pre-unzipped.</param>
+            <param name="skipAssemblyReferences">A boolean indicating whether the assembly references from the packages should be skipped.</param>
+            <param name="ignoreDependencies">A boolean indicating whether the package's dependencies should be ignored</param>
+            <param name="project">The target project for package installation.</param>
+            <param name="packageVersions">A dictionary of packages/versions to install where the key is the package id and the value is the version.</param>
+            <remarks>
+            If any version of the package is already installed, no action will be taken.
+            </remarks>
+        </member>
+        <member name="M:NuGet.VisualStudio.IVsPackageInstaller.InstallPackagesFromVSExtensionRepository(System.String,System.Boolean,System.Boolean,EnvDTE.Project,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Installs one or more packages that are embedded in a Visual Studio Extension Package.
+            </summary>
+            <param name="extensionId">The Id of the Visual Studio Extension Package.</param>
+            <param name="isPreUnzipped">A boolean indicating whether the folder contains packages that are pre-unzipped.</param>
+            <param name="skipAssemblyReferences">A boolean indicating whether the assembly references from the packages should be skipped.</param>
+            <param name="project">The target project for package installation</param>
+            <param name="packageVersions">A dictionary of packages/versions to install where the key is the package id and the value is the version.</param>
+            <remarks>
+            If any version of the package is already installed, no action will be taken.
+            <para>
+            Dependencies are always ignored.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:NuGet.VisualStudio.IVsPackageInstaller.InstallPackagesFromVSExtensionRepository(System.String,System.Boolean,System.Boolean,System.Boolean,EnvDTE.Project,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Installs one or more packages that are embedded in a Visual Studio Extension Package.
+            </summary>
+            <param name="extensionId">The Id of the Visual Studio Extension Package.</param>
+            <param name="isPreUnzipped">A boolean indicating whether the folder contains packages that are pre-unzipped.</param>
+            <param name="skipAssemblyReferences">A boolean indicating whether the assembly references from the packages should be skipped.</param>
+            <param name="ignoreDependencies">A boolean indicating whether the package's dependencies should be ignored</param>
+            <param name="project">The target project for package installation</param>
+            <param name="packageVersions">A dictionary of packages/versions to install where the key is the package id and the value is the version.</param>
+            <remarks>
+            If any version of the package is already installed, no action will be taken.
+            </remarks>
+        </member>
+        <member name="T:NuGet.VisualStudio.OutputConsole">
+            <summary>
+            This class implements the IConsole interface in order to integrate with the PowerShellHost.
+            It sends PowerShell host outputs to the VS Output tool window.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.FSharpProjectSystem.RemoveReference(System.String)">
+            <summary>
+            WORKAROUND:
+            This override is in place to handle the case-sensitive call to Project.Object.References.Item
+            There are certain assemblies where the AssemblyName and Assembly file name do not match in case
+            And, this causes a mismatch. For more information, Refer to the RemoveReference of the base class
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="M:NuGet.VisualStudio.RepositorySettings.GetConfigurationPath">
+            <summary>
+            Returns the configuraton path by walking the directory structure to find a nuget.config file.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.RepositorySettings.GetRepositoryPathFromConfig(System.String)">
+            <summary>
+            Extracts the repository path from a nuget.config settings file
+            </summary>
+            <param name="path">Full path to the nuget.config file</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.RepositorySettings.GetConfigurationDirectories(System.String)">
+            <summary>
+            Returns the list of candidates for nuget config files.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.RuntimeHelpers.LoadAssemblySmart(System.String)">
+            <summary>
+            Load the specified assembly using the information from the executing assembly. 
+            If the executing assembly is strongly signed, use Assembly.Load(); Otherwise, 
+            use Assembly.LoadFrom()
+            </summary>
+            <param name="assemblyName">The name of the assembly to be loaded.</param>
+            <returns>The loaded Assembly instance.</returns>
+        </member>
+        <member name="M:NuGet.VisualStudio.SmartOutputConsoleProvider.Clear">
+            <summary>
+            Clears the output in the console
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsPackageInstaller.#ctor(NuGet.VisualStudio.IVsPackageManagerFactory,NuGet.VisualStudio.IScriptExecutor,NuGet.IPackageRepositoryFactory,NuGet.VisualStudio.IOutputConsoleProvider,NuGet.VisualStudio.IVsCommonOperations,NuGet.VisualStudio.ISolutionManager,NuGet.VisualStudio.IVsWebsiteHandler,NuGet.VisualStudio.IVsPackageInstallerServices,System.Collections.Generic.IEnumerable{NuGet.VisualStudio.IRegistryKey})">
+            <summary>
+            Creates an instance of the package installer for unit testing of registry-based preinstalled packages. This should only be used for unit tests.
+            </summary>
+            <param name="registryKeys">The optional list of parent registry keys to look in (used for unit tests).</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsPackageInstaller.#ctor(NuGet.VisualStudio.IVsPackageManagerFactory,NuGet.VisualStudio.IScriptExecutor,NuGet.IPackageRepositoryFactory,NuGet.VisualStudio.IOutputConsoleProvider,NuGet.VisualStudio.IVsCommonOperations,NuGet.VisualStudio.ISolutionManager,NuGet.VisualStudio.IVsWebsiteHandler,NuGet.VisualStudio.IVsPackageInstallerServices,System.Object)">
+            <summary>
+            Creates an instance of the package installer for unit testing of extension-based preinstalled packages.  This should only be used for unit tests.
+            </summary>
+            <param name="vsExtensionManager">A mock extension manager instance (used for unit tests).</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsPackageManagerFactory.CreatePackageManager">
+            <summary>
+            Creates an VsPackageManagerInstance that uses the Active Repository (the repository selected in the console drop down) and uses a fallback repository for dependencies.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsPackageManagerFactory.CreatePackageManagerToManageInstalledPackages">
+            <summary>
+            Creates a VsPackageManager that is used to manage install packages.
+            The local repository is used as the primary source, and other active sources are 
+            used as fall back repository. When all needed packages are available in the local 
+            repository, which is the normal case, this package manager will not need to query
+            any remote sources at all. Other active sources are 
+            used as fall back repository so that it still works even if user has used 
+            install-package -IgnoreDependencies.
+            </summary>
+            <returns>The VsPackageManager created.</returns>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsPackageManagerFactory.CreateFallbackRepository(NuGet.IPackageRepository)">
+            <summary>
+            Creates a FallbackRepository with an aggregate repository that also contains the primaryRepository.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsPackageManagerFactory.GetDependencyVersion">
+            <summary>
+            Returns the user specified DependencyVersion in nuget.config.
+            </summary>
+            <returns>The user specified DependencyVersion value in nuget.config.</returns>
+        </member>
+        <member name="T:NuGet.VisualStudio.ServiceLocator">
+            <summary>
+            This class unifies all the different ways of getting services within visual studio.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.ISolutionManager.GetProjectSafeName(EnvDTE.Project)">
+            <summary>
+            Get the safe name of the specified project which guarantees not to conflict with other projects.
+            </summary>
+            <remarks>
+            It tries to return simple name if possible. Otherwise it returns the unique name.
+            </remarks>
+        </member>
+        <member name="M:NuGet.VisualStudio.SolutionExtensions.GetAllProjects(EnvDTE.Solution)">
+            <summary>
+            Get the list of all supported projects in the current solution. This method
+            recursively iterates through all projects.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.SolutionManager.IsSolutionSavedAsRequired">
+            <summary>
+            Checks whether the current solution is saved to disk, as opposed to be in memory.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.SolutionManager.GetProjects">
+            <summary>
+            Gets a list of supported projects currently loaded in the solution
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:NuGet.VisualStudio.SolutionManager.IsSolutionOpen">
+            <summary>
+            Gets a value indicating whether there is a solution open in the IDE.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectExtensions.IsNuGetInUse(EnvDTE.Project)">
+            <summary>
+            Determines if NuGet is used in the project. Currently, it is determined by checking if packages.config is part of the project
+            </summary>
+            <param name="project">The project which is checked to see if NuGet is used in it</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectExtensions.GetSupportedChildProjects(EnvDTE.Project)">
+            <summary>
+            Recursively retrieves all supported child projects of a virtual folder.
+            </summary>
+            <param name="project">The root container project</param>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectExtensions.TryGetNestedFile(EnvDTE.ProjectItems,System.String,EnvDTE.ProjectItem@)">
+            <summary>
+            If we didn't find the project item at the top level, then we look one more level down.
+            In VS files can have other nested files like foo.aspx and foo.aspx.cs or web.config and web.debug.config. 
+            These are actually top level files in the file system but are represented as nested project items in VS.            
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectExtensions.GetCustomUniqueName(EnvDTE.Project)">
+            <summary>
+            Returns the unique name of the specified project including all solution folder names containing it.
+            </summary>
+            <remarks>
+            This is different from the DTE Project.UniqueName property, which is the absolute path to the project file.
+            </remarks>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectExtensions.RemoveProject(System.String)">
+            <summary>
+            DO NOT delete this. This method is only called from PowerShell functional test. 
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectExtensions.GetDisplayName(EnvDTE.Project,NuGet.VisualStudio.ISolutionManager)">
+            <summary>
+            This method truncates Website projects into the VS-format, e.g. C:\..\WebSite1
+            This is used for displaying in the projects combo box.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectExtensions.GetDisplayName(EnvDTE.Project)">
+            <summary>
+            This method truncates Website projects into the VS-format, e.g. C:\..\WebSite1, but it uses Name instead of SafeName from Solution Manager.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.ProjectExtensions.IsSharedProject(EnvDTE.Project)">
+            <summary>
+            Check if the project has the SharedAssetsProject capability. This is true
+            for shared projects in universal apps.
+            </summary>
+        </member>
+        <member name="T:NuGet.VisualStudio.Resources.VsResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.AggregateSourceName">
+            <summary>
+              Looks up a localized string similar to All.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.AmbiguousProjectLevelUninstal">
+            <summary>
+              Looks up a localized string similar to Unable to find &apos;{0}&apos; in &apos;{1}&apos; and found multiple versions of &apos;{0}&apos; installed. Please specify a version..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.AmbiguousUninstall">
+            <summary>
+              Looks up a localized string similar to Found multiple versions of &apos;{0}&apos; installed. Please specify a version..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.AmbiguousUpdate">
+            <summary>
+              Looks up a localized string similar to Unable to update &apos;{0}&apos;. Found multiple versions installed..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.AskForRestoreMessage">
+            <summary>
+              Looks up a localized string similar to Some NuGet packages are missing from this solution. Click to restore from your online package sources..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.AskForUpdateMessage">
+            <summary>
+              Looks up a localized string similar to A new version of NuGet Package Manager is available..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Console_DisclaimerText">
+            <summary>
+              Looks up a localized string similar to Each package is licensed to you by its owner. NuGet is not responsible for, nor does it grant any licenses to, third-party packages. Some packages may include dependencies which are governed by additional licenses. Follow the package source (feed) URL to determine any dependencies..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Console_HelpText">
+            <summary>
+              Looks up a localized string similar to Type &apos;get-help NuGet&apos; to see all available NuGet commands..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Console_InitializeHostFails">
+            <summary>
+              Looks up a localized string similar to Failed to initialize the PowerShell host. If your PowerShell execution policy setting is set to AllSigned, open the Package Manager Console to initialize the host first..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Debug_AddedFileToProject">
+            <summary>
+              Looks up a localized string similar to Added file &apos;{0}&apos; to project &apos;{1}&apos;.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Debug_AddReference">
+            <summary>
+              Looks up a localized string similar to Added reference &apos;{0}&apos; to project &apos;{1}&apos;.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Debug_RemovedFile">
+            <summary>
+              Looks up a localized string similar to Removed file &apos;{0}&apos;.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Debug_RemovedFileFromFolder">
+            <summary>
+              Looks up a localized string similar to Removed file &apos;{0}&apos; from folder &apos;{1}&apos;.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Debug_RemovedFolder">
+            <summary>
+              Looks up a localized string similar to Removed folder &apos;{0}&apos;.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Debug_RemoveReference">
+            <summary>
+              Looks up a localized string similar to Removed reference &apos;{0}&apos; from project &apos;{1}&apos;.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Dialog_DisclaimerText">
+            <summary>
+              Looks up a localized string similar to Each package is licensed to you by its owner. NuGet is not responsible for, nor does it grant any licenses to, third-party packages..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.DialogTitle">
+            <summary>
+              Looks up a localized string similar to NuGet Package Manager.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.DoNotRemindAgain">
+            <summary>
+              Looks up a localized string similar to Don&apos;t show again.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.DTE_InvalidProject">
+            <summary>
+              Looks up a localized string similar to The project is invalid.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.DTE_ProjectUnsupported">
+            <summary>
+              Looks up a localized string similar to The project &apos;{0}&apos; is unsupported.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Error_FailedToCreateParentFolder">
+            <summary>
+              Looks up a localized string similar to Failed to create parent folder for file &apos;{0}&apos; in project {1}..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Error_UnsupportedVSVersion">
+            <summary>
+              Looks up a localized string similar to This version of VisualStudio is not supported: {0}.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.ErrorReadingFile">
+            <summary>
+              Looks up a localized string similar to Error reading &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.ExecutingScript">
+            <summary>
+              Looks up a localized string similar to Executing script file &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.FailedToAddGacReference">
+            <summary>
+              Looks up a localized string similar to Failed to add reference to &apos;{0}&apos;. Please make sure that it is in the Global Assembly Cache..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.FailedToAddReference">
+            <summary>
+              Looks up a localized string similar to Failed to add reference to &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.FailedToRemoveReference">
+            <summary>
+              Looks up a localized string similar to Case insensitive search for reference &apos;{0}&apos;, to be removed, returned more than 1 match. Request could not be performed..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.FileConflictTitle">
+            <summary>
+              Looks up a localized string similar to File Conflict.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.IgnoreUpgrade">
+            <summary>
+              Looks up a localized string similar to Ignore for now.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.InvalidSemanticVersionString">
+            <summary>
+              Looks up a localized string similar to The provided version string is not a valid semantic version..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Log_PackageAlreadyInstalled">
+            <summary>
+              Looks up a localized string similar to &apos;{0}&apos; already installed..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.NoActivePackageSource">
+            <summary>
+              Looks up a localized string similar to Unable to retrieve package list because no source was specified..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.NoUpdatesAvailable">
+            <summary>
+              Looks up a localized string similar to No updates available for &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.NuGetLegacyOfficialSourceName">
+            <summary>
+              Looks up a localized string similar to NuGet official package source.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.NuGetOfficialSourceName">
+            <summary>
+              Looks up a localized string similar to nuget.org.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.NuGetSearchProvider_CategoryShortcut">
+            <summary>
+              Looks up a localized string similar to nuget.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.NuGetSearchProvider_Description">
+            <summary>
+              Looks up a localized string similar to Search NuGet packages.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.NuGetSearchProvider_DisplayText">
+            <summary>
+              Looks up a localized string similar to NuGet Packages.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.NuGetSearchProvider_Name">
+            <summary>
+              Looks up a localized string similar to NuGet Search.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.NuGetStaticResult_DisplayText">
+            <summary>
+              Looks up a localized string similar to Search Online for NuGet Packages matching &apos;{0}&apos;.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.OperationFailed">
+            <summary>
+              Looks up a localized string similar to Operation failed..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.OutputConsolePaneName">
+            <summary>
+              Looks up a localized string similar to Package Manager.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PackageCannotBeRemovedBecauseItIsInUse">
+            <summary>
+              Looks up a localized string similar to &apos;{0}&apos; cannot be removed because it in use by &apos;{1}&apos;.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PackageNotInstalledInAnyProject">
+            <summary>
+              Looks up a localized string similar to &apos;{0}&apos; was not installed in any project. Update failed..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PackageRestoreCompleted">
+            <summary>
+              Looks up a localized string similar to Finished configuring this solution to restore NuGet packages on build..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PackageRestoreConfirmation">
+             <summary>
+               Looks up a localized string similar to Do you want to configure this solution to download and restore missing NuGet packages during build? A .nuget folder will be added to the root of the solution that contains files that enable package restore.
+            
+            Packages installed into Website projects will not be restored during build. Consider converting those into Web application projects if necessary..
+             </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PackageRestoreDownloadPackageFailed">
+            <summary>
+              Looks up a localized string similar to Downloading package &apos;{0}&apos; failed..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PackageRestoreErrorMessage">
+            <summary>
+              Looks up a localized string similar to An error occurred while configuring the solution to restore NuGet packages on build.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PackageRestoreErrorTryAgain">
+            <summary>
+              Looks up a localized string similar to An error occurred while trying to restore packages:.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PackageRestoreProgressMessage">
+            <summary>
+              Looks up a localized string similar to Downloading missing packages....
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PackageRestoreSkipForProject">
+            <summary>
+              Looks up a localized string similar to Skipped reinstalling package &apos;{0}&apos; in project &apos;{1}&apos; because the package does not exist in the package source..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PackageRestoreSkipForSolution">
+            <summary>
+              Looks up a localized string similar to Skipped reinstalling package &apos;{0}&apos; because the package does not exist in the package source..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PackageRestoreWaitMessage">
+            <summary>
+              Looks up a localized string similar to Configuring the solution to restore NuGet packages on build....
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PackageSource_Invalid">
+            <summary>
+              Looks up a localized string similar to The package source does not belong to the collection of available sources..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PackageUpdatedSuccessfully">
+            <summary>
+              Looks up a localized string similar to &apos;{0}&apos; updated successfully..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PreinstalledPackages_ExtensionManagerError">
+            <summary>
+              Looks up a localized string similar to Error accessing Extension Manager..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PreinstalledPackages_FailedToInstallPackage">
+            <summary>
+              Looks up a localized string similar to Could not add all required packages to the project. The following packages failed to install from &apos;{0}&apos;:.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PreinstalledPackages_InvalidExtensionId">
+            <summary>
+              Looks up a localized string similar to The preinstalled packages have a reference to a missing Extension. Could not find an Extension with ID &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PreinstalledPackages_InvalidRegistryValue">
+            <summary>
+              Looks up a localized string similar to The preinstalled packages have a reference to a missing Registry value. Could not find a Registry key with name &apos;{0}&apos; under &apos;{1}&apos;..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PreinstalledPackages_PackageInstallStatus">
+            <summary>
+              Looks up a localized string similar to Adding {0}.{1} to project....
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PreinstalledPackages_RegistryKeyError">
+            <summary>
+              Looks up a localized string similar to The preinstalled packages are configured to use a Registry-provided package repository but there was an error accessing Registry key &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.PreinstalledPackages_VersionConflict">
+            <summary>
+              Looks up a localized string similar to Attempting to install version &apos;{1}&apos; of &apos;{0}&apos; but the project already includes a different version. Skipping....
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.ProjectNotSpecified">
+            <summary>
+              Looks up a localized string similar to No project was specified..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.ReinstallProjectPackage">
+            <summary>
+              Looks up a localized string similar to Reinstalling &apos;{0}&apos; in project &apos;{1}&apos;..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.ReinstallSolutionPackage">
+            <summary>
+              Looks up a localized string similar to Reinstalling &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.RequestRestartToCompleteUninstall">
+            <summary>
+              Looks up a localized string similar to One or more packages could not be completely uninstalled: {0}. Restart Visual Studio to finish uninstall..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.RestartNow">
+            <summary>
+              Looks up a localized string similar to Restart Now.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.RestoreButtonLabel">
+            <summary>
+              Looks up a localized string similar to _Restore.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.ShowDetails">
+            <summary>
+              Looks up a localized string similar to Show Details.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.SolutionDirectoryNotAvailable">
+            <summary>
+              Looks up a localized string similar to Unable to locate the solution directory. Please ensure that the solution has been saved..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.SolutionNotAvailable">
+            <summary>
+              Looks up a localized string similar to The current environment does not have a solution loaded..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.TemplateWizard_ErrorDialogTitle">
+            <summary>
+              Looks up a localized string similar to Package Installation Error.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.TemplateWizard_InvalidPackageElementAttributes">
+            <summary>
+              Looks up a localized string similar to The project template lists one or more packages with missing, empty, or invalid values for the &quot;id&quot; or &quot;version&quot; attributes. Both attributes are required and must have valid values..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.TemplateWizard_InvalidRepositoryAttribute">
+            <summary>
+              Looks up a localized string similar to The &quot;repository&quot; attribute of the package element has an invalid value: &apos;{0}&apos;. Valid values are: &apos;template&apos; or &apos;extension&apos;..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.TemplateWizard_InvalidWizardRunKind">
+            <summary>
+              Looks up a localized string similar to This template wizard can only be applied to single-project or project-item templates..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.TemplateWizard_MissingExtensionId">
+            <summary>
+              Looks up a localized string similar to The project template is configured to use an Extension-specific package repository but the Extension ID has not been specified. Use the &quot;repositoryId&quot; attribute to specify the Extension ID..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.TemplateWizard_MissingRegistryKeyName">
+            <summary>
+              Looks up a localized string similar to The project template is configured to use a Registry-provided package repository but the Registry value name has not been specified. Use the &quot;keyName&quot; attribute to specify the Registry value..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.UnableToFindPackageFromSource">
+            <summary>
+              Looks up a localized string similar to Unable to find package &apos;{0}&apos; version &apos;{1}&apos; from the source &apos;{2}&apos;..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.UnknownPackage">
+            <summary>
+              Looks up a localized string similar to Unable to find package &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.UnknownPackageInProject">
+            <summary>
+              Looks up a localized string similar to Unable to find package &apos;{0}&apos; in &apos;{1}&apos;..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.VisualStudioExpressForWindows8SourceName">
+            <summary>
+              Looks up a localized string similar to Windows 8 Packages.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Warning_DirectoryNotEmpty">
+            <summary>
+              Looks up a localized string similar to Directory &apos;{0}&apos; is not empty. Skipping....
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Warning_FailedToAddBindingRedirects">
+            <summary>
+              Looks up a localized string similar to Failed to generate binding redirects for &apos;{0}&apos;. {1}.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Warning_FailedToDeleteMarkedPackageDirectories">
+            <summary>
+              Looks up a localized string similar to Failed to remove package directories that were marked for deletion on Visual Studio restart: {0}.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Warning_FailedToDeleteMarkedPackageDirectory">
+            <summary>
+              Looks up a localized string similar to Failed to remove package directory &apos;{0}&apos; that was marked for deletion on Visual Studio restart..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Warning_FailedToFindMatchForRemoveReference">
+            <summary>
+              Looks up a localized string similar to Failed to find match for removing reference &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Warning_FailedToMarkPackageDirectoryForDeletion">
+            <summary>
+              Looks up a localized string similar to Failed to mark package directory &apos;{0}&apos; for deletion on Visual Studio restart: {1}.
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Warning_FileAlreadyExists">
+            <summary>
+              Looks up a localized string similar to &apos;{0}&apos; already exists. Skipping....
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Warning_NoExactMatchForReference">
+            <summary>
+              Looks up a localized string similar to No exact match found for removing reference &apos;{0}&apos;. Trying case-insensitive search....
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Warning_PackageNotReferencedByAnyProject">
+            <summary>
+              Looks up a localized string similar to Package {0} of version {1} is not referenced by any project..
+            </summary>
+        </member>
+        <member name="P:NuGet.VisualStudio.Resources.VsResources.Warning_RollingBack">
+            <summary>
+              Looks up a localized string similar to Install failed. Rolling back....
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsPackageManager.ReinstallPackage(System.String,System.Boolean,System.Boolean,NuGet.ILogger,NuGet.VisualStudio.IPackageOperationEventListener)">
+            <summary>
+            Reinstall the specified package in all projects.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsPackageManager.ReinstallPackage(NuGet.IProjectManager,System.String,System.Boolean,System.Boolean,NuGet.ILogger)">
+            <summary>
+            Reinstall the specified package in the specified project.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsPackageManager.ReinstallPackageInProject(NuGet.IProjectManager,NuGet.IPackage,System.Boolean,System.Boolean,NuGet.ILogger)">
+            <summary>
+            Reinstall the specified package in the specified project, taking care of logging too.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsPackageManager.IsProjectLevel(NuGet.IPackage)">
+            <summary>
+            Check to see if this package applies to a project based on 2 criteria:
+            1. The package has project content (i.e. content that can be applied to a project lib or content files)
+            2. The package is referenced by any other project
+            3. The package has at least one dependecy
+            
+            This logic will probably fail in one edge case. If there is a meta package that applies to a project
+            that ended up not being installed in any of the projects and it only exists at solution level.
+            If this happens, then we think that the following operation applies to the solution instead of showing an error.
+            To solve that edge case we'd have to walk the graph to find out what the package applies to.
+            
+            Technically, the third condition is not totally accurate because a solution-level package can depend on another 
+            solution-level package. However, doing that check here is expensive and we haven't seen such a package. 
+            This condition here is more geared towards guarding against metadata packages, i.e. we shouldn't treat metadata packages 
+            as solution-level ones.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsPackageManager.RunSolutionAction(System.Action)">
+            <summary>
+            Runs the specified action and rolls back any installed packages if on failure.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsPackageManager.RunActionOnProjects(System.Collections.Generic.IEnumerable{EnvDTE.Project},System.Action{EnvDTE.Project},NuGet.ILogger,NuGet.VisualStudio.IPackageOperationEventListener)">
+            <summary>
+            Runs the action on projects and log any error that may occur.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.VsPackageManager.RunProjectAction(NuGet.IProjectManager,System.Action)">
+            <summary>
+            Runs action on the project manager and rollsback any package installs if it fails.
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.WebSiteProjectSystem.RequiresAppCodeRemapping(System.String)">
+            <summary>
+            Determines if we need a source file to be under the App_Code folder
+            </summary>
+        </member>
+        <member name="M:NuGet.VisualStudio.WebSiteProjectSystem.RemoveDTEReference(System.String)">
+            <summary>
+            Removes a reference via the DTE. 
+            </summary>
+            <remarks>This is identical to VsProjectSystem.RemoveReference except in the way we process exceptions.</remarks>
+        </member>
+    </members>
+</doc>

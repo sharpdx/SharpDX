@@ -26,8 +26,10 @@ using System.Windows.Forms;
 using EnvDTE;
 
 using EnvDTE80;
-
+using Microsoft.VisualStudio.ComponentModelHost;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TemplateWizard;
+using NuGet.VisualStudio;
 
 namespace SharpDX.VisualStudio.ProjectWizard
 {
@@ -42,8 +44,6 @@ namespace SharpDX.VisualStudio.ProjectWizard
 
         private IWizard winRTCertificateWizard;
 
-        private bool isPlatformWP8;
-
         public void BeforeOpeningFile(ProjectItem projectItem)
         {
             if (winRTCertificateWizard != null) winRTCertificateWizard.BeforeOpeningFile(projectItem);
@@ -53,32 +53,18 @@ namespace SharpDX.VisualStudio.ProjectWizard
         {
             if (winRTCertificateWizard != null) winRTCertificateWizard.ProjectFinishedGenerating(project);
 
-            // Because SharpDX assemblies cannot be compiled with Any CPU on Windows Phone 8
-            // We need to patch the generated solution file to force solution config "Any CPU" to use a 
-            // project platform "x86" instead of "Any CPU", otherwise the project will not compile in Any CPU
-            // by default.
-            // Once They will provide DllImport on Windows Phone 8, we will be able to remove this annoying code.
-            if (isPlatformWP8)
+            try
             {
-                try
-                {
-                    var solution = dte.Solution as Solution2;
-                    var solutionBuild = (SolutionBuild2)solution.SolutionBuild;
-                    foreach (SolutionConfiguration2 solutionConfiguration in solutionBuild.SolutionConfigurations)
-                    {
-                        if (solutionConfiguration.PlatformName == "Any CPU")
-                        {
-                            foreach (SolutionContext solutionContext in solutionConfiguration.SolutionContexts)
-                            {
-                                solutionContext.ConfigurationName = solutionContext.ConfigurationName + "|x86";
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Don't bother if we failed to do anything with the solution, let the code generator continue.
-                }
+                var services = new ServiceProvider(dte as Microsoft.VisualStudio.OLE.Interop.IServiceProvider);
+                var componentModel = (IComponentModel)services.GetService(typeof(SComponentModel));
+                var packageManager = componentModel.GetService<IVsPackageInstaller>();
+
+                packageManager.InstallPackage(null, project, "SharpDX.Toolkit.Game", (string)null, false);
+                packageManager.InstallPackage(null, project, "SharpDX.Toolkit.Input", (string)null, false);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Unable to install nuget SharpDX.Toolkit.Game package. Please install it manually", "Error installing SharpDX nuget package", MessageBoxButtons.OK);
             }
         }
 
@@ -96,18 +82,7 @@ namespace SharpDX.VisualStudio.ProjectWizard
         {
             this.dte = automationObject as EnvDTE._DTE;
 
-            // Check that SharpDX is correctly installed
-            const string SharpDXSdkDirEnv = "SharpDXSdkDir";
-
-            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable(SharpDXSdkDirEnv, EnvironmentVariableTarget.Machine)) &&
-                string.IsNullOrEmpty(Environment.GetEnvironmentVariable(SharpDXSdkDirEnv, EnvironmentVariableTarget.User))
-                )
-            {
-                MessageBox.Show("Unable to find SharpDX installation directory. Expecting [SharpDXSdkDir] environment variable to point to valid folder where SharpDX SDK is located", "SharpDX Toolkit Wizard Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                throw new WizardCancelledException("Expecting [SharpDXSdkDir] environment variable");
-            }
             props.Add("$safeclassname$", props["$safeprojectname$"].Replace(".", string.Empty));
-
             props["$currentVsCulture$"] = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
 
             //Call win form created in the project to accept user input
@@ -148,8 +123,6 @@ namespace SharpDX.VisualStudio.ProjectWizard
             {
                 props["$sharpdx_platform_winrt$"] = "true";
             }
-
-            isPlatformWP8 = props.ContainsKey("$sharpdx_platform_wp8$");
         }
 
         private bool GetKey(Dictionary<string, string> replacementsDictionary, string name)

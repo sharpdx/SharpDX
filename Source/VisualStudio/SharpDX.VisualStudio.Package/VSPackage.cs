@@ -28,7 +28,7 @@ namespace SharpDX.VisualStudio.Package
     [PackageRegistration(UseManagedResourcesOnly = true)]
     // This attribute is used to register the information needed to show this package
     // in the Help/About dialog of Visual Studio.
-    [InstalledProductRegistration("#110", "#112", "1.1", IconResourceID = 400)]
+    [InstalledProductRegistration("#110", "#112", "1.2", IconResourceID = 400)]
     [Guid(GuidList.guidSharpDX_VisualStudio_PackagePkgString)]
     //[ProvideAutoLoad("ADFC4E64-0397-11D1-9F4E-00A0C911004F")] // Autoload at VisualStudio startup
     public sealed class VSPackage : Microsoft.VisualStudio.Shell.Package
