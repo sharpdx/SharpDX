@@ -53,6 +53,7 @@
     <Reference Include="SharpYaml, Version=1.2.0.13711, Culture=neutral, PublicKeyToken=1ced8108e942bc02, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\SharpYaml.1.2.0\lib\SharpYaml.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />

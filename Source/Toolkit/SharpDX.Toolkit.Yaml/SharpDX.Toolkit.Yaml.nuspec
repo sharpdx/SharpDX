@@ -42,6 +42,7 @@
       <dependency id="SharpDX" version="$version$"/>
       <dependency id="SharpDX.Toolkit" version="$version$"/>
       <dependency id="SharpDX.Toolkit.Game" version="$version$"/>
+      <dependency id="SharpYaml" version="1.2.0"/>
     </dependencies>
   </metadata>
 
