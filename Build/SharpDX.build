@@ -23,15 +23,15 @@
 <Project DefaultTarget="Help" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-	<SharpDXRepo>$(MSBuildThisFileDirectory)..</SharpDXRepo>
-	<SharDXNugetPackages>$(MSBuildThisFileDirectory)\Packages</SharDXNugetPackages>
+    <SharpDXRepo>$(MSBuildThisFileDirectory)..</SharpDXRepo>
+    <SharDXNugetPackages>$(MSBuildThisFileDirectory)\Packages</SharDXNugetPackages>
     <SharpDXSolution>$(SharpDXRepo)\SharpDX.sln</SharpDXSolution>
     <GitExe>"C:\Program Files (x86)\Git\bin\git.exe"</GitExe>
     <ExtensionTasksPath>$(SharpDXRepo)\External\MSBuildExtensionPack\</ExtensionTasksPath>
     <BuildSignedSharpDX>true</BuildSignedSharpDX>
-	<SharedAssemblyInfoFilePath>$(SharpDXRepo)\Source\SharedAssemblyInfo.cs</SharedAssemblyInfoFilePath>
-	<SharedAssemblyInfo>$([System.IO.File]::ReadAllText($(SharedAssemblyInfoFilePath)))</SharedAssemblyInfo>
-	<SharpDXAssemblyVersion>$([System.Text.RegularExpressions.Regex]::Match($(SharedAssemblyInfo), `AssemblyVersion\("(.*)"`).Groups[1].Value)</SharpDXAssemblyVersion>
+    <SharedAssemblyInfoFilePath>$(SharpDXRepo)\Source\SharedAssemblyInfo.cs</SharedAssemblyInfoFilePath>
+    <SharedAssemblyInfo>$([System.IO.File]::ReadAllText($(SharedAssemblyInfoFilePath)))</SharedAssemblyInfo>
+    <SharpDXAssemblyVersion>$([System.Text.RegularExpressions.Regex]::Match($(SharedAssemblyInfo), `AssemblyVersion\("(.*)"`).Groups[1].Value)</SharpDXAssemblyVersion>
     <SharpDXDevZip>$(MSBuildThisFileDirectory)\SharpDX-SDK-LatestDev.exe</SharpDXDevZip>
     <SharpDXReleaseZip>$(MSBuildThisFileDirectory)\SharpDX-SDK-$(SharpDXAssemblyVersion).exe</SharpDXReleaseZip>
   </PropertyGroup>
@@ -39,8 +39,8 @@
   <Import Project="$(ExtensionTasksPath)MSBuild.ExtensionPack.tasks"/>
 
   <Target Name="Help">
-	<Message Importance="high" Text="SharedAssemblyInfo $(SharedAssemblyInfo)"/>
-	<Message Importance="high" Text="SharpDXAssemblyVersion $(SharpDXAssemblyVersion)"/>
+    <Message Importance="high" Text="SharedAssemblyInfo $(SharedAssemblyInfo)"/>
+    <Message Importance="high" Text="SharpDXAssemblyVersion $(SharpDXAssemblyVersion)"/>
     <Message Importance="high" Text="Use parameter /t:Pre-Build;Build to build SharpDX assemblies for non WP8 platforms. And /t:BuildForVS2012 for WP8"/>
   </Target>
 
@@ -53,23 +53,24 @@
     <CallTarget Targets="ZipBuild"/>
     <CallTarget Targets="FtpZip"/>
   </Target>
-  
+
   <Target Name="Release">
- 	<CallTarget Targets="Build"/>
-	<CallTarget Targets="Post-Build"/>
-	<CallTarget Targets="Nuget"/>
+    <CallTarget Targets="Build"/>
+    <CallTarget Targets="Post-Build"/>
+    <CallTarget Targets="Nuget"/>
     <CallTarget Targets="ZipRelease"/>
+    <CallTarget Targets="FtpReleaseZip"/>
   </Target>
-  
+
   <Target Name="Nuget">
     <Exec Command="RMDIR /Q /S $(SharDXNugetPackages)"/>
     <MakeDir Directories="$(SharDXNugetPackages)"/>
     <ItemGroup>
       <SharpDXNuspecs Include="$(SharpDXRepo)\Source\**\*.nuspec"/>
     </ItemGroup>
-	<Exec Command="nuget.exe pack -OutputDirectory $(SharDXNugetPackages) -Properties version=$(SharpDXAssemblyVersion) %(SharpDXNuspecs.Identity)"/>
+    <Exec Command="nuget.exe pack -OutputDirectory $(SharDXNugetPackages) -Properties version=$(SharpDXAssemblyVersion) %(SharpDXNuspecs.Identity)"/>
   </Target>
-  
+
   <Target Name="Build">
     <!--Build all targets / platforms-->
 
@@ -95,21 +96,21 @@
 
   <!--Custom task for checking certification result (fail or pass), the project is excluded from solution build - needs to be rebuilt manually when needed-->
   <UsingTask TaskName="Certification.Tasks.VerifyCertificationResultTask" AssemblyFile="$(SharpDXRepo)\Source\CertificationTests\Tasks\Certification.Tasks.dll"/>
-  
+
   <!--Runs the certification verification-->
   <Target Name="RunCertificationTests">
     <PropertyGroup>
-      
+
       <!--The main folder for all certification tests-->
       <SharpDXCertificationTestDir>$(SharpDXRepo)\Source\CertificationTests\</SharpDXCertificationTestDir>
-      
+
       <!--The solution which contains projects that require certification verification-->
       <SharpDXCertificationTestSolution>$(SharpDXCertificationTestDir)CertificationTests.sln</SharpDXCertificationTestSolution>
-      
+
       <!--The path to the WACK executable-->
       <AppCertExe>&quot;C:\Program Files (x86)\Windows Kits\8.1\App Certification Kit\appcert.exe&quot;</AppCertExe>
-      
-    <!--The path to store certification results XML-->
+
+      <!--The path to store certification results XML-->
       <AppCertResultsDir>$(SharpDXCertificationTestDir)Results</AppCertResultsDir>
     </PropertyGroup>
 
@@ -207,7 +208,7 @@
     <Delete Files="$(SharpDXDevZip)"/>
     <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(SharpDXRepo)\External\7-Zip\7z.exe a -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.pri -xr!*.exp $(SharpDXDevZip) Bin\*\*.* Build\SharpDX.targets Build\SharpDX.Toolkit.targets License.txt CommitLog.txt Readme.md'/>
   </Target>
-  
+
   <Target Name="ZipRelease">
     <Delete Files="$(SharpDXReleaseZip)"/>
     <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(SharpDXRepo)\External\7-Zip\7z.exe a -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.pri -xr!*.exp $(SharpDXReleaseZip) Bin\*\*.* Build\SharpDX.targets Build\SharpDX.Toolkit.targets License.txt ReleaseNotes.html Readme.md'/>
@@ -223,6 +224,16 @@
     <ItemGroup>
       <FilesToUpload Include="$(SharpDXDevZip)" />
       <FilesToUpload Include="$(LastCommitPath)" />
+    </ItemGroup>
+
+    <!-- Upload Zip -->
+    <MSBuild.ExtensionPack.Communication.Ftp TaskAction="UploadFiles" Host="sharpdx.org" RemoteDirectoryName="/sharpdx/upload" FileNames="@(FilesToUpload)" UserName="$(SharpDXFtpUser)" UserPassword="$(SharpDXFtpPassword)" />
+  </Target>
+
+  <Target Name="FtpReleaseZip">
+    <!-- Get Last commit log from git  -->
+    <ItemGroup>
+      <FilesToUpload Include="$(SharpDXReleaseZip)" />
     </ItemGroup>
 
     <!-- Upload Zip -->
