@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Build\SharpDX.PreSettings.targets" />
+  <PropertyGroup>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E5BB5D1C-6C07-495B-923B-FB80B79C535E}</ProjectGuid>
+    <RootNamespace>SharpDX.Direct3D12</RootNamespace>
+    <AssemblyName>SharpDX.Direct3D12</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(SharpDXWin8Core)' == 'false'">
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="Generated\Enumerations.cs" />
+    <Compile Include="Generated\Functions.cs" />
+    <Compile Include="Generated\Interfaces.cs" />
+    <Compile Include="Generated\LocalInterop.cs" />
+    <Compile Include="Generated\Structures.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Documentation\CodeComments.xml" />
+    <None Include="Mapping.xml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SharpDX.Direct3D12.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
+      <Project>{736dfb52-1afe-4eff-9710-89046ab5b1f9}</Project>
+      <Name>SharpDX.Direct3D11</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj">
+      <Project>{3fc6de77-b412-4101-9e64-6b9aa831179b}</Project>
+      <Name>SharpDX.DXGI</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
+      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
+      <Name>SharpDX</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

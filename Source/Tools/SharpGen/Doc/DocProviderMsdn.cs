@@ -164,6 +164,10 @@ namespace SharpGen.Doc
             Logger.Progress(20 + (counter/50) % 10, "Applying C++ documentation ([{0}])", name);
 
             string doc = GetDocumentationFromCacheOrMsdn(name);
+            if(doc == null)
+            {
+                return new DocItem() {Description = "No documentation for Direct3D12"};
+            }
             return ParseDocumentation(doc);
         }
 
@@ -208,6 +212,8 @@ namespace SharpGen.Doc
                 }
                 else
                 {
+                    return null;
+
                     // Begin update if zip is not updated
                     if (!isZipUpdated)
                     {

@@ -165,7 +165,12 @@ namespace SharpGen
             Macros.Add("WP8");
             Macros.Add("W8CORE");
 #endif
-#if DIRECTX11_2
+#if DirectX12
+            // Load configuration
+            Macros.Add("DirectX12");
+            Macros.Add("DIRECTX11_2");
+            Macros.Add("DIRECTX11_1");
+#elif DIRECTX11_2
             // Load configuration
             Macros.Add("DIRECTX11_2");
             Macros.Add("DIRECTX11_1");
