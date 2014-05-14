@@ -41,6 +41,28 @@ namespace SharpDX.MediaFoundation
             MediaFactory.CreateMediaExtensionActivate(activatableClassId, propertySet, Utilities.GetGuidFromType(typeof (Activate)), out temp);
             NativePointer = temp;
         }
+
+        /// <summary>	
+        /// <p> Creates the object associated with this activation object. </p>	
+        /// </summary>	
+        /// <param name="riid"><dd> <p> Interface identifier (IID) of the requested interface. </p> </dd></param>	
+        /// <returns><dd> <p> A reference to the requested interface. The caller must release the interface. </p> </dd></returns>	
+        /// <remarks>	
+        /// <p>Some Microsoft Media Foundation objects must be shut down before being released. If so, the caller is responsible for shutting down the object that is returned in <em>ppv</em>. To shut down the object, do one of the following:</p><ul> <li>Call <strong><see cref="SharpDX.MediaFoundation.Activate.ShutdownObject"/></strong> on the activation object, or</li> <li>Call the object-specific shutdown method. This method will depend on the type of object. Possibilities include:<ul> <li>Media sources: Call <strong><see cref="SharpDX.MediaFoundation.MediaSource.Shutdown"/></strong>.</li> <li>Media sinks: Call <strong><see cref="SharpDX.MediaFoundation.MediaSink.Shutdown"/></strong>.</li> <li>Any object that supports the <strong><see cref="SharpDX.MediaFoundation.Shutdownable"/></strong> interface: Call <strong><see cref="SharpDX.MediaFoundation.Shutdownable.Shutdown"/></strong>.</li> </ul> </li> </ul><p>The <strong><see cref="SharpDX.MediaFoundation.Activate.ShutdownObject"/></strong> method is generic to all object types. If the object does not require a shutdown method, <strong>ShutdownObject</strong> succeeds and has no effect. If you do not know the specific shutdown method for the object (or do not know the object type), call <strong><see cref="SharpDX.MediaFoundation.Activate.ShutdownObject"/></strong>.</p><p> After the first call to <strong>ActivateObject</strong>, subsequent calls return a reference to the same instance, until the client calls either <strong>ShutdownObject</strong> or <strong><see cref="SharpDX.MediaFoundation.Activate.DetachObject"/></strong>. </p>	
+        /// </remarks>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFActivate::ActivateObject']/*"/>	
+        /// <msdn-id>ms694292</msdn-id>	
+        /// <unmanaged>HRESULT IMFActivate::ActivateObject([In] const GUID&amp; riid,[Out] void** ppv)</unmanaged>	
+        /// <unmanaged-short>IMFActivate::ActivateObject</unmanaged-short>	
+        public T ActivateObject<T>(System.Guid riid) where T : SharpDX.ComObject
+        {
+            unsafe
+            {
+                IntPtr objectRef;
+                ActivateObject(riid, out objectRef);
+                return ComObject.FromPointer<T>(objectRef);
+            }
+        }
     }
 }
 #endif

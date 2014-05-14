@@ -25,6 +25,39 @@ namespace SharpDX.MediaFoundation
 {
     public static partial class MediaFactory
     {
+        /// <summary>	
+        /// <p>Enumerates a list of audio or video capture devices.</p>	
+        /// </summary>	
+        /// <param name="attributesRef"><dd> <p>Pointer to an attribute store that contains search criteria. To create the attribute store, call <strong><see cref="SharpDX.MediaFoundation.MediaFactory.CreateAttributes"/></strong>. Set one or more of the following attributes on the attribute store:</p> <table> <tr><th>Value</th><th>Meaning</th></tr> <tr><td><dl> <dt><strong><see cref="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys.SourceType"/></strong></dt> </dl> </td><td> <p>Specifies whether to enumerate audio or video devices. (Required.)</p> </td></tr> <tr><td><dl> <dt><strong><see cref="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys.SourceTypeAudcapRole"/></strong></dt> </dl> </td><td> <p>For audio capture devices, specifies the device role. (Optional.)</p> </td></tr> <tr><td><dl> <dt><strong><see cref="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys.SourceTypeVidcapCategory"/></strong></dt> </dl> </td><td> <p>For video capture devices, specifies the device category. (Optional.)</p> </td></tr> </table> <p>?</p> </dd></param>	
+        /// <param name="pSourceActivateOut"><dd> <p>Receives an array of <strong><see cref="SharpDX.MediaFoundation.Activate"/></strong> interface references. Each reference represents an activation object for a media source. The function allocates the memory for the array. The caller must release the references in the array and call <strong>CoTaskMemFree</strong> to free the memory for the array.</p> </dd></param>	
+        /// <param name="cSourceActivateRef"><dd> <p>Receives the number of elements in the <em>pppSourceActivate</em> array. If no capture devices match the search criteria, this parameter receives the value 0.</p> </dd></param>	
+        /// <returns><p>If this function succeeds, it returns <strong><see cref="SharpDX.Result.Ok"/></strong>. Otherwise, it returns an <strong><see cref="SharpDX.Result"/></strong> error code.</p></returns>	
+        /// <remarks>	
+        /// <p>Each returned <strong><see cref="SharpDX.MediaFoundation.Activate"/></strong> reference represents a capture device, and can be used to create a media source for that device. You can also use the <strong><see cref="SharpDX.MediaFoundation.Activate"/></strong> reference to query for attributes that describe the device. The following attributes might be set:</p><table> <tr><th>Attribute</th><th>Description</th></tr> <tr><td> <see cref="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys.FriendlyName"/> </td><td>The display name of the device.</td></tr> <tr><td> <see cref="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys.MediaType"/> </td><td>The major type and subtype GUIDs that describe the device's output format.</td></tr> <tr><td> <see cref="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys.SourceType"/> </td><td>The type of capture device (audio or video).</td></tr> <tr><td> <see cref="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys.SourceTypeAudcapEndpointId"/> </td><td>The audio endpoint ID string. (Audio devices only.)</td></tr> <tr><td> <see cref="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys.SourceTypeVidcapCategory"/> </td><td>The device category. (Video devices only.)</td></tr> <tr><td> <see cref="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys.SourceTypeVidcapHwSource"/> </td><td> Whether a device is a hardware or software device. (Video devices only.)</td></tr> <tr><td> <see cref="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys.SourceTypeVidcapSymbolicLink"/> </td><td>The symbolic link for the device driver. (Video devices only.)</td></tr> </table><p>?</p><p>To create a media source from an <strong><see cref="SharpDX.MediaFoundation.Activate"/></strong> reference, call the <strong><see cref="SharpDX.MediaFoundation.Activate.ActivateObject"/></strong> method.</p>	
+        /// </remarks>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='MFEnumDeviceSources']/*"/>	
+        /// <msdn-id>dd388503</msdn-id>	
+        /// <unmanaged>HRESULT MFEnumDeviceSources([In] IMFAttributes* pAttributes,[Out, Buffer] IMFActivate*** pppSourceActivate,[Out] unsigned int* pcSourceActivate)</unmanaged>	
+        /// <unmanaged-short>MFEnumDeviceSources</unmanaged-short>	
+        public static SharpDX.MediaFoundation.Activate[] EnumDeviceSources(SharpDX.MediaFoundation.MediaAttributes attributesRef)
+        {
+            unsafe
+            {
+                IntPtr devicePtr = IntPtr.Zero;
+                uint devicesCount;
+
+                SharpDX.Result result = MFEnumDeviceSources_((void*)((attributesRef == null) ? IntPtr.Zero : attributesRef.NativePointer), &devicePtr, (void*)&devicesCount);
+                result.CheckError();
+                Activate[] activates = new Activate[devicesCount];
+                void** address = (void**)devicePtr;
+                for (uint i = 0; i < devicesCount; i++)
+                {
+                    activates[i] = new Activate(new IntPtr(address[i]));
+                } 
+                return activates;
+            }
+        }
+
         /// <summary>
         /// Gets a list of Microsoft Media Foundation transforms (MFTs) that match specified search criteria. This function extends the <strong><see cref="SharpDX.MediaFoundation.MediaFactory.TEnum"/></strong> function.
         /// </summary>
