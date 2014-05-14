@@ -79,6 +79,7 @@
     <Compile Include="SourceReader.cs" />
     <Compile Include="SourceResolver.cs" />
     <Compile Include="Transform.cs" />
+    <Compile Include="VideoFormatGuids.cs" />
     <Compile Include="VideoPresenter.cs" />
     <Compile Include="VideoPresenterShadow.cs" />
     <Compile Include="WorkQueueId.cs" />
