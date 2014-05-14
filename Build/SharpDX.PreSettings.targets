@@ -96,7 +96,18 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
-  
+
+  <!--.NET 4.0 - DirectX11.2 - Windows 8 Desktop-->
+  <PropertyGroup Condition=" '$(Platform)' == 'DirectX12'">
+    <SharpDXAssemblyType>DirectX12</SharpDXAssemblyType>
+    <SharpDXPlatform>net40</SharpDXPlatform>
+    <DirectX11_1>true</DirectX11_1>
+    <DirectX11_2>true</DirectX11_2>
+    <DirectX12>true</DirectX12>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+
   <!--.NET 4.5 - DirectX11.2 - Windows 8 Metro-->
   <PropertyGroup Condition=" '$(Platform)' == 'Win8'">
     <SharpDXAssemblyType>DirectX11_2</SharpDXAssemblyType>
@@ -138,7 +149,6 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Net20Release\$(AssemblyName).xml</DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
@@ -161,7 +171,6 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Net40Release\$(AssemblyName).xml</DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
@@ -184,9 +193,30 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <DocumentationFile>bin\DIRECTX11_2Release\$(AssemblyName).xml</DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
+  
+  <!--.NET 4.0 - DirectX11.2 - Windows 8 Desktop-->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|DirectX12' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>TRACE;DEBUG;DIRECTX11_1;DirectX12;WinFormsInterop;NET35Plus</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|DirectX12' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE;DIRECTX11_1;DirectX12;WinFormsInterop;NET35Plus</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>  
 
   <!--.NET 4.5 - DirectX11.2 - Windows 8 Metro-->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win8'">
