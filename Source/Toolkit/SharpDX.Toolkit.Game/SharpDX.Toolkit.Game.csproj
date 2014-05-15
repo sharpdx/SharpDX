@@ -8,16 +8,27 @@
     <RootNamespace>SharpDX.Toolkit</RootNamespace>
     <AssemblyName>SharpDX.Toolkit.Game</AssemblyName>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(SharpDXWin8)' == 'false'">
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="System.Xaml" />
-  </ItemGroup>
+  <Choose>
+    <When Condition="'$(SharpDXWin8)' == 'false'">
+      <ItemGroup>
+        <Reference Include="System" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Drawing" />
+        <Reference Include="System.Windows.Forms" />
+        <Reference Include="PresentationFramework" />
+        <Reference Include="PresentationCore" />
+        <Reference Include="WindowsBase" />
+        <Reference Include="System.Xaml" />
+      </ItemGroup>
+      <ItemGroup>
+        <ProjectReference Include="..\..\SharpDX.Direct3D9\SharpDX.Direct3D9.csproj">
+          <Project>{b4d984df-85b8-4bbf-8c3b-5cef905f40d9}</Project>
+          <Name>SharpDX.Direct3D9</Name>
+          <Private>False</Private>
+        </ProjectReference>
+      </ItemGroup>
+    </When>
+  </Choose>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
@@ -94,16 +105,6 @@
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
-  <Choose>
-    <When Condition=" '$(Platform)' == 'Net40' or '$(Platform)' == 'DIRECTX11_2'">
-      <ItemGroup>
-        <ProjectReference Include="..\..\SharpDX.Direct3D9\SharpDX.Direct3D9.csproj">
-          <Project>{b4d984df-85b8-4bbf-8c3b-5cef905f40d9}</Project>
-          <Name>SharpDX.Direct3D9</Name>
-        </ProjectReference>
-      </ItemGroup>
-    </When>
-  </Choose>
   <ItemGroup>
     <None Include="SharpDX.Toolkit.Game.nuspec" />
   </ItemGroup>
