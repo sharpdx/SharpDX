@@ -1002,9 +1002,11 @@
     <map function="ConvertPropVariant" dll='"mf.dll"'/>
     <map function="AppendPropVariant" dll='"mf.dll"'/>
 
-
     <map function="MFTEnumEx" visibility="internal"/>
     <map param="MFTEnumEx::pppMFTActivate" type="void" attribute="out"/>
+
+    <map function="MFEnumDeviceSources" visibility="internal"/>
+    <map param="MFEnumDeviceSources::pppSourceActivate" type="void" attribute="out"/>
 
     <map param="IMFASFMultiplexer::GetNextPacket::pdwStatusFlags" type="ASF_STATUSFLAGS" attribute="out"/>
 

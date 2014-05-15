@@ -39,23 +39,24 @@ namespace SharpDX.MediaFoundation
         /// <msdn-id>dd388503</msdn-id>	
         /// <unmanaged>HRESULT MFEnumDeviceSources([In] IMFAttributes* pAttributes,[Out, Buffer] IMFActivate*** pppSourceActivate,[Out] unsigned int* pcSourceActivate)</unmanaged>	
         /// <unmanaged-short>MFEnumDeviceSources</unmanaged-short>	
-        public static SharpDX.MediaFoundation.Activate[] EnumDeviceSources(SharpDX.MediaFoundation.MediaAttributes attributesRef)
+        public static Activate[] EnumDeviceSources(MediaAttributes attributesRef)
         {
+
+            IntPtr devicePtr;
+            int devicesCount;
+
+            EnumDeviceSources(attributesRef, out devicePtr, out devicesCount);
+
+            var result = new Activate[devicesCount];
+
             unsafe
             {
-                IntPtr devicePtr = IntPtr.Zero;
-                uint devicesCount;
-
-                SharpDX.Result result = MFEnumDeviceSources_((void*)((attributesRef == null) ? IntPtr.Zero : attributesRef.NativePointer), &devicePtr, (void*)&devicesCount);
-                result.CheckError();
-                Activate[] activates = new Activate[devicesCount];
-                void** address = (void**)devicePtr;
-                for (uint i = 0; i < devicesCount; i++)
-                {
-                    activates[i] = new Activate(new IntPtr(address[i]));
-                } 
-                return activates;
+                var address = (void**)devicePtr;
+                for (var i = 0; i < devicesCount; i++)
+                    result[i] = new Activate(new IntPtr(address[i]));
             }
+
+            return result;
         }
 
         /// <summary>
@@ -130,7 +131,7 @@ namespace SharpDX.MediaFoundation
             unsafe
             {
                 SharpDX.Result __result__;
-                    __result__ = MFCopyImage_(destRef.ToPointer(), lDestStride, srcRef.ToPointer(), lSrcStride, dwWidthInBytes, dwLines);
+                __result__ = MFCopyImage_(destRef.ToPointer(), lDestStride, srcRef.ToPointer(), lSrcStride, dwWidthInBytes, dwLines);
                 __result__.CheckError();
             }
         }
