@@ -19,13 +19,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace SharpDX.MediaFoundation
 {
+    using System;
+
     /// <summary>
     /// Utility class which contains all Video Formats GUIDs as specified in mfapi.h
     /// </summary>
