@@ -781,7 +781,7 @@ namespace SharpCli
             }
 
             // TODO: Temporary patch to handle correctly 4.5 Core profile
-            if (mscorlibAssembly == null)
+            if (mscorlibAssembly == null || mscorlibAssembly.MainModule.GetType("System.Void") == null)
             {
                 foreach (var assemblyNameReference in assembly.MainModule.AssemblyReferences)
                 {
