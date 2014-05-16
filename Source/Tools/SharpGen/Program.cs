@@ -22,8 +22,6 @@ using System.Threading;
 using System.Windows.Forms;
 using SharpGen.Logging;
 
-using SharpGen.Doc;
-
 namespace SharpGen
 {
     /// <summary>
@@ -45,14 +43,17 @@ namespace SharpGen
 
                 _codeGenApp.Run();
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Logger.Fatal("Unexpected exception", ex);
             }
             finally
             {
-                MethodInvoker methodInvoker = delegate() { _progressForm.Shutdown(); };
-                _progressForm.Invoke(methodInvoker);                
+                if(_progressForm != null)
+                {
+                    MethodInvoker methodInvoker = delegate() { _progressForm.Shutdown(); };
+                    _progressForm.Invoke(methodInvoker);
+                }
             }
         }
 
@@ -72,18 +73,26 @@ namespace SharpGen
                 _codeGenApp = new CodeGenApp();
                 _codeGenApp.ParseArguments(args);
 
-                if (_codeGenApp.Init())
+                if(_codeGenApp.Init())
                 {
-                    Application.EnableVisualStyles();
-                    Application.SetCompatibleTextRenderingDefault(false);
-                    _progressForm = new ProgressForm();
-                    Logger.ProgressReport = _progressForm;
-                    _progressForm.Show();
+                    if(Environment.GetEnvironmentVariable("SharpDXBuildNoWindow") == null)
+                    {
+                        Application.EnableVisualStyles();
+                        Application.SetCompatibleTextRenderingDefault(false);
+                        _progressForm = new ProgressForm();
+                        Logger.ProgressReport = _progressForm;
+                        _progressForm.Show();
 
-                    var runningThread = new Thread(RunAsync) { IsBackground = true };
-                    runningThread.Start();
+                        var runningThread = new Thread(RunAsync) {IsBackground = true};
+                        runningThread.Start();
 
-                    Application.Run(_progressForm);
+                        Application.Run(_progressForm);
+                    }
+                    else
+                    {
+                        RunAsync();
+                    }
+
                 }
                 else
                 {
@@ -91,7 +100,7 @@ namespace SharpGen
                 }
 
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Logger.Fatal("Unexpected exception", ex);
             }
