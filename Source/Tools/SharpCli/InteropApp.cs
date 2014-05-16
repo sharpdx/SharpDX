@@ -728,7 +728,8 @@ namespace SharpCli
         static string ProgramFilesx86()
         {
             if (8 == IntPtr.Size
-                || (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
+                || (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
+                || Environment.GetEnvironmentVariable("ProgramFiles(x86)") != null)
             {
                 return Environment.GetEnvironmentVariable("ProgramFiles(x86)");
             }
