@@ -801,7 +801,7 @@ namespace SharpCli
             }
 
             // Import void* and int32 from assembly using mscorlib specific version (2.0 or 4.0 depending on assembly)
-            Console.WriteLine("Using mscorlib {0}", mscorlibAssembly.FullName);
+            Console.WriteLine("Using mscorlib {0} ({1})", mscorlibAssembly.FullName, mscorlibAssembly.MainModule.FullyQualifiedName);
             voidType = mscorlibAssembly.MainModule.GetType("System.Void");
             if(voidType == null)
             {
