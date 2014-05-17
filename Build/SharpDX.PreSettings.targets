@@ -99,6 +99,7 @@
   
   <!--.NET 4.5 - DirectX11.2 - Windows 8 Metro-->
   <PropertyGroup Condition=" '$(Platform)' == 'Win8'">
+    <TargetPlatformVersion>8.0</TargetPlatformVersion>
     <SharpDXAssemblyType>DirectX11_2</SharpDXAssemblyType>
     <SharpDXPlatform>winrt</SharpDXPlatform>
     <SharpDXWin8>true</SharpDXWin8>
