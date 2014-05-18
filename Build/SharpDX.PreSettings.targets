@@ -25,6 +25,9 @@
     <DirectX11_1>false</DirectX11_1>
     <DirectX11_2>false</DirectX11_2>
 
+    <!-- Variable used for Windows8 build -->
+    <DefaultLanguage>en-US</DefaultLanguage>
+
     <!-- Save the Platform, as we are overriding it in SharpDXForcePlatform  -->
     <ProjectPlatform>$(Platform)</ProjectPlatform>
   </PropertyGroup>

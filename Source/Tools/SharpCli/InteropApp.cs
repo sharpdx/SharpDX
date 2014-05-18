@@ -24,7 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-
+using System.Runtime.Versioning;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Pdb;
@@ -780,18 +780,22 @@ namespace SharpCli
                 }                
             }
 
-            // TODO: Temporary patch to handle .NETCore 4.5 profile
+            // TODO: Temporary patch to handle .NETCore 4.5/4.5.1 profile
             if (mscorlibAssembly == null || mscorlibAssembly.MainModule.GetType("System.Void") == null)
             {
-                foreach (var assemblyNameReference in assembly.MainModule.AssemblyReferences)
+                // Temporary patch to handle .NETCore 4.5 profile
+                var targetFrameworkAttr = assembly.CustomAttributes.FirstOrDefault(
+                    attribute => attribute.Constructor.FullName.Contains("System.Runtime.Versioning.TargetFrameworkAttribute"));
+                if (targetFrameworkAttr != null && targetFrameworkAttr.ConstructorArguments.Count > 0 &&
+                    targetFrameworkAttr.ConstructorArguments[0].Value != null)
                 {
-                    if (assemblyNameReference.Name == "System.Runtime")
-                    {
-                        ((BaseAssemblyResolver)assembly.MainModule.AssemblyResolver).AddSearchDirectory( Path.Combine(ProgramFilesx86(),@"Reference Assemblies\Microsoft\Framework\.NETCore\v4.5"));
+                    var targetFramework = new FrameworkName(targetFrameworkAttr.ConstructorArguments[0].Value.ToString());
 
-                        // Use the name instead of the assemblyNameReference to resolve 
-                        mscorlibAssembly = assembly.MainModule.AssemblyResolver.Resolve(assemblyNameReference.Name);
-                        break;
+                    if (targetFramework.Identifier == ".NETCore")
+                    {
+                        var netcoreAssemblyPath = @"Reference Assemblies\Microsoft\Framework\.NETCore\v" + targetFramework.Version;
+                        ((BaseAssemblyResolver)assembly.MainModule.AssemblyResolver).AddSearchDirectory(Path.Combine(ProgramFilesx86(), netcoreAssemblyPath));
+                        mscorlibAssembly = assembly.MainModule.AssemblyResolver.Resolve("System.Runtime");
                     }
                 }
             }
