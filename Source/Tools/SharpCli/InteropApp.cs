@@ -773,7 +773,7 @@ namespace SharpCli
 
             foreach (var assemblyNameReference in assembly.MainModule.AssemblyReferences)
             {
-                if (assemblyNameReference.Name.ToLower() == "mscorlib")
+                if (assemblyNameReference.Name.StartsWith("mscorlib"))
                 {
                     mscorlibAssembly =  assembly.MainModule.AssemblyResolver.Resolve(assemblyNameReference);
                     break;
