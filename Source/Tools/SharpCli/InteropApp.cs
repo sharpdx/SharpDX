@@ -780,7 +780,7 @@ namespace SharpCli
                 }                
             }
 
-            // TODO: Temporary patch to handle correctly 4.5 Core profile
+            // TODO: Temporary patch to handle .NETCore 4.5 profile
             if (mscorlibAssembly == null || mscorlibAssembly.MainModule.GetType("System.Void") == null)
             {
                 foreach (var assemblyNameReference in assembly.MainModule.AssemblyReferences)
@@ -788,7 +788,9 @@ namespace SharpCli
                     if (assemblyNameReference.Name == "System.Runtime")
                     {
                         ((BaseAssemblyResolver)assembly.MainModule.AssemblyResolver).AddSearchDirectory( Path.Combine(ProgramFilesx86(),@"Reference Assemblies\Microsoft\Framework\.NETCore\v4.5"));
-                        mscorlibAssembly = assembly.MainModule.AssemblyResolver.Resolve(assemblyNameReference);
+
+                        // Use the name instead of the assemblyNameReference to resolve 
+                        mscorlibAssembly = assembly.MainModule.AssemblyResolver.Resolve(assemblyNameReference.Name);
                         break;
                     }
                 }
@@ -801,11 +803,11 @@ namespace SharpCli
             }
 
             // Import void* and int32 from assembly using mscorlib specific version (2.0 or 4.0 depending on assembly)
-            Console.WriteLine("Using mscorlib {0} ({1})", mscorlibAssembly.FullName, mscorlibAssembly.MainModule.FullyQualifiedName);
             voidType = mscorlibAssembly.MainModule.GetType("System.Void");
             if(voidType == null)
             {
-                Console.WriteLine("Unable to find 'System.Void'");
+                Console.WriteLine("ERROR, Unable to find 'System.Void' from {0} ({1})", mscorlibAssembly.FullName, mscorlibAssembly.MainModule.FullyQualifiedName);
+                throw new InvalidOperationException("Unable to find System.Void from assembly");
             }
             voidPointerType = new PointerType(assembly.MainModule.Import(voidType));
             intType = assembly.MainModule.Import( mscorlibAssembly.MainModule.GetType("System.Int32"));
