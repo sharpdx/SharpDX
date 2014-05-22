@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -142,6 +143,7 @@ namespace SharpGen.Generator
 
             // Handle Methods
             var generatedMethods = new List<CsMethod>();
+            var intPtrType = Manager.ImportType(typeof(IntPtr));
             foreach (var cppMethod in cppInterface.Methods)
             {
                 var cSharpMethod = (CsMethod)MethodTranform.Prepare(cppMethod);
@@ -151,7 +153,7 @@ namespace SharpGen.Generator
                 MethodTranform.Process(cSharpMethod);
 
                 // Add specialized method for ComArray
-                CreateMethodsForComArrayMethod(interfaceType, cSharpMethod);
+                CreateMethodsForComArrayMethod(interfaceType, cSharpMethod, intPtrType);
 
                 //MapMethod(cSharpMethod);
                 //RegisterNativeInterop(cSharpMethod);
@@ -306,7 +308,7 @@ namespace SharpGen.Generator
             }
         }
 
-        private static void CreateMethodsForComArrayMethod(CsInterface interfaceType, CsMethod csMethod)
+        private static void CreateMethodsForComArrayMethod(CsInterface interfaceType, CsMethod csMethod, CsTypeBase intPtrType)
         {
             foreach (var csParameter in csMethod.Parameters)
             {
@@ -321,6 +323,20 @@ namespace SharpGen.Generator
                             csSubParameter.PublicType = new CsComArray((CsInterface)csSubParameter.PublicType);
                     }
                     interfaceType.Add(newMethod);
+
+                    // Create private method with raw pointers for arrays, with all arrays as pure IntPtr
+                    // In order to be able to generate method taking single element
+                    var rawMethod = (CsMethod)csMethod.Clone();
+                    rawMethod.Visibility = Visibility.Private;
+                    foreach (var csSubParameter in rawMethod.Parameters)
+                    {
+                        if(csSubParameter.IsArray)
+                        {
+                            csSubParameter.PublicType = intPtrType;
+                            csSubParameter.IsArray = false;
+                        }
+                    }
+                    interfaceType.Add(rawMethod);
                     break;
                 }
             }
