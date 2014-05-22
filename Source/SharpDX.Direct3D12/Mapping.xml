@@ -49,7 +49,7 @@
   <extension>
     <context id="d3d12-all"/>
 
-    
+    <const from-macro="D3D12_SDK_VERSION" class="SharpDX.Direct3D12.D3D12" type="int" name="SdkVersion" />
     <create class="D3D12" />
     
     <context-clear />
@@ -69,6 +69,7 @@
     // *****************************************************************
     -->
 
+    <map enum-item="D3D12_RESOURCE_BINDING_TIER_(.*)" name="Tier$1"/>
 
     <!--
     // *****************************************************************
@@ -76,13 +77,48 @@
     // *****************************************************************
     -->
 
-  
+    <map struct="D3D12_RESOURCE_DESC" name="ResourceDescription2"/>
+    <map struct="D3D12_PIPELINE_STATE_DESC" struct-to-class="true"/>
+    <map field="D3D12_PIPELINE_STATE_DESC::p([A-Z].*)" name="$1Pointer" visibility="private"/>
+    <map field="D3D12_PIPELINE_STATE_DESC::RTVFormats" name="RenderTargetFormats"/>
+    <map field="D3D12_PIPELINE_STATE_DESC::DSVFormat" name="DepthStencilFormat"/>
+
+    <map field="D3D12_RESOURCE_TRANSITION_BARRIER_DESC::pResource" name="ResourcePointer" visibility="private"/>
+    <map field="D3D12_RESOURCE_TRANSITION_BARRIER_DESC::StateBefore" type="D3D12_RESOURCE_USAGE"/>
+    <map field="D3D12_RESOURCE_TRANSITION_BARRIER_DESC::StateAfter" type="D3D12_RESOURCE_USAGE"/>
+
+    <map field="D3D12_RESOURCE_ALIASING_BARRIER_DESC::pResourceBefore" name="ResourceBeforePointer" visibility="private"/>
+    <map field="D3D12_RESOURCE_ALIASING_BARRIER_DESC::pResourceAfter" name="ResourceAfterPointer" visibility="private"/>
+
     <!--
     // *****************************************************************
     // D3D12 Interfaces
     // *****************************************************************
     -->
-   
+
+    <map param="ID3D12Device::CreateDefaultResource::ppvResource" attribute="out"/>
+    <map param="ID3D12Device::CreateBuffer::ppvBuffer" attribute="out"/>
+    <map method="ID3D12Device::GetDefaultCommandQueue" property="false" visibility="private"/>
+    <map method="ID3D12Resource::GetDesc11" name="Description1"/>
+
+    <map param="ID3D12Device::CreateBuffer::ppvBuffer" type="ID3D12Resource" attribute="out fast"/>
+    <map param="ID3D12Device::CreateDefaultResource::ppvResource" type="ID3D12Resource" attribute="out fast"/>
+    
+    
+    <map method="ID3D12CommandList::SetIndexBufferTable" property="false"/>
+    <map param="ID3D12CommandList::.*::BindAsTable" type="bool" default="false"/>
+    <map method="ID3D12CommandList::IA(.*)" name="$1"/>
+    <map method="ID3D12CommandList::IASetPrimitiveTopology" name="SetPrimitiveTopology"/>
+    <map method="ID3D12CommandList::OM(.*)" name="$1"/>
+    <map method="ID3D12CommandList::RS(.*)" name="$1"/>
+    <map method="ID3D12CommandList::OMSetStencilRef" name="SetStencilReference"/>
+    <map param="ID3D12CommandList::OMSetBlendFactor::BlendFactor" type="SHARPDX_VECTOR4"/>
+
+    <map param="ID3D12CommandList::ClearRenderTargetView::ColorRGBA" type="SHARPDX_COLOR4"/>
+    <map param="ID3D12CommandList::ClearUnorderedAccessViewUint::Values" type="SHARPDX_INT4"/>
+    <map param="ID3D12CommandList::ClearUnorderedAccessViewFloat::Values" type="SHARPDX_VECTOR4"/>
+    
+    <map param="ID3D12CommandList::ResourceBarrier::pDesc" type="void"/>
 
     <!--
     // *****************************************************************

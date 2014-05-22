@@ -17,12 +17,33 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="Buffer.cs" />
+    <Compile Include="CommandAllocator.cs" />
+    <Compile Include="CommandList.cs" />
+    <Compile Include="ConstantBufferView.cs" />
+    <Compile Include="DepthStencilView.cs" />
+    <Compile Include="DescriptorHeap.cs" />
+    <Compile Include="Device.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
     <Compile Include="Generated\Interfaces.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Structures.cs" />
+    <Compile Include="IndexBufferView.cs" />
+    <Compile Include="Library.cs" />
+    <Compile Include="PipelineState.cs" />
+    <Compile Include="PipelineStateDescription.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RenderTargetView.cs" />
+    <Compile Include="Resource.cs" />
+    <Compile Include="ResourceAliasingBarrierDescription.cs" />
+    <Compile Include="ResourceBarrierDescription.cs" />
+    <Compile Include="ResourceTransitionBarrierDescription.cs" />
+    <Compile Include="Sampler.cs" />
+    <Compile Include="ShaderResourceView.cs" />
+    <Compile Include="StreamOutputView.cs" />
+    <Compile Include="UnorderedAccessView.cs" />
+    <Compile Include="VertexBufferView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />
