@@ -1019,6 +1019,13 @@ namespace SharpGen.Parser
             // Get align from structure
             cppStruct.Align = int.Parse(xElement.AttributeValue("align"))/8;
 
+            // By default, packing is platform x86/x64 dependent (4 or 8)
+            // but because gccxml is running in x86, it outputs 4
+            // So by default, we are reversing all align by 4 to 0
+            // IF the packing is a true 4, than it will be reverse back by a later mapping rules
+            if (cppStruct.Align == 4)
+                cppStruct.Align = 0;
+
             // Enter struct/union description
             Logger.PushContext("{0}:[{1}]", xElement.Name.LocalName, cppStruct.Name);
 

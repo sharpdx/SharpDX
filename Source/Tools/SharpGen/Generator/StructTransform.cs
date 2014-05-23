@@ -203,6 +203,22 @@ namespace SharpGen.Generator
 
                     });
                 }
+
+            // In case of explicit layout, check that we can safely generate it on both x86 and x64 (in case of an union
+            // using pointers, we can't)
+            if(csStruct.ExplicitLayout)
+            {
+                foreach (var field in csStruct.Fields)
+                {
+                    var fieldAlignment = (field.MarshalType ?? field.PublicType).CalculateAlignment();
+
+                    if(fieldAlignment < 0 && field.Offset > 0)
+                    {
+                        Logger.Error("The field [{0}] in structure [{1}] has an explicit layout that cannot be handled on both x86/x64. This structure needs manual layout (remove fields from definition) and write them manually", field.CppElementName, csStruct.CppElementName);
+                    }
+                }
+            }
+
             csStruct.SizeOf = currentOffset + lastFieldSize;
             csStruct.HasMarshalType = hasMarshalType;
         }

@@ -345,6 +345,7 @@ namespace SharpGen.Generator
                     {
                         csSubParameter.PublicType = intPtrType;
                         csSubParameter.IsArray = false;
+                        csSubParameter.Attribute = CsParameterAttribute.In;
                     }
                 }
                 interfaceType.Add(rawMethod);
