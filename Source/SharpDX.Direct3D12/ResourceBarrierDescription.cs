@@ -67,5 +67,74 @@ namespace SharpDX.Direct3D12
         {
             return new ResourceBarrierDescription(description);
         }
+
+        /// <summary>	
+        /// No documentation.	
+        /// </summary>	
+        /// <unmanaged>D3D12_RESOURCE_BARRIER_TYPE Type</unmanaged>	
+        /// <unmanaged-short>D3D12_RESOURCE_BARRIER_TYPE Type</unmanaged-short>	
+        public SharpDX.Direct3D12.ResourceBarrierType Type;
+
+        /// <summary>	
+        /// No documentation.	
+        /// </summary>	
+        /// <unmanaged>D3D12_RESOURCE_TRANSITION_BARRIER_DESC Transition</unmanaged>	
+        /// <unmanaged-short>D3D12_RESOURCE_TRANSITION_BARRIER_DESC Transition</unmanaged-short>	
+        private SharpDX.Direct3D12.ResourceTransitionBarrierDescription transition;
+
+        /// <summary>	
+        /// No documentation.	
+        /// </summary>	
+        /// <unmanaged>D3D12_RESOURCE_TRANSITION_BARRIER_DESC Transition</unmanaged>	
+        /// <unmanaged-short>D3D12_RESOURCE_TRANSITION_BARRIER_DESC Transition</unmanaged-short>	
+        public SharpDX.Direct3D12.ResourceTransitionBarrierDescription Transition
+        {
+            get { return transition; }
+            set { transition = value; }
+        }
+
+        /// <summary>	
+        /// No documentation.	
+        /// </summary>	
+        /// <unmanaged>D3D12_RESOURCE_ALIASING_BARRIER_DESC Aliasing</unmanaged>	
+        /// <unmanaged-short>D3D12_RESOURCE_ALIASING_BARRIER_DESC Aliasing</unmanaged-short>	
+        public unsafe SharpDX.Direct3D12.ResourceAliasingBarrierDescription Aliasing
+        {
+            get
+            {
+                // CAUTION: Handle manually the union as it is not possible to use explicit layout for x86/x64 as
+                // ResourceTransitionBarrierDescription contains IntPtr
+                fixed(void* pTransition = &transition)
+                    return *(ResourceAliasingBarrierDescription*)pTransition;
+            }
+
+            set
+            {
+                fixed(void* pTransition = &transition)
+                    *(ResourceAliasingBarrierDescription*)pTransition = value;
+            }
+        }
+
+        /// <summary>	
+        /// No documentation.	
+        /// </summary>	
+        /// <unmanaged>D3D12_RESOURCE_UAV_BARRIER_DESC UAV</unmanaged>	
+        /// <unmanaged-short>D3D12_RESOURCE_UAV_BARRIER_DESC UAV</unmanaged-short>	
+        public unsafe SharpDX.Direct3D12.ResourceUnorderedAccessViewBarrierDescription UnorderedAccessView
+        {
+            get
+            {
+                // CAUTION: Handle manually the union as it is not possible to use explicit layout for x86/x64 as
+                // ResourceTransitionBarrierDescription contains IntPtr
+                fixed (void* pTransition = &transition)
+                    return *(ResourceUnorderedAccessViewBarrierDescription*)pTransition;
+            }
+
+            set
+            {
+                fixed (void* pTransition = &transition)
+                    *(ResourceUnorderedAccessViewBarrierDescription*)pTransition = value;
+            }
+        }
     }
 }
