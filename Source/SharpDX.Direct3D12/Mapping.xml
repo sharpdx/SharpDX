@@ -90,6 +90,10 @@
     <map field="D3D12_RESOURCE_ALIASING_BARRIER_DESC::pResourceBefore" name="ResourceBeforePointer" visibility="private"/>
     <map field="D3D12_RESOURCE_ALIASING_BARRIER_DESC::pResourceAfter" name="ResourceAfterPointer" visibility="private"/>
 
+    <map field="D3D11_RESOURCE_DESC::BindFlags" type="D3D11_BIND_FLAG" />
+    <map field="D3D11_RESOURCE_DESC::CPUAccessFlags" name="CpuAccessFlags" type="D3D11_CPU_ACCESS_FLAG" />
+    <map field="D3D11_RESOURCE_DESC::MiscFlags" name="OptionFlags" type="D3D11_RESOURCE_MISC_FLAG" />
+
     <!--
     // *****************************************************************
     // D3D12 Interfaces
@@ -113,12 +117,28 @@
     <map method="ID3D12CommandList::RS(.*)" name="$1"/>
     <map method="ID3D12CommandList::OMSetStencilRef" name="SetStencilReference"/>
     <map param="ID3D12CommandList::OMSetBlendFactor::BlendFactor" type="SHARPDX_VECTOR4"/>
-
     <map param="ID3D12CommandList::ClearRenderTargetView::ColorRGBA" type="SHARPDX_COLOR4"/>
     <map param="ID3D12CommandList::ClearUnorderedAccessViewUint::Values" type="SHARPDX_INT4"/>
     <map param="ID3D12CommandList::ClearUnorderedAccessViewFloat::Values" type="SHARPDX_VECTOR4"/>
-    
     <map param="ID3D12CommandList::ResourceBarrier::pDesc" type="void"/>
+    <map method="ID3D12CommandList::ResourceBarrier" visibility="private"/>
+    
+    <map method="ID3D12CommandList::RSSetViewports" rawptr="true"/>
+    <map method="ID3D12CommandList::RSSetScissorRects" name="SetScissorRectangles" rawptr="true"/>
+
+
+    <map method="ID3D12CommandList::(.*)ToHeap" name="$1To" />
+    <move method="ID3D12CommandList::(.*)ToHeap" to="DescriptorManager" property="Descriptors" />
+
+    <map method="ID3D12CommandList::(.*)InHeap" name="$1" />
+    <move method="ID3D12CommandList::(.*)InHeap" to="DescriptorManager" property="Descriptors" />
+    <map method="ID3D12CommandList::SetDescriptorHeap" name="SetHeap" />
+    <move method="ID3D12CommandList::SetDescriptorHeap" to="DescriptorManager" property="Descriptors" />
+    
+    <move method="ID3D12CommandList::CopyDescriptors" to="DescriptorManager" property="Descriptors" />
+    
+    <move method="ID3D12CommandList::(.*)Table" to="DescriptorManager" property="Descriptors" />
+
 
     <!--
     // *****************************************************************

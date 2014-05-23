@@ -153,7 +153,7 @@ namespace SharpGen.Generator
                 MethodTranform.Process(cSharpMethod);
 
                 // Add specialized method for ComArray
-                CreateMethodsForComArrayMethod(interfaceType, cSharpMethod, intPtrType);
+                DuplicateMethodSpecial(interfaceType, cSharpMethod, intPtrType);
 
                 //MapMethod(cSharpMethod);
                 //RegisterNativeInterop(cSharpMethod);
@@ -308,37 +308,46 @@ namespace SharpGen.Generator
             }
         }
 
-        private static void CreateMethodsForComArrayMethod(CsInterface interfaceType, CsMethod csMethod, CsTypeBase intPtrType)
+        private static void DuplicateMethodSpecial(CsInterface interfaceType, CsMethod csMethod, CsTypeBase intPtrType)
         {
-            foreach (var csParameter in csMethod.Parameters)
+            bool hasComArrayLike = false;
+            foreach(var csParameter in csMethod.Parameters)
             {
-                // Look for at least one parameter ComArray candidate
-                if (csParameter.IsInComArrayLike)
+                if(csParameter.IsInComArrayLike)
                 {
-                    // Create a new method and transforms all array of ComObject to ComArray<ComObject>
-                    var newMethod = (CsMethod)csMethod.Clone();
-                    foreach (var csSubParameter in newMethod.Parameters)
-                    {
-                        if (csSubParameter.IsInComArrayLike)
-                            csSubParameter.PublicType = new CsComArray((CsInterface)csSubParameter.PublicType);
-                    }
-                    interfaceType.Add(newMethod);
-
-                    // Create private method with raw pointers for arrays, with all arrays as pure IntPtr
-                    // In order to be able to generate method taking single element
-                    var rawMethod = (CsMethod)csMethod.Clone();
-                    rawMethod.Visibility = Visibility.Private;
-                    foreach (var csSubParameter in rawMethod.Parameters)
-                    {
-                        if(csSubParameter.IsArray)
-                        {
-                            csSubParameter.PublicType = intPtrType;
-                            csSubParameter.IsArray = false;
-                        }
-                    }
-                    interfaceType.Add(rawMethod);
+                    hasComArrayLike = true;
                     break;
                 }
+            }
+
+            // Look for at least one parameter ComArray candidate
+            if (hasComArrayLike)
+            {
+                // Create a new method and transforms all array of ComObject to ComArray<ComObject>
+                var newMethod = (CsMethod)csMethod.Clone();
+                foreach (var csSubParameter in newMethod.Parameters)
+                {
+                    if (csSubParameter.IsInComArrayLike)
+                        csSubParameter.PublicType = new CsComArray((CsInterface)csSubParameter.PublicType);
+                }
+                interfaceType.Add(newMethod);
+            }
+
+            if(hasComArrayLike || csMethod.RequestRawPtr)
+            {
+                // Create private method with raw pointers for arrays, with all arrays as pure IntPtr
+                // In order to be able to generate method taking single element
+                var rawMethod = (CsMethod)csMethod.Clone();
+                rawMethod.Visibility = Visibility.Private;
+                foreach(var csSubParameter in rawMethod.Parameters)
+                {
+                    if(csSubParameter.IsArray || csSubParameter.IsComObject || csSubParameter.HasPointer)
+                    {
+                        csSubParameter.PublicType = intPtrType;
+                        csSubParameter.IsArray = false;
+                    }
+                }
+                interfaceType.Add(rawMethod);
             }
         }
 

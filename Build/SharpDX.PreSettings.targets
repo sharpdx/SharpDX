@@ -94,18 +94,16 @@
     <DirectX11_1>true</DirectX11_1>
     <DirectX11_2>true</DirectX11_2>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
 
-  <!--.NET 4.0 - DirectX11.2 - Windows 8 Desktop-->
+  <!--.NET 4.0 - DirectX12 - Windows 8 Desktop-->
   <PropertyGroup Condition=" '$(Platform)' == 'DirectX12'">
     <SharpDXAssemblyType>DirectX12</SharpDXAssemblyType>
     <SharpDXPlatform>net40</SharpDXPlatform>
     <DirectX11_1>true</DirectX11_1>
     <DirectX11_2>true</DirectX11_2>
     <DirectX12>true</DirectX12>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
 
   <!--.NET 4.5 - DirectX11.2 - Windows 8 Metro-->

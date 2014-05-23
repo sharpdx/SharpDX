@@ -61,6 +61,11 @@ namespace SharpDX.Direct3D12
             CreateDevice(adapter, DriverType.Unknown, flags, featureLevels, maxRecordingCommandLists);
         }
 
+        public CommandQueue DefaultCommandQueue
+        {
+            get { return defaultCommandQueue; }
+        }
+
         protected override void NativePointerUpdated(IntPtr oldNativePointer)
         {
             base.NativePointerUpdated(oldNativePointer);

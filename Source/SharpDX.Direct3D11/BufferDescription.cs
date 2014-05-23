@@ -41,5 +41,18 @@ namespace SharpDX.Direct3D11
             OptionFlags = optionFlags;
             StructureByteStride = structureByteStride;
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BufferDescription"/> struct.
+        /// </summary>
+        /// <param name="sizeInBytes">The size in bytes.</param>
+        /// <param name="bindFlags">The bind flags.</param>
+        /// <param name="usage">The usage.</param>
+        public BufferDescription(int sizeInBytes, BindFlags bindFlags, ResourceUsage usage) : this()
+        {
+            SizeInBytes = sizeInBytes;
+            BindFlags = bindFlags;
+            Usage = usage;
+        }
     }
 }

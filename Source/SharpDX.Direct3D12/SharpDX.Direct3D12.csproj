@@ -20,6 +20,7 @@
     <Compile Include="Buffer.cs" />
     <Compile Include="CommandAllocator.cs" />
     <Compile Include="CommandList.cs" />
+    <Compile Include="CommandQueue.cs" />
     <Compile Include="ConstantBufferView.cs" />
     <Compile Include="DepthStencilView.cs" />
     <Compile Include="DescriptorHeap.cs" />
@@ -29,6 +30,7 @@
     <Compile Include="Generated\Interfaces.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Structures.cs" />
+    <Compile Include="DescriptorManager.cs" />
     <Compile Include="IndexBufferView.cs" />
     <Compile Include="Library.cs" />
     <Compile Include="PipelineState.cs" />
@@ -38,6 +40,7 @@
     <Compile Include="Resource.cs" />
     <Compile Include="ResourceAliasingBarrierDescription.cs" />
     <Compile Include="ResourceBarrierDescription.cs" />
+    <Compile Include="ResourceDescription.cs" />
     <Compile Include="ResourceTransitionBarrierDescription.cs" />
     <Compile Include="Sampler.cs" />
     <Compile Include="ShaderResourceView.cs" />
