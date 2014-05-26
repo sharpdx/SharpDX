@@ -15,4 +15,8 @@ See the [Installation][Installation] wiki page for more information.
  
 MIT
 
+## Samples
+
+A collection of [Samples](https://github.com/sharpdx/SharpDX-Samples) using SharpDX exists as a separate github project.
+
 [Installation]: https://github.com/sharpdx/SharpDX/wiki/Installation
