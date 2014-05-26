@@ -26,7 +26,7 @@ namespace SharpDX.Collections
     /// <summary>
     /// Provides <see cref="IEqualityComparer{T}"/> for default value types.
     /// </summary>
-    public static class EqualityComparer
+    internal static class EqualityComparer
     {
         /// <summary>
         /// A default <see cref="IEqualityComparer{T}"/> for <see cref="System.IntPtr"/>.

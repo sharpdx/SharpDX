@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using SharpDX.Collections;
+using SharpDX.Toolkit.Collections;
 
 namespace SharpDX.Toolkit
 {

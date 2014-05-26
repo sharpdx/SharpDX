@@ -25,6 +25,7 @@ using System.Collections.ObjectModel;
 using SharpDX.Collections;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+using SharpDX.Toolkit.Collections;
 using SharpDX.Toolkit.Diagnostics;
 
 namespace SharpDX.Toolkit.Graphics

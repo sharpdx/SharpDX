@@ -30,7 +30,7 @@ namespace SharpDX
     /// This class doesn't validate the position read/write from. It is the responsibility of the client of this class
     /// to verify that access is done within the size of the buffer.
     /// </remarks>
-    public class DataBuffer : Component
+    public class DataBuffer : DisposeBase
     {
         private unsafe sbyte* _buffer;
         private GCHandle _gCHandle;
@@ -176,9 +176,7 @@ namespace SharpDX
                     Utilities.FreeMemory((IntPtr)_buffer);
                     _buffer = (sbyte*)0;
                 }
-            }
-
-            base.Dispose(disposing);
+            }            
         }
 
         /// <summary>

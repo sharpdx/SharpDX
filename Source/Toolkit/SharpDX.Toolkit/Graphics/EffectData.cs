@@ -23,9 +23,9 @@ using System.Collections.Generic;
 using System.IO;
 using SharpDX.IO;
 using SharpDX.Multimedia;
-using SharpDX.Serialization;
 using SharpDX.Toolkit.Content;
 using SharpDX.Toolkit.Diagnostics;
+using SharpDX.Toolkit.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {

@@ -75,8 +75,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using SharpDX.DXGI;
 using SharpDX.IO;
-using SharpDX.Serialization;
 using SharpDX.Toolkit.Content;
+using SharpDX.Toolkit.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {

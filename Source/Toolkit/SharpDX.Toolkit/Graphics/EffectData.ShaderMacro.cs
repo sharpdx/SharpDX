@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 using System;
-using SharpDX.Serialization;
+using SharpDX.Toolkit.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {

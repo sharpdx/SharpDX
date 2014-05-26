@@ -20,7 +20,7 @@
 
 using System;
 using System.Collections.Generic;
-using SharpDX.Serialization;
+using SharpDX.Toolkit.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {

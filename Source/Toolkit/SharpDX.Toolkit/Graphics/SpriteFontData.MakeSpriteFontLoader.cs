@@ -21,7 +21,7 @@
 using System;
 
 using SharpDX.Multimedia;
-using SharpDX.Serialization;
+using SharpDX.Toolkit.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {

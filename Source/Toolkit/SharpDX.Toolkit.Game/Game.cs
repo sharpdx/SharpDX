@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 
 using SharpDX.Collections;
+using SharpDX.Toolkit.Collections;
 using SharpDX.Toolkit.Content;
 using SharpDX.Toolkit.Graphics;
 

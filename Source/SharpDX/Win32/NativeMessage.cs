@@ -31,7 +31,8 @@ namespace SharpDX.Win32
 		public IntPtr wParam;
 		public IntPtr lParam;
 		public uint time;
-		public Point p;
+	    public int px;
+	    public int py;
 	}
 }
 #endif

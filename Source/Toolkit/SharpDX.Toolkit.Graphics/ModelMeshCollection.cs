@@ -20,8 +20,6 @@
 
 using System.Collections.Generic;
 
-using SharpDX.Serialization;
-
 namespace SharpDX.Toolkit.Graphics
 {
     public class ModelMeshCollection : List<ModelMesh>

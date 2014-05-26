@@ -21,8 +21,6 @@
 using System;
 using System.Collections.Generic;
 
-using SharpDX.Serialization;
-
 namespace SharpDX.Toolkit.Graphics
 {
     public class ModelBoneCollection : List<ModelBone>

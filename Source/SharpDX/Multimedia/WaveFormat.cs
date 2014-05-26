@@ -27,15 +27,13 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 
-using SharpDX.Serialization;
-
 namespace SharpDX.Multimedia
 {
     /// <summary>
     /// Represents a Wave file format
     /// </summary>
     /// <unmanaged>WAVEFORMATEX</unmanaged>
-    public class WaveFormat : IDataSerializable
+    public class WaveFormat
     {
         /// <summary>format type</summary>
         protected WaveFormatEncoding waveFormatTag;
@@ -53,7 +51,7 @@ namespace SharpDX.Multimedia
         protected short extraSize;
 
         [StructLayout(LayoutKind.Sequential, Pack = 2)]
-        internal struct __Native : IDataSerializable
+        internal struct __Native
         {
             public __PcmNative pcmWaveFormat;
             /// <summary>number of following bytes</summary>
@@ -61,12 +59,6 @@ namespace SharpDX.Multimedia
             // Method to free native struct
             internal unsafe void __MarshalFree()
             {
-            }
-
-            public void Serialize(BinarySerializer serializer)
-            {
-                serializer.Serialize(ref pcmWaveFormat);
-                serializer.Serialize(ref extraSize);
             }
         }
 
@@ -99,7 +91,7 @@ namespace SharpDX.Multimedia
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 2)]
-        internal struct __PcmNative : IDataSerializable
+        internal struct __PcmNative
         {
             /// <summary>format type</summary>
             public WaveFormatEncoding waveFormatTag;
@@ -117,16 +109,6 @@ namespace SharpDX.Multimedia
             // Method to free native struct
             internal unsafe void __MarshalFree()
             {
-            }
-
-            public void Serialize(BinarySerializer serializer)
-            {
-                serializer.SerializeEnum(ref waveFormatTag);
-                serializer.Serialize(ref channels);
-                serializer.Serialize(ref sampleRate);
-                serializer.Serialize(ref averageBytesPerSecond);
-                serializer.Serialize(ref blockAlign);
-                serializer.Serialize(ref bitsPerSample);
             }
         }
 
@@ -434,25 +416,6 @@ namespace SharpDX.Multimedia
                 averageBytesPerSecond ^
                 (int)blockAlign ^
                 (int)bitsPerSample;
-        }
-
-        /// <summary>
-        /// Reads or writes data from/to the given binary serializer.
-        /// </summary>
-        /// <param name="serializer">The binary serializer.</param>
-        public virtual void Serialize(BinarySerializer serializer)
-        {
-            __Native nativeFormat = default(__Native);
-            if (serializer.Mode == SerializerMode.Read)
-            {
-                serializer.Serialize(ref nativeFormat);
-                this.__MarshalFrom(ref nativeFormat);
-            }
-            else
-            {
-                this.__MarshalTo(ref nativeFormat);
-                serializer.Serialize(ref nativeFormat);
-            }
         }
 
         /// <summary>

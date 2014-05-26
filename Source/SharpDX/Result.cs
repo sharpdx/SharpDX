@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
-using SharpDX.Serialization;
 
 namespace SharpDX
 {
@@ -27,7 +26,7 @@ namespace SharpDX
     /// Result structure for COM methods.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct Result : IEquatable<Result>, IDataSerializable
+    public struct Result : IEquatable<Result>
     {
         private int _code;
 
@@ -151,12 +150,6 @@ namespace SharpDX
         public override int GetHashCode()
         {
             return Code;
-        }
-
-        /// <inheritdoc/>
-        void IDataSerializable.Serialize(BinarySerializer serializer)
-        {
-            serializer.Serialize(ref _code);
         }
 
         /// <summary>

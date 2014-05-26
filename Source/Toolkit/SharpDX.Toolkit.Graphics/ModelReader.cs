@@ -28,7 +28,7 @@ using SharpDX.Text;
 using System.Text.RegularExpressions;
 
 using SharpDX.Direct3D11;
-using SharpDX.Serialization;
+using SharpDX.Toolkit.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {

@@ -22,6 +22,7 @@ using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
+using SharpDX.Toolkit.Collections;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace SharpDX.Toolkit.Graphics
@@ -152,7 +153,7 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
-            EffectPools = new SharpDX.Collections.ObservableCollection<EffectPool>();
+            EffectPools = new ObservableCollection<EffectPool>();
 
             IsDebugMode = (Device.CreationFlags & DeviceCreationFlags.Debug) != 0;
             MainDevice = this;
@@ -270,7 +271,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Gets the effect pools.
         /// </summary>
         /// <value>The effect pools.</value>
-        public SharpDX.Collections.ObservableCollection<EffectPool> EffectPools { get; private set; }
+        public ObservableCollection<EffectPool> EffectPools { get; private set; }
 
         /// <summary>
         /// Gets the back buffer sets by the current <see cref="Presenter" /> setup on this device.
