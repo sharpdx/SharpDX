@@ -1118,6 +1118,7 @@ namespace SharpDX.Serialization
                     TValue localValue = default(TValue);
                     localKey.Serialize(this);
                     localValue.Serialize(this);
+                    dictionary.Add(localKey, localValue);
                 }
             }
         }
@@ -1167,6 +1168,7 @@ namespace SharpDX.Serialization
                     TValue localValue = default(TValue);
                     localKey.Serialize(this);
                     valueSerializer(ref localValue);
+                    dictionary.Add(localKey, localValue);
                 }
             }
         }
@@ -1216,6 +1218,7 @@ namespace SharpDX.Serialization
                     TValue localValue = default(TValue);
                     keySerializer(ref localKey);
                     localValue.Serialize(this);
+                    dictionary.Add(localKey, localValue);
                 }
             }
         }
@@ -1266,6 +1269,7 @@ namespace SharpDX.Serialization
                     TValue localValue = default(TValue);
                     keySerializer(ref localKey);
                     valueSerializer(ref localValue);
+                    dictionary.Add(localKey, localValue);
                 }
             }
         }
