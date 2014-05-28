@@ -17,6 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+using System.Collections.Generic;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -59,7 +60,13 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Indices of the models skinned bones that are affecting this part.
         /// </summary>
-        public int[] SkinnedBones;
+        public List<int> SkinnedBones;
+
+
+        public bool IsSkinned
+        {
+            get { return SkinnedBones != null && SkinnedBones.Count > 0; }
+        }
 
         private Effect effect;
 

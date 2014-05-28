@@ -57,7 +57,7 @@ namespace SharpDX.Toolkit.Graphics
 
         protected override Effect Process(Model model, ModelMeshPart meshPart)
         {
-            if (meshPart.SkinnedBones.Length == 0)
+            if (!meshPart.IsSkinned)
             {
                 return base.Process(model, meshPart);
             }

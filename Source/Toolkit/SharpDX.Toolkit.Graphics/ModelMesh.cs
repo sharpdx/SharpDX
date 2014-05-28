@@ -75,7 +75,7 @@ namespace SharpDX.Toolkit.Graphics
                 }
 
                 var skinnedEffect = effect as SkinnedEffect;
-                int boneCount = part.SkinnedBones.Length;
+                int boneCount = part.SkinnedBones.Count;
                 if (skinnedEffect != null && boneCount > 0)
                 {
                     var transforms = new Matrix[boneCount];

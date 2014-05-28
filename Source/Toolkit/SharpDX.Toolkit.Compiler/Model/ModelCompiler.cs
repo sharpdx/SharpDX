@@ -550,7 +550,9 @@ namespace SharpDX.Toolkit.Graphics
 
         private bool IsModelNode(Node node)
         {
-            return meshNodes.ContainsKey(node);
+            // Return all nodes for now, so we can use model files as skeletons
+            return true;
+            //return meshNodes.ContainsKey(node);
         }
 
         private void RegisterNode(Node node, Dictionary<Node,int> nodeMap)
