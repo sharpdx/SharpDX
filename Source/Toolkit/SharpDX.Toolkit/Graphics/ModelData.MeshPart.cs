@@ -54,11 +54,6 @@ namespace SharpDX.Toolkit.Graphics
             public BufferRange VertexBufferRange;
 
             /// <summary>
-            /// Gets the offset matrix attached to each bone weights
-            /// </summary>
-            public Matrix[] BoneOffsetMatrices;
-
-            /// <summary>
             /// Gets the index of the models skinned bones for each bone weight
             /// </summary>
             public List<int> SkinnedBones;

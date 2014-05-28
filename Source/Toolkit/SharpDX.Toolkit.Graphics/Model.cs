@@ -165,6 +165,13 @@ namespace SharpDX.Toolkit.Graphics
 
             CopyAbsoluteBoneTransformsTo(new IntPtr(localSharedDrawBoneMatrices));
 
+            var skinningTransforms = new Matrix[SkinnedBones.Count];
+            for (int i = 0; i < SkinnedBones.Count; i++)
+            {
+                int boneIndex = SkinnedBones[i].Bone.Index;
+                Matrix.Multiply(ref SkinnedBones[i].InverseBindTransform, ref localSharedDrawBoneMatrices[boneIndex], out skinningTransforms[i]);
+            }
+
             var defaultParametersContext = default(EffectDefaultParametersContext);
 
             for (int i = 0; i < count; i++)
@@ -178,7 +185,7 @@ namespace SharpDX.Toolkit.Graphics
                     Matrix worldTranformed;
                     Matrix.Multiply(ref localSharedDrawBoneMatrices[index], ref world, out worldTranformed);
 
-                    effectOverride.DefaultParameters.Apply(ref defaultParametersContext, ref worldTranformed, ref view, ref projection);
+                    effectOverride.DefaultParameters.Apply(ref defaultParametersContext, ref world, ref view, ref projection);
                 }
                 else
                 {
@@ -196,18 +203,18 @@ namespace SharpDX.Toolkit.Graphics
                         var matrices = effect as IEffectMatrices;
                         if (matrices == null)
                         {
-                            effect.DefaultParameters.Apply(ref defaultParametersContext, ref worldTranformed, ref view, ref projection);
+                            effect.DefaultParameters.Apply(ref defaultParametersContext, ref world, ref view, ref projection);
                         }
                         else
                         {
-                            matrices.World = worldTranformed;
+                            matrices.World = world;
                             matrices.View = view;
                             matrices.Projection = projection;
                         }
                     }
                 }
 
-                mesh.Draw(context, effectOverride);
+                mesh.Draw(context, skinningTransforms, effectOverride);
             }
         }
 

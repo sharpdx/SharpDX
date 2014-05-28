@@ -62,7 +62,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="context">The graphics context.</param>
         /// <param name="effectOverride">The effect to use instead of the effect attached to each mesh part. Default is null (use Effect in MeshPart)</param>
         /// <exception cref="System.InvalidOperationException">Model has no effect</exception>
-        public void Draw(GraphicsDevice context, Effect effectOverride = null)
+        public void Draw(GraphicsDevice context, Matrix[] boneTransforms, Effect effectOverride = null)
         {
             int count = this.MeshParts.Count;
             for (int i = 0; i < count; i++)
@@ -73,6 +73,20 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     throw new InvalidOperationException("ModelMeshPart has no effect and effectOverride is null");
                 }
+
+                var skinnedEffect = effect as SkinnedEffect;
+                int boneCount = part.SkinnedBones.Length;
+                if (skinnedEffect != null && boneCount > 0)
+                {
+                    var transforms = new Matrix[boneCount];
+                    for (int j = 0; j < boneCount; j++)
+                    {
+                        transforms[j] = boneTransforms[part.SkinnedBones[j]];
+                    }
+
+                    skinnedEffect.SetBoneTransforms(transforms);
+                }
+
                 int passCount = effect.CurrentTechnique.Passes.Count;
                 for (int j = 0; j < passCount; j++)
                 {
