@@ -280,7 +280,7 @@
     <map param="ID2D\dDevice1?::CreateDeviceContext::deviceContext1?" attribute="out fast"/>
     <map param="ID2D\dDevice::CreatePrintControl::printControl" attribute="out fast"/>
 
-    <map method="ID2D\dDeviceContext::Create.*" visibility="internal"/>
+    <map method="ID2D\dDeviceContext1?::Create.*" visibility="internal"/>
     <map param="ID2D\dDeviceContext::CreateBitmap::bitmap" attribute="out fast"/>
     <map param="ID2D\dDeviceContext::CreateBitmapBrush::bitmapBrush" attribute="out fast"/>
     <map param="ID2D\dDeviceContext::CreateBitmapFromDxgiSurface::bitmap" attribute="out fast"/>
@@ -291,6 +291,10 @@
     <map param="ID2D\dDeviceContext::CreateEffect::effect" attribute="out fast"/>
     <map param="ID2D\dDeviceContext::CreateGradientStopCollection::gradientStopCollection1" attribute="out fast"/>
     <map param="ID2D\dDeviceContext::CreateImageBrush::imageBrush" attribute="out fast"/>
+    
+    <map param="ID2D\dDeviceContext1::CreateFilledGeometryRealization::geometryRealization" attribute="out fast"/>
+    <map param="ID2D\dDeviceContext1::CreateStrokedGeometryRealization::geometryRealization" attribute="out fast"/>
+
 
     <map param="ID2D\dDeviceContext::CreateBitmapFromWicBitmap::bitmapProperties" attribute="in optional"/>
 
