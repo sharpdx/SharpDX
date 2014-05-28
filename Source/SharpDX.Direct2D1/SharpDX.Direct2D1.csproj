@@ -52,6 +52,7 @@
     <Compile Include="Effects\PerspectiveTransform3D.cs" />
     <Compile Include="Effects\YCbCr.cs" />
     <Compile Include="Factory2.cs" />
+    <Compile Include="GeometryRealization.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="VertexRange.cs" />
     <Compile Include="InputDescription.cs" />
