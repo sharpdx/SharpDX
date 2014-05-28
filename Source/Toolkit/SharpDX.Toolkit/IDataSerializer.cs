@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,21 +17,20 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if !W8CORE
-using System;
-using System.Runtime.InteropServices;
 
-namespace SharpDX.Win32
+using SharpDX.Toolkit.Serialization;
+
+namespace SharpDX.Toolkit
 {
-	[StructLayout(LayoutKind.Sequential)]
-	public struct NativeMessage
-	{
-		public IntPtr handle;
-		public uint msg;
-		public IntPtr wParam;
-		public IntPtr lParam;
-		public uint time;
-		public Point p;
-	}
+    /// <summary>
+    /// Implement this interface to serialize datas with <see cref="BinarySerializer"/>.
+    /// </summary>
+    public interface IDataSerializer
+    {
+        /// <summary>
+        /// Reads or writes datas from/to the given binary serializer.
+        /// </summary>
+        /// <param name="serializer">The binary serializer.</param>
+        void Serialize(BinarySerializer serializer);
+    }
 }
-#endif

@@ -54,7 +54,6 @@
     <Compile Include="Reflection\ObfuscationAttributes.cs" />
     <Compile Include="ComArray.cs" />
     <Compile Include="AssemblyDoc.cs" />
-    <Compile Include="IO\PathUtility.cs" />
     <Compile Include="IInspectable.cs" />
     <Compile Include="InspectableShadow.cs" />
     <Compile Include="ServiceEventArgs.cs" />
@@ -122,7 +121,6 @@
     <Compile Include="TagAttribute.cs" />
     <Compile Include="Text\ASCIIEncoding.cs" />
     <Compile Include="Text\NamespaceDoc.cs" />
-    <Compile Include="TimerTick.cs" />
     <Compile Include="Mathematics\Vector2.cs" />
     <Compile Include="Mathematics\Vector3.cs" />
     <Compile Include="Mathematics\Vector4.cs" />
@@ -155,7 +153,9 @@
     <Compile Include="Win32\VariantType.cs" />
     <Compile Include="Windows\NamespaceDoc.cs" />
     <Compile Include="Windows\RenderControl.cs" />
-    <Compile Include="Windows\RenderForm.cs" />
+    <Compile Include="Windows\RenderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Windows\RenderLoop.cs" />
   </ItemGroup>
   <ItemGroup>

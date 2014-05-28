@@ -21,12 +21,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace SharpDX.IO
+namespace SharpDX.Toolkit
 {
     /// <summary>
     /// Path utility methods.
     /// </summary>
-    public class PathUtility
+    internal class PathUtility
     {
         /// <summary>
         /// Transform a path by replacing '/' by '\' and transforming relative '..' or current path '.' to an absolute path. See remarks.

@@ -42,6 +42,7 @@
     <Compile Include="IComponent.cs" />
     <Compile Include="IdentityEqualityComparer.cs" />
     <Compile Include="IServiceRegistry.cs" />
+    <Compile Include="PathUtility.cs" />
     <Compile Include="PropertyKey.cs" />
     <Compile Include="PropertyCollection.cs" />
     <Compile Include="Graphics\MaterialShadingMode.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Serialization\SerializerMode.cs" />
     <Compile Include="SingletonString.cs" />
     <Compile Include="Threading\TaskUtil.cs" />
+    <Compile Include="TimerTick.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
