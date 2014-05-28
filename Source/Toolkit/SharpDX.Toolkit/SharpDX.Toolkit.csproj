@@ -86,6 +86,7 @@
     <Compile Include="Graphics\EffectParameterClass.cs" />
     <Compile Include="Graphics\EffectParameterType.cs" />
     <Compile Include="Graphics\EffectData.cs" />
+    <Compile Include="SrtTransform.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">

@@ -107,7 +107,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// The bone transform.
             /// </summary>
-            public Matrix Value;
+            public SrtTransform Value;
 
             /// <inheritdoc/>
             void IDataSerializable.Serialize(BinarySerializer serializer)

@@ -431,7 +431,7 @@ namespace SharpDX.Toolkit.Graphics
                         foreach (var key in channel.ScalingKeys)
                         {
                             var keyFrame = GetKeyFrame((float)(key.Time / ticksPerSecond), keyFrames);
-                            keyFrame.Value = Matrix.Scaling(ConvertVector(key.Value));
+                            keyFrame.Value = new SrtTransform(ConvertVector(key.Value), Quaternion.Identity, Vector3.Zero);
                         }
                     }
 
@@ -440,7 +440,7 @@ namespace SharpDX.Toolkit.Graphics
                         foreach (var key in channel.RotationKeys)
                         {
                             var keyFrame = GetKeyFrame((float)(key.Time / ticksPerSecond), keyFrames);
-                            keyFrame.Value *= Matrix.RotationQuaternion(ConvertQuaternion(key.Value));
+                            keyFrame.Value = new SrtTransform(keyFrame.Value.Scale, ConvertQuaternion(key.Value), Vector3.Zero);
                         }
                     }
 
@@ -449,9 +449,11 @@ namespace SharpDX.Toolkit.Graphics
                         foreach (var key in channel.PositionKeys)
                         {
                             var keyFrame = GetKeyFrame((float)(key.Time / ticksPerSecond), keyFrames);
-                            keyFrame.Value *= Matrix.Translation(ConvertVector(key.Value));
+                            keyFrame.Value = new SrtTransform(keyFrame.Value.Scale, keyFrame.Value.Rotation, ConvertVector(key.Value));
                         }
                     }
+
+                    LinearKeyFrameReduction(keyFrames);
 
                     var channelData = new ModelData.AnimationChannel { BoneName = channel.NodeName };
                     channelData.KeyFrames.AddRange(keyFrames);
@@ -471,15 +473,49 @@ namespace SharpDX.Toolkit.Graphics
 
                 if (node.Value.Time > keyTime)
                 {
-                    keyFrame = new ModelData.KeyFrame { Time = keyTime, Value = Matrix.Identity };
+                    keyFrame = new ModelData.KeyFrame { Time = keyTime, Value = SrtTransform.Identity };
                     keyFrames.AddAfter(node, keyFrame);
                     return keyFrame;
                 }
             }
 
-            keyFrame = new ModelData.KeyFrame { Time = keyTime, Value = Matrix.Identity };
+            keyFrame = new ModelData.KeyFrame { Time = keyTime, Value = SrtTransform.Identity };
             keyFrames.AddLast(keyFrame);
             return keyFrame;
+        }
+
+        private const float TranslationThreshold = 1e-8f;
+
+        private const float RotationThreshold = 0.9999999f;
+
+        private void LinearKeyFrameReduction(LinkedList<ModelData.KeyFrame> keyFrames)
+        {
+            if (keyFrames.Count < 3)
+                return;
+
+            var node = keyFrames.First.Next;
+            while (node.Next != null)
+            {
+                var nextNode = node.Next;
+
+                var previous = node.Previous.Value;
+                var current = node.Value;
+                var next = node.Next.Value;
+
+                var amount = (current.Time - previous.Time) / (next.Time - previous.Time);
+                var interpolated = SrtTransform.Slerp(previous.Value, next.Value, amount);
+
+                var actual = current.Value;
+
+                if ((interpolated.Translation - actual.Translation).LengthSquared() < TranslationThreshold &&
+                   Quaternion.Dot(interpolated.Rotation, actual.Rotation) > RotationThreshold &&
+                    (interpolated.Scale - actual.Scale).LengthSquared() < TranslationThreshold)
+                {
+                    keyFrames.Remove(node);
+                }
+
+                node = nextNode;
+            }
         }
 
         private void CollectSkinnedBones()
