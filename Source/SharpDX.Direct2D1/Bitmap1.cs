@@ -124,7 +124,7 @@ namespace SharpDX.Direct2D1
         /// <param name="bitmapProperties">The bitmap properties.</param>
         /// <returns></returns>
         /// <unmanaged>HRESULT ID2D1DeviceContext::CreateBitmapFromWicBitmap([In] IWICBitmapSource* wicBitmapSource,[In, Optional] const D2D1_BITMAP_PROPERTIES1* bitmapProperties,[Out] ID2D1Bitmap1** bitmap)</unmanaged>	
-        public static Bitmap FromWicBitmap(DeviceContext deviceContext, WIC.BitmapSource wicBitmap, SharpDX.Direct2D1.BitmapProperties1 bitmapProperties)
+        public static Bitmap1 FromWicBitmap(DeviceContext deviceContext, WIC.BitmapSource wicBitmap, SharpDX.Direct2D1.BitmapProperties1 bitmapProperties)
         {
             Bitmap1 bitmap;
             deviceContext.CreateBitmapFromWicBitmap(wicBitmap, bitmapProperties, out bitmap);
