@@ -38,6 +38,10 @@
     <Compile Include="WaveBankReader.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SharpDX.Mathematics\SharpDX.Mathematics.csproj">
+      <Project>{49e4485f-3a2a-4c35-a159-12eccfc00396}</Project>
+      <Name>SharpDX.Mathematics</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SharpDX.XAudio2\SharpDX.XAudio2.csproj">
       <Project>{4995127e-0b8e-45b8-80c4-6bac1bbe3783}</Project>
       <Name>SharpDX.XAudio2</Name>
