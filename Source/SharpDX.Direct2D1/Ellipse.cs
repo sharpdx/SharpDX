@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using SharpDX.Native;
+
 namespace SharpDX.Direct2D1
 {
     public partial struct Ellipse
@@ -28,7 +30,7 @@ namespace SharpDX.Direct2D1
         /// <param name="center">The center.</param>
         /// <param name="radiusX">The radius X.</param>
         /// <param name="radiusY">The radius Y.</param>
-        public Ellipse(Vector2 center, float radiusX, float radiusY)
+        public Ellipse(RawVector2 center, float radiusX, float radiusY)
         {
             Point = center;
             RadiusX = radiusX;

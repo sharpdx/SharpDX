@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using SharpDX.Native;
 
 namespace SharpDX.Direct3D10
 {
@@ -159,7 +160,7 @@ namespace SharpDX.Direct3D10
         /// <unmanaged>HRESULT ID3D10EffectScalarVariable::GetBool([Out] BOOL* pValue)</unmanaged>
         public bool GetBool()
         {
-            Bool temp;
+            RawBool temp;
             GetBool(out temp);
             return temp;
         }
@@ -196,7 +197,7 @@ namespace SharpDX.Direct3D10
         /// <unmanaged>HRESULT ID3D10EffectScalarVariable::GetBoolArray([Out, Buffer] BOOL* pData,[None] int Offset,[None] int Count)</unmanaged>
         public bool[] GetBoolArray(int offset, int count)
         {
-            var temp = new Bool[count];
+            var temp = new RawBool[count];
             GetBoolArray(temp, offset, count);
             return Utilities.ConvertToBoolArray(temp);
         }        

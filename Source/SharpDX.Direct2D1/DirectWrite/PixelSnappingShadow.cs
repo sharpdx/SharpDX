@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Native;
 
 namespace SharpDX.DirectWrite
 {
@@ -77,7 +78,7 @@ namespace SharpDX.DirectWrite
             {
                 unsafe
                 {
-                    Matrix3x2 matrix;
+                    RawMatrix3x2 matrix;
                     try
                     {
                         var shadow = ToShadow<PixelSnappingShadow>(thisPtr);

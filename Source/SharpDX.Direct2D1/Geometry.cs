@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using SharpDX.Native;
+
 namespace SharpDX.Direct2D1
 {
     public partial class Geometry
@@ -75,7 +77,7 @@ namespace SharpDX.Direct2D1
         /// <param name="geometrySink">The result of the combine operation.</param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
         /// <unmanaged>HRESULT CombineWithGeometry([In] ID2D1Geometry* inputGeometry,[None] D2D1_COMBINE_MODE combineMode,[In, Optional] const D2D1_MATRIX_3X2_F* inputGeometryTransform,[None] FLOAT flatteningTolerance,[In] ID2D1SimplifiedGeometrySink* geometrySink)</unmanaged>
-        public void Combine(SharpDX.Direct2D1.Geometry inputGeometry, SharpDX.Direct2D1.CombineMode combineMode, SharpDX.Matrix3x2? inputGeometryTransform, float flatteningTolerance, GeometrySink geometrySink)
+        public void Combine(SharpDX.Direct2D1.Geometry inputGeometry, SharpDX.Direct2D1.CombineMode combineMode, RawMatrix3x2? inputGeometryTransform, float flatteningTolerance, GeometrySink geometrySink)
         {
             this.Combine_(inputGeometry, combineMode, inputGeometryTransform, flatteningTolerance, GeometrySinkShadow.ToIntPtr(geometrySink));
         }
@@ -158,7 +160,7 @@ namespace SharpDX.Direct2D1
         /// <param name="unitTangentVector">When this method returns, contains a reference to the tangent vector at the specified distance along the geometry. If the geometry is empty,  this vector contains NaN as its x and y values. You must allocate storage for this parameter. </param>
         /// <returns>The location at the specified distance along the geometry. If the geometry is empty,  this point contains NaN as its x and y values. </returns>
         /// <unmanaged>HRESULT ID2D1Geometry::ComputePointAtLength([None] float length,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] float flatteningTolerance,[Out, Optional] D2D1_POINT_2F* point,[Out, Optional] D2D1_POINT_2F* unitTangentVector)</unmanaged>
-        public Vector2 ComputePointAtLength(float length, out Vector2 unitTangentVector)
+        public RawVector2 ComputePointAtLength(float length, out RawVector2 unitTangentVector)
         {
             return ComputePointAtLength(length, null, FlatteningTolerance, out unitTangentVector);
         }
@@ -171,7 +173,7 @@ namespace SharpDX.Direct2D1
         /// <param name="unitTangentVector">When this method returns, contains a reference to the tangent vector at the specified distance along the geometry. If the geometry is empty,  this vector contains NaN as its x and y values. You must allocate storage for this parameter. </param>
         /// <returns>The location at the specified distance along the geometry. If the geometry is empty,  this point contains NaN as its x and y values. </returns>
         /// <unmanaged>HRESULT ID2D1Geometry::ComputePointAtLength([None] float length,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] float flatteningTolerance,[Out, Optional] D2D1_POINT_2F* point,[Out, Optional] D2D1_POINT_2F* unitTangentVector)</unmanaged>
-        public Vector2 ComputePointAtLength(float length, float flatteningTolerance, out Vector2 unitTangentVector)
+        public RawVector2 ComputePointAtLength(float length, float flatteningTolerance, out RawVector2 unitTangentVector)
         {
             return ComputePointAtLength(length, null, flatteningTolerance, out unitTangentVector);
         }
@@ -182,9 +184,9 @@ namespace SharpDX.Direct2D1
         /// <param name="point">The point to test. </param>
         /// <returns>When this method returns, contains a bool value that is true if the area filled by the geometry contains point; otherwise, false.You must allocate storage for this parameter. </returns>
         /// <unmanaged>HRESULT ID2D1Geometry::FillContainsPoint([None] D2D1_POINT_2F point,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] float flatteningTolerance,[Out] BOOL* contains)</unmanaged>
-        public bool FillContainsPoint(Point point)
+        public bool FillContainsPoint(RawPoint point)
         {
-            return FillContainsPoint(new Vector2(point.X, point.Y), null, FlatteningTolerance);
+            return FillContainsPoint(new RawVector2() { X = point.X, Y = point.Y }, null, FlatteningTolerance);
         }
 
         /// <summary>	
@@ -193,7 +195,7 @@ namespace SharpDX.Direct2D1
         /// <param name="point">The point to test. </param>
         /// <returns>When this method returns, contains a bool value that is true if the area filled by the geometry contains point; otherwise, false.You must allocate storage for this parameter. </returns>
         /// <unmanaged>HRESULT ID2D1Geometry::FillContainsPoint([None] D2D1_POINT_2F point,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] float flatteningTolerance,[Out] BOOL* contains)</unmanaged>
-        public bool FillContainsPoint(Vector2 point)
+        public bool FillContainsPoint(RawVector2 point)
         {
             return FillContainsPoint(point, null, FlatteningTolerance);
         }
@@ -205,9 +207,9 @@ namespace SharpDX.Direct2D1
         /// <param name="flatteningTolerance">The numeric accuracy with which the precise geometric path and path intersection is calculated. Points missing the fill by less than the tolerance are still considered inside.  Smaller values produce more accurate results but cause slower execution.  </param>
         /// <returns>When this method returns, contains a bool value that is true if the area filled by the geometry contains point; otherwise, false.You must allocate storage for this parameter. </returns>
         /// <unmanaged>HRESULT ID2D1Geometry::FillContainsPoint([None] D2D1_POINT_2F point,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] float flatteningTolerance,[Out] BOOL* contains)</unmanaged>
-        public bool FillContainsPoint(Point point, float flatteningTolerance)
+        public bool FillContainsPoint(RawPoint point, float flatteningTolerance)
         {
-            return FillContainsPoint(new Vector2 (point.X, point.Y), null, flatteningTolerance);
+            return FillContainsPoint(new RawVector2 { X = point.X, Y = point.Y}, null, flatteningTolerance);
         }
 
         /// <summary>	
@@ -217,7 +219,7 @@ namespace SharpDX.Direct2D1
         /// <param name="flatteningTolerance">The numeric accuracy with which the precise geometric path and path intersection is calculated. Points missing the fill by less than the tolerance are still considered inside.  Smaller values produce more accurate results but cause slower execution.  </param>
         /// <returns>When this method returns, contains a bool value that is true if the area filled by the geometry contains point; otherwise, false.You must allocate storage for this parameter. </returns>
         /// <unmanaged>HRESULT ID2D1Geometry::FillContainsPoint([None] D2D1_POINT_2F point,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] float flatteningTolerance,[Out] BOOL* contains)</unmanaged>
-        public bool FillContainsPoint(Vector2 point, float flatteningTolerance)
+        public bool FillContainsPoint(RawVector2 point, float flatteningTolerance)
         {
             return FillContainsPoint(point, null, flatteningTolerance);
         }
@@ -230,9 +232,9 @@ namespace SharpDX.Direct2D1
         /// <param name="flatteningTolerance">The numeric accuracy with which the precise geometric path and path intersection is calculated. Points missing the fill by less than the tolerance are still considered inside.  Smaller values produce more accurate results but cause slower execution.  </param>
         /// <returns>When this method returns, contains a bool value that is true if the area filled by the geometry contains point; otherwise, false.You must allocate storage for this parameter. </returns>
         /// <unmanaged>HRESULT ID2D1Geometry::FillContainsPoint([None] D2D1_POINT_2F point,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] float flatteningTolerance,[Out] BOOL* contains)</unmanaged>
-        public bool FillContainsPoint(Point point, Matrix3x2 worldTransform, float flatteningTolerance)
+        public bool FillContainsPoint(RawPoint point, RawMatrix3x2 worldTransform, float flatteningTolerance)
         {
-            return FillContainsPoint(new Vector2(point.X, point.Y), worldTransform, flatteningTolerance);
+            return FillContainsPoint(new RawVector2 {X = point.X, Y = point.Y}, worldTransform, flatteningTolerance);
         }
 
 
@@ -241,7 +243,7 @@ namespace SharpDX.Direct2D1
         /// </summary>	
         /// <returns>When this method returns, contains the bounds of this geometry. If the bounds are empty, this will be a rect where bounds.left &gt; bounds.right. You must allocate storage for this parameter. </returns>
         /// <unmanaged>HRESULT ID2D1Geometry::GetBounds([In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[Out] D2D1_RECT_F* bounds)</unmanaged>
-        public RectangleF GetBounds()
+        public RawRectangleF GetBounds()
         {
             return GetBounds(null);
         }
@@ -252,7 +254,7 @@ namespace SharpDX.Direct2D1
         /// <param name="strokeWidth">The amount by which to widen the geometry by stroking its outline. </param>
         /// <returns>When this method returns, contains the bounds of the widened geometry. You must allocate storage for this parameter. </returns>
         /// <unmanaged>HRESULT ID2D1Geometry::GetWidenedBounds([None] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] float flatteningTolerance,[Out] D2D1_RECT_F* bounds)</unmanaged>
-        public RectangleF GetWidenedBounds(float strokeWidth)
+        public RawRectangleF GetWidenedBounds(float strokeWidth)
         {
             return GetWidenedBounds(strokeWidth, null, null, FlatteningTolerance);
         }
@@ -264,7 +266,7 @@ namespace SharpDX.Direct2D1
         /// <param name="flatteningTolerance">The maximum bounds on the distance between points in the polygonal approximation of the geometry. Smaller values produce more accurate results but cause slower execution.  </param>
         /// <returns>When this method returns, contains the bounds of the widened geometry. You must allocate storage for this parameter. </returns>
         /// <unmanaged>HRESULT ID2D1Geometry::GetWidenedBounds([None] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] float flatteningTolerance,[Out] D2D1_RECT_F* bounds)</unmanaged>
-        public RectangleF GetWidenedBounds(float strokeWidth, float flatteningTolerance)
+        public RawRectangleF GetWidenedBounds(float strokeWidth, float flatteningTolerance)
         {
             return GetWidenedBounds(strokeWidth, null, null, flatteningTolerance);
         }
@@ -277,7 +279,7 @@ namespace SharpDX.Direct2D1
         /// <param name="flatteningTolerance">The maximum bounds on the distance between points in the polygonal approximation of the geometry. Smaller values produce more accurate results but cause slower execution.  </param>
         /// <returns>When this method returns, contains the bounds of the widened geometry. You must allocate storage for this parameter. </returns>
         /// <unmanaged>HRESULT ID2D1Geometry::GetWidenedBounds([None] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] float flatteningTolerance,[Out] D2D1_RECT_F* bounds)</unmanaged>
-        public RectangleF GetWidenedBounds(float strokeWidth, StrokeStyle strokeStyle, float flatteningTolerance)
+        public RawRectangleF GetWidenedBounds(float strokeWidth, StrokeStyle strokeStyle, float flatteningTolerance)
         {
             return GetWidenedBounds(strokeWidth, strokeStyle, null, flatteningTolerance);
         }
@@ -323,7 +325,7 @@ namespace SharpDX.Direct2D1
         /// <param name="geometrySink">The <see cref="SharpDX.Direct2D1.SimplifiedGeometrySink"/> to which the geometry's transformed outline is appended. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
         /// <unmanaged>HRESULT Outline([In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] FLOAT flatteningTolerance,[In] ID2D1SimplifiedGeometrySink* geometrySink)</unmanaged>
-        public void Outline(SharpDX.Matrix3x2? worldTransform, float flatteningTolerance, GeometrySink geometrySink)
+        public void Outline(RawMatrix3x2? worldTransform, float flatteningTolerance, GeometrySink geometrySink)
         {
             this.Outline_(worldTransform, flatteningTolerance, GeometrySinkShadow.ToIntPtr(geometrySink));
         }
@@ -362,7 +364,7 @@ namespace SharpDX.Direct2D1
         /// <param name="geometrySink"> The <see cref="SharpDX.Direct2D1.SimplifiedGeometrySink"/> to which the simplified geometry is appended. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
         /// <unmanaged>HRESULT Simplify([None] D2D1_GEOMETRY_SIMPLIFICATION_OPTION simplificationOption,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] FLOAT flatteningTolerance,[In] ID2D1SimplifiedGeometrySink* geometrySink)</unmanaged>
-        public void Simplify(SharpDX.Direct2D1.GeometrySimplificationOption simplificationOption, SharpDX.Matrix3x2? worldTransform, float flatteningTolerance, SimplifiedGeometrySink geometrySink)
+        public void Simplify(SharpDX.Direct2D1.GeometrySimplificationOption simplificationOption, RawMatrix3x2? worldTransform, float flatteningTolerance, SimplifiedGeometrySink geometrySink)
         {
             this.Simplify_(simplificationOption, worldTransform, flatteningTolerance, GeometrySinkShadow.ToIntPtr(geometrySink));
         }
@@ -374,7 +376,7 @@ namespace SharpDX.Direct2D1
         /// <param name="strokeWidth">The thickness of the stroke to apply. </param>
         /// <returns>When this method returns, contains a boolean value set to true if the geometry's stroke contains the specified point; otherwise, false. You must allocate storage for this parameter. </returns>
         /// <unmanaged>HRESULT ID2D1Geometry::StrokeContainsPoint([None] D2D1_POINT_2F point,[None] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] float flatteningTolerance,[Out] BOOL* contains)</unmanaged>
-        public bool StrokeContainsPoint(Point point, float strokeWidth)
+        public bool StrokeContainsPoint(RawPoint point, float strokeWidth)
         {
             return StrokeContainsPoint(point, strokeWidth, null);
         }
@@ -386,7 +388,7 @@ namespace SharpDX.Direct2D1
         /// <param name="strokeWidth">The thickness of the stroke to apply. </param>
         /// <returns>When this method returns, contains a boolean value set to true if the geometry's stroke contains the specified point; otherwise, false. You must allocate storage for this parameter. </returns>
         /// <unmanaged>HRESULT ID2D1Geometry::StrokeContainsPoint([None] D2D1_POINT_2F point,[None] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] float flatteningTolerance,[Out] BOOL* contains)</unmanaged>
-        public bool StrokeContainsPoint(Vector2 point, float strokeWidth)
+        public bool StrokeContainsPoint(RawVector2 point, float strokeWidth)
         {
             return StrokeContainsPoint(point, strokeWidth, null);
         }
@@ -399,9 +401,9 @@ namespace SharpDX.Direct2D1
         /// <param name="strokeStyle">The style of stroke to apply. </param>
         /// <returns>When this method returns, contains a boolean value set to true if the geometry's stroke contains the specified point; otherwise, false. You must allocate storage for this parameter. </returns>
         /// <unmanaged>HRESULT ID2D1Geometry::StrokeContainsPoint([None] D2D1_POINT_2F point,[None] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] float flatteningTolerance,[Out] BOOL* contains)</unmanaged>
-        public bool StrokeContainsPoint(Point point, float strokeWidth, StrokeStyle strokeStyle)
+        public bool StrokeContainsPoint(RawPoint point, float strokeWidth, StrokeStyle strokeStyle)
         {
-            return StrokeContainsPoint(new Vector2(point.X, point.Y), strokeWidth, strokeStyle);            
+            return StrokeContainsPoint(new RawVector2 { X = point.X, Y = point.Y }, strokeWidth, strokeStyle);            
         }
 
         /// <summary>	
@@ -412,7 +414,7 @@ namespace SharpDX.Direct2D1
         /// <param name="strokeStyle">The style of stroke to apply. </param>
         /// <returns>When this method returns, contains a boolean value set to true if the geometry's stroke contains the specified point; otherwise, false. You must allocate storage for this parameter. </returns>
         /// <unmanaged>HRESULT ID2D1Geometry::StrokeContainsPoint([None] D2D1_POINT_2F point,[None] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] float flatteningTolerance,[Out] BOOL* contains)</unmanaged>
-        public bool StrokeContainsPoint(Vector2 point, float strokeWidth, StrokeStyle strokeStyle)
+        public bool StrokeContainsPoint(RawVector2 point, float strokeWidth, StrokeStyle strokeStyle)
         {
             return StrokeContainsPoint(point, strokeWidth, strokeStyle, null, FlatteningTolerance);
         }
@@ -426,7 +428,7 @@ namespace SharpDX.Direct2D1
         /// <param name="transform">The transform to apply to the stroked geometry.  </param>
         /// <returns>When this method returns, contains a boolean value set to true if the geometry's stroke contains the specified point; otherwise, false. You must allocate storage for this parameter. </returns>
         /// <unmanaged>HRESULT ID2D1Geometry::StrokeContainsPoint([None] D2D1_POINT_2F point,[None] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] float flatteningTolerance,[Out] BOOL* contains)</unmanaged>
-        public bool StrokeContainsPoint(Point point, float strokeWidth, StrokeStyle strokeStyle, Matrix3x2 transform)
+        public bool StrokeContainsPoint(RawPoint point, float strokeWidth, StrokeStyle strokeStyle, RawMatrix3x2 transform)
         {
             return StrokeContainsPoint(point, strokeWidth, strokeStyle, transform, FlatteningTolerance);
         }
@@ -440,7 +442,7 @@ namespace SharpDX.Direct2D1
         /// <param name="transform">The transform to apply to the stroked geometry.  </param>
         /// <returns>When this method returns, contains a boolean value set to true if the geometry's stroke contains the specified point; otherwise, false. You must allocate storage for this parameter. </returns>
         /// <unmanaged>HRESULT ID2D1Geometry::StrokeContainsPoint([None] D2D1_POINT_2F point,[None] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] float flatteningTolerance,[Out] BOOL* contains)</unmanaged>
-        public bool StrokeContainsPoint(Vector2 point, float strokeWidth, StrokeStyle strokeStyle, Matrix3x2 transform)
+        public bool StrokeContainsPoint(RawVector2 point, float strokeWidth, StrokeStyle strokeStyle, RawMatrix3x2 transform)
         {
             return StrokeContainsPoint(point, strokeWidth, strokeStyle, transform, FlatteningTolerance);            
         }
@@ -455,9 +457,9 @@ namespace SharpDX.Direct2D1
         /// <param name="flatteningTolerance">The numeric accuracy with which the precise geometric path and path intersection is calculated. Points missing the stroke by less than the tolerance are still considered inside.  Smaller values produce more accurate results but cause slower execution. </param>
         /// <returns>When this method returns, contains a boolean value set to true if the geometry's stroke contains the specified point; otherwise, false. You must allocate storage for this parameter. </returns>
         /// <unmanaged>HRESULT ID2D1Geometry::StrokeContainsPoint([None] D2D1_POINT_2F point,[None] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] float flatteningTolerance,[Out] BOOL* contains)</unmanaged>
-        public bool StrokeContainsPoint(Point point, float strokeWidth, StrokeStyle strokeStyle, Matrix3x2 transform, float flatteningTolerance)
+        public bool StrokeContainsPoint(RawPoint point, float strokeWidth, StrokeStyle strokeStyle, RawMatrix3x2 transform, float flatteningTolerance)
         {
-            return StrokeContainsPoint(new Vector2(point.X, point.Y), strokeWidth, strokeStyle, transform, flatteningTolerance);
+            return StrokeContainsPoint(new RawVector2 { X = point.X, Y = point.Y}, strokeWidth, strokeStyle, transform, flatteningTolerance);
         }
 
         /// <summary>	
@@ -491,7 +493,7 @@ namespace SharpDX.Direct2D1
         /// <param name="tessellationSink">The <see cref="SharpDX.Direct2D1.TessellationSink"/> to which the tessellated is appended.</param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
         /// <unmanaged>HRESULT Tessellate([In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] FLOAT flatteningTolerance,[In] ID2D1TessellationSink* tessellationSink)</unmanaged>
-        public void Tessellate(SharpDX.Matrix3x2? worldTransform, float flatteningTolerance, TessellationSink tessellationSink)
+        public void Tessellate(RawMatrix3x2? worldTransform, float flatteningTolerance, TessellationSink tessellationSink)
         {
             this.Tessellate_(worldTransform, flatteningTolerance, TessellationSinkShadow.ToIntPtr(tessellationSink));
         }
@@ -545,7 +547,7 @@ namespace SharpDX.Direct2D1
         /// <param name="geometrySink">The <see cref="SharpDX.Direct2D1.SimplifiedGeometrySink"/> to which the widened geometry is appended.</param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
         /// <unmanaged>HRESULT Widen([None] FLOAT strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] FLOAT flatteningTolerance,[In] ID2D1SimplifiedGeometrySink* geometrySink)</unmanaged>
-        public void Widen(float strokeWidth, SharpDX.Direct2D1.StrokeStyle strokeStyle, SharpDX.Matrix3x2? worldTransform, float flatteningTolerance, GeometrySink geometrySink)
+        public void Widen(float strokeWidth, SharpDX.Direct2D1.StrokeStyle strokeStyle, RawMatrix3x2? worldTransform, float flatteningTolerance, GeometrySink geometrySink)
         {
             this.Widen_(strokeWidth, strokeStyle, worldTransform, flatteningTolerance, GeometrySinkShadow.ToIntPtr(geometrySink));
         }

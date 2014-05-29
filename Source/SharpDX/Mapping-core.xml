@@ -452,27 +452,27 @@
     <context-clear/>
 
     <define enum="System.IO.SeekOrigin" sizeof="4" />
-    <define struct="SharpDX.Viewport" sizeof="16" />
-    <define struct="SharpDX.ViewportF" sizeof="16" />
+    <define struct="SharpDX.Native.RawViewport" sizeof="16" />
+    <define struct="SharpDX.Native.RawViewportF" sizeof="16" />
     <define struct="SharpDX.DrawingRectangle" sizeof="16" />
     <define struct="SharpDX.DrawingRectangleF" sizeof="16" />
     <define struct="SharpDX.Size2F" sizeof="8" />
     <define struct="SharpDX.Size2" sizeof="8" />
-    <define struct="SharpDX.Vector2" sizeof="8" />
-    <define struct="SharpDX.Point" sizeof="8" />
+    <define struct="SharpDX.Native.RawVector2" sizeof="8" />
+    <define struct="SharpDX.Native.RawPoint" sizeof="8" />
     <define struct="SharpDX.Result" sizeof="4" />
     <define struct="SharpDX.PointerSize" sizeof="8" />
-    <define struct="SharpDX.Matrix" sizeof="64" />
-    <define struct="SharpDX.Matrix3x2" sizeof="24" />
-    <define struct="SharpDX.Vector2" sizeof="8" />
-    <define struct="SharpDX.Vector3" sizeof="12" />
-    <define struct="SharpDX.Vector4" sizeof="16" />
+    <define struct="SharpDX.Native.RawMatrix" sizeof="64" />
+    <define struct="SharpDX.Native.RawMatrix3x2" sizeof="24" />
+    <define struct="SharpDX.Native.RawVector2" sizeof="8" />
+    <define struct="SharpDX.Native.RawVector3" sizeof="12" />
+    <define struct="SharpDX.Native.RawVector4" sizeof="16" />
     <define struct="SharpDX.Color" sizeof="4" />
-    <define struct="SharpDX.ColorBGRA" sizeof="4" />
-    <define struct="SharpDX.Color3" sizeof="12" />
-    <define struct="SharpDX.Color4" sizeof="16" />
-    <define struct="SharpDX.Quaternion" sizeof="16" />
-    <define struct="SharpDX.Plane" sizeof="16" />
+    <define struct="SharpDX.Native.RawColorBGRA" sizeof="4" />
+    <define struct="SharpDX.Native.RawColor3" sizeof="12" />
+    <define struct="SharpDX.Native.RawColor4" sizeof="16" />
+    <define struct="SharpDX.Native.RawQuaternion" sizeof="16" />
+    <define struct="SharpDX.Native.RawPlane" sizeof="16" />
 
     <define struct="SharpDX.Win32Native.TextMetric" sizeof="32"/> <!-- TODO calculate sizeof -->
     <define struct="SharpDX.Win32Native.TextMetricA" sizeof="32"/> <!-- TODO calculate sizeof -->
@@ -480,12 +480,12 @@
 
     <define struct="SharpDX.DataRectangle" sizeof="12" />
     <define struct="SharpDX.DataBox" sizeof="16" />
-    <define struct="SharpDX.Bool" sizeof="4" />
-    <define struct="SharpDX.Bool4" sizeof="16" />
-    <define struct="SharpDX.Int3" sizeof="12" />
-    <define struct="SharpDX.Int4" sizeof="16" />
-    <define struct="SharpDX.Rectangle" sizeof="16" />
-    <define struct="SharpDX.RectangleF" sizeof="16" />
+    <define struct="SharpDX.Native.RawBool" sizeof="4" />
+    <define struct="SharpDX.Native.RawBool4" sizeof="16" />
+    <define struct="SharpDX.Native.RawInt3" sizeof="12" />
+    <define struct="SharpDX.Native.RawInt4" sizeof="16" />
+    <define struct="SharpDX.Native.RawRectangle" sizeof="16" />
+    <define struct="SharpDX.Native.RawRectangleF" sizeof="16" />
     <define struct="SharpDX.Multimedia.WaveFormat" sizeof="18" marshal="true" />
     <define struct="SharpDX.Multimedia.WaveFormatExtensible" sizeof="18"  marshal="true" custom-new="true"/>
     <define struct="SharpDX.FunctionCallback" sizeof="8" />
@@ -521,36 +521,36 @@
 
     <!-- SharpDX bindings -->
     <bind from="SHARPDX_USHORT" to="System.UInt16" />
-    <bind from="SHARPDX_BOOL4" to="SharpDX.Bool4" />
-    <bind from="SHARPDX_INT3" to="SharpDX.Int3" />
-    <bind from="SHARPDX_INT4" to="SharpDX.Int4" />
-    <bind from="SHARPDX_COLOR4" to="SharpDX.Color4" />
-    <bind from="SHARPDX_VECTOR4" to="SharpDX.Vector4" />
-    <bind from="SHARPDX_MATRIX" to="SharpDX.Matrix" />
+    <bind from="SHARPDX_BOOL4" to="SharpDX.Native.RawBool4" />
+    <bind from="SHARPDX_INT3" to="SharpDX.Native.RawInt3" />
+    <bind from="SHARPDX_INT4" to="SharpDX.Native.RawInt4" />
+    <bind from="SHARPDX_COLOR4" to="SharpDX.Native.RawColor4" />
+    <bind from="SHARPDX_VECTOR4" to="SharpDX.Native.RawVector4" />
+    <bind from="SHARPDX_MATRIX" to="SharpDX.Native.RawMatrix" />
     <bind from="SHARPDX_SEEKORIGIN" to="System.IO.SeekOrigin" />
 
     <!-- Global D3DX/D3D bindings -->
-    <bind from="D3DCOLORVALUE" to="SharpDX.Color4" />
-    <bind from="D3DXCOLOR" to="SharpDX.Color4" />
-    <bind from="D3DXMATRIX" to="SharpDX.Matrix" />
-    <bind from="D3DMATRIX" to="SharpDX.Matrix" />
-    <bind from="D3DXVECTOR2" to="SharpDX.Vector2" />
-    <bind from="D3DVECTOR" to="SharpDX.Vector3" />
-    <bind from="D3DXVECTOR3" to="SharpDX.Vector3" />
-    <bind from="D3DXVECTOR4" to="SharpDX.Vector4" />
-    <bind from="D3DXQUATERNION" to="SharpDX.Quaternion" />
-    <bind from="D3DXPLANE" to="SharpDX.Plane" />
-    <bind from="D3DCOLOR" to="SharpDX.ColorBGRA"/>
+    <bind from="D3DCOLORVALUE" to="SharpDX.Native.RawColor4" />
+    <bind from="D3DXCOLOR" to="SharpDX.Native.RawColor4" />
+    <bind from="D3DXMATRIX" to="SharpDX.Native.RawMatrix" />
+    <bind from="D3DMATRIX" to="SharpDX.Native.RawMatrix" />
+    <bind from="D3DXVECTOR2" to="SharpDX.Native.RawVector2" />
+    <bind from="D3DVECTOR" to="SharpDX.Native.RawVector3" />
+    <bind from="D3DXVECTOR3" to="SharpDX.Native.RawVector3" />
+    <bind from="D3DXVECTOR4" to="SharpDX.Native.RawVector4" />
+    <bind from="D3DXQUATERNION" to="SharpDX.Native.RawQuaternion" />
+    <bind from="D3DXPLANE" to="SharpDX.Native.RawPlane" />
+    <bind from="D3DCOLOR" to="SharpDX.Native.RawColorBGRA"/>
     <bind from="D3DXFLOAT16" to="System.Int32" />
     <bind from="D3DXVECTOR2_16F" to="System.Int32" />
     <bind from="D3DXVECTOR3_16F" to="System.Int32" />
     <bind from="D3DXVECTOR4_16F" to="System.Int32" />
     <bind from="D3D_OMAC" to="System.Guid" />
-    <bind from="D3DRECT" to="SharpDX.Rectangle" />
+    <bind from="D3DRECT" to="SharpDX.Native.RawRectangle" />
 
     <!-- DirectX 11.2 structure -->
     <ifdef name="DIRECTX11_2">
-      <bind from="DXGI_MATRIX_3X2_F" to="SharpDX.Matrix3x2" />
+      <bind from="DXGI_MATRIX_3X2_F" to="SharpDX.Native.RawMatrix3x2" />
     </ifdef>
 
     <!-- Win32 bindings -->
@@ -564,9 +564,9 @@
     <bind from="WAVEFORMATEX" to="SharpDX.Multimedia.WaveFormat" />
     <bind from="tWAVEFORMATEX" to="SharpDX.Multimedia.WaveFormat" />    
     <bind from="WAVEFORMATEXTENSIBLE" to="SharpDX.Multimedia.WaveFormatExtensible" />
-    <bind from="POINT" to="SharpDX.Point" />
-    <bind from="RECT" to="SharpDX.Rectangle" />
-    <bind from="BOOL" to="SharpDX.Bool"/>
+    <bind from="POINT" to="SharpDX.Native.RawPoint" />
+    <bind from="RECT" to="SharpDX.Native.RawRectangle" />
+    <bind from="BOOL" to="SharpDX.Native.RawBool"/>
     <bind from="HACCEL" to="System.IntPtr"/>    
     <bind from="HWND" to="System.IntPtr"/>
     <bind from="HDC" to="System.IntPtr"/>
@@ -582,7 +582,7 @@
     <bind from="HRESULT" to="SharpDX.Result" />
     <bind from="FILETIME" to="System.Int64" />
     <bind from="GUID" to="System.Guid" />
-    <bind from="COLORREF" to="SharpDX.Color4" />
+    <bind from="COLORREF" to="SharpDX.Native.RawColor4" />
     <bind from="__function__stdcall" to="SharpDX.FunctionCallback" />
     <bind from="SIZE" to="SharpDX.Size2" />
     <bind from="SIZE_T" to="SharpDX.PointerSize" marshal="System.IntPtr"/>

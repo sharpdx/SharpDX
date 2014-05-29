@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 using System;
 using System.Diagnostics;
+using SharpDX.Native;
 
 namespace SharpDX.Direct3D10
 {
@@ -31,9 +32,9 @@ namespace SharpDX.Direct3D10
         /// </summary>	
         /// <returns>Returns a four-component vector that contains integer data </returns>
         /// <unmanaged>HRESULT ID3D10EffectVectorVariable::GetIntVector([Out] int* pData)</unmanaged>
-        public SharpDX.Int4 GetIntVector()
+        public RawInt4 GetIntVector()
         {
-            Int4 temp;
+            RawInt4 temp;
             GetIntVector(out temp);
             return temp;
         }
@@ -43,9 +44,9 @@ namespace SharpDX.Direct3D10
         /// </summary>	
         /// <returns>Returns a four-component vector that contains floating-point data.</returns>
         /// <unmanaged>HRESULT ID3D10EffectVectorVariable::GetFloatVector([Out] float* pData)</unmanaged>
-        public SharpDX.Vector4 GetFloatVector()
+        public RawVector4 GetFloatVector()
         {
-            SharpDX.Vector4 temp;
+            RawVector4 temp;
             GetFloatVector(out temp);
             return temp;
         }
@@ -55,9 +56,9 @@ namespace SharpDX.Direct3D10
         /// </summary>	
         /// <returns>a four-component vector that contains boolean data. </returns>
         /// <unmanaged>HRESULT ID3D10EffectVectorVariable::GetBoolVector([Out, Buffer] BOOL* pData)</unmanaged>
-        public Bool4 GetBoolVector()
+        public RawBool4 GetBoolVector()
         {
-            Bool4 temp;
+            RawBool4 temp;
             GetBoolVector(out temp);
             return temp;
         }
@@ -71,7 +72,7 @@ namespace SharpDX.Direct3D10
         public unsafe T GetVector<T>() where T : struct
         {
             T temp;
-            GetIntVector(out *(Int4*)Interop.CastOut(out temp));
+            GetIntVector(out *(RawInt4*)Interop.CastOut(out temp));
             return temp;
         }
 
@@ -81,7 +82,7 @@ namespace SharpDX.Direct3D10
         /// <param name="array">A reference to the start of the data to set. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectVectorVariable::SetIntVectorArray([In, Buffer] int* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public void Set(SharpDX.Int4[] array)
+        public void Set(RawInt4[] array)
         {
             Set(array, 0, array.Length);
         }
@@ -92,7 +93,7 @@ namespace SharpDX.Direct3D10
         /// <param name="array">A reference to the start of the data to set. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectVectorVariable::SetFloatVectorArray([In, Buffer] float* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public void Set(SharpDX.Vector4[] array)
+        public void Set(RawVector4[] array)
         {
             Set(array, 0, array.Length);
         }
@@ -109,7 +110,7 @@ namespace SharpDX.Direct3D10
         public void Set<T>(T[] array) where T : struct
         {
             Trace.Assert(Utilities.SizeOf<T>() == 16, VectorInvalidSize);
-            Set(Interop.CastArray<Vector4, T>(array), 0, array.Length);
+            Set(Interop.CastArray<RawVector4, T>(array), 0, array.Length);
         }
 
         /// <summary>	
@@ -141,11 +142,11 @@ namespace SharpDX.Direct3D10
         /// <param name="value">A reference to the first component. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectVectorVariable::SetFloatVector([In] float* pData)</unmanaged>
-        public void Set(SharpDX.Vector2 value)
+        public void Set(RawVector2 value)
         {
             unsafe
             {
-                SetRawValue(new IntPtr(&value), 0, Utilities.SizeOf<SharpDX.Vector2>());
+                SetRawValue(new IntPtr(&value), 0, Utilities.SizeOf<RawVector2>());
             }
         }
 
@@ -155,11 +156,11 @@ namespace SharpDX.Direct3D10
         /// <param name="value">A reference to the first component. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectVectorVariable::SetFloatVector([In] float* pData)</unmanaged>
-        public void Set(SharpDX.Vector3 value)
+        public void Set(RawVector3 value)
         {
             unsafe
             {
-                SetRawValue(new IntPtr(&value), 0, Utilities.SizeOf<SharpDX.Vector3>());
+                SetRawValue(new IntPtr(&value), 0, Utilities.SizeOf<RawVector3>());
             }
         }
 
@@ -169,11 +170,11 @@ namespace SharpDX.Direct3D10
         /// <param name="value">A reference to the first component. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectVectorVariable::SetFloatVector([In] float* pData)</unmanaged>
-        public void Set(SharpDX.Color4 value)
+        public void Set(RawColor4 value)
         {
             unsafe
             {
-                SetRawValue(new IntPtr(&value), 0, Utilities.SizeOf<SharpDX.Color4>());
+                SetRawValue(new IntPtr(&value), 0, Utilities.SizeOf<RawColor4>());
             }
         }
 
@@ -183,11 +184,11 @@ namespace SharpDX.Direct3D10
         /// <param name="array">A reference to the start of the data to set. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectVectorVariable::SetFloatVectorArray([In, Buffer] float* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public void Set(SharpDX.Color4[] array)
+        public void Set(RawColor4[] array)
         {
             unsafe
             {
-                fixed (void* pArray = &array[0]) SetRawValue((IntPtr)pArray, 0, array.Length * Utilities.SizeOf<SharpDX.Color4>());
+                fixed (void* pArray = &array[0]) SetRawValue((IntPtr)pArray, 0, array.Length * Utilities.SizeOf<RawColor4>());
             }
         }
 
@@ -197,9 +198,9 @@ namespace SharpDX.Direct3D10
         /// <param name="count">The number of array elements to set. </param>
         /// <returns>Returns an array of four-component vectors that contain integer data. </returns>
         /// <unmanaged>HRESULT ID3D10EffectVectorVariable::GetIntVectorArray([Out, Buffer] int* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Int4[] GetIntVectorArray(int count)
+        public RawInt4[] GetIntVectorArray(int count)
         {
-            var temp = new Int4[count];
+            var temp = new RawInt4[count];
             GetIntVectorArray(temp, 0, count);
             return temp;
         }
@@ -210,9 +211,9 @@ namespace SharpDX.Direct3D10
         /// <param name="count">The number of array elements to set. </param>
         /// <returns>Returns an array of four-component vectors that contain floating-point data. </returns>
         /// <unmanaged>HRESULT ID3D10EffectVectorVariable::GetFloatVectorArray([None] float* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Vector4[] GetFloatVectorArray(int count)
+        public RawVector4[] GetFloatVectorArray(int count)
         {
-            var temp = new SharpDX.Vector4[count];
+            var temp = new RawVector4[count];
             GetFloatVectorArray(temp, 0, count);
             return temp;
         }
@@ -223,9 +224,9 @@ namespace SharpDX.Direct3D10
         /// <param name="count">The number of array elements to set. </param>
         /// <returns>an array of four-component vectors that contain boolean data.	 </returns>
         /// <unmanaged>HRESULT ID3D10EffectVectorVariable::GetBoolVectorArray([Out, Buffer] BOOL* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public Bool4[] GetBoolVectorArray(int count)
+        public RawBool4[] GetBoolVectorArray(int count)
         {
-            var temp = new Bool4[count];
+            var temp = new RawBool4[count];
             GetBoolVectorArray(temp, 0, count);
             return temp;
         }
@@ -240,7 +241,7 @@ namespace SharpDX.Direct3D10
         public T[] GetVectorArray<T>(int count) where T : struct
         {
             var temp = new T[count];
-            GetIntVectorArray(Interop.CastArray<Int4, T>(temp), 0, count);
+            GetIntVectorArray(Interop.CastArray<RawInt4, T>(temp), 0, count);
             return temp;
         }
     }

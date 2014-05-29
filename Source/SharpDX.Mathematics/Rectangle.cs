@@ -21,6 +21,7 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using SharpDX.Native;
 
 namespace SharpDX
 {
@@ -501,6 +502,46 @@ namespace SharpDX
         {
             _right = (_right - _left);
             _bottom = (_bottom - _top);
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Rectangle"/> to <see cref="SharpDX.Native.RawRectangle"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public unsafe static implicit operator SharpDX.Native.RawRectangle(Rectangle value)
+        {
+            return *(SharpDX.Native.RawRectangle*)&value;
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawRectangle"/> to <see cref="SharpDX.Rectangle"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public unsafe static implicit operator Rectangle(SharpDX.Native.RawRectangle value)
+        {
+            return *(Rectangle*)&value;
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Rectangle"/> to <see cref="SharpDX.Native.RawRectangle"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public unsafe static implicit operator SharpDX.Native.RawBox(Rectangle value)
+        {
+            return new RawBox(value.X, value.Y, value.Width, value.Height);
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawRectangle"/> to <see cref="SharpDX.Rectangle"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public unsafe static implicit operator Rectangle(SharpDX.Native.RawBox value)
+        {
+            return new Rectangle(value.X, value.Y, value.Width, value.Height);
         }
     }
 }

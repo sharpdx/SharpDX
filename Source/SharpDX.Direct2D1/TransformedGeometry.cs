@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using SharpDX.Native;
 
 namespace SharpDX.Direct2D1
 {
@@ -29,7 +30,7 @@ namespace SharpDX.Direct2D1
         /// <param name="factory">an instance of <see cref = "SharpDX.Direct2D1.Factory" /></param>
         /// <param name="geometrySource"></param>
         /// <param name="matrix3X2"></param>
-        public TransformedGeometry(Factory factory, Geometry geometrySource, Matrix3x2 matrix3X2) : base(IntPtr.Zero)
+        public TransformedGeometry(Factory factory, Geometry geometrySource, RawMatrix3x2 matrix3X2) : base(IntPtr.Zero)
         {
             factory.CreateTransformedGeometry(geometrySource, ref matrix3X2, this);
         }

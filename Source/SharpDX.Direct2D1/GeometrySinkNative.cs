@@ -18,11 +18,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using SharpDX.Native;
+
 namespace SharpDX.Direct2D1
 {
     internal partial class GeometrySinkNative
     {
-        public void AddLine(Vector2 point)
+        public void AddLine(RawVector2 point)
         {
             AddLine_(point);
         }

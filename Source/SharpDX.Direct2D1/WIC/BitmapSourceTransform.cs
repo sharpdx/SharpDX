@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using SharpDX.Native;
 
 namespace SharpDX.WIC
 {
@@ -84,9 +85,8 @@ namespace SharpDX.WIC
         /// <param name="output">The output.</param>
         /// <returns></returns>
         /// <unmanaged>HRESULT IWICBitmapSourceTransform::CopyPixels([In, Optional] const WICRect* prc,[In] unsigned int uiWidth,[In] unsigned int uiHeight,[In, Optional] GUID* pguidDstFormat,[In] WICBitmapTransformOptions dstTransform,[In] unsigned int nStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer)</unmanaged>
-        public unsafe void CopyPixels(Rectangle rectangle, int width, int height, System.Guid guidDstFormat, SharpDX.WIC.BitmapTransformOptions dstTransform, int stride, DataStream output)
+        public unsafe void CopyPixels(RawBox rectangle, int width, int height, System.Guid guidDstFormat, SharpDX.WIC.BitmapTransformOptions dstTransform, int stride, DataStream output)
         {
-            rectangle.MakeXYAndWidthHeight();
             CopyPixels(new IntPtr(&rectangle), width, height, guidDstFormat, dstTransform, stride, (int)(output.Length - output.Position),
                        output.PositionPointer);
         }

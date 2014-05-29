@@ -20,6 +20,7 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using SharpDX.Native;
 
 namespace SharpDX
 {
@@ -362,6 +363,26 @@ namespace SharpDX
         public static implicit operator bool[](Bool4 input)
         {
             return input.ToArray();
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Bool4"/> to <see cref="RawBool4"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public unsafe static implicit operator RawBool4(Bool4 value)
+        {
+            return *(RawBool4*)&value;
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawBool4"/> to <see cref="SharpDX.Bool4"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public unsafe static implicit operator Bool4(RawBool4 value)
+        {
+            return *(Bool4*)&value;
         }
     }
 }

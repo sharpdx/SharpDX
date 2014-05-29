@@ -20,6 +20,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
+using SharpDX.Native;
 using SharpDX.Win32;
 
 namespace SharpDX
@@ -152,7 +153,7 @@ namespace SharpDX
         public static extern IntPtr CallWindowProc(IntPtr wndProc, IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll", EntryPoint = "GetClientRect")]
-        public static extern bool GetClientRect(IntPtr hWnd, out Rectangle lpRect);
+        public static extern bool GetClientRect(IntPtr hWnd, out RawRectangle lpRect);
 
         [DllImport("kernel32.dll", EntryPoint = "GetModuleHandle", CharSet = CharSet.Unicode)]
         public static extern IntPtr GetModuleHandle(string lpModuleName);

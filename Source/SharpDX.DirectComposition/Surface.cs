@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SharpDX.Native;
 
 namespace SharpDX.DirectComposition
 {
@@ -24,7 +25,7 @@ namespace SharpDX.DirectComposition
 			factory.CreateSurface(initialWidth, initialHeight, format, alphaMode, this);
 		}
 
-		public T BeginDraw<T>(Rectangle? updateRect, out Point updateOffset) where T : ComObject
+		public T BeginDraw<T>(RawRectangle? updateRect, out RawPoint updateOffset) where T : ComObject
 		{
 			IntPtr temp;
 			BeginDraw(updateRect, Utilities.GetGuidFromType(typeof(T)), out temp, out updateOffset);

@@ -316,5 +316,26 @@ namespace SharpDX
         {
             return new ViewportF(value.X, value.Y, value.Width, value.Height, value.MinDepth, value.MaxDepth);
         }
+
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="ViewportF"/> to <see cref="SharpDX.Native.RawViewportF"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public unsafe static implicit operator SharpDX.Native.RawViewportF(ViewportF value)
+        {
+            return *(SharpDX.Native.RawViewportF*)&value;
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawViewportF"/> to <see cref="SharpDX.ViewportF"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public unsafe static implicit operator ViewportF(SharpDX.Native.RawViewportF value)
+        {
+            return *(ViewportF*)&value;
+        }
     }
 }

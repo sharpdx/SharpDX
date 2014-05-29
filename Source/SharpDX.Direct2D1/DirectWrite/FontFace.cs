@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 using System;
 using SharpDX.Direct2D1;
+using SharpDX.Native;
 
 namespace SharpDX.DirectWrite
 {
@@ -76,7 +77,7 @@ namespace SharpDX.DirectWrite
         /// <param name="isSideways">A BOOL value that indicates whether the font is being used in a sideways run.  This can affect the glyph metrics if the font has oblique simulation because sideways oblique simulation differs from non-sideways oblique simulation. </param>
         /// <returns>An array of <see cref="T:SharpDX.DirectWrite.GlyphMetrics" /> structures filled by this function. The metrics are in font design units. </returns>
         /// <unmanaged>HRESULT IDWriteFontFace::GetGdiCompatibleGlyphMetrics([None] float emSize,[None] float pixelsPerDip,[In, Optional] const DWRITE_MATRIX* transform,[None] BOOL useGdiNatural,[In, Buffer] const short* glyphIndices,[None] int glyphCount,[Out, Buffer] DWRITE_GLYPH_METRICS* glyphMetrics,[None] BOOL isSideways)</unmanaged>
-        public GlyphMetrics[] GetGdiCompatibleGlyphMetrics(float fontSize, float pixelsPerDip, Matrix? transform, bool useGdiNatural, short[] glyphIndices, bool isSideways)
+        public GlyphMetrics[] GetGdiCompatibleGlyphMetrics(float fontSize, float pixelsPerDip, RawMatrix3x2? transform, bool useGdiNatural, short[] glyphIndices, bool isSideways)
         {
             var glyphMetrics = new GlyphMetrics[glyphIndices.Length];
             GetGdiCompatibleGlyphMetrics(fontSize, pixelsPerDip, transform, useGdiNatural, glyphIndices, glyphIndices.Length, glyphMetrics, isSideways);
@@ -134,7 +135,7 @@ namespace SharpDX.DirectWrite
                 tableData = DataPointer.Zero;
                 IntPtr tableDataPtr = IntPtr.Zero;
                 int tableDataSize;
-                Bool exists;
+                RawBool exists;
                 TryGetFontTable(openTypeTableTag, new IntPtr(&tableDataPtr), out tableDataSize, out tableContext, out exists);
                 if (tableDataPtr != IntPtr.Zero)
                     tableData = new DataPointer(tableDataPtr, tableDataSize);

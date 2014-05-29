@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using SharpDX.Native;
 #if !WIN8METRO
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -90,7 +91,7 @@ namespace SharpDX.WIC
         /// <msdn-id>ee690294</msdn-id>	
         /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromSourceRect([In, Optional] IWICBitmapSource* pIBitmapSource,[In] unsigned int x,[In] unsigned int y,[In] unsigned int width,[In] unsigned int height,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>	
         /// <unmanaged-short>IWICImagingFactory::CreateBitmapFromSourceRect</unmanaged-short>	
-        public Bitmap(ImagingFactory factory, SharpDX.WIC.BitmapSource bitmapSource, Rectangle rectangle)
+        public Bitmap(ImagingFactory factory, SharpDX.WIC.BitmapSource bitmapSource, RawBox rectangle)
             : base(IntPtr.Zero)
         {
             factory.CreateBitmapFromSourceRect(bitmapSource, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, this);
@@ -144,9 +145,8 @@ namespace SharpDX.WIC
         /// <msdn-id>ee690187</msdn-id>	
         /// <unmanaged>HRESULT IWICBitmap::Lock([In, Optional] const WICRect* prcLock,[In] WICBitmapLockFlags flags,[Out] IWICBitmapLock** ppILock)</unmanaged>	
         /// <unmanaged-short>IWICBitmap::Lock</unmanaged-short>	
-        public unsafe SharpDX.WIC.BitmapLock Lock(Rectangle rcLockRef, SharpDX.WIC.BitmapLockFlags flags)
+        public unsafe SharpDX.WIC.BitmapLock Lock(RawBox rcLockRef, SharpDX.WIC.BitmapLockFlags flags)
         {
-            rcLockRef.MakeXYAndWidthHeight();
             return this.Lock(new IntPtr(&rcLockRef), flags);
         }
 

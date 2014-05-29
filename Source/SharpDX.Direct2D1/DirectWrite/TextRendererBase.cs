@@ -20,6 +20,7 @@
 using System;
 
 using SharpDX.Direct2D1;
+using SharpDX.Native;
 
 namespace SharpDX.DirectWrite
 {
@@ -46,9 +47,9 @@ namespace SharpDX.DirectWrite
         /// <param name="clientDrawingContext">The drawing context passed to <see cref="SharpDX.DirectWrite.TextLayout.Draw_"/>.</param>
         /// <returns>a structure which has transform information for  pixel snapping.</returns>
         /// <unmanaged>HRESULT GetCurrentTransform([None] void* clientDrawingContext,[Out] DWRITE_MATRIX* transform)</unmanaged>
-        public virtual Matrix3x2 GetCurrentTransform(object clientDrawingContext)
+        public virtual RawMatrix3x2 GetCurrentTransform(object clientDrawingContext)
         {
-            return new Matrix3x2 { M11 = 1, M22 = 1 };
+            return new RawMatrix3x2 { M11 = 1, M22 = 1 };
         }
 
         /// <summary>	
@@ -69,7 +70,7 @@ namespace SharpDX.DirectWrite
         ///  IDWriteTextLayout::Draw calls this function to instruct the client to render a run of glyphs. 	
         /// </summary>	
         /// <remarks>	
-        /// The <see cref="SharpDX.DirectWrite.TextLayout.Draw_"/> function calls this callback function with all the information about glyphs to render. The application implements this callback by mostly delegating the call to the underlying platform's graphics API such as {{Direct2D}} to draw glyphs on the drawing context. An application that uses GDI can implement this callback in terms of the <see cref="BitmapRenderTarget.DrawGlyphRun(float,float,MeasuringMode,SharpDX.DirectWrite.GlyphRun,SharpDX.DirectWrite.RenderingParams,SharpDX.Color4)"/> method.	
+        /// The <see cref="SharpDX.DirectWrite.TextLayout.Draw_"/> function calls this callback function with all the information about glyphs to render. The application implements this callback by mostly delegating the call to the underlying platform's graphics API such as {{Direct2D}} to draw glyphs on the drawing context. An application that uses GDI can implement this callback in terms of the <see cref="BitmapRenderTarget.DrawGlyphRun(float,float,MeasuringMode,SharpDX.DirectWrite.GlyphRun,SharpDX.DirectWrite.RenderingParams,RawColor4)"/> method.	
         /// </remarks>	
         /// <param name="clientDrawingContext">The application-defined drawing context passed to  <see cref="SharpDX.DirectWrite.TextLayout.Draw_"/>.</param>
         /// <param name="baselineOriginX">The pixel location (X-coordinate) at the baseline origin of the glyph run.</param>

@@ -305,5 +305,25 @@ namespace SharpDX
                 return 0f;
             }
         }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Viewport"/> to <see cref="SharpDX.Native.RawViewport"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public unsafe static implicit operator SharpDX.Native.RawViewport(Viewport value)
+        {
+            return *(SharpDX.Native.RawViewport*)&value;
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawViewport"/> to <see cref="SharpDX.Viewport"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public unsafe static implicit operator Viewport(SharpDX.Native.RawViewport value)
+        {
+            return *(Viewport*)&value;
+        }
     }
 }

@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using SharpDX.Native;
 
 namespace SharpDX.Direct2D1
 {
@@ -28,7 +29,7 @@ namespace SharpDX.Direct2D1
         /// </summary>	
         /// <param name="renderTarget">an instance of <see cref = "SharpDX.Direct2D1.RenderTarget" /></param>
         /// <param name="color">The red, green, blue, and alpha values of the brush's color.</param>
-        public SolidColorBrush(RenderTarget renderTarget, SharpDX.Color4 color) : this(renderTarget, color, null)
+        public SolidColorBrush(RenderTarget renderTarget, RawColor4 color) : this(renderTarget, color, null)
         {
         }
 
@@ -38,7 +39,7 @@ namespace SharpDX.Direct2D1
         /// <param name="renderTarget">an instance of <see cref = "SharpDX.Direct2D1.RenderTarget" /></param>
         /// <param name="color">The red, green, blue, and alpha values of the brush's color.</param>
         /// <param name="brushProperties">The base opacity of the brush.</param>
-        public SolidColorBrush(RenderTarget renderTarget, SharpDX.Color4 color, SharpDX.Direct2D1.BrushProperties? brushProperties)
+        public SolidColorBrush(RenderTarget renderTarget, RawColor4 color, SharpDX.Direct2D1.BrushProperties? brushProperties)
             : base(IntPtr.Zero)
         {
             renderTarget.CreateSolidColorBrush(color, brushProperties, this);

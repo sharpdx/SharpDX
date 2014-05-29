@@ -21,6 +21,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using SharpDX.Native;
 
 namespace SharpDX.Direct3D9
 {
@@ -708,7 +709,7 @@ namespace SharpDX.Direct3D9
                 pool,
                 (int)filter,
                 (int)mipFilter,
-                (Color)colorKey,
+                *(RawColorBGRA*)&colorKey,
                 imageInformation,
                 palette,
                 out cubeVolumeTexture);
@@ -737,7 +738,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="VolumeTexture"/>
         /// </returns>
         /// <unmanaged>HRESULT D3DXCreateVolumeTextureFromFileInMemoryEx([In] IDirect3DDevice9* pDevice,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] unsigned int Size,[In] unsigned int MipLevels,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[In] unsigned int Filter,[In] unsigned int MipFilter,[In] D3DCOLOR ColorKey,[Out] D3DXIMAGE_INFO* pSrcInfo,[Out, Buffer] PALETTEENTRY* pPalette,[In] IDirect3DVolumeTexture9** ppVolumeTexture)</unmanaged>
-        private static VolumeTexture CreateFromFile(Device device, string fileName, int width, int height, int depth, int levelCount, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey, IntPtr imageInformation, PaletteEntry[] palette)
+        private unsafe static VolumeTexture CreateFromFile(Device device, string fileName, int width, int height, int depth, int levelCount, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey, IntPtr imageInformation, PaletteEntry[] palette)
         {
             VolumeTexture cubeVolumeTexture;
             D3DX9.CreateVolumeTextureFromFileExW(
@@ -752,7 +753,7 @@ namespace SharpDX.Direct3D9
                 pool,
                 (int)filter,
                 (int)mipFilter,
-                (Color)colorKey,
+                *(RawColorBGRA*)&colorKey,
                 imageInformation,
                 palette,
                 out cubeVolumeTexture);

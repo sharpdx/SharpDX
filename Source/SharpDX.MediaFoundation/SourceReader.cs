@@ -17,6 +17,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using SharpDX.Native;
 #if !WP8
 using System;
 using System.IO;
@@ -166,7 +168,7 @@ namespace SharpDX.MediaFoundation
         /// <msdn-id>dd374669</msdn-id>	
         /// <unmanaged>HRESULT IMFSourceReader::SetStreamSelection([In] unsigned int dwStreamIndex,[In] BOOL fSelected)</unmanaged>	
         /// <unmanaged-short>IMFSourceReader::SetStreamSelection</unmanaged-short>	
-        public void SetStreamSelection(SourceReaderIndex readerIndex, SharpDX.Bool fSelected)
+        public void SetStreamSelection(SourceReaderIndex readerIndex, RawBool fSelected)
         {
             SetStreamSelection((int)readerIndex, fSelected);
         }

@@ -56,7 +56,7 @@
   </extension>
 
   <bindings>
-    <bind from="WICRect" to="SharpDX.Rectangle"/>
+    <bind from="WICRect" to="SharpDX.Native.RawBox"/>
   </bindings>
 
   <mapping>

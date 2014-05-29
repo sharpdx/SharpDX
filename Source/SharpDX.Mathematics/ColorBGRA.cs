@@ -1135,5 +1135,25 @@ namespace SharpDX
             var value = (int)(component * 255.0f);
             return (byte)(value < 0 ? 0 : value > 255 ? 255 : value);
         }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="ColorBGRA"/> to <see cref="SharpDX.Native.RawColorBGRA"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public unsafe static implicit operator SharpDX.Native.RawColorBGRA(ColorBGRA value)
+        {
+            return *(SharpDX.Native.RawColorBGRA*)&value;
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawColorBGRA"/> to <see cref="SharpDX.ColorBGRA"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public unsafe static implicit operator ColorBGRA(SharpDX.Native.RawColorBGRA value)
+        {
+            return *(ColorBGRA*)&value;
+        }
     }
 }

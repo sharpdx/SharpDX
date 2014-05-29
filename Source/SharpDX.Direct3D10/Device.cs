@@ -24,6 +24,7 @@ using System.Runtime.InteropServices;
 using SharpDX.Direct3D;
 using SharpDX.DXGI;
 using SharpDX;
+using SharpDX.Native;
 
 namespace SharpDX.Direct3D10
 {
@@ -164,7 +165,7 @@ namespace SharpDX.Direct3D10
         public Predicate GetPredication(out bool predicateValue)
         {
             Predicate temp;
-            Bool tempPredicateValue;
+            RawBool tempPredicateValue;
             GetPredication(out temp, out tempPredicateValue);
             predicateValue = tempPredicateValue;
             return temp;

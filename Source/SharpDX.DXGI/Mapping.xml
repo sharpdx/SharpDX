@@ -122,7 +122,7 @@
 
   <!-- DXGI bindings -->
   <bindings>
-    <bind from="DXGI_RGB" to="SharpDX.Color4" />
+    <bind from="DXGI_RGB" to="SharpDX.Native.RawColor4" />
   </bindings>
 
   <!-- DXGI mapping rules -->

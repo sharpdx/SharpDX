@@ -134,5 +134,25 @@ namespace SharpDX
         {
             return new Vector2(value.X, value.Y);
         }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Point"/> to <see cref="SharpDX.Native.RawPoint"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public unsafe static implicit operator SharpDX.Native.RawPoint(Point value)
+        {
+            return *(SharpDX.Native.RawPoint*)&value;
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawPoint"/> to <see cref="SharpDX.Point"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public unsafe static implicit operator Point(SharpDX.Native.RawPoint value)
+        {
+            return *(Point*)&value;
+        }
     }
 }

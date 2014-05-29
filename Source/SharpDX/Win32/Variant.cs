@@ -145,7 +145,7 @@ namespace SharpDX.Win32
                         {
                             case VariantElementType.Bool:
                                 {
-                                    var array = new Bool[size];
+                                    var array = new Native.RawBool[size];
                                     Utilities.Read(variantValue.recordValue.RecordPointer, array, 0, size);
                                     return Utilities.ConvertToBoolArray(array);
                                 }

@@ -20,6 +20,7 @@
 using System;
 using SharpDX;
 using SharpDX.Direct2D1;
+using SharpDX.Native;
 
 namespace SharpDX.DirectWrite
 {
@@ -44,9 +45,9 @@ namespace SharpDX.DirectWrite
         /// <param name="textColor">The foreground color of the text. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
         /// <unmanaged>HRESULT IDWriteBitmapRenderTarget::DrawGlyphRun([None] float baselineOriginX,[None] float baselineOriginY,[None] DWRITE_MEASURING_MODE measuringMode,[In] const DWRITE_GLYPH_RUN* glyphRun,[None] IDWriteRenderingParams* renderingParams,[None] COLORREF textColor,[Out, Optional] RECT* blackBoxRect)</unmanaged>
-        public void DrawGlyphRun(float baselineOriginX, float baselineOriginY, MeasuringMode measuringMode, GlyphRun glyphRun, RenderingParams renderingParams, Color4 textColor)
+        public void DrawGlyphRun(float baselineOriginX, float baselineOriginY, MeasuringMode measuringMode, GlyphRun glyphRun, RenderingParams renderingParams, RawColor4 textColor)
         {
-            Rectangle temp;
+            RawRectangle temp;
             DrawGlyphRun(baselineOriginX, baselineOriginY, measuringMode, glyphRun, renderingParams, textColor, out temp);
         }
     }

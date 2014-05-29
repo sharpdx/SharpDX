@@ -20,6 +20,7 @@
 using System;
 
 using SharpDX.Direct2D1;
+using SharpDX.Native;
 
 namespace SharpDX.DirectWrite
 {
@@ -59,7 +60,7 @@ namespace SharpDX.DirectWrite
         /// The glyph run analysis object contains the results of analyzing the glyph run, including the positions of all the glyphs and references to all of the rasterized glyphs in the font cache.
         /// </remarks>
         /// <unmanaged>HRESULT IDWriteFactory::CreateGlyphRunAnalysis([In] const DWRITE_GLYPH_RUN* glyphRun,[None] float pixelsPerDip,[In, Optional] const DWRITE_MATRIX* transform,[None] DWRITE_RENDERING_MODE renderingMode,[None] DWRITE_MEASURING_MODE measuringMode,[None] float baselineOriginX,[None] float baselineOriginY,[Out] IDWriteGlyphRunAnalysis** glyphRunAnalysis)</unmanaged>
-        public GlyphRunAnalysis(Factory factory, GlyphRun glyphRun, float pixelsPerDip, Matrix? transform, RenderingMode renderingMode, MeasuringMode measuringMode, float baselineOriginX, float baselineOriginY)
+        public GlyphRunAnalysis(Factory factory, GlyphRun glyphRun, float pixelsPerDip, RawMatrix3x2? transform, RenderingMode renderingMode, MeasuringMode measuringMode, float baselineOriginX, float baselineOriginY)
         {
             factory.CreateGlyphRunAnalysis(glyphRun, pixelsPerDip, transform, renderingMode, measuringMode, baselineOriginX, baselineOriginY, this);
         }

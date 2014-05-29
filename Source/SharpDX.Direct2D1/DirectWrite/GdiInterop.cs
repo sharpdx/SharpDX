@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using SharpDX.Native;
 #if !WIN8METRO
 using System.Drawing;
 #endif
@@ -63,7 +64,7 @@ namespace SharpDX.DirectWrite
             {
                 int sizeOfLogFont = Marshal.SizeOf(logFont);
                 byte* nativeLogFont = stackalloc byte[sizeOfLogFont];
-                Bool isSystemFont;
+                RawBool isSystemFont;
                 ConvertFontToLOGFONT(font, new IntPtr(nativeLogFont), out isSystemFont);
                 Marshal.PtrToStructure(new IntPtr(nativeLogFont), logFont);
                 return isSystemFont;                

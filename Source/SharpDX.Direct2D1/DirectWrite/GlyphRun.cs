@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Native;
 
 namespace SharpDX.DirectWrite
 {
@@ -55,7 +56,7 @@ namespace SharpDX.DirectWrite
             public IntPtr GlyphIndices;
             public IntPtr GlyphAdvances;
             public IntPtr GlyphOffsets;
-            public Bool IsSideways;
+            public RawBool IsSideways;
             public int BidiLevel;
             // Method to free native struct
             internal unsafe void __MarshalFree()

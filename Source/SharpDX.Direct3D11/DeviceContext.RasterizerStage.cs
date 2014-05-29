@@ -27,18 +27,18 @@ namespace SharpDX.Direct3D11
         /// <summary>	
         /// Get the array of {{viewports}} bound  to the {{rasterizer stage}} 	
         /// </summary>	
-        /// <returns>An array of viewports (see <see cref="SharpDX.ViewportF"/>).</returns>
+        /// <returns>An array of viewports (see <see cref="SharpDX.Native.RawViewportF"/>).</returns>
         /// <unmanaged>void RSGetViewports([InOut] int* NumViewports,[Out, Buffer, Optional] D3D10_VIEWPORT* pViewports)</unmanaged>
         /// <msdn-id>ff476477</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::RSGetViewports([InOut] unsigned int* pNumViewports,[Out, Buffer, Optional] D3D11_VIEWPORT* pViewports)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::RSGetViewports</unmanaged-short>	
-        public SharpDX.ViewportF[] GetViewports()
+        public SharpDX.Native.RawViewportF[] GetViewports()
         {
             int numViewports = 0;
 
             GetViewports(ref numViewports, null);
 
-            var viewports = new SharpDX.ViewportF[numViewports];
+            var viewports = new SharpDX.Native.RawViewportF[numViewports];
             GetViewports(ref numViewports, viewports);
 
             return viewports;
@@ -47,12 +47,12 @@ namespace SharpDX.Direct3D11
         /// <summary>	
         /// Get the array of {{viewports}} bound  to the {{rasterizer stage}} 	
         /// </summary>	
-        /// <returns>An array of viewports (see <see cref="SharpDX.ViewportF"/>).</returns>
+        /// <returns>An array of viewports (see <see cref="SharpDX.Native.RawViewportF"/>).</returns>
         /// <unmanaged>void RSGetViewports([InOut] int* NumViewports,[Out, Buffer, Optional] D3D10_VIEWPORT* pViewports)</unmanaged>
         /// <msdn-id>ff476477</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::RSGetViewports([InOut] unsigned int* pNumViewports,[Out, Buffer, Optional] D3D11_VIEWPORT* pViewports)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::RSGetViewports</unmanaged-short>	
-        public void GetViewports(SharpDX.ViewportF[] viewports)
+        public void GetViewports(SharpDX.Native.RawViewportF[] viewports)
         {
             int numViewports = viewports.Length;
             GetViewports(ref numViewports, viewports);
@@ -61,17 +61,17 @@ namespace SharpDX.Direct3D11
         /// <summary>	
         /// Get the array of {{scissor rectangles}} bound to the {{rasterizer stage}}.	
         /// </summary>	
-        /// <returns>An array of scissor rectangles (see <see cref="SharpDX.Rectangle"/>).</returns>
+        /// <returns>An array of scissor rectangles (see <see cref="SharpDX.Native.RawRectangle"/>).</returns>
         /// <unmanaged>void RSGetScissorRects([InOut] int* NumRects,[Out, Buffer, Optional] D3D10_RECT* pRects)</unmanaged>
         /// <msdn-id>ff476475</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::RSGetScissorRects([InOut] unsigned int* pNumRects,[Out, Buffer, Optional] RECT* pRects)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::RSGetScissorRects</unmanaged-short>	
-        public SharpDX.Rectangle[] GetScissorRectangles()
+        public SharpDX.Native.RawRectangle[] GetScissorRectangles()
         {
             int numRects = 0;
             GetScissorRects(ref numRects, null);
 
-            SharpDX.Rectangle[] scissorRectangles = new Rectangle[numRects];
+            SharpDX.Native.RawRectangle[] scissorRectangles = new Native.RawRectangle[numRects];
             GetScissorRects(ref numRects, scissorRectangles);
 
             return scissorRectangles;
@@ -80,12 +80,12 @@ namespace SharpDX.Direct3D11
         /// <summary>	
         /// Get the array of {{scissor rectangles}} bound to the {{rasterizer stage}}.	
         /// </summary>	
-        /// <returns>An array of scissor rectangles (see <see cref="SharpDX.Rectangle"/>).</returns>
+        /// <returns>An array of scissor rectangles (see <see cref="SharpDX.Native.RawRectangle"/>).</returns>
         /// <unmanaged>void RSGetScissorRects([InOut] int* NumRects,[Out, Buffer, Optional] D3D10_RECT* pRects)</unmanaged>
         /// <msdn-id>ff476475</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::RSGetScissorRects([InOut] unsigned int* pNumRects,[Out, Buffer, Optional] RECT* pRects)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::RSGetScissorRects</unmanaged-short>	
-        public void GetScissorRectangles(SharpDX.Rectangle[] scissorRectangles)
+        public void GetScissorRectangles(SharpDX.Native.RawRectangle[] scissorRectangles)
         {
             int numRects = scissorRectangles.Length;
             GetScissorRects(ref numRects, scissorRectangles);
@@ -106,7 +106,7 @@ namespace SharpDX.Direct3D11
         /// <unmanaged-short>ID3D11DeviceContext::RSSetScissorRects</unmanaged-short>	
         public void SetScissorRectangle(int left, int top, int right, int bottom)
         {
-            var rect = new Rectangle() { Left = left, Top = top, Right = right, Bottom = bottom };
+            var rect = new Native.RawRectangle() { Left = left, Top = top, Right = right, Bottom = bottom };
             unsafe
             {
                 SetScissorRects(1, new IntPtr(&rect));
@@ -123,7 +123,7 @@ namespace SharpDX.Direct3D11
         /// <msdn-id>ff476478</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::RSSetScissorRects([In] unsigned int NumRects,[In, Buffer, Optional] const void* pRects)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::RSSetScissorRects</unmanaged-short>	
-        public void SetScissorRectangles(params Rectangle[] scissorRectangles)
+        public void SetScissorRectangles(params Native.RawRectangle[] scissorRectangles)
         {
             unsafe
             {
@@ -149,7 +149,7 @@ namespace SharpDX.Direct3D11
         /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>	
         public void SetViewport(float x, float y, float width, float height, float minZ = 0.0f, float maxZ = 1.0f)
         {
-            var viewport = new ViewportF(x, y, width, height, minZ, maxZ);
+            var viewport = new Native.RawViewportF() { X = x, Y = y, Width = width, Height = height, MinDepth= minZ, MaxDepth = maxZ};
             unsafe
             {
                 SetViewports(1, new IntPtr(&viewport));
@@ -166,7 +166,7 @@ namespace SharpDX.Direct3D11
         /// <msdn-id>ff476480</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::RSSetViewports([In] unsigned int NumViewports,[In, Buffer, Optional] const void* pViewports)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>	
-        public void SetViewport(ViewportF viewport)
+        public void SetViewport(Native.RawViewportF viewport)
         {
             unsafe
             {
@@ -183,7 +183,7 @@ namespace SharpDX.Direct3D11
         ///   <unmanaged>void ID3D11DeviceContext::RSSetViewports([In] unsigned int NumViewports,[In, Buffer, Optional] const void* pViewports)</unmanaged>
         ///   <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>
         /// <remarks><p></p><p>All viewports must be set atomically as one operation. Any viewports not defined by the call are disabled.</p><p>Which viewport to use is determined by the SV_ViewportArrayIndex semantic output by a geometry shader; if a geometry shader does not specify the semantic, Direct3D will use the first viewport in the array.</p></remarks>
-        public void SetViewports(ViewportF[] viewports, int count = 0)
+        public void SetViewports(Native.RawViewportF[] viewports, int count = 0)
         {
             unsafe
             {

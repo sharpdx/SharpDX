@@ -620,7 +620,7 @@
     <bind from="MPEG2VIDEOINFO" to="SharpDX.MediaFoundation.Mpeg2VideoInformation"/>
     <bind from="VIDEOINFOHEADER2" to="SharpDX.MediaFoundation.VideoInformationHeader2"/>
     <bind from="RESOURCE_CHARACTERISTICS" to="SharpDX.MediaFoundation.ResourceCharacteristics"/>
-    <bind from="MFARGB" to="SharpDX.ColorBGRA"/>
+    <bind from="MFARGB" to="SharpDX.Native.RawColorBGRA"/>
   </bindings>
 
   <mapping>

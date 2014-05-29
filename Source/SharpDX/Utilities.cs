@@ -376,41 +376,41 @@ namespace SharpDX
         }
  
         /// <summary>
-        /// Converts bool array to <see cref="Bool"/> array.
+        /// Converts bool array to <see cref="Native.RawBool"/> array.
         /// </summary>
         /// <param name="array">The bool array.</param>
-        /// <returns>Converted array of <see cref="Bool"/>.</returns>
-        public static Bool[] ConvertToIntArray(bool[] array)
+        /// <returns>Converted array of <see cref="Native.RawBool"/>.</returns>
+        public static Native.RawBool[] ConvertToIntArray(bool[] array)
         {
-            var temp = new Bool[array.Length];
+            var temp = new Native.RawBool[array.Length];
             for (int i = 0; i < temp.Length; i++)
                 temp[i] = array[i];
             return temp;
         }
 
-    /// <summary>
+        /// <summary>
         /// Converts integer pointer array to bool array.
         /// </summary>
         /// <param name="array">The array of integer pointers.</param>
         /// <param name="length">Array size.</param>
         /// <returns>Converted array of bool.</returns>
-    public unsafe static bool[] ConvertToBoolArray(int* array, int length)
+        public static unsafe bool[] ConvertToBoolArray(int* array, int length)
         {
             var temp = new bool[length];
-            for (int i = 0; i < temp.Length; i++)
+            for(int i = 0; i < temp.Length; i++)
                 temp[i] = array[i] != 0;
             return temp;
         }
 
         /// <summary>
-        /// Converts <see cref="Bool"/> array to bool array.
+        /// Converts <see cref="Native.RawBool"/> array to bool array.
         /// </summary>
         /// <param name="array">The array.</param>
         /// <returns>Converted array of bool.</returns>
-        public static bool[] ConvertToBoolArray(Bool[] array)
+        public static bool[] ConvertToBoolArray(Native.RawBool[] array)
         {
             var temp = new bool[array.Length];
-            for (int i = 0; i < temp.Length; i++)
+            for(int i = 0; i < temp.Length; i++)
                 temp[i] = array[i];
             return temp;
         }

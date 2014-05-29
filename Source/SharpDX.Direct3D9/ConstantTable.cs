@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using SharpDX.Native;
 
 namespace SharpDX.Direct3D9
 {
@@ -119,7 +120,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXConstantTable::SetMatrix([In] IDirect3DDevice9* pDevice,[In] D3DXHANDLE hConstant,[In] const D3DXMATRIX* pMatrix)</unmanaged>
-        public void SetValue(Device device, EffectHandle effectHandle, Matrix value)
+        public void SetValue(Device device, EffectHandle effectHandle, RawMatrix value)
         {
             SetMatrix(device, effectHandle, ref value);
         }
@@ -134,7 +135,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXConstantTable::SetVector([In] IDirect3DDevice9* pDevice,[In] D3DXHANDLE hConstant,[In] const D3DXVECTOR4* pVector)</unmanaged>
-        public void SetValue(Device device, EffectHandle effectHandle, Vector4 value)
+        public void SetValue(Device device, EffectHandle effectHandle, RawVector4 value)
         {
             SetVector(device, effectHandle, value);
         }
@@ -206,7 +207,7 @@ namespace SharpDX.Direct3D9
         /// <param name="values">The values.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT ID3DXConstantTable::SetMatrixArray([In] IDirect3DDevice9* pDevice,[In] D3DXHANDLE hConstant,[In, Buffer] const D3DXMATRIX* pMatrix,[In] unsigned int Count)</unmanaged>
-        public void SetValue(Device device, EffectHandle effectHandle, Matrix[] values)
+        public void SetValue(Device device, EffectHandle effectHandle, RawMatrix[] values)
         {
             SetMatrixArray(device, effectHandle, values, values.Length);
         }
@@ -219,7 +220,7 @@ namespace SharpDX.Direct3D9
         /// <param name="values">The values.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT ID3DXConstantTable::SetVectorArray([In] IDirect3DDevice9* pDevice,[In] D3DXHANDLE hConstant,[In, Buffer] const D3DXVECTOR4* pVector,[In] unsigned int Count)</unmanaged>
-        public void SetValue(Device device, EffectHandle effectHandle, Vector4[] values)
+        public void SetValue(Device device, EffectHandle effectHandle, RawVector4[] values)
         {
             SetVectorArray(device, effectHandle, values, values.Length);
         }

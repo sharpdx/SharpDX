@@ -43,7 +43,7 @@
   <bindings>
     <!-- Primitive bindings -->
     <bind from="X3DAUDIOHANDLE" to="SharpDX.X3DAudio.X3DAudioHandle" />
-    <bind from="X3DAUDIO_VECTOR" to="SharpDX.Vector3"/>
+    <bind from="X3DAUDIO_VECTOR" to="SharpDX.Native.RawVector3"/>
   </bindings>
 
   <mapping>

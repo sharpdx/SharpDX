@@ -1433,70 +1433,24 @@ namespace SharpDX
             return Equals(ref strongValue);
         }
 
-#if SlimDX1xInterop
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Quaternion"/> to <see cref="SlimDX.Quaternion"/>.
+        /// Performs an implicit conversion from <see cref="Quaternion"/> to <see cref="SharpDX.Native.RawQuaternion"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator SlimDX.Quaternion(Quaternion value)
+        public unsafe static implicit operator SharpDX.Native.RawQuaternion(Quaternion value)
         {
-            return new SlimDX.Quaternion(value.X, value.Y, value.Z, value.W);
+            return *(SharpDX.Native.RawQuaternion*)&value;
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SlimDX.Quaternion"/> to <see cref="SharpDX.Quaternion"/>.
+        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawQuaternion"/> to <see cref="SharpDX.Quaternion"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator Quaternion(SlimDX.Quaternion value)
+        public unsafe static implicit operator Quaternion(SharpDX.Native.RawQuaternion value)
         {
-            return new Quaternion(value.X, value.Y, value.Z, value.W);
+            return *(Quaternion*)&value;
         }
-#endif
-
-#if WPFInterop
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Quaternion"/> to <see cref="System.Windows.Media.Media3D.Quaternion"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator System.Windows.Media.Media3D.Quaternion(Quaternion value)
-        {
-            return new System.Windows.Media.Media3D.Quaternion(value.X, value.Y, value.Z, value.W);
-        }
-
-        /// <summary>
-        /// Performs an explicit conversion from <see cref="System.Windows.Media.Media3D.Quaternion"/> to <see cref="SharpDX.Quaternion"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static explicit operator Quaternion(System.Windows.Media.Media3D.Quaternion value)
-        {
-            return new Quaternion((float)value.X, (float)value.Y, (float)value.Z, (float)value.W);
-        }
-#endif
-
-#if XnaInterop
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Quaternion"/> to <see cref="Microsoft.Xna.Framework.Quaternion"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator Microsoft.Xna.Framework.Quaternion(Quaternion value)
-        {
-            return new Microsoft.Xna.Framework.Quaternion(value.X, value.Y, value.Z, value.W);
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="Microsoft.Xna.Framework.Quaternion"/> to <see cref="SharpDX.Quaternion"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator Quaternion(Microsoft.Xna.Framework.Quaternion value)
-        {
-            return new Quaternion(value.X, value.Y, value.Z, value.W);
-        }
-#endif
     }
 }

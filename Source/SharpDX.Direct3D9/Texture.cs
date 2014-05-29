@@ -21,6 +21,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using SharpDX.Native;
 
 namespace SharpDX.Direct3D9
 {
@@ -193,7 +194,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="DataRectangle"/> describing the region locked.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DTexture9::LockRect([In] D3DCUBEMAP_FACES FaceType,[In] unsigned int Level,[In] D3DLOCKED_RECT* pLockedRect,[In] const void* pRect,[In] D3DLOCK Flags)</unmanaged>
-        public DataRectangle LockRectangle(int level, Rectangle rectangle, SharpDX.Direct3D9.LockFlags flags)
+        public DataRectangle LockRectangle(int level, RawRectangle rectangle, SharpDX.Direct3D9.LockFlags flags)
         {
             unsafe
             {
@@ -214,7 +215,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="DataRectangle"/> describing the region locked.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DTexture9::LockRect([In] D3DCUBEMAP_FACES FaceType,[In] unsigned int Level,[In] D3DLOCKED_RECT* pLockedRect,[In] const void* pRect,[In] D3DLOCK Flags)</unmanaged>
-        public DataRectangle LockRectangle(int level, Rectangle rectangle, SharpDX.Direct3D9.LockFlags flags, out DataStream stream)
+        public DataRectangle LockRectangle(int level, RawRectangle rectangle, SharpDX.Direct3D9.LockFlags flags, out DataStream stream)
         {
             unsafe
             {
@@ -245,7 +246,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DTexture9::AddDirtyRect([In] const void* pDirtyRect)</unmanaged>
-        public void AddDirtyRectangle(Rectangle dirtyRectRef)
+        public void AddDirtyRectangle(RawRectangle dirtyRectRef)
         {
             unsafe
             {
@@ -760,7 +761,7 @@ namespace SharpDX.Direct3D9
                 pool,
                 (int)filter,
                 (int)mipFilter,
-                (Color)colorKey,
+                *(RawColorBGRA*)&colorKey,
                 imageInformation,
                 palette,
                 out cubeTexture);
@@ -788,7 +789,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="Texture"/>
         /// </returns>
         /// <unmanaged>HRESULT D3DXCreateTextureFromFileInMemoryEx([In] IDirect3DDevice9* pDevice,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] unsigned int Size,[In] unsigned int MipLevels,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[In] unsigned int Filter,[In] unsigned int MipFilter,[In] D3DCOLOR ColorKey,[Out] D3DXIMAGE_INFO* pSrcInfo,[Out, Buffer] PALETTEENTRY* pPalette,[In] IDirect3DTexture9** ppTexture)</unmanaged>
-        private static Texture CreateFromFile(Device device, string fileName, int width, int height, int levelCount, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey, IntPtr imageInformation, PaletteEntry[] palette)
+        private static unsafe Texture CreateFromFile(Device device, string fileName, int width, int height, int levelCount, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey, IntPtr imageInformation, PaletteEntry[] palette)
         {
             Texture cubeTexture;
             D3DX9.CreateTextureFromFileExW(
@@ -802,7 +803,7 @@ namespace SharpDX.Direct3D9
                 pool,
                 (int)filter,
                 (int)mipFilter,
-                (Color)colorKey,
+                *(RawColorBGRA*)&colorKey,
                 imageInformation,
                 palette,
                 out cubeTexture);

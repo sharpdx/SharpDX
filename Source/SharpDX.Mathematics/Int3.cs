@@ -24,45 +24,40 @@ using System.Runtime.InteropServices;
 namespace SharpDX
 {
     /// <summary>
-    /// Represents a four dimensional mathematical vector.
+    /// Represents a three dimensional mathematical int vector.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct Int4 : IEquatable<Int4>, IFormattable
+    public struct Int3 : IEquatable<Int3>, IFormattable
     {
         /// <summary>
-        /// The size of the <see cref = "Int4" /> type, in bytes.
+        /// The size of the <see cref = "Int3" /> type, in bytes.
         /// </summary>
-        public static readonly int SizeInBytes = Marshal.SizeOf(typeof (Int4));
+        public static readonly int SizeInBytes = Marshal.SizeOf(typeof (Int3));
 
         /// <summary>
-        /// A <see cref = "Int4" /> with all of its components set to zero.
+        /// A <see cref = "Int3" /> with all of its components set to zero.
         /// </summary>
-        public static readonly Int4 Zero = new Int4();
+        public static readonly Int3 Zero = new Int3();
 
         /// <summary>
-        /// The X unit <see cref = "Int4" /> (1, 0, 0, 0).
+        /// The X unit <see cref = "Int3" /> (1, 0, 0).
         /// </summary>
-        public static readonly Int4 UnitX = new Int4(1, 0, 0, 0);
+        public static readonly Int3 UnitX = new Int3(1, 0, 0);
 
         /// <summary>
-        /// The Y unit <see cref = "Int4" /> (0, 1, 0, 0).
+        /// The Y unit <see cref = "Int3" /> (0, 1, 0).
         /// </summary>
-        public static readonly Int4 UnitY = new Int4(0, 1, 0, 0);
+        public static readonly Int3 UnitY = new Int3(0, 1, 0);
 
         /// <summary>
-        /// The Z unit <see cref = "Int4" /> (0, 0, 1, 0).
+        /// The Z unit <see cref = "Int3" /> (0, 0, 1).
         /// </summary>
-        public static readonly Int4 UnitZ = new Int4(0, 0, 1, 0);
+        public static readonly Int3 UnitZ = new Int3(0, 0, 1);
 
         /// <summary>
-        /// The W unit <see cref = "Int4" /> (0, 0, 0, 1).
+        /// A <see cref = "Int3" /> with all of its components set to one.
         /// </summary>
-        public static readonly Int4 UnitW = new Int4(0, 0, 0, 1);
-
-        /// <summary>
-        /// A <see cref = "Int4" /> with all of its components set to one.
-        /// </summary>
-        public static readonly Int4 One = new Int4(1, 1, 1, 1);
+        public static readonly Int3 One = new Int3(1, 1, 1);
 
         /// <summary>
         /// The X component of the vector.
@@ -80,56 +75,47 @@ namespace SharpDX
         public int Z;
 
         /// <summary>
-        /// The W component of the vector.
-        /// </summary>
-        public int W;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref = "Int4" /> struct.
+        /// Initializes a new instance of the <see cref = "Int3" /> struct.
         /// </summary>
         /// <param name = "value">The value that will be assigned to all components.</param>
-        public Int4(int value)
+        public Int3(int value)
         {
             X = value;
             Y = value;
             Z = value;
-            W = value;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref = "Int4" /> struct.
+        /// Initializes a new instance of the <see cref = "Int3" /> struct.
         /// </summary>
         /// <param name = "x">Initial value for the X component of the vector.</param>
         /// <param name = "y">Initial value for the Y component of the vector.</param>
         /// <param name = "z">Initial value for the Z component of the vector.</param>
-        /// <param name = "w">Initial value for the W component of the vector.</param>
-        public Int4(int x, int y, int z, int w)
+        public Int3(int x, int y, int z)
         {
             X = x;
             Y = y;
             Z = z;
-            W = w;
         }
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref = "Int4" /> struct.
+        /// Initializes a new instance of the <see cref = "Int3" /> struct.
         /// </summary>
         /// <param name = "values">The values to assign to the X, Y, Z, and W components of the vector. This must be an array with four elements.</param>
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "values" /> is <c>null</c>.</exception>
         /// <exception cref = "ArgumentOutOfRangeException">Thrown when <paramref name = "values" /> contains more or less than four elements.</exception>
-        public Int4(int[] values)
+        public Int3(int[] values)
         {
             if (values == null)
                 throw new ArgumentNullException("values");
-            if (values.Length != 4)
+            if (values.Length != 3)
                 throw new ArgumentOutOfRangeException("values",
-                                                      "There must be four and only four input values for Int4.");
+                                                      "There must be three and only three input values for Int3.");
 
             X = values[0];
             Y = values[1];
             Z = values[2];
-            W = values[3];
         }
 
         /// <summary>
@@ -151,11 +137,9 @@ namespace SharpDX
                         return Y;
                     case 2:
                         return Z;
-                    case 3:
-                        return W;
                 }
 
-                throw new ArgumentOutOfRangeException("index", "Indices for Int4 run from 0 to 3, inclusive.");
+                throw new ArgumentOutOfRangeException("index", "Indices for Int3 run from 0 to 2, inclusive.");
             }
 
             set
@@ -171,11 +155,8 @@ namespace SharpDX
                     case 2:
                         Z = value;
                         break;
-                    case 3:
-                        W = value;
-                        break;
                     default:
-                        throw new ArgumentOutOfRangeException("index", "Indices for Int4 run from 0 to 3, inclusive.");
+                        throw new ArgumentOutOfRangeException("index", "Indices for Int3 run from 0 to 2, inclusive.");
                 }
             }
         }
@@ -186,7 +167,7 @@ namespace SharpDX
         /// <returns>A four-element array containing the components of the vector.</returns>
         public int[] ToArray()
         {
-            return new int[] {X, Y, Z, W};
+            return new int[] {X, Y, Z};
         }
 
         /// <summary>
@@ -195,9 +176,9 @@ namespace SharpDX
         /// <param name = "left">The first vector to add.</param>
         /// <param name = "right">The second vector to add.</param>
         /// <param name = "result">When the method completes, contains the sum of the two vectors.</param>
-        public static void Add(ref Int4 left, ref Int4 right, out Int4 result)
+        public static void Add(ref Int3 left, ref Int3 right, out Int3 result)
         {
-            result = new Int4(left.X + right.X, left.Y + right.Y, left.Z + right.Z, left.W + right.W);
+            result = new Int3(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
         }
 
         /// <summary>
@@ -206,9 +187,9 @@ namespace SharpDX
         /// <param name = "left">The first vector to add.</param>
         /// <param name = "right">The second vector to add.</param>
         /// <returns>The sum of the two vectors.</returns>
-        public static Int4 Add(Int4 left, Int4 right)
+        public static Int3 Add(Int3 left, Int3 right)
         {
-            return new Int4(left.X + right.X, left.Y + right.Y, left.Z + right.Z, left.W + right.W);
+            return new Int3(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
         }
 
         /// <summary>
@@ -217,9 +198,9 @@ namespace SharpDX
         /// <param name = "left">The first vector to subtract.</param>
         /// <param name = "right">The second vector to subtract.</param>
         /// <param name = "result">When the method completes, contains the difference of the two vectors.</param>
-        public static void Subtract(ref Int4 left, ref Int4 right, out Int4 result)
+        public static void Subtract(ref Int3 left, ref Int3 right, out Int3 result)
         {
-            result = new Int4(left.X - right.X, left.Y - right.Y, left.Z - right.Z, left.W - right.W);
+            result = new Int3(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
         }
 
         /// <summary>
@@ -228,9 +209,9 @@ namespace SharpDX
         /// <param name = "left">The first vector to subtract.</param>
         /// <param name = "right">The second vector to subtract.</param>
         /// <returns>The difference of the two vectors.</returns>
-        public static Int4 Subtract(Int4 left, Int4 right)
+        public static Int3 Subtract(Int3 left, Int3 right)
         {
-            return new Int4(left.X - right.X, left.Y - right.Y, left.Z - right.Z, left.W - right.W);
+            return new Int3(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
         }
 
         /// <summary>
@@ -239,9 +220,9 @@ namespace SharpDX
         /// <param name = "value">The vector to scale.</param>
         /// <param name = "scale">The amount by which to scale the vector.</param>
         /// <param name = "result">When the method completes, contains the scaled vector.</param>
-        public static void Multiply(ref Int4 value, int scale, out Int4 result)
+        public static void Multiply(ref Int3 value, int scale, out Int3 result)
         {
-            result = new Int4(value.X*scale, value.Y*scale, value.Z*scale, value.W*scale);
+            result = new Int3(value.X*scale, value.Y*scale, value.Z*scale);
         }
 
         /// <summary>
@@ -250,9 +231,9 @@ namespace SharpDX
         /// <param name = "value">The vector to scale.</param>
         /// <param name = "scale">The amount by which to scale the vector.</param>
         /// <returns>The scaled vector.</returns>
-        public static Int4 Multiply(Int4 value, int scale)
+        public static Int3 Multiply(Int3 value, int scale)
         {
-            return new Int4(value.X*scale, value.Y*scale, value.Z*scale, value.W*scale);
+            return new Int3(value.X*scale, value.Y*scale, value.Z*scale);
         }
 
         /// <summary>
@@ -261,9 +242,9 @@ namespace SharpDX
         /// <param name = "left">The first vector to modulate.</param>
         /// <param name = "right">The second vector to modulate.</param>
         /// <param name = "result">When the method completes, contains the modulated vector.</param>
-        public static void Modulate(ref Int4 left, ref Int4 right, out Int4 result)
+        public static void Modulate(ref Int3 left, ref Int3 right, out Int3 result)
         {
-            result = new Int4(left.X*right.X, left.Y*right.Y, left.Z*right.Z, left.W*right.W);
+            result = new Int3(left.X*right.X, left.Y*right.Y, left.Z*right.Z);
         }
 
         /// <summary>
@@ -272,9 +253,9 @@ namespace SharpDX
         /// <param name = "left">The first vector to modulate.</param>
         /// <param name = "right">The second vector to modulate.</param>
         /// <returns>The modulated vector.</returns>
-        public static Int4 Modulate(Int4 left, Int4 right)
+        public static Int3 Modulate(Int3 left, Int3 right)
         {
-            return new Int4(left.X*right.X, left.Y*right.Y, left.Z*right.Z, left.W*right.W);
+            return new Int3(left.X*right.X, left.Y*right.Y, left.Z*right.Z);
         }
 
         /// <summary>
@@ -283,9 +264,9 @@ namespace SharpDX
         /// <param name = "value">The vector to scale.</param>
         /// <param name = "scale">The amount by which to scale the vector.</param>
         /// <param name = "result">When the method completes, contains the scaled vector.</param>
-        public static void Divide(ref Int4 value, int scale, out Int4 result)
+        public static void Divide(ref Int3 value, int scale, out Int3 result)
         {
-            result = new Int4(value.X/scale, value.Y/scale, value.Z/scale, value.W/scale);
+            result = new Int3(value.X/scale, value.Y/scale, value.Z/scale);
         }
 
         /// <summary>
@@ -294,9 +275,9 @@ namespace SharpDX
         /// <param name = "value">The vector to scale.</param>
         /// <param name = "scale">The amount by which to scale the vector.</param>
         /// <returns>The scaled vector.</returns>
-        public static Int4 Divide(Int4 value, int scale)
+        public static Int3 Divide(Int3 value, int scale)
         {
-            return new Int4(value.X/scale, value.Y/scale, value.Z/scale, value.W/scale);
+            return new Int3(value.X/scale, value.Y/scale, value.Z/scale);
         }
 
         /// <summary>
@@ -304,9 +285,9 @@ namespace SharpDX
         /// </summary>
         /// <param name = "value">The vector to negate.</param>
         /// <param name = "result">When the method completes, contains a vector facing in the opposite direction.</param>
-        public static void Negate(ref Int4 value, out Int4 result)
+        public static void Negate(ref Int3 value, out Int3 result)
         {
-            result = new Int4(-value.X, -value.Y, -value.Z, -value.W);
+            result = new Int3(-value.X, -value.Y, -value.Z);
         }
 
         /// <summary>
@@ -314,9 +295,9 @@ namespace SharpDX
         /// </summary>
         /// <param name = "value">The vector to negate.</param>
         /// <returns>A vector facing in the opposite direction.</returns>
-        public static Int4 Negate(Int4 value)
+        public static Int3 Negate(Int3 value)
         {
-            return new Int4(-value.X, -value.Y, -value.Z, -value.W);
+            return new Int3(-value.X, -value.Y, -value.Z);
         }
 
         /// <summary>
@@ -326,7 +307,7 @@ namespace SharpDX
         /// <param name = "min">The minimum value.</param>
         /// <param name = "max">The maximum value.</param>
         /// <param name = "result">When the method completes, contains the clamped value.</param>
-        public static void Clamp(ref Int4 value, ref Int4 min, ref Int4 max, out Int4 result)
+        public static void Clamp(ref Int3 value, ref Int3 min, ref Int3 max, out Int3 result)
         {
             int x = value.X;
             x = (x > max.X) ? max.X : x;
@@ -340,11 +321,7 @@ namespace SharpDX
             z = (z > max.Z) ? max.Z : z;
             z = (z < min.Z) ? min.Z : z;
 
-            int w = value.W;
-            w = (w > max.W) ? max.W : w;
-            w = (w < min.W) ? min.W : w;
-
-            result = new Int4(x, y, z, w);
+            result = new Int3(x, y, z);
         }
 
         /// <summary>
@@ -354,9 +331,9 @@ namespace SharpDX
         /// <param name = "min">The minimum value.</param>
         /// <param name = "max">The maximum value.</param>
         /// <returns>The clamped value.</returns>
-        public static Int4 Clamp(Int4 value, Int4 min, Int4 max)
+        public static Int3 Clamp(Int3 value, Int3 min, Int3 max)
         {
-            Int4 result;
+            Int3 result;
             Clamp(ref value, ref min, ref max, out result);
             return result;
         }
@@ -367,12 +344,11 @@ namespace SharpDX
         /// <param name = "left">The first source vector.</param>
         /// <param name = "right">The second source vector.</param>
         /// <param name = "result">When the method completes, contains an new vector composed of the largest components of the source vectors.</param>
-        public static void Max(ref Int4 left, ref Int4 right, out Int4 result)
+        public static void Max(ref Int3 left, ref Int3 right, out Int3 result)
         {
             result.X = (left.X > right.X) ? left.X : right.X;
             result.Y = (left.Y > right.Y) ? left.Y : right.Y;
             result.Z = (left.Z > right.Z) ? left.Z : right.Z;
-            result.W = (left.W > right.W) ? left.W : right.W;
         }
 
         /// <summary>
@@ -381,9 +357,9 @@ namespace SharpDX
         /// <param name = "left">The first source vector.</param>
         /// <param name = "right">The second source vector.</param>
         /// <returns>A vector containing the largest components of the source vectors.</returns>
-        public static Int4 Max(Int4 left, Int4 right)
+        public static Int3 Max(Int3 left, Int3 right)
         {
-            Int4 result;
+            Int3 result;
             Max(ref left, ref right, out result);
             return result;
         }
@@ -394,12 +370,11 @@ namespace SharpDX
         /// <param name = "left">The first source vector.</param>
         /// <param name = "right">The second source vector.</param>
         /// <param name = "result">When the method completes, contains an new vector composed of the smallest components of the source vectors.</param>
-        public static void Min(ref Int4 left, ref Int4 right, out Int4 result)
+        public static void Min(ref Int3 left, ref Int3 right, out Int3 result)
         {
             result.X = (left.X < right.X) ? left.X : right.X;
             result.Y = (left.Y < right.Y) ? left.Y : right.Y;
             result.Z = (left.Z < right.Z) ? left.Z : right.Z;
-            result.W = (left.W < right.W) ? left.W : right.W;
         }
 
         /// <summary>
@@ -408,9 +383,9 @@ namespace SharpDX
         /// <param name = "left">The first source vector.</param>
         /// <param name = "right">The second source vector.</param>
         /// <returns>A vector containing the smallest components of the source vectors.</returns>
-        public static Int4 Min(Int4 left, Int4 right)
+        public static Int3 Min(Int3 left, Int3 right)
         {
-            Int4 result;
+            Int3 result;
             Min(ref left, ref right, out result);
             return result;
         }
@@ -421,9 +396,9 @@ namespace SharpDX
         /// <param name = "left">The first vector to add.</param>
         /// <param name = "right">The second vector to add.</param>
         /// <returns>The sum of the two vectors.</returns>
-        public static Int4 operator +(Int4 left, Int4 right)
+        public static Int3 operator +(Int3 left, Int3 right)
         {
-            return new Int4(left.X + right.X, left.Y + right.Y, left.Z + right.Z, left.W + right.W);
+            return new Int3(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
         }
 
         /// <summary>
@@ -431,7 +406,7 @@ namespace SharpDX
         /// </summary>
         /// <param name = "value">The vector to assert (unchanged).</param>
         /// <returns>The asserted (unchanged) vector.</returns>
-        public static Int4 operator +(Int4 value)
+        public static Int3 operator +(Int3 value)
         {
             return value;
         }
@@ -442,9 +417,9 @@ namespace SharpDX
         /// <param name = "left">The first vector to subtract.</param>
         /// <param name = "right">The second vector to subtract.</param>
         /// <returns>The difference of the two vectors.</returns>
-        public static Int4 operator -(Int4 left, Int4 right)
+        public static Int3 operator -(Int3 left, Int3 right)
         {
-            return new Int4(left.X - right.X, left.Y - right.Y, left.Z - right.Z, left.W - right.W);
+            return new Int3(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
         }
 
         /// <summary>
@@ -452,9 +427,9 @@ namespace SharpDX
         /// </summary>
         /// <param name = "value">The vector to negate.</param>
         /// <returns>A vector facing in the opposite direction.</returns>
-        public static Int4 operator -(Int4 value)
+        public static Int3 operator -(Int3 value)
         {
-            return new Int4(-value.X, -value.Y, -value.Z, -value.W);
+            return new Int3(-value.X, -value.Y, -value.Z);
         }
 
         /// <summary>
@@ -463,9 +438,9 @@ namespace SharpDX
         /// <param name = "value">The vector to scale.</param>
         /// <param name = "scale">The amount by which to scale the vector.</param>
         /// <returns>The scaled vector.</returns>
-        public static Int4 operator *(int scale, Int4 value)
+        public static Int3 operator *(int scale, Int3 value)
         {
-            return new Int4(value.X*scale, value.Y*scale, value.Z*scale, value.W*scale);
+            return new Int3(value.X*scale, value.Y*scale, value.Z*scale);
         }
 
         /// <summary>
@@ -474,9 +449,9 @@ namespace SharpDX
         /// <param name = "value">The vector to scale.</param>
         /// <param name = "scale">The amount by which to scale the vector.</param>
         /// <returns>The scaled vector.</returns>
-        public static Int4 operator *(Int4 value, int scale)
+        public static Int3 operator *(Int3 value, int scale)
         {
-            return new Int4(value.X*scale, value.Y*scale, value.Z*scale, value.W*scale);
+            return new Int3(value.X*scale, value.Y*scale, value.Z*scale);
         }
 
         /// <summary>
@@ -485,9 +460,9 @@ namespace SharpDX
         /// <param name = "value">The vector to scale.</param>
         /// <param name = "scale">The amount by which to scale the vector.</param>
         /// <returns>The scaled vector.</returns>
-        public static Int4 operator /(Int4 value, int scale)
+        public static Int3 operator /(Int3 value, int scale)
         {
-            return new Int4(value.X/scale, value.Y/scale, value.Z/scale, value.W/scale);
+            return new Int3(value.X/scale, value.Y/scale, value.Z/scale);
         }
 
         /// <summary>
@@ -496,7 +471,7 @@ namespace SharpDX
         /// <param name = "left">The first value to compare.</param>
         /// <param name = "right">The second value to compare.</param>
         /// <returns><c>true</c> if <paramref name = "left" /> has the same value as <paramref name = "right" />; otherwise, <c>false</c>.</returns>
-        public static bool operator ==(Int4 left, Int4 right)
+        public static bool operator ==(Int3 left, Int3 right)
         {
             return left.Equals(right);
         }
@@ -507,39 +482,29 @@ namespace SharpDX
         /// <param name = "left">The first value to compare.</param>
         /// <param name = "right">The second value to compare.</param>
         /// <returns><c>true</c> if <paramref name = "left" /> has a different value than <paramref name = "right" />; otherwise, <c>false</c>.</returns>
-        public static bool operator !=(Int4 left, Int4 right)
+        public static bool operator !=(Int3 left, Int3 right)
         {
             return !left.Equals(right);
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref = "Int4" /> to <see cref = "Vector2" />.
+        /// Performs an explicit conversion from <see cref = "Int3" /> to <see cref = "Vector2" />.
         /// </summary>
         /// <param name = "value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator Vector2(Int4 value)
+        public static explicit operator Vector2(Int3 value)
         {
             return new Vector2(value.X, value.Y);
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref = "Int4" /> to <see cref = "Vector3" />.
+        /// Performs an explicit conversion from <see cref = "Int3" /> to <see cref = "Vector3" />.
         /// </summary>
         /// <param name = "value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator Vector3(Int4 value)
+        public static explicit operator Vector3(Int3 value)
         {
             return new Vector3(value.X, value.Y, value.Z);
-        }
-
-        /// <summary>
-        /// Performs an explicit conversion from <see cref = "Int4" /> to <see cref = "Vector4" />.
-        /// </summary>
-        /// <param name = "value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static explicit operator Vector4(Int4 value)
-        {
-            return new Vector4(value.X, value.Y, value.Z, value.W);
         }
 
         /// <summary>
@@ -550,7 +515,7 @@ namespace SharpDX
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.CurrentCulture, "X:{0} Y:{1} Z:{2} W:{3}", X, Y, Z, W);
+            return string.Format(CultureInfo.CurrentCulture, "X:{0} Y:{1} Z:{2}", X, Y, Z);
         }
 
         /// <summary>
@@ -565,11 +530,10 @@ namespace SharpDX
             if (format == null)
                 return ToString();
 
-            return string.Format(CultureInfo.CurrentCulture, "X:{0} Y:{1} Z:{2} W:{3}",
+            return string.Format(CultureInfo.CurrentCulture, "X:{0} Y:{1} Z:{2}",
                                  X.ToString(format, CultureInfo.CurrentCulture),
                                  Y.ToString(format, CultureInfo.CurrentCulture),
-                                 Z.ToString(format, CultureInfo.CurrentCulture),
-                                 W.ToString(format, CultureInfo.CurrentCulture));
+                                 Z.ToString(format, CultureInfo.CurrentCulture));
         }
 
         /// <summary>
@@ -581,7 +545,7 @@ namespace SharpDX
         /// </returns>
         public string ToString(IFormatProvider formatProvider)
         {
-            return string.Format(formatProvider, "X:{0} Y:{1} Z:{2} W:{3}", X, Y, Z, W);
+            return string.Format(formatProvider, "X:{0} Y:{1} Z:{2}", X, Y, Z);
         }
 
         /// <summary>
@@ -597,9 +561,8 @@ namespace SharpDX
             if (format == null)
                 ToString(formatProvider);
 
-            return string.Format(formatProvider, "X:{0} Y:{1} Z:{2} W:{3}", X.ToString(format, formatProvider),
-                                 Y.ToString(format, formatProvider), Z.ToString(format, formatProvider),
-                                 W.ToString(format, formatProvider));
+            return string.Format(formatProvider, "X:{0} Y:{1} Z:{2}", X.ToString(format, formatProvider),
+                                 Y.ToString(format, formatProvider), Z.ToString(format, formatProvider));
         }
 
         /// <summary>
@@ -615,21 +578,20 @@ namespace SharpDX
                 var hashCode = X;
                 hashCode = (hashCode * 397) ^ Y;
                 hashCode = (hashCode * 397) ^ Z;
-                hashCode = (hashCode * 397) ^ W;
                 return hashCode;
             }
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref = "Int4" /> is equal to this instance.
+        /// Determines whether the specified <see cref = "Int3" /> is equal to this instance.
         /// </summary>
-        /// <param name = "other">The <see cref = "Int4" /> to compare with this instance.</param>
+        /// <param name = "other">The <see cref = "Int3" /> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref = "Int4" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref = "Int3" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(Int4 other)
+        public bool Equals(Int3 other)
         {
-            return other.X == X && other.Y == Y && other.Z == Z && other.W == W;
+            return other.X == X && other.Y == Y && other.Z == Z;
         }
 
         /// <summary>
@@ -644,30 +606,50 @@ namespace SharpDX
             if (value == null)
                 return false;
 
-            if (!ReferenceEquals(value.GetType(), typeof(Int4)))
+            if (!ReferenceEquals(value.GetType(), typeof(Int3)))
                 return false;
 
-            return Equals((Int4) value);
+            return Equals((Int3) value);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="int"/> array to <see cref="SharpDX.Int4"/>.
+        /// Performs an implicit conversion from <see cref="int"/> array to <see cref="SharpDX.Int3"/>.
         /// </summary>
         /// <param name="input">The input.</param>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator Int4(int[] input)
+        public static implicit operator Int3(int[] input)
         {
-            return new Int4(input);
+            return new Int3(input);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Int4"/> to <see cref="System.Int32"/> array.
+        /// Performs an implicit conversion from <see cref="SharpDX.Int3"/> to <see cref="System.Int32"/> array.
         /// </summary>
         /// <param name="input">The input.</param>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator int[](Int4 input)
+        public static implicit operator int[](Int3 input)
         {
             return input.ToArray();
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Int3"/> to <see cref="SharpDX.Native.RawInt3"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public unsafe static implicit operator SharpDX.Native.RawInt3(Int3 value)
+        {
+            return *(SharpDX.Native.RawInt3*)&value;
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawInt3"/> to <see cref="SharpDX.Int3"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public unsafe static implicit operator Int3(SharpDX.Native.RawInt3 value)
+        {
+            return *(Int3*)&value;
         }
     }
 }

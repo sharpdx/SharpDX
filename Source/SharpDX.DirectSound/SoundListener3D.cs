@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using SharpDX.Native;
 
 namespace SharpDX.DirectSound
 {
@@ -111,18 +112,18 @@ namespace SharpDX.DirectSound
         /// <summary>
         /// Describes the listener's front orientation.
         /// </summary>
-        public Vector3 FrontOrientation
+        public RawVector3 FrontOrientation
         {
             get
             {
-                Vector3 frontOrientation;
-                Vector3 topOrientation;
+                RawVector3 frontOrientation;
+                RawVector3 topOrientation;
                 GetOrientation(out frontOrientation, out topOrientation);
                 return frontOrientation;
             }
             set
             {
-                Vector3 topOrientation = TopOrientation;
+                RawVector3 topOrientation = TopOrientation;
                 SetOrientation(value.X, value.Y, value.Z, topOrientation.X, topOrientation.Y, topOrientation.Z, Deferred ? 1 : 0);
             }
 
@@ -131,11 +132,11 @@ namespace SharpDX.DirectSound
         /// <summary>
         /// Gets or sets the listener's position.
         /// </summary>
-        public Vector3 Position
+        public RawVector3 Position
         {
             get
             {
-                Vector3 temp;
+                RawVector3 temp;
                 GetPosition(out temp);
                 return temp;
             }
@@ -164,18 +165,18 @@ namespace SharpDX.DirectSound
         /// <summary>
         /// Describes the listener's top orientation.
         /// </summary>
-        public Vector3 TopOrientation
+        public RawVector3 TopOrientation
         {
             get
             {
-                Vector3 frontOrientation; 
-                Vector3 topOrientation;
+                RawVector3 frontOrientation; 
+                RawVector3 topOrientation;
                 GetOrientation(out frontOrientation, out topOrientation);
                 return topOrientation;
             }
             set
             {
-                Vector3 frontOrientation = FrontOrientation;
+                RawVector3 frontOrientation = FrontOrientation;
                 SetOrientation(FrontOrientation.X, frontOrientation.Y, frontOrientation.Z, value.X, value.Y, value.Z, Deferred ? 1 : 0);
             }
         }
@@ -183,11 +184,11 @@ namespace SharpDX.DirectSound
         /// <summary>
         /// Gets or sets the listener's velocity.
         /// </summary>
-        public Vector3 Velocity
+        public RawVector3 Velocity
         {
             get
             {
-                Vector3 temp;
+                RawVector3 temp;
                 GetVelocity(out temp);
                 return temp;
             }

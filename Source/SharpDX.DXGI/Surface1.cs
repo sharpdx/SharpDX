@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using SharpDX.Native;
 
 namespace SharpDX.DXGI
 {
@@ -42,10 +43,10 @@ namespace SharpDX.DXGI
         /// <remarks>	
         /// Use the ReleaseDC method to release the DC and indicate that your application has finished all GDI rendering to this surface.   You must call the ReleaseDC method before you perform addition rendering using Direct3D. Prior to resizing buffers all outstanding DCs must be released. 	
         /// </remarks>	
-        /// <param name="dirtyRect">A reference to a <see cref="SharpDX.Rectangle"/> structure that identifies the dirty region of the surface.   A dirty region is any part of the surface that you have used for GDI rendering and that you want to preserve.  This is used as a performance hint to graphics subsystem in certain scenarios.  Do not use this parameter to restrict rendering to the specified rectangular region. The area specified by the <see cref="SharpDX.Rectangle"/> will be used as a performance hint to indicate what areas have been manipulated by GDI rendering. </param>
+        /// <param name="dirtyRect">A reference to a <see cref="SharpDX.Native.RawRectangle"/> structure that identifies the dirty region of the surface.   A dirty region is any part of the surface that you have used for GDI rendering and that you want to preserve.  This is used as a performance hint to graphics subsystem in certain scenarios.  Do not use this parameter to restrict rendering to the specified rectangular region. The area specified by the <see cref="RawRectangle"/> will be used as a performance hint to indicate what areas have been manipulated by GDI rendering. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
         /// <unmanaged>HRESULT IDXGISurface1::ReleaseDC([In, Optional] RECT* pDirtyRect)</unmanaged>
-        public void ReleaseDC(SharpDX.Rectangle dirtyRect)
+        public void ReleaseDC(SharpDX.Native.RawRectangle dirtyRect)
         {
             ReleaseDC_(dirtyRect);
         }

@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using SharpDX.Native;
 
 namespace SharpDX.DirectWrite
 {
@@ -39,7 +40,7 @@ namespace SharpDX.DirectWrite
         /// <param name="clientDrawingContext">The drawing context passed to <see cref="SharpDX.DirectWrite.TextLayout.Draw_"/>.</param>
         /// <returns>a structure which has transform information for  pixel snapping.</returns>
         /// <unmanaged>HRESULT GetCurrentTransform([None] void* clientDrawingContext,[Out] DWRITE_MATRIX* transform)</unmanaged>
-        Matrix3x2 GetCurrentTransform(object clientDrawingContext);
+        RawMatrix3x2 GetCurrentTransform(object clientDrawingContext);
 
         /// <summary>	
         ///  Gets the number of physical pixels per DIP. 	

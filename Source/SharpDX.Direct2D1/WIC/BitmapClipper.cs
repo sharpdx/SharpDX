@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using SharpDX.Native;
 
 namespace SharpDX.WIC
 {
@@ -42,9 +43,8 @@ namespace SharpDX.WIC
         /// <msdn-id>ee719677</msdn-id>	
         /// <unmanaged>HRESULT IWICBitmapClipper::Initialize([In, Optional] IWICBitmapSource* pISource,[In] const WICRect* prc)</unmanaged>	
         /// <unmanaged-short>IWICBitmapClipper::Initialize</unmanaged-short>	
-        public unsafe void Initialize(SharpDX.WIC.BitmapSource sourceRef, Rectangle rectangleRef)
+        public unsafe void Initialize(SharpDX.WIC.BitmapSource sourceRef, RawBox rectangleRef)
         {
-            rectangleRef.MakeXYAndWidthHeight();
             Initialize(sourceRef, new IntPtr(&rectangleRef));
         }
     }

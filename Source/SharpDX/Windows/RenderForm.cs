@@ -44,6 +44,7 @@
 */
 
 using System.Diagnostics;
+using SharpDX.Native;
 #if !W8CORE
 using System;
 using System.ComponentModel;
@@ -358,7 +359,7 @@ namespace SharpDX.Windows
                     }
                     else
                     {
-                        Rectangle rect;
+                        RawRectangle rect;
 
                         Win32Native.GetClientRect(m.HWnd, out rect);
                         if (rect.Bottom - rect.Top == 0)

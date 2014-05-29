@@ -20,6 +20,7 @@
 
 using System;
 using System.ComponentModel;
+using SharpDX.Native;
 
 namespace SharpDX.WIC
 {
@@ -147,9 +148,8 @@ namespace SharpDX.WIC
         /// <msdn-id>ee690159</msdn-id>	
         /// <unmanaged>HRESULT IWICBitmapFrameEncode::WriteSource([In, Optional] IWICBitmapSource* pIBitmapSource,[In, Optional] WICRect* prc)</unmanaged>	
         /// <unmanaged-short>IWICBitmapFrameEncode::WriteSource</unmanaged-short>	
-        public unsafe void WriteSource(SharpDX.WIC.BitmapSource bitmapSourceRef, Rectangle rectangleRef)
+        public unsafe void WriteSource(SharpDX.WIC.BitmapSource bitmapSourceRef, RawBox rectangleRef)
         {
-            rectangleRef.MakeXYAndWidthHeight();
             WriteSource(bitmapSourceRef, new IntPtr(&rectangleRef));
         }
 

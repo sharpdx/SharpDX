@@ -39,7 +39,7 @@
   </extension>
 
   <bindings>
-    <bind from="DWRITE_MATRIX" to="SharpDX.Matrix3x2" />
+    <bind from="DWRITE_MATRIX" to="SharpDX.Native.RawMatrix3x2" />
   </bindings>
 
   <mapping>
