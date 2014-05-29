@@ -20,6 +20,7 @@
 
 using System;
 using System.Reflection;
+using SharpDX.Mathematics;
 using SharpDX.Toolkit.Content;
 using SharpYaml;
 using SharpYaml.Serialization;

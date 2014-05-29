@@ -20,7 +20,7 @@
 
 using System;
 using System.IO;
-
+using SharpDX.Mathematics;
 using SharpDX.Toolkit.Content;
 
 namespace SharpDX.Toolkit.Graphics

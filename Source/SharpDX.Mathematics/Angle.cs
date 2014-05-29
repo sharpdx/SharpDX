@@ -42,11 +42,12 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
-using System;
-using System.Runtime.InteropServices;
-using System.Globalization;
 
-namespace SharpDX
+using System;
+using System.Globalization;
+using System.Runtime.InteropServices;
+
+namespace SharpDX.Mathematics
 {
     /// <summary>
     /// Represents a unit independent angle using a single-precision floating-point

@@ -42,11 +42,12 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SharpDX
+namespace SharpDX.Mathematics
 {
     /// <summary>
     /// Represents a four dimensional mathematical vector.
@@ -55,37 +56,37 @@ namespace SharpDX
     public struct Vector4 : IEquatable<Vector4>, IFormattable
     {
         /// <summary>
-        /// The size of the <see cref="SharpDX.Vector4"/> type, in bytes.
+        /// The size of the <see cref="Vector4"/> type, in bytes.
         /// </summary>
         public static readonly int SizeInBytes = Marshal.SizeOf(typeof(Vector4));
 
         /// <summary>
-        /// A <see cref="SharpDX.Vector4"/> with all of its components set to zero.
+        /// A <see cref="Vector4"/> with all of its components set to zero.
         /// </summary>
         public static readonly Vector4 Zero = new Vector4();
 
         /// <summary>
-        /// The X unit <see cref="SharpDX.Vector4"/> (1, 0, 0, 0).
+        /// The X unit <see cref="Vector4"/> (1, 0, 0, 0).
         /// </summary>
         public static readonly Vector4 UnitX = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
 
         /// <summary>
-        /// The Y unit <see cref="SharpDX.Vector4"/> (0, 1, 0, 0).
+        /// The Y unit <see cref="Vector4"/> (0, 1, 0, 0).
         /// </summary>
         public static readonly Vector4 UnitY = new Vector4(0.0f, 1.0f, 0.0f, 0.0f);
 
         /// <summary>
-        /// The Z unit <see cref="SharpDX.Vector4"/> (0, 0, 1, 0).
+        /// The Z unit <see cref="Vector4"/> (0, 0, 1, 0).
         /// </summary>
         public static readonly Vector4 UnitZ = new Vector4(0.0f, 0.0f, 1.0f, 0.0f);
 
         /// <summary>
-        /// The W unit <see cref="SharpDX.Vector4"/> (0, 0, 0, 1).
+        /// The W unit <see cref="Vector4"/> (0, 0, 0, 1).
         /// </summary>
         public static readonly Vector4 UnitW = new Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 
         /// <summary>
-        /// A <see cref="SharpDX.Vector4"/> with all of its components set to one.
+        /// A <see cref="Vector4"/> with all of its components set to one.
         /// </summary>
         public static readonly Vector4 One = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -110,7 +111,7 @@ namespace SharpDX
         public float W;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Vector4"/> struct.
+        /// Initializes a new instance of the <see cref="Vector4"/> struct.
         /// </summary>
         /// <param name="value">The value that will be assigned to all components.</param>
         public Vector4(float value)
@@ -122,7 +123,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Vector4"/> struct.
+        /// Initializes a new instance of the <see cref="Vector4"/> struct.
         /// </summary>
         /// <param name="x">Initial value for the X component of the vector.</param>
         /// <param name="y">Initial value for the Y component of the vector.</param>
@@ -137,7 +138,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Vector4"/> struct.
+        /// Initializes a new instance of the <see cref="Vector4"/> struct.
         /// </summary>
         /// <param name="value">A vector containing the values with which to initialize the X, Y, and Z components.</param>
         /// <param name="w">Initial value for the W component of the vector.</param>
@@ -150,7 +151,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Vector4"/> struct.
+        /// Initializes a new instance of the <see cref="Vector4"/> struct.
         /// </summary>
         /// <param name="value">A vector containing the values with which to initialize the X and Y components.</param>
         /// <param name="z">Initial value for the Z component of the vector.</param>
@@ -164,7 +165,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Vector4"/> struct.
+        /// Initializes a new instance of the <see cref="Vector4"/> struct.
         /// </summary>
         /// <param name="values">The values to assign to the X, Y, Z, and W components of the vector. This must be an array with four elements.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="values"/> is <c>null</c>.</exception>
@@ -238,7 +239,7 @@ namespace SharpDX
         /// </summary>
         /// <returns>The length of the vector.</returns>
         /// <remarks>
-        /// <see cref="SharpDX.Vector4.LengthSquared"/> may be preferred when only the relative length is needed
+        /// <see cref="Vector4.LengthSquared"/> may be preferred when only the relative length is needed
         /// and speed is of the essence.
         /// </remarks>
         public float Length()
@@ -251,7 +252,7 @@ namespace SharpDX
         /// </summary>
         /// <returns>The squared length of the vector.</returns>
         /// <remarks>
-        /// This method may be preferred to <see cref="SharpDX.Vector4.Length"/> when only a relative length is needed
+        /// This method may be preferred to <see cref="Vector4.Length"/> when only a relative length is needed
         /// and speed is of the essence.
         /// </remarks>
         public float LengthSquared()
@@ -503,11 +504,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Returns a <see cref="SharpDX.Vector4"/> containing the 4D Cartesian coordinates of a point specified in Barycentric coordinates relative to a 4D triangle.
+        /// Returns a <see cref="Vector4"/> containing the 4D Cartesian coordinates of a point specified in Barycentric coordinates relative to a 4D triangle.
         /// </summary>
-        /// <param name="value1">A <see cref="SharpDX.Vector4"/> containing the 4D Cartesian coordinates of vertex 1 of the triangle.</param>
-        /// <param name="value2">A <see cref="SharpDX.Vector4"/> containing the 4D Cartesian coordinates of vertex 2 of the triangle.</param>
-        /// <param name="value3">A <see cref="SharpDX.Vector4"/> containing the 4D Cartesian coordinates of vertex 3 of the triangle.</param>
+        /// <param name="value1">A <see cref="Vector4"/> containing the 4D Cartesian coordinates of vertex 1 of the triangle.</param>
+        /// <param name="value2">A <see cref="Vector4"/> containing the 4D Cartesian coordinates of vertex 2 of the triangle.</param>
+        /// <param name="value3">A <see cref="Vector4"/> containing the 4D Cartesian coordinates of vertex 3 of the triangle.</param>
         /// <param name="amount1">Barycentric coordinate b2, which expresses the weighting factor toward vertex 2 (specified in <paramref name="value2"/>).</param>
         /// <param name="amount2">Barycentric coordinate b3, which expresses the weighting factor toward vertex 3 (specified in <paramref name="value3"/>).</param>
         /// <param name="result">When the method completes, contains the 4D Cartesian coordinates of the specified point.</param>
@@ -520,14 +521,14 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Returns a <see cref="SharpDX.Vector4"/> containing the 4D Cartesian coordinates of a point specified in Barycentric coordinates relative to a 4D triangle.
+        /// Returns a <see cref="Vector4"/> containing the 4D Cartesian coordinates of a point specified in Barycentric coordinates relative to a 4D triangle.
         /// </summary>
-        /// <param name="value1">A <see cref="SharpDX.Vector4"/> containing the 4D Cartesian coordinates of vertex 1 of the triangle.</param>
-        /// <param name="value2">A <see cref="SharpDX.Vector4"/> containing the 4D Cartesian coordinates of vertex 2 of the triangle.</param>
-        /// <param name="value3">A <see cref="SharpDX.Vector4"/> containing the 4D Cartesian coordinates of vertex 3 of the triangle.</param>
+        /// <param name="value1">A <see cref="Vector4"/> containing the 4D Cartesian coordinates of vertex 1 of the triangle.</param>
+        /// <param name="value2">A <see cref="Vector4"/> containing the 4D Cartesian coordinates of vertex 2 of the triangle.</param>
+        /// <param name="value3">A <see cref="Vector4"/> containing the 4D Cartesian coordinates of vertex 3 of the triangle.</param>
         /// <param name="amount1">Barycentric coordinate b2, which expresses the weighting factor toward vertex 2 (specified in <paramref name="value2"/>).</param>
         /// <param name="amount2">Barycentric coordinate b3, which expresses the weighting factor toward vertex 3 (specified in <paramref name="value3"/>).</param>
-        /// <returns>A new <see cref="SharpDX.Vector4"/> containing the 4D Cartesian coordinates of the specified point.</returns>
+        /// <returns>A new <see cref="Vector4"/> containing the 4D Cartesian coordinates of the specified point.</returns>
         public static Vector4 Barycentric(Vector4 value1, Vector4 value2, Vector4 value3, float amount1, float amount2)
         {
             Vector4 result;
@@ -584,7 +585,7 @@ namespace SharpDX
         /// <param name="value2">The second vector.</param>
         /// <param name="result">When the method completes, contains the distance between the two vectors.</param>
         /// <remarks>
-        /// <see cref="SharpDX.Vector4.DistanceSquared(ref Vector4, ref Vector4, out float)"/> may be preferred when only the relative distance is needed
+        /// <see cref="Vector4.DistanceSquared(ref Vector4, ref Vector4, out float)"/> may be preferred when only the relative distance is needed
         /// and speed is of the essence.
         /// </remarks>
         public static void Distance(ref Vector4 value1, ref Vector4 value2, out float result)
@@ -604,7 +605,7 @@ namespace SharpDX
         /// <param name="value2">The second vector.</param>
         /// <returns>The distance between the two vectors.</returns>
         /// <remarks>
-        /// <see cref="SharpDX.Vector4.DistanceSquared(Vector4, Vector4)"/> may be preferred when only the relative distance is needed
+        /// <see cref="Vector4.DistanceSquared(Vector4, Vector4)"/> may be preferred when only the relative distance is needed
         /// and speed is of the essence.
         /// </remarks>
         public static float Distance(Vector4 value1, Vector4 value2)
@@ -994,11 +995,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Transforms a 4D vector by the given <see cref="SharpDX.Quaternion"/> rotation.
+        /// Transforms a 4D vector by the given <see cref="Quaternion"/> rotation.
         /// </summary>
         /// <param name="vector">The vector to rotate.</param>
-        /// <param name="rotation">The <see cref="SharpDX.Quaternion"/> rotation to apply.</param>
-        /// <param name="result">When the method completes, contains the transformed <see cref="SharpDX.Vector4"/>.</param>
+        /// <param name="rotation">The <see cref="Quaternion"/> rotation to apply.</param>
+        /// <param name="result">When the method completes, contains the transformed <see cref="Vector4"/>.</param>
         public static void Transform(ref Vector4 vector, ref Quaternion rotation, out Vector4 result)
         {
             float x = rotation.X + rotation.X;
@@ -1022,11 +1023,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Transforms a 4D vector by the given <see cref="SharpDX.Quaternion"/> rotation.
+        /// Transforms a 4D vector by the given <see cref="Quaternion"/> rotation.
         /// </summary>
         /// <param name="vector">The vector to rotate.</param>
-        /// <param name="rotation">The <see cref="SharpDX.Quaternion"/> rotation to apply.</param>
-        /// <returns>The transformed <see cref="SharpDX.Vector4"/>.</returns>
+        /// <param name="rotation">The <see cref="Quaternion"/> rotation to apply.</param>
+        /// <returns>The transformed <see cref="Vector4"/>.</returns>
         public static Vector4 Transform(Vector4 vector, Quaternion rotation)
         {
             Vector4 result;
@@ -1035,10 +1036,10 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Transforms an array of vectors by the given <see cref="SharpDX.Quaternion"/> rotation.
+        /// Transforms an array of vectors by the given <see cref="Quaternion"/> rotation.
         /// </summary>
         /// <param name="source">The array of vectors to transform.</param>
-        /// <param name="rotation">The <see cref="SharpDX.Quaternion"/> rotation to apply.</param>
+        /// <param name="rotation">The <see cref="Quaternion"/> rotation to apply.</param>
         /// <param name="destination">The array for which the transformed vectors are stored.
         /// This array may be the same array as <paramref name="source"/>.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="source"/> or <paramref name="destination"/> is <c>null</c>.</exception>
@@ -1086,11 +1087,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Transforms a 4D vector by the given <see cref="SharpDX.Matrix"/>.
+        /// Transforms a 4D vector by the given <see cref="Matrix"/>.
         /// </summary>
         /// <param name="vector">The source vector.</param>
-        /// <param name="transform">The transformation <see cref="SharpDX.Matrix"/>.</param>
-        /// <param name="result">When the method completes, contains the transformed <see cref="SharpDX.Vector4"/>.</param>
+        /// <param name="transform">The transformation <see cref="Matrix"/>.</param>
+        /// <param name="result">When the method completes, contains the transformed <see cref="Vector4"/>.</param>
         public static void Transform(ref Vector4 vector, ref Matrix transform, out Vector4 result)
         {
             result = new Vector4(
@@ -1101,11 +1102,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Transforms a 4D vector by the given <see cref="SharpDX.Matrix"/>.
+        /// Transforms a 4D vector by the given <see cref="Matrix"/>.
         /// </summary>
         /// <param name="vector">The source vector.</param>
-        /// <param name="transform">The transformation <see cref="SharpDX.Matrix"/>.</param>
-        /// <returns>The transformed <see cref="SharpDX.Vector4"/>.</returns>
+        /// <param name="transform">The transformation <see cref="Matrix"/>.</param>
+        /// <returns>The transformed <see cref="Vector4"/>.</returns>
         public static Vector4 Transform(Vector4 vector, Matrix transform)
         {
             Vector4 result;
@@ -1114,11 +1115,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Transforms a 4D vector by the given <see cref="SharpDX.Matrix5x4"/>.
+        /// Transforms a 4D vector by the given <see cref="Matrix5x4"/>.
         /// </summary>
         /// <param name="vector">The source vector.</param>
-        /// <param name="transform">The transformation <see cref="SharpDX.Matrix5x4"/>.</param>
-        /// <param name="result">When the method completes, contains the transformed <see cref="SharpDX.Vector4"/>.</param>
+        /// <param name="transform">The transformation <see cref="Matrix5x4"/>.</param>
+        /// <param name="result">When the method completes, contains the transformed <see cref="Vector4"/>.</param>
         public static void Transform(ref Vector4 vector, ref Matrix5x4 transform, out Vector4 result)
         {
             result = new Vector4(
@@ -1129,11 +1130,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Transforms a 4D vector by the given <see cref="SharpDX.Matrix5x4"/>.
+        /// Transforms a 4D vector by the given <see cref="Matrix5x4"/>.
         /// </summary>
         /// <param name="vector">The source vector.</param>
-        /// <param name="transform">The transformation <see cref="SharpDX.Matrix5x4"/>.</param>
-        /// <returns>The transformed <see cref="SharpDX.Vector4"/>.</returns>
+        /// <param name="transform">The transformation <see cref="Matrix5x4"/>.</param>
+        /// <returns>The transformed <see cref="Vector4"/>.</returns>
         public static Vector4 Transform(Vector4 vector, Matrix5x4 transform)
         {
             Vector4 result;
@@ -1142,10 +1143,10 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Transforms an array of 4D vectors by the given <see cref="SharpDX.Matrix"/>.
+        /// Transforms an array of 4D vectors by the given <see cref="Matrix"/>.
         /// </summary>
         /// <param name="source">The array of vectors to transform.</param>
-        /// <param name="transform">The transformation <see cref="SharpDX.Matrix"/>.</param>
+        /// <param name="transform">The transformation <see cref="Matrix"/>.</param>
         /// <param name="destination">The array for which the transformed vectors are stored.
         /// This array may be the same array as <paramref name="source"/>.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="source"/> or <paramref name="destination"/> is <c>null</c>.</exception>
@@ -1177,7 +1178,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Multiplies a vector with another by performing component-wise multiplication equivalent to <see cref="Multiply(ref SharpDX.Vector4,ref SharpDX.Vector4,out SharpDX.Vector4)"/>.
+        /// Multiplies a vector with another by performing component-wise multiplication equivalent to <see cref="Multiply(ref Vector4,ref Vector4,out Vector4)"/>.
         /// </summary>
         /// <param name="left">The first vector to multiply.</param>
         /// <param name="right">The second vector to multiply.</param>
@@ -1340,7 +1341,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="SharpDX.Vector4"/> to <see cref="SharpDX.Vector2"/>.
+        /// Performs an explicit conversion from <see cref="Vector4"/> to <see cref="Vector2"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -1350,7 +1351,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="SharpDX.Vector4"/> to <see cref="SharpDX.Vector3"/>.
+        /// Performs an explicit conversion from <see cref="Vector4"/> to <see cref="Vector3"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -1434,11 +1435,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="SharpDX.Vector4"/> is equal to this instance.
+        /// Determines whether the specified <see cref="Vector4"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="SharpDX.Vector4"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="Vector4"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="SharpDX.Vector4"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Vector4"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(ref Vector4 other)
         {
@@ -1449,11 +1450,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="SharpDX.Vector4"/> is equal to this instance.
+        /// Determines whether the specified <see cref="Vector4"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="SharpDX.Vector4"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="Vector4"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="SharpDX.Vector4"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Vector4"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(Vector4 other)
         {
@@ -1487,7 +1488,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawVector4"/> to <see cref="SharpDX.Vector4"/>.
+        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawVector4"/> to <see cref="Vector4"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>

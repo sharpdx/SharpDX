@@ -29,6 +29,7 @@ using Assimp.Unmanaged;
 using SharpDX.DXGI;
 using SharpDX.Direct3D11;
 using SharpDX.IO;
+using SharpDX.Mathematics;
 using SharpDX.Toolkit.Diagnostics;
 
 namespace SharpDX.Toolkit.Graphics
@@ -567,13 +568,13 @@ namespace SharpDX.Toolkit.Graphics
 
             // Add position
             layout.Add(VertexElement.PositionTransformed(Format.R32G32B32_Float, 0));
-            vertexBufferElementSize += Utilities.SizeOf<SharpDX.Vector3>();
+            vertexBufferElementSize += Utilities.SizeOf<Vector3>();
 
             // Add normals
             if (assimpMesh.HasNormals)
             {
                 layout.Add(VertexElement.Normal(0, Format.R32G32B32_Float, vertexBufferElementSize));
-                vertexBufferElementSize += Utilities.SizeOf<SharpDX.Vector3>();
+                vertexBufferElementSize += Utilities.SizeOf<Vector3>();
             }
 
             // Add colors
@@ -584,7 +585,7 @@ namespace SharpDX.Toolkit.Graphics
                     if (assimpMesh.HasVertexColors(i))
                     {
                         layout.Add(VertexElement.Color(localIndex, Format.R32G32B32A32_Float, vertexBufferElementSize));
-                        vertexBufferElementSize += Utilities.SizeOf<SharpDX.Color4>();
+                        vertexBufferElementSize += Utilities.SizeOf<Color4>();
                         localIndex++;
                     }
                 }
@@ -602,12 +603,12 @@ namespace SharpDX.Toolkit.Graphics
                         if (uvCount == 2)
                         {
                             layout.Add(VertexElement.TextureCoordinate(localIndex, Format.R32G32_Float, vertexBufferElementSize));
-                            vertexBufferElementSize += Utilities.SizeOf<SharpDX.Vector2>();
+                            vertexBufferElementSize += Utilities.SizeOf<Vector2>();
                         }
                         else if (uvCount == 3)
                         {
                             layout.Add(VertexElement.TextureCoordinate(localIndex, Format.R32G32B32_Float, vertexBufferElementSize));
-                            vertexBufferElementSize += Utilities.SizeOf<SharpDX.Vector3>();
+                            vertexBufferElementSize += Utilities.SizeOf<Vector3>();
                         }
                         else
                         {
@@ -623,10 +624,10 @@ namespace SharpDX.Toolkit.Graphics
             if (assimpMesh.HasTangentBasis)
             {
                 layout.Add(VertexElement.Tangent(Format.R32G32B32_Float, vertexBufferElementSize));
-                vertexBufferElementSize += Utilities.SizeOf<SharpDX.Vector3>();
+                vertexBufferElementSize += Utilities.SizeOf<Vector3>();
 
                 layout.Add(VertexElement.BiTangent(Format.R32G32B32_Float, vertexBufferElementSize));
-                vertexBufferElementSize += Utilities.SizeOf<SharpDX.Vector3>();
+                vertexBufferElementSize += Utilities.SizeOf<Vector3>();
             }
 
             // Extract Skinning Indices / Weights
@@ -665,10 +666,10 @@ namespace SharpDX.Toolkit.Graphics
                 if (hasWeights)
                 {
                     layout.Add(VertexElement.BlendIndices(Format.R16G16B16A16_SInt, vertexBufferElementSize));
-                    vertexBufferElementSize += Utilities.SizeOf<SharpDX.Int4>();
+                    vertexBufferElementSize += Utilities.SizeOf<Int4>();
 
                     layout.Add(VertexElement.BlendWeights(Format.R32G32B32A32_Float, vertexBufferElementSize));
-                    vertexBufferElementSize += Utilities.SizeOf<SharpDX.Vector4>();
+                    vertexBufferElementSize += Utilities.SizeOf<Vector4>();
                 }
             }
 
@@ -777,19 +778,19 @@ namespace SharpDX.Toolkit.Graphics
             return meshPart;
         }
 
-        private unsafe static SharpDX.Vector2 ConvertVector(Vector2D value)
+        private unsafe static Vector2 ConvertVector(Vector2D value)
         {
-            return *(SharpDX.Vector2*)&value;
+            return *(Vector2*)&value;
         }
 
-        private unsafe static SharpDX.Vector3 ConvertVector(Vector3D value)
+        private unsafe static Vector3 ConvertVector(Vector3D value)
         {
-            return *(SharpDX.Vector3*)&value;
+            return *(Vector3*)&value;
         }
 
-        private unsafe static SharpDX.Color4 ConvertColor(Color4D value)
+        private unsafe static Color4 ConvertColor(Color4D value)
         {
-            return *(SharpDX.Color4*)&value;
+            return *(Color4*)&value;
         }
 
         private unsafe static Matrix ConvertMatrix(Matrix4x4 sourceMatrix)

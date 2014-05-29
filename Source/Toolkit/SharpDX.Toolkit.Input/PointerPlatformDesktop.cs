@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using SharpDX.Mathematics;
 #if !W8CORE
-
 using System;
 using System.Windows.Forms;
 using FKeys = System.Windows.Forms.Keys;

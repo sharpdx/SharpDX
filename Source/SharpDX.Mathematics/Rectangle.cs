@@ -23,7 +23,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Native;
 
-namespace SharpDX
+namespace SharpDX.Mathematics
 {
     /// <summary>
     /// Define a Rectangle. This structure is slightly different from System.Drawing.Rectangle as it is
@@ -316,11 +316,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Checks, if specified point is inside <see cref="SharpDX.Rectangle"/>.
+        /// Checks, if specified point is inside <see cref="Rectangle"/>.
         /// </summary>
         /// <param name="x">X point coordinate.</param>
         /// <param name="y">Y point coordinate.</param>
-        /// <returns><c>true</c> if point is inside <see cref="SharpDX.Rectangle"/>, otherwise <c>false</c>.</returns>
+        /// <returns><c>true</c> if point is inside <see cref="Rectangle"/>, otherwise <c>false</c>.</returns>
         public bool Contains(float x, float y)
         {
             return (x >= _left && x <= _right && y >= _top && y <= _bottom);
@@ -431,11 +431,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="SharpDX.Rectangle"/> is equal to this instance.
+        /// Determines whether the specified <see cref="Rectangle"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="SharpDX.Rectangle"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="Rectangle"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="SharpDX.Rectangle"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Rectangle"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(Rectangle other)
         {
@@ -515,7 +515,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawRectangle"/> to <see cref="SharpDX.Rectangle"/>.
+        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawRectangle"/> to <see cref="Rectangle"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -535,7 +535,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawRectangle"/> to <see cref="SharpDX.Rectangle"/>.
+        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawRectangle"/> to <see cref="Rectangle"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>

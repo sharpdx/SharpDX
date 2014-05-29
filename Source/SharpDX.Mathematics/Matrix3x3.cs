@@ -47,7 +47,7 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SharpDX
+namespace SharpDX.Mathematics
 {
     /// <summary>
     /// Represents a 3x3 Matrix ( contains only Scale and Rotation ).
@@ -56,17 +56,17 @@ namespace SharpDX
     public struct Matrix3x3 : IEquatable<Matrix3x3>, IFormattable
     {
         /// <summary>
-        /// The size of the <see cref="SharpDX.Matrix3x3"/> type, in bytes.
+        /// The size of the <see cref="Matrix3x3"/> type, in bytes.
         /// </summary>
         public static readonly int SizeInBytes = Marshal.SizeOf(typeof(Matrix3x3));
 
         /// <summary>
-        /// A <see cref="SharpDX.Matrix3x3"/> with all of its components set to zero.
+        /// A <see cref="Matrix3x3"/> with all of its components set to zero.
         /// </summary>
         public static readonly Matrix3x3 Zero = new Matrix3x3();
 
         /// <summary>
-        /// The identity <see cref="SharpDX.Matrix3x3"/>.
+        /// The identity <see cref="Matrix3x3"/>.
         /// </summary>
         public static readonly Matrix3x3 Identity = new Matrix3x3() { M11 = 1.0f, M22 = 1.0f, M33 = 1.0f };
 
@@ -117,7 +117,7 @@ namespace SharpDX
      
                 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Matrix3x3"/> struct.
+        /// Initializes a new instance of the <see cref="Matrix3x3"/> struct.
         /// </summary>
         /// <param name="value">The value that will be assigned to all components.</param>
         public Matrix3x3(float value)
@@ -128,7 +128,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Matrix3x3"/> struct.
+        /// Initializes a new instance of the <see cref="Matrix3x3"/> struct.
         /// </summary>
         /// <param name="M11">The value to assign at row 1 column 1 of the Matrix3x3.</param>
         /// <param name="M12">The value to assign at row 1 column 2 of the Matrix3x3.</param>
@@ -149,7 +149,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Matrix3x3"/> struct.
+        /// Initializes a new instance of the <see cref="Matrix3x3"/> struct.
         /// </summary>
         /// <param name="values">The values to assign to the components of the Matrix3x3. This must be an array with sixteen elements.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="values"/> is <c>null</c>.</exception>
@@ -2035,11 +2035,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="SharpDX.Matrix3x3"/> is equal to this instance.
+        /// Determines whether the specified <see cref="Matrix3x3"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="SharpDX.Matrix3x3"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="Matrix3x3"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="SharpDX.Matrix3x3"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Matrix3x3"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(ref Matrix3x3 other)
         {
@@ -2055,11 +2055,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="SharpDX.Matrix3x3"/> is equal to this instance.
+        /// Determines whether the specified <see cref="Matrix3x3"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="SharpDX.Matrix3x3"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="Matrix3x3"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="SharpDX.Matrix3x3"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Matrix3x3"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(Matrix3x3 other)
         {
@@ -2067,7 +2067,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="SharpDX.Matrix3x3"/> are equal.
+        /// Determines whether the specified <see cref="Matrix3x3"/> are equal.
         /// </summary>
         public static bool Equals(ref Matrix3x3 a,ref Matrix3x3 b)
         {

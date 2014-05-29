@@ -47,7 +47,7 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SharpDX
+namespace SharpDX.Mathematics
 {
     /// <summary>
     /// Represents a 4x4 mathematical matrix.
@@ -56,17 +56,17 @@ namespace SharpDX
     public struct Matrix : IEquatable<Matrix>, IFormattable
     {
         /// <summary>
-        /// The size of the <see cref="SharpDX.Matrix"/> type, in bytes.
+        /// The size of the <see cref="Matrix"/> type, in bytes.
         /// </summary>
         public static readonly int SizeInBytes = Marshal.SizeOf(typeof(Matrix));
 
         /// <summary>
-        /// A <see cref="SharpDX.Matrix"/> with all of its components set to zero.
+        /// A <see cref="Matrix"/> with all of its components set to zero.
         /// </summary>
         public static readonly Matrix Zero = new Matrix();
 
         /// <summary>
-        /// The identity <see cref="SharpDX.Matrix"/>.
+        /// The identity <see cref="Matrix"/>.
         /// </summary>
         public static readonly Matrix Identity = new Matrix() { M11 = 1.0f, M22 = 1.0f, M33 = 1.0f, M44 = 1.0f };
 
@@ -151,7 +151,7 @@ namespace SharpDX
         public float M44;
      
         /// <summary>
-        /// Gets or sets the up <see cref="SharpDX.Vector3"/> of the matrix; that is M21, M22, and M23.
+        /// Gets or sets the up <see cref="Vector3"/> of the matrix; that is M21, M22, and M23.
         /// </summary>
         public Vector3 Up
         {
@@ -172,7 +172,7 @@ namespace SharpDX
         }
     
         /// <summary>
-        /// Gets or sets the down <see cref="SharpDX.Vector3"/> of the matrix; that is -M21, -M22, and -M23.
+        /// Gets or sets the down <see cref="Vector3"/> of the matrix; that is -M21, -M22, and -M23.
         /// </summary>
         public Vector3 Down
         {
@@ -193,7 +193,7 @@ namespace SharpDX
         }
     
         /// <summary>
-        /// Gets or sets the right <see cref="SharpDX.Vector3"/> of the matrix; that is M11, M12, and M13.
+        /// Gets or sets the right <see cref="Vector3"/> of the matrix; that is M11, M12, and M13.
         /// </summary>
         public Vector3 Right
         {
@@ -214,7 +214,7 @@ namespace SharpDX
         }
     
         /// <summary>
-        /// Gets or sets the left <see cref="SharpDX.Vector3"/> of the matrix; that is -M11, -M12, and -M13.
+        /// Gets or sets the left <see cref="Vector3"/> of the matrix; that is -M11, -M12, and -M13.
         /// </summary>
         public Vector3 Left
         {
@@ -235,7 +235,7 @@ namespace SharpDX
         }
         
         /// <summary>
-        /// Gets or sets the forward <see cref="SharpDX.Vector3"/> of the matrix; that is -M31, -M32, and -M33.
+        /// Gets or sets the forward <see cref="Vector3"/> of the matrix; that is -M31, -M32, and -M33.
         /// </summary>
         public Vector3 Forward
         {
@@ -256,7 +256,7 @@ namespace SharpDX
         }
         
         /// <summary>
-        /// Gets or sets the backward <see cref="SharpDX.Vector3"/> of the matrix; that is M31, M32, and M33.
+        /// Gets or sets the backward <see cref="Vector3"/> of the matrix; that is M31, M32, and M33.
         /// </summary>
         public Vector3 Backward
         {
@@ -277,7 +277,7 @@ namespace SharpDX
         }
         
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Matrix"/> struct.
+        /// Initializes a new instance of the <see cref="Matrix"/> struct.
         /// </summary>
         /// <param name="value">The value that will be assigned to all components.</param>
         public Matrix(float value)
@@ -289,7 +289,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Matrix"/> struct.
+        /// Initializes a new instance of the <see cref="Matrix"/> struct.
         /// </summary>
         /// <param name="M11">The value to assign at row 1 column 1 of the matrix.</param>
         /// <param name="M12">The value to assign at row 1 column 2 of the matrix.</param>
@@ -319,7 +319,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Matrix"/> struct.
+        /// Initializes a new instance of the <see cref="Matrix"/> struct.
         /// </summary>
         /// <param name="values">The values to assign to the components of the matrix. This must be an array with sixteen elements.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="values"/> is <c>null</c>.</exception>
@@ -3208,11 +3208,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="SharpDX.Matrix"/> is equal to this instance.
+        /// Determines whether the specified <see cref="Matrix"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="SharpDX.Matrix"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="Matrix"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="SharpDX.Matrix"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Matrix"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(ref Matrix other)
         {
@@ -3235,11 +3235,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="SharpDX.Matrix"/> is equal to this instance.
+        /// Determines whether the specified <see cref="Matrix"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="SharpDX.Matrix"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="Matrix"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="SharpDX.Matrix"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Matrix"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(Matrix other)
         {
@@ -3273,7 +3273,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawMatrix"/> to <see cref="SharpDX.Matrix"/>.
+        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawMatrix"/> to <see cref="Matrix"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>

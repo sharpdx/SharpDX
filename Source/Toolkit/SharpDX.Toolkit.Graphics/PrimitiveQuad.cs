@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using SharpDX.Mathematics;
+
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
@@ -66,7 +68,7 @@ namespace SharpDX.Toolkit.Graphics
         public GraphicsDevice GraphicsDevice { get; private set; }
 
         /// <summary>
-        /// Gets or sets the color. Default is <see cref="SharpDX.Color.White"/>.
+        /// Gets or sets the color. Default is <see cref="Mathematics.Color.White"/>.
         /// </summary>
         /// <value>The color.</value>
         public Color4 Color

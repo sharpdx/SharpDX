@@ -20,6 +20,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics;
 using SharpDX.Toolkit.Serialization;
 
 namespace SharpDX.Toolkit.Graphics

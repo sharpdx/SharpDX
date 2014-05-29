@@ -18,8 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using SharpDX.Mathematics;
+using RectangleF = SharpDX.Mathematics.RectangleF;
 #if !W8CORE
-
 using System;
 using System.Collections.Generic;
 using System.Drawing;

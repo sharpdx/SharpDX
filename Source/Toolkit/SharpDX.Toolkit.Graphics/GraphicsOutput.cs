@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
+using SharpDX.Mathematics;
 using ResultCode = SharpDX.DXGI.ResultCode;
 
 namespace SharpDX.Toolkit.Graphics

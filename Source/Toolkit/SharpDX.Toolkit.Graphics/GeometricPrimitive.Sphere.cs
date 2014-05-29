@@ -71,6 +71,7 @@
 // particular purpose and non-infringement.
 
 using System;
+using SharpDX.Mathematics;
 
 namespace SharpDX.Toolkit.Graphics
 {

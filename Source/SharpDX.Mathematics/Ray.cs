@@ -42,11 +42,12 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SharpDX
+namespace SharpDX.Mathematics
 {
     /// <summary>
     /// Represents a three dimensional line based on a point in space and a direction.
@@ -65,7 +66,7 @@ namespace SharpDX
         public Vector3 Direction;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Ray"/> struct.
+        /// Initializes a new instance of the <see cref="Ray"/> struct.
         /// </summary>
         /// <param name="position">The position in three dimensional space of the origin of the ray.</param>
         /// <param name="direction">The normalized direction of the ray.</param>
@@ -86,7 +87,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.Ray"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="Ray"/>.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -97,11 +98,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.Ray"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="Ray"/>.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="point">When the method completes, contains the point of intersection,
-        /// or <see cref="SharpDX.Vector3.Zero"/> if there was no intersection.</param>
+        /// or <see cref="Vector3.Zero"/> if there was no intersection.</param>
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Ray ray, out Vector3 point)
         {
@@ -109,7 +110,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.Plane"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="Plane"/>.
         /// </summary>
         /// <param name="plane">The plane to test</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -120,7 +121,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.Plane"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="Plane"/>.
         /// </summary>
         /// <param name="plane">The plane to test.</param>
         /// <param name="distance">When the method completes, contains the distance of the intersection,
@@ -132,11 +133,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.Plane"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="Plane"/>.
         /// </summary>
         /// <param name="plane">The plane to test.</param>
         /// <param name="point">When the method completes, contains the point of intersection,
-        /// or <see cref="SharpDX.Vector3.Zero"/> if there was no intersection.</param>
+        /// or <see cref="Vector3.Zero"/> if there was no intersection.</param>
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Plane plane, out Vector3 point)
         {
@@ -177,7 +178,7 @@ namespace SharpDX
         /// <param name="vertex2">The second vertex of the triangle to test.</param>
         /// <param name="vertex3">The third vertex of the triangle to test.</param>
         /// <param name="point">When the method completes, contains the point of intersection,
-        /// or <see cref="SharpDX.Vector3.Zero"/> if there was no intersection.</param>
+        /// or <see cref="Vector3.Zero"/> if there was no intersection.</param>
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Vector3 vertex1, ref Vector3 vertex2, ref Vector3 vertex3, out Vector3 point)
         {
@@ -185,7 +186,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.BoundingBox"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="BoundingBox"/>.
         /// </summary>
         /// <param name="box">The box to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -196,7 +197,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.BoundingBox"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="BoundingBox"/>.
         /// </summary>
         /// <param name="box">The box to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -206,7 +207,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.BoundingBox"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="BoundingBox"/>.
         /// </summary>
         /// <param name="box">The box to test.</param>
         /// <param name="distance">When the method completes, contains the distance of the intersection,
@@ -218,11 +219,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.BoundingBox"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="BoundingBox"/>.
         /// </summary>
         /// <param name="box">The box to test.</param>
         /// <param name="point">When the method completes, contains the point of intersection,
-        /// or <see cref="SharpDX.Vector3.Zero"/> if there was no intersection.</param>
+        /// or <see cref="Vector3.Zero"/> if there was no intersection.</param>
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref BoundingBox box, out Vector3 point)
         {
@@ -230,7 +231,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.BoundingSphere"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="BoundingSphere"/>.
         /// </summary>
         /// <param name="sphere">The sphere to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -241,7 +242,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.BoundingSphere"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="BoundingSphere"/>.
         /// </summary>
         /// <param name="sphere">The sphere to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -251,7 +252,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.BoundingSphere"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="BoundingSphere"/>.
         /// </summary>
         /// <param name="sphere">The sphere to test.</param>
         /// <param name="distance">When the method completes, contains the distance of the intersection,
@@ -263,11 +264,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.BoundingSphere"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="BoundingSphere"/>.
         /// </summary>
         /// <param name="sphere">The sphere to test.</param>
         /// <param name="point">When the method completes, contains the point of intersection,
-        /// or <see cref="SharpDX.Vector3.Zero"/> if there was no intersection.</param>
+        /// or <see cref="Vector3.Zero"/> if there was no intersection.</param>
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref BoundingSphere sphere, out Vector3 point)
         {
@@ -275,13 +276,13 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Calculates a world space <see cref="SharpDX.Ray"/> from 2d screen coordinates.
+        /// Calculates a world space <see cref="Ray"/> from 2d screen coordinates.
         /// </summary>
         /// <param name="x">X coordinate on 2d screen.</param>
         /// <param name="y">Y coordinate on 2d screen.</param>
-        /// <param name="viewport"><see cref="SharpDX.ViewportF"/>.</param>
-        /// <param name="worldViewProjection">Transformation <see cref="SharpDX.Matrix"/>.</param>
-        /// <returns>Resulting <see cref="SharpDX.Ray"/>.</returns>
+        /// <param name="viewport"><see cref="ViewportF"/>.</param>
+        /// <param name="worldViewProjection">Transformation <see cref="Matrix"/>.</param>
+        /// <returns>Resulting <see cref="Ray"/>.</returns>
         public static Ray GetPickRay(int x, int y, ViewportF viewport, Matrix worldViewProjection)
         {
             var nearPoint = new Vector3(x, y, 0);
@@ -385,11 +386,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="SharpDX.Vector4"/> is equal to this instance.
+        /// Determines whether the specified <see cref="Vector4"/> is equal to this instance.
         /// </summary>
-        /// <param name="value">The <see cref="SharpDX.Vector4"/> to compare with this instance.</param>
+        /// <param name="value">The <see cref="Vector4"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="SharpDX.Vector4"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Vector4"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(Ray value)
         {

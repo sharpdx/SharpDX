@@ -42,12 +42,12 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using SharpDX.Native;
 
-namespace SharpDX
+namespace SharpDX.Mathematics
 {
     /// <summary>
     /// Represents a color in the form of rgb.
@@ -83,7 +83,7 @@ namespace SharpDX
         public float Blue;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Color3"/> struct.
+        /// Initializes a new instance of the <see cref="Color3"/> struct.
         /// </summary>
         /// <param name="value">The value that will be assigned to all components.</param>
         public Color3(float value)
@@ -92,7 +92,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Color3"/> struct.
+        /// Initializes a new instance of the <see cref="Color3"/> struct.
         /// </summary>
         /// <param name="red">The red component of the color.</param>
         /// <param name="green">The green component of the color.</param>
@@ -105,7 +105,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Color3"/> struct.
+        /// Initializes a new instance of the <see cref="Color3"/> struct.
         /// </summary>
         /// <param name="value">The red, green, and blue components of the color.</param>
         public Color3(Vector3 value)
@@ -116,7 +116,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Color3"/> struct.
+        /// Initializes a new instance of the <see cref="Color3"/> struct.
         /// </summary>
         /// <param name="rgb">A packed integer containing all three color components in RGB order.
         /// The alpha component is ignored.</param>
@@ -128,7 +128,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Color3"/> struct.
+        /// Initializes a new instance of the <see cref="Color3"/> struct.
         /// </summary>
         /// <param name="values">The values to assign to the red, green, and blue components of the color. This must be an array with three elements.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="values"/> is <c>null</c>.</exception>
@@ -687,7 +687,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="SharpDX.Color3"/> to <see cref="SharpDX.Color4"/>.
+        /// Performs an explicit conversion from <see cref="Color3"/> to <see cref="Color4"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -697,7 +697,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Color3"/> to <see cref="SharpDX.Vector3"/>.
+        /// Performs an implicit conversion from <see cref="Color3"/> to <see cref="Vector3"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -707,7 +707,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Vector3"/> to <see cref="SharpDX.Color3"/>.
+        /// Performs an implicit conversion from <see cref="Vector3"/> to <see cref="Color3"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -717,7 +717,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="System.Int32"/> to <see cref="SharpDX.Color3"/>.
+        /// Performs an explicit conversion from <see cref="System.Int32"/> to <see cref="Color3"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -799,11 +799,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="SharpDX.Color3"/> is equal to this instance.
+        /// Determines whether the specified <see cref="Color3"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="SharpDX.Color3"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="Color3"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="SharpDX.Color3"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Color3"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(Color3 other)
         {
@@ -839,7 +839,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawColor3"/> to <see cref="SharpDX.Color3"/>.
+        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawColor3"/> to <see cref="Color3"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>

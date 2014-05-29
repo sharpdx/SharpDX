@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace SharpDX
+namespace SharpDX.Mathematics
 {
     /// <summary>
     /// List of predefined <see cref="Color"/>.

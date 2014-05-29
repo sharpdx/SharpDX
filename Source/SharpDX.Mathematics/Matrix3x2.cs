@@ -22,10 +22,10 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SharpDX
+namespace SharpDX.Mathematics
 {
     /// <summary>
-    /// Direct2D Matrix3x2. Supports implicit cast from <see cref="SharpDX.Matrix"/>.
+    /// Direct2D Matrix3x2. Supports implicit cast from <see cref="Matrix"/>.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Matrix3x2
@@ -67,7 +67,7 @@ namespace SharpDX
         public float M32;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Matrix3x2"/> struct.
+        /// Initializes a new instance of the <see cref="Matrix3x2"/> struct.
         /// </summary>
         /// <param name="value">The value that will be assigned to all components.</param>
         public Matrix3x2(float value)
@@ -78,7 +78,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Matrix3x2"/> struct.
+        /// Initializes a new instance of the <see cref="Matrix3x2"/> struct.
         /// </summary>
         /// <param name="M11">The value to assign at row 1 column 1 of the matrix.</param>
         /// <param name="M12">The value to assign at row 1 column 2 of the matrix.</param>
@@ -94,7 +94,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Matrix3x2"/> struct.
+        /// Initializes a new instance of the <see cref="Matrix3x2"/> struct.
         /// </summary>
         /// <param name="values">The values to assign to the components of the matrix. This must be an array with six elements.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="values"/> is <c>null</c>.</exception>
@@ -1085,11 +1085,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="SharpDX.Matrix3x2"/> is equal to this instance.
+        /// Determines whether the specified <see cref="Matrix3x2"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="SharpDX.Matrix3x2"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="Matrix3x2"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="SharpDX.Matrix3x2"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Matrix3x2"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(Matrix3x2 other)
         {
@@ -1120,7 +1120,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Matrix"/> to <see cref="SharpDX.Matrix3x2"/>.
+        /// Performs an implicit conversion from <see cref="Matrix"/> to <see cref="Matrix3x2"/>.
         /// </summary>
         /// <param name="matrix">The matrix.</param>
         /// <returns>The result of the conversion.</returns>
@@ -1148,7 +1148,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawMatrix3x2"/> to <see cref="SharpDX.Matrix3x2"/>.
+        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawMatrix3x2"/> to <see cref="Matrix3x2"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>

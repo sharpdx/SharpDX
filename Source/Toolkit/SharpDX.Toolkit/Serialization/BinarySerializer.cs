@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using SharpDX.IO;
+using SharpDX.Mathematics;
 using SharpDX.Multimedia;
 
 namespace SharpDX.Toolkit.Serialization

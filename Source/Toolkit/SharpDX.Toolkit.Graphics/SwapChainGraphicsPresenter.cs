@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using SharpDX.Mathematics;
 #if WIN8METRO
 using Windows.UI.Core;
 using Windows.Graphics.Display;

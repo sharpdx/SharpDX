@@ -22,7 +22,7 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SharpDX
+namespace SharpDX.Mathematics
 {
     /// <summary>
     /// Define a RectangleF. This structure is slightly different from System.Drawing.RectangleF as it is
@@ -318,31 +318,31 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Checks, if specified point is inside <see cref="SharpDX.RectangleF"/>.
+        /// Checks, if specified point is inside <see cref="RectangleF"/>.
         /// </summary>
         /// <param name="x">X point coordinate.</param>
         /// <param name="y">Y point coordinate.</param>
-        /// <returns><c>true</c> if point is inside <see cref="SharpDX.RectangleF"/>, otherwise <c>false</c>.</returns>
+        /// <returns><c>true</c> if point is inside <see cref="RectangleF"/>, otherwise <c>false</c>.</returns>
         public bool Contains(float x, float y)
         {
             return (x >= _left && x <= _right && y >= _top && y <= _bottom);
         }
 
         /// <summary>
-        /// Checks, if specified <see cref="SharpDX.Vector2"/> is inside <see cref="SharpDX.RectangleF"/>.
+        /// Checks, if specified <see cref="Vector2"/> is inside <see cref="RectangleF"/>.
         /// </summary>
-        /// <param name="vector2D">Coordinate <see cref="SharpDX.Vector2"/>.</param>
-        /// <returns><c>true</c> if <see cref="SharpDX.Vector2"/> is inside <see cref="SharpDX.RectangleF"/>, otherwise <c>false</c>.</returns>
+        /// <param name="vector2D">Coordinate <see cref="Vector2"/>.</param>
+        /// <returns><c>true</c> if <see cref="Vector2"/> is inside <see cref="RectangleF"/>, otherwise <c>false</c>.</returns>
         public bool Contains(Vector2 vector2D)
         {
             return Contains(vector2D.X, vector2D.Y);
         }
 
         /// <summary>
-        /// Checks, if specified <see cref="SharpDX.Point"/> is inside <see cref="SharpDX.RectangleF"/>.
+        /// Checks, if specified <see cref="Point"/> is inside <see cref="RectangleF"/>.
         /// </summary>
-        /// <param name="point">Coordinate <see cref="SharpDX.Point"/>.</param>
-        /// <returns><c>true</c> if <see cref="SharpDX.Point"/> is inside <see cref="SharpDX.RectangleF"/>, otherwise <c>false</c>.</returns>
+        /// <param name="point">Coordinate <see cref="Point"/>.</param>
+        /// <returns><c>true</c> if <see cref="Point"/> is inside <see cref="RectangleF"/>, otherwise <c>false</c>.</returns>
         public bool Contains(Point point)
         {
             return Contains(point.X, point.Y);

@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System.Collections.Generic;
+using SharpDX.Mathematics;
 using SharpDX.Toolkit.Serialization;
 
 namespace SharpDX.Toolkit.Graphics

@@ -79,6 +79,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using SharpDX.IO;
+using SharpDX.Mathematics;
 using SharpDX.Toolkit.Content;
 
 namespace SharpDX.Toolkit.Graphics

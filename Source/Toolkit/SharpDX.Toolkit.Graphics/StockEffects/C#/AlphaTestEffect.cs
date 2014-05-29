@@ -76,6 +76,8 @@
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
 
+using SharpDX.Mathematics;
+
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>

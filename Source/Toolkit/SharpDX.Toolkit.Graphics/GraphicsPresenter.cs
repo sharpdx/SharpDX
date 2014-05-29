@@ -20,6 +20,7 @@
 
 using System;
 using SharpDX.DXGI;
+using SharpDX.Mathematics;
 
 namespace SharpDX.Toolkit.Graphics
 {

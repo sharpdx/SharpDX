@@ -17,11 +17,12 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SharpDX
+namespace SharpDX.Mathematics
 {
     /// <summary>
     /// Represents a 4x4 mathematical Matrix5x4.
@@ -30,17 +31,17 @@ namespace SharpDX
     public struct Matrix5x4 : IEquatable<Matrix5x4>, IFormattable
     {
         /// <summary>
-        /// The size of the <see cref="SharpDX.Matrix5x4"/> type, in bytes.
+        /// The size of the <see cref="Matrix5x4"/> type, in bytes.
         /// </summary>
         public static readonly int SizeInBytes = Marshal.SizeOf(typeof(Matrix5x4));
 
         /// <summary>
-        /// A <see cref="SharpDX.Matrix5x4"/> with all of its components set to zero.
+        /// A <see cref="Matrix5x4"/> with all of its components set to zero.
         /// </summary>
         public static readonly Matrix5x4 Zero = new Matrix5x4();
 
         /// <summary>
-        /// The identity <see cref="SharpDX.Matrix5x4"/>.
+        /// The identity <see cref="Matrix5x4"/>.
         /// </summary>
         public static readonly Matrix5x4 Identity = new Matrix5x4() { M11 = 1.0f, M22 = 1.0f, M33 = 1.0f, M44 = 1.0f, M54 = 0.0f };
 
@@ -145,7 +146,7 @@ namespace SharpDX
         public float M54;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Matrix5x4"/> struct.
+        /// Initializes a new instance of the <see cref="Matrix5x4"/> struct.
         /// </summary>
         /// <param name="value">The value that will be assigned to all components.</param>
         public Matrix5x4(float value)
@@ -158,7 +159,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Matrix5x4"/> struct.
+        /// Initializes a new instance of the <see cref="Matrix5x4"/> struct.
         /// </summary>
         /// <param name="M11">The value to assign at row 1 column 1 of the Matrix5x4.</param>
         /// <param name="M12">The value to assign at row 1 column 2 of the Matrix5x4.</param>
@@ -194,7 +195,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Matrix5x4"/> struct.
+        /// Initializes a new instance of the <see cref="Matrix5x4"/> struct.
         /// </summary>
         /// <param name="values">The values to assign to the components of the Matrix5x4. This must be an array with sixteen elements.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="values"/> is <c>null</c>.</exception>
@@ -1016,11 +1017,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="SharpDX.Matrix5x4"/> is equal to this instance.
+        /// Determines whether the specified <see cref="Matrix5x4"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="SharpDX.Matrix5x4"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="Matrix5x4"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="SharpDX.Matrix5x4"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Matrix5x4"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(Matrix5x4 other)
         {

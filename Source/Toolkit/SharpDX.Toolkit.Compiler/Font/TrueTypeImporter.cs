@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
+using SharpDX.Mathematics;
 using Factory = SharpDX.DirectWrite.Factory;
 
 namespace SharpDX.Toolkit.Graphics
@@ -123,7 +124,7 @@ namespace SharpDX.Toolkit.Graphics
             var pixelWidth = (int)Math.Ceiling(width + 4);
             var pixelHeight = (int)Math.Ceiling(height + 4);
 
-            var matrix = SharpDX.Matrix.Identity;
+            var matrix = Matrix.Identity;
             matrix.M41 = -(float)Math.Floor(xOffset) + 1;
             matrix.M42 = -(float)Math.Floor(yOffset) + 1;
 
@@ -168,7 +169,7 @@ namespace SharpDX.Toolkit.Graphics
                     0.0f))
                 {
 
-                    var bounds = new SharpDX.Rectangle(0, 0, pixelWidth, pixelHeight);
+                    var bounds = new Mathematics.Rectangle(0, 0, pixelWidth, pixelHeight);
                     bitmap = new Bitmap(bounds.Width, bounds.Height, PixelFormat.Format32bppArgb);
 
                     if (renderingMode == RenderingMode.Aliased)

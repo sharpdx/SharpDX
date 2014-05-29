@@ -22,6 +22,7 @@ using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
+using SharpDX.Mathematics;
 using SharpDX.Toolkit.Collections;
 using Device = SharpDX.Direct3D11.Device;
 

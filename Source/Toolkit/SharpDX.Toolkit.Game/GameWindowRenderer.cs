@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 using System;
-
+using SharpDX.Mathematics;
 using SharpDX.Toolkit.Graphics;
 
 namespace SharpDX.Toolkit

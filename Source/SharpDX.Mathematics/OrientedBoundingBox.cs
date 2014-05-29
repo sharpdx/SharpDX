@@ -17,11 +17,12 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SharpDX
+namespace SharpDX.Mathematics
 {
     /// <summary>
     /// OrientedBoundingBox (OBB) is a rectangular block, much like an AABB (BoundingBox) but with an arbitrary orientation.
@@ -40,7 +41,7 @@ namespace SharpDX
         public Matrix Transformation;
 
         /// <summary>
-        /// Creates an <see cref="SharpDX.OrientedBoundingBox"/> from a BoundingBox.
+        /// Creates an <see cref="OrientedBoundingBox"/> from a BoundingBox.
         /// </summary>
         /// <param name="bb">The BoundingBox to create from.</param>
         /// <remarks>
@@ -54,7 +55,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates an <see cref="SharpDX.OrientedBoundingBox"/> which contained between two minimum and maximum points.
+        /// Creates an <see cref="OrientedBoundingBox"/> which contained between two minimum and maximum points.
         /// </summary>
         /// <param name="minimum">The minimum vertex of the bounding box.</param>
         /// <param name="maximum">The maximum vertex of the bounding box.</param>
@@ -69,7 +70,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates an <see cref="SharpDX.OrientedBoundingBox"/> that fully contains the given points.
+        /// Creates an <see cref="OrientedBoundingBox"/> that fully contains the given points.
         /// </summary>
         /// <param name="points">The points that will be contained by the box.</param>
         /// <remarks>
@@ -150,7 +151,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Scales the <see cref="SharpDX.OrientedBoundingBox"/> by scaling its Extents without affecting the Transformation matrix,
+        /// Scales the <see cref="OrientedBoundingBox"/> by scaling its Extents without affecting the Transformation matrix,
         /// By keeping Transformation matrix scaling-free, the collision detection methods will be more accurate.
         /// </summary>
         /// <param name="scaling"></param>
@@ -160,7 +161,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Scales the <see cref="SharpDX.OrientedBoundingBox"/> by scaling its Extents without affecting the Transformation matrix,
+        /// Scales the <see cref="OrientedBoundingBox"/> by scaling its Extents without affecting the Transformation matrix,
         /// By keeping Transformation matrix scaling-free, the collision detection methods will be more accurate.
         /// </summary>
         /// <param name="scaling"></param>
@@ -170,7 +171,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Scales the <see cref="SharpDX.OrientedBoundingBox"/> by scaling its Extents without affecting the Transformation matrix,
+        /// Scales the <see cref="OrientedBoundingBox"/> by scaling its Extents without affecting the Transformation matrix,
         /// By keeping Transformation matrix scaling-free, the collision detection methods will be more accurate.
         /// </summary>
         /// <param name="scaling"></param>
@@ -180,7 +181,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Translates the <see cref="SharpDX.OrientedBoundingBox"/> to a new position using a translation vector;
+        /// Translates the <see cref="OrientedBoundingBox"/> to a new position using a translation vector;
         /// </summary>
         /// <param name="translation">the translation vector.</param>
         public void Translate(ref Vector3 translation)
@@ -189,7 +190,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Translates the <see cref="SharpDX.OrientedBoundingBox"/> to a new position using a translation vector;
+        /// Translates the <see cref="OrientedBoundingBox"/> to a new position using a translation vector;
         /// </summary>
         /// <param name="translation">the translation vector.</param>
         public void Translate(Vector3 translation)
@@ -198,7 +199,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// The size of the <see cref="SharpDX.OrientedBoundingBox"/> if no scaling is applied to the transformation matrix.
+        /// The size of the <see cref="OrientedBoundingBox"/> if no scaling is applied to the transformation matrix.
         /// </summary>
         /// <remarks>
         /// The property will return the actual size even if the scaling is applied using Scale method, 
@@ -213,12 +214,12 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Returns the size of the <see cref="SharpDX.OrientedBoundingBox"/> taking into consideration the scaling applied to the transformation matrix.
+        /// Returns the size of the <see cref="OrientedBoundingBox"/> taking into consideration the scaling applied to the transformation matrix.
         /// </summary>
         /// <returns>The size of the consideration</returns>
         /// <remarks>
         /// This method is computationally expensive, so if no scale is applied to the transformation matrix
-        /// use <see cref="SharpDX.OrientedBoundingBox.Size"/> property instead.
+        /// use <see cref="OrientedBoundingBox.Size"/> property instead.
         /// </remarks>
         public Vector3 GetSize()
         {
@@ -233,7 +234,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Returns the square size of the <see cref="SharpDX.OrientedBoundingBox"/> taking into consideration the scaling applied to the transformation matrix.
+        /// Returns the square size of the <see cref="OrientedBoundingBox"/> taking into consideration the scaling applied to the transformation matrix.
         /// </summary>
         /// <returns>The size of the consideration</returns>
         public Vector3 GetSizeSquared()
@@ -249,7 +250,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Returns the center of the <see cref="SharpDX.OrientedBoundingBox"/>.
+        /// Returns the center of the <see cref="OrientedBoundingBox"/>.
         /// </summary>
         public Vector3 Center
         {
@@ -260,7 +261,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether a <see cref="SharpDX.OrientedBoundingBox"/> contains a point. 
+        /// Determines whether a <see cref="OrientedBoundingBox"/> contains a point. 
         /// </summary>
         /// <param name="point">The point to test.</param>
         /// <returns>The type of containment the two objects have.</returns>
@@ -287,7 +288,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether a <see cref="SharpDX.OrientedBoundingBox"/> contains a point. 
+        /// Determines whether a <see cref="OrientedBoundingBox"/> contains a point. 
         /// </summary>
         /// <param name="point">The point to test.</param>
         /// <returns>The type of containment the two objects have.</returns>
@@ -297,7 +298,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether a <see cref="SharpDX.OrientedBoundingBox"/> contains an array of points>.
+        /// Determines whether a <see cref="OrientedBoundingBox"/> contains an array of points>.
         /// </summary>
         /// <param name="points">The points array to test.</param>
         /// <returns>The type of containment.</returns>
@@ -338,13 +339,13 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether a <see cref="SharpDX.OrientedBoundingBox"/> contains a <see cref="SharpDX.BoundingSphere"/>.
+        /// Determines whether a <see cref="OrientedBoundingBox"/> contains a <see cref="BoundingSphere"/>.
         /// </summary>
         /// <param name="sphere">The sphere to test.</param>
-        /// <param name="IgnoreScale">Optimize the check operation by assuming that <see cref="SharpDX.OrientedBoundingBox"/> has no scaling applied</param>
+        /// <param name="IgnoreScale">Optimize the check operation by assuming that <see cref="OrientedBoundingBox"/> has no scaling applied</param>
         /// <returns>The type of containment the two objects have.</returns>
         /// <remarks>
-        /// This method is not designed for <see cref="SharpDX.OrientedBoundingBox"/> which has a non-uniform scaling applied to its transformation matrix.
+        /// This method is not designed for <see cref="OrientedBoundingBox"/> which has a non-uniform scaling applied to its transformation matrix.
         /// But any type of scaling applied using Scale method will keep this method accurate.
         /// </remarks>
         public ContainmentType Contains(BoundingSphere sphere, bool IgnoreScale = false)
@@ -396,12 +397,12 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Check the intersection between two <see cref="SharpDX.OrientedBoundingBox"/>
+        /// Check the intersection between two <see cref="OrientedBoundingBox"/>
         /// </summary>
         /// <param name="obb">The OrientedBoundingBoxs to test.</param>
         /// <returns>The type of containment the two objects have.</returns>
         /// <remarks>
-        /// For accuracy, The transformation matrix for both <see cref="SharpDX.OrientedBoundingBox"/> must not have any scaling applied to it.
+        /// For accuracy, The transformation matrix for both <see cref="OrientedBoundingBox"/> must not have any scaling applied to it.
         /// Anyway, scaling using Scale method will keep this method accurate.
         /// </remarks>
         public ContainmentType Contains(ref OrientedBoundingBox obb)
@@ -476,13 +477,13 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Check the intersection between an <see cref="SharpDX.OrientedBoundingBox"/> and a line defined by two points
+        /// Check the intersection between an <see cref="OrientedBoundingBox"/> and a line defined by two points
         /// </summary>
         /// <param name="L1">The first point in the line.</param>
         /// <param name="L2">The second point in the line.</param>
         /// <returns>The type of containment the two objects have.</returns>
         /// <remarks>
-        /// For accuracy, The transformation matrix for the <see cref="SharpDX.OrientedBoundingBox"/> must not have any scaling applied to it.
+        /// For accuracy, The transformation matrix for the <see cref="OrientedBoundingBox"/> must not have any scaling applied to it.
         /// Anyway, scaling using Scale method will keep this method accurate.
         /// </remarks>
         public ContainmentType ContainsLine(ref Vector3 L1, ref Vector3 L2)
@@ -520,12 +521,12 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Check the intersection between an <see cref="SharpDX.OrientedBoundingBox"/> and <see cref="SharpDX.BoundingBox"/>
+        /// Check the intersection between an <see cref="OrientedBoundingBox"/> and <see cref="BoundingBox"/>
         /// </summary>
         /// <param name="box">The BoundingBox to test.</param>
         /// <returns>The type of containment the two objects have.</returns>
         /// <remarks>
-        /// For accuracy, The transformation matrix for the <see cref="SharpDX.OrientedBoundingBox"/> must not have any scaling applied to it.
+        /// For accuracy, The transformation matrix for the <see cref="OrientedBoundingBox"/> must not have any scaling applied to it.
         /// Anyway, scaling using Scale method will keep this method accurate.
         /// </remarks>
         public ContainmentType Contains(ref BoundingBox box)
@@ -600,11 +601,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether there is an intersection between a <see cref="SharpDX.Ray"/> and a <see cref="SharpDX.OrientedBoundingBox"/>.
+        /// Determines whether there is an intersection between a <see cref="Ray"/> and a <see cref="OrientedBoundingBox"/>.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="point">When the method completes, contains the point of intersection,
-        /// or <see cref="SharpDX.Vector3.Zero"/> if there was no intersection.</param>
+        /// or <see cref="Vector3.Zero"/> if there was no intersection.</param>
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Ray ray, out Vector3 point)
         {
@@ -628,7 +629,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether there is an intersection between a <see cref="SharpDX.Ray"/> and a <see cref="SharpDX.OrientedBoundingBox"/>.
+        /// Determines whether there is an intersection between a <see cref="Ray"/> and a <see cref="OrientedBoundingBox"/>.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -658,7 +659,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Get the axis-aligned <see cref="SharpDX.BoundingBox"/> which contains all <see cref="SharpDX.OrientedBoundingBox"/> corners.
+        /// Get the axis-aligned <see cref="BoundingBox"/> which contains all <see cref="OrientedBoundingBox"/> corners.
         /// </summary>
         /// <returns>The axis-aligned BoundingBox of this OrientedBoundingBox.</returns>
         public BoundingBox GetBoundingBox()
@@ -667,7 +668,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Calculates the matrix required to transfer any point from one <see cref="SharpDX.OrientedBoundingBox"/> local coordinates to another.
+        /// Calculates the matrix required to transfer any point from one <see cref="OrientedBoundingBox"/> local coordinates to another.
         /// </summary>
         /// <param name="A">The source OrientedBoundingBox.</param>
         /// <param name="B">The target OrientedBoundingBox.</param>
@@ -708,8 +709,8 @@ namespace SharpDX
         /// <summary>
         /// Merge an OrientedBoundingBox B into another OrientedBoundingBox A, by expanding A to contain B and keeping A orientation.
         /// </summary>
-        /// <param name="A">The <see cref="SharpDX.OrientedBoundingBox"/> to merge into it.</param>
-        /// <param name="B">The <see cref="SharpDX.OrientedBoundingBox"/> to be merged</param>
+        /// <param name="A">The <see cref="OrientedBoundingBox"/> to merge into it.</param>
+        /// <param name="B">The <see cref="OrientedBoundingBox"/> to be merged</param>
         /// <param name="NoMatrixScaleApplied">
         /// If true, the method will use a fast algorithm which is inapplicable if a scale is applied to the transformation matrix of the OrientedBoundingBox.
         /// </param>
@@ -744,7 +745,7 @@ namespace SharpDX
         /// <summary>
         /// Merge this OrientedBoundingBox into another OrientedBoundingBox, keeping the other OrientedBoundingBox orientation.
         /// </summary>
-        /// <param name="OBB">The other <see cref="SharpDX.OrientedBoundingBox"/> to merge into.</param>
+        /// <param name="OBB">The other <see cref="OrientedBoundingBox"/> to merge into.</param>
         /// <param name="NoMatrixScaleApplied">
         /// If true, the method will use a fast algorithm which is inapplicable if a scale is applied to the transformation matrix of the OrientedBoundingBox.
         /// </param>
@@ -756,7 +757,7 @@ namespace SharpDX
         /// <summary>
         /// Merge another OrientedBoundingBox into this OrientedBoundingBox.
         /// </summary>
-        /// <param name="OBB">The other <see cref="SharpDX.OrientedBoundingBox"/> to merge into this OrientedBoundingBox.</param>
+        /// <param name="OBB">The other <see cref="OrientedBoundingBox"/> to merge into this OrientedBoundingBox.</param>
         /// <param name="NoMatrixScaleApplied">
         /// If true, the method will use a fast algorithm which is inapplicable if a scale is applied to the transformation matrix of the OrientedBoundingBox.
         /// </param>
@@ -766,11 +767,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="SharpDX.Vector4"/> is equal to this instance.
+        /// Determines whether the specified <see cref="Vector4"/> is equal to this instance.
         /// </summary>
-        /// <param name="value">The <see cref="SharpDX.Vector4"/> to compare with this instance.</param>
+        /// <param name="value">The <see cref="Vector4"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="SharpDX.Vector4"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Vector4"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(OrientedBoundingBox value)
         {

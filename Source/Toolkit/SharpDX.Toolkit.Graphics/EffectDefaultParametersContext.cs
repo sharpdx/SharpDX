@@ -18,10 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using SharpDX.Mathematics;
+
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// A context used by <see cref="EffectDefaultParameters.Apply(ref EffectDefaultParametersContext, ref SharpDX.Matrix,ref SharpDX.Matrix,ref SharpDX.Matrix)"/> in order to store/share intermediate result for an effect.
+    /// A context used by <see cref="EffectDefaultParameters.Apply(ref EffectDefaultParametersContext, ref Matrix,ref Matrix,ref Matrix)"/> in order to store/share intermediate result for an effect.
     /// </summary>
     public struct EffectDefaultParametersContext
     {

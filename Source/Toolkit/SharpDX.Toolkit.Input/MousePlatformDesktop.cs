@@ -20,6 +20,7 @@
 
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics;
 
 #if !W8CORE
 
@@ -161,10 +162,10 @@ namespace SharpDX.Toolkit.Input
         }
 
         [DllImport("user32.dll", EntryPoint = "GetCursorPos", CharSet = CharSet.Auto)]
-        private static extern bool GetCursorPos(out SharpDX.Point pt);
+        private static extern bool GetCursorPos(out Point pt);
 
         [DllImport("user32.dll", EntryPoint = "ScreenToClient", CharSet = CharSet.Auto)]
-        private static extern bool ScreenToClient(IntPtr hWnd, ref SharpDX.Point point); 
+        private static extern bool ScreenToClient(IntPtr hWnd, ref Point point); 
     }
 }
 

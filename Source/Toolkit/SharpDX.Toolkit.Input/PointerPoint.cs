@@ -20,6 +20,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics;
 
 namespace SharpDX.Toolkit.Input
 {

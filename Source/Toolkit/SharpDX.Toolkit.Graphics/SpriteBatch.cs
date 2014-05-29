@@ -80,6 +80,7 @@ using System.Threading;
 
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+using SharpDX.Mathematics;
 
 namespace SharpDX.Toolkit.Graphics
 {

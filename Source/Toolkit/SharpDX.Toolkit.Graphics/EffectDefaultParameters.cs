@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using SharpDX.Mathematics;
+
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
@@ -51,7 +53,7 @@ namespace SharpDX.Toolkit.Graphics
         /// The world parameter defined as "float4x4 World" in an effect. See remarks.
         /// </summary>
         /// <remarks>
-        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref SharpDX.Matrix,ref SharpDX.Matrix,ref SharpDX.Matrix)"/>, this parameter will receive the matrix <c>world</c>.
+        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref Matrix,ref Matrix,ref Matrix)"/>, this parameter will receive the matrix <c>world</c>.
         /// This parameter can be null if not present in the effect.
         /// </remarks>
         public readonly EffectParameter WorldParameter;
@@ -60,7 +62,7 @@ namespace SharpDX.Toolkit.Graphics
         /// The view parameter defined as "float4x4 View" in an effect.
         /// </summary>
         /// <remarks>
-        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref SharpDX.Matrix,ref SharpDX.Matrix,ref SharpDX.Matrix)"/>, this parameter will receive the matrix <c>view</c>.
+        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref Matrix,ref Matrix,ref Matrix)"/>, this parameter will receive the matrix <c>view</c>.
         /// This parameter can be null if not present in the effect.
         /// </remarks>
         public readonly EffectParameter ViewParameter;
@@ -69,7 +71,7 @@ namespace SharpDX.Toolkit.Graphics
         /// The view inverse parameter defined as "float4x4 ViewInverse" in an effect.
         /// </summary>
         /// <remarks>
-        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref SharpDX.Matrix,ref SharpDX.Matrix,ref SharpDX.Matrix)"/>, this parameter will receive the matrix <c>view</c>.
+        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref Matrix,ref Matrix,ref Matrix)"/>, this parameter will receive the matrix <c>view</c>.
         /// This parameter can be null if not present in the effect.
         /// </remarks>
         public readonly EffectParameter ViewInverseParameter;
@@ -78,7 +80,7 @@ namespace SharpDX.Toolkit.Graphics
         /// The projection parameter defined as "float4x4 Projection" in an effect.
         /// </summary>
         /// <remarks>
-        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref SharpDX.Matrix,ref SharpDX.Matrix,ref SharpDX.Matrix)"/>, this parameter will receive the matrix <c>projection</c>.
+        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref Matrix,ref Matrix,ref Matrix)"/>, this parameter will receive the matrix <c>projection</c>.
         /// This parameter can be null if not present in the effect.
         /// </remarks>
         public readonly EffectParameter ProjectionParameter;
@@ -87,7 +89,7 @@ namespace SharpDX.Toolkit.Graphics
         /// The world view parameter defined as "float4x4 WorldView" in an effect.
         /// </summary>
         /// <remarks>
-        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref SharpDX.Matrix,ref SharpDX.Matrix,ref SharpDX.Matrix)"/>, this parameter will receive the matrix <c>world * view</c>.
+        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref Matrix,ref Matrix,ref Matrix)"/>, this parameter will receive the matrix <c>world * view</c>.
         /// This parameter can be null if not present in the effect.
         /// </remarks>
         public readonly EffectParameter WorldViewParameter;
@@ -96,7 +98,7 @@ namespace SharpDX.Toolkit.Graphics
         /// The view projection parameter defined as "float4x4 ViewProjection" or "float4x4 ViewProj" in an effect.
         /// </summary>
         /// <remarks>
-        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref SharpDX.Matrix,ref SharpDX.Matrix,ref SharpDX.Matrix)"/>, this parameter will receive the matrix <c>view * projection</c>.
+        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref Matrix,ref Matrix,ref Matrix)"/>, this parameter will receive the matrix <c>view * projection</c>.
         /// This parameter can be null if not present in the effect.
         /// </remarks>
         public readonly EffectParameter ViewProjectionParameter;
@@ -105,7 +107,7 @@ namespace SharpDX.Toolkit.Graphics
         /// The world inverse transpose parameter defined as "float4x4 WorldInverseTranspose"
         /// </summary>
         /// <remarks>
-        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref SharpDX.Matrix,ref SharpDX.Matrix,ref SharpDX.Matrix)"/>, this parameter will receive the matrix <c>world.Invert().Transpose()</c>.
+        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref Matrix,ref Matrix,ref Matrix)"/>, this parameter will receive the matrix <c>world.Invert().Transpose()</c>.
         /// This parameter can be null if not present in the effect.
         /// </remarks>
         public readonly EffectParameter WorldInverseTransposeParameter;
@@ -114,7 +116,7 @@ namespace SharpDX.Toolkit.Graphics
         /// The world inverse transpose * view parameter defined as "float4x4 WorldInverseTransposeView"
         /// </summary>
         /// <remarks>
-        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref SharpDX.Matrix,ref SharpDX.Matrix,ref SharpDX.Matrix)"/>, this parameter will receive the matrix <c>world.Invert().Transpose()</c>.
+        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref Matrix,ref Matrix,ref Matrix)"/>, this parameter will receive the matrix <c>world.Invert().Transpose()</c>.
         /// This parameter can be null if not present in the effect.
         /// </remarks>
         public readonly EffectParameter WorldInverseTransposeViewParameter;
@@ -123,7 +125,7 @@ namespace SharpDX.Toolkit.Graphics
         /// The world view projection parameter defined as "float4x4 WorldViewProjection" or "float4x4 WorldViewProj" in an effect.
         /// </summary>
         /// <remarks>
-        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref SharpDX.Matrix,ref SharpDX.Matrix,ref SharpDX.Matrix)"/>, this parameter will receive the matrix <c>world * view * projection</c>.
+        /// When applying values with <see cref="Apply(ref EffectDefaultParametersContext, ref Matrix,ref Matrix,ref Matrix)"/>, this parameter will receive the matrix <c>world * view * projection</c>.
         /// This parameter can be null if not present in the effect.
         /// </remarks>
         public readonly EffectParameter WorldViewProjectionParameter;

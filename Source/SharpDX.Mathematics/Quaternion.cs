@@ -42,11 +42,12 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SharpDX
+namespace SharpDX.Mathematics
 {
     /// <summary>
     /// Represents a four dimensional mathematical quaternion.
@@ -55,22 +56,22 @@ namespace SharpDX
     public struct Quaternion : IEquatable<Quaternion>, IFormattable
     {
         /// <summary>
-        /// The size of the <see cref="SharpDX.Quaternion"/> type, in bytes.
+        /// The size of the <see cref="Quaternion"/> type, in bytes.
         /// </summary>
         public static readonly int SizeInBytes = Marshal.SizeOf(typeof(Quaternion));
 
         /// <summary>
-        /// A <see cref="SharpDX.Quaternion"/> with all of its components set to zero.
+        /// A <see cref="Quaternion"/> with all of its components set to zero.
         /// </summary>
         public static readonly Quaternion Zero = new Quaternion();
 
         /// <summary>
-        /// A <see cref="SharpDX.Quaternion"/> with all of its components set to one.
+        /// A <see cref="Quaternion"/> with all of its components set to one.
         /// </summary>
         public static readonly Quaternion One = new Quaternion(1.0f, 1.0f, 1.0f, 1.0f);
 
         /// <summary>
-        /// The identity <see cref="SharpDX.Quaternion"/> (0, 0, 0, 1).
+        /// The identity <see cref="Quaternion"/> (0, 0, 0, 1).
         /// </summary>
         public static readonly Quaternion Identity = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -95,7 +96,7 @@ namespace SharpDX
         public float W;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Quaternion"/> struct.
+        /// Initializes a new instance of the <see cref="Quaternion"/> struct.
         /// </summary>
         /// <param name="value">The value that will be assigned to all components.</param>
         public Quaternion(float value)
@@ -107,7 +108,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Quaternion"/> struct.
+        /// Initializes a new instance of the <see cref="Quaternion"/> struct.
         /// </summary>
         /// <param name="value">A vector containing the values with which to initialize the components.</param>
         public Quaternion(Vector4 value)
@@ -119,7 +120,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Quaternion"/> struct.
+        /// Initializes a new instance of the <see cref="Quaternion"/> struct.
         /// </summary>
         /// <param name="value">A vector containing the values with which to initialize the X, Y, and Z components.</param>
         /// <param name="w">Initial value for the W component of the quaternion.</param>
@@ -132,7 +133,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Quaternion"/> struct.
+        /// Initializes a new instance of the <see cref="Quaternion"/> struct.
         /// </summary>
         /// <param name="value">A vector containing the values with which to initialize the X and Y components.</param>
         /// <param name="z">Initial value for the Z component of the quaternion.</param>
@@ -146,7 +147,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Quaternion"/> struct.
+        /// Initializes a new instance of the <see cref="Quaternion"/> struct.
         /// </summary>
         /// <param name="x">Initial value for the X component of the quaternion.</param>
         /// <param name="y">Initial value for the Y component of the quaternion.</param>
@@ -161,7 +162,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Quaternion"/> struct.
+        /// Initializes a new instance of the <see cref="Quaternion"/> struct.
         /// </summary>
         /// <param name="values">The values to assign to the X, Y, Z, and W components of the quaternion. This must be an array with four elements.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="values"/> is <c>null</c>.</exception>
@@ -298,7 +299,7 @@ namespace SharpDX
         /// </summary>
         /// <returns>The length of the quaternion.</returns>
         /// <remarks>
-        /// <see cref="SharpDX.Quaternion.LengthSquared"/> may be preferred when only the relative length is needed
+        /// <see cref="Quaternion.LengthSquared"/> may be preferred when only the relative length is needed
         /// and speed is of the essence.
         /// </remarks>
         public float Length()
@@ -311,7 +312,7 @@ namespace SharpDX
         /// </summary>
         /// <returns>The squared length of the quaternion.</returns>
         /// <remarks>
-        /// This method may be preferred to <see cref="SharpDX.Quaternion.Length"/> when only a relative length is needed
+        /// This method may be preferred to <see cref="Quaternion.Length"/> when only a relative length is needed
         /// and speed is of the essence.
         /// </remarks>
         public float LengthSquared()
@@ -490,14 +491,14 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Returns a <see cref="SharpDX.Quaternion"/> containing the 4D Cartesian coordinates of a point specified in Barycentric coordinates relative to a 2D triangle.
+        /// Returns a <see cref="Quaternion"/> containing the 4D Cartesian coordinates of a point specified in Barycentric coordinates relative to a 2D triangle.
         /// </summary>
-        /// <param name="value1">A <see cref="SharpDX.Quaternion"/> containing the 4D Cartesian coordinates of vertex 1 of the triangle.</param>
-        /// <param name="value2">A <see cref="SharpDX.Quaternion"/> containing the 4D Cartesian coordinates of vertex 2 of the triangle.</param>
-        /// <param name="value3">A <see cref="SharpDX.Quaternion"/> containing the 4D Cartesian coordinates of vertex 3 of the triangle.</param>
+        /// <param name="value1">A <see cref="Quaternion"/> containing the 4D Cartesian coordinates of vertex 1 of the triangle.</param>
+        /// <param name="value2">A <see cref="Quaternion"/> containing the 4D Cartesian coordinates of vertex 2 of the triangle.</param>
+        /// <param name="value3">A <see cref="Quaternion"/> containing the 4D Cartesian coordinates of vertex 3 of the triangle.</param>
         /// <param name="amount1">Barycentric coordinate b2, which expresses the weighting factor toward vertex 2 (specified in <paramref name="value2"/>).</param>
         /// <param name="amount2">Barycentric coordinate b3, which expresses the weighting factor toward vertex 3 (specified in <paramref name="value3"/>).</param>
-        /// <param name="result">When the method completes, contains a new <see cref="SharpDX.Quaternion"/> containing the 4D Cartesian coordinates of the specified point.</param>
+        /// <param name="result">When the method completes, contains a new <see cref="Quaternion"/> containing the 4D Cartesian coordinates of the specified point.</param>
         public static void Barycentric(ref Quaternion value1, ref Quaternion value2, ref Quaternion value3, float amount1, float amount2, out Quaternion result)
         {
             Quaternion start, end;
@@ -507,14 +508,14 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Returns a <see cref="SharpDX.Quaternion"/> containing the 4D Cartesian coordinates of a point specified in Barycentric coordinates relative to a 2D triangle.
+        /// Returns a <see cref="Quaternion"/> containing the 4D Cartesian coordinates of a point specified in Barycentric coordinates relative to a 2D triangle.
         /// </summary>
-        /// <param name="value1">A <see cref="SharpDX.Quaternion"/> containing the 4D Cartesian coordinates of vertex 1 of the triangle.</param>
-        /// <param name="value2">A <see cref="SharpDX.Quaternion"/> containing the 4D Cartesian coordinates of vertex 2 of the triangle.</param>
-        /// <param name="value3">A <see cref="SharpDX.Quaternion"/> containing the 4D Cartesian coordinates of vertex 3 of the triangle.</param>
+        /// <param name="value1">A <see cref="Quaternion"/> containing the 4D Cartesian coordinates of vertex 1 of the triangle.</param>
+        /// <param name="value2">A <see cref="Quaternion"/> containing the 4D Cartesian coordinates of vertex 2 of the triangle.</param>
+        /// <param name="value3">A <see cref="Quaternion"/> containing the 4D Cartesian coordinates of vertex 3 of the triangle.</param>
         /// <param name="amount1">Barycentric coordinate b2, which expresses the weighting factor toward vertex 2 (specified in <paramref name="value2"/>).</param>
         /// <param name="amount2">Barycentric coordinate b3, which expresses the weighting factor toward vertex 3 (specified in <paramref name="value3"/>).</param>
-        /// <returns>A new <see cref="SharpDX.Quaternion"/> containing the 4D Cartesian coordinates of the specified point.</returns>
+        /// <returns>A new <see cref="Quaternion"/> containing the 4D Cartesian coordinates of the specified point.</returns>
         public static Quaternion Barycentric(Quaternion value1, Quaternion value2, Quaternion value3, float amount1, float amount2)
         {
             Quaternion result;
@@ -1394,11 +1395,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="SharpDX.Quaternion"/> is equal to this instance.
+        /// Determines whether the specified <see cref="Quaternion"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="SharpDX.Quaternion"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="Quaternion"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="SharpDX.Quaternion"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Quaternion"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(ref Quaternion other)
         {
@@ -1406,11 +1407,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="SharpDX.Quaternion"/> is equal to this instance.
+        /// Determines whether the specified <see cref="Quaternion"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="SharpDX.Quaternion"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="Quaternion"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="SharpDX.Quaternion"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Quaternion"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(Quaternion other)
         {
@@ -1444,7 +1445,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawQuaternion"/> to <see cref="SharpDX.Quaternion"/>.
+        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawQuaternion"/> to <see cref="Quaternion"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>

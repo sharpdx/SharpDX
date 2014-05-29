@@ -70,6 +70,8 @@
 // contributors exclude the implied warranties of merchantability, fitness for a
 // particular purpose and non-infringement.
 
+using SharpDX.Mathematics;
+
 namespace SharpDX.Toolkit.Graphics
 {
     public interface IEffectMatrices

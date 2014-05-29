@@ -21,7 +21,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace SharpDX
+namespace SharpDX.Mathematics
 {
     /// <summary>
     /// Defines a three component vector, using half precision floating point coordinates.
@@ -46,7 +46,7 @@ namespace SharpDX
         public Half Z;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Half3" /> structure.
+        /// Initializes a new instance of the <see cref="T:SharpDX.Mathematics.Half3" /> structure.
         /// </summary>
         /// <param name="x">The X component.</param>
         /// <param name="y">The Y component.</param>
@@ -59,7 +59,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Half3" /> structure.
+        /// Initializes a new instance of the <see cref="T:SharpDX.Mathematics.Half3" /> structure.
         /// </summary>
         /// <param name="x">The X component.</param>
         /// <param name="y">The Y component.</param>
@@ -72,7 +72,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Half3" /> structure.
+        /// Initializes a new instance of the <see cref="T:SharpDX.Mathematics.Half3" /> structure.
         /// </summary>
         /// <param name="x">The X component.</param>
         /// <param name="y">The Y component.</param>
@@ -85,7 +85,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Half3" /> structure.
+        /// Initializes a new instance of the <see cref="T:SharpDX.Mathematics.Half3" /> structure.
         /// </summary>
         /// <param name="value">The value to set for the X, Y, and Z components.</param>
         public Half3(Half value)
@@ -96,7 +96,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Vector3"/> to <see cref="SharpDX.Half3"/>.
+        /// Performs an implicit conversion from <see cref="Vector3"/> to <see cref="Half3"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -106,7 +106,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Half3"/> to <see cref="SharpDX.Vector3"/>.
+        /// Performs an implicit conversion from <see cref="Half3"/> to <see cref="Vector3"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -116,7 +116,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="SharpDX.Vector2"/> to <see cref="SharpDX.Half3"/>.
+        /// Performs an explicit conversion from <see cref="Vector2"/> to <see cref="Half3"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -126,7 +126,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="SharpDX.Half3"/> to <see cref="SharpDX.Vector2"/>.
+        /// Performs an explicit conversion from <see cref="Half3"/> to <see cref="Vector2"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>

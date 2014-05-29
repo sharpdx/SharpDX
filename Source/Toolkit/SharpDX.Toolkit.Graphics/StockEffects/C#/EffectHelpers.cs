@@ -8,6 +8,7 @@
 #endregion
 
 using System;
+using SharpDX.Mathematics;
 
 namespace SharpDX.Toolkit.Graphics
 {

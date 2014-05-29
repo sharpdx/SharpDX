@@ -22,7 +22,7 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SharpDX
+namespace SharpDX.Mathematics
 {
     /// <summary>
     /// Defines the viewport dimensions using float coordinates for (X,Y,Width,Height).
@@ -131,11 +131,11 @@ namespace SharpDX
         }
 
     	/// <summary>
-        /// Determines whether the specified <see cref="SharpDX.ViewportF"/> is equal to this instance.
+        /// Determines whether the specified <see cref="ViewportF"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="SharpDX.ViewportF"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="ViewportF"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="SharpDX.ViewportF"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="ViewportF"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(ViewportF other)
         {
@@ -308,7 +308,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="SharpDX.Viewport"/> to <see cref="SharpDX.ViewportF"/>.
+        /// Performs an explicit conversion from <see cref="Viewport"/> to <see cref="ViewportF"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -329,7 +329,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawViewportF"/> to <see cref="SharpDX.ViewportF"/>.
+        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawViewportF"/> to <see cref="ViewportF"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>

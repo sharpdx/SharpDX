@@ -21,7 +21,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace SharpDX
+namespace SharpDX.Mathematics
 {
     /// <summary>
     /// Structure using the same layout than <see cref="System.Drawing.Point"/>.
@@ -116,7 +116,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="SharpDX.Vector2"/> to <see cref="Point"/>.
+        /// Performs an explicit conversion from <see cref="Vector2"/> to <see cref="Point"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -126,7 +126,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Point"/> to <see cref="SharpDX.Vector2"/>.
+        /// Performs an implicit conversion from <see cref="Point"/> to <see cref="Vector2"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -146,7 +146,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawPoint"/> to <see cref="SharpDX.Point"/>.
+        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawPoint"/> to <see cref="Point"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>

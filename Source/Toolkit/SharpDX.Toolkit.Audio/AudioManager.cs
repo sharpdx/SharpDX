@@ -1,4 +1,5 @@
-﻿using SharpDX.Toolkit.Content;
+﻿using SharpDX.Mathematics;
+using SharpDX.Toolkit.Content;
 
 // Copyright (c) 2010-2013 SharpDX - SharpDX Team
 //

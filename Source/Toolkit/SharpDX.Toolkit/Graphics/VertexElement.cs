@@ -24,6 +24,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using SharpDX.DXGI;
+using SharpDX.Mathematics;
 using SharpDX.Native;
 using SharpDX.Toolkit.Serialization;
 

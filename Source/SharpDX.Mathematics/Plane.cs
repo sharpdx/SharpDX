@@ -42,11 +42,12 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SharpDX
+namespace SharpDX.Mathematics
 {
     /// <summary>
     /// Represents a plane in three dimensional space.
@@ -65,7 +66,7 @@ namespace SharpDX
         public float D;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Plane"/> struct.
+        /// Initializes a new instance of the <see cref="Plane"/> struct.
         /// </summary>
         /// <param name="value">The value that will be assigned to all components.</param>
         public Plane(float value)
@@ -74,7 +75,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Plane"/> struct.
+        /// Initializes a new instance of the <see cref="Plane"/> struct.
         /// </summary>
         /// <param name="a">The X component of the normal.</param>
         /// <param name="b">The Y component of the normal.</param>
@@ -89,7 +90,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Plane" /> class.
+        /// Initializes a new instance of the <see cref="T:SharpDX.Mathematics.Plane" /> class.
         /// </summary>
         /// <param name="point">Any point that lies along the plane.</param>
         /// <param name="normal">The normal vector to the plane.</param>
@@ -100,7 +101,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Plane"/> struct.
+        /// Initializes a new instance of the <see cref="Plane"/> struct.
         /// </summary>
         /// <param name="value">The normal of the plane.</param>
         /// <param name="d">The distance of the plane along its normal from the origin</param>
@@ -111,7 +112,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Plane"/> struct.
+        /// Initializes a new instance of the <see cref="Plane"/> struct.
         /// </summary>
         /// <param name="point1">First point of a triangle defining the plane.</param>
         /// <param name="point2">Second point of a triangle defining the plane.</param>
@@ -136,7 +137,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Plane"/> struct.
+        /// Initializes a new instance of the <see cref="Plane"/> struct.
         /// </summary>
         /// <param name="values">The values to assign to the A, B, C, and D components of the plane. This must be an array with four elements.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="values"/> is <c>null</c>.</exception>
@@ -222,7 +223,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.Ray"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="Ray"/>.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -233,7 +234,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.Ray"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="Ray"/>.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="distance">When the method completes, contains the distance of the intersection,
@@ -245,11 +246,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.Ray"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="Ray"/>.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="point">When the method completes, contains the point of intersection,
-        /// or <see cref="SharpDX.Vector3.Zero"/> if there was no intersection.</param>
+        /// or <see cref="Vector3.Zero"/> if there was no intersection.</param>
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Ray ray, out Vector3 point)
         {
@@ -257,7 +258,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.Plane"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="Plane"/>.
         /// </summary>
         /// <param name="plane">The plane to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -267,11 +268,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.Plane"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="Plane"/>.
         /// </summary>
         /// <param name="plane">The plane to test.</param>
         /// <param name="line">When the method completes, contains the line of intersection
-        /// as a <see cref="SharpDX.Ray"/>, or a zero ray if there was no intersection.</param>
+        /// as a <see cref="Ray"/>, or a zero ray if there was no intersection.</param>
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Plane plane, out Ray line)
         {
@@ -291,7 +292,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.BoundingBox"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="BoundingBox"/>.
         /// </summary>
         /// <param name="box">The box to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -301,7 +302,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.BoundingSphere"/>.
+        /// Determines if there is an intersection between the current object and a <see cref="BoundingSphere"/>.
         /// </summary>
         /// <param name="sphere">The sphere to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -874,11 +875,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="SharpDX.Vector4"/> is equal to this instance.
+        /// Determines whether the specified <see cref="Vector4"/> is equal to this instance.
         /// </summary>
-        /// <param name="value">The <see cref="SharpDX.Vector4"/> to compare with this instance.</param>
+        /// <param name="value">The <see cref="Vector4"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="SharpDX.Vector4"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Vector4"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(Plane value)
         {

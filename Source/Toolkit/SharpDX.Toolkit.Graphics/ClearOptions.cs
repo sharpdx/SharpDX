@@ -18,11 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using SharpDX.Mathematics;
 
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// Specifies the buffer to use when using <see cref="GraphicsDevice.Clear(SharpDX.Color4)"/>
+    /// Specifies the buffer to use when using <see cref="GraphicsDevice.Clear(Color4)"/>
     /// </summary>
     [Flags]
     public enum ClearOptions
