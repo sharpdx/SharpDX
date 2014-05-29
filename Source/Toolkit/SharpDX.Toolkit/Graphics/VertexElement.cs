@@ -24,6 +24,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using SharpDX.DXGI;
+using SharpDX.Native;
 using SharpDX.Toolkit.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
@@ -658,7 +659,7 @@ namespace SharpDX.Toolkit.Graphics
             if (typeof(Bool4) == typeT)
                 return Format.R32G32B32A32_UInt;
 
-            if (typeof(Bool) == typeT)
+            if (typeof(RawBool) == typeT)
                 return Format.R32_UInt;
 
             throw new NotSupportedException(string.Format("Type [{0}] is not supported. You must specify an explicit DXGI.Format", typeT.Name));
