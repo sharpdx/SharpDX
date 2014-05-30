@@ -21,7 +21,7 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using SharpDX.Native;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Mathematics
 {
@@ -505,41 +505,41 @@ namespace SharpDX.Mathematics
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Rectangle"/> to <see cref="SharpDX.Native.RawRectangle"/>.
+        /// Performs an implicit conversion from <see cref="Rectangle"/> to <see cref="RawRectangle"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public unsafe static implicit operator SharpDX.Native.RawRectangle(Rectangle value)
+        public unsafe static implicit operator RawRectangle(Rectangle value)
         {
-            return *(SharpDX.Native.RawRectangle*)&value;
+            return *(RawRectangle*)&value;
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawRectangle"/> to <see cref="Rectangle"/>.
+        /// Performs an implicit conversion from <see cref="RawRectangle"/> to <see cref="Rectangle"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public unsafe static implicit operator Rectangle(SharpDX.Native.RawRectangle value)
+        public unsafe static implicit operator Rectangle(RawRectangle value)
         {
             return *(Rectangle*)&value;
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Rectangle"/> to <see cref="SharpDX.Native.RawRectangle"/>.
+        /// Performs an implicit conversion from <see cref="Rectangle"/> to <see cref="RawRectangle"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public unsafe static implicit operator SharpDX.Native.RawBox(Rectangle value)
+        public unsafe static implicit operator RawBox(Rectangle value)
         {
             return new RawBox(value.X, value.Y, value.Width, value.Height);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawRectangle"/> to <see cref="Rectangle"/>.
+        /// Performs an implicit conversion from <see cref="RawRectangle"/> to <see cref="Rectangle"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public unsafe static implicit operator Rectangle(SharpDX.Native.RawBox value)
+        public unsafe static implicit operator Rectangle(RawBox value)
         {
             return new Rectangle(value.X, value.Y, value.Width, value.Height);
         }

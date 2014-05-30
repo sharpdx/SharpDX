@@ -21,6 +21,7 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Mathematics
 {
@@ -1138,21 +1139,21 @@ namespace SharpDX.Mathematics
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="ColorBGRA"/> to <see cref="SharpDX.Native.RawColorBGRA"/>.
+        /// Performs an implicit conversion from <see cref="ColorBGRA"/> to <see cref="RawColorBGRA"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public unsafe static implicit operator SharpDX.Native.RawColorBGRA(ColorBGRA value)
+        public unsafe static implicit operator RawColorBGRA(ColorBGRA value)
         {
-            return *(SharpDX.Native.RawColorBGRA*)&value;
+            return *(RawColorBGRA*)&value;
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawColorBGRA"/> to <see cref="ColorBGRA"/>.
+        /// Performs an implicit conversion from <see cref="RawColorBGRA"/> to <see cref="ColorBGRA"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public unsafe static implicit operator ColorBGRA(SharpDX.Native.RawColorBGRA value)
+        public unsafe static implicit operator ColorBGRA(RawColorBGRA value)
         {
             return *(ColorBGRA*)&value;
         }

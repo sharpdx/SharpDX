@@ -21,6 +21,7 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Reflection;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Win32
 {
@@ -145,7 +146,7 @@ namespace SharpDX.Win32
                         {
                             case VariantElementType.Bool:
                                 {
-                                    var array = new Native.RawBool[size];
+                                    var array = new RawBool[size];
                                     Utilities.Read(variantValue.recordValue.RecordPointer, array, 0, size);
                                     return Utilities.ConvertToBoolArray(array);
                                 }

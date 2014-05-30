@@ -20,7 +20,7 @@
 using System;
 using System.IO;
 using SharpDX.DXGI;
-using SharpDX.Native;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1
 {

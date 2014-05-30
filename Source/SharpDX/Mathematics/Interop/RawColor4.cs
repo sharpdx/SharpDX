@@ -21,15 +21,30 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Native
+namespace SharpDX.Mathematics.Interop
 {
     /// <summary>
-    /// Interop type for a Color3 (RGB, 3 floats).
+    /// Interop type for a Color4 (RGBA, 4 floats).
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    [DebuggerDisplay("R: {R}, G: {G}, B: {B}")]
-    public struct RawColor3
+    [DebuggerDisplay("R:{R} G:{G} B:{B} A:{A}")]
+    public struct RawColor4
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RawColor4"/> struct.
+        /// </summary>
+        /// <param name="r">The r.</param>
+        /// <param name="g">The g.</param>
+        /// <param name="b">The b.</param>
+        /// <param name="a">A.</param>
+        public RawColor4(float r, float g, float b, float a)
+        {
+            R = r;
+            G = g;
+            B = b;
+            A = a;
+        }
+
         /// <summary>
         /// The red component of the color.
         /// </summary>
@@ -44,5 +59,10 @@ namespace SharpDX.Native
         /// The blue component of the color.
         /// </summary>
         public float B;
+
+        /// <summary>
+        /// The alpha component of the color.
+        /// </summary>
+        public float A;
     }
 }

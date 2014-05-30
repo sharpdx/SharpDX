@@ -21,43 +21,23 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Native
+namespace SharpDX.Mathematics.Interop
 {
     /// <summary>
-    /// Interop type for a ViewPort (4 ints + 2 floats).
+    /// Interop type for a float2 (2 floats).
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    [DebuggerDisplay("X: {X}, Y: {Y}, Width: {Width}, Height: {Height}, MinDepth: {MinDepth}, MaxDepth: {MaxDepth}")]
-    public struct RawViewport
+    [DebuggerDisplay("X: {X}, Y: {Y}")]
+    public struct RawVector2
     {
         /// <summary>
-        /// Position of the pixel coordinate of the upper-left corner of the viewport.
+        /// The X component of the vector.
         /// </summary>
-        public int X;
+        public float X;
 
         /// <summary>
-        /// Position of the pixel coordinate of the upper-left corner of the viewport.
+        /// The Y component of the vector.
         /// </summary>
-        public int Y;
-
-        /// <summary>
-        /// Width dimension of the viewport.
-        /// </summary>
-        public int Width;
-
-        /// <summary>
-        /// Height dimension of the viewport.
-        /// </summary>
-        public int Height;
-
-        /// <summary>
-        /// Gets or sets the minimum depth of the clip volume.
-        /// </summary>
-        public float MinDepth;
-
-        /// <summary>
-        /// Gets or sets the maximum depth of the clip volume.
-        /// </summary>
-        public float MaxDepth;
+        public float Y;
     }
 }

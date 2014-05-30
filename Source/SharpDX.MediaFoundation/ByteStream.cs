@@ -21,7 +21,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using SharpDX.Native;
+using SharpDX.Mathematics.Interop;
 using SharpDX.Win32;
 using SharpDX.IO;
 

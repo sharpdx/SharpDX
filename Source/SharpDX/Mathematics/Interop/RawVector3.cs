@@ -21,33 +21,28 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Native
+namespace SharpDX.Mathematics.Interop
 {
     /// <summary>
-    /// Interop type for a ColorBGRA (BGRA, 4 bytes).
+    /// Interop type for a float3 (3 floats).
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, Size = 4)]
-    [DebuggerDisplay("R:{R} G:{G} B:{B} A:{A}")]
-    public struct RawColorBGRA
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    [DebuggerDisplay("X: {X}, Y: {Y}, Z: {Z}")]
+    public struct RawVector3
     {
         /// <summary>
-        /// The blue component of the color.
+        /// The X component of the vector.
         /// </summary>
-        public byte B;
+        public float X;
 
         /// <summary>
-        /// The green component of the color.
+        /// The Y component of the vector.
         /// </summary>
-        public byte G;
+        public float Y;
 
         /// <summary>
-        /// The red component of the color.
+        /// The Z component of the vector.
         /// </summary>
-        public byte R;
-
-        /// <summary>
-        /// The alpha component of the color.
-        /// </summary>
-        public byte A;
+        public float Z;
     }
 }

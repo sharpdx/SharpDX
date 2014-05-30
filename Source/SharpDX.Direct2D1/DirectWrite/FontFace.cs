@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 using System;
 using SharpDX.Direct2D1;
-using SharpDX.Native;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.DirectWrite
 {

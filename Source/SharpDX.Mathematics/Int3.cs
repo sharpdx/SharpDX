@@ -21,6 +21,7 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Mathematics
 {
@@ -634,21 +635,21 @@ namespace SharpDX.Mathematics
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Int3"/> to <see cref="SharpDX.Native.RawInt3"/>.
+        /// Performs an implicit conversion from <see cref="Int3"/> to <see cref="RawInt3"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public unsafe static implicit operator SharpDX.Native.RawInt3(Int3 value)
+        public unsafe static implicit operator RawInt3(Int3 value)
         {
-            return *(SharpDX.Native.RawInt3*)&value;
+            return *(RawInt3*)&value;
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawInt3"/> to <see cref="Int3"/>.
+        /// Performs an implicit conversion from <see cref="RawInt3"/> to <see cref="Int3"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public unsafe static implicit operator Int3(SharpDX.Native.RawInt3 value)
+        public unsafe static implicit operator Int3(RawInt3 value)
         {
             return *(Int3*)&value;
         }

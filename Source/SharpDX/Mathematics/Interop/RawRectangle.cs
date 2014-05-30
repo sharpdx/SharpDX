@@ -1,15 +1,15 @@
 ﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,43 +21,50 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Native
+namespace SharpDX.Mathematics.Interop
 {
     /// <summary>
-    /// Interop type for a ViewPort (6 floats).
+    /// Interop type for a Rectangle (4 ints).
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    [DebuggerDisplay("X: {X}, Y: {Y}, Width: {Width}, Height: {Height}, MinDepth: {MinDepth}, MaxDepth: {MaxDepth}")]
-    public struct RawViewportF
+    [DebuggerDisplay("Left: {Left}, Top: {Top}, Right: {Right}, Bottom: {Bottom}")]
+    public struct RawRectangle
     {
-        /// <summary>
-        /// Position of the pixel coordinate of the upper-left corner of the viewport.
-        /// </summary>
-        public float X;
+        public RawRectangle(int left, int top, int right, int bottom)
+        {
+            Left = left;
+            Top = top;
+            Right = right;
+            Bottom = bottom;
+        }
 
         /// <summary>
-        /// Position of the pixel coordinate of the upper-left corner of the viewport.
+        /// The left position.
         /// </summary>
-        public float Y;
+        public int Left;
 
         /// <summary>
-        /// Width dimension of the viewport.
+        /// The top position.
         /// </summary>
-        public float Width;
+        public int Top;
 
         /// <summary>
-        /// Height dimension of the viewport.
+        /// The right position
         /// </summary>
-        public float Height;
+        public int Right;
 
         /// <summary>
-        /// Gets or sets the minimum depth of the clip volume.
+        /// The bottom position.
         /// </summary>
-        public float MinDepth;
+        public int Bottom;
 
         /// <summary>
-        /// Gets or sets the maximum depth of the clip volume.
+        /// Gets a value indicating whether this instance is empty.
         /// </summary>
-        public float MaxDepth;
+        /// <value><c>true</c> if this instance is empty; otherwise, <c>false</c>.</value>
+        public bool IsEmpty
+        {
+            get { return Left == 0 && Top == 0 && Right == 0 && Bottom == 0; }
+        }
     }
 }

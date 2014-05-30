@@ -73,13 +73,13 @@
   <bindings>
     <bind from="D2D_SIZE_F" to="SharpDX.Size2F" />
     <bind from="D2D_SIZE_U" to="SharpDX.Size2" />
-    <bind from="D2D_RECT_U" to="SharpDX.Native.RawRectangle" />
-    <bind from="D2D_RECT_F" to="SharpDX.Native.RawRectangleF" />
-    <bind from="D2D_POINT_2F" to="SharpDX.Native.RawVector2" />
-    <bind from="D2D_POINT_2U" to="SharpDX.Native.RawPoint" />
-    <bind from="D2D_COLOR_F" to="SharpDX.Native.RawColor4" />
-    <bind from="D2D_MATRIX_3X2_F" to="SharpDX.Native.RawMatrix3x2" />
-    <bind from="D2D_MATRIX_4X4_F" to="SharpDX.Native.RawMatrix" />
+    <bind from="D2D_RECT_U" to="SharpDX.Mathematics.Interop.RawRectangle" />
+    <bind from="D2D_RECT_F" to="SharpDX.Mathematics.Interop.RawRectangleF" />
+    <bind from="D2D_POINT_2F" to="SharpDX.Mathematics.Interop.RawVector2" />
+    <bind from="D2D_POINT_2U" to="SharpDX.Mathematics.Interop.RawPoint" />
+    <bind from="D2D_COLOR_F" to="SharpDX.Mathematics.Interop.RawColor4" />
+    <bind from="D2D_MATRIX_3X2_F" to="SharpDX.Mathematics.Interop.RawMatrix3x2" />
+    <bind from="D2D_MATRIX_4X4_F" to="SharpDX.Mathematics.Interop.RawMatrix" />
     <bind from="IPrintDocumentPackageTarget" to="SharpDX.ComObject" />
   </bindings>
   

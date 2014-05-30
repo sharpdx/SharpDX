@@ -21,7 +21,7 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using SharpDX.Native;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Mathematics
 {
@@ -377,7 +377,7 @@ namespace SharpDX.Mathematics
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawBool4"/> to <see cref="Bool4"/>.
+        /// Performs an implicit conversion from <see cref="RawBool4"/> to <see cref="Bool4"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>

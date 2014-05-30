@@ -46,6 +46,7 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Mathematics
 {
@@ -1435,21 +1436,21 @@ namespace SharpDX.Mathematics
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Quaternion"/> to <see cref="SharpDX.Native.RawQuaternion"/>.
+        /// Performs an implicit conversion from <see cref="Quaternion"/> to <see cref="RawQuaternion"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public unsafe static implicit operator SharpDX.Native.RawQuaternion(Quaternion value)
+        public unsafe static implicit operator RawQuaternion(Quaternion value)
         {
-            return *(SharpDX.Native.RawQuaternion*)&value;
+            return *(RawQuaternion*)&value;
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawQuaternion"/> to <see cref="Quaternion"/>.
+        /// Performs an implicit conversion from <see cref="RawQuaternion"/> to <see cref="Quaternion"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public unsafe static implicit operator Quaternion(SharpDX.Native.RawQuaternion value)
+        public unsafe static implicit operator Quaternion(RawQuaternion value)
         {
             return *(Quaternion*)&value;
         }

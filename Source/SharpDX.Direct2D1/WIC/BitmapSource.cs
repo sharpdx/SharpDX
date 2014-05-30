@@ -20,7 +20,7 @@
 
 
 using System;
-using SharpDX.Native;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.WIC
 {

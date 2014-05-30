@@ -44,7 +44,7 @@
 */
 
 using System.Diagnostics;
-using SharpDX.Native;
+using SharpDX.Mathematics.Interop;
 #if !W8CORE
 using System;
 using System.ComponentModel;

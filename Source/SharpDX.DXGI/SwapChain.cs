@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.DXGI
 {
@@ -73,7 +74,7 @@ namespace SharpDX.DXGI
         {
             get
             {
-                Native.RawBool isFullScreen;
+                RawBool isFullScreen;
                 Output output;
                 GetFullscreenState(out isFullScreen, out output);
                 if (output != null)

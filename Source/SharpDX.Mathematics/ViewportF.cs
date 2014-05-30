@@ -21,6 +21,7 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Mathematics
 {
@@ -319,21 +320,21 @@ namespace SharpDX.Mathematics
 
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="ViewportF"/> to <see cref="SharpDX.Native.RawViewportF"/>.
+        /// Performs an implicit conversion from <see cref="ViewportF"/> to <see cref="RawViewportF"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public unsafe static implicit operator SharpDX.Native.RawViewportF(ViewportF value)
+        public unsafe static implicit operator RawViewportF(ViewportF value)
         {
-            return *(SharpDX.Native.RawViewportF*)&value;
+            return *(RawViewportF*)&value;
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawViewportF"/> to <see cref="ViewportF"/>.
+        /// Performs an implicit conversion from <see cref="RawViewportF"/> to <see cref="ViewportF"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public unsafe static implicit operator ViewportF(SharpDX.Native.RawViewportF value)
+        public unsafe static implicit operator ViewportF(RawViewportF value)
         {
             return *(ViewportF*)&value;
         }

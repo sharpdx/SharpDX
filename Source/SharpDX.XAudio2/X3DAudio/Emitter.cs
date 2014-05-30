@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using SharpDX.Native;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.X3DAudio
 {

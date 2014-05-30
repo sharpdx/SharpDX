@@ -24,7 +24,7 @@ using System.Runtime.InteropServices;
 using SharpDX.Direct3D;
 using SharpDX.DXGI;
 using SharpDX;
-using SharpDX.Native;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D10
 {

@@ -20,7 +20,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
-using SharpDX.Native;
+using SharpDX.Mathematics.Interop;
 using SharpDX.Win32;
 
 namespace SharpDX

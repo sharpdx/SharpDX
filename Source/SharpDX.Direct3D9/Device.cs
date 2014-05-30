@@ -20,7 +20,7 @@
 
 using System;
 using System.Globalization;
-using SharpDX.Native;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D9
 {

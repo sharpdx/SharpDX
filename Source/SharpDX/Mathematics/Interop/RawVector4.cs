@@ -21,33 +21,33 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Native
+namespace SharpDX.Mathematics.Interop
 {
     /// <summary>
-    /// Interop type for a Bool4 (4 ints).
+    /// Interop type for a float4 (4 floats).
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     [DebuggerDisplay("X: {X}, Y: {Y}, Z: {Z}, W: {W}")]
-    public struct RawBool4
+    public struct RawVector4
     {
         /// <summary>
         /// The X component of the vector.
         /// </summary>
-        public int X;
+        public float X;
 
         /// <summary>
         /// The Y component of the vector.
         /// </summary>
-        public int Y;
+        public float Y;
 
         /// <summary>
         /// The Z component of the vector.
         /// </summary>
-        public int Z;
+        public float Z;
 
         /// <summary>
         /// The W component of the vector.
         /// </summary>
-        public int W;
+        public float W;
     }
 }

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 using System;
-using SharpDX.Native;
+using SharpDX.Mathematics.Interop;
 #if !WIN8METRO
 using System.Drawing;
 using System.Drawing.Imaging;

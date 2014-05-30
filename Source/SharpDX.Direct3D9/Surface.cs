@@ -22,7 +22,7 @@ using System;
 using System.IO;
 
 using SharpDX.Direct3D;
-using SharpDX.Native;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D9
 {

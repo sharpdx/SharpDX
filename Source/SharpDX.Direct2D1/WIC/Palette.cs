@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 using System;
-using SharpDX.Native;
 
 namespace SharpDX.WIC
 {

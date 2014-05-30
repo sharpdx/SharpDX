@@ -46,6 +46,7 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Mathematics
 {
@@ -980,21 +981,21 @@ namespace SharpDX.Mathematics
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Color4"/> to <see cref="SharpDX.Native.RawColor4"/>.
+        /// Performs an implicit conversion from <see cref="Color4"/> to <see cref="RawColor4"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public unsafe static implicit operator SharpDX.Native.RawColor4(Color4 value)
+        public unsafe static implicit operator RawColor4(Color4 value)
         {
-            return *(SharpDX.Native.RawColor4*)&value;
+            return *(RawColor4*)&value;
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawColor4"/> to <see cref="Color4"/>.
+        /// Performs an implicit conversion from <see cref="RawColor4"/> to <see cref="Color4"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public unsafe static implicit operator Color4(SharpDX.Native.RawColor4 value)
+        public unsafe static implicit operator Color4(RawColor4 value)
         {
             return *(Color4*)&value;
         }

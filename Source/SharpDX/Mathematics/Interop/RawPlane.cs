@@ -21,28 +21,23 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Native
+namespace SharpDX.Mathematics.Interop
 {
     /// <summary>
-    /// Interop type for a float3 (3 floats).
+    /// Interop type for a Plane (4 floats).
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    [DebuggerDisplay("X: {X}, Y: {Y}, Z: {Z}")]
-    public struct RawVector3
+    [DebuggerDisplay("Normal: {Normal}, D: {D}")]
+    public struct RawPlane
     {
         /// <summary>
-        /// The X component of the vector.
+        /// The normal vector of the plane.
         /// </summary>
-        public float X;
+        public RawVector3 Normal;
 
         /// <summary>
-        /// The Y component of the vector.
+        /// The distance of the plane along its normal from the origin.
         /// </summary>
-        public float Y;
-
-        /// <summary>
-        /// The Z component of the vector.
-        /// </summary>
-        public float Z;
+        public float D;
     }
 }

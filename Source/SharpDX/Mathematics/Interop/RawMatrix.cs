@@ -20,7 +20,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Native
+namespace SharpDX.Mathematics.Interop
 {
     /// <summary>
     /// Interop type for a float4x4 (16 floats).

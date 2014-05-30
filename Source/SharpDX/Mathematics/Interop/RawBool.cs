@@ -21,7 +21,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Native
+namespace SharpDX.Mathematics.Interop
 {
     /// <summary>
     /// A boolean value stored on 4 bytes (instead of 1 in .NET).

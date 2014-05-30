@@ -16,46 +16,38 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.using System;
+// THE SOFTWARE.
 
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Native
+namespace SharpDX.Mathematics.Interop
 {
     /// <summary>
-    /// Interop type for a float3x2 (6 floats).
+    /// Interop type for a ColorBGRA (BGRA, 4 bytes).
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct RawMatrix3x2
+    [StructLayout(LayoutKind.Sequential, Size = 4)]
+    [DebuggerDisplay("R:{R} G:{G} B:{B} A:{A}")]
+    public struct RawColorBGRA
     {
         /// <summary>
-        /// Element (1,1)
+        /// The blue component of the color.
         /// </summary>
-        public float M11;
+        public byte B;
 
         /// <summary>
-        /// Element (1,2)
+        /// The green component of the color.
         /// </summary>
-        public float M12;
+        public byte G;
 
         /// <summary>
-        /// Element (2,1)
+        /// The red component of the color.
         /// </summary>
-        public float M21;
+        public byte R;
 
         /// <summary>
-        /// Element (2,2)
+        /// The alpha component of the color.
         /// </summary>
-        public float M22;
-
-        /// <summary>
-        /// Element (3,1)
-        /// </summary>
-        public float M31;
-
-        /// <summary>
-        /// Element (3,2)
-        /// </summary>
-        public float M32;
+        public byte A;
     }
 }

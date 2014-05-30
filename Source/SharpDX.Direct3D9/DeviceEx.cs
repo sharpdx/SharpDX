@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 using System;
 using System.Drawing;
-using SharpDX.Native;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D9
 {

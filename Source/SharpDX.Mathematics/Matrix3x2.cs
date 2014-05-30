@@ -21,6 +21,7 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Mathematics
 {
@@ -1138,21 +1139,21 @@ namespace SharpDX.Mathematics
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Matrix3x2"/> to <see cref="SharpDX.Native.RawMatrix3x2"/>.
+        /// Performs an implicit conversion from <see cref="Matrix3x2"/> to <see cref="RawMatrix3x2"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public unsafe static implicit operator SharpDX.Native.RawMatrix3x2(Matrix3x2 value)
+        public unsafe static implicit operator RawMatrix3x2(Matrix3x2 value)
         {
-            return *(SharpDX.Native.RawMatrix3x2*)&value;
+            return *(RawMatrix3x2*)&value;
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawMatrix3x2"/> to <see cref="Matrix3x2"/>.
+        /// Performs an implicit conversion from <see cref="RawMatrix3x2"/> to <see cref="Matrix3x2"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public unsafe static implicit operator Matrix3x2(SharpDX.Native.RawMatrix3x2 value)
+        public unsafe static implicit operator Matrix3x2(RawMatrix3x2 value)
         {
             return *(Matrix3x2*)&value;
         }

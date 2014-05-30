@@ -21,48 +21,43 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Native
+namespace SharpDX.Mathematics.Interop
 {
     /// <summary>
-    /// Interop type for a Color4 (RGBA, 4 floats).
+    /// Interop type for a ViewPort (6 floats).
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    [DebuggerDisplay("R:{R} G:{G} B:{B} A:{A}")]
-    public struct RawColor4
+    [DebuggerDisplay("X: {X}, Y: {Y}, Width: {Width}, Height: {Height}, MinDepth: {MinDepth}, MaxDepth: {MaxDepth}")]
+    public struct RawViewportF
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RawColor4"/> struct.
+        /// Position of the pixel coordinate of the upper-left corner of the viewport.
         /// </summary>
-        /// <param name="r">The r.</param>
-        /// <param name="g">The g.</param>
-        /// <param name="b">The b.</param>
-        /// <param name="a">A.</param>
-        public RawColor4(float r, float g, float b, float a)
-        {
-            R = r;
-            G = g;
-            B = b;
-            A = a;
-        }
+        public float X;
 
         /// <summary>
-        /// The red component of the color.
+        /// Position of the pixel coordinate of the upper-left corner of the viewport.
         /// </summary>
-        public float R;
+        public float Y;
 
         /// <summary>
-        /// The green component of the color.
+        /// Width dimension of the viewport.
         /// </summary>
-        public float G;
+        public float Width;
 
         /// <summary>
-        /// The blue component of the color.
+        /// Height dimension of the viewport.
         /// </summary>
-        public float B;
+        public float Height;
 
         /// <summary>
-        /// The alpha component of the color.
+        /// Gets or sets the minimum depth of the clip volume.
         /// </summary>
-        public float A;
+        public float MinDepth;
+
+        /// <summary>
+        /// Gets or sets the maximum depth of the clip volume.
+        /// </summary>
+        public float MaxDepth;
     }
 }

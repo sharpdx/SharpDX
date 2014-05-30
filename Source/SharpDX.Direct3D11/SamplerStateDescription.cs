@@ -17,6 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using SharpDX.Mathematics.Interop;
+
 namespace SharpDX.Direct3D11
 {
     public partial struct SamplerStateDescription
@@ -40,7 +43,7 @@ namespace SharpDX.Direct3D11
                            MipLodBias = 0.0f,
                            MaximumAnisotropy = 16,
                            ComparisonFunction = Comparison.Never,
-                           BorderColor = new Native.RawColor4(),
+                           BorderColor = new RawColor4(),
                        };
         }
     }

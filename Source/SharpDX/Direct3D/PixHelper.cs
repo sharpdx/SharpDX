@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using SharpDX.Mathematics.Interop;
 #if !W8CORE
 using System.Runtime.InteropServices;
-using SharpDX.Native;
 
 namespace SharpDX.Direct3D
 {

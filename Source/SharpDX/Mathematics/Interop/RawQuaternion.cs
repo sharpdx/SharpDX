@@ -21,33 +21,33 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Native
+namespace SharpDX.Mathematics.Interop
 {
     /// <summary>
-    /// Interop type for a Int4 (4 ints).
+    /// Interop type for a Quaternion (4 floats).
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     [DebuggerDisplay("X: {X}, Y: {Y}, Z: {Z}, W: {W}")]
-    public struct RawInt4
+    public struct RawQuaternion
     {
         /// <summary>
-        /// The X component of the vector.
+        /// The X component of the quaternion.
         /// </summary>
-        public int X;
+        public float X;
 
         /// <summary>
-        /// The Y component of the vector.
+        /// The Y component of the quaternion.
         /// </summary>
-        public int Y;
+        public float Y;
 
         /// <summary>
-        /// The Z component of the vector.
+        /// The Z component of the quaternion.
         /// </summary>
-        public int Z;
+        public float Z;
 
         /// <summary>
-        /// The W component of the vector.
+        /// The W component of the quaternion.
         /// </summary>
-        public int W;
+        public float W;
     }
 }

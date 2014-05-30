@@ -46,6 +46,7 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Mathematics
 {
@@ -3263,21 +3264,21 @@ namespace SharpDX.Mathematics
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Matrix"/> to <see cref="SharpDX.Native.RawMatrix"/>.
+        /// Performs an implicit conversion from <see cref="Matrix"/> to <see cref="RawMatrix"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public unsafe static implicit operator SharpDX.Native.RawMatrix(Matrix value)
+        public unsafe static implicit operator RawMatrix(Matrix value)
         {
-            return *(SharpDX.Native.RawMatrix*)&value;
+            return *(RawMatrix*)&value;
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Native.RawMatrix"/> to <see cref="Matrix"/>.
+        /// Performs an implicit conversion from <see cref="RawMatrix"/> to <see cref="Matrix"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public unsafe static implicit operator Matrix(SharpDX.Native.RawMatrix value)
+        public unsafe static implicit operator Matrix(RawMatrix value)
         {
             return *(Matrix*)&value;
         }

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
-using SharpDX.Native;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1
 {

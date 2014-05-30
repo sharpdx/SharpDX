@@ -16,28 +16,46 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
+// THE SOFTWARE.using System;
 
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Native
+namespace SharpDX.Mathematics.Interop
 {
     /// <summary>
-    /// Interop type for a float2 (2 floats).
+    /// Interop type for a float3x2 (6 floats).
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    [DebuggerDisplay("X: {X}, Y: {Y}")]
-    public struct RawVector2
+    public struct RawMatrix3x2
     {
         /// <summary>
-        /// The X component of the vector.
+        /// Element (1,1)
         /// </summary>
-        public float X;
+        public float M11;
 
         /// <summary>
-        /// The Y component of the vector.
+        /// Element (1,2)
         /// </summary>
-        public float Y;
+        public float M12;
+
+        /// <summary>
+        /// Element (2,1)
+        /// </summary>
+        public float M21;
+
+        /// <summary>
+        /// Element (2,2)
+        /// </summary>
+        public float M22;
+
+        /// <summary>
+        /// Element (3,1)
+        /// </summary>
+        public float M31;
+
+        /// <summary>
+        /// Element (3,2)
+        /// </summary>
+        public float M32;
     }
 }
