@@ -23,7 +23,7 @@ using System;
 using NUnit.Framework;
 
 using SharpDX.Direct3D;
-using SharpDX.Mathematics.Interop;
+using SharpDX.Mathematics;
 
 namespace SharpDX.Tests
 {
@@ -47,7 +47,7 @@ namespace SharpDX.Tests
 
             public double Double { get; set; }
 
-            public RawVector2 Vector2 { get; set; }
+            public Vector2 Vector2 { get; set; }
 
             public TestEnum TestEnum { get; set; }
 
@@ -84,13 +84,13 @@ namespace SharpDX.Tests
             getDouble(customEffect, out doubleValue);
             Assert.AreEqual(doubleValue, 5);
 
-            var getVector2 = Utilities.BuildPropertyGetter<RawVector2>(typeof(CustomEffect), typeof(CustomEffect).GetProperty("Vector2"));
-            var setVector2 = Utilities.BuildPropertySetter<RawVector2>(typeof(CustomEffect), typeof(CustomEffect).GetProperty("Vector2"));
+            var getVector2 = Utilities.BuildPropertyGetter<Vector2>(typeof(CustomEffect), typeof(CustomEffect).GetProperty("Vector2"));
+            var setVector2 = Utilities.BuildPropertySetter<Vector2>(typeof(CustomEffect), typeof(CustomEffect).GetProperty("Vector2"));
 
-            var Vector2Value = new RawVector2(1,2);
+            var Vector2Value = new Vector2(1,2);
             setVector2(customEffect, ref Vector2Value);
             getVector2(customEffect, out Vector2Value);
-            Assert.AreEqual(Vector2Value, new RawVector2(1, 2));
+            Assert.AreEqual(Vector2Value, new Vector2(1, 2));
 
             var getTestEnum = Utilities.BuildPropertyGetter<int>(typeof(CustomEffect), typeof(CustomEffect).GetProperty("TestEnum"));
             var setTestEnum = Utilities.BuildPropertySetter<int>(typeof(CustomEffect), typeof(CustomEffect).GetProperty("TestEnum"));

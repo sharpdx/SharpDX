@@ -22,6 +22,7 @@ using System;
 using NUnit.Framework;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+using SharpDX.Mathematics;
 
 namespace SharpDX.Toolkit.Graphics.Tests
 {
@@ -114,7 +115,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             var destMatrix = worldViewProj.GetMatrix();
             Assert.AreEqual(sourceMatrix, destMatrix);
 
-            var destMatrix2 = constantBuffer.GetMatrix(worldViewProj.Offset);
+            var destMatrix2 = constantBuffer.BackingBuffer.Get<Matrix>(worldViewProj.Offset);
             destMatrix2.Transpose();
             Assert.AreEqual(sourceMatrix, destMatrix2);
 
@@ -123,7 +124,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             destMatrix = worlViewProjRowMajor.GetMatrix();
             Assert.AreEqual(sourceMatrix, destMatrix);
 
-            destMatrix2 = constantBuffer.GetMatrix(worlViewProjRowMajor.Offset);
+            destMatrix2 = constantBuffer.BackingBuffer.Get<Matrix>(worlViewProjRowMajor.Offset);
             Assert.AreEqual(sourceMatrix, destMatrix2);
 
             // Test column_major float3x3 (the matrix is transposed automatically by the effect and only the 3x3 is transferred)
@@ -135,7 +136,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             destMatrix = worldViewProj3x3.GetMatrix();
             Assert.AreEqual(sourceMatrix3x3, destMatrix);
 
-            var destMatrixFloats = constantBuffer.GetRange<float>(worldViewProj3x3.Offset, 3 * 3);
+            var destMatrixFloats = constantBuffer.BackingBuffer.GetRange<float>(worldViewProj3x3.Offset, 3 * 3);
             for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 3; j++)

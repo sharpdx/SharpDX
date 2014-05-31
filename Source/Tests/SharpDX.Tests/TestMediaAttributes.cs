@@ -25,6 +25,7 @@ using NUnit.Framework;
 
 using SharpDX.IO;
 using SharpDX.MediaFoundation;
+using SharpDX.Mathematics;
 
 namespace SharpDX.Tests
 {

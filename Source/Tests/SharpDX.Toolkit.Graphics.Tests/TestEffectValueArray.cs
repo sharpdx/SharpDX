@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using NUnit.Framework;
+using SharpDX.Mathematics;
 
 namespace SharpDX.Toolkit.Graphics.Tests
 {

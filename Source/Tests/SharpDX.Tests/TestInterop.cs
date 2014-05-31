@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using SharpDX.Mathematics;
 
 using NUnit.Framework;
 

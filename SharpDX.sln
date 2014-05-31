@@ -97,6 +97,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDX.Toolkit.Graphics.Tests", "Source\Tests\SharpDX.Toolkit.Graphics.Tests\SharpDX.Toolkit.Graphics.Tests.csproj", "{4E0E6A4D-930D-4660-8DE0-E30FF1F9F4A9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDX.Toolkit", "Source\Toolkit\SharpDX.Toolkit\SharpDX.Toolkit.csproj", "{9FF0707C-75BB-4984-A01F-B9EAAD293F6C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{49E4485F-3A2A-4C35-A159-12ECCFC00396} = {49E4485F-3A2A-4C35-A159-12ECCFC00396}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDX.Toolkit.Compiler", "Source\Toolkit\SharpDX.Toolkit.Compiler\SharpDX.Toolkit.Compiler.csproj", "{8BFFF9D1-84EC-4FBA-9BEB-710ECF1857A8}"
 EndProject
@@ -123,6 +126,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDX.DirectManipulation", "Source\SharpDX.DirectManipulation\SharpDX.DirectManipulation.csproj", "{F826CCCE-4B72-47F4-9493-DFCB51C106B7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDX.Mathematics", "Source\SharpDX.Mathematics\SharpDX.Mathematics.csproj", "{49E4485F-3A2A-4C35-A159-12ECCFC00396}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDX.Toolkit.Tests", "Source\Tests\SharpDX.Toolkit.Tests\SharpDX.Toolkit.Tests.csproj", "{EEFFFBCA-06D3-447E-85B0-E49FC5676744}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1193,5 +1198,6 @@ Global
 		{FBE5DD99-00A0-4FED-A116-941A46A0C0D0} = {CC8DB471-0644-430D-9D4B-808A2475BEC0}
 		{F826CCCE-4B72-47F4-9493-DFCB51C106B7} = {CC8DB471-0644-430D-9D4B-808A2475BEC0}
 		{49E4485F-3A2A-4C35-A159-12ECCFC00396} = {CC8DB471-0644-430D-9D4B-808A2475BEC0}
+		{EEFFFBCA-06D3-447E-85B0-E49FC5676744} = {1B526C0E-EE4A-4E8F-BF8F-8C7397FB4918}
 	EndGlobalSection
 EndGlobal

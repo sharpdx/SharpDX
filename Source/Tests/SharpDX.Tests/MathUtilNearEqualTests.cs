@@ -20,6 +20,7 @@
 
 using System.Runtime.InteropServices;
 using NUnit.Framework;
+using SharpDX.Mathematics;
 
 namespace SharpDX.Tests
 {
