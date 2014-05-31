@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using SharpDX.Toolkit;
 
 namespace SharpDX.Toolkit.Graphics
 {

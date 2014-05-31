@@ -26,6 +26,10 @@ using SharpDX.Mathematics;
 using SharpDX.Toolkit.Collections;
 using Device = SharpDX.Direct3D11.Device;
 
+//For temporary fixes:
+using SharpDX.Mathematics.Interop;
+using System.Linq;
+
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
@@ -1002,7 +1006,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::RSSetScissorRects</unmanaged-short>	
         public void SetScissorRectangles(params Rectangle[] scissorRectangles)
         {
-            RasterizerStage.SetScissorRectangles(scissorRectangles);
+            //TODO: Remove this later / replace it with something more efficient.
+            RasterizerStage.SetScissorRectangles(scissorRectangles.Cast<RawRectangle>().ToArray());
         }
 
         /// <summary>
@@ -1013,7 +1018,10 @@ namespace SharpDX.Toolkit.Graphics
         {
             get
             {
-                RasterizerStage.GetViewports(viewports);
+                //TODO: Remove this later / replace it with something more efficient.
+                RawViewportF[] rawViewports = new RawViewportF[viewports.Length];
+                RasterizerStage.GetViewports(rawViewports);
+                rawViewports.Cast<ViewportF>().ToArray().CopyTo(viewports, 0);
                 return viewports[0];
             }
 
@@ -1030,7 +1038,10 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>Returns a viewport bound to a specified render target</returns>
         public ViewportF GetViewport(int index)
         {
-            RasterizerStage.GetViewports(viewports);
+            //TODO: Remove this later / replace it with something more efficient.
+            RawViewportF[] rawViewports = new RawViewportF[viewports.Length];
+            RasterizerStage.GetViewports(rawViewports);
+            rawViewports.Cast<ViewportF>().ToArray().CopyTo(viewports, 0);
             return viewports[index];
         }
 
@@ -1083,10 +1094,10 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>	
         public void SetViewports(params ViewportF[] viewports)
         {
-            for (int i = 0; i < viewports.Length; i++)
-                this.viewports[i] = viewports[i];
+            viewports.CopyTo(this.viewports, 0);
 
-            RasterizerStage.SetViewports(this.viewports, viewports.Length);
+            RawViewportF[] rawViewports = this.viewports.Cast<RawViewportF>().ToArray();
+            RasterizerStage.SetViewports(rawViewports, viewports.Length);
         }
 
         /// <summary>

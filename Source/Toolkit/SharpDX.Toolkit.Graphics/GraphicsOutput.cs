@@ -236,7 +236,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>A matched <see cref="DisplayMode"/> or null if nothing is found.</returns>
         private DisplayMode TryFindMatchingDisplayMode(Format format)
         {
-            var desktopBounds = outputDescription.DesktopBounds;
+            Rectangle desktopBounds = outputDescription.DesktopBounds;
 
             foreach (var supportedDisplayMode in SupportedDisplayModes)
             {

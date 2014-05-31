@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using SharpDX.Mathematics;
 #if !W8CORE && NET35Plus
 using SharpDX.Toolkit.Graphics;
 using System;
@@ -29,6 +28,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using SharpDX.Direct3D11;
+using SharpDX.Mathematics;
+using SharpDX.Mathematics.Interop;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace SharpDX.Toolkit
@@ -289,7 +290,7 @@ namespace SharpDX.Toolkit
             deviceContext.End(queryForCompletion);
 
             // wait until drawing completes
-            Bool completed;
+            RawBool completed;
             while (!(deviceContext.GetData(queryForCompletion, out completed)
                    && completed)) Thread.Yield();
 

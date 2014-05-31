@@ -438,7 +438,7 @@ namespace SharpDX.Toolkit.Graphics
                     var constantBuffer = constantBufferLink.ConstantBuffer;
                     if (constantBuffer.IsDirty)
                     {
-                        constantBuffers[constantBufferLink.ResourceIndex].SetData(Effect.GraphicsDevice, new DataPointer(constantBuffer.DataPointer, constantBuffer.Size));
+                        constantBuffers[constantBufferLink.ResourceIndex].SetData(Effect.GraphicsDevice, new DataPointer(constantBuffer.BackingBuffer.DataPointer, constantBuffer.BackingBuffer.Size));
                         constantBuffer.IsDirty = false;
                     }
                 }

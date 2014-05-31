@@ -35,7 +35,6 @@ namespace SharpDX.Toolkit.Serialization
     /// <param name="serializer">The serializer.</param>
     public delegate void SerializerAction(ref object value, BinarySerializer serializer);
 
-
     /// <summary>
     /// This class provides serialization methods for types implementing the <see cref="IDataSerializable"/>.
     /// </summary>
@@ -51,7 +50,7 @@ namespace SharpDX.Toolkit.Serialization
     /// 
     /// </ul>
     /// </remarks>
-    public class BinarySerializer : Component
+    public partial class BinarySerializer : Component
     {
         private int chunkCount;
         private Chunk[] chunks;
@@ -167,13 +166,10 @@ namespace SharpDX.Toolkit.Serialization
             foreach (var defaultDynamic in DefaultDynamics)
                 RegisterDynamic(defaultDynamic);
 
-            RegisterDynamic<Color4>();
-            RegisterDynamic<Color3>();
-            RegisterDynamic<Color>();
-            RegisterDynamic<Vector4>();
-            RegisterDynamic<Vector3>();
-            RegisterDynamic<Vector2>();
+            RegisterPartialDynamics();
         }
+
+        partial void RegisterPartialDynamics();
 
         /// <summary>
         /// Gets a tag value with the specified key.
@@ -346,6 +342,25 @@ namespace SharpDX.Toolkit.Serialization
             dynamicSerializer.Reader = dynamicSerializer.DynamicReader<T>;
             dynamicSerializer.Writer = dynamicSerializer.DynamicWriter;
             RegisterDynamic(dynamicSerializer);
+        }
+
+        private delegate void TypedSerializerAction<T>(ref T value, BinarySerializer serializer);
+
+        private void RegisterDynamic<T>(FourCC id, TypedSerializerAction<T> dynamicSerializer) where T : new()
+        {
+            var dyn = new Dynamic { Id = id, Type = typeof(T) };
+            dyn.Reader = (serializer) =>
+                {
+                    T value = new T();
+                    dynamicSerializer(ref value, serializer);
+                    return value;
+                };
+            dyn.Writer = (value, serializer) =>
+                {
+                    T valueT = (T)value;
+                    dynamicSerializer(ref valueT, serializer);
+                };
+            RegisterDynamic(dyn);
         }
 
         /// <summary>
@@ -1720,6 +1735,24 @@ namespace SharpDX.Toolkit.Serialization
             else
             {
                 value = new Guid(Reader.ReadBytes(16));
+            }
+        }
+
+        /// <summary>
+        /// Serializes a single <see cref="FourCC"/> value.
+        /// </summary>
+        /// <param name="value">The value to serialize</param>
+        /// <remarks>
+        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
+        /// </remarks>
+        public void Serialize(ref FourCC value)
+        {
+            uint valueUint = (uint)value;
+            Serialize(ref valueUint);
+
+            if (Mode == SerializerMode.Read)
+            {
+                value = valueUint;
             }
         }
 

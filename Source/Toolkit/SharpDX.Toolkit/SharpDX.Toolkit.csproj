@@ -98,6 +98,7 @@
     <Compile Include="Graphics\EffectData.cs" />
     <Compile Include="Serialization\ArrayLengthType.cs" />
     <Compile Include="Serialization\BinarySerializer.cs" />
+    <Compile Include="Serialization\BinarySerializer.Mathematics.cs" />
     <Compile Include="Serialization\DynamicSerializerAttribute.cs" />
     <Compile Include="IDataSerializable.cs" />
     <Compile Include="Serialization\InvalidChunkException.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Graphics\SpriteFontData.Glyph.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Serialization\BinarySerializer.Graphics.cs" />
     <None Include="SharpDX.Toolkit.nuspec" />
   </ItemGroup>
   <ItemGroup>

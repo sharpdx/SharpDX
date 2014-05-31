@@ -19,8 +19,9 @@
 // THE SOFTWARE.
 
 using System;
+using SharpDX.Toolkit.Serialization;
 
-namespace SharpDX
+namespace SharpDX.Toolkit
 {
     /// <summary>
     /// A singleton string is a string that has a unique instance in memory, See remarks for usage scenarios.
@@ -30,7 +31,7 @@ namespace SharpDX
     /// could be invoked frequently, and the set of strings is limited. Internally, <see cref="SingletonString"/> 
     /// string is using the method <see cref="string.Intern"/> and also is precaching the hashcode of the string.
     /// </remarks>
-    public struct SingletonString : IEquatable<SingletonString>
+    public struct SingletonString : IEquatable<SingletonString>, IDataSerializable
     {
         private int hashCode;
         private string text;
@@ -64,6 +65,14 @@ namespace SharpDX
         public override int GetHashCode()
         {
             return hashCode;
+        }
+
+        public void Serialize(BinarySerializer serializer)
+        {
+            serializer.Serialize(ref text, SerializeFlags.Nullable);
+
+            if (serializer.Mode == SerializerMode.Read)
+                hashCode = text != null ? text.GetHashCode() : 0;
         }
 
         /// <summary>

@@ -21,6 +21,7 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Mathematics
 {
@@ -1045,6 +1046,26 @@ namespace SharpDX.Mathematics
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
         public static implicit operator Color4(Color value)
+        {
+            return value.ToColor4();
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Color"/> to <see cref="RawColor4"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator RawColor4(Color value)
+        {
+            return value.ToColor4();
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Color"/> to nullable <see cref="RawColor4"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator RawColor4?(Color value)
         {
             return value.ToColor4();
         }

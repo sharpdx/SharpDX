@@ -20,6 +20,7 @@
 
 using System;
 using SharpDX.Mathematics;
+using SharpDX.Mathematics.Interop;
 #if WIN8METRO
 using Windows.UI.Core;
 using Windows.Graphics.Display;
@@ -105,7 +106,7 @@ namespace SharpDX.Toolkit.Graphics
 
                 try
                 {
-                    Bool isCurrentlyFullscreen;
+                    RawBool isCurrentlyFullscreen;
                     swapChain.GetFullscreenState(out isCurrentlyFullscreen, out currentOutput);
 
                     // check if the current fullscreen monitor is the same as new one

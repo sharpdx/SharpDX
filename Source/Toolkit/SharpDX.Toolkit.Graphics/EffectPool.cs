@@ -437,7 +437,7 @@ namespace SharpDX.Toolkit.Graphics
 
         private static Buffer DefaultConstantBufferAllocator(GraphicsDevice device, EffectPool pool, EffectConstantBuffer constantBuffer)
         {
-            return Buffer.Constant.New(device, constantBuffer.Size);
+            return Buffer.Constant.New(device, constantBuffer.BackingBuffer.Size);
         }
 
         private void OnEffectAdded(ObservableCollectionEventArgs<Effect> e)

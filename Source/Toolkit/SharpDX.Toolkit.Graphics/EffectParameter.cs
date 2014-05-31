@@ -166,7 +166,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>The value of this parameter.</returns>
         public T GetValue<T>() where T : struct
         {
-            return buffer.Get<T>(offset);
+            return buffer.BackingBuffer.Get<T>(offset);
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             int size;
             AlignedToFloat4<T>(out size);
-            return buffer.Get<T>(offset + index * size);
+            return buffer.BackingBuffer.Get<T>(offset + index * size);
         }
 
         /// <summary>
@@ -196,12 +196,12 @@ namespace SharpDX.Toolkit.Graphics
                 int localOffset = offset;
                 for (int i = 0; i < values.Length; i++, localOffset += size)
                 {
-                    buffer.Get(localOffset, out values[i]);
+                    buffer.BackingBuffer.Get(localOffset, out values[i]);
                 }
 
                 return values;
             }
-            return buffer.GetRange<T>(offset, count);
+            return buffer.BackingBuffer.GetRange<T>(offset, count);
         }
 
         /// <summary>
@@ -258,7 +258,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "value">The value to write to the buffer.</param>
         public void SetValue<T>(ref T value) where T : struct
         {
-            buffer.Set(offset, ref value);
+            buffer.BackingBuffer.Set(offset, ref value);
             buffer.IsDirty = true;
         }
 
@@ -269,7 +269,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "value">The value to write to the buffer.</param>
         public void SetValue<T>(T value) where T : struct
         {
-            buffer.Set(offset, value);
+            buffer.BackingBuffer.Set(offset, value);
             buffer.IsDirty = true;
         }
 
@@ -344,7 +344,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "values">An array of values to be written to the current buffer.</param>
         public void SetRawValue(byte[] values)
         {
-            buffer.Set(offset, values);
+            buffer.BackingBuffer.Set(offset, values);
             buffer.IsDirty = true;
         }
 
@@ -361,12 +361,12 @@ namespace SharpDX.Toolkit.Graphics
                 int localOffset = offset;
                 for (int i = 0; i < values.Length; i++, localOffset += size)
                 {
-                    buffer.Set(localOffset, ref values[i]);
+                    buffer.BackingBuffer.Set(localOffset, ref values[i]);
                 }
             }
             else
             {
-                buffer.Set(offset, values);
+                buffer.BackingBuffer.Set(offset, values);
             }
 
             buffer.IsDirty = true;
@@ -382,7 +382,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             int size;
             AlignedToFloat4<T>(out size);
-            buffer.Set(offset + size * index, ref value);
+            buffer.BackingBuffer.Set(offset + size * index, ref value);
             buffer.IsDirty = true;
         }
 
@@ -396,7 +396,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             int size;
             AlignedToFloat4<T>(out size);
-            buffer.Set(offset + size * index, ref value);
+            buffer.BackingBuffer.Set(offset + size * index, ref value);
             buffer.IsDirty = true;
         }
 
@@ -414,12 +414,12 @@ namespace SharpDX.Toolkit.Graphics
                 int localOffset = offset + size * index; 
                 for (int i = 0; i < values.Length; i++, localOffset += size)
                 {
-                    buffer.Set(localOffset, ref values[i]);
+                    buffer.BackingBuffer.Set(localOffset, ref values[i]);
                 }
             }
             else
             {
-                buffer.Set(offset + size * index, values);
+                buffer.BackingBuffer.Set(offset + size * index, values);
             }
             buffer.IsDirty = true;
         }
@@ -547,7 +547,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="offset">The offset in bytes to write to</param>
         private unsafe void CopyMatrixRowMajor(ref Matrix matrix, int offset)
         {
-            var pDest = (float*)((byte*)buffer.DataPointer + offset);
+            var pDest = (float*)((byte*)buffer.BackingBuffer.DataPointer + offset);
             fixed (void* pMatrix = &matrix)
             {
                 var pSrc = (float*)pMatrix;
@@ -568,7 +568,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="offset">The offset in bytes to write to</param>
         private unsafe void CopyMatrixColumnMajor(ref Matrix matrix, int offset)
         {
-            var pDest = (float*)((byte*)buffer.DataPointer + offset);
+            var pDest = (float*)((byte*)buffer.BackingBuffer.DataPointer + offset);
             fixed (void* pMatrix = &matrix)
             {
                 var pSrc = (float*)pMatrix;
@@ -596,7 +596,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="offset">The offset in bytes to write to</param>
         private void CopyMatrixDirect(ref Matrix matrix, int offset)
         {
-            buffer.Set(offset, matrix);
+            buffer.BackingBuffer.Set(offset, matrix);
         }
 
         /// <summary>
@@ -612,7 +612,7 @@ namespace SharpDX.Toolkit.Graphics
         private unsafe Matrix GetMatrixRowMajorFrom(int offset)
         {
             var result = default(Matrix);
-            var pSrc = (float*)((byte*)buffer.DataPointer + offset);
+            var pSrc = (float*)((byte*)buffer.BackingBuffer.DataPointer + offset);
             var pDest = (float*)&result;
 
             // If Matrix is row_major but expecting less columns/rows
@@ -632,7 +632,7 @@ namespace SharpDX.Toolkit.Graphics
         private unsafe Matrix GetMatrixColumnMajorFrom(int offset)
         {
             var result = default(Matrix);
-            var pSrc = (float*)((byte*)buffer.DataPointer + offset);
+            var pSrc = (float*)((byte*)buffer.BackingBuffer.DataPointer + offset);
             var pDest = (float*)&result;
 
             // If Matrix is column_major, then we need to transpose it
@@ -650,7 +650,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="offset">The offset in bytes to write to</param>
         private Matrix GetMatrixDirectFrom(int offset)
         {
-            return buffer.GetMatrix(offset);
+            return buffer.BackingBuffer.Get<Matrix>(offset);
         }
     }
 }

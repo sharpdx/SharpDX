@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using SharpDX.Toolkit;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -29,15 +30,18 @@ namespace SharpDX.Toolkit.Graphics
     /// Constant buffers are created and shared inside a same <see cref="EffectPool"/>. The creation of the underlying GPU buffer
     /// can be overridden using <see cref="EffectPool.ConstantBufferAllocator"/>.
     /// </remarks>
-    public sealed class EffectConstantBuffer : DataBuffer, IEquatable<EffectConstantBuffer>
+    public sealed class EffectConstantBuffer : Component, IEquatable<EffectConstantBuffer>
     {
         private GraphicsDevice device;
         private readonly Buffer nativeBuffer;
         internal EffectData.ConstantBuffer Description;
         private readonly int hashCode;
+        
+        public readonly DataBuffer BackingBuffer;
 
-        internal EffectConstantBuffer(GraphicsDevice device, EffectData.ConstantBuffer description) : base(description.Size)
+        internal EffectConstantBuffer(GraphicsDevice device, EffectData.ConstantBuffer description)
         {
+            BackingBuffer = new DataBuffer(description.Size);
             this.device = device;
             Description = description;
             Name = description.Name;
@@ -53,9 +57,9 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             // By default, all constant buffers are cleared with 0
-            Clear();
+            BackingBuffer.Clear();
 
-            nativeBuffer = ToDispose(Buffer.Constant.New(device, Size));
+            nativeBuffer = ToDispose(Buffer.Constant.New(device, BackingBuffer.Size));
 
             // The buffer is considered dirty for the first usage.
             IsDirty = true;
@@ -93,13 +97,13 @@ namespace SharpDX.Toolkit.Graphics
             if (toBuffer == null)
                 throw new ArgumentNullException("toBuffer");
 
-            if (Size != toBuffer.Size)
+            if (BackingBuffer.Size != toBuffer.BackingBuffer.Size)
             {
                 throw new ArgumentOutOfRangeException("toBuffer",
                                                       "Size of the source and destination buffer are not the same");
             }
 
-            Utilities.CopyMemory(toBuffer.DataPointer, DataPointer, Size);
+            Utilities.CopyMemory(toBuffer.BackingBuffer.DataPointer, BackingBuffer.DataPointer, BackingBuffer.Size);
             toBuffer.IsDirty = true;
         }
 
@@ -111,7 +115,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             if (IsDirty)
             {
-                nativeBuffer.SetData(device, new DataPointer(DataPointer, Size));
+                nativeBuffer.SetData(device, new DataPointer(BackingBuffer.DataPointer, BackingBuffer.Size));
                 IsDirty = false;
             }
         }

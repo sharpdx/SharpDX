@@ -32,10 +32,25 @@ namespace SharpDX.Mathematics
     [StructLayout(LayoutKind.Sequential)]
     public struct Rectangle : IEquatable<Rectangle>
     {
-        private int _left;
-        private int _top;
-        private int _right;
-        private int _bottom;
+        /// <summary>
+        /// The left.
+        /// </summary>
+        public int Left;
+
+        /// <summary>
+        /// The top.
+        /// </summary>
+        public int Top;
+
+        /// <summary>
+        /// The right.
+        /// </summary>
+        public int Right;
+
+        /// <summary>
+        /// The bottom.
+        /// </summary>
+        public int Bottom;
 
         /// <summary>
         /// An empty rectangle.
@@ -56,50 +71,10 @@ namespace SharpDX.Mathematics
         /// <param name="height">The height.</param>
         public Rectangle(int x, int y, int width, int height)
         {
-            _left = x;
-            _top = y;
-            _right = x + width;
-            _bottom = y + height;
-        }
-
-        /// <summary>
-        /// Gets or sets the left.
-        /// </summary>
-        /// <value>The left.</value>
-        public int Left
-        {
-            get { return _left; }
-            set { _left = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the top.
-        /// </summary>
-        /// <value>The top.</value>
-        public int Top
-        {
-            get { return _top; }
-            set { _top = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the right.
-        /// </summary>
-        /// <value>The right.</value>
-        public int Right
-        {
-            get { return _right; }
-            set { _right = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the bottom.
-        /// </summary>
-        /// <value>The bottom.</value>
-        public int Bottom
-        {
-            get { return _bottom; }
-            set { _bottom = value; }
+            Left = x;
+            Top = y;
+            Right = x + width;
+            Bottom = y + height;
         }
 
         /// <summary>
@@ -110,12 +85,12 @@ namespace SharpDX.Mathematics
         {
             get
             {
-                return _left;
+                return Left;
             }
             set
             {
-                _right = value + Width;
-                _left = value;
+                Right = value + Width;
+                Left = value;
             }
         }
 
@@ -127,12 +102,12 @@ namespace SharpDX.Mathematics
         {
             get
             {
-                return _top;
+                return Top;
             }
             set
             {
-                _bottom = value + Height;
-                _top = value;
+                Bottom = value + Height;
+                Top = value;
             }
         }
 
@@ -142,8 +117,8 @@ namespace SharpDX.Mathematics
         /// <value>The width.</value>
         public int Width
         {
-            get { return _right - _left; }
-            set { _right = _left + value; }
+            get { return Right - Left; }
+            set { Right = Left + value; }
         }
 
         /// <summary>
@@ -152,8 +127,8 @@ namespace SharpDX.Mathematics
         /// <value>The height.</value>
         public int Height
         {
-            get { return _bottom - _top; }
-            set { _bottom = _top + value; }
+            get { return Bottom - Top; }
+            set { Bottom = Top + value; }
         }
 
 
@@ -323,7 +298,7 @@ namespace SharpDX.Mathematics
         /// <returns><c>true</c> if point is inside <see cref="Rectangle"/>, otherwise <c>false</c>.</returns>
         public bool Contains(float x, float y)
         {
-            return (x >= _left && x <= _right && y >= _top && y <= _bottom);
+            return (x >= Left && x <= Right && y >= Top && y <= Bottom);
         }
 
         ///// <summary>
@@ -439,7 +414,7 @@ namespace SharpDX.Mathematics
         /// </returns>
         public bool Equals(Rectangle other)
         {
-            return other._left == _left && other._top == _top && other._right == _right && other._bottom == _bottom;
+            return other.Left == Left && other.Top == Top && other.Right == Right && other.Bottom == Bottom;
         }
 
         /// <summary>
@@ -452,10 +427,10 @@ namespace SharpDX.Mathematics
         {
             unchecked
             {
-                int result = _left;
-                result = (result * 397) ^ _top;
-                result = (result * 397) ^ _right;
-                result = (result * 397) ^ _bottom;
+                int result = Left;
+                result = (result * 397) ^ Top;
+                result = (result * 397) ^ Right;
+                result = (result * 397) ^ Bottom;
                 return result;
             }
         }
@@ -500,8 +475,8 @@ namespace SharpDX.Mathematics
 
         internal void MakeXYAndWidthHeight()
         {
-            _right = (_right - _left);
-            _bottom = (_bottom - _top);
+            Right = (Right - Left);
+            Bottom = (Bottom - Top);
         }
 
         /// <summary>

@@ -162,7 +162,7 @@ namespace SharpDX.Toolkit.Graphics
                 using(var runAnalysis = new GlyphRunAnalysis(factory,
                     glyphRun,
                     1.0f,
-                    matrix,
+                    (Matrix3x2)matrix,
                     renderingMode,
                     MeasuringMode.Natural,
                     0.0f,

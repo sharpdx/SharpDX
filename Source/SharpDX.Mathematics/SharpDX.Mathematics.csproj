@@ -16,7 +16,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Angle.cs" />
+    <Compile Include="AngleSingle.cs" />
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="Bool4.cs" />
     <Compile Include="BoundingBox.cs" />

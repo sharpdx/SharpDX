@@ -21,7 +21,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace SharpDX
+namespace SharpDX.Toolkit
 {
     /// <summary>
     /// A generic collection for effect framework.

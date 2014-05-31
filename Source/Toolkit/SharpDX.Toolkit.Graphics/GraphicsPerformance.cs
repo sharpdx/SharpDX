@@ -86,7 +86,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="color">The color.</param>
         /// <param name="name">The name.</param>
-        public void Begin(Color color, string name)
+        public void Begin(ColorBGRA color, string name)
         {
             if (!Enabled) return;
 #if !W8CORE
@@ -101,7 +101,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="color">The color.</param>
         /// <param name="formatName">Name of the format.</param>
         /// <param name="parameters">The parameters.</param>
-        public void Begin(Color color, string formatName, params object[] parameters)
+        public void Begin(ColorBGRA color, string formatName, params object[] parameters)
         {
             if (!Enabled) return;
 #if !W8CORE
@@ -125,7 +125,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="color">The color.</param>
         /// <param name="name">The name.</param>
-        public void SetMarker(Color color, string name)
+        public void SetMarker(ColorBGRA color, string name)
         {
             if (!Enabled) return;
 #if !W8CORE
@@ -140,7 +140,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="color">The color.</param>
         /// <param name="formatName">Name of the format.</param>
         /// <param name="parameters">The parameters.</param>
-        public void SetMarker(Color color, string formatName, params object[] parameters)
+        public void SetMarker(ColorBGRA color, string formatName, params object[] parameters)
         {
             if (!Enabled) return;
 #if !W8CORE

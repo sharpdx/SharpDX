@@ -69,22 +69,22 @@ namespace SharpDX.Mathematics
         /// <summary>
         /// The X component of the vector.
         /// </summary>
-        private int iX;
+        internal int iX;
 
         /// <summary>
         /// The Y component of the vector.
         /// </summary>
-        private int iY;
+        internal int iY;
 
         /// <summary>
         /// The Z component of the vector.
         /// </summary>
-        private int iZ;
+        internal int iZ;
 
         /// <summary>
         /// The W component of the vector.
         /// </summary>
-        private int iW;
+        internal int iW;
 
         /// <summary>
         /// The X component of the vector.

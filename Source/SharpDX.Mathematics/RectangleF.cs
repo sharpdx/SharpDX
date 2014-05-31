@@ -31,10 +31,25 @@ namespace SharpDX.Mathematics
     [StructLayout(LayoutKind.Sequential)]
     public struct RectangleF : IEquatable<RectangleF>
     {
-        private float _left;
-        private float _top;
-        private float _right;
-        private float _bottom;
+        /// <summary>
+        /// The left.
+        /// </summary>
+        public float Left;
+
+        /// <summary>
+        /// The top.
+        /// </summary>
+        public float Top;
+
+        /// <summary>
+        /// The right.
+        /// </summary>
+        public float Right;
+
+        /// <summary>
+        /// The bottom.
+        /// </summary>
+        public float Bottom;
 
         /// <summary>
         /// An empty rectangle.
@@ -72,50 +87,10 @@ namespace SharpDX.Mathematics
         /// <param name="height">The height.</param>
         public RectangleF(float x, float y, float width, float height)
         {
-            _left = x;
-            _top = y;
-            _right = x + width;
-            _bottom = y + height;
-        }
-
-        /// <summary>
-        /// Gets or sets the X position of the left edge.
-        /// </summary>
-        /// <value>The left.</value>
-        public float Left
-        {
-            get { return _left; }
-            set { _left = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the top.
-        /// </summary>
-        /// <value>The top.</value>
-        public float Top
-        {
-            get { return _top; }
-            set { _top = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the right.
-        /// </summary>
-        /// <value>The right.</value>
-        public float Right
-        {
-            get { return _right; }
-            set { _right = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the bottom.
-        /// </summary>
-        /// <value>The bottom.</value>
-        public float Bottom
-        {
-            get { return _bottom; }
-            set { _bottom = value; }
+            Left = x;
+            Top = y;
+            Right = x + width;
+            Bottom = y + height;
         }
 
         /// <summary>
@@ -126,12 +101,12 @@ namespace SharpDX.Mathematics
         {
             get
             {
-                return _left;
+                return Left;
             }
             set
             {
-                _right = value + Width;
-                _left = value;
+                Right = value + Width;
+                Left = value;
             }
         }
 
@@ -143,12 +118,12 @@ namespace SharpDX.Mathematics
         {
             get
             {
-                return _top;
+                return Top;
             }
             set
             {
-                _bottom = value + Height;
-                _top = value;
+                Bottom = value + Height;
+                Top = value;
             }
         }
 
@@ -158,8 +133,8 @@ namespace SharpDX.Mathematics
         /// <value>The width.</value>
         public float Width
         {
-            get { return _right - _left; }
-            set { _right = _left + value; }
+            get { return Right - Left; }
+            set { Right = Left + value; }
         }
 
         /// <summary>
@@ -168,8 +143,8 @@ namespace SharpDX.Mathematics
         /// <value>The height.</value>
         public float Height
         {
-            get { return _bottom - _top; }
-            set { _bottom = _top + value; }
+            get { return Bottom - Top; }
+            set { Bottom = Top + value; }
         }
 
         /// <summary>
@@ -240,25 +215,25 @@ namespace SharpDX.Mathematics
         /// Gets the position of the top-left corner of the rectangle.
         /// </summary>
         /// <value>The top-left corner of the rectangle.</value>
-        public Vector2 TopLeft { get { return new Vector2(_left, _top); } }
+        public Vector2 TopLeft { get { return new Vector2(Left, Top); } }
 
         /// <summary>
         /// Gets the position of the top-right corner of the rectangle.
         /// </summary>
         /// <value>The top-right corner of the rectangle.</value>
-        public Vector2 TopRight { get { return new Vector2(_right, _top); } }
+        public Vector2 TopRight { get { return new Vector2(Right, Top); } }
 
         /// <summary>
         /// Gets the position of the bottom-left corner of the rectangle.
         /// </summary>
         /// <value>The bottom-left corner of the rectangle.</value>
-        public Vector2 BottomLeft { get { return new Vector2(_left, _bottom); } }
+        public Vector2 BottomLeft { get { return new Vector2(Left, Bottom); } }
 
         /// <summary>
         /// Gets the position of the bottom-right corner of the rectangle.
         /// </summary>
         /// <value>The bottom-right corner of the rectangle.</value>
-        public Vector2 BottomRight { get { return new Vector2(_right, _bottom); } }
+        public Vector2 BottomRight { get { return new Vector2(Right, Bottom); } }
 
         /// <summary>Changes the position of the rectangle.</summary>
         /// <param name="amount">The values to adjust the position of the rectangle by.</param>
@@ -325,7 +300,7 @@ namespace SharpDX.Mathematics
         /// <returns><c>true</c> if point is inside <see cref="RectangleF"/>, otherwise <c>false</c>.</returns>
         public bool Contains(float x, float y)
         {
-            return (x >= _left && x <= _right && y >= _top && y <= _bottom);
+            return (x >= Left && x <= Right && y >= Top && y <= Bottom);
         }
 
         /// <summary>
@@ -461,10 +436,10 @@ namespace SharpDX.Mathematics
         {
             unchecked
             {
-                int result = _left.GetHashCode();
-                result = (result * 397) ^ _top.GetHashCode();
-                result = (result * 397) ^ _right.GetHashCode();
-                result = (result * 397) ^ _bottom.GetHashCode();
+                int result = Left.GetHashCode();
+                result = (result * 397) ^ Top.GetHashCode();
+                result = (result * 397) ^ Right.GetHashCode();
+                result = (result * 397) ^ Bottom.GetHashCode();
                 return result;
             }
         }
