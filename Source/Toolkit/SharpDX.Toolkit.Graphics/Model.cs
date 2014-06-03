@@ -182,10 +182,16 @@ namespace SharpDX.Toolkit.Graphics
 
                 if (effectOverride != null)
                 {
-                    Matrix worldTranformed;
-                    Matrix.Multiply(ref localSharedDrawBoneMatrices[index], ref world, out worldTranformed);
-
-                    effectOverride.DefaultParameters.Apply(ref defaultParametersContext, ref world, ref view, ref projection);
+                    if (effectOverride is SkinnedEffect)
+                    {
+                        effectOverride.DefaultParameters.Apply(ref defaultParametersContext, ref world, ref view, ref projection);
+                    }
+                    else
+                    {
+                        Matrix worldTranformed;
+                        Matrix.Multiply(ref localSharedDrawBoneMatrices[index], ref world, out worldTranformed);
+                        effectOverride.DefaultParameters.Apply(ref defaultParametersContext, ref worldTranformed, ref view, ref projection);
+                    }
                 }
                 else
                 {
@@ -207,7 +213,7 @@ namespace SharpDX.Toolkit.Graphics
                         }
                         else
                         {
-                            matrices.World = world;
+                            matrices.World = effect is SkinnedEffect ? world : worldTranformed;
                             matrices.View = view;
                             matrices.Projection = projection;
                         }

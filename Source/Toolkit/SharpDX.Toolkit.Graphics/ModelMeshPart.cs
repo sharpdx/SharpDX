@@ -62,7 +62,12 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public List<int> SkinnedBones;
 
-
+        /// <summary>
+        /// Gets a value indicating whether this instance contains skinning information.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance contains skinning information; otherwise, <c>false</c>.
+        /// </value>
         public bool IsSkinned
         {
             get { return SkinnedBones != null && SkinnedBones.Count > 0; }

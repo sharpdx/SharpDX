@@ -27,39 +27,33 @@ namespace SharpDX.Toolkit.Graphics
     public sealed partial class ModelData
     {
         /// <summary>
-        /// Class Animation
+        /// Class AnimationChannel
         /// </summary>
-        public class Animation : IDataSerializable
+        public class AnimationChannel : IDataSerializable
         {
             /// <summary>
-            /// The name of this animation.
+            /// The name of the animated bone.
             /// </summary>
-            public string Name;
+            public string BoneName;
 
             /// <summary>
-            /// Total total animation duration.
+            /// The key frames of this animation.
             /// </summary>
-            public float Duration;
+            public List<KeyFrame> KeyFrames;
 
             /// <summary>
-            /// The channels of this animation.
+            /// Initializes a new instance of the <see cref="AnimationChannel" /> class.
             /// </summary>
-            public List<AnimationChannel> Channels;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Animation" /> class.
-            /// </summary>
-            public Animation()
+            public AnimationChannel()
             {
-                Channels = new List<AnimationChannel>();
+                KeyFrames = new List<KeyFrame>();
             }
 
             /// <inheritdoc/>
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
-                serializer.Serialize(ref Name);
-                serializer.Serialize(ref Duration);
-                serializer.Serialize(ref Channels);
+                serializer.Serialize(ref BoneName);
+                serializer.Serialize(ref KeyFrames);
             }
         }
     }

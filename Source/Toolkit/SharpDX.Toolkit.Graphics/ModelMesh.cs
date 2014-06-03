@@ -60,6 +60,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Draws all of the ModelMeshPart objects in this mesh, using their current Effect settings.
         /// </summary>
         /// <param name="context">The graphics context.</param>
+        /// <param name="boneTransforms">The model's bone transforms.</param>
         /// <param name="effectOverride">The effect to use instead of the effect attached to each mesh part. Default is null (use Effect in MeshPart)</param>
         /// <exception cref="System.InvalidOperationException">Model has no effect</exception>
         public void Draw(GraphicsDevice context, Matrix[] boneTransforms, Effect effectOverride = null)

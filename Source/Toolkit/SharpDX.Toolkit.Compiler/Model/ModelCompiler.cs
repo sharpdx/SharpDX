@@ -38,7 +38,7 @@ namespace SharpDX.Toolkit.Graphics
         private Assimp.Scene scene;
         private ModelData model;
         private List<ModelData.MeshPart>[] registeredMeshParts;
-        private readonly Dictionary<Node, int> meshNodes = new Dictionary<Node, int>();
+        private readonly Dictionary<Node, int> skeletonNodes = new Dictionary<Node, int>();
         private readonly Dictionary<Node, int> skinnedBones = new Dictionary<Node, int>();
 
 
@@ -413,7 +413,7 @@ namespace SharpDX.Toolkit.Graphics
                 if (!animation.HasNodeAnimations)
                     continue;
 
-                var ticksPerSecond = animation.TicksPerSecond > 0 ? animation.TicksPerSecond : 25.0;
+                var ticksPerSecond = animation.TicksPerSecond > 0 ? animation.TicksPerSecond : 25.0; // Is this format dependent? At least some .x files behave strangely.
 
                 var animationData = new ModelData.Animation
                 {
@@ -526,7 +526,7 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     foreach (var bone in mesh.Bones)
                     {
-                        RegisterNode(scene.RootNode.FindNode(bone.Name), meshNodes);
+                        RegisterNode(scene.RootNode.FindNode(bone.Name), skeletonNodes);
                     }
                 }
             }
@@ -536,7 +536,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             if (node.HasMeshes)
             {
-                RegisterNode(node, meshNodes);
+                RegisterNode(node, skeletonNodes);
             }
 
             if (node.HasChildren)
@@ -552,7 +552,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             // Return all nodes for now, so we can use model files as skeletons
             return true;
-            //return meshNodes.ContainsKey(node);
+            //return skeletonNodes.ContainsKey(node);
         }
 
         private void RegisterNode(Node node, Dictionary<Node,int> nodeMap)
@@ -596,7 +596,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             // Associate created bones with local index
-            meshNodes[node] = model.Bones.Count;
+            skeletonNodes[node] = model.Bones.Count;
             model.Bones.Add(parent);
 
             // if node has meshes, create a new scene object for it
@@ -773,7 +773,7 @@ namespace SharpDX.Toolkit.Graphics
 
                         model.SkinnedBones.Add(new ModelData.SkinnedBone
                         {
-                            BoneIndex = meshNodes[boneNode],
+                            BoneIndex = skeletonNodes[boneNode],
                             InverseBindTransform = Matrix.Invert(GetAbsoluteTransform(parentNode)) * ConvertMatrix(bone.OffsetMatrix),
                         });
                     }
