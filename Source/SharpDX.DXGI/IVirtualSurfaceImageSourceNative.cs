@@ -17,10 +17,10 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if WIN8METRO
 using System;
-using System.Collections.Generic;
-using System.Text;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.DXGI
 {
@@ -32,12 +32,12 @@ namespace SharpDX.DXGI
         /// <summary>
         /// Gets the set of regions that must be updated on the shared surface.
         /// </summary>
-        public Rectangle[] UpdateRectangles
+        public RawRectangle[] UpdateRectangles
         {
             get
             {
                 int count = this.GetUpdateRectCount();
-                var regionToUpdate = new Rectangle[count];
+                var regionToUpdate = new RawRectangle[count];
                 this.GetUpdateRects(regionToUpdate, count);
                 return regionToUpdate;
             }
