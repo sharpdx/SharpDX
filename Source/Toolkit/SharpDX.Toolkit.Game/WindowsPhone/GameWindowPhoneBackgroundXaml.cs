@@ -19,13 +19,12 @@
 // THE SOFTWARE.
 
 #if WP8
-
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
-
+using SharpDX.Mathematics;
 using SharpDX.Direct3D11;
 using SharpDX.Toolkit.Graphics;
 

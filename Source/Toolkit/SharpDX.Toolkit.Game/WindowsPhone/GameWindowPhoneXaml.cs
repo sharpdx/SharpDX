@@ -17,8 +17,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if WP8
 
+#if WP8
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -27,6 +27,8 @@ using System.Windows.Controls;
 using SharpDX.Direct3D11;
 using SharpDX.Toolkit.Graphics;
 using Texture2D = SharpDX.Direct3D11.Texture2D;
+using SharpDX.Mathematics;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Toolkit
 {
@@ -124,12 +126,12 @@ namespace SharpDX.Toolkit
             //Utilities.Dispose(ref host);
         }
 
-        void IDrawingSurfaceContentProviderNative.PrepareResources(DateTime presentTargetTime, out Bool isContentDirty)
+        void IDrawingSurfaceContentProviderNative.PrepareResources(DateTime presentTargetTime, out RawBool isContentDirty)
         {
             isContentDirty = true;
         }
 
-        void IDrawingSurfaceContentProviderNative.GetTexture(Size2F surfaceSize, out DrawingSurfaceSynchronizedTexture synchronizedTexture, out RectangleF textureSubRectangle)
+        void IDrawingSurfaceContentProviderNative.GetTexture(Size2F surfaceSize, out DrawingSurfaceSynchronizedTexture synchronizedTexture, out RawRectangleF textureSubRectangle)
         {
             try
             {
@@ -174,7 +176,8 @@ namespace SharpDX.Toolkit
             }
 
             // Set output parameters.
-            textureSubRectangle = new RectangleF(0f, 0f, surfaceSize.Width, surfaceSize.Height);
+            var output = new RectangleF(0f, 0f, surfaceSize.Width, surfaceSize.Height);
+            textureSubRectangle = new RawRectangleF { Left = output.Left, Top = output.Top, Right = output.Right, Bottom = output.Bottom };
             synchronizedTexture = this.synchronizedTexture;
         }
 
