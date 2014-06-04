@@ -17,9 +17,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.DirectWrite
 {
@@ -55,11 +57,11 @@ namespace SharpDX.DirectWrite
             /// <unmanaged-short>IDWriteTextAnalysisSink1::SetGlyphOrientation</unmanaged-short>	
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
             private unsafe delegate int SetGlyphOrientationDelegate(IntPtr thisPtr, int textPosition, int textLength,
-                                     SharpDX.DirectWrite.GlyphOrientationAngle glyphOrientationAngle, byte adjustedBidiLevel,
-                                     SharpDX.Bool isSideways, SharpDX.Bool isRightToLeft);
+                                     GlyphOrientationAngle glyphOrientationAngle, byte adjustedBidiLevel,
+                                     RawBool isSideways, RawBool isRightToLeft);
             private static int SetGlyphOrientationImpl(IntPtr thisPtr, int textPosition, int textLength,
-                                     SharpDX.DirectWrite.GlyphOrientationAngle glyphOrientationAngle, byte adjustedBidiLevel,
-                                     SharpDX.Bool isSideways, SharpDX.Bool isRightToLeft)
+                                     GlyphOrientationAngle glyphOrientationAngle, byte adjustedBidiLevel,
+                                     RawBool isSideways, RawBool isRightToLeft)
             {
                 try
                 {
@@ -69,7 +71,7 @@ namespace SharpDX.DirectWrite
                 }
                 catch (Exception exception)
                 {
-                    return (int) SharpDX.Result.GetResultFromException(exception);
+                    return (int) Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }

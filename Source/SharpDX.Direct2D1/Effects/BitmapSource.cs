@@ -17,11 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
-using System;
-using System.Collections.Generic;
-using System.Text;
-using SharpDX.WIC;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1.Effects
 {
@@ -63,7 +61,7 @@ namespace SharpDX.Direct2D1.Effects
         /// The effect multiplies the width by the X value and the height by the Y value. 
         /// This property is a <see cref="Vector2"/> defined as: (X scale, Y scale). The scale amounts are FLOAT, unitless, and must be positive or 0.
         /// </summary>
-        public Vector2 ScaleSource
+        public RawVector2 ScaleSource
         {
             get
             {

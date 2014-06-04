@@ -25,6 +25,7 @@
     <Compile Include="Direct3D\CompilationResultBase.cs" />
     <Compile Include="Direct3D\PixHelper.cs" />
     <Compile Include="Mathematics\Interop\RawBox.cs" />
+    <Compile Include="Mathematics\Interop\RawMatrix5x4.cs" />
     <Compile Include="Mathematics\Interop\RawPlane.cs" />
     <Compile Include="Mathematics\Interop\RawBool.cs" />
     <Compile Include="Mathematics\Interop\RawBool4.cs" />

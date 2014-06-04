@@ -17,8 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
-using System;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1
 {
@@ -34,7 +35,7 @@ namespace SharpDX.Direct2D1
         /// <param name="opacity">The opacity.</param>
         /// <param name="opacityBrush">The opacity brush.</param>
         /// <param name="layerOptions">The layer options.</param>
-        public LayerParameters1(RectangleF contentBounds, Geometry geometryMask, AntialiasMode maskAntialiasMode, Matrix3x2 maskTransform, float opacity, Brush opacityBrush, LayerOptions1 layerOptions)
+        public LayerParameters1(RawRectangleF contentBounds, Geometry geometryMask, AntialiasMode maskAntialiasMode, RawMatrix3x2 maskTransform, float opacity, Brush opacityBrush, LayerOptions1 layerOptions)
             : this()
         {
             ContentBounds = contentBounds;

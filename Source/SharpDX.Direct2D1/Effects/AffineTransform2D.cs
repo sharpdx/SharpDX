@@ -17,10 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
-using System;
-using System.Collections.Generic;
-using System.Text;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1.Effects
 {
@@ -72,7 +71,7 @@ namespace SharpDX.Direct2D1.Effects
         /// <summary>
         /// The 3x2 matrix to transform the image using the Direct2D matrix transform. 
         /// </summary>
-        public Matrix3x2 TransformMatrix
+        public RawMatrix3x2 TransformMatrix
         {
             get
             {

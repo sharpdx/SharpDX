@@ -473,6 +473,7 @@
     <define struct="SharpDX.Mathematics.Interop.RawColor4" sizeof="16" />
     <define struct="SharpDX.Mathematics.Interop.RawQuaternion" sizeof="16" />
     <define struct="SharpDX.Mathematics.Interop.RawPlane" sizeof="16" />
+    <define struct="SharpDX.Mathematics.Interop.RawBox" sizeof="16" />
 
     <define struct="SharpDX.Win32Native.TextMetric" sizeof="32"/> <!-- TODO calculate sizeof -->
     <define struct="SharpDX.Win32Native.TextMetricA" sizeof="32"/> <!-- TODO calculate sizeof -->

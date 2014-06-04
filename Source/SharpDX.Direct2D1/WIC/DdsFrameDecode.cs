@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #if DIRECTX11_2
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.WIC
 {
@@ -60,7 +61,7 @@ namespace SharpDX.WIC
         /// <msdn-id>dn302087</msdn-id>	
         /// <unmanaged>HRESULT IWICDdsFrameDecode::CopyBlocks([In, Optional] const WICRect* prcBoundsInBlocks,[In] unsigned int cbStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer)</unmanaged>	
         /// <unmanaged-short>IWICDdsFrameDecode::CopyBlocks</unmanaged-short>	
-        public void CopyBlocks(Rectangle? boundsInBlocks, int stride, DataStream destination)
+        public void CopyBlocks(RawBox? boundsInBlocks, int stride, DataStream destination)
         {
             CopyBlocks(boundsInBlocks, stride, (int)(destination.Length - destination.Position), destination.PositionPointer);
         }

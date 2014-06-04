@@ -17,10 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
-using System;
-using System.Collections.Generic;
-using System.Text;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1.Effects
 {
@@ -40,7 +39,7 @@ namespace SharpDX.Direct2D1.Effects
         /// <summary>
         /// The light position of the point light source. The property is a D2D1_VECTOR_3F defined as (x, y, z). The units are in device-independent pixels (DIPs) and the values are unitless and unbounded.
         /// </summary>
-        public Vector3 LightPosition
+        public RawVector3 LightPosition
         {
             get
             {
@@ -55,7 +54,7 @@ namespace SharpDX.Direct2D1.Effects
         /// <summary>
         /// Where the spot light is focused. The property is exposed as a <see cref="Vector3"/>  with – (x, y, z). The units are in DIPs and the values are unbounded.
         /// </summary>
-        public Vector3 PointsAt
+        public RawVector3 PointsAt
         {
             get
             {
@@ -145,7 +144,7 @@ namespace SharpDX.Direct2D1.Effects
         /// <summary>
         /// The color of the incoming light. This property is exposed as a <see cref="Vector3"/> – (R, G, B) and used to compute LR, LG, LB. 
         /// </summary>
-        public Vector3 Color
+        public RawVector3 Color
         {
             get
             {
@@ -163,7 +162,7 @@ namespace SharpDX.Direct2D1.Effects
         /// This property is a <see cref="Vector2"/> (Kernel Unit Length X, Kernel Unit Length Y) and is defined in (device-independent pixels (DIPs)/Kernel Unit). 
         /// The effect uses bilinear interpolation to scale the bitmap to match size of kernel elements.
         /// </summary>
-        public Vector2 KernelUnitLength
+        public RawVector2 KernelUnitLength
         {
             get
             {

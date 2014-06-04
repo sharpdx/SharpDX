@@ -17,9 +17,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1
 {
@@ -69,14 +71,14 @@ namespace SharpDX.Direct2D1
 
             /// <unmanaged>HRESULT ID2D1SourceTransform::Draw([In] ID2D1Bitmap1* target,[In] const RECT* drawRect,[In] D2D_POINT_2U targetOrigin)</unmanaged>	
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate int DrawDelegate(IntPtr thisPtr, IntPtr target, IntPtr drawRect, SharpDX.Point targetOrigin);
-            private unsafe static int DrawImpl(IntPtr thisPtr, IntPtr target, IntPtr drawRect, SharpDX.Point targetOrigin)
+            private delegate int DrawDelegate(IntPtr thisPtr, IntPtr target, IntPtr drawRect, RawPoint targetOrigin);
+            private unsafe static int DrawImpl(IntPtr thisPtr, IntPtr target, IntPtr drawRect, RawPoint targetOrigin)
             {
                 try
                 {
                     var shadow = ToShadow<SourceTransformShadow>(thisPtr);
                     var callback = (SourceTransform)shadow.Callback;
-                    callback.Draw(new Bitmap1(target), *(SharpDX.Rectangle*)drawRect, targetOrigin);
+                    callback.Draw(new Bitmap1(target), *(RawRectangle*)drawRect, targetOrigin);
                 }
                 catch (Exception exception)
                 {

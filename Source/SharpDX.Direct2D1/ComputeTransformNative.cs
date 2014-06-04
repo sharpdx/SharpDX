@@ -17,9 +17,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
-using System;
-namespace SharpDX.Direct2D1
+using SharpDX.Mathematics.Interop;
+
+namespace SharpDX.Direct2D1    
 {
     public partial class ComputeTransformNative
     {
@@ -30,9 +32,9 @@ namespace SharpDX.Direct2D1
         }
 
         /// <inheritdoc/>
-        public SharpDX.Int3 CalculateThreadgroups(SharpDX.Rectangle outputRect)
+        public RawInt3 CalculateThreadgroups(RawRectangle outputRect)
         {
-            Int3 result;
+            RawInt3 result;
             CalculateThreadgroups_(outputRect, out result.X, out result.Y, out result.Z);
             return result;
         }

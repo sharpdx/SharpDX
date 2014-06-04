@@ -17,26 +17,28 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
-using System;
+using SharpDX.Mathematics.Interop;
+
 namespace SharpDX.Direct2D1
 {
     public partial class TransformNative
     {
         /// <inheritdoc/>
-        public void MapOutputRectangleToInputRectangles(SharpDX.Rectangle outputRect, SharpDX.Rectangle[] inputRects)
+        public void MapOutputRectangleToInputRectangles(RawRectangle outputRect, RawRectangle[] inputRects)
         {
             MapOutputRectToInputRects_(outputRect, inputRects, inputRects.Length);
         }
 
         /// <inheritdoc/>
-        public SharpDX.Rectangle MapInputRectanglesToOutputRectangle(SharpDX.Rectangle[] inputRects, SharpDX.Rectangle[] inputOpaqueSubRects, out SharpDX.Rectangle outputOpaqueSubRect)
+        public RawRectangle MapInputRectanglesToOutputRectangle(RawRectangle[] inputRects, RawRectangle[] inputOpaqueSubRects, out RawRectangle outputOpaqueSubRect)
         {
             return MapInputRectsToOutputRect_(inputRects, inputOpaqueSubRects, inputRects.Length, out outputOpaqueSubRect);
         }
 
         /// <inheritdoc/>
-        public Rectangle MapInvalidRect(int inputIndex, Rectangle invalidInputRect)
+        public RawRectangle MapInvalidRect(int inputIndex, RawRectangle invalidInputRect)
         {
             return MapInvalidRect_(inputIndex, invalidInputRect);
         }

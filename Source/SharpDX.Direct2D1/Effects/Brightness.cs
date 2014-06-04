@@ -17,10 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
-using System;
-using System.Collections.Generic;
-using System.Text;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1.Effects
 {
@@ -40,7 +39,7 @@ namespace SharpDX.Direct2D1.Effects
         /// <summary>
         /// The upper portion of the brightness transfer curve. The white point adjusts the appearance of the brighter portions of the image. This property is for both the x value and the y value, in that order. Each of the values of this property are between 0 and 1, inclusive.
         /// </summary>
-        public Vector2 WhitePoint
+        public RawVector2 WhitePoint
         {
             get
             {
@@ -55,7 +54,7 @@ namespace SharpDX.Direct2D1.Effects
         /// <summary>
         /// The lower portion of the brightness transfer curve. The black point adjusts the appearance of the darker portions of the image. This property is for both the x value and the y value, in that order. Each of the values of this property are between 0 and 1, inclusive.
         /// </summary>
-        public Vector2 BlackPoint
+        public RawVector2 BlackPoint
         {
             get
             {

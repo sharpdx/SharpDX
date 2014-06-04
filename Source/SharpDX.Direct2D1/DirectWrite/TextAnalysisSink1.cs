@@ -17,8 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
-using System;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.DirectWrite
 {
@@ -40,8 +41,8 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteTextAnalysisSink1::SetGlyphOrientation([In] unsigned int textPosition,[In] unsigned int textLength,[In] DWRITE_GLYPH_ORIENTATION_ANGLE glyphOrientationAngle,[In] unsigned char adjustedBidiLevel,[In] BOOL isSideways,[In] BOOL isRightToLeft)</unmanaged>	
         /// <unmanaged-short>IDWriteTextAnalysisSink1::SetGlyphOrientation</unmanaged-short>	
         void SetGlyphOrientation(int textPosition, int textLength,
-                                 SharpDX.DirectWrite.GlyphOrientationAngle glyphOrientationAngle, byte adjustedBidiLevel,
-                                 SharpDX.Bool isSideways, SharpDX.Bool isRightToLeft);
+                                 GlyphOrientationAngle glyphOrientationAngle, byte adjustedBidiLevel,
+                                 RawBool isSideways, RawBool isRightToLeft);
 
     }
 }

@@ -17,10 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
-using System;
-using System.Collections.Generic;
-using System.Text;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1
 {
@@ -42,7 +41,7 @@ namespace SharpDX.Direct2D1
         /// <msdn-id>hh446945</msdn-id>	
         /// <unmanaged>HRESULT ID2D1Transform::MapOutputRectToInputRects([In] const RECT* outputRect,[Out, Buffer] RECT* inputRects,[In] unsigned int inputRectsCount)</unmanaged>	
         /// <unmanaged-short>ID2D1Transform::MapOutputRectToInputRects</unmanaged-short>	
-        void MapOutputRectangleToInputRectangles(SharpDX.Rectangle outputRect, SharpDX.Rectangle[] inputRects);
+        void MapOutputRectangleToInputRectangles(RawRectangle outputRect, RawRectangle[] inputRects);
 
         /// <summary>	
         /// <p>[This documentation is preliminary and is subject to change.]</p><p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p>Performs the inverse mapping to <strong>MapOutputRectToInputRects</strong>.</p>	
@@ -57,7 +56,7 @@ namespace SharpDX.Direct2D1
         /// <msdn-id>hh446943</msdn-id>	
         /// <unmanaged>HRESULT ID2D1Transform::MapInputRectsToOutputRect([In, Buffer] const RECT* inputRects,[In, Buffer] const RECT* inputOpaqueSubRects,[In] unsigned int inputRectCount,[Out] RECT* outputRect,[Out] RECT* outputOpaqueSubRect)</unmanaged>	
         /// <unmanaged-short>ID2D1Transform::MapInputRectsToOutputRect</unmanaged-short>	
-        SharpDX.Rectangle MapInputRectanglesToOutputRectangle(SharpDX.Rectangle[] inputRects, SharpDX.Rectangle[] inputOpaqueSubRects, out SharpDX.Rectangle outputOpaqueSubRect);
+        RawRectangle MapInputRectanglesToOutputRectangle(RawRectangle[] inputRects, RawRectangle[] inputOpaqueSubRects, out RawRectangle outputOpaqueSubRect);
 
         /// <summary>	
         /// No documentation.	
@@ -67,7 +66,7 @@ namespace SharpDX.Direct2D1
         /// <returns>The rectangle invalidated.</returns>	
         /// <unmanaged>HRESULT ID2D1Transform::MapInvalidRect([In] unsigned int inputIndex,[In] RECT invalidInputRect,[Out] RECT* invalidOutputRect)</unmanaged>	
         /// <unmanaged-short>ID2D1Transform::MapInvalidRect</unmanaged-short>	
-        SharpDX.Rectangle MapInvalidRect(int inputIndex, SharpDX.Rectangle invalidInputRect);
+        RawRectangle MapInvalidRect(int inputIndex, RawRectangle invalidInputRect);
     }
 }
 #endif

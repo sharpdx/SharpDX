@@ -48,7 +48,7 @@ namespace SharpDX.Direct2D1.Effects
         /// <summary>
         /// Gets or sets the axis-aligned affine transform of the image. Axis aligned transforms include Scale, Flips, and 90 degree rotations.
         /// </summary>
-        public Matrix3x2 Transform
+        public SharpDX.Mathematics.Interop.RawMatrix3x2 Transform
         {
             get { return GetMatrix3x2Value((int)YCbCrProperties.TransformMatrix); }
             set { SetValue((int)YCbCrProperties.TransformMatrix, value); }

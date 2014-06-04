@@ -17,10 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
-using System;
-using System.Collections.Generic;
-using System.Text;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1.Effects
 {
@@ -40,7 +39,7 @@ namespace SharpDX.Direct2D1.Effects
         /// <summary>
         /// The scale amount in the X and Y direction as a ratio of the output size to the input size. This property a <see cref="Vector2"/> defined as: (X scale, Y scale). The scale amounts are FLOAT, unitless, and must be positive or 0.
         /// </summary>
-        public Vector2 ScaleAmount
+        public RawVector2 ScaleAmount
         {
             get
             {
@@ -56,7 +55,7 @@ namespace SharpDX.Direct2D1.Effects
         /// The image scaling center point. This property is a <see cref="Vector2"/> defined as: (point X, point Y). The units are in DIPs.
         /// Use the center point property to scale around a point other than the upper-left corner.
         /// </summary>
-        public Vector2 CenterPoint
+        public RawVector2 CenterPoint
         {
             get
             {

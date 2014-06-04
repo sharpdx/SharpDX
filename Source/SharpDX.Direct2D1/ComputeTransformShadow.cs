@@ -17,9 +17,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1
 {
@@ -76,7 +78,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<ComputeTransformShadow>(thisPtr);
                     var callback = (ComputeTransform)shadow.Callback;
-                    var result = callback.CalculateThreadgroups(*(SharpDX.Rectangle*)rect);
+                    var result = callback.CalculateThreadgroups(*(RawRectangle*)rect);
                     dimX = result.X;
                     dimY = result.Y;
                     dimZ = result.Z;

@@ -17,8 +17,10 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
 using System;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1
 {
@@ -70,7 +72,7 @@ namespace SharpDX.Direct2D1
         /// <param name="interpolationMode">No documentation.</param>	
         /// <param name="compositeMode">No documentation.</param>	
         /// <unmanaged>void ID2D1DeviceContext::DrawImage([In] ID2D1Image* image,[In, Optional] const D2D_POINT_2F* targetOffset,[In, Optional] const D2D_RECT_F* imageRectangle,[In] D2D1_INTERPOLATION_MODE interpolationMode,[In] D2D1_COMPOSITE_MODE compositeMode)</unmanaged>	
-        public void DrawImage(SharpDX.Direct2D1.Effect effect, SharpDX.Vector2 targetOffset, SharpDX.Direct2D1.InterpolationMode interpolationMode = InterpolationMode.Linear, SharpDX.Direct2D1.CompositeMode compositeMode = CompositeMode.SourceOver)
+        public void DrawImage(SharpDX.Direct2D1.Effect effect, RawVector2 targetOffset, SharpDX.Direct2D1.InterpolationMode interpolationMode = InterpolationMode.Linear, SharpDX.Direct2D1.CompositeMode compositeMode = CompositeMode.SourceOver)
         {
             using (var output = effect.Output)
                 DrawImage(output, targetOffset, null, interpolationMode, compositeMode);
@@ -97,7 +99,7 @@ namespace SharpDX.Direct2D1
         /// <param name="interpolationMode">No documentation.</param>	
         /// <param name="compositeMode">No documentation.</param>	
         /// <unmanaged>void ID2D1DeviceContext::DrawImage([In] ID2D1Image* image,[In, Optional] const D2D_POINT_2F* targetOffset,[In, Optional] const D2D_RECT_F* imageRectangle,[In] D2D1_INTERPOLATION_MODE interpolationMode,[In] D2D1_COMPOSITE_MODE compositeMode)</unmanaged>	
-        public void DrawImage(SharpDX.Direct2D1.Image image, SharpDX.Vector2 targetOffset, SharpDX.Direct2D1.InterpolationMode interpolationMode = InterpolationMode.Linear, SharpDX.Direct2D1.CompositeMode compositeMode = CompositeMode.SourceOver)
+        public void DrawImage(SharpDX.Direct2D1.Image image, RawVector2 targetOffset, SharpDX.Direct2D1.InterpolationMode interpolationMode = InterpolationMode.Linear, SharpDX.Direct2D1.CompositeMode compositeMode = CompositeMode.SourceOver)
         {
             DrawImage(image, targetOffset, null, interpolationMode, compositeMode);
         }
@@ -134,7 +136,7 @@ namespace SharpDX.Direct2D1
         /// <param name="interpolationMode">The interpolation mode.</param>
         /// <param name="perspectiveTransformRef">The perspective transform ref.</param>
         /// <unmanaged>void ID2D1DeviceContext::DrawBitmap([In] ID2D1Bitmap* bitmap,[In, Optional] const D2D_RECT_F* destinationRectangle,[In] float opacity,[In] D2D1_INTERPOLATION_MODE interpolationMode,[In, Optional] const D2D_RECT_F* sourceRectangle,[In, Optional] const D2D_MATRIX_4X4_F* perspectiveTransform)</unmanaged>
-        public void DrawBitmap(SharpDX.Direct2D1.Bitmap bitmap, float opacity, SharpDX.Direct2D1.InterpolationMode interpolationMode, SharpDX.Matrix perspectiveTransformRef)
+        public void DrawBitmap(SharpDX.Direct2D1.Bitmap bitmap, float opacity, SharpDX.Direct2D1.InterpolationMode interpolationMode, RawMatrix perspectiveTransformRef)
         {
             DrawBitmap(bitmap, null, opacity, interpolationMode, null, perspectiveTransformRef);
         }
@@ -148,7 +150,7 @@ namespace SharpDX.Direct2D1
         /// <param name="sourceRectangle">The source rectangle.</param>
         /// <param name="perspectiveTransformRef">The perspective transform ref.</param>
         /// <unmanaged>void ID2D1DeviceContext::DrawBitmap([In] ID2D1Bitmap* bitmap,[In, Optional] const D2D_RECT_F* destinationRectangle,[In] float opacity,[In] D2D1_INTERPOLATION_MODE interpolationMode,[In, Optional] const D2D_RECT_F* sourceRectangle,[In, Optional] const D2D_MATRIX_4X4_F* perspectiveTransform)</unmanaged>
-        public void DrawBitmap(SharpDX.Direct2D1.Bitmap bitmap, float opacity, SharpDX.Direct2D1.InterpolationMode interpolationMode, SharpDX.RectangleF sourceRectangle, SharpDX.Matrix perspectiveTransformRef)
+        public void DrawBitmap(SharpDX.Direct2D1.Bitmap bitmap, float opacity, SharpDX.Direct2D1.InterpolationMode interpolationMode, RawRectangleF sourceRectangle, RawMatrix perspectiveTransformRef)
         {
             DrawBitmap(bitmap, null, opacity, interpolationMode, sourceRectangle, perspectiveTransformRef);
         }
@@ -170,9 +172,9 @@ namespace SharpDX.Direct2D1
         /// <param name="effect">The effect.</param>
         /// <returns></returns>
         /// <unmanaged>HRESULT ID2D1DeviceContext::GetEffectInvalidRectangles([In] ID2D1Effect* effect,[Out, Buffer] D2D_RECT_F* rectangles,[In] unsigned int rectanglesCount)</unmanaged>
-        public SharpDX.RectangleF[] GetEffectInvalidRectangles(SharpDX.Direct2D1.Effect effect)
+        public RawRectangleF[] GetEffectInvalidRectangles(SharpDX.Direct2D1.Effect effect)
         {
-            var invalidRects = new RectangleF[GetEffectInvalidRectangleCount(effect)];
+            var invalidRects = new RawRectangleF[GetEffectInvalidRectangleCount(effect)];
             if (invalidRects.Length == 0)
                 return invalidRects;
             GetEffectInvalidRectangles(effect, invalidRects, invalidRects.Length);
@@ -186,9 +188,9 @@ namespace SharpDX.Direct2D1
         /// <param name="inputDescriptions">The input descriptions.</param>
         /// <returns></returns>
         /// <unmanaged>HRESULT ID2D1DeviceContext::GetEffectRequiredInputRectangles([In] ID2D1Effect* renderEffect,[In, Optional] const D2D_RECT_F* renderImageRectangle,[In, Buffer] const D2D1_EFFECT_INPUT_DESCRIPTION* inputDescriptions,[Out, Buffer] D2D_RECT_F* requiredInputRects,[In] unsigned int inputCount)</unmanaged>
-        public SharpDX.RectangleF[] GetEffectRequiredInputRectangles(SharpDX.Direct2D1.Effect renderEffect, SharpDX.Direct2D1.EffectInputDescription[] inputDescriptions)
+        public RawRectangleF[] GetEffectRequiredInputRectangles(SharpDX.Direct2D1.Effect renderEffect, SharpDX.Direct2D1.EffectInputDescription[] inputDescriptions)
         {
-            var result = new RectangleF[inputDescriptions.Length];
+            var result = new RawRectangleF[inputDescriptions.Length];
             GetEffectRequiredInputRectangles(renderEffect, null, inputDescriptions, result, inputDescriptions.Length);
             return result;
         }
@@ -201,9 +203,9 @@ namespace SharpDX.Direct2D1
         /// <param name="inputDescriptions">The input descriptions.</param>
         /// <returns></returns>
         /// <unmanaged>HRESULT ID2D1DeviceContext::GetEffectRequiredInputRectangles([In] ID2D1Effect* renderEffect,[In, Optional] const D2D_RECT_F* renderImageRectangle,[In, Buffer] const D2D1_EFFECT_INPUT_DESCRIPTION* inputDescriptions,[Out, Buffer] D2D_RECT_F* requiredInputRects,[In] unsigned int inputCount)</unmanaged>
-        public SharpDX.RectangleF[] GetEffectRequiredInputRectangles(SharpDX.Direct2D1.Effect renderEffect, SharpDX.RectangleF renderImageRectangle, SharpDX.Direct2D1.EffectInputDescription[] inputDescriptions)
+        public RawRectangleF[] GetEffectRequiredInputRectangles(SharpDX.Direct2D1.Effect renderEffect, RawRectangleF renderImageRectangle, SharpDX.Direct2D1.EffectInputDescription[] inputDescriptions)
         {
-            var result = new RectangleF[inputDescriptions.Length];
+            var result = new RawRectangleF[inputDescriptions.Length];
             GetEffectRequiredInputRectangles(renderEffect, renderImageRectangle, inputDescriptions, result, inputDescriptions.Length);
             return result;
         }
