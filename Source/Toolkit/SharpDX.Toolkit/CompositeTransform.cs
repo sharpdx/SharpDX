@@ -26,7 +26,7 @@ namespace SharpDX
     /// <summary>
     /// Represents a transformation composed of a scaling, rotation and translation operation.
     /// </summary>
-    public struct SrtTransform : IEquatable<SrtTransform>, IFormattable, IDataSerializable
+    public struct CompositeTransform : IEquatable<CompositeTransform>, IFormattable, IDataSerializable
     {
         /// <summary>
         /// The scaling component of the transformation.
@@ -44,17 +44,17 @@ namespace SharpDX
         public Vector3 Translation;
 
         /// <summary>
-        /// The identety <see cref="SharpDX.SrtTransform"/>.
+        /// The identety <see cref="SharpDX.CompositeTransform"/>.
         /// </summary>
-        public static readonly SrtTransform Identity = new SrtTransform(Vector3.One, Quaternion.Identity, Vector3.Zero);
+        public static readonly CompositeTransform Identity = new CompositeTransform(Vector3.One, Quaternion.Identity, Vector3.Zero);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.SrtTransform"/> struct.
+        /// Initializes a new instance of the <see cref="SharpDX.CompositeTransform"/> struct.
         /// </summary>
         /// <param name="scale">The scaling component of the transformation.</param>
         /// <param name="rotation">The rotation component of the transformation.</param>
         /// <param name="translation">The translation component of the transformation.</param>
-        public SrtTransform(Vector3 scale, Quaternion rotation, Vector3 translation)
+        public CompositeTransform(Vector3 scale, Quaternion rotation, Vector3 translation)
         {
             Scale = scale;
             Rotation = rotation;
@@ -62,13 +62,13 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.SrtTransform"/> struct.
+        /// Initializes a new instance of the <see cref="SharpDX.CompositeTransform"/> struct.
         /// </summary>
         /// <param name="transform">The transformation matrix.</param>
         /// <remarks>
         /// This constructor is designed to decompose a SRT transformation matrix only.
         /// </remarks>
-        public SrtTransform(Matrix transform)
+        public CompositeTransform(Matrix transform)
         {
             transform.Decompose(out Scale, out Rotation, out Translation);
         }
@@ -80,7 +80,7 @@ namespace SharpDX
         /// <param name="end">End transformation.</param>
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
         /// <param name="result">When the method completes, contains the interpolation of the two transformations.</param>
-        public static void Slerp(ref SrtTransform start, ref SrtTransform end, float amount, out SrtTransform result)
+        public static void Slerp(ref CompositeTransform start, ref CompositeTransform end, float amount, out CompositeTransform result)
         {
             Vector3.Lerp(ref start.Scale, ref end.Scale, amount, out result.Scale);
             Quaternion.Slerp(ref start.Rotation, ref end.Rotation, amount, out result.Rotation);
@@ -94,19 +94,19 @@ namespace SharpDX
         /// <param name="end">End transformation.</param>
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
         /// <returns>The interpolation of the two transformations.</returns>
-        public static SrtTransform Slerp(SrtTransform start, SrtTransform end, float amount)
+        public static CompositeTransform Slerp(CompositeTransform start, CompositeTransform end, float amount)
         {
-            SrtTransform result;
+            CompositeTransform result;
             Slerp(ref start, ref end, amount, out result);
             return result;
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="SharpDX.SrtTransform"/> to <see cref="SlimDX.Matrix"/>.
+        /// Performs an explicit conversion from <see cref="SharpDX.CompositeTransform"/> to <see cref="SlimDX.Matrix"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator Matrix(SrtTransform value)
+        public static explicit operator Matrix(CompositeTransform value)
         {
             return Matrix.Scaling(value.Scale) * Matrix.RotationQuaternion(value.Rotation) * Matrix.Translation(value.Translation);
         }
@@ -117,7 +117,7 @@ namespace SharpDX
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
-        public static bool operator ==(SrtTransform left, SrtTransform right)
+        public static bool operator ==(CompositeTransform left, CompositeTransform right)
         {
             return left.Equals(ref right);
         }
@@ -128,7 +128,7 @@ namespace SharpDX
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
-        public static bool operator !=(SrtTransform left, SrtTransform right)
+        public static bool operator !=(CompositeTransform left, CompositeTransform right)
         {
             return !left.Equals(ref right);
         }
@@ -215,25 +215,25 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="SharpDX.SrtTransform"/> is equal to this instance.
+        /// Determines whether the specified <see cref="SharpDX.CompositeTransform"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="SharpDX.SrtTransform"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="SharpDX.CompositeTransform"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="SharpDX.SrtTransform"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="SharpDX.CompositeTransform"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(ref SrtTransform other)
+        public bool Equals(ref CompositeTransform other)
         {
             return Scale.Equals(ref other.Scale) && Rotation.Equals(ref other.Rotation) && Translation.Equals(ref other.Translation);
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="SharpDX.SrtTransform"/> is equal to this instance.
+        /// Determines whether the specified <see cref="SharpDX.CompositeTransform"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="SharpDX.SrtTransform"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="SharpDX.CompositeTransform"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="SharpDX.SrtTransform"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="SharpDX.CompositeTransform"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(SrtTransform other)
+        public bool Equals(CompositeTransform other)
         {
             return Equals(ref other);
         }
@@ -247,10 +247,10 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (!(value is SrtTransform))
+            if (!(value is CompositeTransform))
                 return false;
 
-            var strongValue = (SrtTransform)value;
+            var strongValue = (CompositeTransform)value;
             return Equals(ref strongValue);
         }
     }

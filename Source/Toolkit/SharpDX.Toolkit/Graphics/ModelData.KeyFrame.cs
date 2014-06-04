@@ -37,7 +37,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// The bone transform.
             /// </summary>
-            public SrtTransform Value;
+            public CompositeTransform Value;
 
             /// <inheritdoc/>
             void IDataSerializable.Serialize(BinarySerializer serializer)

@@ -431,7 +431,7 @@ namespace SharpDX.Toolkit.Graphics
                         foreach (var key in channel.ScalingKeys)
                         {
                             var keyFrame = GetKeyFrame((float)(key.Time / ticksPerSecond), keyFrames);
-                            keyFrame.Value = new SrtTransform(ConvertVector(key.Value), Quaternion.Identity, Vector3.Zero);
+                            keyFrame.Value = new CompositeTransform(ConvertVector(key.Value), Quaternion.Identity, Vector3.Zero);
                         }
                     }
 
@@ -440,7 +440,7 @@ namespace SharpDX.Toolkit.Graphics
                         foreach (var key in channel.RotationKeys)
                         {
                             var keyFrame = GetKeyFrame((float)(key.Time / ticksPerSecond), keyFrames);
-                            keyFrame.Value = new SrtTransform(keyFrame.Value.Scale, ConvertQuaternion(key.Value), Vector3.Zero);
+                            keyFrame.Value = new CompositeTransform(keyFrame.Value.Scale, ConvertQuaternion(key.Value), Vector3.Zero);
                         }
                     }
 
@@ -449,7 +449,7 @@ namespace SharpDX.Toolkit.Graphics
                         foreach (var key in channel.PositionKeys)
                         {
                             var keyFrame = GetKeyFrame((float)(key.Time / ticksPerSecond), keyFrames);
-                            keyFrame.Value = new SrtTransform(keyFrame.Value.Scale, keyFrame.Value.Rotation, ConvertVector(key.Value));
+                            keyFrame.Value = new CompositeTransform(keyFrame.Value.Scale, keyFrame.Value.Rotation, ConvertVector(key.Value));
                         }
                     }
 
@@ -473,13 +473,13 @@ namespace SharpDX.Toolkit.Graphics
 
                 if (node.Value.Time > keyTime)
                 {
-                    keyFrame = new ModelData.KeyFrame { Time = keyTime, Value = SrtTransform.Identity };
+                    keyFrame = new ModelData.KeyFrame { Time = keyTime, Value = CompositeTransform.Identity };
                     keyFrames.AddAfter(node, keyFrame);
                     return keyFrame;
                 }
             }
 
-            keyFrame = new ModelData.KeyFrame { Time = keyTime, Value = SrtTransform.Identity };
+            keyFrame = new ModelData.KeyFrame { Time = keyTime, Value = CompositeTransform.Identity };
             keyFrames.AddLast(keyFrame);
             return keyFrame;
         }
@@ -503,7 +503,7 @@ namespace SharpDX.Toolkit.Graphics
                 var next = node.Next.Value;
 
                 var amount = (current.Time - previous.Time) / (next.Time - previous.Time);
-                var interpolated = SrtTransform.Slerp(previous.Value, next.Value, amount);
+                var interpolated = CompositeTransform.Slerp(previous.Value, next.Value, amount);
 
                 var actual = current.Value;
 
