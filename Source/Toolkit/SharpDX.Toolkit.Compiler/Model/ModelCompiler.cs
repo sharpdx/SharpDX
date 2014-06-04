@@ -823,12 +823,12 @@ namespace SharpDX.Toolkit.Graphics
             var vertexStream = DataStream.Create(vertexBuffer.Buffer, true, true);
             for (int i = 0; i < assimpMesh.VertexCount; i++)
             {
-                var position = ConvertVector(assimpMesh.Vertices[i]);
-                Vector3.TransformCoordinate(ref position, ref meshBindTransform, out position);
+                Vector3 defaultPosition = ConvertVector(assimpMesh.Vertices[i]);
+                Vector3 position = Vector3.TransformCoordinate(defaultPosition, meshBindTransform);
                 vertexStream.Write(position);
 
                 // Store bounding points for BoundingSphere pre-calculation
-                boundingPoints[currentBoundingPointIndex++] = new Vector3(position.X, position.Y, position.Z);
+                boundingPoints[currentBoundingPointIndex++] = assimpMesh.HasBones ? defaultPosition : position;
 
                 // Add normals
                 if (assimpMesh.HasNormals)
