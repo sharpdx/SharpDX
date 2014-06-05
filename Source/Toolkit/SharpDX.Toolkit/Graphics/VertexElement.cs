@@ -586,7 +586,8 @@ namespace SharpDX.Toolkit.Graphics
                         fieldFormat = ConvertTypeToFormat(field.FieldType);
 
                     var offset = vertexElementAttribute.AlignedByteOffset;
-#if WP8
+#if WP8 || WP81
+                    // On WP81, Marshal.OffsetOf is crashing the CLR, so we are using directly the size of the Format instead
                     if (offset < 0)
                     {
                         offset = currentOffset;
