@@ -757,25 +757,30 @@ namespace SharpDX.Toolkit.Graphics
             Matrix meshBindTransform = Matrix.Identity;
             if (assimpMesh.HasBones)
             {
-                meshBindTransform = GetAbsoluteTransform(parentNode);
-
                 for (int i = 0; i < assimpMesh.Bones.Length; i++)
                 {
                     var bone = assimpMesh.Bones[i];
                     var boneNode = scene.RootNode.FindNode(bone.Name);
 
-                    // Get or create this skinned bone's global index
+                    // If a bone is used by multiple meshes, their offset matrices may still be different, as the meshes could have additional
+                    // transformations in bind pose. However, this transformation is equal for all offset matrices of the same mesh.
                     int boneIndex;
                     if (!skinnedBones.TryGetValue(boneNode, out boneIndex))
                     {
+                        // Register each bone only once
                         boneIndex = model.SkinnedBones.Count;
                         skinnedBones[boneNode] = boneIndex;
 
                         model.SkinnedBones.Add(new ModelData.SkinnedBone
                         {
                             BoneIndex = skeletonNodes[boneNode],
-                            InverseBindTransform = Matrix.Invert(GetAbsoluteTransform(parentNode)) * ConvertMatrix(bone.OffsetMatrix),
+                            InverseBindTransform = ConvertMatrix(bone.OffsetMatrix)
                         });
+                    }
+                    else
+                    {
+                        // If another mesh is using the bone, the difference in offset matrices is baked into the mesh.
+                        meshBindTransform = ConvertMatrix(bone.OffsetMatrix) * Matrix.Invert(model.SkinnedBones[boneIndex].InverseBindTransform);
                     }
 
                     // Add the bone index to the mesh part's local bone list
