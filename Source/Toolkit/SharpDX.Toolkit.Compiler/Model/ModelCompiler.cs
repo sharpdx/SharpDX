@@ -198,6 +198,8 @@ namespace SharpDX.Toolkit.Graphics
             // Collect bones from mesh
             CollectSkinnedBones();
 
+            CalculateMeshOffsets();
+
             registeredMeshParts = new List<ModelData.MeshPart>[scene.MeshCount];
 
             CollectEmbeddedTextures(scene.Textures);
@@ -520,6 +522,79 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        private Dictionary<Tuple<Mesh, Mesh>, Matrix> meshOffsets = new Dictionary<Tuple<Mesh, Mesh>, Matrix>();
+        private Dictionary<Node, Mesh> referenceMeshes = new Dictionary<Node, Mesh>();
+
+        private void CalculateMeshOffsets()
+        {
+            // For each pair of meshes, get the difference of their offset transforms, based on one of their shared bones (if any)
+            foreach (var mesh in scene.Meshes)
+            {
+                foreach (var otherMesh in scene.Meshes)
+                {
+                    if (mesh == otherMesh)
+                        break;
+
+                    foreach (var bone in mesh.Bones)
+                    {
+                        foreach (var otherBone in otherMesh.Bones)
+                        {
+                            if (bone.Name == otherBone.Name)
+                            {
+                                var offset = ConvertMatrix(bone.OffsetMatrix) * Matrix.Invert(ConvertMatrix(otherBone.OffsetMatrix));
+                                meshOffsets[Tuple.Create(mesh, otherMesh)] = offset;
+                                meshOffsets[Tuple.Create(otherMesh, mesh)] = Matrix.Invert(offset);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // For each pair of meshes, get the difference of their offset transforms (if they are connected by a chain of offset transforms)
+            foreach (var start in scene.Meshes)
+            {
+                foreach (var mid in scene.Meshes)
+                {
+                    foreach (var end in scene.Meshes)
+                    {
+                        if (start == end || start == mid || mid == end)
+                            continue;
+
+                        var startToEnd = Tuple.Create(start, end);
+                        var startToMid = Tuple.Create(start, mid);
+                        var midToEnd = Tuple.Create(mid, end);
+
+                        if (meshOffsets.ContainsKey(startToEnd) ||
+                            !meshOffsets.ContainsKey(startToMid) ||
+                            !meshOffsets.ContainsKey(midToEnd))
+                            continue;
+
+                        var offset = meshOffsets[startToMid] * meshOffsets[midToEnd];
+                        meshOffsets[startToEnd] = offset;
+                        meshOffsets[Tuple.Create(end, start)] = Matrix.Invert(offset);
+                    }
+                }
+            }
+
+            // Associate each bones with the first mesh that is connected to it by a chain of offset transforms
+            foreach (var mesh in scene.Meshes)
+            {
+                foreach (var otherMesh in scene.Meshes)
+                {
+                    if (otherMesh != mesh && !meshOffsets.ContainsKey(Tuple.Create(mesh, otherMesh)))
+                        continue;
+
+                    foreach (var bone in otherMesh.Bones)
+                    {
+                        var boneNode = scene.RootNode.FindNode(bone.Name);
+                        if (!referenceMeshes.ContainsKey(boneNode))
+                            referenceMeshes.Add(boneNode, mesh);
+                    }
+                }
+            }
+        }
+
         private void CollectSkinnedBones()
         {
             foreach (var mesh in scene.Meshes)
@@ -779,24 +854,25 @@ namespace SharpDX.Toolkit.Graphics
                     var boneNode = scene.RootNode.FindNode(bone.Name);
 
                     // If a bone is used by multiple meshes, their offset matrices may still be different, as the meshes could have additional
-                    // transformations in bind pose. However, this transformation is equal for all offset matrices of the same mesh.
+                    // transformations in bind pose. We choose one mesh's bind pose as reference, and bake the difference into the current mesh's vertices.
+                    Mesh boneMesh = referenceMeshes[boneNode];
+                    if (boneMesh != assimpMesh)
+                    {
+                        meshBindTransform = meshOffsets[Tuple.Create(assimpMesh, boneMesh)];
+                    }
+
+                    // Register each bone only once
                     int boneIndex;
                     if (!skinnedBones.TryGetValue(boneNode, out boneIndex))
                     {
-                        // Register each bone only once
                         boneIndex = model.SkinnedBones.Count;
                         skinnedBones[boneNode] = boneIndex;
 
                         model.SkinnedBones.Add(new ModelData.SkinnedBone
                         {
                             BoneIndex = skeletonNodes[boneNode],
-                            InverseBindTransform = ConvertMatrix(bone.OffsetMatrix)
+                            InverseBindTransform = Matrix.Invert(meshBindTransform) * ConvertMatrix(bone.OffsetMatrix)
                         });
-                    }
-                    else
-                    {
-                        // If another mesh is using the bone, the difference in offset matrices is baked into the mesh.
-                        meshBindTransform = ConvertMatrix(bone.OffsetMatrix) * Matrix.Invert(model.SkinnedBones[boneIndex].InverseBindTransform);
                     }
 
                     // Add the bone index to the mesh part's local bone list
