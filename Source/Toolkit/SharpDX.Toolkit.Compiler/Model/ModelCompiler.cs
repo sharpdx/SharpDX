@@ -204,9 +204,11 @@ namespace SharpDX.Toolkit.Graphics
 
             // Collect meshes and attached nodes
             CollectMeshNodes(scene.RootNode);
-            
+
             // Collect nodes
             CollectNodes(scene.RootNode, null);
+
+            CollectMeshes(scene.RootNode);
 
             // Process materials
             ProcessMaterials();
@@ -571,7 +573,7 @@ namespace SharpDX.Toolkit.Graphics
                 node = node.Parent;
             }
         }
-        
+
         private void CollectNodes(Node node, ModelData.Bone targetParent)
         {
             bool isModelNode = IsModelNode(node);
@@ -582,15 +584,15 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             var parent = new ModelData.Bone
-                            {
-                                Index = model.Bones.Count,
-                                Name = node.Name,
-                                ParentIndex = targetParent == null ? -1 : targetParent.Index,
-                                Transform = ConvertMatrix(node.Transform),
-                                Children = new List<int>()
-                            };
+            {
+                Index = model.Bones.Count,
+                Name = node.Name,
+                ParentIndex = targetParent == null ? -1 : targetParent.Index,
+                Transform = ConvertMatrix(node.Transform),
+                Children = new List<int>()
+            };
 
-            if (targetParent!= null && targetParent.Children != null)
+            if (targetParent != null && targetParent.Children != null)
             {
                 targetParent.Children.Add(parent.Index);
             }
@@ -599,15 +601,29 @@ namespace SharpDX.Toolkit.Graphics
             skeletonNodes[node] = model.Bones.Count;
             model.Bones.Add(parent);
 
-            // if node has meshes, create a new scene object for it
-            if( node.MeshCount > 0)
+            // continue for all child nodes
+            if (node.HasChildren)
+            {
+                foreach (var subNode in node.Children)
+                {
+                    CollectNodes(subNode, parent);
+                }
+            }
+        }
+
+        private void CollectMeshes(Node node)
+        {
+            var boneIndex = skeletonNodes[node];
+            var bone = model.Bones[boneIndex];
+
+            if (node.HasMeshes)
             {
                 var mesh = new ModelData.Mesh
-                               {
-                                   Name = parent.Name, 
-                                   ParentBoneIndex = parent.Index, 
-                                   MeshParts = new List<ModelData.MeshPart>()
-                               };
+                {
+                    Name = bone.Name,
+                    ParentBoneIndex = bone.Index,
+                    MeshParts = new List<ModelData.MeshPart>()
+                };
                 model.Meshes.Add(mesh);
 
                 // Precalculate the number of vertices for bounding sphere calculation
@@ -651,7 +667,7 @@ namespace SharpDX.Toolkit.Graphics
             {
                 foreach (var subNode in node.Children)
                 {
-                    CollectNodes(subNode, parent);
+                    CollectMeshes(subNode);
                 }
             }
         }
