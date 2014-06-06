@@ -22,6 +22,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AnimationSystem.cs" />
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="Desktop\GameWindowDesktopWpf.cs" />
     <Compile Include="Desktop\SharpDXElement.cs" />
