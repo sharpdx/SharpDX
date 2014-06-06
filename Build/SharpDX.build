@@ -34,6 +34,7 @@
     <SharpDXAssemblyVersion>$([System.Text.RegularExpressions.Regex]::Match($(SharedAssemblyInfo), `AssemblyVersion\("(.*)"`).Groups[1].Value)</SharpDXAssemblyVersion>
     <SharpDXDevZip>$(MSBuildThisFileDirectory)\SharpDX-SDK-LatestDev.exe</SharpDXDevZip>
     <SharpDXReleaseZip>$(MSBuildThisFileDirectory)\SharpDX-SDK-$(SharpDXAssemblyVersion).exe</SharpDXReleaseZip>
+    <SharpDXLocalUpload>C:\inetpub\wwwroot\sharpdx\upload</SharpDXLocalUpload>
   </PropertyGroup>
 
   <Import Project="$(ExtensionTasksPath)MSBuild.ExtensionPack.tasks"/>
@@ -51,7 +52,7 @@
   <Target Name="PackageDev">
     <CallTarget Targets="GitUpdate"/>
     <CallTarget Targets="ZipBuild"/>
-    <CallTarget Targets="FtpZip"/>
+    <CallTarget Targets="LocalCopy"/>
   </Target>
 
   <Target Name="PackageRelease">
@@ -219,7 +220,7 @@
     <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(SharpDXRepo)\External\7-Zip\7z.exe a -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.pri -xr!*.exp $(SharpDXReleaseZip) Bin\*\*.* Build\SharpDX.targets Build\SharpDX.Toolkit.targets License.txt ReleaseNotes.html Readme.md'/>
   </Target>
 
-  <Target Name="FtpZip">
+  <Target Name="LocalCopy">
     <!-- Get Last commit log from git  -->
     <PropertyGroup>
       <LastCommitPath>$(SharpDXRepo)\last_commit.txt</LastCommitPath>
@@ -232,7 +233,7 @@
     </ItemGroup>
 
     <!-- Upload Zip -->
-    <MSBuild.ExtensionPack.Communication.Ftp TaskAction="UploadFiles" Host="sharpdx.org" RemoteDirectoryName="/sharpdx/upload" FileNames="@(FilesToUpload)" UserName="$(SharpDXFtpUser)" UserPassword="$(SharpDXFtpPassword)" />
+    <Copy SourceFiles="@(FilesToUpload)" DestinationFolder="$(SharpDXLocalUpload)"/>
   </Target>
 
   <Target Name="FtpReleaseZip">
