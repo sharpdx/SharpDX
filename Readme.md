@@ -1,4 +1,4 @@
-# SharpDX 
+# SharpDX [![Build Status](http://build.sharpdx.org/app/rest/builds/project:SharpDX/statusIcon)](http://build.sharpdx.org/project.html?projectId=SharpDX&guest=1)
 
 Official web site: [sharpdx.org](http://sharpdx.org)
 
