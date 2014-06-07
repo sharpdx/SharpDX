@@ -535,16 +535,19 @@ namespace SharpDX.Toolkit.Graphics
                     if (mesh == otherMesh)
                         break;
 
-                    foreach (var bone in mesh.Bones)
+                    if (mesh.HasBones && otherMesh.HasBones)
                     {
-                        foreach (var otherBone in otherMesh.Bones)
+                        foreach (var bone in mesh.Bones)
                         {
-                            if (bone.Name == otherBone.Name)
+                            foreach (var otherBone in otherMesh.Bones)
                             {
-                                var offset = ConvertMatrix(bone.OffsetMatrix) * Matrix.Invert(ConvertMatrix(otherBone.OffsetMatrix));
-                                meshOffsets[Tuple.Create(mesh, otherMesh)] = offset;
-                                meshOffsets[Tuple.Create(otherMesh, mesh)] = Matrix.Invert(offset);
-                                break;
+                                if (bone.Name == otherBone.Name)
+                                {
+                                    var offset = ConvertMatrix(bone.OffsetMatrix) * Matrix.Invert(ConvertMatrix(otherBone.OffsetMatrix));
+                                    meshOffsets[Tuple.Create(mesh, otherMesh)] = offset;
+                                    meshOffsets[Tuple.Create(otherMesh, mesh)] = Matrix.Invert(offset);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -585,11 +588,14 @@ namespace SharpDX.Toolkit.Graphics
                     if (otherMesh != mesh && !meshOffsets.ContainsKey(Tuple.Create(mesh, otherMesh)))
                         continue;
 
-                    foreach (var bone in otherMesh.Bones)
+                    if (otherMesh.HasBones)
                     {
-                        var boneNode = scene.RootNode.FindNode(bone.Name);
-                        if (!referenceMeshes.ContainsKey(boneNode))
-                            referenceMeshes.Add(boneNode, mesh);
+                        foreach (var bone in otherMesh.Bones)
+                        {
+                            var boneNode = scene.RootNode.FindNode(bone.Name);
+                            if (!referenceMeshes.ContainsKey(boneNode))
+                                referenceMeshes.Add(boneNode, mesh);
+                        }
                     }
                 }
             }
