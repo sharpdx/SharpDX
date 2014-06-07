@@ -30,11 +30,11 @@ namespace SharpDX.Toolkit.Graphics
     [ContentReader(typeof(ModelContentReader))]
     public class Model : Component
     {
+        private static Matrix[] sharedDrawBones;
+
         public MaterialCollection Materials;
 
         public ModelBoneCollection Bones;
-
-        public ModelSkinnedBoneCollection SkinnedBones;
 
         public ModelMeshCollection Meshes;
 
@@ -161,16 +161,13 @@ namespace SharpDX.Toolkit.Graphics
         {
             int count = Meshes.Count;
             int boneCount = Bones.Count;
-            Matrix* localSharedDrawBoneMatrices = stackalloc Matrix[boneCount]; // TODO use a global cache as BoneCount could generate a StackOverflow
 
-            CopyAbsoluteBoneTransformsTo(new IntPtr(localSharedDrawBoneMatrices));
-
-            var skinningTransforms = new Matrix[SkinnedBones.Count];
-            for (int i = 0; i < SkinnedBones.Count; i++)
+            if (sharedDrawBones == null || sharedDrawBones.Length < boneCount)
             {
-                int boneIndex = SkinnedBones[i].Bone.Index;
-                Matrix.Multiply(ref SkinnedBones[i].InverseBindTransform, ref localSharedDrawBoneMatrices[boneIndex], out skinningTransforms[i]);
+                sharedDrawBones = new Matrix[boneCount];
             }
+
+            CopyAbsoluteBoneTransformsTo(sharedDrawBones);
 
             var defaultParametersContext = default(EffectDefaultParametersContext);
 
@@ -189,7 +186,7 @@ namespace SharpDX.Toolkit.Graphics
                     else
                     {
                         Matrix worldTranformed;
-                        Matrix.Multiply(ref localSharedDrawBoneMatrices[index], ref world, out worldTranformed);
+                        Matrix.Multiply(ref sharedDrawBones[index], ref world, out worldTranformed);
                         effectOverride.DefaultParameters.Apply(ref defaultParametersContext, ref worldTranformed, ref view, ref projection);
                     }
                 }
@@ -204,7 +201,7 @@ namespace SharpDX.Toolkit.Graphics
                         }
 
                         Matrix worldTranformed;
-                        Matrix.Multiply(ref localSharedDrawBoneMatrices[index], ref world, out worldTranformed);
+                        Matrix.Multiply(ref sharedDrawBones[index], ref world, out worldTranformed);
 
                         var matrices = effect as IEffectMatrices;
                         if (matrices == null)
@@ -220,10 +217,9 @@ namespace SharpDX.Toolkit.Graphics
                     }
                 }
 
-                mesh.Draw(context, skinningTransforms, effectOverride);
+                mesh.Draw(context, sharedDrawBones, effectOverride);
             }
         }
-
 
         /// <summary>
         /// Calculates the bounds of this model.
@@ -243,16 +239,20 @@ namespace SharpDX.Toolkit.Graphics
         {
             int count = Meshes.Count;
             int boneCount = Bones.Count;
-            Matrix* localSharedDrawBoneMatrices = stackalloc Matrix[boneCount]; // TODO use a global cache as BoneCount could generate a StackOverflow
 
-            CopyAbsoluteBoneTransformsTo(new IntPtr(localSharedDrawBoneMatrices));
+            if (sharedDrawBones == null || sharedDrawBones.Length < boneCount)
+            {
+                sharedDrawBones = new Matrix[boneCount];
+            }
+
+            CopyAbsoluteBoneTransformsTo(sharedDrawBones);
             var defaultSphere = new BoundingSphere(Vector3.Zero, 0.0f);
             for (int i = 0; i < count; i++)
             {
                 var mesh = Meshes[i];
                 int index = mesh.ParentBone.Index;
                 Matrix result;
-                Matrix.Multiply(ref localSharedDrawBoneMatrices[index], ref world, out result);
+                Matrix.Multiply(ref sharedDrawBones[index], ref world, out result);
 
                 var meshSphere = mesh.BoundingSphere;
                 Vector3.TransformCoordinate(ref meshSphere.Center, ref result, out meshSphere.Center);

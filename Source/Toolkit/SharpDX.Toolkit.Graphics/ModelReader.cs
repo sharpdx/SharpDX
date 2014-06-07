@@ -228,11 +228,6 @@ namespace SharpDX.Toolkit.Graphics
             ReadBones(ref model.Bones);
             EndChunk();
 
-            // Skinned Bones section
-            BeginChunk("SKIN");
-            ReadSkinnedBones(ref model.SkinnedBones);
-            EndChunk();
-
             // Mesh section
             BeginChunk("MESH");
             ReadMeshes(ref model.Meshes);
@@ -465,7 +460,7 @@ namespace SharpDX.Toolkit.Graphics
             }
             skinnedBone.Bone = Model.Bones[boneIndex];
 
-            Serialize(ref skinnedBone.InverseBindTransform);
+            Serialize(ref skinnedBone.OffsetMatrix);
         }
 
         protected virtual void ReadMesh(ref ModelMesh mesh)
@@ -508,7 +503,7 @@ namespace SharpDX.Toolkit.Graphics
             meshPart.VertexBuffer = GetFromList(vertexBufferRange, CurrentMesh.VertexBuffers);
 
             // Skinned bones
-            Serialize(ref meshPart.SkinnedBones, Serialize);
+            ReadSkinnedBones(ref meshPart.SkinnedBones);
 
             // Properties
             ReadProperties(ref meshPart.Properties);

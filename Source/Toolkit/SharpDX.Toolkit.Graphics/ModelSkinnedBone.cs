@@ -22,10 +22,8 @@ namespace SharpDX.Toolkit.Graphics
 {
     public class ModelSkinnedBone : ComponentBase
     {
-        public int Index;
-
         public ModelBone Bone;
 
-        public Matrix InverseBindTransform;
+        public Matrix OffsetMatrix;
     }
 }

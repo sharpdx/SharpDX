@@ -44,7 +44,6 @@ namespace SharpDX.Toolkit.Graphics
             Textures = new List<byte[]>();
             Materials = new List<Material>();
             Bones = new List<Bone>();
-            SkinnedBones = new List<SkinnedBone>();
             Meshes = new List<Mesh>();
             Animations = new List<Animation>();
             Attributes = new PropertyCollection();
@@ -69,11 +68,6 @@ namespace SharpDX.Toolkit.Graphics
         /// Gets the bones of this model.
         /// </summary>
         public List<Bone> Bones;
-
-        /// <summary>
-        /// Gets the bones used to perform skinning animation with this model.
-        /// </summary>
-        public List<SkinnedBone> SkinnedBones;
 
         /// <summary>
         /// Gets the mesh of this model.
@@ -224,11 +218,6 @@ namespace SharpDX.Toolkit.Graphics
             // Bones section
             serializer.BeginChunk("BONE");
             serializer.Serialize(ref Bones);
-            serializer.EndChunk();
-
-            // Skinned Bones section
-            serializer.BeginChunk("SKIN");
-            serializer.Serialize(ref SkinnedBones);
             serializer.EndChunk();
 
             // Mesh section

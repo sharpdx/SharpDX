@@ -82,7 +82,8 @@ namespace SharpDX.Toolkit.Graphics
                     var transforms = new Matrix[boneCount];
                     for (int j = 0; j < boneCount; j++)
                     {
-                        transforms[j] = boneTransforms[part.SkinnedBones[j]];
+                        var skinnedBone = part.SkinnedBones[j];
+                        Matrix.Multiply(ref skinnedBone.OffsetMatrix, ref boneTransforms[skinnedBone.Bone.Index], out transforms[j]);
                     }
 
                     skinnedEffect.SetBoneTransforms(transforms);

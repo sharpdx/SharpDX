@@ -58,9 +58,9 @@ namespace SharpDX.Toolkit.Graphics
         public PropertyCollection Properties;
 
         /// <summary>
-        /// Indices of the models skinned bones that are affecting this part.
+        /// The skinned bones that are affecting this mesh part.
         /// </summary>
-        public List<int> SkinnedBones;
+        public ModelSkinnedBoneCollection SkinnedBones;
 
         /// <summary>
         /// Gets a value indicating whether this instance contains skinning information.
