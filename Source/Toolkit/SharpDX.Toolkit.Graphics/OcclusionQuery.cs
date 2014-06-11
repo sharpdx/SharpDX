@@ -6,9 +6,9 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// A D3D query used to determine the number of visible pixels of a drawn object(s)
     /// </summary>
-    public class OcclusionQuery : IDisposable
+    public class OcclusionQuery : Component
     {
-        private readonly Query d3dQuery;
+        private Query d3dQuery;
 
         private bool isBeginCalled = false;
         private bool isQueryPerformed = false;
@@ -113,9 +113,19 @@ namespace SharpDX.Toolkit.Graphics
             isQueryPerformed = true;
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposeManagedResources)
         {
-            d3dQuery.Dispose();
+            if (disposeManagedResources)
+            {
+                if (d3dQuery != null)
+                {
+                    d3dQuery.Dispose();
+                }
+
+                d3dQuery = null;
+            }
+
+            base.Dispose(disposeManagedResources);
         }
     }
 }
