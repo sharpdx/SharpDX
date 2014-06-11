@@ -101,17 +101,16 @@ namespace SharpDX.Toolkit.Graphics
 
         public static void WriteSpriteFont(FontDescription options, Stream outputStream, Glyph[] glyphs, float lineSpacing, Bitmap bitmap)
         {
-            using (var writer = new BinaryWriter(outputStream))
-            {
-                WriteMagic(writer);
-                writer.Write(SpriteFontData.Version);
-                WriteGlyphs(writer, glyphs);
+            var writer = new BinaryWriter(outputStream);
+            WriteMagic(writer);
+            writer.Write(SpriteFontData.Version);
+            WriteGlyphs(writer, glyphs);
 
-                writer.Write(lineSpacing);
-                writer.Write(options.DefaultCharacter);
-                
-                WriteBitmap(writer, options, bitmap);
-            }
+            writer.Write(lineSpacing);
+            writer.Write(options.DefaultCharacter);
+
+            WriteBitmap(writer, options, bitmap);
+            writer.Flush();
         }
 
         static void WriteMagic(BinaryWriter writer)
@@ -153,15 +152,15 @@ namespace SharpDX.Toolkit.Graphics
                 case FontTextureFormat.Rgba32:
                     WriteRgba32(writer, bitmap);
                     break;
-             
+
                 case FontTextureFormat.Bgra4444:
                     WriteBgra4444(writer, bitmap);
                     break;
-                
+
                 case FontTextureFormat.CompressedMono:
                     WriteCompressedMono(writer, bitmap, options);
                     break;
-                
+
                 default:
                     throw new NotSupportedException();
             }
