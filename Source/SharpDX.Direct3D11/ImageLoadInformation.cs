@@ -41,6 +41,9 @@ namespace SharpDX.Direct3D11
             {
                 Utilities.ClearMemory(new IntPtr(&value), 0xFF, Utilities.SizeOf<ImageLoadInformation>());
             }
+
+            value.PSrcInfo = IntPtr.Zero;
+
             return value;
         }
     }
