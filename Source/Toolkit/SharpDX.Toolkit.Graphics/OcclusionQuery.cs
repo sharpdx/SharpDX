@@ -57,6 +57,9 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OcclusionQuery" /> class.
+        /// </summary>
         public OcclusionQuery(GraphicsDevice graphicsDevice)
         {
             if (graphicsDevice.Features.Level == SharpDX.Direct3D.FeatureLevel.Level_9_1)
@@ -67,13 +70,14 @@ namespace SharpDX.Toolkit.Graphics
 
             try
             {
-                d3dQuery = new Query(
-                    graphicsDevice,
-                    new QueryDescription
-                    {
-                        Type = QueryType.Occlusion,
-                        Flags = QueryFlags.None
-                    });
+                d3dQuery = ToDispose(
+                    new Query(
+                        graphicsDevice,
+                        new QueryDescription
+                        {
+                            Type = QueryType.Occlusion,
+                            Flags = QueryFlags.None
+                        }));
             }
             catch
             {
@@ -111,21 +115,6 @@ namespace SharpDX.Toolkit.Graphics
 
             isBeginCalled = false;
             isQueryPerformed = true;
-        }
-
-        protected override void Dispose(bool disposeManagedResources)
-        {
-            if (disposeManagedResources)
-            {
-                if (d3dQuery != null)
-                {
-                    d3dQuery.Dispose();
-                }
-
-                d3dQuery = null;
-            }
-
-            base.Dispose(disposeManagedResources);
         }
     }
 }
