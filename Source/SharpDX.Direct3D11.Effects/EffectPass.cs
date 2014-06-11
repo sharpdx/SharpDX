@@ -31,6 +31,16 @@ namespace SharpDX.Direct3D11
         {
             Apply(0, context);
         }
+
+        /// <summary>	
+        /// Set the state contained in a pass to the device.	
+        /// </summary>	
+        /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}.</returns>
+        /// <unmanaged>HRESULT Apply([None] UINT Flags)</unmanaged>
+        public void Apply(DeviceContext context, int flags)
+        {
+            Apply(flags, context);
+        }
     }
 }
 #endif
