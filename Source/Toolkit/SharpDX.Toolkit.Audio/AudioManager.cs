@@ -1,6 +1,6 @@
 ﻿using SharpDX.Toolkit.Content;
 
-// Copyright (c) 2010-2013 SharpDX - SharpDX Team
+// Copyright (c) 2010-2014 SharpDX - SharpDX Team
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
