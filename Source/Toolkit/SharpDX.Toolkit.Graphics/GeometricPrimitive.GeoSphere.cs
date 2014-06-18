@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -299,10 +299,12 @@ namespace SharpDX.Toolkit.Graphics
                                 else if (*triIndex1 == i)
                                 {
                                     Utilities.Swap(ref *triIndex0, ref *triIndex1);
+                                    Utilities.Swap(ref *triIndex1, ref *triIndex2);
                                 }
                                 else if (*triIndex2 == i)
                                 {
                                     Utilities.Swap(ref *triIndex0, ref *triIndex2);
+                                    Utilities.Swap(ref *triIndex1, ref *triIndex2);
                                 }
                                 else
                                 {
@@ -328,7 +330,7 @@ namespace SharpDX.Toolkit.Graphics
                     indices = (int*)0;
                 }
 
-                return new GeometricPrimitive(graphicsDevice, vertices.ToArray(), indexList.ToArray(), toLeftHanded) { Name = "GeoSphere"};
+                return new GeometricPrimitive(graphicsDevice, vertices.ToArray(), indicesArray, toLeftHanded) { Name = "GeoSphere"};
             }
 
             private unsafe void FixPole(int poleIndex)
