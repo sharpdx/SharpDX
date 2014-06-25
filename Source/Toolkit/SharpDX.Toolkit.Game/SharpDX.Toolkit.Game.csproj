@@ -26,6 +26,8 @@
     <Compile Include="Desktop\GameWindowDesktopWpf.cs" />
     <Compile Include="Desktop\SharpDXElement.cs" />
     <Compile Include="Desktop\ToolkitHwndHost.cs" />
+    <Compile Include="Direct2DSurface.cs" />
+    <Compile Include="Direct2DSystem.cs" />
     <Compile Include="GameContext.WindowsPhoneBackgroundXaml.cs" />
     <Compile Include="GameContext.WinRTBackgroundXaml.cs" />
     <Compile Include="GameContext.WinRT.cs" />
@@ -37,6 +39,7 @@
     <Compile Include="GameContext.Desktop.cs" />
     <Compile Include="GameContextType.cs" />
     <Compile Include="GameWindowRenderer.cs" />
+    <Compile Include="HelperExtensions.cs" />
     <Compile Include="IGamePlatform.cs" />
     <Compile Include="IContentable.cs" />
     <Compile Include="GameGraphicsParameters.cs" />
@@ -68,6 +71,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SharpDX.Direct2D1\SharpDX.Direct2D1.csproj" Condition=" '$(SharpDXWP8)' == 'false'">
+      <Project>{c97878f4-1510-4bba-8153-bd71da7d50d8}</Project>
+      <Name>SharpDX.Direct2D1</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
       <Project>{736dfb52-1afe-4eff-9710-89046ab5b1f9}</Project>
       <Name>SharpDX.Direct3D11</Name>

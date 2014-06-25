@@ -23,6 +23,7 @@
     <Compile Include="BlendStateCollection.cs" />
     <Compile Include="ClearOptions.cs" />
     <Compile Include="BasicEffect.Extensions.cs" />
+    <Compile Include="Direct2DService.cs" />
     <Compile Include="EffectDefaultParameters.cs" />
     <Compile Include="EffectDefaultParametersContext.cs" />
     <Compile Include="EffectInstallerBase.cs" />
@@ -36,6 +37,7 @@
     <Compile Include="GeometricPrimitive.Torus.cs" />
     <Compile Include="GraphicsOutput.cs" />
     <Compile Include="GraphicsPerformance.cs" />
+    <Compile Include="IDirect2DService.cs" />
     <Compile Include="IEffectInstaller.cs" />
     <Compile Include="ModelContentReader.cs" />
     <Compile Include="OcclusionQuery.cs" />
