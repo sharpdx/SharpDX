@@ -23,7 +23,6 @@
 namespace SharpDX.Toolkit
 {
     using System;
-    using Direct3D11;
     using System.Collections.Generic;
     using Graphics;
 
@@ -71,7 +70,7 @@ namespace SharpDX.Toolkit
             d2DService = this.GetService<IDirect2DService>();
 
             foreach (var surface in surfaces)
-                surface.Initialize();
+                surface.InitializeInternal();
         }
 
         /// <summary>
@@ -85,7 +84,7 @@ namespace SharpDX.Toolkit
             foreach (var surface in surfaces)
             {
                 if (surface.IsVisible)
-                    surface.Update(gameTime);
+                    surface.UpdateInternal(gameTime);
             }
         }
 
@@ -108,7 +107,7 @@ namespace SharpDX.Toolkit
                     foreach (var surface in surfaces)
                     {
                         if (surface.IsDirty && surface.IsVisible)
-                            surface.Draw();
+                            surface.DrawInternal();
                     }
 
                     ctx.EndDraw();
@@ -153,7 +152,7 @@ namespace SharpDX.Toolkit
             surfaceDestinationRectangle = new Rectangle(0, 0, GraphicsDevice.BackBuffer.Width, GraphicsDevice.BackBuffer.Height);
 
             foreach (var surface in surfaces)
-                surface.LoadContent();
+                surface.LoadContentInternal();
         }
 
         /// <summary>
@@ -164,7 +163,7 @@ namespace SharpDX.Toolkit
             base.UnloadContent();
 
             foreach (var surface in surfaces)
-                surface.UnloadContent();
+                surface.UnloadContentInternal();
         }
     }
 }

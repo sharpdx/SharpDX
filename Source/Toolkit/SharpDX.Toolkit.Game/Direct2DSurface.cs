@@ -64,7 +64,7 @@ namespace SharpDX.Toolkit
         }
 
         /// <summary>
-        /// Inidicates whether this surface needs to be redrawn.
+        /// Indicates whether this surface needs to be redrawn.
         /// </summary>
         public bool IsDirty { get; private set; }
 
@@ -102,18 +102,18 @@ namespace SharpDX.Toolkit
         /// </summary>
         /// <exception cref="ArgumentNullException">Is thrown when <see cref="IGraphicsDeviceService"/> or <see cref="IDirect2DService"/> cannot be retrieved
         /// from the service registry provided in constructor.</exception>
-        internal void Initialize()
+        internal void InitializeInternal()
         {
             graphicsDeviceService = serviceProvider.GetService<IGraphicsDeviceService>();
             direct2DService = serviceProvider.GetService<IDirect2DService>();
 
-            InitializeInternal();
+            Initialize();
         }
 
         /// <summary>
         /// Loads the content and prepares the actual drawing surface.
         /// </summary>
-        internal void LoadContent()
+        internal void LoadContentInternal()
         {
             renderTarget = ToDisposeContent(CreateRenderTarget());
 
@@ -124,17 +124,17 @@ namespace SharpDX.Toolkit
 
             bitmapTarget = ToDisposeContent(new Bitmap1(direct2DService.DeviceContext, renderTarget, bitmapProperties));
 
-            LoadContentInternal();
+            LoadContent();
         }
 
         /// <summary>
         /// Unloads the content and disposes all unmanaged resources.
         /// </summary>
-        internal void UnloadContent()
+        internal void UnloadContentInternal()
         {
             disposeCollector.DisposeAndClear();
 
-            UnloadContentInternal();
+            UnloadContent();
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace SharpDX.Toolkit
         /// <remarks>
         /// This method call will replace the render target in the D2D device context.
         /// </remarks>
-        internal void Draw()
+        internal void DrawInternal()
         {
             var context = direct2DService.DeviceContext;
 
@@ -152,7 +152,7 @@ namespace SharpDX.Toolkit
                 context.Target = bitmapTarget;
                 context.Clear(new Color4(0f, 0f, 0f, 0f));
 
-                DrawInternal();
+                Draw();
 
                 context.Target = null;
             }
@@ -164,9 +164,9 @@ namespace SharpDX.Toolkit
         /// Updates the surface logic.
         /// </summary>
         /// <param name="time">The structure holding game time information.</param>
-        internal void Update(GameTime time)
+        internal void UpdateInternal(GameTime time)
         {
-            UpdateInternal(time);
+            Update(time);
         }
 
         /// <summary>
@@ -211,27 +211,27 @@ namespace SharpDX.Toolkit
         /// <summary>
         /// Derived classes should implement this method to perform custom initialization.
         /// </summary>
-        protected virtual void InitializeInternal() { }
+        protected virtual void Initialize() { }
 
         /// <summary>
         /// Derived classes should implement this method to perform custom content loading.
         /// </summary>
-        protected virtual void LoadContentInternal() { }
+        protected virtual void LoadContent() { }
 
         /// <summary>
         /// Derived classes should implement this method to perform custom content unloading.
         /// </summary>
-        protected virtual void UnloadContentInternal() { }
+        protected virtual void UnloadContent() { }
 
         /// <summary>
         /// Derived classes should implement this method to perform custom drawing operations.
         /// </summary>
-        protected virtual void DrawInternal() { }
+        protected virtual void Draw() { }
 
         /// <summary>
         /// Derived classes should implement this method to perform custom logic updates.
         /// </summary>
-        protected virtual void UpdateInternal(GameTime time) { }
+        protected virtual void Update(GameTime time) { }
     }
 }
 
