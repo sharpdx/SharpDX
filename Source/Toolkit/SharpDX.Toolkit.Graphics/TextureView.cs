@@ -48,9 +48,11 @@ namespace SharpDX.Toolkit.Graphics
 
             var shaderResourceView = view as ShaderResourceView;
             int mipLevel = 0;
+            bool isMultisampled = Texture.Description.SampleDescription.Count > 1;
+
             if (shaderResourceView != null)
             {
-                mipLevel = shaderResourceView.Description.Texture1D.MostDetailedMip;
+                mipLevel = isMultisampled ? 0 : shaderResourceView.Description.Texture1D.MostDetailedMip;
             }
             else
             {
@@ -58,7 +60,7 @@ namespace SharpDX.Toolkit.Graphics
                 if (renderTargetView != null)
                 {
                     IsRenderView = true;
-                    mipLevel = renderTargetView.Description.Texture1D.MipSlice;
+                    mipLevel = isMultisampled ? 0 : renderTargetView.Description.Texture1D.MipSlice;
                 }
                 else
                 {
@@ -66,7 +68,7 @@ namespace SharpDX.Toolkit.Graphics
                     if (depthStencilView != null)
                     {
                         IsDepthStencilView = true;
-                        mipLevel = depthStencilView.Description.Texture1D.MipSlice;
+                        mipLevel = isMultisampled ? 0 : depthStencilView.Description.Texture1D.MipSlice;
                     }
                     else
                     {
