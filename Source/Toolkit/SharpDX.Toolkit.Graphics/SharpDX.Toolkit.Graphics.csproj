@@ -23,6 +23,7 @@
     <Compile Include="BlendStateCollection.cs" />
     <Compile Include="ClearOptions.cs" />
     <Compile Include="BasicEffect.Extensions.cs" />
+    <Compile Include="DepthStencilViewSelector.cs" />
     <Compile Include="EffectDefaultParameters.cs" />
     <Compile Include="EffectDefaultParametersContext.cs" />
     <Compile Include="EffectInstallerBase.cs" />
