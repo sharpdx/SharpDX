@@ -1899,7 +1899,7 @@ namespace SharpDX
         {
             Vector3 crossed;
             Vector3 final;
-            Vector3 difference = objectPosition - cameraPosition;
+            Vector3 difference = cameraPosition - objectPosition;
 
             float lengthSq = difference.LengthSquared();
             if (MathUtil.IsZero(lengthSq))
@@ -1952,10 +1952,11 @@ namespace SharpDX
         /// <param name="cameraUpVector">The up vector of the camera.</param>
         /// <param name="cameraForwardVector">The forward vector of the camera.</param>
         /// <param name="result">When the method completes, contains the created billboard matrix.</param>
-        public static void BillboardRH(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Matrix result) {
+        public static void BillboardRH(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Matrix result)
+        {
             Vector3 crossed;
             Vector3 final;
-            Vector3 difference = cameraPosition - objectPosition;
+            Vector3 difference = objectPosition - cameraPosition;
 
             float lengthSq = difference.LengthSquared();
             if (MathUtil.IsZero(lengthSq))
