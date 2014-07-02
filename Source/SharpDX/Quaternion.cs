@@ -919,6 +919,31 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Creates a left-handed, look-at quaternion.
+        /// </summary>
+        /// <param name="forward">The camera's forward direction.</param>
+        /// <param name="up">The camera's up vector.</param>
+        /// <param name="result">When the method completes, contains the created look-at quaternion.</param>
+        public static void RotationLookAtLH(ref Vector3 forward, ref Vector3 up, out Quaternion result)
+        {
+            Vector3 eye = Vector3.Zero;
+            Quaternion.LookAtLH(ref eye, ref forward, ref up, out result);
+        }
+
+        /// <summary>
+        /// Creates a left-handed, look-at quaternion.
+        /// </summary>
+        /// <param name="forward">The camera's forward direction.</param>
+        /// <param name="up">The camera's up vector.</param>
+        /// <returns>The created look-at quaternion.</returns>
+        public static Quaternion RotationLookAtLH(Vector3 forward, Vector3 up)
+        {
+            Quaternion result;
+            RotationLookAtLH(ref forward, ref up, out result);
+            return result;
+        }
+
+        /// <summary>
         /// Creates a right-handed, look-at quaternion.
         /// </summary>
         /// <param name="eye">The position of the viewer's eye.</param>
@@ -943,6 +968,31 @@ namespace SharpDX
         {
             Quaternion result;
             LookAtRH(ref eye, ref target, ref up, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a right-handed, look-at quaternion.
+        /// </summary>
+        /// <param name="forward">The camera's forward direction.</param>
+        /// <param name="up">The camera's up vector.</param>
+        /// <param name="result">When the method completes, contains the created look-at quaternion.</param>
+        public static void RotationLookAtRH(ref Vector3 forward, ref Vector3 up, out Quaternion result)
+        {
+            Vector3 eye = Vector3.Zero;
+            Quaternion.LookAtRH(ref eye, ref forward, ref up, out result);
+        }
+
+        /// <summary>
+        /// Creates a right-handed, look-at quaternion.
+        /// </summary>
+        /// <param name="forward">The camera's forward direction.</param>
+        /// <param name="up">The camera's up vector.</param>
+        /// <returns>The created look-at quaternion.</returns>
+        public static Quaternion RotationLookAtRH(Vector3 forward, Vector3 up)
+        {
+            Quaternion result;
+            RotationLookAtRH(ref forward, ref up, out result);
             return result;
         }
 
