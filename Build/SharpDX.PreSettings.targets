@@ -25,6 +25,9 @@
     <DirectX11_1>false</DirectX11_1>
     <DirectX11_2>false</DirectX11_2>
 
+    <!-- Variable used for Windows8 build -->
+    <DefaultLanguage>en-US</DefaultLanguage>
+
     <!-- Save the Platform, as we are overriding it in SharpDXForcePlatform  -->
     <ProjectPlatform>$(Platform)</ProjectPlatform>
   </PropertyGroup>
@@ -99,6 +102,7 @@
   
   <!--.NET 4.5 - DirectX11.2 - Windows 8 Metro-->
   <PropertyGroup Condition=" '$(Platform)' == 'Win8'">
+    <TargetPlatformVersion>8.0</TargetPlatformVersion>
     <SharpDXAssemblyType>DirectX11_2</SharpDXAssemblyType>
     <SharpDXPlatform>winrt</SharpDXPlatform>
     <SharpDXWin8>true</SharpDXWin8>

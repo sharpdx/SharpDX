@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -35,6 +35,7 @@ namespace SharpDX.Toolkit.Graphics
             public MeshPart()
             {
                 Properties = new PropertyCollection();
+                SkinnedBones = new List<SkinnedBone>();
             }
 
             /// <summary>
@@ -53,9 +54,9 @@ namespace SharpDX.Toolkit.Graphics
             public BufferRange VertexBufferRange;
 
             /// <summary>
-            /// Gets the offset matrix attached to each bone weights
+            /// Gets the skinned bones.
             /// </summary>
-            public Matrix[] BoneOffsetMatrices;
+            public List<SkinnedBone> SkinnedBones;
 
             /// <summary>
             /// The attributes attached to this mesh part.
@@ -67,6 +68,7 @@ namespace SharpDX.Toolkit.Graphics
                 serializer.Serialize(ref MaterialIndex);
                 serializer.Serialize(ref IndexBufferRange);
                 serializer.Serialize(ref VertexBufferRange);
+                serializer.Serialize(ref SkinnedBones);
                 serializer.Serialize(ref Properties);
             }
         }

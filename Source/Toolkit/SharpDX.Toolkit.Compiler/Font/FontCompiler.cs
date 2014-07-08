@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -171,10 +171,12 @@ namespace SharpDX.Toolkit.Graphics
         {
             // We are using a MemoryStream, this is not efficient
             // but this was a quickest way to use existing from MakeSpriteFont from DirectXTk
-            var stream = new MemoryStream();
-            MakeSpriteFont(fontDescription, stream);
-            stream.Position = 0;
-            return SpriteFontData.Load(stream);
+            using(var stream = new MemoryStream())
+            {
+                MakeSpriteFont(fontDescription, stream);
+                stream.Position = 0;
+                return SpriteFontData.Load(stream);
+            }
         }
 
         static void MakeSpriteFont(FontDescription options, Stream stream)

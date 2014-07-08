@@ -15,14 +15,20 @@ It adds automatically references to SharpDX assemblies
     <SharpDXDirectXVersion Condition="'$(SharpDXDirectXVersion)' == '' and '$(TargetFrameworkIdentifier)' == '.NETCore'">DirectX11_2</SharpDXDirectXVersion>
     <SharpDXDirectXVersion Condition="'$(SharpDXDirectXVersion)' == '' and '$(TargetPlatformIdentifier)' == 'WindowsPhoneApp'">DirectX11_2</SharpDXDirectXVersion>
     <SharpDXDirectXVersion Condition="'$(SharpDXDirectXVersion)' == '' and '$(TargetFrameworkIdentifier)' == 'WindowsPhone' and $(TargetFrameworkVersion.Contains('v8'))">DirectX11_1</SharpDXDirectXVersion>
+	<!-- Use latest DirectX11_2 in case we don't know the .NET framework -->
+    <SharpDXDirectXVersion Condition="'$(SharpDXDirectXVersion)' == ''">DirectX11_2</SharpDXDirectXVersion>
 
     <!-- Detect the .NET Framework -->
     <SharpDXNETFramework Condition="'$(SharpDXNETFramework)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework' and ('$(TargetFrameworkVersion)' == 'v2.0' or '$(TargetFrameworkVersion)' == 'v3.5') ">net20</SharpDXNETFramework>
     <SharpDXNETFramework Condition="'$(SharpDXNETFramework)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework' and $(TargetFrameworkVersion.Contains('v4'))">net40</SharpDXNETFramework>
     <SharpDXNETFramework Condition="'$(SharpDXNETFramework)' == '' and '$(TargetFrameworkIdentifier)' == '.NETCore'">winrt</SharpDXNETFramework>
+    <SharpDXNETFramework Condition="'$(SharpDXNETFramework)' == '' and '$(TargetFrameworkProfile)' == 'Profile32'">winrt</SharpDXNETFramework>
     <SharpDXNETFramework Condition="'$(SharpDXNETFramework)' == '' and '$(TargetFrameworkIdentifier)' == 'WindowsPhone' and $(TargetFrameworkVersion.Contains('v8')) and '$(Platform)' != 'ARM'">wp8-x86</SharpDXNETFramework>
     <SharpDXNETFramework Condition="'$(SharpDXNETFramework)' == '' and '$(TargetFrameworkIdentifier)' == 'WindowsPhone' and $(TargetFrameworkVersion.Contains('v8')) and '$(Platform)' == 'ARM'">wp8-ARM</SharpDXNETFramework>
     <SharpDXNETFramework Condition="'$(SharpDXNETFramework)' == '' and '$(TargetPlatformIdentifier)' == 'WindowsPhoneApp'">wp81</SharpDXNETFramework>
+
+	<!-- Use latest net40 in case we don't detect the .NET framework (to avoid nuget to crash when trying to add a SharpDX reference) -->
+    <SharpDXNETFramework Condition="'$(SharpDXNETFramework)' == ''">net40</SharpDXNETFramework>
 
     <!-- Select Signed or not signed assemblies -->
     <SharpDXSigned Condition="'$(SharpDXNoSigned)' == '' and '$(TargetFrameworkIdentifier)' != 'WindowsPhone'">Signed-</SharpDXSigned>

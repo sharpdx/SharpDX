@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -41,6 +41,9 @@ namespace SharpDX.Direct3D11
             {
                 Utilities.ClearMemory(new IntPtr(&value), 0xFF, Utilities.SizeOf<ImageLoadInformation>());
             }
+
+            value.PSrcInfo = IntPtr.Zero;
+
             return value;
         }
     }

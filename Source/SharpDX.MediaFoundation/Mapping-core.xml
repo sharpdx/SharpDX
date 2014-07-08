@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -200,10 +200,14 @@
 
     <create visibility="public static" class="AudioFormatGuids" />
     <const from-guid="MFAudioFormat_(.*)" class="SharpDX.MediaFoundation.AudioFormatGuids" type="System.Guid" name="$1">new Guid("$1")</const>
+	
+    <create visibility="public static" class="VideoFormatGuids" />
+    <const from-guid="MFVideoFormat_([A-Z].*)" class="SharpDX.MediaFoundation.VideoFormatGuids" type="System.Guid" name="$1">new Guid("$1")</const>
+    <const from-guid="MFVideoFormat_420O" class="SharpDX.MediaFoundation.VideoFormatGuids" type="System.Guid" name="Y420O">new Guid("$1")</const>
 
     <create visibility="public static" class="MediaTypeGuids" />
     <const from-guid="MFMediaType_(.*)" class="SharpDX.MediaFoundation.MediaTypeGuids" type="System.Guid" name="$1">new Guid("$1")</const>
-
+	
     <const from-guid="EVRConfig_AllowBatching" class="SharpDX.MediaFoundation.EVRConfigAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="AllowBatching">new MediaAttributeKey&lt;int&gt;("$1", "AllowBatching")</const>
     <const from-guid="EVRConfig_AllowDropToBob" class="SharpDX.MediaFoundation.EVRConfigAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="AllowDropToBob">new MediaAttributeKey&lt;int&gt;("$1", "AllowDropToBob")</const>
     <const from-guid="EVRConfig_AllowDropToHalfInterlace" class="SharpDX.MediaFoundation.EVRConfigAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="AllowDropToHalfInterlace">new MediaAttributeKey&lt;int&gt;("$1", "AllowDropToHalfInterlace")</const>
@@ -998,9 +1002,11 @@
     <map function="ConvertPropVariant" dll='"mf.dll"'/>
     <map function="AppendPropVariant" dll='"mf.dll"'/>
 
-
     <map function="MFTEnumEx" visibility="internal"/>
     <map param="MFTEnumEx::pppMFTActivate" type="void" attribute="out"/>
+
+    <map function="MFEnumDeviceSources" visibility="internal"/>
+    <map param="MFEnumDeviceSources::pppSourceActivate" type="void" attribute="out"/>
 
     <map param="IMFASFMultiplexer::GetNextPacket::pdwStatusFlags" type="ASF_STATUSFLAGS" attribute="out"/>
 

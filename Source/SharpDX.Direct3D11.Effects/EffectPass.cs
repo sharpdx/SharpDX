@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,16 @@ namespace SharpDX.Direct3D11
         public void Apply(DeviceContext context)
         {
             Apply(0, context);
+        }
+
+        /// <summary>	
+        /// Set the state contained in a pass to the device.	
+        /// </summary>	
+        /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}.</returns>
+        /// <unmanaged>HRESULT Apply([None] UINT Flags)</unmanaged>
+        public void Apply(DeviceContext context, int flags)
+        {
+            Apply(flags, context);
         }
     }
 }

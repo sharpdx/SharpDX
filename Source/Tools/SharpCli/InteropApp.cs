@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-
+using System.Runtime.Versioning;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Pdb;
@@ -719,8 +719,6 @@ namespace SharpCli
             return File.Exists(file) && File.GetLastWriteTime(file) == File.GetLastWriteTime(fromFile);
         }
 
-        AssemblyDefinition mscorlibAssembly;
-
         /// <summary>
         /// Get Program Files x86
         /// </summary>
@@ -728,7 +726,8 @@ namespace SharpCli
         static string ProgramFilesx86()
         {
             if (8 == IntPtr.Size
-                || (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
+                || (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
+                || Environment.GetEnvironmentVariable("ProgramFiles(x86)") != null)
             {
                 return Environment.GetEnvironmentVariable("ProgramFiles(x86)");
             }
@@ -742,6 +741,8 @@ namespace SharpCli
         /// <param name="file">The file.</param>
         public bool PatchFile(string file)
         {
+            file = Path.Combine(Environment.CurrentDirectory, file);
+
             var fileTime = new FileTime(file);
             //var fileTimeInteropBuilder = new FileTime(Assembly.GetExecutingAssembly().Location);
             string checkFile = Path.GetFullPath(file) + ".check";
@@ -756,6 +757,8 @@ namespace SharpCli
 
             // Copy PDB from input assembly to output assembly if any
             var readerParameters = new ReaderParameters();
+            var resolver = new DefaultAssemblyResolver();
+            readerParameters.AssemblyResolver = resolver;
             var writerParameters = new WriterParameters();
             var pdbName = Path.ChangeExtension(file, "pdb");
             if (File.Exists(pdbName))
@@ -768,41 +771,30 @@ namespace SharpCli
 
             // Read Assembly
             assembly = AssemblyDefinition.ReadAssembly(file, readerParameters);
-            ((BaseAssemblyResolver)assembly.MainModule.AssemblyResolver).AddSearchDirectory(Path.GetDirectoryName(file));
+            resolver.AddSearchDirectory(Path.GetDirectoryName(file));
 
-            foreach (var assemblyNameReference in assembly.MainModule.AssemblyReferences)
+            // Query the target framework in order to resolve correct assemblies and type forwarding
+            var targetFrameworkAttr = assembly.CustomAttributes.FirstOrDefault(
+                attribute => attribute.Constructor.FullName.Contains("System.Runtime.Versioning.TargetFrameworkAttribute"));
+            if(targetFrameworkAttr != null && targetFrameworkAttr.ConstructorArguments.Count > 0 &&
+                targetFrameworkAttr.ConstructorArguments[0].Value != null)
             {
-                if (assemblyNameReference.Name.ToLower() == "mscorlib")
-                {
-                    mscorlibAssembly =  assembly.MainModule.AssemblyResolver.Resolve(assemblyNameReference);
-                    break;
-                }                
-            }
+                var targetFramework = new FrameworkName(targetFrameworkAttr.ConstructorArguments[0].Value.ToString());
 
-            // TODO: Temporary patch to handle correctly 4.5 Core profile
-            if (mscorlibAssembly == null)
-            {
-                foreach (var assemblyNameReference in assembly.MainModule.AssemblyReferences)
+                var netcoreAssemblyPath = string.Format(@"Reference Assemblies\Microsoft\Framework\{0}\v{1}",
+                    targetFramework.Identifier,
+                    targetFramework.Version);
+                netcoreAssemblyPath = Path.Combine(ProgramFilesx86(), netcoreAssemblyPath);
+                if(Directory.Exists(netcoreAssemblyPath))
                 {
-                    if (assemblyNameReference.Name == "System.Runtime")
-                    {
-                        ((BaseAssemblyResolver)assembly.MainModule.AssemblyResolver).AddSearchDirectory( Path.Combine(ProgramFilesx86(),@"Reference Assemblies\Microsoft\Framework\.NETCore\v4.5"));
-                        mscorlibAssembly = assembly.MainModule.AssemblyResolver.Resolve(assemblyNameReference);
-                        break;
-                    }
+                    resolver.AddSearchDirectory(netcoreAssemblyPath);
                 }
             }
 
-            if (mscorlibAssembly == null)
-            {
-                LogError("Missing mscorlib.dll from assembly {0}", file);
-                throw new InvalidOperationException("Missing mscorlib.dll from assembly");
-            }
-
-            // Import void* and int32 from assembly using mscorlib specific version (2.0 or 4.0 depending on assembly)
-            voidType = mscorlibAssembly.MainModule.GetType("System.Void");
+            // Import void* and int32 
+            voidType = assembly.MainModule.TypeSystem.Void.Resolve();
             voidPointerType = new PointerType(assembly.MainModule.Import(voidType));
-            intType = assembly.MainModule.Import( mscorlibAssembly.MainModule.GetType("System.Int32"));
+            intType = assembly.MainModule.Import( assembly.MainModule.TypeSystem.Int32.Resolve());
 
             // Remove CompilationRelaxationsAttribute
             for (int i = 0; i < assembly.CustomAttributes.Count; i++)

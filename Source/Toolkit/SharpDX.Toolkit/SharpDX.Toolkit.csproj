@@ -31,6 +31,9 @@
     <Compile Include="Graphics\CommonData.PropertyCollection.cs" />
     <Compile Include="Graphics\MaterialBlendMode.cs" />
     <Compile Include="Graphics\MaterialKeys.cs" />
+    <Compile Include="Graphics\ModelData.Animation.cs" />
+    <Compile Include="Graphics\ModelData.KeyFrame.cs" />
+    <Compile Include="Graphics\ModelData.SkinnedBone.cs" />
     <Compile Include="PropertyKey.cs" />
     <Compile Include="PropertyCollection.cs" />
     <Compile Include="Graphics\MaterialShadingMode.cs" />
@@ -84,6 +87,7 @@
     <Compile Include="Graphics\EffectParameterClass.cs" />
     <Compile Include="Graphics\EffectParameterType.cs" />
     <Compile Include="Graphics\EffectData.cs" />
+    <Compile Include="CompositeTransform.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
@@ -105,6 +109,7 @@
     <Compile Include="Graphics\SpriteFontData.Glyph.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphics\ModelData.AnimationChannel.cs" />
     <None Include="SharpDX.Toolkit.nuspec" />
   </ItemGroup>
   <ItemGroup>
