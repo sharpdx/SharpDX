@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="MathUtilNearEqualTests.cs" />
     <Compile Include="MathUtilWrapTests.cs" />
+    <Compile Include="RayTests.cs" />
     <Compile Include="ShaderBytecodeProfileTests.cs" />
     <Compile Include="TestUtilityCompare.cs" />
     <Compile Include="TestMediaAttributes.cs" />
