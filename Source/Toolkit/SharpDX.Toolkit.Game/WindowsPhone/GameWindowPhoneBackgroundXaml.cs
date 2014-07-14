@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -38,8 +38,6 @@ namespace SharpDX.Toolkit
     {
         #region Fields
 
-        private readonly RenderTargetLocal[] renderTargets = new RenderTargetLocal[3];
-
         private readonly IntPtr thisComObjectPtr;
 
         private RenderTarget2D backBuffer;
@@ -57,8 +55,6 @@ namespace SharpDX.Toolkit
         private GraphicsDevice graphicsDevice;
 
         private IGraphicsDeviceManager graphicsDeviceManager;
-
-        private RenderTargetGraphicsPresenter graphicsPresenter;
 
         private DrawingSurfaceRuntimeHost host;
 
@@ -284,37 +280,18 @@ namespace SharpDX.Toolkit
         /// <param name="resetPresenter">if set to <c>true</c> [reset presenter].</param>
         internal void EnsurePresenter(bool resetPresenter)
         {
-            // Find any previous render target that was already allocated.
-            if (!resetPresenter)
-            {
-                foreach (RenderTargetLocal renderTargetLocal in renderTargets)
-                {
-                    if (renderTargetLocal.NativePointer == currentRenderTargetView.NativePointer)
-                    {
-                        backBuffer = renderTargetLocal.RenderTarget;
-                        graphicsPresenter.SetBackBuffer(backBuffer);
-                        return;
-                    }
-                }
-            }
-
             // Creates the backbuffer
+            Utilities.Dispose(ref backBuffer);
             backBuffer = RenderTarget2D.New(graphicsDevice, currentRenderTargetView, true);
             currentRenderTargetView.Tag = backBuffer;
-
-            // Dispose any previous render target.
-            renderTargets[nextRenderTarget].Dispose();
-            renderTargets[nextRenderTarget].NativePointer = currentRenderTargetView.NativePointer;
-            renderTargets[nextRenderTarget].RenderTarget = backBuffer;
-            nextRenderTarget = (nextRenderTarget + 1) % renderTargets.Length;
-
-            if (resetPresenter)
+            
+            if(graphicsDevice.Presenter != null)
             {
-                graphicsPresenter = new RenderTargetGraphicsPresenter(graphicsDevice, backBuffer, RequestDepthFormat);
-                graphicsDevice.Presenter = graphicsPresenter;
+                graphicsDevice.Presenter.Dispose();
+                graphicsDevice.Presenter = null;
             }
 
-            graphicsPresenter.SetBackBuffer(backBuffer);
+            graphicsDevice.Presenter = new RenderTargetGraphicsPresenter(graphicsDevice, backBuffer, RequestDepthFormat);
         }
 
         internal override void Initialize(GameContext gameContext)
@@ -375,12 +352,6 @@ namespace SharpDX.Toolkit
         {
             // Dispose the graphics device
             Utilities.Dispose(ref graphicsDevice);
-
-            // Dispose all allocated render targets
-            for (int i = 0; i < renderTargets.Length; i++)
-            {
-                renderTargets[i].Dispose();
-            }
 
             // Dispose the backbuffer
             Utilities.Dispose(ref backBuffer);

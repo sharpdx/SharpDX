@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -377,8 +377,10 @@ namespace SharpDX.Toolkit.Graphics
 
             if (currentDepthStencilView != null)
             {
-                var depthStencilBuffer = currentDepthStencilView.Tag as DepthStencilBuffer;
-                if (depthStencilBuffer == null)
+                var textureView = currentDepthStencilView.Tag as TextureView;
+                DepthStencilBuffer depthStencilBuffer;
+
+                if (textureView == null || (depthStencilBuffer = textureView.Texture as DepthStencilBuffer) == null)
                 {
                     throw new InvalidOperationException("Clear on a custom DepthStencilView is not supported by this method. Use Clear(DepthStencilView) directly");
                 }

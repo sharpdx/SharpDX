@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -117,7 +117,7 @@ namespace SharpDX.Toolkit
         /// <inheritdoc />
         public override void EndScreenDeviceChange(int clientWidth, int clientHeight)
         {
-            if (element != null && !element.IsDisposed)
+            if (element != null)
             {
                 element.TrySetSize(clientWidth, clientHeight);
                 element.SetBackbuffer(presenter.BackBuffer);
@@ -140,6 +140,7 @@ namespace SharpDX.Toolkit
             element.MouseLeave -= OnMouseLeave;
             element.Loaded -= HandleElementLoaded;
             element.Unloaded -= HandleElementUnloaded;
+            element.Game = null;
 
             element = null;
 
@@ -167,8 +168,7 @@ namespace SharpDX.Toolkit
             // device context will be used to query drawing operations status
             deviceContext = ((Device)presenter.GraphicsDevice).ImmediateContext;
 
-            if (!element.IsDisposed)
-                element.SetBackbuffer(presenter.BackBuffer);
+            element.SetBackbuffer(presenter.BackBuffer);
 
             return presenter;
         }
@@ -212,8 +212,7 @@ namespace SharpDX.Toolkit
         /// <inheritdoc />
         internal override void Resize(int width, int height)
         {
-            if (!element.IsDisposed)
-                element.TrySetSize(width, height);
+            element.TrySetSize(width, height);
         }
 
         /// <inheritdoc />
@@ -225,7 +224,7 @@ namespace SharpDX.Toolkit
         /// <inheritdoc />
         protected override void SetTitle(string title)
         {
-            if(window != null)
+            if (window != null)
             {
                 window.Title = title;
             }
@@ -276,9 +275,12 @@ namespace SharpDX.Toolkit
                 CompositionTarget.Rendering -= OnCompositionTargetRendering;
                 if (element != null)
                 {
-                    element.Dispose();
+                    element.Game = null;
                     element = null;
                 }
+
+                presenter.Dispose();
+
                 return;
             }
 
@@ -293,8 +295,7 @@ namespace SharpDX.Toolkit
                    && completed)) Thread.Yield();
 
             // syncronize D3D surface with WPF
-            if (!element.IsDisposed)
-                element.InvalidateRendering();
+            element.InvalidateRendering();
         }
 
         /// <summary>
@@ -304,17 +305,7 @@ namespace SharpDX.Toolkit
         /// <param name="e">Ignored.</param>
         private void HandleElementLoaded(object sender, RoutedEventArgs e)
         {
-            var searchWindow = (FrameworkElement)element;
-            while (searchWindow != null && searchWindow.Parent != null || searchWindow.TemplatedParent != null)
-            {
-                searchWindow = (searchWindow.Parent ?? searchWindow.TemplatedParent) as FrameworkElement;
-                if (searchWindow is Window)
-                {
-                    window = (Window)searchWindow;
-                    break;
-                }
-            }
-
+            window = Window.GetWindow(element);
             OnActivated(this, EventArgs.Empty);
         }
 

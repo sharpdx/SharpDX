@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -105,7 +105,7 @@ namespace SharpGen
 
             var options = new OptionSet()
                               {
-                                  "Copyright (c) 2010-2013 SharpDX - Alexandre Mutel",
+                                  "Copyright (c) 2010-2014 SharpDX - Alexandre Mutel",
                                   "Usage: SharpGen [options] config_file.xml",
                                   "Code generator from C++ to C# for .Net languages",
                                   "",

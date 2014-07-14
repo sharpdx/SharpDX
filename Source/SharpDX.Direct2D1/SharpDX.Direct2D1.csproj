@@ -37,6 +37,7 @@
     <Compile Include="ComputeTransform.cs" />
     <Compile Include="ComputeTransformNative.cs" />
     <Compile Include="ComputeTransformShadow.cs" />
+    <Compile Include="D2D1.cs" />
     <Compile Include="Device1.cs" />
     <Compile Include="DeviceContext1.cs" />
     <Compile Include="DirectWrite\Factory1.cs" />
@@ -52,6 +53,7 @@
     <Compile Include="Effects\PerspectiveTransform3D.cs" />
     <Compile Include="Effects\YCbCr.cs" />
     <Compile Include="Factory2.cs" />
+    <Compile Include="GeometryRealization.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="VertexRange.cs" />
     <Compile Include="InputDescription.cs" />

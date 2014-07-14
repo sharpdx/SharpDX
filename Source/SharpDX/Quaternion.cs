@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -891,66 +891,51 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a quaternion given forward and up vectors
+        /// Creates a left-handed, look-at quaternion.
         /// </summary>
-        /// <param name="forward">The forward vector the quaternion should look at</param>
-        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
-        /// <param name="right">The right vector of the quaternion (must be perpendicular to forward vector)</param>
-        /// <param name="result">The newly created quaternion</param>
-        public static void RotationLookAt(ref Vector3 forward, ref Vector3 up, ref Vector3 right, out Quaternion result)
+        /// <param name="eye">The position of the viewer's eye.</param>
+        /// <param name="target">The camera look-at target.</param>
+        /// <param name="up">The camera's up vector.</param>
+        /// <param name="result">When the method completes, contains the created look-at quaternion.</param>
+        public static void LookAtLH(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Quaternion result)
         {
-            //normalize input
-            forward.Normalize(); 
-            up.Normalize(); 
-            right.Normalize();
-            //fill the 3x3 matrix with the bases for the system
-            Matrix3x3 m;
-            m.M11 = right.X;
-            m.M12 = right.Y;
-            m.M13 = right.Z;
-            m.M21 = up.X;
-            m.M22 = up.Y;
-            m.M23 = up.Z;
-            m.M31 = forward.X;
-            m.M32 = forward.Y;
-            m.M33 = forward.Z;
-            //create new quaternion from matrix
-            RotationMatrix(ref m, out result);
-        }
-        
-        /// <summary>
-        /// Creates a quaternion given forward and up vectors
-        /// </summary>
-        /// <param name="forward">The forward vector the quaternion should look at</param>
-        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
-        /// <param name="right">The right vector of the quaternion</param>
-        /// <returns>The newly created quaternion</returns>
-        public static Quaternion RotationLookAt(Vector3 forward, Vector3 up, Vector3 right)
-        {
-            Quaternion result;
-            RotationLookAt(ref forward, ref up, ref right, out result);
-            return result;
-        }
-        
-        /// <summary>
-        /// Creates a quaternion given left-handed forward and up vectors
-        /// </summary>
-        /// <param name="forward">The forward vector the quaternion should look at</param>
-        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
-        /// <param name="result">The newly created quaternion</param>
-        public static void RotationLookAtLH(ref Vector3 forward, ref Vector3 up, out Quaternion result)
-        {
-            Vector3 right;
-            Vector3.Cross(ref up, ref forward, out right);
-            RotationLookAt(ref forward, ref up, ref right, out result);
+            Matrix3x3 matrix;
+            Matrix3x3.LookAtLH(ref eye, ref target, ref up, out matrix);
+            RotationMatrix(ref matrix, out result);
         }
 
         /// <summary>
-        /// Creates a quaternion given left-handed forward and up vectors
+        /// Creates a left-handed, look-at quaternion.
         /// </summary>
-        /// <param name="forward">The forward vector the quaternion should look at</param>
-        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
-        /// <returns>The newly created quaternion</returns>
+        /// <param name="eye">The position of the viewer's eye.</param>
+        /// <param name="target">The camera look-at target.</param>
+        /// <param name="up">The camera's up vector.</param>
+        /// <returns>The created look-at quaternion.</returns>
+        public static Quaternion LookAtLH(Vector3 eye, Vector3 target, Vector3 up)
+        {
+            Quaternion result;
+            LookAtLH(ref eye, ref target, ref up, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a left-handed, look-at quaternion.
+        /// </summary>
+        /// <param name="forward">The camera's forward direction.</param>
+        /// <param name="up">The camera's up vector.</param>
+        /// <param name="result">When the method completes, contains the created look-at quaternion.</param>
+        public static void RotationLookAtLH(ref Vector3 forward, ref Vector3 up, out Quaternion result)
+        {
+            Vector3 eye = Vector3.Zero;
+            Quaternion.LookAtLH(ref eye, ref forward, ref up, out result);
+        }
+
+        /// <summary>
+        /// Creates a left-handed, look-at quaternion.
+        /// </summary>
+        /// <param name="forward">The camera's forward direction.</param>
+        /// <param name="up">The camera's up vector.</param>
+        /// <returns>The created look-at quaternion.</returns>
         public static Quaternion RotationLookAtLH(Vector3 forward, Vector3 up)
         {
             Quaternion result;
@@ -959,24 +944,51 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a quaternion given right-handed forward and up vectors
+        /// Creates a right-handed, look-at quaternion.
         /// </summary>
-        /// <param name="forward">The forward vector the quaternion should look at</param>
-        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
-        /// <param name="result">The newly created quaternion</param>
-        public static void RotationLookAtRH(ref Vector3 forward, ref Vector3 up, out Quaternion result)
+        /// <param name="eye">The position of the viewer's eye.</param>
+        /// <param name="target">The camera look-at target.</param>
+        /// <param name="up">The camera's up vector.</param>
+        /// <param name="result">When the method completes, contains the created look-at quaternion.</param>
+        public static void LookAtRH(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Quaternion result)
         {
-            Vector3 right;
-            Vector3.Cross(ref forward, ref up, out right);
-            RotationLookAt(ref forward, ref up, ref right, out result);
+            Matrix3x3 matrix;
+            Matrix3x3.LookAtRH(ref eye, ref target, ref up, out matrix);
+            RotationMatrix(ref matrix, out result);
         }
 
         /// <summary>
-        /// Creates a quaternion given right-handed forward and up vectors
+        /// Creates a right-handed, look-at quaternion.
         /// </summary>
-        /// <param name="forward">The forward vector the quaternion should look at</param>
-        /// <param name="up">The up vector of the quaternion (must be perpendicular to forward vector)</param>
-        /// <returns>The newly created quaternion</returns>
+        /// <param name="eye">The position of the viewer's eye.</param>
+        /// <param name="target">The camera look-at target.</param>
+        /// <param name="up">The camera's up vector.</param>
+        /// <returns>The created look-at quaternion.</returns>
+        public static Quaternion LookAtRH(Vector3 eye, Vector3 target, Vector3 up)
+        {
+            Quaternion result;
+            LookAtRH(ref eye, ref target, ref up, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a right-handed, look-at quaternion.
+        /// </summary>
+        /// <param name="forward">The camera's forward direction.</param>
+        /// <param name="up">The camera's up vector.</param>
+        /// <param name="result">When the method completes, contains the created look-at quaternion.</param>
+        public static void RotationLookAtRH(ref Vector3 forward, ref Vector3 up, out Quaternion result)
+        {
+            Vector3 eye = Vector3.Zero;
+            Quaternion.LookAtRH(ref eye, ref forward, ref up, out result);
+        }
+
+        /// <summary>
+        /// Creates a right-handed, look-at quaternion.
+        /// </summary>
+        /// <param name="forward">The camera's forward direction.</param>
+        /// <param name="up">The camera's up vector.</param>
+        /// <returns>The created look-at quaternion.</returns>
         public static Quaternion RotationLookAtRH(Vector3 forward, Vector3 up)
         {
             Quaternion result;
@@ -994,20 +1006,11 @@ namespace SharpDX
         /// <param name="result">When the method completes, contains the created billboard quaternion.</param>
         public static void BillboardLH(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Quaternion result)
         {
-            Vector3 right;
-            Vector3 up;
-            Vector3 difference = objectPosition - cameraPosition;
-
-            float lengthSq = difference.LengthSquared();
-            if (MathUtil.IsZero(lengthSq))
-                difference = -cameraForwardVector;
-
-            Vector3.Cross(ref cameraUpVector, ref difference, out right);
-            Vector3.Cross(ref difference, ref right, out up);
-
-            RotationLookAt(ref difference, ref up, ref right, out result);
+            Matrix3x3 matrix;
+            Matrix3x3.BillboardLH(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out matrix);
+            RotationMatrix(ref matrix, out result);
         }
-        
+
         /// <summary>
         /// Creates a left-handed spherical billboard that rotates around a specified object position.
         /// </summary>
@@ -1015,7 +1018,7 @@ namespace SharpDX
         /// <param name="cameraPosition">The position of the camera.</param>
         /// <param name="cameraUpVector">The up vector of the camera.</param>
         /// <param name="cameraForwardVector">The forward vector of the camera.</param>
-        /// <returns>When the method completes, contains the created billboard quaternion.</returns>
+        /// <returns>The created billboard quaternion.</returns>
         public static Quaternion BillboardLH(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector)
         {
             Quaternion result;
@@ -1024,7 +1027,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a left-handed spherical billboard that rotates around a specified object position.
+        /// Creates a right-handed spherical billboard that rotates around a specified object position.
         /// </summary>
         /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
         /// <param name="cameraPosition">The position of the camera.</param>
@@ -1033,28 +1036,19 @@ namespace SharpDX
         /// <param name="result">When the method completes, contains the created billboard quaternion.</param>
         public static void BillboardRH(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Quaternion result)
         {
-            Vector3 right;
-            Vector3 up;
-            Vector3 difference = cameraPosition - objectPosition;
-
-            float lengthSq = difference.LengthSquared();
-            if (MathUtil.IsZero(lengthSq))
-                difference = cameraForwardVector;
-
-            Vector3.Cross(ref cameraUpVector, ref difference, out right);
-            Vector3.Cross(ref difference, ref right, out up);
-
-            RotationLookAt(ref difference, ref up, ref right, out result);
+            Matrix3x3 matrix;
+            Matrix3x3.BillboardRH(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out matrix);
+            RotationMatrix(ref matrix, out result);
         }
 
         /// <summary>
-        /// Creates a left-handed spherical billboard that rotates around a specified object position.
+        /// Creates a right-handed spherical billboard that rotates around a specified object position.
         /// </summary>
         /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
         /// <param name="cameraPosition">The position of the camera.</param>
         /// <param name="cameraUpVector">The up vector of the camera.</param>
         /// <param name="cameraForwardVector">The forward vector of the camera.</param>
-        /// <returns>When the method completes, contains the created billboard quaternion.</returns>
+        /// <returns>The created billboard quaternion.</returns>
         public static Quaternion BillboardRH(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector)
         {
             Quaternion result;
