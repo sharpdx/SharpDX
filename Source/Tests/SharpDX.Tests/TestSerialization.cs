@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 using NUnit.Framework;
 using SharpDX.Serialization;
@@ -112,6 +113,87 @@ namespace SharpDX.Tests
                                                         rw.Serialize(ref string1, 4);
                                                     });
 
+        }
+
+        public class TestComparableClass : IDataSerializable, IEquatable<TestComparableClass>
+        {
+            public string A;
+            public string B;
+
+            void IDataSerializable.Serialize(BinarySerializer serializer)
+            {
+                serializer.Serialize(ref A);
+                serializer.Serialize(ref B);
+            }
+
+            public bool Equals(TestComparableClass other)
+            {
+                if (ReferenceEquals(null, other)) return false;
+                if (ReferenceEquals(this, other)) return true;
+                return string.Equals(A, other.A) && string.Equals(B, other.B);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((TestComparableClass)obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return ((A != null ? A.GetHashCode() : 0) * 397) ^ (B != null ? B.GetHashCode() : 0);
+                }
+            }
+
+            public static bool operator ==(TestComparableClass left, TestComparableClass right)
+            {
+                return Equals(left, right);
+            }
+
+            public static bool operator !=(TestComparableClass left, TestComparableClass right)
+            {
+                return !Equals(left, right);
+            }
+        }
+
+        [Test]
+        public void TestDictionary()
+        {
+            var stream = new MemoryStream();
+            var rw = new BinarySerializer(stream, SerializerMode.Write, Text.Encoding.ASCII);
+            var dIntString = new Dictionary<int, string>() { { 0, "ValueA" }, { 1, "ValueB" } };
+            var dIntTestClassData = new Dictionary<int, TestComparableClass>()
+                                    {
+                                        {0, new TestComparableClass() {A = "Value1", B="Value2"}},
+                                        {1, new TestComparableClass() {A = "Value3", B="Value4"}},
+                                    };
+            rw.Serialize(ref dIntString, rw.Serialize, rw.Serialize);
+            rw.Serialize(ref dIntTestClassData, rw.Serialize);
+            stream.Position = 0;
+            rw.Mode = SerializerMode.Read;
+
+            Dictionary<int, string> dIntString1 = null;
+            Dictionary<int, TestComparableClass> dIntTestClassData1 = null;
+            rw.Serialize(ref dIntString1, rw.Serialize, rw.Serialize);
+            rw.Serialize(ref dIntTestClassData1, rw.Serialize);
+
+            CheckDictionary(dIntString, dIntString1);
+            CheckDictionary(dIntTestClassData, dIntTestClassData1);
+        }
+
+        void CheckDictionary<TKey, TValue>(Dictionary<TKey, TValue> d1, Dictionary<TKey, TValue> d2)
+        {
+            for (int i = 0; i < d1.Count; i++)
+            {
+                var kvp = d1.ElementAt(i);
+                var kvp1 = d2.ElementAt(i);
+                Assert.AreEqual(kvp.Key, kvp1.Key);
+                Assert.AreEqual(kvp.Value, kvp1.Value);
+            }
         }
 
         private static void RegisterDynamicForTestNonDataSerializer(BinarySerializer serializer)
