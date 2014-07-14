@@ -1213,7 +1213,7 @@ namespace SharpDX.Serialization
                 for (int i = 0; i < count; i++)
                 {
                     TKey localKey = default(TKey);
-                    TValue localValue = Utilities.IsValueType(typeof(TValue)) ? default(TValue) : new TValue();
+                    TValue localValue = default(TValue);
                     keySerializer(ref localKey);
                     localValue.Serialize(this);
                 }
