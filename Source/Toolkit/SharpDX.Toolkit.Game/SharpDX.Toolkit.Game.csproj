@@ -24,6 +24,7 @@
     </Compile>
     <Compile Include="AnimationSystem.cs" />
     <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="Desktop\D3D11Image.cs" />
     <Compile Include="Desktop\GameWindowDesktopWpf.cs" />
     <Compile Include="Desktop\SharpDXElement.cs" />
     <Compile Include="Desktop\ToolkitHwndHost.cs" />

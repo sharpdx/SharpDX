@@ -36,84 +36,10 @@ namespace SharpDX.Toolkit
     /// </summary>
     public sealed class SharpDXElement : FrameworkElement
     {
-        internal sealed class D3D9 : IDisposable
-        {
-            private Direct3DEx direct3d;
-            private DeviceEx device;
-
-            public D3D9()
-            {
-                var presentparams = new PresentParameters
-                                    {
-                                        Windowed = true,
-                                        SwapEffect = SwapEffect.Discard,
-                                        DeviceWindowHandle = GetDesktopWindow(),
-                                        PresentationInterval = PresentInterval.Default
-                                    };
-
-                const CreateFlags deviceFlags = CreateFlags.HardwareVertexProcessing | CreateFlags.Multithreaded | CreateFlags.FpuPreserve;
-
-                direct3d = new Direct3DEx();
-                device = new DeviceEx(direct3d, 0, DeviceType.Hardware, IntPtr.Zero, deviceFlags, presentparams);
-            }
-
-            ~D3D9()
-            {
-                Dispose();
-            }
-
-            public DeviceEx Device { get { return device; } }
-
-            public void Dispose()
-            {
-                Utilities.Dispose(ref direct3d);
-                Utilities.Dispose(ref device);
-
-                GC.SuppressFinalize(this);
-            }
-
-            [DllImport("user32.dll", SetLastError = false)]
-            private static extern IntPtr GetDesktopWindow();
-        }
-
-        internal sealed class RefCounter<T> where T : class, IDisposable, new()
-        {
-            private int instancesCount;
-            private T instance;
-
-            public T Instance { get { return instance; } }
-
-            public void AddReference()
-            {
-                instancesCount++;
-                if (instancesCount == 1)
-                {
-                    System.Diagnostics.Debug.Assert(instance == null);
-                    instance = new T();
-                }
-            }
-
-            public void RemoveReference()
-            {
-                instancesCount--;
-
-                System.Diagnostics.Debug.WriteLine("Instances: {0}", instancesCount);
-                if (instancesCount == 0)
-                {
-                    System.Diagnostics.Debug.Assert(instance != null);
-                    instance.Dispose();
-                    instance = null;
-                }
-            }
-        }
-
-        private static readonly ThreadLocal<RefCounter<D3D9>> d3d9 = new ThreadLocal<RefCounter<D3D9>>(() => new RefCounter<D3D9>());
-
-        private readonly D3DImage image;
+       
+        private D3D11Image image;
         private readonly DispatcherTimer resizeDelayTimer;
-        private Texture texture;
-        private IntPtr textureSurfaceHandle;
-        private bool isLoaded;
+      
 
         // used to avoid infinite loop when both ReceiveResizeFromGameProperty and SendResizeToGameProperty are set to true
         private bool isResizeCompletedBeingRaised;
@@ -181,24 +107,17 @@ namespace SharpDX.Toolkit
 
         /// <summary>
         /// Creates a new instance of <see cref="SharpDXElement"/> class.
-        /// Initializes the D3D9 runtime.
         /// </summary>
         public SharpDXElement()
         {
-            image = new D3DImage();
-            image.IsFrontBufferAvailableChanged += HandleIsFrontBufferAvailableChanged;
-
+          
             resizeDelayTimer = new DispatcherTimer(DispatcherPriority.Normal);
             resizeDelayTimer.Tick += HandleResizeDelayTimerTick;
             resizeDelayTimer.Interval = SendResizeDelay;
 
             Focusable = true;
 
-            SizeChanged += HandleSizeChanged;
-            Loaded += HandleLoaded;
-            Unloaded += HandleUnloaded;
-
-            Dispatcher.ShutdownStarted += HandleShutdownStarted;
+            SizeChanged += HandleSizeChanged;        
         }
 
         /// <summary>
@@ -260,46 +179,14 @@ namespace SharpDX.Toolkit
         internal event EventHandler ResizeCompleted;
 
         /// <summary>
-        /// Associates an D3D11 render target with the current instance.
+        /// Associates an <see cref="D3D11Image"/> with the current instance.
         /// </summary>
-        /// <param name="renderTarget">An valid D3D11 render target. It must be created with the "Shared" flag.</param>
-        internal void SetBackbuffer(Direct3D11.Texture2D renderTarget)
+        /// <param name="image">A valid <see cref="D3D11Image"/>.</param>
+        internal void SetBackbufferImage(D3D11Image image)
         {
-            EnsureD3D9IsReady();
-
-            DisposeD3D9Backbuffer();
-
-            using (var resource = renderTarget.QueryInterface<DXGI.Resource>())
-            {
-                var handle = resource.SharedHandle;
-                texture = new Texture(d3d9.Value.Instance.Device,
-                                      renderTarget.Description.Width,
-                                      renderTarget.Description.Height,
-                                      1,
-                                      Usage.RenderTarget,
-                                      Format.A8R8G8B8,
-                                      Pool.Default,
-                                      ref handle);
-            }
-
-            using (var surface = texture.GetSurfaceLevel(0))
-            {
-                textureSurfaceHandle = surface.NativePointer;
-                TrySetBackbufferPointer(textureSurfaceHandle);
-            }
-        }
-
-        /// <summary>
-        /// Marks the surface of element as invalid and requests its presentation on screen.
-        /// </summary>
-        internal void InvalidateRendering()
-        {
-            if (!isLoaded || texture == null) return;
-
-            image.Lock();
-            image.AddDirtyRect(new Int32Rect(0, 0, image.PixelWidth, image.PixelHeight));
-            image.Unlock();
-        }
+            this.image = image;
+            this.InvalidateVisual();
+        }       
 
         /// <summary>
         /// Tries to set the width and height of the current instance.
@@ -308,7 +195,7 @@ namespace SharpDX.Toolkit
         /// <param name="height">The height in dips.</param>
         internal void TrySetSize(int width, int height)
         {
-            if (!ReceiveResizeFromGame || isResizeCompletedBeingRaised || !isLoaded) return;
+            if (!ReceiveResizeFromGame || isResizeCompletedBeingRaised) return;
 
             Width = width;
             Height = height;
@@ -320,27 +207,6 @@ namespace SharpDX.Toolkit
 
             if (image != null && image.IsFrontBufferAvailable)
                 drawingContext.DrawImage(image, new Rect(new Point(), RenderSize));
-        }
-
-        private void HandleIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (image.IsFrontBufferAvailable)
-                TrySetBackbufferPointer(textureSurfaceHandle);
-        }
-
-        private void HandleLoaded(object sender, RoutedEventArgs e)
-        {
-            EnsureD3D9IsReady();
-        }
-
-        private void HandleUnloaded(object sender, RoutedEventArgs e)
-        {
-            Unload();
-        }
-
-        private void HandleShutdownStarted(object sender, EventArgs eventArgs)
-        {
-            Unload();
         }
 
         private void HandleResizeDelayTimerTick(object sender, EventArgs e)
@@ -355,49 +221,6 @@ namespace SharpDX.Toolkit
         {
             resizeDelayTimer.Stop();
             resizeDelayTimer.Start();
-        }
-
-        private void EnsureD3D9IsReady()
-        {
-            if (isLoaded) return;
-            d3d9.Value.AddReference();
-
-            isLoaded = true;
-        }
-
-        private void Unload()
-        {
-            if (!isLoaded) return;
-
-            isLoaded = false;
-            textureSurfaceHandle = IntPtr.Zero;
-            DisposeD3D9Backbuffer();
-            d3d9.Value.RemoveReference();
-        }
-
-        private void DisposeD3D9Backbuffer()
-        {
-            if (texture != null)
-            {
-                TrySetBackbufferPointer(IntPtr.Zero);
-
-                texture.Dispose();
-                texture = null;
-            }
-        }
-
-        private void TrySetBackbufferPointer(IntPtr ptr)
-        {
-            // TODO: use TryLock and check multithreading scenarios
-            image.Lock();
-            try
-            {
-                image.SetBackBuffer(D3DResourceType.IDirect3DSurface9, ptr);
-            }
-            finally
-            {
-                image.Unlock();
-            }
         }
 
         private void RaiseResizeCompleted(EventHandler handler)
