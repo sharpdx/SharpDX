@@ -99,17 +99,19 @@ namespace SharpDX.Toolkit
         /// Disposes associated D3D9 texture.
         /// </summary>
         public void Dispose()
-        {
+        {            
             if (texture != null)
             {
-                textureSurfaceHandle = IntPtr.Zero;
-                TrySetBackbufferPointer(IntPtr.Zero);
+                this.Dispatcher.BeginInvoke((Action)delegate
+                { 
+                    this.IsFrontBufferAvailableChanged -= HandleIsFrontBufferAvailableChanged;
+                    texture.Dispose();
+                    texture = null;
+                    textureSurfaceHandle = IntPtr.Zero;
 
-                texture.Dispose();
-                texture = null;
-            }
-
-            this.IsFrontBufferAvailableChanged -= HandleIsFrontBufferAvailableChanged;
+                    TrySetBackbufferPointer(IntPtr.Zero); 
+                }, System.Windows.Threading.DispatcherPriority.Send);                
+            }            
         }  
         
         private void HandleIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e)
