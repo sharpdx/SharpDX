@@ -862,8 +862,6 @@
     <ifdef name="W8CORE">
       <remove function="MFCreateAggregateSource"/>
       <remove function="MFCreateProtectedEnvironmentAccess"/>
-      <remove function="MFCreateSinkWriterFromMediaSink"/>
-      <remove function="MFCreateSinkWriterFromURL"/>
       <remove function="MFGetLocalId"/>
       <remove function="MFGetService"/>
       <remove function="MFGetSystemId"/>
