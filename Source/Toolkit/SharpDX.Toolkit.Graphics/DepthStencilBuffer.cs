@@ -35,7 +35,8 @@ namespace SharpDX.Toolkit.Graphics
     public class DepthStencilBuffer : Texture2DBase
     {
         internal readonly DXGI.Format DefaultViewFormat;
-        private DepthStencilView depthStencilView;
+        private TextureView[] depthStencilViews;
+        private TextureView[] readOnlyViews;
 
         /// <summary>
         /// Gets the <see cref="Graphics.DepthFormat"/> of this depth stencil buffer.
@@ -53,12 +54,23 @@ namespace SharpDX.Toolkit.Graphics
         public readonly bool HasReadOnlyView;
 
         /// <summary>
+        /// Gets the selector for a <see cref="DepthStencilView"/>
+        /// </summary>
+        public readonly DepthStencilViewSelector DepthStencilView;
+
+        /// <summary>
         /// Gets a a read-only <see cref="DepthStencilView"/>.
         /// </summary>
         /// <remarks>
         /// This value can be null if not supported by hardware (minimum features level is 11.0)
         /// </remarks>
-        public readonly DepthStencilView ReadOnlyView;
+        public DepthStencilView ReadOnlyView
+        {
+            get
+            {
+                return readOnlyViews != null ? readOnlyViews[0] : null;
+            }
+        }
 
         internal DepthStencilBuffer(GraphicsDevice device, Texture2DDescription description2D, DepthFormat depthFormat)
             : base(device, description2D)
@@ -66,7 +78,8 @@ namespace SharpDX.Toolkit.Graphics
             DepthFormat = depthFormat;
             DefaultViewFormat = ComputeViewFormat(DepthFormat, out HasStencil);
             Initialize(Resource);
-            HasReadOnlyView = InitializeViewsDelayed(out ReadOnlyView);
+            HasReadOnlyView = InitializeViewsDelayed();
+            DepthStencilView = new DepthStencilViewSelector(this);
         }
 
         internal DepthStencilBuffer(GraphicsDevice device, Direct3D11.Texture2D texture, DepthFormat depthFormat)
@@ -75,7 +88,8 @@ namespace SharpDX.Toolkit.Graphics
             DepthFormat = depthFormat;
             DefaultViewFormat = ComputeViewFormat(DepthFormat, out HasStencil);
             Initialize(Resource);
-            HasReadOnlyView = InitializeViewsDelayed(out ReadOnlyView);
+            HasReadOnlyView = InitializeViewsDelayed();
+            DepthStencilView = new DepthStencilViewSelector(this);
         }
 
         protected override void InitializeViews()
@@ -85,10 +99,9 @@ namespace SharpDX.Toolkit.Graphics
             // TODO: Fix this problem
         }
 
-        protected bool InitializeViewsDelayed(out DepthStencilView readOnlyView)
+        protected bool InitializeViewsDelayed()
         {
             bool hasReadOnlyView = false;
-            readOnlyView = null;
 
             // Perform default initialization
             base.InitializeViews();
@@ -96,48 +109,16 @@ namespace SharpDX.Toolkit.Graphics
             if ((Description.BindFlags & BindFlags.DepthStencil) == 0)
                 return hasReadOnlyView;
 
-            // Create a Depth stencil view on this texture2D
-            var depthStencilViewDescription = new SharpDX.Direct3D11.DepthStencilViewDescription
-                                                  {
-                                                      Format = (Format)DepthFormat,
-                                                      Flags = SharpDX.Direct3D11.DepthStencilViewFlags.None,
-                                                  };
-
-            if (Description.ArraySize <= 1)
-            {
-                depthStencilViewDescription.Dimension = DepthStencilViewDimension.Texture2D;
-                depthStencilViewDescription.Texture2D = new DepthStencilViewDescription.Texture2DResource
-                                                      {
-                                                          MipSlice = 0
-                                                      };
-            }
-            else
-            {
-                depthStencilViewDescription.Dimension = DepthStencilViewDimension.Texture2DArray;
-                depthStencilViewDescription.Texture2DArray = new DepthStencilViewDescription.Texture2DArrayResource
-                                                             {
-                                                                 MipSlice = 0,
-                                                                 FirstArraySlice = 0,
-                                                                 ArraySize = Description.ArraySize
-                                                             };
-            }
-
-            if (Description.SampleDescription.Count > 1)
-                depthStencilViewDescription.Dimension = DepthStencilViewDimension.Texture2DMultisampled;
-
-            // Create the Depth Stencil View
-            depthStencilView = ToDispose(new SharpDX.Direct3D11.DepthStencilView(GraphicsDevice, Resource, depthStencilViewDescription) { Tag = this });
+            int viewCount = GetViewCount();
+            depthStencilViews = new TextureView[viewCount];
+            GetDepthStencilView(ViewType.Full, 0, 0, false);
 
             // ReadOnly for feature level Direct3D11
             if (GraphicsDevice.Features.Level >= FeatureLevel.Level_11_0)
             {
-                // Create a Depth stencil view on this texture2D
-                depthStencilViewDescription.Flags = DepthStencilViewFlags.ReadOnlyDepth;
-                if (HasStencil)
-                    depthStencilViewDescription.Flags |= DepthStencilViewFlags.ReadOnlyStencil;
-
-                readOnlyView = ToDispose(new SharpDX.Direct3D11.DepthStencilView(GraphicsDevice, Resource, depthStencilViewDescription) { Tag = this });
                 hasReadOnlyView = true;
+                readOnlyViews = new TextureView[viewCount];
+                GetDepthStencilView(ViewType.Full, 0, 0, true);
             }
 
             return hasReadOnlyView;
@@ -154,12 +135,86 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="buffer">Source for the.</param>
         public static implicit operator DepthStencilView(DepthStencilBuffer buffer)
         {
-            return buffer == null ? null : buffer.depthStencilView;
+            return buffer == null ? null : buffer.depthStencilViews != null ? buffer.depthStencilViews[0] : null;
         }
 
         internal override TextureView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipIndex)
         {
             throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// Gets a specific <see cref="DepthStencilView" /> from this texture.
+        /// </summary>
+        /// <param name="viewType">Type of the view slice.</param>
+        /// <param name="arrayOrDepthSlice">The texture array slice index.</param>
+        /// <param name="mipMapSlice">The mip map slice index.</param>
+        /// <param name="readOnlyView">Indicates if the view is read-only.</param>
+        /// <returns>A <see cref="DepthStencilView" /></returns>
+        internal virtual TextureView GetDepthStencilView(ViewType viewType, int arrayOrDepthSlice, int mipIndex, bool readOnlyView)
+        {
+            if ((this.Description.BindFlags & BindFlags.DepthStencil) == 0)
+                return null;
+
+            if (viewType == ViewType.MipBand)
+                throw new NotSupportedException("ViewSlice.MipBand is not supported for depth stencils");
+
+            if (readOnlyView && !HasReadOnlyView)
+                return null;
+
+            var views = readOnlyView ? readOnlyViews : depthStencilViews;
+
+            int arrayCount;
+            int mipCount;
+            GetViewSliceBounds(viewType, ref arrayOrDepthSlice, ref mipIndex, out arrayCount, out mipCount);
+
+            var dsvIndex = GetViewIndex(viewType, arrayOrDepthSlice, mipIndex);
+
+            lock (views)
+            {
+                var dsv = views[dsvIndex];
+
+                // Creates the shader resource view
+                if (dsv == null)
+                {
+                    // Create the depth stencil view
+                    var dsvDescription = new DepthStencilViewDescription() { Format = (Format)DepthFormat };
+
+                    if (this.Description.ArraySize > 1)
+                    {
+                        dsvDescription.Dimension = this.Description.SampleDescription.Count > 1 ? DepthStencilViewDimension.Texture2DMultisampledArray : DepthStencilViewDimension.Texture2DArray;
+                        if (this.Description.SampleDescription.Count > 1)
+                        {
+                            dsvDescription.Texture2DMSArray.ArraySize = arrayCount;
+                            dsvDescription.Texture2DMSArray.FirstArraySlice = arrayOrDepthSlice;
+                        }
+                        else
+                        {
+                            dsvDescription.Texture2DArray.ArraySize = arrayCount;
+                            dsvDescription.Texture2DArray.FirstArraySlice = arrayOrDepthSlice;
+                            dsvDescription.Texture2DArray.MipSlice = mipIndex;
+                        }
+                    }
+                    else
+                    {
+                        dsvDescription.Dimension = this.Description.SampleDescription.Count > 1 ? DepthStencilViewDimension.Texture2DMultisampled : DepthStencilViewDimension.Texture2D;
+                        if (this.Description.SampleDescription.Count <= 1)
+                            dsvDescription.Texture2D.MipSlice = mipIndex;
+                    }
+
+                    if (readOnlyView)
+                    {
+                        dsvDescription.Flags = DepthStencilViewFlags.ReadOnlyDepth;
+                        if (HasStencil)
+                            dsvDescription.Flags |= DepthStencilViewFlags.ReadOnlyStencil;
+                    }
+
+                    dsv = new TextureView(this, new DepthStencilView(GraphicsDevice, Resource, dsvDescription));
+                    views[dsvIndex] = ToDispose(dsv);
+                }
+
+                return dsv;
+            }
         }
 
         public override Texture Clone()

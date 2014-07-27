@@ -1181,7 +1181,7 @@ namespace SharpDX.Toolkit.Serialization
 
                 for (int i = 0; i < count; i++)
                 {
-                    TKey localKey = default(TKey);
+                    TKey localKey = Utilities.IsValueType(typeof(TKey)) ? default(TKey) : new TKey();
                     TValue localValue = default(TValue);
                     localKey.Serialize(this);
                     valueSerializer(ref localValue);
@@ -1232,7 +1232,7 @@ namespace SharpDX.Toolkit.Serialization
                 for (int i = 0; i < count; i++)
                 {
                     TKey localKey = default(TKey);
-                    TValue localValue = default(TValue);
+                    TValue localValue = Utilities.IsValueType(typeof(TValue)) ? default(TValue) : new TValue();
                     keySerializer(ref localKey);
                     localValue.Serialize(this);
                     dictionary.Add(localKey, localValue);

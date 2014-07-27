@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2015 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,38 +18,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
 using System.Collections.Generic;
+
+using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public class ModelBoneCollection : List<ModelBone>
+    public sealed partial class ModelData
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection"/> class.
+        /// Class SkinnedBone
         /// </summary>
-        public ModelBoneCollection()
+        public class SkinnedBone : IDataSerializable
         {
-        }
+            /// <summary>
+            /// Index of the skinned bone.
+            /// </summary>
+            public int BoneIndex;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection" /> class that is empty and has the specified initial capacity.
-        /// </summary>
-        /// <param name="capacity">The number of elements that the new list can initially store.</param>
-        public ModelBoneCollection(int capacity)
-            : base(capacity)
-        {
-        }
+            /// <summary>
+            /// The absolute transform that takes the skinned vertices in bind pose from world space to bone space.
+            /// </summary>
+            public Matrix InverseBindTransform;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection"/> class.
-        /// </summary>
-        /// <param name="collection">The collection.</param>
-        public ModelBoneCollection(IEnumerable<ModelBone> collection)
-            : base(collection)
-        {
+            /// <inheritdoc/>
+            void IDataSerializable.Serialize(BinarySerializer serializer)
+            {
+                serializer.Serialize(ref BoneIndex);
+                serializer.Serialize(ref InverseBindTransform);
+            }
         }
-
-        internal List<int> ChildIndices;
     }
 }

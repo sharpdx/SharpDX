@@ -379,8 +379,10 @@ namespace SharpDX.Toolkit.Graphics
 
             if (currentDepthStencilView != null)
             {
-                var depthStencilBuffer = currentDepthStencilView.Tag as DepthStencilBuffer;
-                if (depthStencilBuffer == null)
+                var textureView = currentDepthStencilView.Tag as TextureView;
+                DepthStencilBuffer depthStencilBuffer;
+
+                if (textureView == null || (depthStencilBuffer = textureView.Texture as DepthStencilBuffer) == null)
                 {
                     throw new InvalidOperationException("Clear on a custom DepthStencilView is not supported by this method. Use Clear(DepthStencilView) directly");
                 }

@@ -862,8 +862,6 @@
     <ifdef name="W8CORE">
       <remove function="MFCreateAggregateSource"/>
       <remove function="MFCreateProtectedEnvironmentAccess"/>
-      <remove function="MFCreateSinkWriterFromMediaSink"/>
-      <remove function="MFCreateSinkWriterFromURL"/>
       <remove function="MFGetLocalId"/>
       <remove function="MFGetService"/>
       <remove function="MFGetSystemId"/>
@@ -894,7 +892,7 @@
     <map function="Create.*" dll='"Temp.dll"' group="SharpDX.MediaFoundation.MediaFactory"/>
 
     <map function="MFCreateSourceReader.*" dll='"Mfreadwrite.dll"'/>
-    <map function="MFCreateSinkWriterFromURL.*" dll='"Mfreadwrite.dll"'/>
+    <map function="MFCreateSinkWriterFrom.*" dll='"Mfreadwrite.dll"'/>
 
     <map function="MFCreateWaveFormatExFromMFMediaType" visibility="internal"/>
     <map param="MFCreateWaveFormatExFromMFMediaType::ppWF" type="void"/>

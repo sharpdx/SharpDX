@@ -23,33 +23,17 @@ using System.Collections.Generic;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public class ModelBoneCollection : List<ModelBone>
+    public class ModelAnimation : ComponentBase
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection"/> class.
-        /// </summary>
-        public ModelBoneCollection()
-        {
-        }
+        public string Name;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection" /> class that is empty and has the specified initial capacity.
-        /// </summary>
-        /// <param name="capacity">The number of elements that the new list can initially store.</param>
-        public ModelBoneCollection(int capacity)
-            : base(capacity)
-        {
-        }
+        public float Duration;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection"/> class.
-        /// </summary>
-        /// <param name="collection">The collection.</param>
-        public ModelBoneCollection(IEnumerable<ModelBone> collection)
-            : base(collection)
-        {
-        }
+        public List<ModelData.AnimationChannel> Channels;
 
-        internal List<int> ChildIndices;
+        public ModelAnimation()
+        {
+            Channels = new List<ModelData.AnimationChannel>();
+        }
     }
 }

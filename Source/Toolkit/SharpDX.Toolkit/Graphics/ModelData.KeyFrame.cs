@@ -18,38 +18,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
+using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public class ModelBoneCollection : List<ModelBone>
+    public sealed partial class ModelData
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection"/> class.
+        /// Class KeyFrame
         /// </summary>
-        public ModelBoneCollection()
+        public class KeyFrame : IDataSerializable
         {
-        }
+            /// <summary>
+            /// The key time.
+            /// </summary>
+            public float Time;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection" /> class that is empty and has the specified initial capacity.
-        /// </summary>
-        /// <param name="capacity">The number of elements that the new list can initially store.</param>
-        public ModelBoneCollection(int capacity)
-            : base(capacity)
-        {
-        }
+            /// <summary>
+            /// The bone transform.
+            /// </summary>
+            public CompositeTransform Value;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection"/> class.
-        /// </summary>
-        /// <param name="collection">The collection.</param>
-        public ModelBoneCollection(IEnumerable<ModelBone> collection)
-            : base(collection)
-        {
+            /// <inheritdoc/>
+            void IDataSerializable.Serialize(BinarySerializer serializer)
+            {
+                serializer.Serialize(ref Time);
+                serializer.Serialize(ref Value);
+            }
         }
-
-        internal List<int> ChildIndices;
     }
 }

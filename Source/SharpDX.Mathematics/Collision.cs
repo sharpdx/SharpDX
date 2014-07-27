@@ -522,13 +522,8 @@ namespace SharpDX.Mathematics
 
             if (distance < 0f)
             {
-                if (MathUtil.IsZero(distance))
-                {
-                    distance = 0;
-                    return false;
-                }
-
                 distance = 0f;
+                return false;
             }
 
             return true;

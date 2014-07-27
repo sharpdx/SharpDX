@@ -18,38 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-
 namespace SharpDX.Toolkit.Graphics
 {
-    public class ModelBoneCollection : List<ModelBone>
+    public class ModelSkinnedBone : ComponentBase
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection"/> class.
-        /// </summary>
-        public ModelBoneCollection()
-        {
-        }
+        public ModelBone Bone;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection" /> class that is empty and has the specified initial capacity.
-        /// </summary>
-        /// <param name="capacity">The number of elements that the new list can initially store.</param>
-        public ModelBoneCollection(int capacity)
-            : base(capacity)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection"/> class.
-        /// </summary>
-        /// <param name="collection">The collection.</param>
-        public ModelBoneCollection(IEnumerable<ModelBone> collection)
-            : base(collection)
-        {
-        }
-
-        internal List<int> ChildIndices;
+        public Matrix OffsetMatrix;
     }
 }

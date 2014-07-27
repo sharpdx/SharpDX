@@ -17,29 +17,29 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System.Threading;
+
 #if !W8CORE && NET35Plus
-using System;
-using System.Runtime.InteropServices;
-using System.Windows;
-using System.Windows.Interop;
-using System.Windows.Threading;
-using SharpDX.Direct3D9;
 
 namespace SharpDX.Toolkit
 {
+    using System;
+    using System.Runtime.InteropServices;
+    using System.Windows;
+    using System.Windows.Interop;
+    using System.Windows.Threading;
+    using Direct3D9;
+
     /// <summary>
     /// An framework element that supports rendering D3D11 scene.
     /// </summary>
-    public sealed class SharpDXElement : FrameworkElement, IDisposable
+    public sealed class SharpDXElement : FrameworkElement
     {
-        private readonly D3DImage image;
-        private readonly Direct3DEx direct3D;
-        private readonly DeviceEx device9;
+       
+        private D3D11Image image;
         private readonly DispatcherTimer resizeDelayTimer;
-        private Texture texture;
-        private IntPtr textureSurfaceHandle;
-
-        private bool isDisposed;
+      
 
         // used to avoid infinite loop when both ReceiveResizeFromGameProperty and SendResizeToGameProperty are set to true
         private bool isResizeCompletedBeingRaised;
@@ -71,6 +71,16 @@ namespace SharpDX.Toolkit
         public static readonly DependencyProperty LowPriorityRenderingProperty = DependencyProperty
             .Register("LowPriorityRendering", typeof(bool), typeof(SharpDXElement), new PropertyMetadata(default(bool)));
 
+        /// <summary>
+        /// Binds a Game object to use this element as rendering surface.
+        /// </summary>
+        /// <remarks>
+        /// Internally uses <see cref="Game.Run(GameContext)"/> <see cref="Game.Switch(GameContext)"/> depending whether <see cref="Game.IsRunning"/>.
+        /// This property is intended to be used only in WPF MVVM scenarios, do not use it if you use the above methods directly.
+        /// </remarks>
+        public static readonly DependencyProperty GameProperty = DependencyProperty
+            .Register("Game", typeof(Game), typeof(SharpDXElement), new FrameworkPropertyMetadata(default(Game), HandleGameChanged));
+
         private static void HandleResizeDelayChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
             var element = dependencyObject as SharpDXElement;
@@ -80,55 +90,34 @@ namespace SharpDX.Toolkit
                 element.resizeDelayTimer.Interval = (TimeSpan)e.NewValue;
         }
 
-        /// <summary>
-        /// Creates a new instance of <see cref="SharpDXElement"/> class.
-        /// Initializes the D3D9 runtime.
-        /// </summary>
-        public SharpDXElement()
+        private static void HandleGameChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
-            image = new D3DImage();
-            image.IsFrontBufferAvailableChanged += HandleIsFrontBufferAvailableChanged;
+            var element = dependencyObject as SharpDXElement;
+            if (element == null) return;
 
-            var presentparams = new PresentParameters
-                {
-                    Windowed = true,
-                    SwapEffect = SwapEffect.Discard,
-                    DeviceWindowHandle = GetDesktopWindow(),
-                    PresentationInterval = PresentInterval.Default
-                };
-
-            direct3D = new Direct3DEx();
-
-            device9 = new DeviceEx(direct3D,
-                                   0,
-                                   DeviceType.Hardware,
-                                   IntPtr.Zero,
-                                   CreateFlags.HardwareVertexProcessing | CreateFlags.Multithreaded | CreateFlags.FpuPreserve,
-                                   presentparams);
-
-            resizeDelayTimer = new DispatcherTimer(DispatcherPriority.Normal);
-            resizeDelayTimer.Interval = SendResizeDelay;
-            resizeDelayTimer.Tick += HandleResizeDelayTimerTick;
-
-            Focusable = true;
-
-            SizeChanged += HandleSizeChanged;
-            Unloaded += HandleUnloaded;
+            var game = e.NewValue as Game;
+            if (game != null)
+            {
+                if (game.IsRunning)
+                    game.Switch(element);
+                else
+                    game.Run(element);
+            }
         }
 
         /// <summary>
-        /// Disposes all unmanaged resources associated with this instance
+        /// Creates a new instance of <see cref="SharpDXElement"/> class.
         /// </summary>
-        public void Dispose()
+        public SharpDXElement()
         {
-            if (isDisposed) return;
+          
+            resizeDelayTimer = new DispatcherTimer(DispatcherPriority.Normal);
+            resizeDelayTimer.Tick += HandleResizeDelayTimerTick;
+            resizeDelayTimer.Interval = SendResizeDelay;
 
-            DisposeD3D9Backbuffer();
+            Focusable = true;
 
-            device9.Dispose();
-            direct3D.Dispose();
-
-            isDisposed = true;
+            SizeChanged += HandleSizeChanged;        
         }
 
         /// <summary>
@@ -168,16 +157,20 @@ namespace SharpDX.Toolkit
         }
 
         /// <summary>
-        /// Gets a value indicating whether this instance is disposed or not.
+        /// Gets or sets the associated game instance. See <see cref="GameProperty"/> for details.
         /// </summary>
-        public bool IsDisposed { get { return isDisposed; } }
+        public Game Game
+        {
+            get { return (Game)GetValue(GameProperty); }
+            set { SetValue(GameProperty, value); }
+        }
 
         /// <summary>
         /// Converts an <see cref="SharpDXElement"/> to <see cref="GameContext"/>.
         /// Operator is placed here to avoid WPF references when only WinForms is used.
         /// </summary>
         /// <param name="element">The <see cref="SharpDXElement"/> representing the game context.</param>
-        /// <returns>An <see cref="GameContextWpf"/> instance derived from <see cref="GameContext"/>.</returns>
+        /// <returns>An instance of <see cref="GameContext"/>.</returns>
         public static implicit operator GameContext(SharpDXElement element)
         {
             return new GameContext(element);
@@ -186,46 +179,14 @@ namespace SharpDX.Toolkit
         internal event EventHandler ResizeCompleted;
 
         /// <summary>
-        /// Associates an D3D11 render target with the current instance.
+        /// Associates an <see cref="D3D11Image"/> with the current instance.
         /// </summary>
-        /// <param name="renderTarget">An valid D3D11 render target. It must be created with the "Shared" flag.</param>
-        internal void SetBackbuffer(Direct3D11.Texture2D renderTarget)
+        /// <param name="image">A valid <see cref="D3D11Image"/>.</param>
+        internal void SetBackbufferImage(D3D11Image image)
         {
-            DisposedGuard();
-
-            DisposeD3D9Backbuffer();
-
-            using (var resource = renderTarget.QueryInterface<DXGI.Resource>())
-            {
-                var handle = resource.SharedHandle;
-                texture = new Texture(device9,
-                                      renderTarget.Description.Width,
-                                      renderTarget.Description.Height,
-                                      1,
-                                      Usage.RenderTarget,
-                                      Format.A8R8G8B8,
-                                      Pool.Default,
-                                      ref handle);
-            }
-
-            using (var surface = texture.GetSurfaceLevel(0))
-            {
-                textureSurfaceHandle = surface.NativePointer;
-                TrySetBackbufferPointer(textureSurfaceHandle);
-            }
-        }
-
-        /// <summary>
-        /// Marks the surface of element as invalid and requests its presentation on screen.
-        /// </summary>
-        internal void InvalidateRendering()
-        {
-            DisposedGuard();
-
-            image.Lock();
-            image.AddDirtyRect(new Int32Rect(0, 0, image.PixelWidth, image.PixelHeight));
-            image.Unlock();
-        }
+            this.image = image;
+            this.InvalidateVisual();
+        }       
 
         /// <summary>
         /// Tries to set the width and height of the current instance.
@@ -236,8 +197,6 @@ namespace SharpDX.Toolkit
         {
             if (!ReceiveResizeFromGame || isResizeCompletedBeingRaised) return;
 
-            DisposedGuard();
-
             Width = width;
             Height = height;
         }
@@ -247,27 +206,7 @@ namespace SharpDX.Toolkit
             base.OnRender(drawingContext);
 
             if (image != null && image.IsFrontBufferAvailable)
-                drawingContext.DrawImage(image, new Rect(new System.Windows.Point(), RenderSize));
-        }
-
-        /// <summary>
-        /// Throws <see cref="ObjectDisposedException"/> if the current instance is already disposed.
-        /// </summary>
-        private void DisposedGuard()
-        {
-            if (isDisposed)
-                throw new ObjectDisposedException("SharpDXElement", "The element is disposed - either explicitly or via Unloaded event, it cannot be reused.");
-        }
-
-        private void HandleIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (image.IsFrontBufferAvailable)
-                TrySetBackbufferPointer(textureSurfaceHandle);
-        }
-
-        private void HandleUnloaded(object sender, RoutedEventArgs e)
-        {
-            Dispose();
+                drawingContext.DrawImage(image, new Rect(new Point(), RenderSize));
         }
 
         private void HandleResizeDelayTimerTick(object sender, EventArgs e)
@@ -282,31 +221,6 @@ namespace SharpDX.Toolkit
         {
             resizeDelayTimer.Stop();
             resizeDelayTimer.Start();
-        }
-
-        private void TrySetBackbufferPointer(IntPtr ptr)
-        {
-            // TODO: use TryLock and check multithreading scenarios
-            image.Lock();
-            try
-            {
-                image.SetBackBuffer(D3DResourceType.IDirect3DSurface9, ptr);
-            }
-            finally
-            {
-                image.Unlock();
-            }
-        }
-
-        private void DisposeD3D9Backbuffer()
-        {
-            if (texture != null)
-            {
-                TrySetBackbufferPointer(IntPtr.Zero);
-
-                texture.Dispose();
-                texture = null;
-            }
         }
 
         private void RaiseResizeCompleted(EventHandler handler)
@@ -324,9 +238,6 @@ namespace SharpDX.Toolkit
                 }
             }
         }
-
-        [DllImport("user32.dll", SetLastError = false)]
-        private static extern IntPtr GetDesktopWindow();
     }
 }
 #endif

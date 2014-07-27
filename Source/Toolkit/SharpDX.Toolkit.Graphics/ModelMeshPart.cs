@@ -17,6 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+using System.Collections.Generic;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -55,6 +56,22 @@ namespace SharpDX.Toolkit.Graphics
         /// The attributes for this mesh part.
         /// </summary>
         public PropertyCollection Properties;
+
+        /// <summary>
+        /// The skinned bones that are affecting this mesh part.
+        /// </summary>
+        public ModelSkinnedBoneCollection SkinnedBones;
+
+        /// <summary>
+        /// Gets a value indicating whether this instance contains skinning information.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance contains skinning information; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsSkinned
+        {
+            get { return SkinnedBones != null && SkinnedBones.Count > 0; }
+        }
 
         private Effect effect;
 

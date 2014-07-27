@@ -21,35 +21,35 @@
 using System;
 using System.Collections.Generic;
 
+using SharpDX.Serialization;
+
 namespace SharpDX.Toolkit.Graphics
 {
-    public class ModelBoneCollection : List<ModelBone>
+    public class ModelSkinnedBoneCollection : List<ModelSkinnedBone>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection"/> class.
+        /// Initializes a new instance of the <see cref="ModelSkinnedBoneCollection"/> class.
         /// </summary>
-        public ModelBoneCollection()
+        public ModelSkinnedBoneCollection()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection" /> class that is empty and has the specified initial capacity.
+        /// Initializes a new instance of the <see cref="ModelSkinnedBoneCollection" /> class that is empty and has the specified initial capacity.
         /// </summary>
         /// <param name="capacity">The number of elements that the new list can initially store.</param>
-        public ModelBoneCollection(int capacity)
+        public ModelSkinnedBoneCollection(int capacity)
             : base(capacity)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection"/> class.
+        /// Initializes a new instance of the <see cref="ModelSkinnedBoneCollection"/> class.
         /// </summary>
         /// <param name="collection">The collection.</param>
-        public ModelBoneCollection(IEnumerable<ModelBone> collection)
+        public ModelSkinnedBoneCollection(IEnumerable<ModelSkinnedBone> collection)
             : base(collection)
         {
         }
-
-        internal List<int> ChildIndices;
     }
 }

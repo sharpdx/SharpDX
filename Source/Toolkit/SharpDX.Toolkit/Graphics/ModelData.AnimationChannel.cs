@@ -18,38 +18,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
 using System.Collections.Generic;
+
+using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public class ModelBoneCollection : List<ModelBone>
+    public sealed partial class ModelData
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection"/> class.
+        /// Class AnimationChannel
         /// </summary>
-        public ModelBoneCollection()
+        public class AnimationChannel : IDataSerializable
         {
-        }
+            /// <summary>
+            /// The name of the animated bone.
+            /// </summary>
+            public string BoneName;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection" /> class that is empty and has the specified initial capacity.
-        /// </summary>
-        /// <param name="capacity">The number of elements that the new list can initially store.</param>
-        public ModelBoneCollection(int capacity)
-            : base(capacity)
-        {
-        }
+            /// <summary>
+            /// The key frames of this animation.
+            /// </summary>
+            public List<KeyFrame> KeyFrames;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection"/> class.
-        /// </summary>
-        /// <param name="collection">The collection.</param>
-        public ModelBoneCollection(IEnumerable<ModelBone> collection)
-            : base(collection)
-        {
-        }
+            /// <summary>
+            /// Initializes a new instance of the <see cref="AnimationChannel" /> class.
+            /// </summary>
+            public AnimationChannel()
+            {
+                KeyFrames = new List<KeyFrame>();
+            }
 
-        internal List<int> ChildIndices;
+            /// <inheritdoc/>
+            void IDataSerializable.Serialize(BinarySerializer serializer)
+            {
+                serializer.Serialize(ref BoneName);
+                serializer.Serialize(ref KeyFrames);
+            }
+        }
     }
 }

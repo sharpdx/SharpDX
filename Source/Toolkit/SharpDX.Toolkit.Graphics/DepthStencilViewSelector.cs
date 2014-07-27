@@ -18,38 +18,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
+using SharpDX.Direct3D11;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public class ModelBoneCollection : List<ModelBone>
+    /// <summary>
+    /// Used by <see cref="DepthStencilBuffer"/> to provide a selector to a <see cref="DepthStencilView"/>.
+    /// </summary>
+    public sealed class DepthStencilViewSelector
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection"/> class.
-        /// </summary>
-        public ModelBoneCollection()
+        private readonly DepthStencilBuffer texture;
+
+        internal DepthStencilViewSelector(DepthStencilBuffer texture)
         {
+            this.texture = texture;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection" /> class that is empty and has the specified initial capacity.
+        /// Gets a specific <see cref="DepthStencilView" /> from this texture.
         /// </summary>
-        /// <param name="capacity">The number of elements that the new list can initially store.</param>
-        public ModelBoneCollection(int capacity)
-            : base(capacity)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBoneCollection"/> class.
-        /// </summary>
-        /// <param name="collection">The collection.</param>
-        public ModelBoneCollection(IEnumerable<ModelBone> collection)
-            : base(collection)
-        {
-        }
-
-        internal List<int> ChildIndices;
+        /// <param name="viewType">Type of the view slice.</param>
+        /// <param name="arrayOrDepthSlice">The texture array slice index.</param>
+        /// <param name="mipIndex">The mip map slice index.</param>
+        /// <param name="readOnlyView">Indicates if this view is read-only.</param>
+        /// <returns>An <see cref="DepthStencilView" /></returns>
+        public TextureView this[ViewType viewType, int arrayOrDepthSlice, int mipIndex, bool readOnlyView = false] { get { return this.texture.GetDepthStencilView(viewType, arrayOrDepthSlice, mipIndex, readOnlyView); } }
     }
 }

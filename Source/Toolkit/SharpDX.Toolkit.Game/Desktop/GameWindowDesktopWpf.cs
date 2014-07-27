@@ -31,6 +31,7 @@ using SharpDX.Direct3D11;
 using SharpDX.Mathematics;
 using SharpDX.Mathematics.Interop;
 using Device = SharpDX.Direct3D11.Device;
+using System.Runtime.InteropServices;
 
 namespace SharpDX.Toolkit
 {
@@ -39,7 +40,85 @@ namespace SharpDX.Toolkit
     /// </summary>
     internal class GameWindowDesktopWpf : GameWindow
     {
+
+        #region D3D9
+        private sealed class D3D9 : IDisposable
+        {
+            private SharpDX.Direct3D9.Direct3DEx direct3d;
+            private SharpDX.Direct3D9.DeviceEx device;
+
+            public D3D9()
+            {
+                var presentparams = new SharpDX.Direct3D9.PresentParameters
+                {
+                    Windowed = true,
+                    SwapEffect = SharpDX.Direct3D9.SwapEffect.Discard,
+                    DeviceWindowHandle = GetDesktopWindow(),
+                    PresentationInterval = SharpDX.Direct3D9.PresentInterval.Default
+                };
+
+                const SharpDX.Direct3D9.CreateFlags deviceFlags = SharpDX.Direct3D9.CreateFlags.HardwareVertexProcessing | SharpDX.Direct3D9.CreateFlags.Multithreaded | SharpDX.Direct3D9.CreateFlags.FpuPreserve;
+
+                direct3d = new SharpDX.Direct3D9.Direct3DEx();
+                device = new SharpDX.Direct3D9.DeviceEx(direct3d, 0, SharpDX.Direct3D9.DeviceType.Hardware, IntPtr.Zero, deviceFlags, presentparams);
+            }
+
+            ~D3D9()
+            {
+                Dispose();
+            }
+
+            public SharpDX.Direct3D9.DeviceEx Device { get { return device; } }
+
+            public void Dispose()
+            {
+                Utilities.Dispose(ref direct3d);
+                Utilities.Dispose(ref device);
+
+                GC.SuppressFinalize(this);
+            }
+
+            [DllImport("user32.dll", SetLastError = false)]
+            private static extern IntPtr GetDesktopWindow();
+        }
+
+        private sealed class RefCounter<T> where T : class, IDisposable, new()
+        {
+            private int instancesCount;
+            private T instance;
+
+            public T Instance { get { return instance; } }
+
+            public void AddReference()
+            {
+                instancesCount++;
+                if (instancesCount == 1)
+                {
+                    System.Diagnostics.Debug.Assert(instance == null);
+                    instance = new T();
+                }
+            }
+
+            public void RemoveReference()
+            {
+                instancesCount--;
+
+                System.Diagnostics.Debug.WriteLine("Instances: {0}", instancesCount);
+                if (instancesCount == 0)
+                {
+                    System.Diagnostics.Debug.Assert(instance != null);
+                    instance.Dispose();
+                    instance = null;
+                }
+            }
+        }
+
+        private static readonly ThreadLocal<RefCounter<D3D9>> d3d9 = new ThreadLocal<RefCounter<D3D9>>(() => new RefCounter<D3D9>());
+
+        #endregion
+
         private SharpDXElement element;
+        private D3D11Image image;
         private Window window;
         private DispatcherOperation previousRenderCall; // keep previous render call to avoid calling it again if prev one is not finished yet
         private readonly Action renderDelegate; //delegate cache to avoid garbage generation
@@ -119,10 +198,10 @@ namespace SharpDX.Toolkit
         /// <inheritdoc />
         public override void EndScreenDeviceChange(int clientWidth, int clientHeight)
         {
-            if (element != null && !element.IsDisposed)
+            if (element != null)
             {
                 element.TrySetSize(clientWidth, clientHeight);
-                element.SetBackbuffer(presenter.BackBuffer);
+                SetElementBackbuffer();
             }
         }
 
@@ -137,11 +216,13 @@ namespace SharpDX.Toolkit
         /// <inheritdoc />
         internal override void Switch(GameContext context)
         {
+            element.SetBackbufferImage(null);
             element.ResizeCompleted -= OnClientSizeChanged;
             element.MouseEnter -= OnMouseEnter;
             element.MouseLeave -= OnMouseLeave;
             element.Loaded -= HandleElementLoaded;
             element.Unloaded -= HandleElementUnloaded;
+            element.Game = null;
 
             element = null;
 
@@ -162,6 +243,9 @@ namespace SharpDX.Toolkit
             RemoveAndDispose(ref presenter);
             RemoveAndDispose(ref queryForCompletion);
 
+            if(image == null)
+                d3d9.Value.AddReference();
+
             presenter = ToDispose(new RenderTargetGraphicsPresenter(device, backbufferDesc, parameters.DepthStencilFormat, false, true, parameters.DepthBufferShaderResource));
             // used to indicate if all drawing operations have completed
             queryForCompletion = ToDispose(new Query(presenter.GraphicsDevice, new QueryDescription { Type = QueryType.Event, Flags = QueryFlags.None }));
@@ -169,10 +253,16 @@ namespace SharpDX.Toolkit
             // device context will be used to query drawing operations status
             deviceContext = ((Device)presenter.GraphicsDevice).ImmediateContext;
 
-            if (!element.IsDisposed)
-                element.SetBackbuffer(presenter.BackBuffer);
+            SetElementBackbuffer();
 
             return presenter;
+        }
+
+        private void SetElementBackbuffer()
+        {
+            RemoveAndDispose(ref image);
+            image = ToDispose(new D3D11Image(d3d9.Value.Instance.Device, presenter.BackBuffer));
+            element.SetBackbufferImage(image);
         }
 
         /// <inheritdoc />
@@ -198,7 +288,9 @@ namespace SharpDX.Toolkit
             element.MouseLeave += OnMouseLeave;
             element.Loaded += HandleElementLoaded;
             element.Unloaded += HandleElementUnloaded;
-        }
+
+            
+        }        
 
         /// <inheritdoc />
         internal override void Run()
@@ -214,8 +306,7 @@ namespace SharpDX.Toolkit
         /// <inheritdoc />
         internal override void Resize(int width, int height)
         {
-            if (!element.IsDisposed)
-                element.TrySetSize(width, height);
+            element.TrySetSize(width, height);
         }
 
         /// <inheritdoc />
@@ -227,11 +318,18 @@ namespace SharpDX.Toolkit
         /// <inheritdoc />
         protected override void SetTitle(string title)
         {
-            if(window != null)
+            if (window != null)
             {
                 window.Title = title;
             }
             // ignore. SharpDXElement doesn't have title
+        }
+
+        /// <inheritdoc />
+        protected override void Dispose(bool disposeManagedResources)
+        {            
+            base.Dispose(disposeManagedResources);
+            d3d9.Value.RemoveReference();
         }
 
         /// <summary>
@@ -278,9 +376,12 @@ namespace SharpDX.Toolkit
                 CompositionTarget.Rendering -= OnCompositionTargetRendering;
                 if (element != null)
                 {
-                    element.Dispose();
+                    element.Game = null;
                     element = null;
                 }
+               
+                presenter.Dispose();
+
                 return;
             }
 
@@ -295,8 +396,7 @@ namespace SharpDX.Toolkit
                    && completed)) Thread.Yield();
 
             // syncronize D3D surface with WPF
-            if (!element.IsDisposed)
-                element.InvalidateRendering();
+            image.InvalidateRendering();
         }
 
         /// <summary>
@@ -306,17 +406,7 @@ namespace SharpDX.Toolkit
         /// <param name="e">Ignored.</param>
         private void HandleElementLoaded(object sender, RoutedEventArgs e)
         {
-            var searchWindow = (FrameworkElement)element;
-            while (searchWindow != null && searchWindow.Parent != null || searchWindow.TemplatedParent != null)
-            {
-                searchWindow = (searchWindow.Parent ?? searchWindow.TemplatedParent) as FrameworkElement;
-                if (searchWindow is Window)
-                {
-                    window = (Window)searchWindow;
-                    break;
-                }
-            }
-
+            window = Window.GetWindow(element);
             OnActivated(this, EventArgs.Empty);
         }
 

@@ -25,8 +25,8 @@ using SharpDX.Direct3D11;
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// A texture view is a view on a specified mipmap set of a <see cref="Texture"/> or a RenderTarget. 
-    /// An instance of this class is castable to <see cref="ShaderResourceView"/> or <see cref="RenderTargetView"/> depending on the underlying native view.
+    /// A texture view is a view on a specified mipmap set of a <see cref="Texture"/>, a RenderTarget or a <see cref="DepthStencilBuffer"/>. 
+    /// An instance of this class is castable to <see cref="ShaderResourceView"/>, <see cref="RenderTargetView"/> or <see cref="DepthStencilView"/> depending on the underlying native view.
     /// </summary>
     public sealed class TextureView : GraphicsResource
     {
@@ -46,23 +46,35 @@ namespace SharpDX.Toolkit.Graphics
             // The initialize method will override the view.Tag, so we are setting it back
             base.Initialize(view);
 
-            IsRenderView = view is RenderTargetView;
-
             var shaderResourceView = view as ShaderResourceView;
             int mipLevel = 0;
+            bool isMultisampled = Texture.Description.SampleDescription.Count > 1;
+
             if (shaderResourceView != null)
             {
-                var description = shaderResourceView.Description;
-                mipLevel = description.Texture1D.MostDetailedMip;
+                mipLevel = isMultisampled ? 0 : shaderResourceView.Description.Texture1D.MostDetailedMip;
             }
             else
             {
                 var renderTargetView = view as RenderTargetView;
-                if (renderTargetView == null)
+                if (renderTargetView != null)
                 {
-                    throw new ArgumentException("Expecting argument to be a ShaderResourceView or RenderTargetView", "view");
+                    IsRenderView = true;
+                    mipLevel = isMultisampled ? 0 : renderTargetView.Description.Texture1D.MipSlice;
                 }
-                mipLevel = renderTargetView.Description.Texture1D.MipSlice;
+                else
+                {
+                    var depthStencilView = view as DepthStencilView;
+                    if (depthStencilView != null)
+                    {
+                        IsDepthStencilView = true;
+                        mipLevel = isMultisampled ? 0 : depthStencilView.Description.Texture1D.MipSlice;
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Expecting argument to be a ShaderResourceView, RenderTargetView or DepthStencilView", "view");
+                    }
+                }
             }
             Size = new Size2(Math.Max(1, Texture.Width >> mipLevel), Math.Max(1, Texture.Height >> mipLevel));
 
@@ -133,6 +145,12 @@ namespace SharpDX.Toolkit.Graphics
         public bool IsRenderView { get; private set; }
 
         /// <summary>
+        /// Gets a value indicating whether this instance is a depth stencil view.
+        /// </summary>
+        /// <value><c>true</c> if this instance is a depth stencil view; otherwise, <c>false</c>.</value>
+        public bool IsDepthStencilView { get; private set; }
+
+        /// <summary>
         /// Gets the texture.
         /// </summary>
         /// <value>The texture.</value>
@@ -166,6 +184,16 @@ namespace SharpDX.Toolkit.Graphics
         public static implicit operator RenderTargetView(TextureView view)
         {
             return view == null ? null : view.View as RenderTargetView;
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="TextureView"/> to <see cref="DepthStencilView"/>.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator DepthStencilView(TextureView view)
+        {
+            return view == null ? null : view.View as DepthStencilView;
         }
     }
 }

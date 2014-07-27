@@ -35,6 +35,7 @@ namespace SharpDX.Toolkit.Graphics
             public MeshPart()
             {
                 Properties = new PropertyCollection();
+                SkinnedBones = new List<SkinnedBone>();
             }
 
             /// <summary>
@@ -53,9 +54,9 @@ namespace SharpDX.Toolkit.Graphics
             public BufferRange VertexBufferRange;
 
             /// <summary>
-            /// Gets the offset matrix attached to each bone weights
+            /// Gets the skinned bones.
             /// </summary>
-            public Matrix[] BoneOffsetMatrices;
+            public List<SkinnedBone> SkinnedBones;
 
             /// <summary>
             /// The attributes attached to this mesh part.
@@ -67,6 +68,7 @@ namespace SharpDX.Toolkit.Graphics
                 serializer.Serialize(ref MaterialIndex);
                 serializer.Serialize(ref IndexBufferRange);
                 serializer.Serialize(ref VertexBufferRange);
+                serializer.Serialize(ref SkinnedBones);
                 serializer.Serialize(ref Properties);
             }
         }

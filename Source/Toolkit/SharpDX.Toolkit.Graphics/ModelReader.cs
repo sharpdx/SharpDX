@@ -97,6 +97,11 @@ namespace SharpDX.Toolkit.Graphics
             return new ModelBone();
         }
 
+        protected virtual ModelSkinnedBone CreateModelSkinnedBone()
+        {
+            return new ModelSkinnedBone();
+        }
+
         protected virtual ModelMesh CreateModelMesh()
         {
             return new ModelMesh();
@@ -107,6 +112,11 @@ namespace SharpDX.Toolkit.Graphics
             return new ModelMeshPart();
         }
 
+        protected virtual ModelAnimation CreateModelAnimation()
+        {
+            return new ModelAnimation();
+        }
+
         protected virtual MaterialCollection CreateModelMaterialCollection(int capacity)
         {
             return new MaterialCollection(capacity);
@@ -115,6 +125,11 @@ namespace SharpDX.Toolkit.Graphics
         protected virtual ModelBoneCollection CreateModelBoneCollection(int capacity)
         {
             return new ModelBoneCollection(capacity);
+        }
+
+        protected virtual ModelSkinnedBoneCollection CreateModelSkinnedBoneCollection(int capacity)
+        {
+            return new ModelSkinnedBoneCollection(capacity);
         }
 
         protected virtual ModelMeshCollection CreateModelMeshCollection(int capacity)
@@ -135,6 +150,11 @@ namespace SharpDX.Toolkit.Graphics
         protected virtual PropertyCollection CreatePropertyCollection(int capacity)
         {
             return new PropertyCollection(capacity);
+        }
+
+        protected virtual ModelAnimationCollection CreateModelAnimationCollection(int capacity)
+        {
+            return new ModelAnimationCollection(capacity);
         }
 
         protected virtual PropertyCollection CreateMaterialPropertyCollection(int capacity)
@@ -208,15 +228,14 @@ namespace SharpDX.Toolkit.Graphics
             ReadBones(ref model.Bones);
             EndChunk();
 
-            //// DISABLE_SKINNED_BONES
-            //// Skinned Bones section
-            //BeginChunk("SKIN");
-            //ReadBones(ref model.SkinnedBones);
-            //EndChunk();
-
             // Mesh section
             BeginChunk("MESH");
             ReadMeshes(ref model.Meshes);
+            EndChunk();
+
+            // Animation section
+            BeginChunk("ANIM");
+            ReadAnimations(ref model.Animations);
             EndChunk();
 
             // Serialize attributes
@@ -258,6 +277,12 @@ namespace SharpDX.Toolkit.Graphics
                 }
                 children.ChildIndices = null;
             }
+        }
+
+        protected virtual void ReadSkinnedBones(ref ModelSkinnedBoneCollection skinnedBones)
+        {
+            // Read all bones
+            ReadList(ref skinnedBones, CreateModelSkinnedBoneCollection, CreateModelSkinnedBone, ReadSkinnedBone);
         }
 
         public delegate PropertyKey NameToPropertyKeyDelegate(string name);
@@ -326,6 +351,11 @@ namespace SharpDX.Toolkit.Graphics
             {
                 list.Add(ReadIndexBuffer());
             }
+        }
+
+        protected virtual void ReadAnimations(ref ModelAnimationCollection meshes)
+        {
+            ReadList(ref meshes, CreateModelAnimationCollection, CreateModelAnimation, ReadAnimation);
         }
 
         protected virtual void ReadMaterial(ref Material material)
@@ -421,6 +451,18 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        protected virtual void ReadSkinnedBone(ref ModelSkinnedBone skinnedBone)
+        {
+            var boneIndex = Reader.ReadInt32();
+            if (boneIndex > Model.Bones.Count)
+            {
+                throw new InvalidOperationException("Invalid bone index");
+            }
+            skinnedBone.Bone = Model.Bones[boneIndex];
+
+            Serialize(ref skinnedBone.OffsetMatrix);
+        }
+
         protected virtual void ReadMesh(ref ModelMesh mesh)
         {
             CurrentMesh = mesh;
@@ -460,8 +502,18 @@ namespace SharpDX.Toolkit.Graphics
             vertexBufferRange.Serialize(this);
             meshPart.VertexBuffer = GetFromList(vertexBufferRange, CurrentMesh.VertexBuffers);
 
+            // Skinned bones
+            ReadSkinnedBones(ref meshPart.SkinnedBones);
+
             // Properties
             ReadProperties(ref meshPart.Properties);
+        }
+
+        protected virtual void ReadAnimation(ref ModelAnimation animation)
+        {
+            Serialize(ref animation.Name);
+            Serialize(ref animation.Duration);
+            Serialize(ref animation.Channels);
         }
 
         protected virtual void ReadVertexBuffer(ref VertexBufferBinding vertexBufferBinding)
