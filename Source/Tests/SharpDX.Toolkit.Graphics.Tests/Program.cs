@@ -27,7 +27,6 @@ using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.IO;
 using SharpDX.WIC;
-using SharpDX.Windows;
 
 namespace SharpDX.Toolkit.Graphics.Tests
 {

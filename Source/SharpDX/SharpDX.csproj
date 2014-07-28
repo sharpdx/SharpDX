@@ -144,14 +144,6 @@
     <Compile Include="Win32\Variant.cs" />
     <Compile Include="Win32\VariantElementType.cs" />
     <Compile Include="Win32\VariantType.cs" />
-    <Compile Include="Windows\NamespaceDoc.cs" />
-    <Compile Include="Windows\RenderControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Windows\RenderForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Windows\RenderLoop.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Mapping-core.xml">

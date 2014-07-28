@@ -99,11 +99,21 @@
     </ProjectReference>
   </ItemGroup>
   <Choose>
-    <When Condition=" '$(Platform)' == 'Net40' or '$(Platform)' == 'DIRECTX11_2'">
+    <When Condition="'$(Platform)' == 'Net40' or '$(Platform)' == 'DIRECTX11_2'">
       <ItemGroup>
         <ProjectReference Include="..\..\SharpDX.Direct3D9\SharpDX.Direct3D9.csproj">
           <Project>{b4d984df-85b8-4bbf-8c3b-5cef905f40d9}</Project>
           <Name>SharpDX.Direct3D9</Name>
+        </ProjectReference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="'$(Platform)' == 'Net40' or '$(Platform)' == 'DIRECTX11_2' or '$(Platform)' == 'Net20'">
+      <ItemGroup>
+        <ProjectReference Include="..\..\SharpDX.Desktop\SharpDX.Desktop.csproj">
+          <Project>{5F8DB9E8-FFAE-475F-AC2E-FE2DC5B15A1B}</Project>
+          <Name>SharpDX.Desktop</Name>
         </ProjectReference>
       </ItemGroup>
     </When>
