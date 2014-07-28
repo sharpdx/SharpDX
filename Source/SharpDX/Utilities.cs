@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -1415,6 +1415,7 @@ namespace SharpDX
 #endif
 #endif
 
+#if !W8CORE
         /// <summary>
         /// Loads a native library.
         /// </summary>
@@ -1429,21 +1430,6 @@ namespace SharpDX
             return result;
         }
 
-#if WP8
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate IntPtr LoadLibraryDelegate([MarshalAs(UnmanagedType.LPWStr)] string lpFileName, int reserved = 0);
-        private static LoadLibraryDelegate loadLibrary_;
-        private static LoadLibraryDelegate LoadLibrary_
-        {
-            get { return loadLibrary_ ?? (loadLibrary_ = (LoadLibraryDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.LoadPackagedLibrary()), typeof(LoadLibraryDelegate))); }
-        }
-#elif WIN8METRO && !WP81
-        [DllImport("kernel32", EntryPoint = "LoadPackagedLibrary", SetLastError = true)]
-        static extern IntPtr LoadLibrary_(string lpFileName, int reserved = 0);
-#elif WP81
-        [DllImport("PhoneAppModelHost", EntryPoint = "LoadPackagedLibrary", SetLastError = true)]
-        static extern IntPtr LoadLibrary_(string lpFileName, int reserved = 0);
-#else
         [DllImport("kernel32", EntryPoint = "LoadLibrary", SetLastError = true, CharSet = CharSet.Unicode)]
         static extern IntPtr LoadLibrary_(string lpFileName);
 #endif

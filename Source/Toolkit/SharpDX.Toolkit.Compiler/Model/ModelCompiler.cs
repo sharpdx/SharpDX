@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@ namespace SharpDX.Toolkit.Graphics
         private Assimp.Scene scene;
         private ModelData model;
         private List<ModelData.MeshPart>[] registeredMeshParts;
-        private readonly Dictionary<Node, int> meshNodes = new Dictionary<Node, int>();
+        private readonly Dictionary<Node, int> skeletonNodes = new Dictionary<Node, int>();
         private readonly Dictionary<Node, int> skinnedBones = new Dictionary<Node, int>();
 
 
@@ -164,10 +164,11 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             var importer = new AssimpImporter();
+            importer.SetConfig(new Assimp.Configs.MaxBoneCountConfig(72));
             //importer.SetConfig(new NormalSmoothingAngleConfig(66.0f));
 
             // Steps for Direct3D Right-Handed, should we make this configurable?
-            var steps = PostProcessSteps.FlipUVs | PostProcessSteps.FlipWindingOrder;
+            var steps = PostProcessSteps.FlipUVs | PostProcessSteps.FlipWindingOrder | PostProcessSteps.LimitBoneWeights | PostProcessSteps.SplitByBoneCount;
 
             // Setup quality
             switch (compilerOptions.Quality)
@@ -204,12 +205,17 @@ namespace SharpDX.Toolkit.Graphics
 
             // Collect meshes and attached nodes
             CollectMeshNodes(scene.RootNode);
-            
+
             // Collect nodes
             CollectNodes(scene.RootNode, null);
 
+            CollectMeshes(scene.RootNode);
+
             // Process materials
             ProcessMaterials();
+
+            // Process animations
+            ProcessAnimations();
         }
 
         private void CollectEmbeddedTextures(Texture[] textures)
@@ -400,6 +406,121 @@ namespace SharpDX.Toolkit.Graphics
             return material;
         }
 
+        private void ProcessAnimations()
+        {
+            if (!scene.HasAnimations)
+                return;
+
+            foreach (var animation in scene.Animations)
+            {
+                if (!animation.HasNodeAnimations)
+                    continue;
+
+                var ticksPerSecond = animation.TicksPerSecond > 0 ? animation.TicksPerSecond : 25.0; // Is this format dependent? At least some .x files behave strangely.
+
+                var animationData = new ModelData.Animation
+                {
+                    Name = animation.Name,
+                    Duration = (float)(animation.DurationInTicks / ticksPerSecond)
+                };
+                model.Animations.Add(animationData);
+
+                foreach (var channel in animation.NodeAnimationChannels)
+                {
+                    var keyFrames = new LinkedList<ModelData.KeyFrame>();
+
+                    if (channel.HasScalingKeys)
+                    {
+                        foreach (var key in channel.ScalingKeys)
+                        {
+                            var keyFrame = GetKeyFrame((float)(key.Time / ticksPerSecond), keyFrames);
+                            keyFrame.Value = new CompositeTransform(ConvertVector(key.Value), Mathematics.Quaternion.Identity, Vector3.Zero);
+                        }
+                    }
+
+                    if (channel.HasRotationKeys)
+                    {
+                        foreach (var key in channel.RotationKeys)
+                        {
+                            var keyFrame = GetKeyFrame((float)(key.Time / ticksPerSecond), keyFrames);
+                            keyFrame.Value = new CompositeTransform(keyFrame.Value.Scale, ConvertQuaternion(key.Value), Vector3.Zero);
+                        }
+                    }
+
+                    if (channel.HasPositionKeys)
+                    {
+                        foreach (var key in channel.PositionKeys)
+                        {
+                            var keyFrame = GetKeyFrame((float)(key.Time / ticksPerSecond), keyFrames);
+                            keyFrame.Value = new CompositeTransform(keyFrame.Value.Scale, keyFrame.Value.Rotation, ConvertVector(key.Value));
+                        }
+                    }
+
+                    LinearKeyFrameReduction(keyFrames);
+
+                    var channelData = new ModelData.AnimationChannel { BoneName = channel.NodeName };
+                    channelData.KeyFrames.AddRange(keyFrames);
+                    animationData.Channels.Add(channelData);
+                }
+            }
+        }
+
+        private ModelData.KeyFrame GetKeyFrame(float keyTime, LinkedList<ModelData.KeyFrame> keyFrames)
+        {
+            ModelData.KeyFrame keyFrame;
+
+            for (var node = keyFrames.First; node != null; node = node.Next)
+            {
+                if (MathUtil.NearEqual((float)keyTime, node.Value.Time))
+                    return node.Value;
+
+                if (node.Value.Time > keyTime)
+                {
+                    keyFrame = new ModelData.KeyFrame { Time = keyTime, Value = CompositeTransform.Identity };
+                    keyFrames.AddAfter(node, keyFrame);
+                    return keyFrame;
+                }
+            }
+
+            keyFrame = new ModelData.KeyFrame { Time = keyTime, Value = CompositeTransform.Identity };
+            keyFrames.AddLast(keyFrame);
+            return keyFrame;
+        }
+
+        private const float TranslationThreshold = 1e-8f;
+
+        private const float RotationThreshold = 0.9999999f;
+
+        private void LinearKeyFrameReduction(LinkedList<ModelData.KeyFrame> keyFrames)
+        {
+            if (keyFrames.Count < 3)
+                return;
+
+            var node = keyFrames.First.Next;
+            while (node.Next != null)
+            {
+                var nextNode = node.Next;
+
+                var previous = node.Previous.Value;
+                var current = node.Value;
+                var next = node.Next.Value;
+
+                var amount = (current.Time - previous.Time) / (next.Time - previous.Time);
+                var interpolated = CompositeTransform.Slerp(previous.Value, next.Value, amount);
+
+                var actual = current.Value;
+
+                if ((interpolated.Translation - actual.Translation).LengthSquared() < TranslationThreshold &&
+                   Mathematics.Quaternion.Dot(interpolated.Rotation, actual.Rotation) > RotationThreshold &&
+                    (interpolated.Scale - actual.Scale).LengthSquared() < TranslationThreshold)
+                {
+                    keyFrames.Remove(node);
+                }
+
+                node = nextNode;
+            }
+        }
+
         private void CollectSkinnedBones()
         {
             foreach (var mesh in scene.Meshes)
@@ -408,7 +529,7 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     foreach (var bone in mesh.Bones)
                     {
-                        RegisterNode(scene.RootNode.FindNode(bone.Name), skinnedBones);
+                        RegisterNode(scene.RootNode.FindNode(bone.Name), skeletonNodes);
                     }
                 }
             }
@@ -418,7 +539,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             if (node.HasMeshes)
             {
-                RegisterNode(node, meshNodes);
+                RegisterNode(node, skeletonNodes);
             }
 
             if (node.HasChildren)
@@ -432,9 +553,9 @@ namespace SharpDX.Toolkit.Graphics
 
         private bool IsModelNode(Node node)
         {
-            // Disable Skinned bones for this version
-            //return meshNodes.ContainsKey(node) || skinnedBones.ContainsKey(node);
-            return meshNodes.ContainsKey(node);
+            // Return all nodes for now, so we can use model files as skeletons
+            return true;
+            //return skeletonNodes.ContainsKey(node);
         }
 
         private void RegisterNode(Node node, Dictionary<Node,int> nodeMap)
@@ -453,7 +574,7 @@ namespace SharpDX.Toolkit.Graphics
                 node = node.Parent;
             }
         }
-        
+
         private void CollectNodes(Node node, ModelData.Bone targetParent)
         {
             bool isModelNode = IsModelNode(node);
@@ -464,32 +585,46 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             var parent = new ModelData.Bone
-                            {
-                                Index = model.Bones.Count,
-                                Name = node.Name,
-                                ParentIndex = targetParent == null ? -1 : targetParent.Index,
-                                Transform = ConvertMatrix(node.Transform),
-                                Children = new List<int>()
-                            };
+            {
+                Index = model.Bones.Count,
+                Name = node.Name,
+                ParentIndex = targetParent == null ? -1 : targetParent.Index,
+                Transform = ConvertMatrix(node.Transform),
+                Children = new List<int>()
+            };
 
-            if (targetParent!= null && targetParent.Children != null)
+            if (targetParent != null && targetParent.Children != null)
             {
                 targetParent.Children.Add(parent.Index);
             }
 
             // Associate created bones with local index
-            meshNodes[node] = model.Bones.Count;
+            skeletonNodes[node] = model.Bones.Count;
             model.Bones.Add(parent);
 
-            // if node has meshes, create a new scene object for it
-            if( node.MeshCount > 0)
+            // continue for all child nodes
+            if (node.HasChildren)
+            {
+                foreach (var subNode in node.Children)
+                {
+                    CollectNodes(subNode, parent);
+                }
+            }
+        }
+
+        private void CollectMeshes(Node node)
+        {
+            var boneIndex = skeletonNodes[node];
+            var bone = model.Bones[boneIndex];
+
+            if (node.HasMeshes)
             {
                 var mesh = new ModelData.Mesh
-                               {
-                                   Name = parent.Name, 
-                                   ParentBoneIndex = parent.Index, 
-                                   MeshParts = new List<ModelData.MeshPart>()
-                               };
+                {
+                    Name = bone.Name,
+                    ParentBoneIndex = bone.Index,
+                    MeshParts = new List<ModelData.MeshPart>()
+                };
                 model.Meshes.Add(mesh);
 
                 // Precalculate the number of vertices for bounding sphere calculation
@@ -511,7 +646,7 @@ namespace SharpDX.Toolkit.Graphics
                 for (int i = 0; i < node.MeshCount; i++)
                 {
                     var meshIndex = node.MeshIndices[i];
-                    var meshPart = Process(mesh, scene.Meshes[meshIndex]);
+                    var meshPart = Process(mesh, scene.Meshes[meshIndex], node);
 
                     var meshToPartList = registeredMeshParts[meshIndex];
                     if (meshToPartList == null)
@@ -533,7 +668,7 @@ namespace SharpDX.Toolkit.Graphics
             {
                 foreach (var subNode in node.Children)
                 {
-                    CollectNodes(subNode, parent);
+                    CollectMeshes(subNode);
                 }
             }
         }
@@ -544,7 +679,7 @@ namespace SharpDX.Toolkit.Graphics
 
 
 
-        private ModelData.MeshPart Process(ModelData.Mesh mesh, Assimp.Mesh assimpMesh)
+        private ModelData.MeshPart Process(ModelData.Mesh mesh, Assimp.Mesh assimpMesh, Node parentNode)
         {
             var meshPart = new ModelData.MeshPart()
                                {
@@ -638,21 +773,27 @@ namespace SharpDX.Toolkit.Graphics
 
             if (assimpMesh.HasBones)
             {
-                meshPart.BoneOffsetMatrices = new Matrix[assimpMesh.BoneCount];
                 for (int i = 0; i < assimpMesh.Bones.Length; i++)
                 {
                     var bone = assimpMesh.Bones[i];
-                    meshPart.BoneOffsetMatrices[i] = ConvertMatrix(bone.OffsetMatrix);
+                    var boneNode = scene.RootNode.FindNode(bone.Name);
+
                     if (bone.HasVertexWeights)
                     {
-                        var boneNode = scene.RootNode.FindNode(bone.Name);
-                        var boneIndex = skinnedBones[boneNode];
+                        var skinnedBoneIndex = meshPart.SkinnedBones.Count;
+
+                        meshPart.SkinnedBones.Add(new ModelData.SkinnedBone
+                        {
+                            BoneIndex = skeletonNodes[boneNode],
+                            InverseBindTransform = ConvertMatrix(bone.OffsetMatrix)
+                        });
+
                         for (int j = 0; j < bone.VertexWeightCount; j++)
                         {
                             var weights = bone.VertexWeights[j];
                             var vertexSkinningCount = skinningCount[weights.VertexID];
 
-                            skinningIndices[weights.VertexID][vertexSkinningCount] = boneIndex;
+                            skinningIndices[weights.VertexID][vertexSkinningCount] = skinnedBoneIndex;
 
                             skinningWeights[weights.VertexID][vertexSkinningCount] = weights.Weight;
 
@@ -666,7 +807,7 @@ namespace SharpDX.Toolkit.Graphics
                 if (hasWeights)
                 {
                     layout.Add(VertexElement.BlendIndices(Format.R16G16B16A16_SInt, vertexBufferElementSize));
-                    vertexBufferElementSize += Utilities.SizeOf<Int4>();
+                    vertexBufferElementSize += 8;
 
                     layout.Add(VertexElement.BlendWeights(Format.R32G32B32A32_Float, vertexBufferElementSize));
                     vertexBufferElementSize += Utilities.SizeOf<Vector4>();
@@ -687,16 +828,17 @@ namespace SharpDX.Toolkit.Graphics
             var vertexStream = DataStream.Create(vertexBuffer.Buffer, true, true);
             for (int i = 0; i < assimpMesh.VertexCount; i++)
             {
-                var position = assimpMesh.Vertices[i];
+                Vector3 position = ConvertVector(assimpMesh.Vertices[i]);
                 vertexStream.Write(position);
 
                 // Store bounding points for BoundingSphere pre-calculation
-                boundingPoints[currentBoundingPointIndex++] = new Vector3(position.X, position.Y, position.Z);
+                boundingPoints[currentBoundingPointIndex++] = position;
 
                 // Add normals
                 if (assimpMesh.HasNormals)
                 {
-                    vertexStream.Write(assimpMesh.Normals[i]);
+                    var normal = ConvertVector(assimpMesh.Normals[i]);
+                    vertexStream.Write(normal);
                 }
 
                 // Add colors
@@ -737,14 +879,20 @@ namespace SharpDX.Toolkit.Graphics
                 // Add tangent / bitangent
                 if (assimpMesh.HasTangentBasis)
                 {
-                    vertexStream.Write(assimpMesh.Tangents[i]);
-                    vertexStream.Write(assimpMesh.BiTangents[i]);
+                    var tangent = ConvertVector(assimpMesh.Normals[i]);
+                    var bitangent = ConvertVector(assimpMesh.Normals[i]);
+                    vertexStream.Write(tangent);
+                    vertexStream.Write(bitangent);
                 }
 
                 // Add Skinning Indices/Weights
                 if (assimpMesh.HasBones && hasWeights)
                 {
-                    vertexStream.Write(skinningIndices[i]);
+                    var vertexSkinndingIndices = skinningIndices[i];
+                    vertexStream.Write((short)vertexSkinndingIndices.X);
+                    vertexStream.Write((short)vertexSkinndingIndices.Y);
+                    vertexStream.Write((short)vertexSkinndingIndices.Z);
+                    vertexStream.Write((short)vertexSkinndingIndices.W);
                     vertexStream.Write(skinningWeights[i]);
                 }
             }
@@ -778,6 +926,19 @@ namespace SharpDX.Toolkit.Graphics
             return meshPart;
         }
 
+        private static Matrix GetAbsoluteTransform(Node node)
+        {
+            Matrix transform = ConvertMatrix(node.Transform);
+
+            while (node.Parent != null)
+            {
+                node = node.Parent;
+                transform *= ConvertMatrix(node.Transform);
+            }
+
+            return transform;
+        }
+
         private unsafe static Vector2 ConvertVector(Vector2D value)
         {
             return *(Vector2*)&value;
@@ -795,7 +956,14 @@ namespace SharpDX.Toolkit.Graphics
 
         private unsafe static Matrix ConvertMatrix(Matrix4x4 sourceMatrix)
         {
-            return *(Matrix*)&sourceMatrix;
+            // Assimp uses column vectors
+            return Matrix.Transpose(*(Matrix*)&sourceMatrix);
+        }
+
+        private static SharpDX.Mathematics.Quaternion ConvertQuaternion(Assimp.Quaternion value)
+        {
+            // Assimp quaternions are stored in wxyz order
+            return new SharpDX.Mathematics.Quaternion(value.X, value.Y, value.Z, value.W);
         }
 
         private TextureAddressMode ConvertWrapMode(TextureWrapMode wrapMode)

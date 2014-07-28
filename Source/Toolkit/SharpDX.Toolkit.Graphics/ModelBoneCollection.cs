@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Collections.Generic.List`1" /> class that is empty and has the specified initial capacity.
+        /// Initializes a new instance of the <see cref="ModelBoneCollection" /> class that is empty and has the specified initial capacity.
         /// </summary>
         /// <param name="capacity">The number of elements that the new list can initially store.</param>
         public ModelBoneCollection(int capacity)

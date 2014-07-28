@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,8 +28,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly:AssemblyVersion("2.6.0")]
-[assembly:AssemblyFileVersion("2.6.0")]
+[assembly:AssemblyVersion("2.6.3")]
+[assembly:AssemblyFileVersion("2.6.3")]
 
 [assembly: NeutralResourcesLanguage("en-us")]
 

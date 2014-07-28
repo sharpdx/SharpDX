@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -79,9 +79,11 @@ using SharpDX.WIC;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    internal class WICHelper
+    public class WICHelper
     {
-        public static readonly WIC.ImagingFactory Factory = new ImagingFactory();
+        private static WIC.ImagingFactory _factory = new ImagingFactory();
+
+        private static ImagingFactory Factory { get { return _factory ?? (_factory = new ImagingFactory()); } }
 
         //-------------------------------------------------------------------------------------
         // WIC Pixel Format Translation Data
@@ -503,7 +505,7 @@ namespace SharpDX.Toolkit.Graphics
         //-------------------------------------------------------------------------------------
         // Load a WIC-supported file in memory
         //-------------------------------------------------------------------------------------
-        public static Image LoadFromWICMemory(IntPtr pSource, int size, bool makeACopy, GCHandle? handle)
+        internal static Image LoadFromWICMemory(IntPtr pSource, int size, bool makeACopy, GCHandle? handle)
         {
             var flags = WICFlags.AllFrames;
 
@@ -548,7 +550,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             // For WIC, we are not keeping the original buffer.
-            if (image != null && !makeACopy) 
+            if (image != null && !makeACopy)
             {
                 if (handle.HasValue)
                 {
@@ -565,10 +567,10 @@ namespace SharpDX.Toolkit.Graphics
         //-------------------------------------------------------------------------------------
         // Encodes a single frame
         //-------------------------------------------------------------------------------------
-        private static void EncodeImage( PixelBuffer image, WICFlags flags, BitmapFrameEncode frame)
+        private static void EncodeImage(PixelBuffer image, WICFlags flags, BitmapFrameEncode frame)
         {
             Guid pfGuid;
-            if (! ToWIC(image.Format, out pfGuid))
+            if (!ToWIC(image.Format, out pfGuid))
                 throw new NotSupportedException("Format not supported");
 
             frame.Initialize();
@@ -618,7 +620,7 @@ namespace SharpDX.Toolkit.Graphics
             frame.Commit();
         }
 
-        private static void EncodeSingleFrame( PixelBuffer pixelBuffer, WICFlags flags, Guid guidContainerFormat, Stream stream )
+        private static void EncodeSingleFrame(PixelBuffer pixelBuffer, WICFlags flags, Guid guidContainerFormat, Stream stream)
         {
             using (var encoder = new BitmapEncoder(Factory, guidContainerFormat, stream))
             {
@@ -643,9 +645,9 @@ namespace SharpDX.Toolkit.Graphics
         //-------------------------------------------------------------------------------------
         // Encodes an image array
         //-------------------------------------------------------------------------------------
-        private static void EncodeMultiframe( PixelBuffer[] images, int count, WICFlags flags, Guid guidContainerFormat, Stream stream )
+        private static void EncodeMultiframe(PixelBuffer[] images, int count, WICFlags flags, Guid guidContainerFormat, Stream stream)
         {
-            if ( images.Length < 2 )
+            if (images.Length < 2)
                 throw new ArgumentException("Cannot encode to multiple frame. Image doesn't have multiple frame");
 
             using (var encoder = new BitmapEncoder(Factory, guidContainerFormat))
@@ -690,32 +692,32 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        public static void SaveGifToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
+        internal static void SaveGifToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
         {
             SaveToWICMemory(pixelBuffers, count, WICFlags.AllFrames, ImageFileType.Gif, imageStream);
         }
 
-        public static void SaveTiffToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
+        internal static void SaveTiffToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
         {
             SaveToWICMemory(pixelBuffers, count, WICFlags.AllFrames, ImageFileType.Tiff, imageStream);
         }
 
-        public static void SaveBmpToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
+        internal static void SaveBmpToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
         {
             SaveToWICMemory(pixelBuffers, 1, WICFlags.None, ImageFileType.Bmp, imageStream);
         }
 
-        public static void SaveJpgToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
+        internal static void SaveJpgToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
         {
             SaveToWICMemory(pixelBuffers, 1, WICFlags.None, ImageFileType.Jpg, imageStream);
         }
 
-        public static void SavePngToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
+        internal static void SavePngToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
         {
             SaveToWICMemory(pixelBuffers, 1, WICFlags.None, ImageFileType.Png, imageStream);
         }
 
-        public static void SaveWmpToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
+        internal static void SaveWmpToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
         {
             SaveToWICMemory(pixelBuffers, 1, WICFlags.None, ImageFileType.Wmp, imageStream);
         }
@@ -726,6 +728,11 @@ namespace SharpDX.Toolkit.Graphics
                 EncodeMultiframe(pixelBuffer, count, flags, GetContainerFormatFromFileType(fileType), stream);
             else
                 EncodeSingleFrame(pixelBuffer[0], flags, GetContainerFormatFromFileType(fileType), stream);
+        }
+
+        public static void Dispose()
+        {
+            Utilities.Dispose(ref _factory);
         }
     }
 }

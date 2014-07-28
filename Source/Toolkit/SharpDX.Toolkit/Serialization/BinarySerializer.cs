@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -1135,6 +1135,7 @@ namespace SharpDX.Toolkit.Serialization
                     TValue localValue = default(TValue);
                     localKey.Serialize(this);
                     localValue.Serialize(this);
+                    dictionary.Add(localKey, localValue);
                 }
             }
         }
@@ -1180,10 +1181,11 @@ namespace SharpDX.Toolkit.Serialization
 
                 for (int i = 0; i < count; i++)
                 {
-                    TKey localKey = default(TKey);
+                    TKey localKey = Utilities.IsValueType(typeof(TKey)) ? default(TKey) : new TKey();
                     TValue localValue = default(TValue);
                     localKey.Serialize(this);
                     valueSerializer(ref localValue);
+                    dictionary.Add(localKey, localValue);
                 }
             }
         }
@@ -1230,9 +1232,10 @@ namespace SharpDX.Toolkit.Serialization
                 for (int i = 0; i < count; i++)
                 {
                     TKey localKey = default(TKey);
-                    TValue localValue = default(TValue);
+                    TValue localValue = Utilities.IsValueType(typeof(TValue)) ? default(TValue) : new TValue();
                     keySerializer(ref localKey);
                     localValue.Serialize(this);
+                    dictionary.Add(localKey, localValue);
                 }
             }
         }
@@ -1283,6 +1286,7 @@ namespace SharpDX.Toolkit.Serialization
                     TValue localValue = default(TValue);
                     keySerializer(ref localKey);
                     valueSerializer(ref localValue);
+                    dictionary.Add(localKey, localValue);
                 }
             }
         }

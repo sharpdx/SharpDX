@@ -42,6 +42,9 @@
     <Compile Include="IComponent.cs" />
     <Compile Include="IdentityEqualityComparer.cs" />
     <Compile Include="IServiceRegistry.cs" />
+    <Compile Include="Graphics\ModelData.Animation.cs" />
+    <Compile Include="Graphics\ModelData.KeyFrame.cs" />
+    <Compile Include="Graphics\ModelData.SkinnedBone.cs" />
     <Compile Include="PathUtility.cs" />
     <Compile Include="PropertyKey.cs" />
     <Compile Include="PropertyCollection.cs" />
@@ -97,6 +100,7 @@
     <Compile Include="Graphics\EffectParameterType.cs" />
     <Compile Include="Graphics\EffectData.cs" />
     <Compile Include="Serialization\ArrayLengthType.cs" />
+    <Compile Include="CompositeTransform.cs" />
     <Compile Include="Serialization\BinarySerializer.cs" />
     <Compile Include="Serialization\BinarySerializer.Mathematics.cs" />
     <Compile Include="Serialization\DynamicSerializerAttribute.cs" />
@@ -134,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Serialization\BinarySerializer.Graphics.cs" />
+    <Compile Include="Graphics\ModelData.AnimationChannel.cs" />
     <None Include="SharpDX.Toolkit.nuspec" />
   </ItemGroup>
   <ItemGroup>

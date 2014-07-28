@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -522,13 +522,8 @@ namespace SharpDX.Mathematics
 
             if (distance < 0f)
             {
-                if (MathUtil.IsZero(distance))
-                {
-                    distance = 0;
-                    return false;
-                }
-
                 distance = 0f;
+                return false;
             }
 
             return true;
