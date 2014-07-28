@@ -477,7 +477,7 @@
 
     <define struct="SharpDX.Win32Native.TextMetric" sizeof="32"/> <!-- TODO calculate sizeof -->
     <define struct="SharpDX.Win32Native.TextMetricA" sizeof="32"/> <!-- TODO calculate sizeof -->
-    <define struct="SharpDX.Win32Native.LogFont" sizeof="32"/> <!-- TODO calculate sizeof -->
+    <define struct="SharpDX.DirectWrite.GdiInterop.LogFont" sizeof="32"/> <!-- TODO calculate sizeof -->
 
     <define struct="SharpDX.DataRectangle" sizeof="12" />
     <define struct="SharpDX.DataBox" sizeof="16" />
@@ -611,7 +611,7 @@
     <bind from="RGNDATA" to="System.IntPtr"/>
     <bind from="TEXTMETRICW" to="SharpDX.Win32Native.TextMetric"/>
     <bind from="TEXTMETRICA" to="SharpDX.Win32Native.TextMetricA"/>
-    <bind from="LOGFONTW" to="SharpDX.Win32Native.LogFont"/>
+    <bind from="LOGFONTW" to="SharpDX.DirectWrite.GdiInterop.LogFont"/>
 
     <!-- Win32 structures -->
     <bind from="DISPPARAMS" to="System.Runtime.InteropServices.ComTypes.DISPPARAMS"/>

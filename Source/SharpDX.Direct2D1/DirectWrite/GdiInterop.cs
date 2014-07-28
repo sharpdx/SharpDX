@@ -29,6 +29,26 @@ namespace SharpDX.DirectWrite
 
     public partial class GdiInterop
     {
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public class LogFont
+        {
+            public int lfHeight;
+            public int lfWidth;
+            public int lfEscapement;
+            public int lfOrientation;
+            public int lfWeight;
+            public byte lfItalic;
+            public byte lfUnderline;
+            public byte lfStrikeOut;
+            public byte lfCharSet;
+            public byte lfOutPrecision;
+            public byte lfClipPrecision;
+            public byte lfQuality;
+            public byte lfPitchAndFamily;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x20)]
+            public string lfFaceName;
+        }
+
         /// <summary>	
         /// Creates a font object that matches the properties specified by the LOGFONT structure. 	
         /// </summary>	
@@ -79,7 +99,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteGdiInterop::CreateFontFromLOGFONT([In] const LOGFONTW* logFont,[Out] IDWriteFont** font)</unmanaged>
         public Font FromSystemDrawingFont(System.Drawing.Font font)
         {
-            var logfontw = new Win32Native.LogFont();
+            var logfontw = new LogFont();
             font.ToLogFont(logfontw);
             return FromLogFont(logfontw);
         }
@@ -92,7 +112,7 @@ namespace SharpDX.DirectWrite
         /// <returns>true if the specified font object is part of the system font collection; otherwise, false.</returns>
         public bool ToSystemDrawingFont(Font d2dFont, out System.Drawing.Font font)
         {
-            var logfontw = new Win32Native.LogFont();
+            var logfontw = new LogFont();
             bool isSystemFont = ToLogFont(d2dFont, logfontw);
             font = System.Drawing.Font.FromLogFont(logfontw);
             return isSystemFont;
