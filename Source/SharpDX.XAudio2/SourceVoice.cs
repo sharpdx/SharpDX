@@ -107,16 +107,8 @@ namespace SharpDX.XAudio2
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAudio2::CreateSourceVoice([Out] IXAudio2SourceVoice** ppSourceVoice,[In] const WAVEFORMATEX* pSourceFormat,[None] UINT32 Flags,[None] float MaxFrequencyRatio,[In, Optional] IXAudio2VoiceCallback* pCallback,[In, Optional] const XAUDIO2_VOICE_SENDS* pSendList,[In, Optional] const XAUDIO2_EFFECT_CHAIN* pEffectChain)</unmanaged>
         public SourceVoice(XAudio2 device, SharpDX.Multimedia.WaveFormat sourceFormat, SharpDX.XAudio2.VoiceFlags flags, float maxFrequencyRatio, VoiceCallback callback)
-            : base(IntPtr.Zero)
+            : this(device, sourceFormat, flags, maxFrequencyRatio, callback, null)
         {
-            var waveformatPtr = WaveFormat.MarshalToPtr(sourceFormat);
-            try
-            {
-                device.CreateSourceVoice_(this, waveformatPtr, flags, maxFrequencyRatio, callback == null ? IntPtr.Zero : VoiceShadow.ToIntPtr(callback), null, null);
-            } finally
-            {
-                Marshal.FreeHGlobal(waveformatPtr);
-            }
         }
 
         /// <summary>
@@ -130,15 +122,73 @@ namespace SharpDX.XAudio2
         /// <returns>No enableCallbackEvents.</returns>
         ///   <unmanaged>HRESULT IXAudio2::CreateSourceVoice([Out] IXAudio2SourceVoice** ppSourceVoice,[In] const WAVEFORMATEX* pSourceFormat,[None] UINT32 Flags,[None] float MaxFrequencyRatio,[In, Optional] IXAudio2VoiceCallback* pCallback,[In, Optional] const XAUDIO2_VOICE_SENDS* pSendList,[In, Optional] const XAUDIO2_EFFECT_CHAIN* pEffectChain)</unmanaged>
         public SourceVoice(XAudio2 device, SharpDX.Multimedia.WaveFormat sourceFormat, SharpDX.XAudio2.VoiceFlags flags, float maxFrequencyRatio, bool enableCallbackEvents)
+            : this(device, sourceFormat, flags, maxFrequencyRatio, enableCallbackEvents, null)
+        {
+        }
+
+        /// <summary>	
+        /// Creates and configures a source voice.	
+        /// </summary>	
+        /// <param name="device">an instance of <see cref = "SharpDX.XAudio2.XAudio2" /></param>
+        /// <param name="sourceFormat">[in]  Pointer to a <see cref="SharpDX.Multimedia.WaveFormat"/> structure. This structure contains the expected format for all audio buffers submitted to the source voice. XAudio2 supports voice types of PCM, xWMA, ADPCM (Windows only), and XMA (Xbox 360 only). XAudio2 supports the following PCM formats.   8-bit (unsigned) integer PCM   16-bit integer PCM (Optimal format for XAudio2)   20-bit integer PCM (either in 24 or 32 bit containers)   24-bit integer PCM (either in 24 or 32 bit containers)   32-bit integer PCM   32-bit float PCM (Preferred format after 16-bit integer)   The number of channels in a source voice must be less than or equal to XAUDIO2_MAX_AUDIO_CHANNELS. The sample rate of a source voice must be between XAUDIO2_MIN_SAMPLE_RATE and XAUDIO2_MAX_SAMPLE_RATE. Note Data formats such as XMA, {{ADPCM}}, and {{xWMA}} that require more information than provided by <see cref="SharpDX.Multimedia.WaveFormat"/> have a <see cref="SharpDX.Multimedia.WaveFormat"/> structure as the first member in their format structure. When creating a source voice with one of those formats cast the format's structure as a <see cref="SharpDX.Multimedia.WaveFormat"/> structure and use it as the value for pSourceFormat. </param>
+        /// <param name="flags">[in]  Flags that specify the behavior of the source voice. A flag can be 0 or a combination of one or more of the following: ValueDescriptionXAUDIO2_VOICE_NOPITCHNo pitch control is available on the voice.?XAUDIO2_VOICE_NOSRCNo sample rate conversion is available on the voice, the voice's  outputs must have the same sample rate.Note The XAUDIO2_VOICE_NOSRC flag causes the voice to behave as though the XAUDIO2_VOICE_NOPITCH flag also is specified. ?XAUDIO2_VOICE_USEFILTERThe filter effect should be available on this voice.?XAUDIO2_VOICE_MUSICThe voice is used to play background music. The system automatically  can replace the voice with music selected by the user.? </param>
+        /// <param name="maxFrequencyRatio">[in]  Highest allowable frequency ratio that can be set on this voice. The value for this argument must be between XAUDIO2_MIN_FREQ_RATIO and XAUDIO2_MAX_FREQ_RATIO. Subsequent calls to <see cref="SharpDX.XAudio2.SourceVoice.SetFrequencyRatio"/> are clamped between XAUDIO2_MIN_FREQ_RATIO and MaxFrequencyRatio. The maximum value for this argument is defined as XAUDIO2_MAX_FREQ_RATIO, which allows pitch to be raised by up to 10 octaves. If MaxFrequencyRatio is less than 1.0, the voice will use that ratio immediately after being created (rather than the default of 1.0). Xbox 360  For XMA voices there is an additional restriction on the MaxFrequencyRatio argument and the voice's sample rate. The product of these two numbers cannot exceed XAUDIO2_MAX_RATIO_TIMES_RATE_XMA_MONO for one-channel voices or XAUDIO2_MAX_RATIO_TIMES_RATE_XMA_MULTICHANNEL for voices with any other number of channels. If the value specified for MaxFrequencyRatio is too high for the specified format, the call to CreateSourceVoice fails and produces a debug message.  Note XAudio2's memory usage can be reduced by using the lowest possible MaxFrequencyRatio value. </param>
+        /// <param name="callback">[in, optional]  Pointer to a client-provided callback interface, <see cref="SharpDX.XAudio2.VoiceCallback"/>. </param>
+        /// <param name="effectDescriptors">[in, optional] Pointer to a list of XAUDIO2_EFFECT_CHAIN structures that describe an effect chain to use in the source voice.</param>
+        /// <returns>No documentation.</returns>
+        /// <unmanaged>HRESULT IXAudio2::CreateSourceVoice([Out] IXAudio2SourceVoice** ppSourceVoice,[In] const WAVEFORMATEX* pSourceFormat,[None] UINT32 Flags,[None] float MaxFrequencyRatio,[In, Optional] IXAudio2VoiceCallback* pCallback,[In, Optional] const XAUDIO2_VOICE_SENDS* pSendList,[In, Optional] const XAUDIO2_EFFECT_CHAIN* pEffectChain)</unmanaged>
+        public SourceVoice(XAudio2 device, SharpDX.Multimedia.WaveFormat sourceFormat, SharpDX.XAudio2.VoiceFlags flags, float maxFrequencyRatio, VoiceCallback callback, EffectDescriptor[] effectDescriptors)
             : base(IntPtr.Zero)
+        {
+            CreateSourceVoice(device, sourceFormat, flags, maxFrequencyRatio, callback == null ? IntPtr.Zero : VoiceShadow.ToIntPtr(callback), effectDescriptors);
+        }
+
+        /// <summary>
+        /// Creates and configures a source voice with callback through delegates.
+        /// </summary>
+        /// <param name="device">an instance of <see cref="SharpDX.XAudio2.XAudio2" /></param>
+        /// <param name="sourceFormat">[in]  Pointer to a <see cref="SharpDX.Multimedia.WaveFormat" /> structure. This structure contains the expected format for all audio buffers submitted to the source voice. XAudio2 supports voice types of PCM, xWMA, ADPCM (Windows only), and XMA (Xbox 360 only). XAudio2 supports the following PCM formats.   8-bit (unsigned) integer PCM   16-bit integer PCM (Optimal format for XAudio2)   20-bit integer PCM (either in 24 or 32 bit containers)   24-bit integer PCM (either in 24 or 32 bit containers)   32-bit integer PCM   32-bit float PCM (Preferred format after 16-bit integer)   The number of channels in a source voice must be less than or equal to XAUDIO2_MAX_AUDIO_CHANNELS. The sample rate of a source voice must be between XAUDIO2_MIN_SAMPLE_RATE and XAUDIO2_MAX_SAMPLE_RATE. Note Data formats such as XMA, {{ADPCM}}, and {{xWMA}} that require more information than provided by <see cref="SharpDX.Multimedia.WaveFormat" /> have a <see cref="SharpDX.Multimedia.WaveFormat" /> structure as the first member in their format structure. When creating a source voice with one of those formats cast the format's structure as a <see cref="SharpDX.Multimedia.WaveFormat" /> structure and use it as the value for pSourceFormat.</param>
+        /// <param name="flags">[in]  Flags that specify the behavior of the source voice. A flag can be 0 or a combination of one or more of the following: ValueDescriptionXAUDIO2_VOICE_NOPITCHNo pitch control is available on the voice.?XAUDIO2_VOICE_NOSRCNo sample rate conversion is available on the voice, the voice's  outputs must have the same sample rate.Note The XAUDIO2_VOICE_NOSRC flag causes the voice to behave as though the XAUDIO2_VOICE_NOPITCH flag also is specified. ?XAUDIO2_VOICE_USEFILTERThe filter effect should be available on this voice.?XAUDIO2_VOICE_MUSICThe voice is used to play background music. The system automatically  can replace the voice with music selected by the user.?</param>
+        /// <param name="maxFrequencyRatio">[in]  Highest allowable frequency ratio that can be set on this voice. The value for this argument must be between XAUDIO2_MIN_FREQ_RATIO and XAUDIO2_MAX_FREQ_RATIO. Subsequent calls to <see cref="SharpDX.XAudio2.SourceVoice.SetFrequencyRatio" /> are clamped between XAUDIO2_MIN_FREQ_RATIO and MaxFrequencyRatio. The maximum value for this argument is defined as XAUDIO2_MAX_FREQ_RATIO, which allows pitch to be raised by up to 10 octaves. If MaxFrequencyRatio is less than 1.0, the voice will use that ratio immediately after being created (rather than the default of 1.0). Xbox 360  For XMA voices there is an additional restriction on the MaxFrequencyRatio argument and the voice's sample rate. The product of these two numbers cannot exceed XAUDIO2_MAX_RATIO_TIMES_RATE_XMA_MONO for one-channel voices or XAUDIO2_MAX_RATIO_TIMES_RATE_XMA_MULTICHANNEL for voices with any other number of channels. If the value specified for MaxFrequencyRatio is too high for the specified format, the call to CreateSourceVoice fails and produces a debug message.  Note XAudio2's memory usage can be reduced by using the lowest possible MaxFrequencyRatio value.</param>
+        /// <param name="enableCallbackEvents">if set to <c>true</c> [enable callback events].</param>
+        /// <param name="effectDescriptors">[in, optional] Pointer to a list of XAUDIO2_EFFECT_CHAIN structures that describe an effect chain to use in the source voice.</param>
+        /// <returns>No enableCallbackEvents.</returns>
+        ///   <unmanaged>HRESULT IXAudio2::CreateSourceVoice([Out] IXAudio2SourceVoice** ppSourceVoice,[In] const WAVEFORMATEX* pSourceFormat,[None] UINT32 Flags,[None] float MaxFrequencyRatio,[In, Optional] IXAudio2VoiceCallback* pCallback,[In, Optional] const XAUDIO2_VOICE_SENDS* pSendList,[In, Optional] const XAUDIO2_EFFECT_CHAIN* pEffectChain)</unmanaged>
+        public SourceVoice(XAudio2 device, SharpDX.Multimedia.WaveFormat sourceFormat, SharpDX.XAudio2.VoiceFlags flags, float maxFrequencyRatio, bool enableCallbackEvents, EffectDescriptor[] effectDescriptors)
+            : base(IntPtr.Zero)
+        {
+            CreateSourceVoice(device, sourceFormat, flags, maxFrequencyRatio, enableCallbackEvents ? VoiceShadow.ToIntPtr(voiceCallbackImpl = new VoiceCallbackImpl(this)) : IntPtr.Zero, effectDescriptors);
+        }
+
+        private void CreateSourceVoice(XAudio2 device, SharpDX.Multimedia.WaveFormat sourceFormat, SharpDX.XAudio2.VoiceFlags flags, float maxFrequencyRatio, IntPtr callback, EffectDescriptor[] effectDescriptors)
         {
             var waveformatPtr = WaveFormat.MarshalToPtr(sourceFormat);
             try
             {
-                device.CreateSourceVoice_(this, waveformatPtr, flags, maxFrequencyRatio, enableCallbackEvents ? VoiceShadow.ToIntPtr(voiceCallbackImpl = new VoiceCallbackImpl(this)) : IntPtr.Zero, null, null);
-            } finally
+                if (effectDescriptors != null)
+                {
+                    unsafe
+                    {
+                        var tempSendDescriptor = new EffectChain();
+                        var effectDescriptorNatives = new EffectDescriptor.__Native[effectDescriptors.Length];
+                        for (int i = 0; i < effectDescriptorNatives.Length; i++)
+                            effectDescriptors[i].__MarshalTo(ref effectDescriptorNatives[i]);
+                        tempSendDescriptor.EffectCount = effectDescriptorNatives.Length;
+                        fixed (void* pEffectDescriptors = &effectDescriptorNatives[0])
+                        {
+                            tempSendDescriptor.EffectDescriptorPointer = (IntPtr)pEffectDescriptors;
+                            device.CreateSourceVoice_(this, waveformatPtr, flags, maxFrequencyRatio, callback, null, tempSendDescriptor);
+                        }
+                    }
+                }
+                else
+                {
+                    device.CreateSourceVoice_(this, waveformatPtr, flags, maxFrequencyRatio, callback, null, null);
+                }
+            }
+            finally
             {
-                Marshal.FreeHGlobal(waveformatPtr);                
+                Marshal.FreeHGlobal(waveformatPtr);
             }
         }
 
