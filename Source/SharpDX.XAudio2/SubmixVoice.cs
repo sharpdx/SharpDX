@@ -98,13 +98,13 @@ namespace SharpDX.XAudio2
                     fixed (void* pEffectDescriptors = &effectDescriptorNatives[0])
                     {
                         tempSendDescriptor.EffectDescriptorPointer = (IntPtr)pEffectDescriptors;
-                        device.CreateSubmixVoice(this, inputChannels, inputSampleRate, flags, processingStage, null, tempSendDescriptor);
+                        device.CreateSubmixVoice(this, inputChannels, inputSampleRate, unchecked((int)flags), processingStage, null, tempSendDescriptor);
                     }
                 }
             }
             else
             {
-                device.CreateSubmixVoice(this, inputChannels, inputSampleRate, flags, processingStage, null, null);
+                device.CreateSubmixVoice(this, inputChannels, inputSampleRate, unchecked((int)flags), processingStage, null, null);
             }
         }
     }
