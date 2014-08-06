@@ -232,7 +232,7 @@ namespace SharpDX.MediaFoundation
         /// <unmanaged-short>IMFSourceReader::GetCurrentMediaType</unmanaged-short>	
         public SharpDX.MediaFoundation.MediaType GetCurrentMediaType(SourceReaderIndex readerIndex)
         {
-            return GetCurrentMediaType((int)SourceReaderIndex.FirstAudioStream);
+            return GetCurrentMediaType((int)readerIndex);
         }
 
         /// <summary>	
