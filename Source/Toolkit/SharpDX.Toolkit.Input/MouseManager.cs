@@ -30,6 +30,7 @@ namespace SharpDX.Toolkit.Input
         // as the MouseState structure is immutable - keep a state from which the structure can be rebuilt
         private MouseState state;
         private MouseState nextState;
+        private bool isFirstUpdateDone;
 
         // provides platform-specific binding to mouse functionality
         private MousePlatform platform;
@@ -71,11 +72,6 @@ namespace SharpDX.Toolkit.Input
         /// <exception cref="NullReferenceException">Is thrown if <see cref="Initialize"/> is not called.</exception>
         public MouseState GetState()
         {
-            // read the mouse position information
-            var position = platform.GetLocation();
-
-            state.x = position.X;
-            state.y = position.Y;
             return state;
         }
 
@@ -100,13 +96,27 @@ namespace SharpDX.Toolkit.Input
         {
             base.Update(gameTime);
 
-            state = nextState;
+            var position = platform.GetLocation();
+            nextState.x = position.X;
+            nextState.y = position.Y;
 
+            if(!isFirstUpdateDone)
+            {
+                state = nextState;
+            }
+
+            var previousState = state;
+            state = nextState;
+            state.deltaX = state.X - previousState.X;
+            state.deltaY = state.Y - previousState.Y;
+
+            nextState.wheelDelta = 0;
             nextState.leftButton.ResetEvents();
             nextState.middleButton.ResetEvents();
             nextState.rightButton.ResetEvents();
             nextState.xButton1.ResetEvents();
             nextState.xButton2.ResetEvents();
+            isFirstUpdateDone = true;
         }
 
         /// <summary>
