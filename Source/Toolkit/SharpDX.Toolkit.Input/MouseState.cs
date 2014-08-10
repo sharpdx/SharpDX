@@ -102,7 +102,7 @@ namespace SharpDX.Toolkit.Input
         public float Y { get { return y; } }
 
         /// <summary>
-        /// Gets the delta on x since the previous frame.
+        /// Gets the delta on x since the previous update.
         /// </summary>
         /// <value>The delta x.</value>
         public float DeltaX
@@ -111,7 +111,7 @@ namespace SharpDX.Toolkit.Input
         }
 
         /// <summary>
-        /// Gets the delta y since the previous frame.
+        /// Gets the delta y since the previous update.
         /// </summary>
         /// <value>The delta y.</value>
         public float DeltaY
@@ -120,7 +120,7 @@ namespace SharpDX.Toolkit.Input
         }
 
         /// <summary>
-        /// Gets the cumulative mouse scroll wheel value since the game was started.
+        /// Gets the mouse scroll wheel value since the previous update.
         /// </summary>
         public int WheelDelta
         {
