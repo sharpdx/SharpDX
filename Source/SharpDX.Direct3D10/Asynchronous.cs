@@ -69,15 +69,9 @@ namespace SharpDX.Direct3D10
         {
             get
             {
-                try
-                {
-                    GetData(IntPtr.Zero, 0, 0);
-                    return true;
-                }
-                catch (SharpDXException)
-                {
-                    return false;
-                }
+                // http://msdn.microsoft.com/en-us/library/windows/desktop/bb173503%28v=vs.85%29.aspx
+                // any result other than S_OK will indicate that there is no data available.
+                return GetData(IntPtr.Zero, 0, 0) == Result.Ok;
             }
         }
     }

@@ -221,7 +221,7 @@
     -->
     <remove interface="ID3D10ShaderReflection.*" />
     <remove interface="ID3D10ShaderReflection.*" />
-    <map method="ID3D10Asynchronous::Get.*" visibility="internal" property="false" />
+    <map method="ID3D10Asynchronous::Get.*" visibility="internal" property="false" check="false" />
     <map method="ID3D10Debug::(.*)FeatureMask" visibility="internal" property="false" name="$1FeatureFlags" />
     <map method="ID3D10Buffer::Map.*" visibility="internal" />
     <map method="ID3D10Device::IA(.*)" name="$1" />
