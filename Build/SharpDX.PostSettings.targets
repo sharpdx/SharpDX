@@ -35,9 +35,11 @@
 
   <ProjectExtensions/>
 
+  <!--
   <Target Name="BeforeClean">
     <RemoveDir Condition="Exists('$(ProjectDir)Generated')" Directories="$(ProjectDir)Generated"/>
   </Target>
+  -->
 
   <Target Name="AfterBuild">
     <Exec Command='"$(SolutionDir)\Source\Bin\SharpCLI.exe" "$(TargetPath)"'/>
