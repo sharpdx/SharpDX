@@ -56,7 +56,7 @@ namespace SharpDX.Toolkit.Graphics
             swapChain = ToDispose(CreateSwapChain());
 
 #if DIRECTX11_2
-            swapChain2 = ToDispose(new SwapChain2(swapChain.NativePointer));
+            swapChain2 = ToDispose(swapChain.QueryInterface<SwapChain2>());
 #endif
 
             backBuffer = ToDispose(RenderTarget2D.New(device, swapChain.GetBackBuffer<Direct3D11.Texture2D>(0)));
