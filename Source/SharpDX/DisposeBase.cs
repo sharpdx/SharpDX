@@ -52,8 +52,8 @@ namespace SharpDX
             if (!IsDisposed)
             {
 	            EventHandler<EventArgs> disposingHandlers = Disposing;
-	            if (disposingHandlers != null) 
-					disposingHandlers(this, EventArgs.Empty);
+	            if (disposingHandlers != null)
+                    disposingHandlers(this, DisposeEventArgs.Get(disposing));
 
                 Dispose(disposing);
                 GC.SuppressFinalize(this);
@@ -61,8 +61,8 @@ namespace SharpDX
                 IsDisposed = true;
 
 	            EventHandler<EventArgs> disposedHandlers = Disposed;
-	            if (disposedHandlers != null) 
-					disposedHandlers(this, EventArgs.Empty);
+	            if (disposedHandlers != null)
+                    disposedHandlers(this, DisposeEventArgs.Get(disposing));
             }
         }
 

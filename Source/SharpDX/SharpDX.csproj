@@ -35,6 +35,7 @@
     <Compile Include="ComponentCollection.cs" />
     <Compile Include="Diagnostics\CollectionDebugView.cs" />
     <Compile Include="Diagnostics\VSGraphicsDebugger.cs" />
+    <Compile Include="DisposeEventArgs.cs" />
     <Compile Include="Matrix3x3.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="OrientedBoundingBox.cs" />
