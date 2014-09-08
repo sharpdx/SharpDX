@@ -1,22 +1,28 @@
-//////////////////////////////////////////////////////////////////////////////
+//--------------------------------------------------------------------------------------
+// File: EffectLoad.cpp
 //
-//  Copyright (C) Microsoft Corporation.  All Rights Reserved.
+// Direct3D Effects file loading code
 //
-//  File:       EffectLoad.cpp
-//  Content:    D3DX11 Effects file loading code
+// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+// PARTICULAR PURPOSE.
 //
-//////////////////////////////////////////////////////////////////////////////
+// Copyright (c) Microsoft Corporation. All rights reserved.
+//
+// http://go.microsoft.com/fwlink/p/?LinkId=271568
+//--------------------------------------------------------------------------------------
 
 #include "pchfx.h"
 
-#include <EffectStates11.h>
+#include "EffectStates11.h"
 
 #define PRIVATENEW new(m_BulkHeap)
 
 namespace D3DX11Effects
 {
 
-LPCSTR g_szEffectLoadArea = "D3D11EffectLoader";
+static LPCSTR g_szEffectLoadArea = "D3D11EffectLoader";
 
 SRasterizerBlock g_NullRasterizer;
 SDepthStencilBlock g_NullDepthStencil;
@@ -34,51 +40,51 @@ SDepthStencilView g_NullDepthStencilView;
 // 4) SetShaderResources
 // 5) CreateShader
 SD3DShaderVTable g_vtPS = {
-    (void (__stdcall ID3D11DeviceContext::*)(ID3D11DeviceChild*, ID3D11ClassInstance*const*, UINT)) &ID3D11DeviceContext::PSSetShader,
+    (void (__stdcall ID3D11DeviceContext::*)(ID3D11DeviceChild*, ID3D11ClassInstance*const*, uint32_t)) &ID3D11DeviceContext::PSSetShader,
     &ID3D11DeviceContext::PSSetConstantBuffers,
     &ID3D11DeviceContext::PSSetSamplers,
     &ID3D11DeviceContext::PSSetShaderResources,
-    (HRESULT (__stdcall ID3D11Device::*)(const void *, SIZE_T, ID3D11ClassLinkage*, ID3D11DeviceChild **)) &ID3D11Device::CreatePixelShader
+    (HRESULT (__stdcall ID3D11Device::*)(const void *, size_t, ID3D11ClassLinkage*, ID3D11DeviceChild **)) &ID3D11Device::CreatePixelShader
 };
 
 SD3DShaderVTable g_vtVS = {
-    (void (__stdcall ID3D11DeviceContext::*)(ID3D11DeviceChild*, ID3D11ClassInstance*const*, UINT)) &ID3D11DeviceContext::VSSetShader,
+    (void (__stdcall ID3D11DeviceContext::*)(ID3D11DeviceChild*, ID3D11ClassInstance*const*, uint32_t)) &ID3D11DeviceContext::VSSetShader,
     &ID3D11DeviceContext::VSSetConstantBuffers,
     &ID3D11DeviceContext::VSSetSamplers,
     &ID3D11DeviceContext::VSSetShaderResources,
-    (HRESULT (__stdcall ID3D11Device::*)(const void *, SIZE_T, ID3D11ClassLinkage*, ID3D11DeviceChild **)) &ID3D11Device::CreateVertexShader
+    (HRESULT (__stdcall ID3D11Device::*)(const void *, size_t, ID3D11ClassLinkage*, ID3D11DeviceChild **)) &ID3D11Device::CreateVertexShader
 };
 
 SD3DShaderVTable g_vtGS = {
-    (void (__stdcall ID3D11DeviceContext::*)(ID3D11DeviceChild*, ID3D11ClassInstance*const*, UINT)) &ID3D11DeviceContext::GSSetShader,
+    (void (__stdcall ID3D11DeviceContext::*)(ID3D11DeviceChild*, ID3D11ClassInstance*const*, uint32_t)) &ID3D11DeviceContext::GSSetShader,
     &ID3D11DeviceContext::GSSetConstantBuffers,
     &ID3D11DeviceContext::GSSetSamplers,
     &ID3D11DeviceContext::GSSetShaderResources,
-    (HRESULT (__stdcall ID3D11Device::*)(const void *, SIZE_T, ID3D11ClassLinkage*, ID3D11DeviceChild **)) &ID3D11Device::CreateGeometryShader
+    (HRESULT (__stdcall ID3D11Device::*)(const void *, size_t, ID3D11ClassLinkage*, ID3D11DeviceChild **)) &ID3D11Device::CreateGeometryShader
 };
 
 SD3DShaderVTable g_vtHS = {
-    (void (__stdcall ID3D11DeviceContext::*)(ID3D11DeviceChild*, ID3D11ClassInstance*const*, UINT)) &ID3D11DeviceContext::HSSetShader,
+    (void (__stdcall ID3D11DeviceContext::*)(ID3D11DeviceChild*, ID3D11ClassInstance*const*, uint32_t)) &ID3D11DeviceContext::HSSetShader,
     &ID3D11DeviceContext::HSSetConstantBuffers,
     &ID3D11DeviceContext::HSSetSamplers,
     &ID3D11DeviceContext::HSSetShaderResources,
-    (HRESULT (__stdcall ID3D11Device::*)(const void *, SIZE_T, ID3D11ClassLinkage*, ID3D11DeviceChild **)) &ID3D11Device::CreateHullShader
+    (HRESULT (__stdcall ID3D11Device::*)(const void *, size_t, ID3D11ClassLinkage*, ID3D11DeviceChild **)) &ID3D11Device::CreateHullShader
 };
 
 SD3DShaderVTable g_vtDS = {
-    (void (__stdcall ID3D11DeviceContext::*)(ID3D11DeviceChild*, ID3D11ClassInstance*const*, UINT)) &ID3D11DeviceContext::DSSetShader,
+    (void (__stdcall ID3D11DeviceContext::*)(ID3D11DeviceChild*, ID3D11ClassInstance*const*, uint32_t)) &ID3D11DeviceContext::DSSetShader,
     &ID3D11DeviceContext::DSSetConstantBuffers,
     &ID3D11DeviceContext::DSSetSamplers,
     &ID3D11DeviceContext::DSSetShaderResources,
-    (HRESULT (__stdcall ID3D11Device::*)(const void *, SIZE_T, ID3D11ClassLinkage*, ID3D11DeviceChild **)) &ID3D11Device::CreateDomainShader
+    (HRESULT (__stdcall ID3D11Device::*)(const void *, size_t, ID3D11ClassLinkage*, ID3D11DeviceChild **)) &ID3D11Device::CreateDomainShader
 };
 
 SD3DShaderVTable g_vtCS = {
-    (void (__stdcall ID3D11DeviceContext::*)(ID3D11DeviceChild*, ID3D11ClassInstance*const*, UINT)) &ID3D11DeviceContext::CSSetShader,
+    (void (__stdcall ID3D11DeviceContext::*)(ID3D11DeviceChild*, ID3D11ClassInstance*const*, uint32_t)) &ID3D11DeviceContext::CSSetShader,
     &ID3D11DeviceContext::CSSetConstantBuffers,
     &ID3D11DeviceContext::CSSetSamplers,
     &ID3D11DeviceContext::CSSetShaderResources,
-    (HRESULT (__stdcall ID3D11Device::*)(const void *, SIZE_T, ID3D11ClassLinkage*, ID3D11DeviceChild **)) &ID3D11Device::CreateComputeShader
+    (HRESULT (__stdcall ID3D11Device::*)(const void *, size_t, ID3D11ClassLinkage*, ID3D11DeviceChild **)) &ID3D11Device::CreateComputeShader
 };
 
 SShaderBlock g_NullVS(&g_vtVS);
@@ -88,38 +94,38 @@ SShaderBlock g_NullHS(&g_vtHS);
 SShaderBlock g_NullDS(&g_vtDS);
 SShaderBlock g_NullCS(&g_vtCS);
 
-D3D10_SHADER_VARIABLE_TYPE GetSimpleParameterTypeFromObjectType(EObjectType ObjectType)
+D3D_SHADER_VARIABLE_TYPE GetSimpleParameterTypeFromObjectType(EObjectType ObjectType)
 {
     switch (ObjectType)
     {
     case EOT_String:
-        return D3D10_SVT_STRING;
+        return D3D_SVT_STRING;
     case EOT_Blend:
-        return D3D10_SVT_BLEND;        
+        return D3D_SVT_BLEND;        
     case EOT_DepthStencil:
-        return D3D10_SVT_DEPTHSTENCIL;        
+        return D3D_SVT_DEPTHSTENCIL;        
     case EOT_Rasterizer:
-        return D3D10_SVT_RASTERIZER;        
+        return D3D_SVT_RASTERIZER;        
     case EOT_PixelShader:
     case EOT_PixelShader5:
-        return D3D10_SVT_PIXELSHADER;        
+        return D3D_SVT_PIXELSHADER;        
     case EOT_VertexShader:
     case EOT_VertexShader5:
-        return D3D10_SVT_VERTEXSHADER;        
+        return D3D_SVT_VERTEXSHADER;        
     case EOT_GeometryShader:
     case EOT_GeometryShaderSO:
     case EOT_GeometryShader5:
-        return D3D10_SVT_GEOMETRYSHADER;    
+        return D3D_SVT_GEOMETRYSHADER;    
     case EOT_HullShader5:
-        return D3D11_SVT_HULLSHADER;        
+        return D3D_SVT_HULLSHADER;        
     case EOT_DomainShader5:
-        return D3D11_SVT_DOMAINSHADER;        
+        return D3D_SVT_DOMAINSHADER;        
     case EOT_ComputeShader5:
-        return D3D11_SVT_COMPUTESHADER;        
+        return D3D_SVT_COMPUTESHADER;        
     case EOT_RenderTargetView:
-        return D3D10_SVT_RENDERTARGETVIEW;
+        return D3D_SVT_RENDERTARGETVIEW;
     case EOT_DepthStencilView:
-        return D3D10_SVT_DEPTHSTENCILVIEW;
+        return D3D_SVT_DEPTHSTENCILVIEW;
     case EOT_Texture:
     case EOT_Texture1D:
     case EOT_Texture1DArray:
@@ -130,46 +136,46 @@ D3D10_SHADER_VARIABLE_TYPE GetSimpleParameterTypeFromObjectType(EObjectType Obje
     case EOT_Texture3D:
     case EOT_TextureCube:
     case EOT_TextureCubeArray:
-        return D3D10_SVT_TEXTURE;
+        return D3D_SVT_TEXTURE;
     case EOT_Buffer:
-        return D3D10_SVT_BUFFER;        
+        return D3D_SVT_BUFFER;        
     case EOT_Sampler:
-        return D3D10_SVT_SAMPLER;
+        return D3D_SVT_SAMPLER;
     case EOT_ByteAddressBuffer:
-        return D3D11_SVT_BYTEADDRESS_BUFFER;
+        return D3D_SVT_BYTEADDRESS_BUFFER;
     case EOT_StructuredBuffer:
-        return D3D11_SVT_STRUCTURED_BUFFER;
+        return D3D_SVT_STRUCTURED_BUFFER;
     case EOT_RWTexture1D:
-        return D3D11_SVT_RWTEXTURE1D;
+        return D3D_SVT_RWTEXTURE1D;
     case EOT_RWTexture1DArray:
-        return D3D11_SVT_RWTEXTURE1DARRAY;
+        return D3D_SVT_RWTEXTURE1DARRAY;
     case EOT_RWTexture2D:
-        return D3D11_SVT_RWTEXTURE2D;
+        return D3D_SVT_RWTEXTURE2D;
     case EOT_RWTexture2DArray:
-        return D3D11_SVT_RWTEXTURE2DARRAY;
+        return D3D_SVT_RWTEXTURE2DARRAY;
     case EOT_RWTexture3D:
-        return D3D11_SVT_RWTEXTURE3D;
+        return D3D_SVT_RWTEXTURE3D;
     case EOT_RWBuffer:
-        return D3D11_SVT_RWBUFFER;
+        return D3D_SVT_RWBUFFER;
     case EOT_RWByteAddressBuffer:
-        return D3D11_SVT_RWBYTEADDRESS_BUFFER;
+        return D3D_SVT_RWBYTEADDRESS_BUFFER;
     case EOT_RWStructuredBuffer:
     case EOT_RWStructuredBufferAlloc:
     case EOT_RWStructuredBufferConsume:
-        return D3D11_SVT_RWSTRUCTURED_BUFFER;
+        return D3D_SVT_RWSTRUCTURED_BUFFER;
     case EOT_AppendStructuredBuffer:
-        return D3D11_SVT_APPEND_STRUCTURED_BUFFER;
+        return D3D_SVT_APPEND_STRUCTURED_BUFFER;
     case EOT_ConsumeStructuredBuffer:
-        return D3D11_SVT_CONSUME_STRUCTURED_BUFFER;
+        return D3D_SVT_CONSUME_STRUCTURED_BUFFER;
     default:
-        D3DXASSERT(0);
+        assert(0);
     }
-    return D3D10_SVT_VOID;
+    return D3D_SVT_VOID;
 }
 
-inline HRESULT VerifyPointer(UINT  oBase, UINT  dwSize, UINT  dwMaxSize)
+inline HRESULT VerifyPointer(uint32_t oBase, uint32_t dwSize, uint32_t dwMaxSize)
 {
-    UINT  dwAdd = oBase + dwSize;
+    uint32_t  dwAdd = oBase + dwSize;
     if (dwAdd < oBase || dwAdd > dwMaxSize)
         return E_FAIL;
     return S_OK;
@@ -180,10 +186,8 @@ inline HRESULT VerifyPointer(UINT  oBase, UINT  dwSize, UINT  dwMaxSize)
 // A simple class which assists in adding data to a block of memory
 //////////////////////////////////////////////////////////////////////////
 
-CEffectHeap::CEffectHeap()
+CEffectHeap::CEffectHeap() : m_pData(nullptr), m_dwSize(0), m_dwBufferSize(0)
 {
-    m_pData = NULL;
-    m_dwSize = m_dwBufferSize = 0;
 }
 
 CEffectHeap::~CEffectHeap()
@@ -191,42 +195,43 @@ CEffectHeap::~CEffectHeap()
     SAFE_DELETE_ARRAY(m_pData);
 }
 
-UINT  CEffectHeap::GetSize()
+uint32_t  CEffectHeap::GetSize()
 {
     return m_dwSize;
 }
 
-HRESULT CEffectHeap::ReserveMemory(UINT  dwSize)
+HRESULT CEffectHeap::ReserveMemory(uint32_t dwSize)
 {
     HRESULT hr = S_OK;
 
-    D3DXASSERT(!m_pData);
-    D3DXASSERT(dwSize == AlignToPowerOf2(dwSize, c_DataAlignment));
+    assert(!m_pData);
+    assert(dwSize == AlignToPowerOf2(dwSize, c_DataAlignment));
 
     m_dwBufferSize = dwSize;
 
-    VN( m_pData = NEW BYTE[m_dwBufferSize] );
+    VN( m_pData = new uint8_t[m_dwBufferSize] );
     
     // make sure that we have machine word alignment
-    D3DXASSERT(m_pData == AlignToPowerOf2(m_pData, c_DataAlignment));
+    assert(m_pData == AlignToPowerOf2(m_pData, c_DataAlignment));
 
 lExit:
     return hr;
 }
 
-HRESULT CEffectHeap::AddString(const char *pString, __deref_out_z char **ppPointer)
+_Use_decl_annotations_
+HRESULT CEffectHeap::AddString(const char *pString, char **ppPointer)
 {
     size_t size = strlen(pString) + 1;
-    D3DXASSERT( size <= 0xffffffff );
-    return AddData(pString, (UINT)size, (void**) ppPointer);
+    assert( size <= 0xffffffff );
+    return AddData(pString, (uint32_t)size, (void**) ppPointer);
 }
 
 // This data is forcibly aligned, so make sure you account for that in calculating heap size
 template <bool bCopyData>
-HRESULT CEffectHeap::AddDataInternal(const void *pData, UINT  dwSize, void **ppPointer)
+HRESULT CEffectHeap::AddDataInternal(_In_reads_bytes_(dwSize) const void *pData, _In_ uint32_t dwSize, _Outptr_ void **ppPointer)
 {
     CCheckedDword chkFinalSize( m_dwSize );
-    UINT  finalSize;
+    uint32_t  finalSize;
     HRESULT hr = S_OK;
 
     chkFinalSize += dwSize;
@@ -239,7 +244,7 @@ HRESULT CEffectHeap::AddDataInternal(const void *pData, UINT  dwSize, void **ppP
     VBD( finalSize <= m_dwBufferSize, "Overflow adding data to Effect heap." );
 
     *ppPointer = m_pData + m_dwSize;
-    D3DXASSERT(*ppPointer == AlignToPowerOf2(*ppPointer, c_DataAlignment));
+    assert(*ppPointer == AlignToPowerOf2(*ppPointer, c_DataAlignment));
 
     if( bCopyData )
     {
@@ -249,12 +254,13 @@ HRESULT CEffectHeap::AddDataInternal(const void *pData, UINT  dwSize, void **ppP
 
 lExit:
     if (FAILED(hr))
-        *ppPointer = NULL;
+        *ppPointer = nullptr;
 
     return hr;
 }
 
-HRESULT CEffectHeap::AddData(const void *pData, UINT  dwSize, void **ppPointer)
+_Use_decl_annotations_
+HRESULT CEffectHeap::AddData(const void *pData, uint32_t  dwSize, void **ppPointer)
 {
     return AddDataInternal<true>( pData, dwSize, ppPointer );
 }
@@ -263,16 +269,18 @@ HRESULT CEffectHeap::AddData(const void *pData, UINT  dwSize, void **ppPointer)
 //   point to the new memory block.
 // The general heap is freed as a whole, so we don't worry about leaking the given string pointer.
 // This data is forcibly aligned, so make sure you account for that in calculating heap size
-HRESULT CEffectHeap::MoveString(__deref_inout_z char **ppString)
+_Use_decl_annotations_
+HRESULT CEffectHeap::MoveString(char **ppString)
 {
     HRESULT hr;
     char *pNewPointer;
 
-    if (*ppString == NULL)
+    if (*ppString == nullptr)
         return S_OK;
 
     hr = AddString(*ppString, &pNewPointer);
-    *ppString = pNewPointer;
+    if ( SUCCEEDED(hr) )
+        *ppString = pNewPointer;
 
     return hr;
 }
@@ -280,18 +288,22 @@ HRESULT CEffectHeap::MoveString(__deref_inout_z char **ppString)
 // Allocates space but does not move data
 // The general heap is freed as a whole, so we don't worry about leaking the given string pointer.
 // This data is forcibly aligned, so make sure you account for that in calculating heap size
-HRESULT CEffectHeap::MoveEmptyDataBlock(void **ppData, UINT  size)
+_Use_decl_annotations_  
+HRESULT CEffectHeap::MoveEmptyDataBlock(void **ppData, uint32_t  size)
 {
     HRESULT hr;
     void *pNewPointer;
 
     hr = AddDataInternal<false>(*ppData, size, &pNewPointer);
 
-    *ppData = pNewPointer;
-    if (size == 0)
+    if (SUCCEEDED(hr))
     {
-        // To help catch bugs, set zero-byte blocks to null. There's no real reason to do this
-        *ppData = NULL;
+        *ppData = pNewPointer;
+        if (size == 0)
+        {
+            // To help catch bugs, set zero-byte blocks to null. There's no real reason to do this
+            *ppData = nullptr;
+        }
     }
 
     return hr;
@@ -301,18 +313,19 @@ HRESULT CEffectHeap::MoveEmptyDataBlock(void **ppData, UINT  size)
 //   point to the new memory block.
 // The general heap is freed as a whole, so we don't worry about leaking the given string pointer.
 // This data is forcibly aligned, so make sure you account for that in calculating heap size
-HRESULT CEffectHeap::MoveInterfaceParameters(UINT InterfaceCount, __in_ecount(1) SShaderBlock::SInterfaceParameter **ppInterfaces)
+_Use_decl_annotations_
+HRESULT CEffectHeap::MoveInterfaceParameters(uint32_t InterfaceCount, SShaderBlock::SInterfaceParameter **ppInterfaces)
 {
     HRESULT hr;
     SShaderBlock::SInterfaceParameter *pNewPointer;
 
-    if (*ppInterfaces == NULL)
+    if (*ppInterfaces == nullptr)
         return S_OK;
 
     VBD( InterfaceCount <= D3D11_SHADER_MAX_INTERFACES, "Internal loading error: InterfaceCount > D3D11_SHADER_MAX_INTERFACES." );
     VH( AddData(*ppInterfaces, InterfaceCount * sizeof(SShaderBlock::SInterfaceParameter), (void**)&pNewPointer) );
 
-    for( UINT i=0; i < InterfaceCount; i++ )
+    for( size_t i=0; i < InterfaceCount; i++ )
     {
         VH( MoveString( &pNewPointer[i].pName ) );
     }
@@ -328,18 +341,21 @@ lExit:
 //   point to the new memory block 
 // The general heap is freed as a whole, so we don't worry about leaking the given pointer.
 // This data is forcibly aligned, so make sure you account for that in calculating heap size
-HRESULT CEffectHeap::MoveData(void **ppData, UINT  size)
+_Use_decl_annotations_
+HRESULT CEffectHeap::MoveData(void **ppData, uint32_t  size)
 {
     HRESULT hr;
     void *pNewPointer;
 
     hr = AddData(*ppData, size, &pNewPointer);
-    
-    *ppData = pNewPointer;
-    if (size == 0)
+    if ( SUCCEEDED(hr) )
     {
-        // To help catch bugs, set zero-byte blocks to null. There's no real reason to do this
-        *ppData = NULL;
+        *ppData = pNewPointer;
+        if (size == 0)
+        {
+            // To help catch bugs, set zero-byte blocks to null. There's no real reason to do this
+            *ppData = nullptr;
+        }
     }
 
     return hr;
@@ -350,14 +366,15 @@ HRESULT CEffectHeap::MoveData(void **ppData, UINT  size)
 // Load API 
 //////////////////////////////////////////////////////////////////////////
 
-HRESULT CEffect::LoadEffect(CONST void *pEffectBuffer, UINT  cbEffectBuffer)
+_Use_decl_annotations_
+HRESULT CEffect::LoadEffect(const void *pEffectBuffer, uint32_t cbEffectBuffer)
 {
     HRESULT hr = S_OK;
     CEffectLoader loader;
 
     if (!pEffectBuffer)
     {
-        DPF(0, "%s: pEffectBuffer is NULL.", g_szEffectLoadArea);
+        DPF(0, "%s: pEffectBuffer is nullptr.", g_szEffectLoadArea);
         VH( E_INVALIDARG );
     }
     
@@ -377,10 +394,11 @@ lExit:
 // A helper class which loads an effect
 //////////////////////////////////////////////////////////////////////////
 
-HRESULT CEffectLoader::GetUnstructuredDataBlock(UINT offset, UINT  *pdwSize, void **ppData)
+_Use_decl_annotations_
+HRESULT CEffectLoader::GetUnstructuredDataBlock(uint32_t offset, uint32_t  *pdwSize, void **ppData)
 {
     HRESULT hr = S_OK;
-    UINT  *pBlockSize;
+    uint32_t  *pBlockSize;
 
     VH( m_msUnstructured.ReadAtOffset(offset, sizeof(*pBlockSize), (void**) &pBlockSize ) );
     *pdwSize = *pBlockSize;
@@ -396,22 +414,23 @@ lExit:
 // This function should be used in 1:1 conjunction with CEffectHeap::MoveString;
 // that is, any string added to the reflection heap with this function
 // must be relocated with MoveString at some point later on.
-HRESULT CEffectLoader::GetStringAndAddToReflection(UINT offset, __out_ecount_full(1) char **ppString)
+_Use_decl_annotations_
+HRESULT CEffectLoader::GetStringAndAddToReflection(uint32_t offset, char **ppString)
 {
     HRESULT hr = S_OK;
     LPCSTR pName;
-    SIZE_T oldPos;
+    size_t oldPos;
     
     if (offset == 0)
     {
-        *ppString = NULL;
+        *ppString = nullptr;
         goto lExit;
     }
 
     oldPos = m_msUnstructured.GetPosition();
 
     VH( m_msUnstructured.ReadAtOffset(offset, &pName) );
-    m_ReflectionMemory += AlignToPowerOf2( (UINT)strlen(pName) + 1, c_DataAlignment);
+    m_ReflectionMemory += AlignToPowerOf2( (uint32_t)strlen(pName) + 1, c_DataAlignment);
     *ppString = const_cast<char*>(pName);
     
     m_msUnstructured.Seek(oldPos);
@@ -425,15 +444,16 @@ lExit:
 // This function should be used in 1:1 conjunction with CEffectHeap::MoveInterfaceParameters;
 // that is, any array of parameters added to the reflection heap with this function
 // must be relocated with MoveInterfaceParameters at some point later on.
-HRESULT CEffectLoader::GetInterfaceParametersAndAddToReflection( UINT InterfaceCount, UINT offset, __out_ecount_full(1) SShaderBlock::SInterfaceParameter **ppInterfaces )
+_Use_decl_annotations_  
+HRESULT CEffectLoader::GetInterfaceParametersAndAddToReflection( uint32_t InterfaceCount, uint32_t offset, SShaderBlock::SInterfaceParameter **ppInterfaces )
 {
     HRESULT hr = S_OK;
     SBinaryInterfaceInitializer* pInterfaceInitializer;
-    SIZE_T oldPos;
+    size_t oldPos;
 
     if (offset == 0)
     {
-        *ppInterfaces = NULL;
+        *ppInterfaces = nullptr;
         goto lExit;
     }
 
@@ -441,19 +461,20 @@ HRESULT CEffectLoader::GetInterfaceParametersAndAddToReflection( UINT InterfaceC
 
     VBD( InterfaceCount <= D3D11_SHADER_MAX_INTERFACES, "Internal loading error: InterfaceCount > D3D11_SHADER_MAX_INTERFACES." );
     m_ReflectionMemory += AlignToPowerOf2(InterfaceCount * sizeof(SShaderBlock::SInterfaceParameter), c_DataAlignment);
-    D3DXASSERT( ppInterfaces );
+    assert( ppInterfaces != 0 );
+    _Analysis_assume_( ppInterfaces != 0 );
     (*ppInterfaces) = PRIVATENEW SShaderBlock::SInterfaceParameter[InterfaceCount];
     VN( *ppInterfaces );
 
     VHD( m_msUnstructured.ReadAtOffset(offset, sizeof(SBinaryInterfaceInitializer) * InterfaceCount, (void**)&pInterfaceInitializer),
          "Invalid pEffectBuffer: cannot read interface initializer." );
 
-    for( UINT i=0; i < InterfaceCount; i++ )
+    for( size_t i=0; i < InterfaceCount; i++ )
     {
         (*ppInterfaces)[i].Index = pInterfaceInitializer[i].ArrayIndex;
         VHD( m_msUnstructured.ReadAtOffset(pInterfaceInitializer[i].oInstanceName, const_cast<LPCSTR*>(&(*ppInterfaces)[i].pName)),
              "Invalid pEffectBuffer: cannot read interface initializer." );
-        m_ReflectionMemory += AlignToPowerOf2( (UINT)strlen((*ppInterfaces)[i].pName) + 1, c_DataAlignment);
+        m_ReflectionMemory += AlignToPowerOf2( (uint32_t)strlen((*ppInterfaces)[i].pName) + 1, c_DataAlignment);
     }
 
     m_msUnstructured.Seek(oldPos);
@@ -462,12 +483,12 @@ lExit:
     return hr;
 }
 
-HRESULT CEffectLoader::FixupCBPointer(SConstantBuffer **ppCB)
+HRESULT CEffectLoader::FixupCBPointer(_Inout_ SConstantBuffer **ppCB)
 {
     HRESULT hr = S_OK;
     
-    SIZE_T index = (SConstantBuffer*)*ppCB - m_pOldCBs;
-    D3DXASSERT( index * sizeof(SConstantBuffer) == ((size_t)(SConstantBuffer*)*ppCB - (size_t)m_pOldCBs) );
+    size_t index = (SConstantBuffer*)*ppCB - m_pOldCBs;
+    assert( index * sizeof(SConstantBuffer) == ((size_t)(SConstantBuffer*)*ppCB - (size_t)m_pOldCBs) );
     VBD( index < m_pEffect->m_CBCount, "Internal loading error: invalid constant buffer index." );
     *ppCB = (SConstantBuffer*)(m_pEffect->m_pCBs + index);
     
@@ -475,15 +496,15 @@ lExit:
     return hr;
 }
 
-HRESULT CEffectLoader::FixupShaderPointer(SShaderBlock **ppShaderBlock)
+HRESULT CEffectLoader::FixupShaderPointer(_Inout_ SShaderBlock **ppShaderBlock)
 {
     HRESULT hr = S_OK;
     if (*ppShaderBlock != &g_NullVS && *ppShaderBlock != &g_NullGS && *ppShaderBlock != &g_NullPS &&
         *ppShaderBlock != &g_NullHS && *ppShaderBlock != &g_NullDS && *ppShaderBlock != &g_NullCS && 
-        *ppShaderBlock != NULL)
+        *ppShaderBlock != nullptr)
     {
-        SIZE_T index = *ppShaderBlock - m_pOldShaders;
-        D3DXASSERT( index * sizeof(SShaderBlock) == ((size_t)*ppShaderBlock - (size_t)m_pOldShaders) );
+        size_t index = *ppShaderBlock - m_pOldShaders;
+        assert( index * sizeof(SShaderBlock) == ((size_t)*ppShaderBlock - (size_t)m_pOldShaders) );
         VBD( index < m_pEffect->m_ShaderBlockCount, "Internal loading error: invalid shader index."  );
         *ppShaderBlock = m_pEffect->m_pShaderBlocks + index;
     }
@@ -491,13 +512,13 @@ lExit:
     return hr;
 }
 
-HRESULT CEffectLoader::FixupDSPointer(SDepthStencilBlock **ppDSBlock)
+HRESULT CEffectLoader::FixupDSPointer(_Inout_ SDepthStencilBlock **ppDSBlock)
 {
     HRESULT hr = S_OK;
-    if (*ppDSBlock != &g_NullDepthStencil && *ppDSBlock != NULL)
+    if (*ppDSBlock != &g_NullDepthStencil && *ppDSBlock != nullptr)
     {
-        SIZE_T index = *ppDSBlock - m_pOldDS;
-        D3DXASSERT( index * sizeof(SDepthStencilBlock) == ((size_t)*ppDSBlock - (size_t)m_pOldDS) );
+        size_t index = *ppDSBlock - m_pOldDS;
+        assert( index * sizeof(SDepthStencilBlock) == ((size_t)*ppDSBlock - (size_t)m_pOldDS) );
         VBD( index < m_pEffect->m_DepthStencilBlockCount, "Internal loading error: invalid depth-stencil state index." );
         *ppDSBlock = m_pEffect->m_pDepthStencilBlocks + index;
     }
@@ -505,13 +526,13 @@ lExit:
     return hr;
 }
 
-HRESULT CEffectLoader::FixupABPointer(SBlendBlock **ppABBlock)
+HRESULT CEffectLoader::FixupABPointer(_Inout_ SBlendBlock **ppABBlock)
 {
     HRESULT hr = S_OK;
-    if (*ppABBlock != &g_NullBlend && *ppABBlock != NULL)
+    if (*ppABBlock != &g_NullBlend && *ppABBlock != nullptr)
     {
-        SIZE_T index = *ppABBlock - m_pOldAB;
-        D3DXASSERT( index * sizeof(SBlendBlock) == ((size_t)*ppABBlock - (size_t)m_pOldAB) );
+        size_t index = *ppABBlock - m_pOldAB;
+        assert( index * sizeof(SBlendBlock) == ((size_t)*ppABBlock - (size_t)m_pOldAB) );
         VBD( index < m_pEffect->m_BlendBlockCount, "Internal loading error: invalid blend state index." );
         *ppABBlock = m_pEffect->m_pBlendBlocks + index;
     }
@@ -519,13 +540,13 @@ lExit:
     return hr;
 }
 
-HRESULT CEffectLoader::FixupRSPointer(SRasterizerBlock **ppRSBlock)
+HRESULT CEffectLoader::FixupRSPointer(_Inout_ SRasterizerBlock **ppRSBlock)
 {
     HRESULT hr = S_OK;
-    if (*ppRSBlock != &g_NullRasterizer && *ppRSBlock != NULL)
+    if (*ppRSBlock != &g_NullRasterizer && *ppRSBlock != nullptr)
     {
-        SIZE_T index = *ppRSBlock - m_pOldRS;
-        D3DXASSERT( index * sizeof(SRasterizerBlock) == ((size_t)*ppRSBlock - (size_t)m_pOldRS) );
+        size_t index = *ppRSBlock - m_pOldRS;
+        assert( index * sizeof(SRasterizerBlock) == ((size_t)*ppRSBlock - (size_t)m_pOldRS) );
         VBD( index < m_pEffect->m_RasterizerBlockCount, "Internal loading error: invalid rasterizer state index." );
         *ppRSBlock = m_pEffect->m_pRasterizerBlocks + index;
     }
@@ -533,11 +554,11 @@ lExit:
     return hr;
 }
 
-HRESULT CEffectLoader::FixupSamplerPointer(SSamplerBlock **ppSampler)
+HRESULT CEffectLoader::FixupSamplerPointer(_Inout_ SSamplerBlock **ppSampler)
 {
     HRESULT hr = S_OK;
-    SIZE_T index = *ppSampler - m_pOldSamplers;
-    D3DXASSERT( index * sizeof(SSamplerBlock) == ((size_t)*ppSampler - (size_t)m_pOldSamplers) );
+    size_t index = *ppSampler - m_pOldSamplers;
+    assert( index * sizeof(SSamplerBlock) == ((size_t)*ppSampler - (size_t)m_pOldSamplers) );
     VBD( index < m_pEffect->m_SamplerBlockCount, "Internal loading error: invalid sampler index." );
     *ppSampler = m_pEffect->m_pSamplerBlocks + index;
 
@@ -545,15 +566,15 @@ lExit:
     return hr;
 }
 
-HRESULT CEffectLoader::FixupInterfacePointer(SInterface **ppInterface, bool CheckBackgroundInterfaces)
+HRESULT CEffectLoader::FixupInterfacePointer(_Inout_ SInterface **ppInterface, _In_ bool CheckBackgroundInterfaces)
 {
     HRESULT hr = S_OK;
-    if (*ppInterface != &g_NullInterface && *ppInterface != NULL)
+    if (*ppInterface != &g_NullInterface && *ppInterface != nullptr)
     {
-        SIZE_T index = *ppInterface - m_pOldInterfaces;
+        size_t index = *ppInterface - m_pOldInterfaces;
         if(index < m_OldInterfaceCount)
         {
-            D3DXASSERT( index * sizeof(SInterface) == ((size_t)*ppInterface - (size_t)m_pOldInterfaces) );
+            assert( index * sizeof(SInterface) == ((size_t)*ppInterface - (size_t)m_pOldInterfaces) );
             *ppInterface = m_pEffect->m_pInterfaces + index;
         }
         else
@@ -561,7 +582,7 @@ HRESULT CEffectLoader::FixupInterfacePointer(SInterface **ppInterface, bool Chec
             VBD( CheckBackgroundInterfaces, "Internal loading error: invalid interface pointer." );
             for( index=0; index < m_BackgroundInterfaces.GetSize(); index++ )
             {
-                if( *ppInterface == m_BackgroundInterfaces[ (UINT)index ] )
+                if( *ppInterface == m_BackgroundInterfaces[ (uint32_t)index ] )
                 {
                     // The interfaces m_BackgroundInterfaces were concatenated to the original ones in m_pEffect->m_pInterfaces
                     *ppInterface = m_pEffect->m_pInterfaces + (m_OldInterfaceCount + index);
@@ -576,13 +597,13 @@ lExit:
     return hr;
 }
 
-HRESULT CEffectLoader::FixupShaderResourcePointer(SShaderResource **ppResource)
+HRESULT CEffectLoader::FixupShaderResourcePointer(_Inout_ SShaderResource **ppResource)
 {
     HRESULT hr = S_OK;
-    if (*ppResource != &g_NullTexture && *ppResource != NULL)
+    if (*ppResource != &g_NullTexture && *ppResource != nullptr)
     {
-        SIZE_T index = *ppResource - m_pOldShaderResources;
-        D3DXASSERT( index * sizeof(SShaderResource) == ((size_t)*ppResource - (size_t)m_pOldShaderResources) );
+        size_t index = *ppResource - m_pOldShaderResources;
+        assert( index * sizeof(SShaderResource) == ((size_t)*ppResource - (size_t)m_pOldShaderResources) );
         
         // could be a TBuffer or a texture; better check first
         if (index < m_pEffect->m_ShaderResourceCount)
@@ -594,7 +615,7 @@ HRESULT CEffectLoader::FixupShaderResourcePointer(SShaderResource **ppResource)
             // if this is a TBuffer, then the shader resource pointer
             // actually points into a SConstantBuffer's TBuffer field
             index = (SConstantBuffer*)*ppResource - (SConstantBuffer*)&m_pOldCBs->TBuffer;
-            D3DXASSERT( index * sizeof(SConstantBuffer) == ((size_t)(SConstantBuffer*)*ppResource - (size_t)(SConstantBuffer*)&m_pOldCBs->TBuffer) );
+            assert( index * sizeof(SConstantBuffer) == ((size_t)(SConstantBuffer*)*ppResource - (size_t)(SConstantBuffer*)&m_pOldCBs->TBuffer) );
             VBD( index < m_pEffect->m_CBCount, "Internal loading error: invalid SRV index." );
             *ppResource = &m_pEffect->m_pCBs[index].TBuffer;
         }
@@ -604,13 +625,13 @@ lExit:
     return hr;
 }
 
-HRESULT CEffectLoader::FixupUnorderedAccessViewPointer(SUnorderedAccessView **ppUnorderedAccessView)
+HRESULT CEffectLoader::FixupUnorderedAccessViewPointer(_Inout_ SUnorderedAccessView **ppUnorderedAccessView)
 {
     HRESULT hr = S_OK;
-    if (*ppUnorderedAccessView != &g_NullUnorderedAccessView && *ppUnorderedAccessView != NULL)
+    if (*ppUnorderedAccessView != &g_NullUnorderedAccessView && *ppUnorderedAccessView != nullptr)
     {
-        SIZE_T index = *ppUnorderedAccessView - m_pOldUnorderedAccessViews;
-        D3DXASSERT( index * sizeof(SUnorderedAccessView) == ((size_t)*ppUnorderedAccessView - (size_t)m_pOldUnorderedAccessViews) );
+        size_t index = *ppUnorderedAccessView - m_pOldUnorderedAccessViews;
+        assert( index * sizeof(SUnorderedAccessView) == ((size_t)*ppUnorderedAccessView - (size_t)m_pOldUnorderedAccessViews) );
 
         VBD( index < m_pEffect->m_UnorderedAccessViewCount, "Internal loading error: invalid UAV index." );
         *ppUnorderedAccessView = m_pEffect->m_pUnorderedAccessViews + index;
@@ -620,13 +641,13 @@ lExit:
     return hr;
 }
 
-HRESULT CEffectLoader::FixupRenderTargetViewPointer(SRenderTargetView **ppRenderTargetView)
+HRESULT CEffectLoader::FixupRenderTargetViewPointer(_Inout_ SRenderTargetView **ppRenderTargetView)
 {
     HRESULT hr = S_OK;
-    if (*ppRenderTargetView != &g_NullRenderTargetView && *ppRenderTargetView != NULL)
+    if (*ppRenderTargetView != &g_NullRenderTargetView && *ppRenderTargetView != nullptr)
     {
-        SIZE_T index = *ppRenderTargetView - m_pOldRenderTargetViews;
-        D3DXASSERT( index * sizeof(SRenderTargetView) == ((size_t)*ppRenderTargetView - (size_t)m_pOldRenderTargetViews) );
+        size_t index = *ppRenderTargetView - m_pOldRenderTargetViews;
+        assert( index * sizeof(SRenderTargetView) == ((size_t)*ppRenderTargetView - (size_t)m_pOldRenderTargetViews) );
         VBD( index < m_pEffect->m_RenderTargetViewCount, "Internal loading error: invalid RTV index." );
         *ppRenderTargetView = m_pEffect->m_pRenderTargetViews + index;
     }
@@ -635,13 +656,13 @@ lExit:
     return hr;
 }
 
-HRESULT CEffectLoader::FixupDepthStencilViewPointer(SDepthStencilView **ppDepthStencilView)
+HRESULT CEffectLoader::FixupDepthStencilViewPointer(_Inout_ SDepthStencilView **ppDepthStencilView)
 {
     HRESULT hr = S_OK;
-    if (*ppDepthStencilView != &g_NullDepthStencilView && *ppDepthStencilView != NULL)
+    if (*ppDepthStencilView != &g_NullDepthStencilView && *ppDepthStencilView != nullptr)
     {
-        SIZE_T index = *ppDepthStencilView - m_pOldDepthStencilViews;
-        D3DXASSERT( index * sizeof(SDepthStencilView) == ((size_t)*ppDepthStencilView - (size_t)m_pOldDepthStencilViews) );
+        size_t index = *ppDepthStencilView - m_pOldDepthStencilViews;
+        assert( index * sizeof(SDepthStencilView) == ((size_t)*ppDepthStencilView - (size_t)m_pOldDepthStencilViews) );
         VBD( index < m_pEffect->m_DepthStencilViewCount, "Internal loading error: invalid DSV index." );
         *ppDepthStencilView = m_pEffect->m_pDepthStencilViews + index;
     }
@@ -650,63 +671,63 @@ lExit:
     return hr;
 }
 
-HRESULT CEffectLoader::FixupStringPointer(SString **ppString)
+HRESULT CEffectLoader::FixupStringPointer(_Inout_ SString **ppString)
 {
     HRESULT hr = S_OK;
-    SIZE_T index = *ppString - m_pOldStrings;
-    D3DXASSERT( index * sizeof(SString) == ((size_t)*ppString - (size_t)m_pOldStrings) );
+    size_t index = *ppString - m_pOldStrings;
+    assert( index * sizeof(SString) == ((size_t)*ppString - (size_t)m_pOldStrings) );
     VBD(index < m_pEffect->m_StringCount, "Internal loading error: invalid string index." );
     *ppString = m_pEffect->m_pStrings + index;
 lExit:
     return hr;
 }
 
-HRESULT CEffectLoader::FixupMemberDataPointer(SMemberDataPointer **ppMemberData)
+HRESULT CEffectLoader::FixupMemberDataPointer(_Inout_ SMemberDataPointer **ppMemberData)
 {
     HRESULT hr = S_OK;
-    SIZE_T index = *ppMemberData - m_pOldMemberDataBlocks;
-    D3DXASSERT( index * sizeof(SMemberDataPointer) == ((size_t)*ppMemberData - (size_t)m_pOldMemberDataBlocks) );
+    size_t index = *ppMemberData - m_pOldMemberDataBlocks;
+    assert( index * sizeof(SMemberDataPointer) == ((size_t)*ppMemberData - (size_t)m_pOldMemberDataBlocks) );
     VBD( index < m_pEffect->m_MemberDataCount, "Internal loading error: invalid member block index." );
     *ppMemberData = m_pEffect->m_pMemberDataBlocks + index;
 lExit:
     return hr;
 }
 
-HRESULT CEffectLoader::FixupVariablePointer(SGlobalVariable **ppVar)
+HRESULT CEffectLoader::FixupVariablePointer(_Inout_ SGlobalVariable **ppVar)
 {
     HRESULT hr = S_OK;
-    SIZE_T index = *ppVar - m_pOldVars;
+    size_t index = *ppVar - m_pOldVars;
 
     if( index < m_pEffect->m_VariableCount )
     {
-        D3DXASSERT( index * sizeof(SGlobalVariable) == ((size_t)*ppVar - (size_t)m_pOldVars) );
+        assert( index * sizeof(SGlobalVariable) == ((size_t)*ppVar - (size_t)m_pOldVars) );
         *ppVar = m_pEffect->m_pVariables + index;
     }
     else if( m_pvOldMemberInterfaces )
     {
-        // When cloning, m_pvOldMemberInterfaces may be non-NULL, and *ppVar may point to a variable in it.
-        const SIZE_T Members = m_pvOldMemberInterfaces->GetSize();
+        // When cloning, m_pvOldMemberInterfaces may be non-nullptr, and *ppVar may point to a variable in it.
+        const size_t Members = m_pvOldMemberInterfaces->GetSize();
         for( index=0; index < Members; index++ )
         {
-            if( (ID3DX11EffectVariable*)(*m_pvOldMemberInterfaces)[ (UINT)index] == (ID3DX11EffectVariable*)*ppVar )
+            if( (ID3DX11EffectVariable*)(*m_pvOldMemberInterfaces)[ (uint32_t)index] == (ID3DX11EffectVariable*)*ppVar )
             {
                 break;
             }
         }
         VBD( index < Members, "Internal loading error: invalid member pointer." );
-        *ppVar = (SGlobalVariable*)m_pEffect->m_pMemberInterfaces[ (UINT)index];
+        *ppVar = (SGlobalVariable*)m_pEffect->m_pMemberInterfaces[ (uint32_t)index];
     }
 lExit:
     return hr;
 }
 
-HRESULT CEffectLoader::FixupGroupPointer(SGroup **ppGroup)
+HRESULT CEffectLoader::FixupGroupPointer(_Inout_ SGroup **ppGroup)
 {
     HRESULT hr = S_OK;
-    if( *ppGroup != NULL )
+    if( *ppGroup != nullptr )
     {
-        SIZE_T index = *ppGroup - m_pOldGroups;
-        D3DXASSERT( index * sizeof(SGroup) == ((size_t)*ppGroup - (size_t)m_pOldGroups) );
+        size_t index = *ppGroup - m_pOldGroups;
+        assert( index * sizeof(SGroup) == ((size_t)*ppGroup - (size_t)m_pOldGroups) );
         VBD( index < m_pEffect->m_GroupCount, "Internal loading error: invalid group index." );
         *ppGroup = m_pEffect->m_pGroups + index;
     }
@@ -714,13 +735,13 @@ lExit:
     return hr;
 }
 
-HRESULT GetEffectVersion( UINT effectFileTag, DWORD* pVersion )
+static HRESULT GetEffectVersion( _In_ uint32_t effectFileTag, _Out_ DWORD* pVersion )
 {
-    D3DXASSERT( pVersion != NULL );
+    assert( pVersion != nullptr );
     if( !pVersion )
         return E_FAIL;
 
-    for( UINT i = 0; i < NUM_EFFECT10_VERSIONS; i++ )
+    for( size_t i = 0; i < _countof(g_EffectVersions); i++ )
     {
         if( g_EffectVersions[i].m_Tag == effectFileTag )
         {
@@ -732,28 +753,30 @@ HRESULT GetEffectVersion( UINT effectFileTag, DWORD* pVersion )
     return E_FAIL;
 }
 
-HRESULT CEffectLoader::LoadEffect(CEffect *pEffect, CONST void *pEffectBuffer, UINT  cbEffectBuffer)
+_Use_decl_annotations_
+HRESULT CEffectLoader::LoadEffect(CEffect *pEffect, const void *pEffectBuffer, uint32_t cbEffectBuffer)
 {
+
     HRESULT hr = S_OK;
-    UINT  i, varSize, cMemberDataBlocks;
+    uint32_t  i, varSize, cMemberDataBlocks;
     CCheckedDword chkVariables = 0;
 
     // Used for cloning
-    m_pvOldMemberInterfaces = NULL;
+    m_pvOldMemberInterfaces = nullptr;
 
     m_BulkHeap.EnableAlignment();
 
-    D3DXASSERT(pEffect && pEffectBuffer);
+    assert(pEffect && pEffectBuffer);
     m_pEffect = pEffect;
     m_EffectMemory = m_ReflectionMemory = 0;
 
-    VN( m_pEffect->m_pReflection = NEW CEffectReflection() );
+    VN( m_pEffect->m_pReflection = new CEffectReflection() );
     m_pReflection = m_pEffect->m_pReflection;
 
     // Begin effect load
-    VN( m_pEffect->m_pTypePool = NEW CEffect::CTypeHashTable );
-    VN( m_pEffect->m_pStringPool = NEW CEffect::CStringHashTable );
-    VN( m_pEffect->m_pPooledHeap = NEW CDataBlockStore );
+    VN( m_pEffect->m_pTypePool = new CEffect::CTypeHashTable );
+    VN( m_pEffect->m_pStringPool = new CEffect::CStringHashTable );
+    VN( m_pEffect->m_pPooledHeap = new CDataBlockStore );
     m_pEffect->m_pPooledHeap->EnableAlignment();
     m_pEffect->m_pTypePool->SetPrivateHeap(m_pEffect->m_pPooledHeap);
     m_pEffect->m_pStringPool->SetPrivateHeap(m_pEffect->m_pPooledHeap);
@@ -762,7 +785,7 @@ HRESULT CEffectLoader::LoadEffect(CEffect *pEffect, CONST void *pEffectBuffer, U
     VH( m_pEffect->m_pStringPool->AutoGrow() );
 
     // Load from blob
-    m_pData = (BYTE*)pEffectBuffer;
+    m_pData = (uint8_t*)pEffectBuffer;
     m_dwBufferSize = cbEffectBuffer;
 
     VH( m_msStructured.SetData(m_pData, m_dwBufferSize) );
@@ -773,7 +796,7 @@ HRESULT CEffectLoader::LoadEffect(CEffect *pEffect, CONST void *pEffectBuffer, U
     // Verify the version
     if( FAILED( hr = GetEffectVersion( m_pHeader->Tag, &m_Version ) ) )
     {
-        DPF(0, "Effect version is unrecognized.  This runtime supports fx_5_0 to %s.", g_EffectVersions[NUM_EFFECT10_VERSIONS-1].m_pName );
+        DPF(0, "Effect version is unrecognized.  This runtime supports fx_5_0 to %s.", g_EffectVersions[_countof(g_EffectVersions)-1].m_pName );
         VH( hr );
     }
 
@@ -811,7 +834,7 @@ HRESULT CEffectLoader::LoadEffect(CEffect *pEffect, CONST void *pEffectBuffer, U
     VN( m_pEffect->m_pSamplerBlocks = PRIVATENEW SSamplerBlock[m_pHeader->cSamplers] );
     
     // we allocate raw bytes for variables because they are polymorphic types that need to be placement new'ed
-    VN( m_pEffect->m_pVariables = (SGlobalVariable *)PRIVATENEW BYTE[varSize] );
+    VN( m_pEffect->m_pVariables = (SGlobalVariable *)PRIVATENEW uint8_t[varSize] );
     VN( m_pEffect->m_pAnonymousShaders = PRIVATENEW SAnonymousShader[m_pHeader->cInlineShaders] );
 
     VN( m_pEffect->m_pGroups = PRIVATENEW SGroup[m_pHeader->cGroups] );
@@ -824,7 +847,7 @@ HRESULT CEffectLoader::LoadEffect(CEffect *pEffect, CONST void *pEffectBuffer, U
     VN( m_pEffect->m_pRenderTargetViews = PRIVATENEW SRenderTargetView[m_pHeader->cRenderTargetViews] );
     VN( m_pEffect->m_pDepthStencilViews = PRIVATENEW SDepthStencilView[m_pHeader->cDepthStencilViews] );
 
-    UINT oStructured = m_pHeader->cbUnstructured + sizeof(SBinaryHeader5);
+    uint32_t oStructured = m_pHeader->cbUnstructured + sizeof(SBinaryHeader5);
     VHD( m_msStructured.Seek(oStructured), "Invalid pEffectBuffer: Missing structured data block." );
     VH( m_msUnstructured.SetData(m_pData + sizeof(SBinaryHeader5), oStructured - sizeof(SBinaryHeader5)) );
 
@@ -839,17 +862,17 @@ HRESULT CEffectLoader::LoadEffect(CEffect *pEffect, CONST void *pEffectBuffer, U
         VH( BuildShaderBlock(&m_pEffect->m_pShaderBlocks[i]) );
     }
     
-    for( UINT iGroup=0; iGroup<m_pHeader->cGroups; iGroup++ )
+    for( size_t iGroup=0; iGroup<m_pHeader->cGroups; iGroup++ )
     {
         SGroup *pGroup = &m_pEffect->m_pGroups[iGroup];
-        pGroup->HasDependencies = FALSE;
+        pGroup->HasDependencies = false;
 
-        for( UINT iTechnique=0; iTechnique < pGroup->TechniqueCount; iTechnique++ )
+        for( size_t iTechnique=0; iTechnique < pGroup->TechniqueCount; iTechnique++ )
         {
             STechnique* pTech = &pGroup->pTechniques[iTechnique];
-            pTech->HasDependencies = FALSE;
+            pTech->HasDependencies = false;
 
-            for( UINT iPass=0; iPass < pTech->PassCount; iPass++ )
+            for( size_t iPass=0; iPass < pTech->PassCount; iPass++ )
             {
                 SPassBlock *pPass = &pTech->pPasses[iPass];
 
@@ -889,29 +912,31 @@ lExit:
 }
 
 // position in buffer is lost on error
-HRESULT CEffectLoader::LoadStringAndAddToPool(__out_ecount_full(1) char **ppString, UINT  dwOffset)
+_Use_decl_annotations_
+HRESULT CEffectLoader::LoadStringAndAddToPool(char **ppString, uint32_t  dwOffset)
 {
     HRESULT hr = S_OK;
     char *pName;
-    UINT  hash;
-    SIZE_T oldPos;
+    uint32_t  hash;
+    size_t oldPos;
     CEffect::CStringHashTable::CIterator iter;
-    UINT  len;
+    uint32_t  len;
 
     if (dwOffset == 0)
     {
-        *ppString = NULL;
+        *ppString = nullptr;
         goto lExit;
     }
 
     oldPos = m_msUnstructured.GetPosition();
 
     VHD( m_msUnstructured.ReadAtOffset(dwOffset, (LPCSTR *) &pName), "Invalid pEffectBuffer: cannot read string." );
-    len = (UINT)strlen(pName);
-    hash = ComputeHash((BYTE *)pName, len);
+    len = (uint32_t)strlen(pName);
+    hash = ComputeHash((uint8_t *)pName, len);
     if (FAILED(m_pEffect->m_pStringPool->FindValueWithHash(pName, hash, &iter)))
     {
-        D3DXASSERT( m_pEffect->m_pPooledHeap != NULL );
+        assert( m_pEffect->m_pPooledHeap != 0 );
+        _Analysis_assume_( m_pEffect->m_pPooledHeap != 0 );
         VN( (*ppString) = new(*m_pEffect->m_pPooledHeap) char[len + 1] );
         memcpy(*ppString, pName, len + 1);
         VHD( m_pEffect->m_pStringPool->AddValueWithHash(*ppString, hash), "Internal loading error: failed to add string to pool." );
@@ -927,19 +952,20 @@ lExit:
     return hr;
 }
 
-HRESULT CEffectLoader::LoadTypeAndAddToPool(SType **ppType, UINT  dwOffset)
+_Use_decl_annotations_
+HRESULT CEffectLoader::LoadTypeAndAddToPool(SType **ppType, uint32_t  dwOffset)
 {
     HRESULT hr = S_OK;
     SBinaryType *psType;
     SBinaryNumericType *pNumericType;
     EObjectType *pObjectType;
-    UINT  cMembers, iMember, cInterfaces;
-    UINT  oBaseClassType;
+    uint32_t  cMembers, iMember, cInterfaces;
+    uint32_t  oBaseClassType;
     SType temporaryType;
     CEffect::CTypeHashTable::CIterator iter;
-    BYTE *pHashBuffer;
-    UINT  hash;
-    SVariable *pTempMembers = NULL;
+    uint8_t *pHashBuffer;
+    uint32_t  hash;
+    SVariable *pTempMembers = nullptr;
     
     m_HashBuffer.Empty();
 
@@ -952,7 +978,7 @@ HRESULT CEffectLoader::LoadTypeAndAddToPool(SType **ppType, UINT  dwOffset)
     temporaryType.PackedSize = psType->PackedSize;
 
     // sanity check elements, size, stride, etc.
-    UINT  cElements = max(1, temporaryType.Elements);
+    uint32_t  cElements = std::max<uint32_t>(1, temporaryType.Elements);
     VBD( cElements * temporaryType.Stride == AlignToPowerOf2(temporaryType.TotalSize, SType::c_RegisterSize), "Invalid pEffectBuffer: invalid type size." );
     VBD( temporaryType.Stride % SType::c_RegisterSize == 0, "Invalid pEffectBuffer: invalid type stride." );
     VBD( temporaryType.PackedSize <= temporaryType.TotalSize && temporaryType.PackedSize % cElements == 0, "Invalid pEffectBuffer: invalid type packed size." );
@@ -960,7 +986,7 @@ HRESULT CEffectLoader::LoadTypeAndAddToPool(SType **ppType, UINT  dwOffset)
     switch(temporaryType.VarType)
     {
     case EVT_Object:
-        VHD( m_msUnstructured.Read((void**) &pObjectType, sizeof(UINT)), "Invalid pEffectBuffer: cannot read object type." );
+        VHD( m_msUnstructured.Read((void**) &pObjectType, sizeof(uint32_t)), "Invalid pEffectBuffer: cannot read object type." );
         temporaryType.ObjectType = *pObjectType;
         VBD( temporaryType.VarType > EOT_Invalid && temporaryType.VarType < EOT_Count, "Invalid pEffectBuffer: invalid object type." );
         
@@ -976,7 +1002,7 @@ HRESULT CEffectLoader::LoadTypeAndAddToPool(SType **ppType, UINT  dwOffset)
         break;
 
     case EVT_Interface:
-        temporaryType.InterfaceType = NULL; 
+        temporaryType.InterfaceType = nullptr; 
 
         VN( pHashBuffer = m_HashBuffer.AddRange(sizeof(temporaryType.VarType) + sizeof(temporaryType.Elements) + 
             sizeof(temporaryType.pTypeName) + sizeof(temporaryType.ObjectType)) );
@@ -1000,7 +1026,7 @@ HRESULT CEffectLoader::LoadTypeAndAddToPool(SType **ppType, UINT  dwOffset)
 
         if (temporaryType.NumericType.NumericLayout != ENL_Matrix)
         {
-            VBD( temporaryType.NumericType.IsColumnMajor == FALSE, "Invalid pEffectBuffer: only matricies can be column major." );
+            VBD( temporaryType.NumericType.IsColumnMajor == false, "Invalid pEffectBuffer: only matricies can be column major." );
         }
 
         VN( pHashBuffer = m_HashBuffer.AddRange(sizeof(temporaryType.VarType) + sizeof(temporaryType.Elements) + 
@@ -1019,7 +1045,7 @@ HRESULT CEffectLoader::LoadTypeAndAddToPool(SType **ppType, UINT  dwOffset)
 
         temporaryType.StructType.Members = cMembers;
 
-        VN( pTempMembers = NEW SVariable[cMembers] );
+        VN( pTempMembers = new SVariable[cMembers] );
         temporaryType.StructType.pMembers = pTempMembers;
         
         // read up all of the member descriptors at once
@@ -1044,11 +1070,11 @@ HRESULT CEffectLoader::LoadTypeAndAddToPool(SType **ppType, UINT  dwOffset)
                 temporaryType.StructType.HasSuperClass = 1;
             }
             // Read (and ignore) the interface types
-            UINT *poInterface;
+            uint32_t *poInterface;
             VHD( m_msUnstructured.Read((void**) &poInterface, cInterfaces * sizeof(poInterface)), "Invalid pEffectBuffer: cannot read interface types." );
         }
 
-        UINT  totalSize;
+        uint32_t  totalSize;
         totalSize = 0;
         for (iMember=0; iMember<cMembers; iMember++)
         {   
@@ -1085,14 +1111,14 @@ HRESULT CEffectLoader::LoadTypeAndAddToPool(SType **ppType, UINT  dwOffset)
         break;
 
     default:
-        D3DXASSERT(0);
+        assert(0);
         VHD( E_FAIL, "Internal loading error: invalid variable type." );
     }
 
     hash = ComputeHash(&m_HashBuffer[0], m_HashBuffer.GetSize());
     if (FAILED(m_pEffect->m_pTypePool->FindValueWithHash(&temporaryType, hash, &iter)))
     {
-        D3DXASSERT( m_pEffect->m_pPooledHeap != NULL );
+        assert( m_pEffect->m_pPooledHeap != nullptr );
 
         // allocate real member array, if necessary
         if (temporaryType.VarType == EVT_Struct)
@@ -1118,24 +1144,21 @@ lExit:
 }
 
 // Numeric data in annotations are tightly packed (unlike in CBs which follow D3D11 packing rules).  This unpacks them.
-UINT CEffectLoader::UnpackData(BYTE *pDestData, BYTE *pSrcData, UINT  PackedDataSize, SType *pType, UINT  *pBytesRead)
+uint32_t CEffectLoader::UnpackData(uint8_t *pDestData, uint8_t *pSrcData, uint32_t PackedDataSize, SType *pType, uint32_t  *pBytesRead)
 {
-    UINT  bytesRead = 0;
-    UINT  i, j, k;
-    UINT  registers, entries;
+    uint32_t  bytesRead = 0;
     HRESULT hr = S_OK;
-    UINT  elementsToCopy = max(pType->Elements, 1);
+    uint32_t  elementsToCopy = std::max<uint32_t>(pType->Elements, 1);
 
     switch (pType->VarType)
     {
     case EVT_Struct:
-        for (i = 0; i < elementsToCopy; ++ i)
+        for (size_t i = 0; i < elementsToCopy; ++ i)
         {
-            for (j = 0; j < pType->StructType.Members; ++ j)
+            for (size_t j = 0; j < pType->StructType.Members; ++ j)
             {
-                UINT  br;
-                D3DXASSERT((UINT_PTR)pType->StructType.pMembers[j].pType == (UINT)(UINT_PTR)pType->StructType.pMembers[j].pType);
-                D3DXASSERT(PackedDataSize > bytesRead);                    
+                uint32_t  br;
+                assert(PackedDataSize > bytesRead);                    
 
                 VH( UnpackData(pDestData + pType->StructType.pMembers[j].Data.Offset, 
                     pSrcData + bytesRead, PackedDataSize - bytesRead, 
@@ -1151,27 +1174,27 @@ UINT CEffectLoader::UnpackData(BYTE *pDestData, BYTE *pSrcData, UINT  PackedData
         if (pType->NumericType.IsPackedArray)
         {
             // No support for packed arrays
-            D3DXASSERT(0);
+            assert(0);
             VHD(E_FAIL, "Internal loading error: packed arrays are not supported." );
         }
         else
         {
-            UINT  bytesToCopy;
+            uint32_t  bytesToCopy;
 
             if (pType->NumericType.IsColumnMajor)
             {
-                registers = pType->NumericType.Columns;
-                entries = pType->NumericType.Rows;
+                uint32_t registers = pType->NumericType.Columns;
+                uint32_t entries = pType->NumericType.Rows;
                 bytesToCopy = entries * registers * SType::c_ScalarSize;
 
-                for (i = 0; i < elementsToCopy; ++ i)
+                for (size_t i = 0; i < elementsToCopy; ++ i)
                 {
-                    for (j = 0; j < registers; ++ j)
+                    for (size_t j = 0; j < registers; ++ j)
                     {
-                        for (k = 0; k < entries; ++ k)
+                        for (size_t k = 0; k < entries; ++ k)
                         {
                             // type cast to an arbitrary scalar
-                            ((UINT*)pDestData)[k] = ((UINT*)pSrcData)[k * registers + j];
+                            ((uint32_t*)pDestData)[k] = ((uint32_t*)pSrcData)[k * registers + j];
                         }
                         pDestData += SType::c_RegisterSize; // advance to next register
                     }
@@ -1181,13 +1204,13 @@ UINT CEffectLoader::UnpackData(BYTE *pDestData, BYTE *pSrcData, UINT  PackedData
             }
             else
             {
-                registers = pType->NumericType.Rows;
-                entries = pType->NumericType.Columns;
+                uint32_t registers = pType->NumericType.Rows;
+                uint32_t entries = pType->NumericType.Columns;
                 bytesToCopy = entries * SType::c_ScalarSize;
 
-                for (i = 0; i < elementsToCopy; ++ i)
+                for (size_t i = 0; i < elementsToCopy; ++ i)
                 {
-                    for (j = 0; j < registers; ++ j)
+                    for (size_t j = 0; j < registers; ++ j)
                     {
                         memcpy(pDestData, pSrcData, bytesToCopy);
 
@@ -1202,7 +1225,7 @@ UINT CEffectLoader::UnpackData(BYTE *pDestData, BYTE *pSrcData, UINT  PackedData
 
     default:
         // shouldn't be called on non-struct/numeric types
-        D3DXASSERT(0);
+        assert(0);
         VHD(E_FAIL, "Internal loading error: UnpackData should not be called on non-struct, non-numeric types." );
     }  
 
@@ -1212,7 +1235,7 @@ lExit:
 }
 
 // Read info from the compiled blob and initialize a numeric variable
-HRESULT CEffectLoader::LoadNumericVariable(SConstantBuffer *pParentCB)
+HRESULT CEffectLoader::LoadNumericVariable(_In_ SConstantBuffer *pParentCB)
 {
     HRESULT hr = S_OK;
     SBinaryNumericVariable *psVar;
@@ -1230,7 +1253,7 @@ HRESULT CEffectLoader::LoadNumericVariable(SConstantBuffer *pParentCB)
     VH( LoadTypeAndAddToPool(&pType, psVar->oType) );
     
     // Make sure the right polymorphic type is created
-    VH( PlacementNewVariable(pVar, pType, FALSE) );
+    VH( PlacementNewVariable(pVar, pType, false) );
 
     if (psVar->Flags & D3DX11_EFFECT_VARIABLE_EXPLICIT_BIND_POINT)
     {
@@ -1238,7 +1261,7 @@ HRESULT CEffectLoader::LoadNumericVariable(SConstantBuffer *pParentCB)
     }
     else
     {
-        pVar->ExplicitBindPoint = -1;
+        pVar->ExplicitBindPoint = uint32_t(-1);
     }
 
     pVar->pEffect = m_pEffect;
@@ -1250,7 +1273,7 @@ HRESULT CEffectLoader::LoadNumericVariable(SConstantBuffer *pParentCB)
     if (pType->VarType == EVT_Struct && pType->StructType.ImplementsInterface && !pParentCB->IsTBuffer)
     {
         pVar->MemberDataOffsetPlus4 = m_pEffect->m_MemberDataCount * sizeof(SMemberDataPointer) + 4;
-        m_pEffect->m_MemberDataCount += max(pType->Elements,1);
+        m_pEffect->m_MemberDataCount += std::max<uint32_t>(pType->Elements,1);
     }
 
     // Get name & semantic
@@ -1266,9 +1289,9 @@ HRESULT CEffectLoader::LoadNumericVariable(SConstantBuffer *pParentCB)
     // Get default value
     if (0 != psVar->oDefaultValue)
     {
-        UINT  bytesUnpacked;
+        uint32_t  bytesUnpacked;
         VHD( m_msUnstructured.ReadAtOffset(psVar->oDefaultValue, pType->PackedSize, &pDefaultValue), "Invalid pEffectBuffer: cannot read default value." );
-        VH( UnpackData((BYTE*) pVar->Data.pGeneric, (BYTE*) pDefaultValue, pType->PackedSize, pType, &bytesUnpacked) );
+        VH( UnpackData((uint8_t*) pVar->Data.pGeneric, (uint8_t*) pDefaultValue, pType->PackedSize, pType, &bytesUnpacked) );
         VBD( bytesUnpacked == pType->PackedSize, "Invalid pEffectBuffer: invalid type packed size.");
     }
     
@@ -1288,7 +1311,7 @@ lExit:
 HRESULT CEffectLoader::LoadCBs()
 {
     HRESULT hr = S_OK;
-    UINT  iCB, iVar;
+    uint32_t  iCB, iVar;
 
     for (iCB=0; iCB<m_pHeader->Effect.cCBs; iCB++)
     {
@@ -1300,12 +1323,12 @@ HRESULT CEffectLoader::LoadCBs()
 
         VHD( GetStringAndAddToReflection(psCB->oName, &pCB->pName), "Invalid pEffectBuffer: cannot read CB name." );
 
-        pCB->IsTBuffer = (psCB->Flags & SBinaryConstantBuffer::c_IsTBuffer) != 0 ? TRUE : FALSE;
-        pCB->IsSingle = (psCB->Flags & SBinaryConstantBuffer::c_IsSingle) != 0 ? TRUE : FALSE;
+        pCB->IsTBuffer = (psCB->Flags & SBinaryConstantBuffer::c_IsTBuffer) != 0 ? true : false;
+        pCB->IsSingle = (psCB->Flags & SBinaryConstantBuffer::c_IsSingle) != 0 ? true : false;
         pCB->Size = psCB->Size;
         pCB->ExplicitBindPoint = psCB->ExplicitBindPoint;
         VBD( pCB->Size == AlignToPowerOf2(pCB->Size, SType::c_RegisterSize), "Invalid pEffectBuffer: CB size not a power of 2." );
-        VN( pCB->pBackingStore = PRIVATENEW BYTE[pCB->Size] );
+        VN( pCB->pBackingStore = PRIVATENEW uint8_t[pCB->Size] );
         
         pCB->MemberDataOffsetPlus4 = m_pEffect->m_MemberDataCount * sizeof(SMemberDataPointer) + 4;
         m_pEffect->m_MemberDataCount += 2;
@@ -1318,7 +1341,7 @@ HRESULT CEffectLoader::LoadCBs()
         }
         else
         {
-            pCB->pVariables = NULL;
+            pCB->pVariables = nullptr;
         }
 
         // Read annotations
@@ -1337,7 +1360,8 @@ lExit:
 }
 
 // Used by LoadAssignment to initialize members on load
-HRESULT CEffectLoader::ExecuteConstantAssignment(SBinaryConstant *pConstant, void *pLHS, D3D10_SHADER_VARIABLE_TYPE lhsType)
+_Use_decl_annotations_
+HRESULT CEffectLoader::ExecuteConstantAssignment(const SBinaryConstant *pConstant, void *pLHS, D3D_SHADER_VARIABLE_TYPE lhsType)
 {
     HRESULT hr = S_OK;
 
@@ -1348,17 +1372,17 @@ HRESULT CEffectLoader::ExecuteConstantAssignment(SBinaryConstant *pConstant, voi
     case EST_Bool:
         switch(lhsType)
         {
-        case D3D10_SVT_BOOL:
-        case D3D10_SVT_INT:
-        case D3D10_SVT_UINT:
-            *(UINT*) pLHS = pConstant->iValue;
+        case D3D_SVT_BOOL:
+        case D3D_SVT_INT:
+        case D3D_SVT_UINT:
+            *(uint32_t*) pLHS = pConstant->iValue;
             break;
 
-        case D3D10_SVT_UINT8:
-            *(BYTE*) pLHS = (BYTE) pConstant->iValue;
+        case D3D_SVT_UINT8:
+            *(uint8_t*) pLHS = (uint8_t) pConstant->iValue;
             break;
 
-        case D3D10_SVT_FLOAT:
+        case D3D_SVT_FLOAT:
             *(float*) pLHS = (float) pConstant->iValue;
             break;
 
@@ -1370,17 +1394,17 @@ HRESULT CEffectLoader::ExecuteConstantAssignment(SBinaryConstant *pConstant, voi
     case EST_Float:
         switch(lhsType)
         {
-        case D3D10_SVT_BOOL:
-        case D3D10_SVT_INT:
-        case D3D10_SVT_UINT:
-            *(UINT*) pLHS = (UINT) pConstant->fValue;
+        case D3D_SVT_BOOL:
+        case D3D_SVT_INT:
+        case D3D_SVT_UINT:
+            *(uint32_t*) pLHS = (uint32_t) pConstant->fValue;
             break;
 
-        case D3D10_SVT_UINT8:
-            *(BYTE*) pLHS = (BYTE) pConstant->fValue;
+        case D3D_SVT_UINT8:
+            *(uint8_t*) pLHS = (uint8_t) pConstant->fValue;
             break;
 
-        case D3D10_SVT_FLOAT:
+        case D3D_SVT_FLOAT:
             *(float*) pLHS = pConstant->fValue;
             break;
 
@@ -1399,14 +1423,16 @@ lExit:
 
 
 // Read info from the compiled blob and initialize a set of assignments
-HRESULT CEffectLoader::LoadAssignments( UINT Assignments, SAssignment **ppAssignments, BYTE *pBackingStore, UINT *pRTVAssignments, UINT *pFinalAssignments )
+_Use_decl_annotations_
+HRESULT CEffectLoader::LoadAssignments( uint32_t Assignments, SAssignment **ppAssignments,
+                                        uint8_t *pBackingStore, uint32_t *pRTVAssignments, uint32_t *pFinalAssignments )
 {
     HRESULT hr = S_OK;
-    UINT  i, j;
+    uint32_t  i, j;
 
     SBinaryAssignment *psAssignments;
-    UINT  finalAssignments = 0;             // the number of assignments worth keeping    
-    UINT  renderTargetViewAssns = 0;        // Number of render target view assns, used by passes since SetRTV is a vararg call
+    uint32_t  finalAssignments = 0;             // the number of assignments worth keeping    
+    uint32_t  renderTargetViewAssns = 0;        // Number of render target view assns, used by passes since SetRTV is a vararg call
 
     *pFinalAssignments = 0;
     if (pRTVAssignments)
@@ -1429,7 +1455,7 @@ HRESULT CEffectLoader::LoadAssignments( UINT Assignments, SAssignment **ppAssign
         SGlobalVariable *pVarArray, *pVarIndex, *pVar;
         const char *pGlobalVarName;
         SAssignment *pAssignment = &(*ppAssignments)[finalAssignments];
-        BYTE *pLHS;
+        uint8_t *pLHS;
 
         VBD( psAssignments[i].iState < NUM_STATES, "Invalid pEffectBuffer: invalid assignment state." );
         VBD( psAssignments[i].Index < g_lvGeneral[psAssignments[i].iState].m_Indices, "Invalid pEffectBuffer: invalid assignment index." );
@@ -1442,84 +1468,84 @@ HRESULT CEffectLoader::LoadAssignments( UINT Assignments, SAssignment **ppAssign
 
         switch (g_lvGeneral[psAssignments[i].iState].m_Type)
         {
-        case D3D10_SVT_UINT8:
-            D3DXASSERT(g_lvGeneral[psAssignments[i].iState].m_Cols == 1); // BYTE arrays not supported
-            pAssignment->DataSize = sizeof(BYTE);
+        case D3D_SVT_UINT8:
+            assert(g_lvGeneral[psAssignments[i].iState].m_Cols == 1); // uint8_t arrays not supported
+            pAssignment->DataSize = sizeof(uint8_t);
             // Store an offset for destination instead of a pointer so that it's easy to relocate it later
             
             break;
 
-        case D3D10_SVT_BOOL:
-        case D3D10_SVT_INT:
-        case D3D10_SVT_UINT:
-        case D3D10_SVT_FLOAT:
+        case D3D_SVT_BOOL:
+        case D3D_SVT_INT:
+        case D3D_SVT_UINT:
+        case D3D_SVT_FLOAT:
             pAssignment->DataSize = SType::c_ScalarSize * g_lvGeneral[psAssignments[i].iState].m_Cols;
             break;
 
-        case D3D10_SVT_RASTERIZER:
+        case D3D_SVT_RASTERIZER:
             pAssignment->DataSize = sizeof(SRasterizerBlock);
             break;
 
-        case D3D10_SVT_DEPTHSTENCIL:
+        case D3D_SVT_DEPTHSTENCIL:
             pAssignment->DataSize = sizeof(SDepthStencilBlock);
             break;
 
-        case D3D10_SVT_BLEND:
+        case D3D_SVT_BLEND:
             pAssignment->DataSize = sizeof(SBlendBlock);
             break;
 
-        case D3D10_SVT_VERTEXSHADER:
-        case D3D10_SVT_GEOMETRYSHADER:
-        case D3D10_SVT_PIXELSHADER:
-        case D3D11_SVT_HULLSHADER:
-        case D3D11_SVT_DOMAINSHADER:
-        case D3D11_SVT_COMPUTESHADER:
+        case D3D_SVT_VERTEXSHADER:
+        case D3D_SVT_GEOMETRYSHADER:
+        case D3D_SVT_PIXELSHADER:
+        case D3D_SVT_HULLSHADER:
+        case D3D_SVT_DOMAINSHADER:
+        case D3D_SVT_COMPUTESHADER:
             pAssignment->DataSize = sizeof(SShaderBlock);
             break;
 
-        case D3D10_SVT_TEXTURE:
-        case D3D10_SVT_TEXTURE1D:
-        case D3D10_SVT_TEXTURE2D:
-        case D3D10_SVT_TEXTURE2DMS:
-        case D3D10_SVT_TEXTURE3D:
-        case D3D10_SVT_TEXTURECUBE:
-        case D3D10_SVT_TEXTURECUBEARRAY:
-        case D3D11_SVT_BYTEADDRESS_BUFFER:
-        case D3D11_SVT_STRUCTURED_BUFFER:
+        case D3D_SVT_TEXTURE:
+        case D3D_SVT_TEXTURE1D:
+        case D3D_SVT_TEXTURE2D:
+        case D3D_SVT_TEXTURE2DMS:
+        case D3D_SVT_TEXTURE3D:
+        case D3D_SVT_TEXTURECUBE:
+        case D3D_SVT_TEXTURECUBEARRAY:
+        case D3D_SVT_BYTEADDRESS_BUFFER:
+        case D3D_SVT_STRUCTURED_BUFFER:
             pAssignment->DataSize = sizeof(SShaderResource);
             break;
 
-        case D3D10_SVT_RENDERTARGETVIEW:
+        case D3D_SVT_RENDERTARGETVIEW:
             pAssignment->DataSize = sizeof(SRenderTargetView);
             break;
 
-        case D3D10_SVT_DEPTHSTENCILVIEW:
+        case D3D_SVT_DEPTHSTENCILVIEW:
             pAssignment->DataSize = sizeof(SDepthStencilView);
             break;
 
-        case D3D11_SVT_RWTEXTURE1D:
-        case D3D11_SVT_RWTEXTURE1DARRAY:
-        case D3D11_SVT_RWTEXTURE2D:
-        case D3D11_SVT_RWTEXTURE2DARRAY:
-        case D3D11_SVT_RWTEXTURE3D:
-        case D3D11_SVT_RWBUFFER:
-        case D3D11_SVT_RWBYTEADDRESS_BUFFER:
-        case D3D11_SVT_RWSTRUCTURED_BUFFER:
-        case D3D11_SVT_APPEND_STRUCTURED_BUFFER:
-        case D3D11_SVT_CONSUME_STRUCTURED_BUFFER:
+        case D3D_SVT_RWTEXTURE1D:
+        case D3D_SVT_RWTEXTURE1DARRAY:
+        case D3D_SVT_RWTEXTURE2D:
+        case D3D_SVT_RWTEXTURE2DARRAY:
+        case D3D_SVT_RWTEXTURE3D:
+        case D3D_SVT_RWBUFFER:
+        case D3D_SVT_RWBYTEADDRESS_BUFFER:
+        case D3D_SVT_RWSTRUCTURED_BUFFER:
+        case D3D_SVT_APPEND_STRUCTURED_BUFFER:
+        case D3D_SVT_CONSUME_STRUCTURED_BUFFER:
             pAssignment->DataSize = sizeof(SUnorderedAccessView);
             break;
 
-        case D3D11_SVT_INTERFACE_POINTER:
+        case D3D_SVT_INTERFACE_POINTER:
             pAssignment->DataSize = sizeof(SInterface);
             break;
 
         default:
-            D3DXASSERT(0);
+            assert(0);
             VHD( E_FAIL, "Internal loading error: invalid assignment type.");
         }
 
-        UINT lhsStride;
+        uint32_t lhsStride;
         if( g_lvGeneral[psAssignments[i].iState].m_Stride > 0 )
             lhsStride = g_lvGeneral[psAssignments[i].iState].m_Stride;
         else
@@ -1533,18 +1559,18 @@ HRESULT CEffectLoader::LoadAssignments( UINT Assignments, SAssignment **ppAssign
 
         switch (psAssignments[i].AssignmentType)
         {
-        case ECAT_Constant: // e.g. LHS = 1; or LHS = NULL;
-            UINT  *pNumConstants;
+        case ECAT_Constant: // e.g. LHS = 1; or LHS = nullptr;
+            uint32_t  *pNumConstants;
             SBinaryConstant *pConstants;
 
-            VHD( m_msUnstructured.ReadAtOffset(psAssignments[i].oInitializer, sizeof(UINT), (void**) &pNumConstants), "Invalid pEffectBuffer: cannot read NumConstants." );
+            VHD( m_msUnstructured.ReadAtOffset(psAssignments[i].oInitializer, sizeof(uint32_t), (void**) &pNumConstants), "Invalid pEffectBuffer: cannot read NumConstants." );
             VHD( m_msUnstructured.Read((void **)&pConstants, sizeof(SBinaryConstant) * (*pNumConstants)), "Invalid pEffectBuffer: cannot read constants." );
 
             if(pAssignment->IsObjectAssignment())
             {
-                // make sure this is a NULL assignment
+                // make sure this is a nullptr assignment
                 VBD( *pNumConstants == 1 && (pConstants[0].Type == EST_Int || pConstants[0].Type == EST_UInt) && pConstants[0].iValue == 0,
-                    "Invalid pEffectBuffer: non-NULL constant assignment to object.");
+                    "Invalid pEffectBuffer: non-nullptr constant assignment to object.");
 
                 switch (pAssignment->LhsType)
                 {
@@ -1585,7 +1611,7 @@ HRESULT CEffectLoader::LoadAssignments( UINT Assignments, SAssignment **ppAssign
                     *((void **)pLHS) = &g_NullRenderTargetView;
                     break;
                 default:
-                    D3DXASSERT(0);
+                    assert(0);
                 }
             }
             else
@@ -1652,7 +1678,7 @@ HRESULT CEffectLoader::LoadAssignments( UINT Assignments, SAssignment **ppAssign
 
                 // Write directly into the state block's backing store
                 *((void **)pLHS) = GetBlockByIndex(pVarArray->pType->VarType, pVarArray->pType->ObjectType, pVarArray->Data.pGeneric, psConstIndex->Index);
-                VBD( NULL != *((void **)pLHS), "Internal loading error: invalid block." );
+                VBD( nullptr != *((void **)pLHS), "Internal loading error: invalid block." );
 
                 // Now we can get rid of this assignment
             }
@@ -1665,7 +1691,7 @@ HRESULT CEffectLoader::LoadAssignments( UINT Assignments, SAssignment **ppAssign
                 pAssignment->pDependencies->pVariable = pVarArray;
 
                 CCheckedDword chkDataLen = psConstIndex->Index;
-                UINT  dataLen;
+                uint32_t  dataLen;
                 chkDataLen *= SType::c_ScalarSize;
                 chkDataLen += pAssignment->DataSize;
                 VHD( chkDataLen.GetValue(&dataLen), "Overflow: assignment size." );
@@ -1698,7 +1724,7 @@ HRESULT CEffectLoader::LoadAssignments( UINT Assignments, SAssignment **ppAssign
                  "Invalid pEffectBuffer: invalid index variable type.");
             VBD( pVarArray->pType->Elements > 0, "Invalid pEffectBuffer: array variable is not an array." );
 
-            pVarIndex->pCB->IsUsedByExpression = TRUE;
+            pVarIndex->pCB->IsUsedByExpression = true;
 
             if (pAssignment->IsObjectAssignment())
             {
@@ -1731,7 +1757,7 @@ HRESULT CEffectLoader::LoadAssignments( UINT Assignments, SAssignment **ppAssign
 
                 // When pVarIndex is updated, we update the source pointer.
                 // When pVarArray is updated, we copy data from the source to the destination.
-                pAssignment->Source.pGeneric = NULL;
+                pAssignment->Source.pGeneric = nullptr;
                 pAssignment->AssignmentType = ERAT_NumericVariableIndex;
             }
 
@@ -1748,8 +1774,8 @@ HRESULT CEffectLoader::LoadAssignments( UINT Assignments, SAssignment **ppAssign
 
         case ECAT_InlineShader:
         case ECAT_InlineShader5:
-            UINT  cbShaderBin;
-            BYTE *pShaderBin;
+            uint32_t  cbShaderBin;
+            uint8_t *pShaderBin;
             SShaderBlock *pShaderBlock;
             SAnonymousShader *pAnonShader;
             union
@@ -1759,7 +1785,7 @@ HRESULT CEffectLoader::LoadAssignments( UINT Assignments, SAssignment **ppAssign
             };
 
             // Inline shader assignments must be object types
-            D3DXASSERT(pAssignment->IsObjectAssignment());
+            assert(pAssignment->IsObjectAssignment());
 
             C_ASSERT( offsetof(SBinaryAssignment::SInlineShader,oShader) == offsetof(SBinaryShaderData5,oShader) );
             C_ASSERT( offsetof(SBinaryAssignment::SInlineShader,oSODecl) == offsetof(SBinaryShaderData5,oSODecls) );
@@ -1794,23 +1820,23 @@ HRESULT CEffectLoader::LoadAssignments( UINT Assignments, SAssignment **ppAssign
                 VN( pShaderBlock->pReflectionData = PRIVATENEW SShaderBlock::SReflectionData );
 
                 pShaderBlock->pReflectionData->BytecodeLength = cbShaderBin;
-                pShaderBlock->pReflectionData->pBytecode = (BYTE*) pShaderBin;
+                pShaderBlock->pReflectionData->pBytecode = (uint8_t*) pShaderBin;
                 pShaderBlock->pReflectionData->pStreamOutDecls[0] =
                 pShaderBlock->pReflectionData->pStreamOutDecls[1] =
                 pShaderBlock->pReflectionData->pStreamOutDecls[2] =
-                pShaderBlock->pReflectionData->pStreamOutDecls[3] = NULL;
+                pShaderBlock->pReflectionData->pStreamOutDecls[3] = nullptr;
                 pShaderBlock->pReflectionData->RasterizedStream = 0;
                 pShaderBlock->pReflectionData->IsNullGS = FALSE;
-                pShaderBlock->pReflectionData->pReflection = NULL;
+                pShaderBlock->pReflectionData->pReflection = nullptr;
                 pShaderBlock->pReflectionData->InterfaceParameterCount = 0;
-                pShaderBlock->pReflectionData->pInterfaceParameters = NULL;
+                pShaderBlock->pReflectionData->pInterfaceParameters = nullptr;
             }
 
             switch (pAssignment->LhsType)
             {
             case ELHS_PixelShaderBlock:
                 pShaderBlock->pVT = &g_vtPS;
-                VBD( psInlineShader->oSODecl == NULL, "Internal loading error: pixel shaders cannot have stream out decls." );
+                VBD( psInlineShader->oSODecl == 0, "Internal loading error: pixel shaders cannot have stream out decls." );
                 break;
             
             case ELHS_GeometryShaderBlock:
@@ -1827,7 +1853,7 @@ HRESULT CEffectLoader::LoadAssignments( UINT Assignments, SAssignment **ppAssign
                 else
                 {
                     // This is a GS with addressable stream out
-                    for( UINT iDecl=0; iDecl < psInlineShader5->cSODecls; ++iDecl )
+                    for( size_t iDecl=0; iDecl < psInlineShader5->cSODecls; ++iDecl )
                     {
                         if (psInlineShader5->oSODecls[iDecl])
                         {
@@ -1841,26 +1867,26 @@ HRESULT CEffectLoader::LoadAssignments( UINT Assignments, SAssignment **ppAssign
 
             case ELHS_VertexShaderBlock:
                 pShaderBlock->pVT = &g_vtVS;
-                VBD( psInlineShader->oSODecl == NULL, "Internal loading error: vertex shaders cannot have stream out decls." );
+                VBD( psInlineShader->oSODecl == 0, "Internal loading error: vertex shaders cannot have stream out decls." );
                 break;
 
             case ELHS_HullShaderBlock:
                 pShaderBlock->pVT = &g_vtHS;
-                VBD( psInlineShader->oSODecl == NULL, "Internal loading error: hull shaders cannot have stream out decls." );
+                VBD( psInlineShader->oSODecl == 0, "Internal loading error: hull shaders cannot have stream out decls." );
                 break;
 
             case ELHS_DomainShaderBlock:
                 pShaderBlock->pVT = &g_vtDS;
-                VBD( psInlineShader->oSODecl == NULL, "Internal loading error: domain shaders cannot have stream out decls." );
+                VBD( psInlineShader->oSODecl == 0, "Internal loading error: domain shaders cannot have stream out decls." );
                 break;
 
             case ELHS_ComputeShaderBlock:
                 pShaderBlock->pVT = &g_vtCS;
-                VBD( psInlineShader->oSODecl == NULL, "Internal loading error: compute shaders cannot have stream out decls." );
+                VBD( psInlineShader->oSODecl == 0, "Internal loading error: compute shaders cannot have stream out decls." );
                 break;
 
             case ELHS_GeometryShaderSO:
-                D3DXASSERT(0); // Should never happen
+                assert(0); // Should never happen
 
             default:
                 VHD( E_FAIL, "Internal loading error: invalid shader type."  );
@@ -1876,7 +1902,7 @@ HRESULT CEffectLoader::LoadAssignments( UINT Assignments, SAssignment **ppAssign
             break;
 
         default:
-            D3DXASSERT(0);
+            assert(0);
 
         }
     }
@@ -1894,20 +1920,17 @@ lExit:
 HRESULT CEffectLoader::LoadObjectVariables()
 {
     HRESULT hr = S_OK;
-    UINT  iBlock;
-    UINT  cBlocks;
 
-    cBlocks = m_pHeader->Effect.cObjectVariables;
+    size_t cBlocks = m_pHeader->Effect.cObjectVariables;
 
-    for (iBlock=0; iBlock<cBlocks; iBlock++)
+    for (size_t iBlock=0; iBlock<cBlocks; iBlock++)
     {
         SBinaryObjectVariable *psBlock;
         SGlobalVariable *pVar;
         SType *pType;
-        UINT  iElement;
-        UINT  elementsToRead;
+        uint32_t  elementsToRead;
         CCheckedDword chkElementsTotal;
-        UINT  elementsTotal;
+        uint32_t  elementsTotal;
 
         // Read variable info
         VHD( m_msStructured.Read((void**) &psBlock, sizeof(*psBlock)), "Invalid pEffectBuffer: cannot read object variable." );
@@ -1919,17 +1942,17 @@ HRESULT CEffectLoader::LoadObjectVariables()
         VH( LoadTypeAndAddToPool(&pType, psBlock->oType) );
 
         // Make sure the right polymorphic type is created
-        VH( PlacementNewVariable(pVar, pType, FALSE) );
+        VH( PlacementNewVariable(pVar, pType, false) );
 
         pVar->pEffect = m_pEffect;
         pVar->pType = pType;
-        pVar->pCB = NULL;
+        pVar->pCB = nullptr;
         pVar->ExplicitBindPoint = psBlock->ExplicitBindPoint;
 
         if( pType->IsStateBlockObject() )
         {
             pVar->MemberDataOffsetPlus4 = m_pEffect->m_MemberDataCount * sizeof(SMemberDataPointer) + 4;
-            m_pEffect->m_MemberDataCount += max(pType->Elements,1);
+            m_pEffect->m_MemberDataCount += std::max<uint32_t>(pType->Elements,1);
         }
 
         // Get name
@@ -1937,15 +1960,15 @@ HRESULT CEffectLoader::LoadObjectVariables()
         VHD( GetStringAndAddToReflection(psBlock->oSemantic, &pVar->pSemantic), "Invalid pEffectBuffer: cannot read object variable semantic." );
 
         m_pEffect->m_VariableCount++;
-        elementsToRead = max(1, pType->Elements);
+        elementsToRead = std::max<uint32_t>(1, pType->Elements);
         chkElementsTotal = elementsToRead;
 
         if (pType->IsStateBlockObject())
         {
             // State blocks
             EBlockType blockType;
-            UINT  *maxBlockCount;
-            UINT  *currentBlockCount;
+            uint32_t  *maxBlockCount;
+            uint32_t  *currentBlockCount;
 
             switch (pType->ObjectType)
             {
@@ -1984,19 +2007,19 @@ HRESULT CEffectLoader::LoadObjectVariables()
             
             *currentBlockCount += elementsToRead;
 
-            for (iElement = 0; iElement < elementsToRead; ++ iElement)
+            for (uint32_t iElement = 0; iElement < elementsToRead; ++ iElement)
             {
                 SBaseBlock *pCurrentBlock;
-                UINT  cAssignments;
+                uint32_t  cAssignments;
                 
                 pCurrentBlock = (SBaseBlock *) GetBlockByIndex(pVar->pType->VarType, pVar->pType->ObjectType, pVar->Data.pGeneric, iElement);
-                VBD( NULL != pCurrentBlock, "Internal loading error: find state block." );
+                VBD( nullptr != pCurrentBlock, "Internal loading error: find state block." );
 
                 pCurrentBlock->BlockType = blockType;
 
                 VHD( m_msStructured.Read(&cAssignments), "Invalid pEffectBuffer: cannot read state block assignments." );
 
-                VH( LoadAssignments( cAssignments, &pCurrentBlock->pAssignments, (BYTE*)pCurrentBlock, NULL, &pCurrentBlock->AssignmentCount ) );
+                VH( LoadAssignments( cAssignments, &pCurrentBlock->pAssignments, (uint8_t*)pCurrentBlock, nullptr, &pCurrentBlock->AssignmentCount ) );
             }
         }
         else if (pType->IsShader())
@@ -2009,15 +2032,15 @@ HRESULT CEffectLoader::LoadObjectVariables()
 
             pVar->Data.pShader = &m_pEffect->m_pShaderBlocks[m_pEffect->m_ShaderBlockCount];
 
-            for (iElement=0; iElement<elementsToRead; iElement++)
+            for (size_t iElement=0; iElement<elementsToRead; iElement++)
             {
-                UINT  cbShaderBin;
+                uint32_t  cbShaderBin;
                 void *pShaderBin;
                 SShaderBlock *pShaderBlock;
 
                 union
                 {
-                    UINT *pOffset;
+                    uint32_t *pOffset;
                     SBinaryGSSOInitializer *psInlineGSSO4;
                     SBinaryShaderData5 *psInlineShader5;
                 };
@@ -2062,16 +2085,16 @@ HRESULT CEffectLoader::LoadObjectVariables()
                     VN( pShaderBlock->pReflectionData = PRIVATENEW SShaderBlock::SReflectionData );
 
                     pShaderBlock->pReflectionData->BytecodeLength = cbShaderBin;
-                    pShaderBlock->pReflectionData->pBytecode = (BYTE*) pShaderBin;
+                    pShaderBlock->pReflectionData->pBytecode = (uint8_t*) pShaderBin;
                     pShaderBlock->pReflectionData->pStreamOutDecls[0] =
                     pShaderBlock->pReflectionData->pStreamOutDecls[1] =
                     pShaderBlock->pReflectionData->pStreamOutDecls[2] =
-                    pShaderBlock->pReflectionData->pStreamOutDecls[3] = NULL;
+                    pShaderBlock->pReflectionData->pStreamOutDecls[3] = nullptr;
                     pShaderBlock->pReflectionData->RasterizedStream = 0;
                     pShaderBlock->pReflectionData->IsNullGS = FALSE;
-                    pShaderBlock->pReflectionData->pReflection = NULL;
+                    pShaderBlock->pReflectionData->pReflection = nullptr;
                     pShaderBlock->pReflectionData->InterfaceParameterCount = 0;
-                    pShaderBlock->pReflectionData->pInterfaceParameters = NULL;
+                    pShaderBlock->pReflectionData->pInterfaceParameters = nullptr;
                 }
 
                 switch (pType->ObjectType)
@@ -2100,7 +2123,7 @@ HRESULT CEffectLoader::LoadObjectVariables()
                     // Get StreamOut decls
                     if (cbShaderBin > 0)
                     {
-                        for( UINT iDecl=0; iDecl < psInlineShader5->cSODecls; ++iDecl )
+                        for( size_t iDecl=0; iDecl < psInlineShader5->cSODecls; ++iDecl )
                         {
                             VHD( GetStringAndAddToReflection(psInlineShader5->oSODecls[iDecl], &pShaderBlock->pReflectionData->pStreamOutDecls[iDecl]),
                                  "Invalid pEffectBuffer: cannot read stream out decls." );
@@ -2157,9 +2180,9 @@ HRESULT CEffectLoader::LoadObjectVariables()
 
             pVar->Data.pString = &m_pEffect->m_pStrings[m_pEffect->m_StringCount];
 
-            for (iElement=0; iElement<elementsToRead; iElement++)
+            for (size_t iElement=0; iElement<elementsToRead; iElement++)
             {
-                UINT  dwOffset;
+                uint32_t  dwOffset;
                 SString *pString;
 
                 pString = &m_pEffect->m_pStrings[m_pEffect->m_StringCount];
@@ -2231,8 +2254,8 @@ lExit:
 HRESULT CEffectLoader::LoadInterfaceVariables()
 {
     HRESULT hr = S_OK;
-    UINT  iBlock;
-    UINT  cBlocks;
+    uint32_t  iBlock;
+    uint32_t  cBlocks;
 
     cBlocks = m_pHeader->cInterfaceVariables;
 
@@ -2241,9 +2264,9 @@ HRESULT CEffectLoader::LoadInterfaceVariables()
         SBinaryInterfaceVariable *psBlock;
         SGlobalVariable *pVar;
         SType *pType;
-        UINT  elementsToRead;
+        uint32_t  elementsToRead;
         CCheckedDword chkElementsTotal;
-        UINT  elementsTotal;
+        uint32_t  elementsTotal;
         void *pDefaultValue;
 
         // Read variable info
@@ -2256,19 +2279,19 @@ HRESULT CEffectLoader::LoadInterfaceVariables()
         VH( LoadTypeAndAddToPool(&pType, psBlock->oType) );
 
         // Make sure the right polymorphic type is created
-        VH( PlacementNewVariable(pVar, pType, FALSE) );
+        VH( PlacementNewVariable(pVar, pType, false) );
 
         pVar->pEffect = m_pEffect;
         pVar->pType = pType;
-        pVar->pCB = NULL;
-        pVar->ExplicitBindPoint = (UINT)-1;
-        pVar->pSemantic = NULL;
+        pVar->pCB = nullptr;
+        pVar->ExplicitBindPoint = (uint32_t)-1;
+        pVar->pSemantic = nullptr;
 
         // Get name
         VHD( GetStringAndAddToReflection(psBlock->oName, &pVar->pName), "Invalid pEffectBuffer: cannot read interface name." );
 
         m_pEffect->m_VariableCount++;
-        elementsToRead = max(1, pType->Elements);
+        elementsToRead = std::max<uint32_t>(1, pType->Elements);
         chkElementsTotal = elementsToRead;
 
         VBD( pType->IsInterface(), "Internal loading error: invlaid type for interface." );
@@ -2285,16 +2308,16 @@ HRESULT CEffectLoader::LoadInterfaceVariables()
         {
             VHD( m_msUnstructured.ReadAtOffset(psBlock->oDefaultValue, elementsToRead * sizeof(SBinaryInterfaceInitializer), &pDefaultValue),
                  "Invalid pEffectBuffer: cannot read interface initializer offset." );
-            for( UINT i=0; i < elementsToRead; i++ )
+            for( size_t i=0; i < elementsToRead; i++ )
             {
                 SBinaryInterfaceInitializer* pInterfaceInit = &((SBinaryInterfaceInitializer*)pDefaultValue)[i];
                 LPCSTR pClassInstanceName;
                 VHD( m_msUnstructured.ReadAtOffset(pInterfaceInit->oInstanceName, &pClassInstanceName), "Invalid pEffectBuffer: cannot read interface initializer." );
 
                 SGlobalVariable *pCIVariable = m_pEffect->FindVariableByName(pClassInstanceName);
-                VBD( pCIVariable != NULL, "Loading error: cannot find class instance for interface initializer." );
+                VBD( pCIVariable != nullptr, "Loading error: cannot find class instance for interface initializer." );
                 VBD( pCIVariable->pType->IsClassInstance(), "Loading error: variable type mismatch for interface initializer." );
-                if( pInterfaceInit->ArrayIndex == (UINT)-1 )
+                if( pInterfaceInit->ArrayIndex == (uint32_t)-1 )
                 {
                     VBD( pCIVariable->pType->Elements == 0, "Loading error: array mismatch for interface initializer." );
                     pVar->Data.pInterface[i].pClassInstance = (SClassInstanceGlobalVariable*)pCIVariable;
@@ -2325,10 +2348,9 @@ lExit:
 HRESULT CEffectLoader::LoadGroups()
 {
     HRESULT hr = S_OK;
-    UINT iGroup;
-    UINT TechniquesInEffect = 0;
+    uint32_t TechniquesInEffect = 0;
 
-    for( iGroup=0; iGroup<m_pHeader->cGroups; iGroup++ )
+    for( size_t iGroup=0; iGroup<m_pHeader->cGroups; iGroup++ )
     {
         SGroup *pGroup = &m_pEffect->m_pGroups[iGroup];
         SBinaryGroup *psGroup;
@@ -2339,17 +2361,16 @@ HRESULT CEffectLoader::LoadGroups()
         VN( pGroup->pTechniques = PRIVATENEW STechnique[pGroup->TechniqueCount] );
         VHD( GetStringAndAddToReflection(psGroup->oName, &pGroup->pName), "Invalid pEffectBuffer: cannot read group name." );
 
-        if( pGroup->pName == NULL )
+        if( pGroup->pName == nullptr )
         {
-            VBD( m_pEffect->m_pNullGroup == NULL, "Internal loading error: multiple NULL groups." );
+            VBD( m_pEffect->m_pNullGroup == nullptr, "Internal loading error: multiple nullptr groups." );
             m_pEffect->m_pNullGroup = pGroup;
         }
 
         // Read annotations
         VH( LoadAnnotations(&pGroup->AnnotationCount, &pGroup->pAnnotations) );
 
-        UINT iTechnique;
-        for( iTechnique=0; iTechnique < psGroup->cTechniques; iTechnique++ )
+        for( size_t iTechnique=0; iTechnique < psGroup->cTechniques; iTechnique++ )
         {
             VH( LoadTechnique( &pGroup->pTechniques[iTechnique] ) );
         }
@@ -2369,7 +2390,7 @@ lExit:
 HRESULT CEffectLoader::LoadTechnique( STechnique* pTech )
 {
     HRESULT hr = S_OK;
-    UINT  iPass;
+    uint32_t  iPass;
 
     SBinaryTechnique *psTech;
 
@@ -2394,7 +2415,7 @@ HRESULT CEffectLoader::LoadTechnique( STechnique* pTech )
         // Read annotations
         VH( LoadAnnotations(&pPass->AnnotationCount, &pPass->pAnnotations) );
 
-        VH( LoadAssignments( psPass->cAssignments, &pPass->pAssignments, (BYTE*)pPass, &pPass->BackingStore.RenderTargetViewCount, &pPass->AssignmentCount ) );
+        VH( LoadAssignments( psPass->cAssignments, &pPass->pAssignments, (uint8_t*)pPass, &pPass->BackingStore.RenderTargetViewCount, &pPass->AssignmentCount ) );
         VBD( pPass->BackingStore.RenderTargetViewCount <= D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, "Invalid pEffectBuffer: too many RTVs in pass." );
 
         // Initialize other pass information
@@ -2408,17 +2429,17 @@ lExit:
 
 
 // Read info from the compiled blob and initialize a set of annotations
-HRESULT CEffectLoader::LoadAnnotations(UINT  *pcAnnotations, SAnnotation **ppAnnotations)
+HRESULT CEffectLoader::LoadAnnotations(uint32_t  *pcAnnotations, SAnnotation **ppAnnotations)
 {
     HRESULT hr = S_OK;
-    UINT  cAnnotations, i, oData;
-    SAnnotation *pAnnotations = NULL;
+    uint32_t  cAnnotations, i, oData;
+    SAnnotation *pAnnotations = nullptr;
 
     VHD( m_msStructured.Read(&cAnnotations), "Invalid pEffectBuffer: cannot read anootation count." );
 
     if (cAnnotations)
     {
-        UINT  annotationsSize;
+        uint32_t  annotationsSize;
         CCheckedDword chkAnnotationsSize;
 
         chkAnnotationsSize = cAnnotations;
@@ -2426,7 +2447,7 @@ HRESULT CEffectLoader::LoadAnnotations(UINT  *pcAnnotations, SAnnotation **ppAnn
         VHD( chkAnnotationsSize.GetValue(&annotationsSize), "Overflow in annotations."  );
         
         // we allocate raw bytes for annotations because they are polymorphic types that need to be placement new'ed
-        VN( pAnnotations = (SAnnotation *) PRIVATENEW BYTE[annotationsSize] );
+        VN( pAnnotations = (SAnnotation *) PRIVATENEW uint8_t[annotationsSize] );
         
         for (i=0; i<cAnnotations; i++)
         {
@@ -2439,7 +2460,7 @@ HRESULT CEffectLoader::LoadAnnotations(UINT  *pcAnnotations, SAnnotation **ppAnn
             VH( LoadTypeAndAddToPool(&pType, psAnnotation->oType) );
 
             // Make sure the right polymorphic type is created
-            VH( PlacementNewVariable(pAn, pType, TRUE) );
+            VH( PlacementNewVariable(pAn, pType, true) );
 
             pAn->pEffect = m_pEffect;
             pAn->pType = pType;
@@ -2448,8 +2469,8 @@ HRESULT CEffectLoader::LoadAnnotations(UINT  *pcAnnotations, SAnnotation **ppAnn
 
             if (pType->IsObjectType(EOT_String))
             {
-                UINT  cElements = max(1, pType->Elements);
-                UINT  j;
+                uint32_t  cElements = std::max<uint32_t>(1, pType->Elements);
+                uint32_t  j;
                 VN( pAn->Data.pString = PRIVATENEW SString[cElements] );
                 for (j = 0; j < cElements; ++ j)
                 {
@@ -2461,17 +2482,17 @@ HRESULT CEffectLoader::LoadAnnotations(UINT  *pcAnnotations, SAnnotation **ppAnn
             else if (pType->BelongsInConstantBuffer())
             {
                 void *pDefaultValue;
-                UINT  bytesUnpacked;
+                uint32_t  bytesUnpacked;
                 
                 // Read initializer offset
                 VHD( m_msStructured.Read(&oData), "Invalid pEffectBuffer: cannot read annotation."  );
 
                 VBD( oData != 0, "Invalid pEffectBuffer: invalid anotation offset." );
 
-                VN( pAn->Data.pGeneric = PRIVATENEW BYTE[pType->TotalSize] );
+                VN( pAn->Data.pGeneric = PRIVATENEW uint8_t[pType->TotalSize] );
                 ZeroMemory(pAn->Data.pGeneric, pType->TotalSize);
                 VHD( m_msUnstructured.ReadAtOffset(oData, pType->PackedSize, &pDefaultValue), "Invalid pEffectBuffer: cannot read variable default value."  );
-                VH( UnpackData((BYTE*) pAn->Data.pGeneric, (BYTE*) pDefaultValue, pType->PackedSize, pType, &bytesUnpacked) );
+                VH( UnpackData((uint8_t*) pAn->Data.pGeneric, (uint8_t*) pDefaultValue, pType->PackedSize, pType, &bytesUnpacked) );
                 VBD( bytesUnpacked == pType->PackedSize, "Invalid pEffectBuffer: packed sizes to not match." );
             }
             else
@@ -2500,9 +2521,9 @@ lExit:
 HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
 {
     HRESULT hr = S_OK;
-    UINT  i, j;
     CEffectVector<SRange> vRanges[ER_Count], *pvRange;
-    SRange *pRange = NULL;
+
+    SRange *pRange = nullptr;
     CEffectVector<SConstantBuffer*> vTBuffers;
     
     //////////////////////////////////////////////////////////////////////////
@@ -2510,28 +2531,30 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
     // an "optimized" list of all of the dependencies
 
     D3D11_SHADER_DESC ShaderDesc;
-    pShaderBlock->pReflectionData->pReflection->GetDesc( &ShaderDesc );
+    hr = pShaderBlock->pReflectionData->pReflection->GetDesc( &ShaderDesc );
+    if ( FAILED(hr) ) 
+        return hr;
 
-    // Since we have the shader desc, let's find out if this is a NULL GS
+    // Since we have the shader desc, let's find out if this is a nullptr GS
     if( D3D11_SHVER_GET_TYPE( ShaderDesc.Version ) == D3D11_SHVER_VERTEX_SHADER && pShaderBlock->GetShaderType() == EOT_GeometryShader )
     {
-        pShaderBlock->pReflectionData->IsNullGS = TRUE;
+        pShaderBlock->pReflectionData->IsNullGS = true;
     }
 
     pShaderBlock->CBDepCount = pShaderBlock->ResourceDepCount = pShaderBlock->TBufferDepCount = pShaderBlock->SampDepCount = 0;
     pShaderBlock->UAVDepCount = pShaderBlock->InterfaceDepCount = 0;
 
-    for(i = 0; i < ShaderDesc.BoundResources; i++)
+    for(uint32_t i = 0; i < ShaderDesc.BoundResources; i++)
     {
         LPCSTR pName;
-        UINT bindPoint, size;
-        ERanges eRange;
-        SShaderResource *pShaderResource = NULL;
-        SUnorderedAccessView *pUnorderedAccessView = NULL;
-        SSamplerBlock *pSampler = NULL;
-        SConstantBuffer *pCB = NULL;
-        SVariable *pVariable = NULL;
-        BOOL isFX9TextureLoad = FALSE;
+        uint32_t bindPoint, size;
+        ERanges eRange = ER_CBuffer;
+        SShaderResource *pShaderResource = nullptr;
+        SUnorderedAccessView *pUnorderedAccessView = nullptr;
+        SSamplerBlock *pSampler = nullptr;
+        SConstantBuffer *pCB = nullptr;
+        SVariable *pVariable = nullptr;
+        bool isFX9TextureLoad = false;
         D3D11_SHADER_INPUT_BIND_DESC ResourceDesc;
 
         pShaderBlock->pReflectionData->pReflection->GetResourceBindingDesc( i, &ResourceDesc );
@@ -2546,88 +2569,89 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
 
         switch( ResourceDesc.Type )
         {
-        case D3D10_SIT_CBUFFER:
+        case D3D_SIT_CBUFFER:
             eRange = ER_CBuffer;
             
             pCB = m_pEffect->FindCB(pName);
-            VBD( NULL != pCB, "Loading error: cannot find cbuffer." );
+            VBD( nullptr != pCB, "Loading error: cannot find cbuffer." );
             VBD( size == 1, "Loading error: cbuffer arrays are not supported." );
             break;
 
-        case D3D10_SIT_TBUFFER:
+        case D3D_SIT_TBUFFER:
             eRange = ER_Texture;
             
             pCB = m_pEffect->FindCB(pName);
-            VBD( NULL != pCB, "Loading error: cannot find tbuffer." );
-            VBD( FALSE != pCB->IsTBuffer, "Loading error: cbuffer found where tbuffer is expected." );
+            VBD( nullptr != pCB, "Loading error: cannot find tbuffer." );
+            VBD( false != pCB->IsTBuffer, "Loading error: cbuffer found where tbuffer is expected." );
             VBD( size == 1, "Loading error: tbuffer arrays are not supported." );
             pShaderResource = &pCB->TBuffer;
             break;
 
-        case D3D10_SIT_TEXTURE: 
-        case D3D11_SIT_STRUCTURED:
-        case D3D11_SIT_BYTEADDRESS:
-            eRange = ER_Texture;
-
-            pVariable = m_pEffect->FindVariableByNameWithParsing(pName);
-            VBD( pVariable != NULL, "Loading error: cannot find SRV variable." );
-            UINT elements;
-            elements = max(1, pVariable->pType->Elements);
-            VBD( size <= elements, "Loading error: SRV array size mismatch." );
-
-            if (pVariable->pType->IsShaderResource())
+        case D3D_SIT_TEXTURE: 
+        case D3D_SIT_STRUCTURED:
+        case D3D_SIT_BYTEADDRESS:
             {
-                // this is just a straight texture assignment
-                pShaderResource = pVariable->Data.pShaderResource;
-            }
-            else
-            {
-                // This is a FX9/HLSL9-style texture load instruction that specifies only a sampler
-                VBD( pVariable->pType->IsSampler(), "Loading error: shader dependency is neither an SRV nor sampler.");
-                isFX9TextureLoad = TRUE;
-                pSampler = pVariable->Data.pSampler;
-                // validate that all samplers actually used (i.e. based on size, not elements) in this variable have a valid TEXTURE assignment
-                for (j = 0; j < size; ++ j)
+                eRange = ER_Texture;
+
+                pVariable = m_pEffect->FindVariableByNameWithParsing(pName);
+                VBD( pVariable != nullptr, "Loading error: cannot find SRV variable." );
+                uint32_t elements = std::max<uint32_t>(1, pVariable->pType->Elements);
+                VBD( size <= elements, "Loading error: SRV array size mismatch." );
+
+                if (pVariable->pType->IsShaderResource())
                 {
-                    if (NULL == pSampler[j].BackingStore.pTexture)
+                    // this is just a straight texture assignment
+                    pShaderResource = pVariable->Data.pShaderResource;
+                }
+                else
+                {
+                    // This is a FX9/HLSL9-style texture load instruction that specifies only a sampler
+                    VBD( pVariable->pType->IsSampler(), "Loading error: shader dependency is neither an SRV nor sampler.");
+                    isFX9TextureLoad = true;
+                    pSampler = pVariable->Data.pSampler;
+                    // validate that all samplers actually used (i.e. based on size, not elements) in this variable have a valid TEXTURE assignment
+                    for (size_t j = 0; j < size; ++ j)
                     {
-                        // print spew appropriately for samplers vs sampler arrays
-                        if (0 == pVariable->pType->Elements)
+                        if (nullptr == pSampler[j].BackingStore.pTexture)
                         {
-                            DPF(0, "%s: Sampler %s does not have a texture bound to it, even though the sampler is used in a DX9-style texture load instruction", g_szEffectLoadArea, pName);
-                        }
-                        else
-                        {
-                            DPF(0, "%s: Sampler %s[%d] does not have a texture bound to it, even though the sampler array is used in a DX9-style texture load instruction", g_szEffectLoadArea, pName, j);
-                        }
+                            // print spew appropriately for samplers vs sampler arrays
+                            if (0 == pVariable->pType->Elements)
+                            {
+                                DPF(0, "%s: Sampler %s does not have a texture bound to it, even though the sampler is used in a DX9-style texture load instruction", g_szEffectLoadArea, pName);
+                            }
+                            else
+                            {
+                                DPF(0, "%s: Sampler %s[%d] does not have a texture bound to it, even though the sampler array is used in a DX9-style texture load instruction", g_szEffectLoadArea, pName, j);
+                            }
                         
-                        VH( E_FAIL );
+                            VH( E_FAIL );
+                        }
                     }
                 }
             }
             break;
 
-        case D3D11_SIT_UAV_RWTYPED:
-        case D3D11_SIT_UAV_RWSTRUCTURED:
-        case D3D11_SIT_UAV_RWBYTEADDRESS:
-        case D3D11_SIT_UAV_APPEND_STRUCTURED:
-        case D3D11_SIT_UAV_CONSUME_STRUCTURED:
-        case D3D11_SIT_UAV_RWSTRUCTURED_WITH_COUNTER:
+        case D3D_SIT_UAV_RWTYPED:
+        case D3D_SIT_UAV_RWSTRUCTURED:
+        case D3D_SIT_UAV_RWBYTEADDRESS:
+        case D3D_SIT_UAV_APPEND_STRUCTURED:
+        case D3D_SIT_UAV_CONSUME_STRUCTURED:
+        case D3D_SIT_UAV_RWSTRUCTURED_WITH_COUNTER:
             eRange = ER_UnorderedAccessView;
 
             pVariable = m_pEffect->FindVariableByNameWithParsing(pName);
-            VBD( pVariable != NULL, "Loading error: cannot find UAV variable." );
-            VBD( size <= max(1, pVariable->pType->Elements), "Loading error: UAV array index out of range." );
+            VBD( pVariable != nullptr, "Loading error: cannot find UAV variable." );
+            VBD( size <= std::max<uint32_t>(1, pVariable->pType->Elements), "Loading error: UAV array index out of range." );
             VBD( pVariable->pType->IsUnorderedAccessView(), "Loading error: UAV variable expected." );
             pUnorderedAccessView = pVariable->Data.pUnorderedAccessView;
             break;
 
-        case D3D10_SIT_SAMPLER:
+        case D3D_SIT_SAMPLER:
             eRange = ER_Sampler;
 
             pVariable = m_pEffect->FindVariableByNameWithParsing(pName);
-            VBD( pVariable != NULL, "Loading error: cannot find sampler variable." );
-            VBD( size <= max(1, pVariable->pType->Elements), "Loading error: sampler array index out of range." );
+            VBD( pVariable != nullptr, "Loading error: cannot find sampler variable." );
+            VBD( size <= std::max<uint32_t>(1, pVariable->pType->Elements), "Loading error: sampler array index out of range." );
             VBD( pVariable->pType->IsSampler(), "Loading error: sampler variable expected." );
             pSampler = pVariable->Data.pSampler;
             break;
@@ -2642,7 +2666,7 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
         // an existing resource dependency and merge them together
         // if possible
         //
-        UINT  rangeCount;
+        uint32_t  rangeCount;
         pvRange = &vRanges[eRange];
         rangeCount = pvRange->GetSize();
 
@@ -2653,7 +2677,7 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
 
             // Make sure that bind points are strictly increasing,
             // otherwise this algorithm breaks and we'd get worse runtime performance
-            D3DXASSERT(pRange->last <= bindPoint);
+            assert(pRange->last <= bindPoint);
 
             if ( pRange->last != bindPoint )
             {
@@ -2684,20 +2708,20 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
 
         switch( ResourceDesc.Type )
         {
-        case D3D10_SIT_CBUFFER:
+        case D3D_SIT_CBUFFER:
             VHD( pRange->vResources.Add(pCB), "Internal loading error: cannot add cbuffer to range." );
             break;
-        case D3D10_SIT_TBUFFER:
+        case D3D_SIT_TBUFFER:
             VHD( pRange->vResources.Add(pShaderResource), "Internal loading error: cannot add tbuffer to range." );
             VHD( vTBuffers.Add( (SConstantBuffer*)pCB ), "Internal loading error: cannot add tbuffer to vector." );
             break;
-        case D3D10_SIT_TEXTURE:
-        case D3D11_SIT_STRUCTURED:
-        case D3D11_SIT_BYTEADDRESS:
+        case D3D_SIT_TEXTURE:
+        case D3D_SIT_STRUCTURED:
+        case D3D_SIT_BYTEADDRESS:
             if (isFX9TextureLoad)
             {
                 // grab all of the textures from each sampler
-                for (j = 0; j < size; ++ j)
+                for (size_t j = 0; j < size; ++ j)
                 {
                     VHD( pRange->vResources.Add(pSampler[j].BackingStore.pTexture), "Internal loading error: cannot add SRV to range." );
                 }
@@ -2705,27 +2729,27 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
             else
             {
                 // add the whole array
-                for (j = 0; j < size; ++ j)
+                for (size_t j = 0; j < size; ++ j)
                 {
                     VHD( pRange->vResources.Add(pShaderResource + j), "Internal loading error: cannot add SRV to range." );
                 }
             }
             break;
-        case D3D11_SIT_UAV_RWTYPED:
-        case D3D11_SIT_UAV_RWSTRUCTURED:
-        case D3D11_SIT_UAV_RWBYTEADDRESS:
-        case D3D11_SIT_UAV_APPEND_STRUCTURED:
-        case D3D11_SIT_UAV_CONSUME_STRUCTURED:
-        case D3D11_SIT_UAV_RWSTRUCTURED_WITH_COUNTER:
+        case D3D_SIT_UAV_RWTYPED:
+        case D3D_SIT_UAV_RWSTRUCTURED:
+        case D3D_SIT_UAV_RWBYTEADDRESS:
+        case D3D_SIT_UAV_APPEND_STRUCTURED:
+        case D3D_SIT_UAV_CONSUME_STRUCTURED:
+        case D3D_SIT_UAV_RWSTRUCTURED_WITH_COUNTER:
             // add the whole array
-            for (j = 0; j < size; ++ j)
+            for (size_t j = 0; j < size; ++ j)
             {
                 VHD( pRange->vResources.Add(pUnorderedAccessView + j), "Internal loading error: cannot add UAV to range." );
             }
             break;
-        case D3D10_SIT_SAMPLER:
+        case D3D_SIT_SAMPLER:
             // add the whole array
-            for (j = 0; j < size; ++ j)
+            for (size_t j = 0; j < size; ++ j)
             {
                 VHD( pRange->vResources.Add(pSampler + j), "Internal loading error: cannot add sampler to range." );
             }
@@ -2740,13 +2764,13 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
     // Step 2: iterate through the interfaces and build
     // an "optimized" list of all of the dependencies
 
-    UINT NumInterfaces = pShaderBlock->pReflectionData->pReflection->GetNumInterfaceSlots();
-    UINT CurInterfaceParameter = 0;
+    uint32_t NumInterfaces = pShaderBlock->pReflectionData->pReflection->GetNumInterfaceSlots();
+    uint32_t CurInterfaceParameter = 0;
     if( NumInterfaces > 0 )
     {
-        D3DXASSERT( ShaderDesc.ConstantBuffers > 0 );
+        assert( ShaderDesc.ConstantBuffers > 0 );
 
-        for( i=0; i < ShaderDesc.ConstantBuffers; i++ )
+        for( uint32_t i=0; i < ShaderDesc.ConstantBuffers; i++ )
         {
             ID3D11ShaderReflectionConstantBuffer* pCB = pShaderBlock->pReflectionData->pReflection->GetConstantBufferByIndex(i);
             VN( pCB );
@@ -2757,29 +2781,29 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
                 continue;
             }
 
-            for( UINT iVar=0; iVar < CBDesc.Variables; iVar++ )
+            for( uint32_t iVar=0; iVar < CBDesc.Variables; iVar++ )
             {
                 ID3D11ShaderReflectionVariable* pInterfaceVar = pCB->GetVariableByIndex( iVar );
                 VN( pInterfaceVar );
                 D3D11_SHADER_VARIABLE_DESC InterfaceDesc;
-                pInterfaceVar->GetDesc( &InterfaceDesc );
+                VHD( pInterfaceVar->GetDesc(&InterfaceDesc), "Internal load error: cannot get IV desc.");
 
                 LPCSTR pName;
-                UINT bindPoint, size;
-                SGlobalVariable *pVariable = NULL;
-                SInterface *pInterface = NULL;
-                UINT VariableElements;
+                uint32_t bindPoint, size;
+                SGlobalVariable *pVariable = nullptr;
+                SInterface *pInterface = nullptr;
+                uint32_t VariableElements;
 
                 pName = InterfaceDesc.Name;
                 bindPoint = InterfaceDesc.StartOffset;
                 size = InterfaceDesc.Size;
 
-                if( bindPoint == (UINT)-1 )
+                if( bindPoint == (uint32_t)-1 )
                 {
                     continue;
                 }
 
-                D3DXASSERT( InterfaceDesc.uFlags & D3D11_SVF_INTERFACE_POINTER );
+                assert( InterfaceDesc.uFlags & D3D11_SVF_INTERFACE_POINTER );
                 if( InterfaceDesc.uFlags & D3D11_SVF_INTERFACE_PARAMETER )
                 {
                     // This interface pointer is a parameter to the shader
@@ -2797,8 +2821,8 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
                         pInterfaceInfo = &pShaderBlock->pReflectionData->pInterfaceParameters[CurInterfaceParameter];
                         ++CurInterfaceParameter;
                         SGlobalVariable *pParent = m_pEffect->FindVariableByName(pInterfaceInfo->pName);
-                        VBD( pParent != NULL, "Loading error: cannot find parent type." );
-                        if( pInterfaceInfo->Index == (UINT)-1 )
+                        VBD( pParent != nullptr, "Loading error: cannot find parent type." );
+                        if( pInterfaceInfo->Index == (uint32_t)-1 )
                         {
                             pVariable = pParent;
                             VariableElements = pVariable->pType->Elements;
@@ -2817,10 +2841,10 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
                 {
                     // This interface pointer is a global interface used in the shader
                     pVariable = m_pEffect->FindVariableByName(pName);
-                    VBD( pVariable != NULL, "Loading error: cannot find interface variable." );
+                    VBD( pVariable != nullptr, "Loading error: cannot find interface variable." );
                     VariableElements = pVariable->pType->Elements;
                 }
-                VBD( size <= max(1, VariableElements), "Loading error: interface array size mismatch." );
+                VBD( size <= std::max<uint32_t>(1, VariableElements), "Loading error: interface array size mismatch." );
                 if( pVariable->pType->IsInterface() )
                 {
                     pInterface = pVariable->Data.pInterface;
@@ -2832,7 +2856,7 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
                     VN( pInterface = PRIVATENEW SInterface[size] );
                     if( VariableElements == 0 )
                     {
-                        D3DXASSERT( size == 1 );
+                        assert( size == 1 );
                         pInterface[0].pClassInstance = (SClassInstanceGlobalVariable*)pVariable;
                         m_BackgroundInterfaces.Add( &pInterface[0] );
                     }
@@ -2840,7 +2864,7 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
                     {
                         // Fill each element of the SInstance array individually
                         VBD( size == VariableElements, "Loading error: class instance array size mismatch." );
-                        for( UINT iElement=0; iElement < size; iElement++ )
+                        for( uint32_t iElement=0; iElement < size; iElement++ )
                         {
                             SGlobalVariable *pElement = (SGlobalVariable*)pVariable->GetElement( iElement );
                             VBD( pElement->IsValid(), "Internal loading error: class instance array index out of range." );
@@ -2860,7 +2884,7 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
                 // an existing resource dependency and merge them together
                 // if possible
                 //
-                UINT  rangeCount;
+                uint32_t  rangeCount;
                 pvRange = &vRanges[ER_Interfaces];
                 rangeCount = pvRange->GetSize();
 
@@ -2880,7 +2904,7 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
                 {
                     // add interfaces into the range that already exists
                     VBD( bindPoint + size < pRange->last, "Internal loading error: range overlap." );
-                    for( j = 0; j < size; ++ j )
+                    for( uint32_t j = 0; j < size; ++ j )
                     {
                         pRange->vResources[j + bindPoint] = pInterface + j;
                     }
@@ -2892,12 +2916,12 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
                     // add missing interface slots, if necessary
                     while(pRange->last < bindPoint)
                     {
-                        VHD( pRange->vResources.Add(&g_NullInterface), "Internal loading error: cannot add NULL interface to range." );
+                        VHD( pRange->vResources.Add(&g_NullInterface), "Internal loading error: cannot add nullptr interface to range." );
                         pRange->last++;
                     }
 
-                    D3DXASSERT( bindPoint == pRange->last );
-                    for( j=0; j < size; ++ j )
+                    assert( bindPoint == pRange->last );
+                    for( size_t j=0; j < size; ++ j )
                     {
                         VHD( pRange->vResources.Add(pInterface + j), "Internal loading error: cannot at interface to range." );
                     }
@@ -2928,7 +2952,7 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
     VN( pShaderBlock->pUAVDeps = PRIVATENEW SUnorderedAccessViewDependency[pShaderBlock->UAVDepCount] );
     VN( pShaderBlock->ppTbufDeps = PRIVATENEW SConstantBuffer*[pShaderBlock->TBufferDepCount] );
 
-    for (i=0; i<pShaderBlock->CBDepCount; ++i)
+    for (size_t i=0; i<pShaderBlock->CBDepCount; ++i)
     {
         SShaderCBDependency *pDep = &pShaderBlock->pCBDeps[i];
 
@@ -2939,15 +2963,15 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
         pDep->ppFXPointers = PRIVATENEW SConstantBuffer*[ pDep->Count ];
         pDep->ppD3DObjects = PRIVATENEW ID3D11Buffer*[ pDep->Count ];
 
-        D3DXASSERT(pDep->Count == pRange->vResources.GetSize());
-        for (j=0; j<pDep->Count; ++j)
+        assert(pDep->Count == pRange->vResources.GetSize());
+        for (size_t j=0; j<pDep->Count; ++j)
         {
             pDep->ppFXPointers[j] = (SConstantBuffer *)pRange->vResources[j];
-            pDep->ppD3DObjects[j] = NULL;
+            pDep->ppD3DObjects[j] = nullptr;
         }
     }
 
-    for (i=0; i<pShaderBlock->SampDepCount; ++i)
+    for (size_t i=0; i<pShaderBlock->SampDepCount; ++i)
     {
         SShaderSamplerDependency *pDep = &pShaderBlock->pSampDeps[i];
 
@@ -2958,15 +2982,15 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
         pDep->ppFXPointers = PRIVATENEW SSamplerBlock*[ pDep->Count ];
         pDep->ppD3DObjects = PRIVATENEW ID3D11SamplerState*[ pDep->Count ];
 
-        D3DXASSERT(pDep->Count == pRange->vResources.GetSize());
-        for (j=0; j<pDep->Count; ++j)
+        assert(pDep->Count == pRange->vResources.GetSize());
+        for (size_t j=0; j<pDep->Count; ++j)
         {
             pDep->ppFXPointers[j] = (SSamplerBlock *) pRange->vResources[j];
-            pDep->ppD3DObjects[j] = NULL;
+            pDep->ppD3DObjects[j] = nullptr;
         }
     }
 
-    for (i=0; i<pShaderBlock->InterfaceDepCount; ++i)
+    for (size_t i=0; i<pShaderBlock->InterfaceDepCount; ++i)
     {
         SInterfaceDependency *pDep = &pShaderBlock->pInterfaceDeps[i];
 
@@ -2977,15 +3001,15 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
         pDep->ppFXPointers = PRIVATENEW SInterface*[ pDep->Count ];
         pDep->ppD3DObjects = PRIVATENEW ID3D11ClassInstance*[ pDep->Count ];
 
-        D3DXASSERT(pDep->Count == pRange->vResources.GetSize());
-        for (j=0; j<pDep->Count; ++j)
+        assert(pDep->Count == pRange->vResources.GetSize());
+        for (size_t j=0; j<pDep->Count; ++j)
         {
             pDep->ppFXPointers[j] = (SInterface *) pRange->vResources[j];
-            pDep->ppD3DObjects[j] = NULL;
+            pDep->ppD3DObjects[j] = nullptr;
         }
     }
 
-    for (i=0; i<pShaderBlock->ResourceDepCount; ++i)
+    for (size_t i=0; i<pShaderBlock->ResourceDepCount; ++i)
     {
         SShaderResourceDependency *pDep = &pShaderBlock->pResourceDeps[i];
 
@@ -2996,15 +3020,15 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
         pDep->ppFXPointers = PRIVATENEW SShaderResource*[ pDep->Count ];
         pDep->ppD3DObjects = PRIVATENEW ID3D11ShaderResourceView*[ pDep->Count ];
 
-        D3DXASSERT(pDep->Count == pRange->vResources.GetSize());
-        for (j=0; j<pDep->Count; ++j)
+        assert(pDep->Count == pRange->vResources.GetSize());
+        for (size_t j=0; j<pDep->Count; ++j)
         {
             pDep->ppFXPointers[j] = (SShaderResource *) pRange->vResources[j];
-            pDep->ppD3DObjects[j] = NULL;
+            pDep->ppD3DObjects[j] = nullptr;
         }
     }
 
-    for (i=0; i<pShaderBlock->UAVDepCount; ++i)
+    for (size_t i=0; i<pShaderBlock->UAVDepCount; ++i)
     {
         SUnorderedAccessViewDependency *pDep = &pShaderBlock->pUAVDeps[i];
 
@@ -3015,11 +3039,11 @@ HRESULT CEffectLoader::GrabShaderData(SShaderBlock *pShaderBlock)
         pDep->ppFXPointers = PRIVATENEW SUnorderedAccessView*[ pDep->Count ];
         pDep->ppD3DObjects = PRIVATENEW ID3D11UnorderedAccessView*[ pDep->Count ];
 
-        D3DXASSERT(pDep->Count == pRange->vResources.GetSize());
-        for (j=0; j<pDep->Count; ++j)
+        assert(pDep->Count == pRange->vResources.GetSize());
+        for (size_t j=0; j<pDep->Count; ++j)
         {
             pDep->ppFXPointers[j] = (SUnorderedAccessView *) pRange->vResources[j];
-            pDep->ppD3DObjects[j] = NULL;
+            pDep->ppD3DObjects[j] = nullptr;
         }
     }
 
@@ -3038,17 +3062,17 @@ HRESULT CEffectLoader::BuildShaderBlock(SShaderBlock *pShaderBlock)
     HRESULT hr = S_OK;
 
     // unused shader block? that's not right
-    VBD( pShaderBlock->pVT != NULL, "Internal loading error: NULL shader vtable." );
+    VBD( pShaderBlock->pVT != nullptr, "Internal loading error: nullptr shader vtable." );
 
-    D3DXASSERT(pShaderBlock->pD3DObject == NULL);
+    assert(pShaderBlock->pD3DObject == nullptr);
 
-    if (NULL == pShaderBlock->pReflectionData)
+    if (nullptr == pShaderBlock->pReflectionData)
     {
         // File contains a shader variable without an assigned shader, or this is a null assignment.
         // Usually, this is called by one of these guys:
-        // SetVertexShader( NULL );
+        // SetVertexShader( nullptr );
         // or 
-        // vertexshader g_VS = NULL;
+        // vertexshader g_VS = nullptr;
         return S_OK;
     }
 
@@ -3062,8 +3086,10 @@ HRESULT CEffectLoader::BuildShaderBlock(SShaderBlock *pShaderBlock)
     // Grab input signatures for VS
     if( EOT_VertexShader == pShaderBlock->GetShaderType() )
     {
-        D3DXASSERT( pShaderBlock->pInputSignatureBlob == NULL );
-        VHD( D3DGetInputSignatureBlob( pShaderBlock->pReflectionData->pBytecode, pShaderBlock->pReflectionData->BytecodeLength, &pShaderBlock->pInputSignatureBlob ),
+        assert( pShaderBlock->pInputSignatureBlob == nullptr );
+        VHD( D3DGetBlobPart( pShaderBlock->pReflectionData->pBytecode, pShaderBlock->pReflectionData->BytecodeLength, 
+                             D3D_BLOB_INPUT_SIGNATURE_BLOB, 0,
+                             &pShaderBlock->pInputSignatureBlob ),
              "Internal loading error: cannot get input signature." );
     }
 
@@ -3090,10 +3116,10 @@ lExit:
 // Reflection reallocation code
 //////////////////////////////////////////////////////////////////////////
 
-HRESULT CEffectLoader::CalculateAnnotationSize(UINT  cAnnotations, SAnnotation *pAnnotations)
+HRESULT CEffectLoader::CalculateAnnotationSize(uint32_t  cAnnotations, SAnnotation *pAnnotations)
 {
     HRESULT hr = S_OK;
-    UINT  i;
+    uint32_t  i;
 
     m_ReflectionMemory += AlignToPowerOf2(cAnnotations * sizeof(SAnnotation), c_DataAlignment);
     for (i=0; i<cAnnotations; i++)
@@ -3106,8 +3132,7 @@ HRESULT CEffectLoader::CalculateAnnotationSize(UINT  cAnnotations, SAnnotation *
         {
             VBD( pAnnotations[i].pType->IsObjectType(EOT_String), "Invalid pEffectBuffer: invalid annotation type." );
 
-            UINT  cElements;
-            cElements = max(1, pAnnotations[i].pType->Elements);
+            uint32_t  cElements = std::max<uint32_t>(1, pAnnotations[i].pType->Elements);
             
             m_ReflectionMemory += AlignToPowerOf2(cElements * sizeof(SString), c_DataAlignment);
             
@@ -3118,10 +3143,10 @@ lExit:
     return hr;
 }
 
-HRESULT CEffectLoader::ReallocateAnnotationData(UINT  cAnnotations, SAnnotation **ppAnnotations)
+HRESULT CEffectLoader::ReallocateAnnotationData(uint32_t  cAnnotations, SAnnotation **ppAnnotations)
 {
     HRESULT hr = S_OK;
-    UINT  i;
+    uint32_t  i;
     SAnnotation *pAnnotations;
 
     VHD( m_pReflection->m_Heap.MoveData((void**) ppAnnotations, cAnnotations * sizeof(SAnnotation)),
@@ -3142,11 +3167,10 @@ HRESULT CEffectLoader::ReallocateAnnotationData(UINT  cAnnotations, SAnnotation 
         }
         else if (pAnnotations[i].pType->IsObjectType(EOT_String))
         {
-            UINT  j;
-            UINT  cElements = max(1, pAn->pType->Elements);
+            uint32_t  cElements = std::max<uint32_t>(1, pAn->pType->Elements);
                         
             VHD( m_pReflection->m_Heap.MoveData((void**) &pAn->Data.pString, cElements * sizeof(SString)), "Internal loading error: cannot move annotation string." );
-            for (j = 0; j < cElements; ++ j)
+            for (size_t j = 0; j < cElements; ++ j)
             {
                 VHD( m_pReflection->m_Heap.MoveString(&pAn->Data.pString[j].pString), "Internal loading error: cannot move annotation string element." );
             }
@@ -3161,11 +3185,10 @@ lExit:
     return hr;
 }
 
-HRESULT CEffectLoader::InitializeReflectionDataAndMoveStrings( UINT KnownSize )
+HRESULT CEffectLoader::InitializeReflectionDataAndMoveStrings( uint32_t KnownSize )
 {
     HRESULT hr = S_OK;
-    UINT  i, j, k;
-    UINT  cbStrings;
+    uint32_t  cbStrings;
     CEffectHeap *pHeap = &m_pReflection->m_Heap;
 
     // Get byte counts
@@ -3179,25 +3202,25 @@ HRESULT CEffectLoader::InitializeReflectionDataAndMoveStrings( UINT KnownSize )
     {
         m_ReflectionMemory += AlignToPowerOf2(cbStrings, c_DataAlignment);
 
-        for (i=0; i<m_pEffect->m_CBCount; i++)
+        for (size_t i=0; i<m_pEffect->m_CBCount; i++)
         {
             VH( CalculateAnnotationSize(m_pEffect->m_pCBs[i].AnnotationCount, m_pEffect->m_pCBs[i].pAnnotations) );
         }
 
-        for (i=0; i<m_pEffect->m_VariableCount; i++)
+        for (size_t i=0; i<m_pEffect->m_VariableCount; i++)
         {
             VH( CalculateAnnotationSize(m_pEffect->m_pVariables[i].AnnotationCount, m_pEffect->m_pVariables[i].pAnnotations) );
         }
 
-        for (i=0; i<m_pEffect->m_GroupCount; i++)
+        for (size_t i=0; i<m_pEffect->m_GroupCount; i++)
         {
             VH( CalculateAnnotationSize(m_pEffect->m_pGroups[i].AnnotationCount, m_pEffect->m_pGroups[i].pAnnotations) );
 
-            for (j=0; j<m_pEffect->m_pGroups[i].TechniqueCount; j++)
+            for (size_t j=0; j<m_pEffect->m_pGroups[i].TechniqueCount; j++)
             {
                 VH( CalculateAnnotationSize(m_pEffect->m_pGroups[i].pTechniques[j].AnnotationCount, m_pEffect->m_pGroups[i].pTechniques[j].pAnnotations) );
 
-                for (k=0; k<m_pEffect->m_pGroups[i].pTechniques[j].PassCount; k++)
+                for (size_t k=0; k<m_pEffect->m_pGroups[i].pTechniques[j].PassCount; k++)
                 {
                     VH( CalculateAnnotationSize(m_pEffect->m_pGroups[i].pTechniques[j].pPasses[k].AnnotationCount, m_pEffect->m_pGroups[i].pTechniques[j].pPasses[k].pAnnotations) );
                 }
@@ -3205,9 +3228,9 @@ HRESULT CEffectLoader::InitializeReflectionDataAndMoveStrings( UINT KnownSize )
         }
 
         // Calculate shader reflection data size
-        for (i=0; i<m_pEffect->m_ShaderBlockCount; i++)
+        for (size_t i=0; i<m_pEffect->m_ShaderBlockCount; i++)
         {
-            if (NULL != m_pEffect->m_pShaderBlocks[i].pReflectionData)
+            if (nullptr != m_pEffect->m_pShaderBlocks[i].pReflectionData)
             {
                 m_ReflectionMemory += AlignToPowerOf2(sizeof(SShaderBlock::SReflectionData), c_DataAlignment);
                 m_ReflectionMemory += AlignToPowerOf2(m_pEffect->m_pShaderBlocks[i].pReflectionData->BytecodeLength, c_DataAlignment);
@@ -3221,7 +3244,7 @@ HRESULT CEffectLoader::InitializeReflectionDataAndMoveStrings( UINT KnownSize )
     // Strings are handled separately because we are moving them to reflection
     m_pOldStrings = m_pEffect->m_pStrings;
     VHD( pHeap->MoveData((void**) &m_pEffect->m_pStrings, cbStrings), "Internal loading error: cannot move string data." );
-    for(i=0; i<m_pEffect->m_StringCount; i++)
+    for(size_t i=0; i<m_pEffect->m_StringCount; i++)
     {
         VHD( pHeap->MoveString( &m_pEffect->m_pStrings[i].pString), "Internal loading error: cannot move string pointer." );
     }
@@ -3234,33 +3257,32 @@ lExit:
 HRESULT CEffectLoader::ReallocateReflectionData( bool Cloning )
 {
     HRESULT hr = S_OK;
-    UINT  i, j, k;
     CEffectHeap *pHeap = &m_pReflection->m_Heap;
 
-    for(i=0; i<m_pEffect->m_CBCount; i++)
+    for(size_t i=0; i<m_pEffect->m_CBCount; i++)
     {
         VHD( pHeap->MoveString( &m_pEffect->m_pCBs[i].pName ), "Internal loading error: cannot move CB name." );
         VH( ReallocateAnnotationData(m_pEffect->m_pCBs[i].AnnotationCount, &m_pEffect->m_pCBs[i].pAnnotations) );
     }
 
-    for(i=0; i<m_pEffect->m_VariableCount; i++)
+    for(size_t i=0; i<m_pEffect->m_VariableCount; i++)
     {
         VHD( pHeap->MoveString( &m_pEffect->m_pVariables[i].pName ), "Internal loading error: cannot move variable name." );
         VHD( pHeap->MoveString( &m_pEffect->m_pVariables[i].pSemantic ), "Internal loading error: cannot move variable semantic." );
         VH( ReallocateAnnotationData(m_pEffect->m_pVariables[i].AnnotationCount, &m_pEffect->m_pVariables[i].pAnnotations) );
     }
 
-    for(i=0; i<m_pEffect->m_GroupCount; i++)
+    for(size_t i=0; i<m_pEffect->m_GroupCount; i++)
     {
         VHD( pHeap->MoveString( &m_pEffect->m_pGroups[i].pName ), "Internal loading error: cannot move group name." );
         VH( ReallocateAnnotationData(m_pEffect->m_pGroups[i].AnnotationCount, &m_pEffect->m_pGroups[i].pAnnotations) );
 
-        for(j=0; j<m_pEffect->m_pGroups[i].TechniqueCount; j++)
+        for(size_t j=0; j<m_pEffect->m_pGroups[i].TechniqueCount; j++)
         {
             VHD( pHeap->MoveString( &m_pEffect->m_pGroups[i].pTechniques[j].pName ), "Internal loading error: cannot move technique name." );
             VH( ReallocateAnnotationData(m_pEffect->m_pGroups[i].pTechniques[j].AnnotationCount, &m_pEffect->m_pGroups[i].pTechniques[j].pAnnotations) );
             
-            for(k=0; k<m_pEffect->m_pGroups[i].pTechniques[j].PassCount; k++)
+            for(size_t k=0; k<m_pEffect->m_pGroups[i].pTechniques[j].PassCount; k++)
             {
                 VHD( pHeap->MoveString( &m_pEffect->m_pGroups[i].pTechniques[j].pPasses[k].pName ), "Internal loading error: cannot move pass name." );
                 VH( ReallocateAnnotationData(m_pEffect->m_pGroups[i].pTechniques[j].pPasses[k].AnnotationCount, &m_pEffect->m_pGroups[i].pTechniques[j].pPasses[k].pAnnotations) );
@@ -3272,7 +3294,7 @@ HRESULT CEffectLoader::ReallocateReflectionData( bool Cloning )
     {
         // When not cloning, every member in m_pMemberInterfaces is from a global variable, so we can take pName and pSemantic
         // from the parent variable, which were updated above
-        for (i = 0; i < m_pEffect->m_pMemberInterfaces.GetSize(); ++ i)
+        for (size_t i = 0; i < m_pEffect->m_pMemberInterfaces.GetSize(); ++ i)
         {
             SMember* pMember = m_pEffect->m_pMemberInterfaces[i];
             SGlobalVariable* pTopLevelEntity = (SGlobalVariable*)pMember->pTopLevelEntity;
@@ -3283,15 +3305,15 @@ HRESULT CEffectLoader::ReallocateReflectionData( bool Cloning )
     }
 
     // Move shader bytecode
-    for (i=0; i<m_pEffect->m_ShaderBlockCount; i++)
+    for (size_t i=0; i<m_pEffect->m_ShaderBlockCount; i++)
     {
-        if (NULL != m_pEffect->m_pShaderBlocks[i].pReflectionData)
+        if (nullptr != m_pEffect->m_pShaderBlocks[i].pReflectionData)
         {
             VHD( pHeap->MoveData((void**)&m_pEffect->m_pShaderBlocks[i].pReflectionData, sizeof(SShaderBlock::SReflectionData)),
                  "Internal loading error: cannot move shader reflection block." );
             VHD( pHeap->MoveData((void**)&m_pEffect->m_pShaderBlocks[i].pReflectionData->pBytecode, m_pEffect->m_pShaderBlocks[i].pReflectionData->BytecodeLength),
                  "Internal loading error: cannot move shader bytecode.");
-            for( UINT iDecl=0; iDecl < D3D11_SO_STREAM_COUNT; ++iDecl )
+            for( size_t iDecl=0; iDecl < D3D11_SO_STREAM_COUNT; ++iDecl )
             {
                 VHD( pHeap->MoveString(&m_pEffect->m_pShaderBlocks[i].pReflectionData->pStreamOutDecls[iDecl]), "Internal loading error: cannot move SO decl." );
             }
@@ -3308,43 +3330,42 @@ lExit:
 // Runtime effect reallocation code
 //////////////////////////////////////////////////////////////////////////
 
-template<class T> HRESULT CEffectLoader::ReallocateBlockAssignments(T* &pBlocks, UINT  cBlocks, T* pOldBlocks)
+template<class T> HRESULT CEffectLoader::ReallocateBlockAssignments(T* &pBlocks, uint32_t  cBlocks, T* pOldBlocks)
 {
     HRESULT hr = S_OK;
     CEffectHeap *pHeap = &m_pEffect->m_Heap;
-    UINT  i, j;
-
-    for(i=0; i<cBlocks; i++)
+    
+    for(size_t i=0; i<cBlocks; i++)
     {
         T *pBlock = &pBlocks[i];
         VHD( pHeap->MoveData((void**) &pBlock->pAssignments, sizeof(SAssignment)*pBlock->AssignmentCount), "Internal loading error: cannot move assignment count." );
 
-        for (j=0; j<pBlock->AssignmentCount; j++)
+        for (size_t j=0; j<pBlock->AssignmentCount; j++)
         {
             SAssignment *pAssignment = &pBlock->pAssignments[j];
-            UINT  cbDeps;
+            uint32_t  cbDeps;
 
             // When cloning, convert pointers back into offsets
             if( pOldBlocks )
             {
                 T *pOldBlock = &pOldBlocks[i];
-                pAssignment->Destination.Offset = (UINT)( (UINT_PTR)pAssignment->Destination.pGeneric - (UINT_PTR)pOldBlock ) ;
+                pAssignment->Destination.Offset = (uint32_t)( (UINT_PTR)pAssignment->Destination.pGeneric - (UINT_PTR)pOldBlock ) ;
             }
 
             // Convert destination pointers from offset to real pointer
-            pAssignment->Destination.pGeneric = (BYTE*) pBlock + pAssignment->Destination.Offset;
+            pAssignment->Destination.pGeneric = (uint8_t*) pBlock + pAssignment->Destination.Offset;
 
             // Make sure the data pointer points into the backing store
             VBD( pAssignment->Destination.pGeneric >= &pBlock->BackingStore && 
-                 pAssignment->Destination.pGeneric < (BYTE*) &pBlock->BackingStore + sizeof(pBlock->BackingStore), 
+                 pAssignment->Destination.pGeneric < (uint8_t*) &pBlock->BackingStore + sizeof(pBlock->BackingStore), 
                  "Internal loading error: assignment destination out of range." );
 
             // Fixup dependencies
             cbDeps = pAssignment->DependencyCount * sizeof(SAssignment::SDependency);
             VHD( pHeap->MoveData((void**) &pAssignment->pDependencies, cbDeps), "Internal loading error: cannot move assignment dependencies." );
 
-            SGlobalVariable *pOldVariable = NULL;
-            for(UINT  iDep=0; iDep<pAssignment->DependencyCount; iDep++)
+            SGlobalVariable *pOldVariable = nullptr;
+            for(size_t iDep=0; iDep<pAssignment->DependencyCount; iDep++)
             {
                 SAssignment::SDependency *pDep = &pAssignment->pDependencies[iDep];
                 // We ignore all but the last variable because below, we only use the last dependency
@@ -3380,7 +3401,7 @@ template<class T> HRESULT CEffectLoader::ReallocateBlockAssignments(T* &pBlocks,
 
             default:
                 // Non-object assignment (must have at least one dependency or it would have been pruned by now)
-                D3DXASSERT( !pAssignment->IsObjectAssignment() && pAssignment->DependencyCount > 0 );
+                assert( !pAssignment->IsObjectAssignment() && pAssignment->DependencyCount > 0 );
 
                 // Numeric variables must be relocated before this function is called
                 
@@ -3391,12 +3412,12 @@ template<class T> HRESULT CEffectLoader::ReallocateBlockAssignments(T* &pBlocks,
                     // the variable or variable array is always the last dependency in the chain
                     SGlobalVariable *pVariable;
                     pVariable = pAssignment->pDependencies[pAssignment->DependencyCount - 1].pVariable;
-                    D3DXASSERT( pVariable->pType->BelongsInConstantBuffer() && NULL != pVariable->pCB );
+                    assert( pVariable->pType->BelongsInConstantBuffer() && nullptr != pVariable->pCB );
 
                     // When cloning, convert pointers back into offsets
                     if( pOldBlocks )
                     {
-                        VBD( pOldVariable != NULL, "Internal loading error: pOldVariable is NULL." );
+                        VBD( pOldVariable != nullptr, "Internal loading error: pOldVariable is nullptr." );
                         pAssignment->Source.Offset = pAssignment->Source.pNumeric - pOldVariable->pCB->pBackingStore;
                     }
 
@@ -3406,7 +3427,7 @@ template<class T> HRESULT CEffectLoader::ReallocateBlockAssignments(T* &pBlocks,
 
                 default:
                     // Shouldn't be able to get here
-                    D3DXASSERT(0);
+                    assert(0);
                     VHD( E_FAIL, "Loading error: invalid assignment type." );
                 }
                 break;
@@ -3415,7 +3436,7 @@ template<class T> HRESULT CEffectLoader::ReallocateBlockAssignments(T* &pBlocks,
                 VHD( E_FAIL, "Loading error: invalid assignment type." );
             }
 
-            D3DXASSERT(m_pEffect->m_LocalTimer > 0);
+            assert(m_pEffect->m_LocalTimer > 0);
             m_pEffect->EvaluateAssignment(pAssignment);
         }
     }
@@ -3424,17 +3445,16 @@ lExit:
     return hr;
 }
 
-template<class T> UINT  CEffectLoader::CalculateBlockAssignmentSize(T* &pBlocks, UINT  cBlocks)
+template<class T> uint32_t  CEffectLoader::CalculateBlockAssignmentSize(T* &pBlocks, uint32_t  cBlocks)
 {
-    UINT  dwSize = 0;
-    UINT  i, j;
+    uint32_t  dwSize = 0;
 
-    for(i=0; i<cBlocks; i++)
+    for(size_t i=0; i<cBlocks; i++)
     {
         SBaseBlock *pBlock = &pBlocks[i];
         dwSize += AlignToPowerOf2(pBlock->AssignmentCount * sizeof(SAssignment), c_DataAlignment);
         
-        for (j=0; j<pBlock->AssignmentCount; j++)
+        for (size_t j=0; j<pBlock->AssignmentCount; j++)
         {
             SAssignment *pAssignment = &pBlock->pAssignments[j];
             
@@ -3448,11 +3468,10 @@ template<class T> UINT  CEffectLoader::CalculateBlockAssignmentSize(T* &pBlocks,
 HRESULT CEffectLoader::ReallocateShaderBlocks()
 {
     HRESULT hr = S_OK;
-    UINT  i, j, k;
     CEffectHeap *pHeap = &m_pEffect->m_Heap;
     const char* pError = "Internal loading error: cannot move shader data.";
     
-    for (i=0; i<m_pEffect->m_ShaderBlockCount; i++)
+    for (size_t i=0; i<m_pEffect->m_ShaderBlockCount; i++)
     {
         SShaderBlock *pShader = &m_pEffect->m_pShaderBlocks[i];
 
@@ -3464,67 +3483,67 @@ HRESULT CEffectLoader::ReallocateShaderBlocks()
         VHD( pHeap->MoveData((void**) &pShader->pUAVDeps, pShader->UAVDepCount * sizeof(SUnorderedAccessViewDependency)), pError );
         VHD( pHeap->MoveData((void**) &pShader->ppTbufDeps, pShader->TBufferDepCount * sizeof(SConstantBuffer*)), pError );
         
-        for (j=0; j<pShader->CBDepCount; j++)
+        for (size_t j=0; j<pShader->CBDepCount; j++)
         {
             SShaderCBDependency *pCBDeps = &pShader->pCBDeps[j];
             VHD( pHeap->MoveData((void**) &pCBDeps->ppD3DObjects, pCBDeps->Count * sizeof(ID3D11Buffer*)), pError );
             VHD( pHeap->MoveData((void**) &pCBDeps->ppFXPointers, pCBDeps->Count * sizeof(SConstantBuffer*)), pError );
 
-            for (k=0; k<pCBDeps->Count; k++)
+            for (size_t k=0; k<pCBDeps->Count; k++)
             {
                 VH( FixupCBPointer( &pCBDeps->ppFXPointers[k] ) );
             }
         }
 
-        for (j=0; j<pShader->SampDepCount; j++)
+        for (size_t j=0; j<pShader->SampDepCount; j++)
         {
             SShaderSamplerDependency *pSampDeps = &pShader->pSampDeps[j];
             VHD( pHeap->MoveData((void**) &pSampDeps->ppD3DObjects, pSampDeps->Count * sizeof(ID3D11SamplerState*)), pError );
             VHD( pHeap->MoveData((void**) &pSampDeps->ppFXPointers, pSampDeps->Count * sizeof(SSamplerBlock*)), pError );
 
-            for (k=0; k<pSampDeps->Count; k++)
+            for (size_t k=0; k<pSampDeps->Count; k++)
             {
                 VH( FixupSamplerPointer(&pSampDeps->ppFXPointers[k]) );
             }
         }
 
-        for (j=0; j<pShader->InterfaceDepCount; j++)
+        for (size_t j=0; j<pShader->InterfaceDepCount; j++)
         {
             SInterfaceDependency *pInterfaceDeps = &pShader->pInterfaceDeps[j];
             VHD( pHeap->MoveData((void**) &pInterfaceDeps->ppD3DObjects, pInterfaceDeps->Count * sizeof(ID3D11ClassInstance*)), pError );
             VHD( pHeap->MoveData((void**) &pInterfaceDeps->ppFXPointers, pInterfaceDeps->Count * sizeof(SInterface*)), pError );
 
-            for (k=0; k<pInterfaceDeps->Count; k++)
+            for (size_t k=0; k<pInterfaceDeps->Count; k++)
             {
                 VH( FixupInterfacePointer(&pInterfaceDeps->ppFXPointers[k], true) );
             }
         }
 
-        for (j=0; j<pShader->ResourceDepCount; j++)
+        for (size_t j=0; j<pShader->ResourceDepCount; j++)
         {
             SShaderResourceDependency *pResourceDeps = &pShader->pResourceDeps[j];
             VHD( pHeap->MoveData((void**) &pResourceDeps->ppD3DObjects, pResourceDeps->Count * sizeof(ID3D11ShaderResourceView*)), pError );
             VHD( pHeap->MoveData((void**) &pResourceDeps->ppFXPointers, pResourceDeps->Count * sizeof(SShaderResource*)), pError );
 
-            for (k=0; k<pResourceDeps->Count; k++)
+            for (size_t k=0; k<pResourceDeps->Count; k++)
             {
                 VH( FixupShaderResourcePointer(&pResourceDeps->ppFXPointers[k]) );
             }
         }
 
-        for (j=0; j<pShader->UAVDepCount; j++)
+        for (size_t j=0; j<pShader->UAVDepCount; j++)
         {
             SUnorderedAccessViewDependency *pUAVDeps = &pShader->pUAVDeps[j];
             VHD( pHeap->MoveData((void**) &pUAVDeps->ppD3DObjects, pUAVDeps->Count * sizeof(ID3D11UnorderedAccessView*)), pError );
             VHD( pHeap->MoveData((void**) &pUAVDeps->ppFXPointers, pUAVDeps->Count * sizeof(SUnorderedAccessView*)), pError );
 
-            for (k=0; k<pUAVDeps->Count; k++)
+            for (size_t k=0; k<pUAVDeps->Count; k++)
             {
                 VH( FixupUnorderedAccessViewPointer(&pUAVDeps->ppFXPointers[k]) );
             }
         }
 
-        for (j=0; j<pShader->TBufferDepCount; j++)
+        for (size_t j=0; j<pShader->TBufferDepCount; j++)
         {
             VH( FixupCBPointer( &pShader->ppTbufDeps[j] ) );
         }
@@ -3535,12 +3554,11 @@ lExit:
 }
 
 
-UINT  CEffectLoader::CalculateShaderBlockSize()
+uint32_t  CEffectLoader::CalculateShaderBlockSize()
 {
-    UINT  dwSize = 0;
-    UINT  i, j;
+    uint32_t  dwSize = 0;
     
-    for (i=0; i<m_pEffect->m_ShaderBlockCount; i++)
+    for (size_t i=0; i<m_pEffect->m_ShaderBlockCount; i++)
     {
         SShaderBlock *pShader = &m_pEffect->m_pShaderBlocks[i];
 
@@ -3551,35 +3569,35 @@ UINT  CEffectLoader::CalculateShaderBlockSize()
         dwSize += AlignToPowerOf2(pShader->UAVDepCount * sizeof(SUnorderedAccessViewDependency), c_DataAlignment);
         dwSize += AlignToPowerOf2(pShader->TBufferDepCount * sizeof(SConstantBuffer*), c_DataAlignment);
 
-        for (j=0; j<pShader->CBDepCount; j++)
+        for (size_t j=0; j<pShader->CBDepCount; j++)
         {
             SShaderCBDependency *pCBDeps = &pShader->pCBDeps[j];
             dwSize += AlignToPowerOf2(pCBDeps->Count * sizeof(ID3D11Buffer*), c_DataAlignment);
             dwSize += AlignToPowerOf2(pCBDeps->Count * sizeof(SConstantBuffer*), c_DataAlignment);
         }
 
-        for (j=0; j<pShader->SampDepCount; j++)
+        for (size_t j=0; j<pShader->SampDepCount; j++)
         {
             SShaderSamplerDependency *pSampDeps = &pShader->pSampDeps[j];
             dwSize += AlignToPowerOf2(pSampDeps->Count * sizeof(ID3D11SamplerState*), c_DataAlignment);
             dwSize += AlignToPowerOf2(pSampDeps->Count * sizeof(SSamplerBlock*), c_DataAlignment);
         }
 
-        for (j=0; j<pShader->InterfaceDepCount; j++)
+        for (size_t j=0; j<pShader->InterfaceDepCount; j++)
         {
             SInterfaceDependency *pInterfaceDeps = &pShader->pInterfaceDeps[j];
             dwSize += AlignToPowerOf2(pInterfaceDeps->Count * sizeof(ID3D11ClassInstance*), c_DataAlignment);
             dwSize += AlignToPowerOf2(pInterfaceDeps->Count * sizeof(SInterface*), c_DataAlignment);
         }
 
-        for (j=0; j<pShader->ResourceDepCount; j++)
+        for (size_t j=0; j<pShader->ResourceDepCount; j++)
         {
             SShaderResourceDependency *pResourceDeps = &pShader->pResourceDeps[j];
             dwSize += AlignToPowerOf2(pResourceDeps->Count * sizeof(ID3D11ShaderResourceView*), c_DataAlignment);
             dwSize += AlignToPowerOf2(pResourceDeps->Count * sizeof(SShaderResource*), c_DataAlignment);
         }
 
-        for (j=0; j<pShader->UAVDepCount; j++)
+        for (size_t j=0; j<pShader->UAVDepCount; j++)
         {
             SUnorderedAccessViewDependency *pUAVDeps = &pShader->pUAVDeps[j];
             dwSize += AlignToPowerOf2(pUAVDeps->Count * sizeof(ID3D11UnorderedAccessView*), c_DataAlignment);
@@ -3591,27 +3609,28 @@ UINT  CEffectLoader::CalculateShaderBlockSize()
 }
 
 // Move all (non-reflection) effect data to private heap
+#pragma warning(push)
+#pragma warning(disable: 4616 6239 )
 HRESULT CEffectLoader::ReallocateEffectData( bool Cloning )
 {
     HRESULT hr = S_OK;
-    UINT i, j;
     CEffectHeap *pHeap = &m_pEffect->m_Heap;
-    UINT cbCBs = sizeof(SConstantBuffer) * m_pEffect->m_CBCount;
-    UINT cbVariables = sizeof(SGlobalVariable) * m_pEffect->m_VariableCount;
-    UINT cbGroups = sizeof(STechnique) * m_pEffect->m_GroupCount;
-    UINT cbShaders = sizeof(SShaderBlock) * m_pEffect->m_ShaderBlockCount;
-    UINT cbDS = sizeof(SDepthStencilBlock) * m_pEffect->m_DepthStencilBlockCount;
-    UINT cbAB = sizeof(SBlendBlock) * m_pEffect->m_BlendBlockCount;
-    UINT cbRS = sizeof(SRasterizerBlock) * m_pEffect->m_RasterizerBlockCount;
-    UINT cbSamplers = sizeof(SSamplerBlock) * m_pEffect->m_SamplerBlockCount;
-    UINT cbMemberDatas = sizeof(SMemberDataPointer) * m_pEffect->m_MemberDataCount;
-    UINT cbInterfaces = sizeof(SInterface) * m_pEffect->m_InterfaceCount;
-    UINT cbBackgroundInterfaces = sizeof(SInterface) * m_BackgroundInterfaces.GetSize();
-    UINT cbShaderResources = sizeof(SShaderResource) * m_pEffect->m_ShaderResourceCount;
-    UINT cbUnorderedAccessViews = sizeof(SUnorderedAccessView) * m_pEffect->m_UnorderedAccessViewCount;
-    UINT cbRenderTargetViews = sizeof(SRenderTargetView) * m_pEffect->m_RenderTargetViewCount;
-    UINT cbDepthStencilViews = sizeof(SDepthStencilView) * m_pEffect->m_DepthStencilViewCount;
-    UINT cbAnonymousShaders = sizeof(SAnonymousShader) * m_pEffect->m_AnonymousShaderCount;
+    uint32_t cbCBs = sizeof(SConstantBuffer) * m_pEffect->m_CBCount;
+    uint32_t cbVariables = sizeof(SGlobalVariable) * m_pEffect->m_VariableCount;
+    uint32_t cbGroups = sizeof(STechnique) * m_pEffect->m_GroupCount;
+    uint32_t cbShaders = sizeof(SShaderBlock) * m_pEffect->m_ShaderBlockCount;
+    uint32_t cbDS = sizeof(SDepthStencilBlock) * m_pEffect->m_DepthStencilBlockCount;
+    uint32_t cbAB = sizeof(SBlendBlock) * m_pEffect->m_BlendBlockCount;
+    uint32_t cbRS = sizeof(SRasterizerBlock) * m_pEffect->m_RasterizerBlockCount;
+    uint32_t cbSamplers = sizeof(SSamplerBlock) * m_pEffect->m_SamplerBlockCount;
+    uint32_t cbMemberDatas = sizeof(SMemberDataPointer) * m_pEffect->m_MemberDataCount;
+    uint32_t cbInterfaces = sizeof(SInterface) * m_pEffect->m_InterfaceCount;
+    uint32_t cbBackgroundInterfaces = sizeof(SInterface) * m_BackgroundInterfaces.GetSize();
+    uint32_t cbShaderResources = sizeof(SShaderResource) * m_pEffect->m_ShaderResourceCount;
+    uint32_t cbUnorderedAccessViews = sizeof(SUnorderedAccessView) * m_pEffect->m_UnorderedAccessViewCount;
+    uint32_t cbRenderTargetViews = sizeof(SRenderTargetView) * m_pEffect->m_RenderTargetViewCount;
+    uint32_t cbDepthStencilViews = sizeof(SDepthStencilView) * m_pEffect->m_DepthStencilViewCount;
+    uint32_t cbAnonymousShaders = sizeof(SAnonymousShader) * m_pEffect->m_AnonymousShaderCount;
 
     // Calculate memory needed
     m_EffectMemory += AlignToPowerOf2(cbCBs, c_DataAlignment);
@@ -3632,20 +3651,20 @@ HRESULT CEffectLoader::ReallocateEffectData( bool Cloning )
 
     m_EffectMemory += CalculateShaderBlockSize();
 
-    for (i=0; i<m_pEffect->m_CBCount; i++)
+    for (size_t i=0; i<m_pEffect->m_CBCount; i++)
     {
         SConstantBuffer *pCB = &m_pEffect->m_pCBs[i];
 
         m_EffectMemory += AlignToPowerOf2(pCB->Size, c_DataAlignment);
     }
 
-    for (i=0; i<m_pEffect->m_GroupCount; i++)
+    for (size_t i=0; i<m_pEffect->m_GroupCount; i++)
     {
         SGroup *pGroup = &m_pEffect->m_pGroups[i];
 
         m_EffectMemory += AlignToPowerOf2(pGroup->TechniqueCount * sizeof(STechnique), c_DataAlignment);
 
-        for (j=0; j<pGroup->TechniqueCount; j++)
+        for (size_t j=0; j<pGroup->TechniqueCount; j++)
         {
             STechnique *pTech = &pGroup->pTechniques[j];
 
@@ -3669,7 +3688,7 @@ HRESULT CEffectLoader::ReallocateEffectData( bool Cloning )
     // Move CBs
     m_pOldCBs = m_pEffect->m_pCBs;
     VHD( pHeap->MoveData((void**) &m_pEffect->m_pCBs, cbCBs), "Internal loading error: cannot move CB count." );
-    for (i=0; i<m_pEffect->m_CBCount; i++)
+    for (size_t i=0; i<m_pEffect->m_CBCount; i++)
     {
         SConstantBuffer *pCB = &m_pEffect->m_pCBs[i];
 
@@ -3680,7 +3699,7 @@ HRESULT CEffectLoader::ReallocateEffectData( bool Cloning )
             // When creating the effect, MemberDataOffsetPlus4 is used, not pMemberData
             if( pCB->MemberDataOffsetPlus4 )
             {
-                pCB->pMemberData = (SMemberDataPointer*)( (BYTE*)m_pEffect->m_pMemberDataBlocks + ( pCB->MemberDataOffsetPlus4 - 4 ) );
+                pCB->pMemberData = (SMemberDataPointer*)( (uint8_t*)m_pEffect->m_pMemberDataBlocks + ( pCB->MemberDataOffsetPlus4 - 4 ) );
             }
         }
         else if (pCB->pMemberData)
@@ -3693,7 +3712,7 @@ HRESULT CEffectLoader::ReallocateEffectData( bool Cloning )
     // Move numeric variables; move all variable types
     m_pOldVars = m_pEffect->m_pVariables;
     VHD( pHeap->MoveData((void**) &m_pEffect->m_pVariables, cbVariables), "Internal loading error: cannot move variable count." );
-    for (i=0; i<m_pEffect->m_VariableCount; i++)
+    for (size_t i=0; i<m_pEffect->m_VariableCount; i++)
     {
         SGlobalVariable *pVar = &m_pEffect->m_pVariables[i];
         pVar->pEffect = m_pEffect;
@@ -3715,7 +3734,7 @@ HRESULT CEffectLoader::ReallocateEffectData( bool Cloning )
             // When creating the effect, MemberDataOffsetPlus4 is used, not pMemberData
             if( pVar->MemberDataOffsetPlus4 )
             {
-                pVar->pMemberData = (SMemberDataPointer*)( (BYTE*)m_pEffect->m_pMemberDataBlocks + ( pVar->MemberDataOffsetPlus4 - 4 ) );
+                pVar->pMemberData = (SMemberDataPointer*)( (uint8_t*)m_pEffect->m_pMemberDataBlocks + ( pVar->MemberDataOffsetPlus4 - 4 ) );
             }
         }
         else if (pVar->pMemberData)
@@ -3732,12 +3751,12 @@ HRESULT CEffectLoader::ReallocateEffectData( bool Cloning )
     }
 
     // Fixup each CB's array of child variable pointers
-    for (i=0; i<m_pEffect->m_CBCount; i++)
+    for (size_t i=0; i<m_pEffect->m_CBCount; i++)
     {
         SConstantBuffer *pCB = &m_pEffect->m_pCBs[i];
         pCB->pEffect = m_pEffect;
 
-        if (pCB->pVariables != NULL)
+        if (pCB->pVariables != nullptr)
         {
             VH( FixupVariablePointer(&pCB->pVariables) );
         }
@@ -3752,10 +3771,10 @@ HRESULT CEffectLoader::ReallocateEffectData( bool Cloning )
     m_OldInterfaceCount = m_pEffect->m_InterfaceCount;
     VHD( pHeap->MoveEmptyDataBlock((void**) &m_pEffect->m_pInterfaces, cbInterfaces + cbBackgroundInterfaces), "Internal loading error: cannot move shader." );
     memcpy( m_pEffect->m_pInterfaces, m_pOldInterfaces, cbInterfaces );
-    for( i=0; i < m_BackgroundInterfaces.GetSize(); i++ )
+    for( size_t i=0; i < m_BackgroundInterfaces.GetSize(); i++ )
     {
-        D3DXASSERT( m_BackgroundInterfaces[i] != NULL );
-        BYTE* pDst = (BYTE*)m_pEffect->m_pInterfaces  + ( m_pEffect->m_InterfaceCount * sizeof(SInterface) );
+        assert( m_BackgroundInterfaces[i] != nullptr );
+        uint8_t* pDst = (uint8_t*)m_pEffect->m_pInterfaces  + ( m_pEffect->m_InterfaceCount * sizeof(SInterface) );
         memcpy( pDst, m_BackgroundInterfaces[i], sizeof(SInterface) );
         m_pEffect->m_InterfaceCount++;
     }
@@ -3774,39 +3793,39 @@ HRESULT CEffectLoader::ReallocateEffectData( bool Cloning )
 
     m_pOldDS = m_pEffect->m_pDepthStencilBlocks;
     VHD( pHeap->MoveData((void**) &m_pEffect->m_pDepthStencilBlocks, cbDS), "Internal loading error: cannot move depth-stencil state blocks." );
-    VH( ReallocateBlockAssignments(m_pEffect->m_pDepthStencilBlocks, m_pEffect->m_DepthStencilBlockCount, Cloning ? m_pOldDS : NULL) );
+    VH( ReallocateBlockAssignments(m_pEffect->m_pDepthStencilBlocks, m_pEffect->m_DepthStencilBlockCount, Cloning ? m_pOldDS : nullptr) );
     
     m_pOldAB = m_pEffect->m_pBlendBlocks;
     VHD( pHeap->MoveData((void**) &m_pEffect->m_pBlendBlocks, cbAB), "Internal loading error: cannot move blend state blocks." );
-    VH( ReallocateBlockAssignments(m_pEffect->m_pBlendBlocks, m_pEffect->m_BlendBlockCount, Cloning ? m_pOldAB : NULL) );
+    VH( ReallocateBlockAssignments(m_pEffect->m_pBlendBlocks, m_pEffect->m_BlendBlockCount, Cloning ? m_pOldAB : nullptr) );
 
     m_pOldRS = m_pEffect->m_pRasterizerBlocks;
     VHD( pHeap->MoveData((void**) &m_pEffect->m_pRasterizerBlocks, cbRS), "Internal loading error: cannot move rasterizer state blocks." );
-    VH( ReallocateBlockAssignments(m_pEffect->m_pRasterizerBlocks, m_pEffect->m_RasterizerBlockCount, Cloning ? m_pOldRS : NULL) );
+    VH( ReallocateBlockAssignments(m_pEffect->m_pRasterizerBlocks, m_pEffect->m_RasterizerBlockCount, Cloning ? m_pOldRS : nullptr) );
 
     m_pOldSamplers = m_pEffect->m_pSamplerBlocks;
     VHD( pHeap->MoveData((void**) &m_pEffect->m_pSamplerBlocks, cbSamplers), "Internal loading error: cannot move samplers." );
-    VH( ReallocateBlockAssignments(m_pEffect->m_pSamplerBlocks, m_pEffect->m_SamplerBlockCount, Cloning ? m_pOldSamplers : NULL) );
+    VH( ReallocateBlockAssignments(m_pEffect->m_pSamplerBlocks, m_pEffect->m_SamplerBlockCount, Cloning ? m_pOldSamplers : nullptr) );
     
     // Fixup sampler backing stores
-    for (i=0; i<m_pEffect->m_SamplerBlockCount; ++i)
+    for (size_t i=0; i<m_pEffect->m_SamplerBlockCount; ++i)
     {
         VH( FixupShaderResourcePointer(&m_pEffect->m_pSamplerBlocks[i].BackingStore.pTexture) );
     }
 
     // Fixup each interface's class instance variable pointer
-    for (i=0; i<m_pEffect->m_InterfaceCount; i++)
+    for (size_t i=0; i<m_pEffect->m_InterfaceCount; i++)
     {
         SInterface *pInterface = &m_pEffect->m_pInterfaces[i];
 
-        if (pInterface->pClassInstance != NULL)
+        if (pInterface->pClassInstance != nullptr)
         {
             VH( FixupVariablePointer( (SGlobalVariable**)&pInterface->pClassInstance ) );
         }
     }
 
     // Fixup pointers for non-numeric variables
-    for (i=0; i<m_pEffect->m_VariableCount; i++)
+    for (size_t i=0; i<m_pEffect->m_VariableCount; i++)
     {
         SGlobalVariable *pVar = &m_pEffect->m_pVariables[i];
 
@@ -3880,7 +3899,7 @@ HRESULT CEffectLoader::ReallocateEffectData( bool Cloning )
     }
 
     // Fixup created members
-    for (i = 0; i < m_pEffect->m_pMemberInterfaces.GetSize(); ++ i)
+    for (size_t i = 0; i < m_pEffect->m_pMemberInterfaces.GetSize(); ++ i)
     {
         SMember* pMember = m_pEffect->m_pMemberInterfaces[i];
         SGlobalVariable** ppTopLevelEntity = (SGlobalVariable**)&pMember->pTopLevelEntity;
@@ -3893,12 +3912,12 @@ HRESULT CEffectLoader::ReallocateEffectData( bool Cloning )
         {
             if( pMember->pType->BelongsInConstantBuffer() )
             {
-                D3DXASSERT( pMember->Data.pGeneric == NULL || (*ppTopLevelEntity)->pEffect->m_Heap.IsInHeap(pMember->Data.pGeneric) );
-                pMember->Data.Offset = (UINT)( (BYTE*)pMember->Data.pGeneric - (BYTE*)(*ppTopLevelEntity)->pCB->pBackingStore );
+                assert( pMember->Data.pGeneric == nullptr || (*ppTopLevelEntity)->pEffect->m_Heap.IsInHeap(pMember->Data.pGeneric) );
+                pMember->Data.Offset = (uint32_t)( (uint8_t*)pMember->Data.pGeneric - (uint8_t*)(*ppTopLevelEntity)->pCB->pBackingStore );
             }
             if( bGlobalMemberDataBlock && pMember->pMemberData )
             {
-                pMember->MemberDataOffsetPlus4 = (UINT)( (BYTE*)pMember->pMemberData - (BYTE*)(*ppTopLevelEntity)->pEffect->m_pMemberDataBlocks ) + 4;
+                pMember->MemberDataOffsetPlus4 = (uint32_t)( (uint8_t*)pMember->pMemberData - (uint8_t*)(*ppTopLevelEntity)->pEffect->m_pMemberDataBlocks ) + 4;
             }
         }
 
@@ -3911,7 +3930,7 @@ HRESULT CEffectLoader::ReallocateEffectData( bool Cloning )
         }
         if( bGlobalMemberDataBlock && pMember->MemberDataOffsetPlus4 )
         {
-            pMember->pMemberData = (SMemberDataPointer*)( (BYTE*)m_pEffect->m_pMemberDataBlocks + ( pMember->MemberDataOffsetPlus4 - 4 ) );
+            pMember->pMemberData = (SMemberDataPointer*)( (uint8_t*)m_pEffect->m_pMemberDataBlocks + ( pMember->MemberDataOffsetPlus4 - 4 ) );
         }
     }
 
@@ -3921,25 +3940,24 @@ HRESULT CEffectLoader::ReallocateEffectData( bool Cloning )
     // Move groups, techniques, and passes
     m_pOldGroups = m_pEffect->m_pGroups;
     VHD( pHeap->MoveData((void**) &m_pEffect->m_pGroups, cbGroups), "Internal loading error: cannot move groups." );
-    for (i=0; i<m_pEffect->m_GroupCount; i++)
+    for (size_t i=0; i<m_pEffect->m_GroupCount; i++)
     {
         SGroup *pGroup = &m_pEffect->m_pGroups[i];
-        UINT  cbTechniques;
+        uint32_t  cbTechniques;
 
         cbTechniques = pGroup->TechniqueCount * sizeof(STechnique);
         VHD( pHeap->MoveData((void**) &pGroup->pTechniques, cbTechniques), "Internal loading error: cannot move techniques." );
 
-        for (j=0; j<pGroup->TechniqueCount; j++)
+        for (size_t j=0; j<pGroup->TechniqueCount; j++)
         {
             STechnique *pTech = &pGroup->pTechniques[j];
-            UINT  cbPass;
-            UINT  iPass;
+            uint32_t  cbPass;
 
             cbPass = pTech->PassCount * sizeof(SPassBlock);
-            SPassBlock* pOldPasses = Cloning ? pTech->pPasses : NULL;
+            SPassBlock* pOldPasses = Cloning ? pTech->pPasses : nullptr;
             VHD( pHeap->MoveData((void**) &pTech->pPasses, cbPass), "Internal loading error: cannot move passes." );
 
-            for (iPass = 0; iPass < pTech->PassCount; ++ iPass)
+            for (size_t iPass = 0; iPass < pTech->PassCount; ++ iPass)
             {
                 pTech->pPasses[iPass].pEffect = m_pEffect;
 
@@ -3954,7 +3972,7 @@ HRESULT CEffectLoader::ReallocateEffectData( bool Cloning )
                 VH( FixupShaderPointer((SShaderBlock**) &pTech->pPasses[iPass].BackingStore.pDomainShaderBlock) );
                 VH( FixupShaderPointer((SShaderBlock**) &pTech->pPasses[iPass].BackingStore.pComputeShaderBlock) );
                 VH( FixupDepthStencilViewPointer( &pTech->pPasses[iPass].BackingStore.pDepthStencilView) );
-                for (UINT iRT = 0; iRT < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; iRT++)
+                for (size_t iRT = 0; iRT < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; iRT++)
                 {
                     VH( FixupRenderTargetViewPointer( &pTech->pPasses[iPass].BackingStore.pRenderTargetViews[iRT] ) );
                 }
@@ -3967,7 +3985,7 @@ HRESULT CEffectLoader::ReallocateEffectData( bool Cloning )
 
     // Move anonymous shader variables
     VHD( pHeap->MoveData((void **) &m_pEffect->m_pAnonymousShaders, cbAnonymousShaders), "Internal loading error: cannot move anonymous shaders." );
-    for (i=0; i<m_pEffect->m_AnonymousShaderCount; ++i)
+    for (size_t i=0; i<m_pEffect->m_AnonymousShaderCount; ++i)
     {
         SAnonymousShader *pAnonymousShader = m_pEffect->m_pAnonymousShaders + i;
         VH( FixupShaderPointer((SShaderBlock**) &pAnonymousShader->pShaderBlock) );
@@ -3978,5 +3996,6 @@ HRESULT CEffectLoader::ReallocateEffectData( bool Cloning )
 lExit:
     return hr;
 }
+#pragma warning(pop)
 
 }

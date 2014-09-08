@@ -1,18 +1,26 @@
-//////////////////////////////////////////////////////////////////////////////
+//--------------------------------------------------------------------------------------
+// File: SOParser.h
 //
-//  Copyright (C) Microsoft Corporation.  All Rights Reserved.
+// Direct3D 11 Effects Stream Out Decl Parser
 //
-//  File:       SOParser.h
-//  Content:    D3DX11 Effects Stream Out Decl Parser
+// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+// PARTICULAR PURPOSE.
 //
-//////////////////////////////////////////////////////////////////////////////
+// Copyright (c) Microsoft Corporation. All rights reserved.
+//
+// http://go.microsoft.com/fwlink/p/?LinkId=271568
+//--------------------------------------------------------------------------------------
 
 #pragma once
 
+#include <stdio.h>
+#include <string.h>
+
 namespace D3DX11Effects
 {
-
-
+    
 //////////////////////////////////////////////////////////////////////////
 // CSOParser
 //////////////////////////////////////////////////////////////////////////
@@ -24,7 +32,7 @@ class CSOParser
     D3D11_SO_DECLARATION_ENTRY                  m_newEntry;                                     // Currently parsing entry
     LPSTR                                       m_SemanticString[D3D11_SO_BUFFER_SLOT_COUNT];   // Copy of strings
 
-    static const UINT MAX_ERROR_SIZE = 254;
+    static const size_t MAX_ERROR_SIZE = 254;
     char                                        m_pError[ MAX_ERROR_SIZE + 1 ];                 // Error buffer
 
 public:
@@ -37,33 +45,33 @@ public:
 
     ~CSOParser()
     {
-        for( UINT Stream = 0; Stream < D3D11_SO_STREAM_COUNT; Stream++ )
+        for( size_t Stream = 0; Stream < D3D11_SO_STREAM_COUNT; ++Stream )
         {
             SAFE_DELETE_ARRAY( m_SemanticString[Stream] );
         }
     }
 
     // Parse a single string, assuming stream 0
-    HRESULT Parse( __in_z LPCSTR pString )
+    HRESULT Parse( _In_z_ LPCSTR pString )
     {
         m_vDecls.Clear();
         return Parse( 0, pString );
     }
 
     // Parse all 4 streams
-    HRESULT Parse( __in_z LPSTR pStreams[D3D11_SO_STREAM_COUNT] )
+    HRESULT Parse( _In_z_ LPSTR pStreams[D3D11_SO_STREAM_COUNT] )
     {
         HRESULT hr = S_OK;
         m_vDecls.Clear();
-        for( UINT iDecl=0; iDecl < D3D11_SO_STREAM_COUNT; ++iDecl )
+        for( uint32_t iDecl=0; iDecl < D3D11_SO_STREAM_COUNT; ++iDecl )
         {
             hr = Parse( iDecl, pStreams[iDecl] );
             if( FAILED(hr) )
             {
-                char pStream[16];
-                StringCchPrintfA( pStream, 16, " in stream %d.", iDecl );
-                pStream[15] = 0;
-                StringCchCatA( m_pError, MAX_ERROR_SIZE, pStream );
+                char str[16];
+                sprintf_s( str, 16, " in stream %u.", iDecl );
+                str[15] = 0;
+                strcat_s( m_pError, MAX_ERROR_SIZE, str );
                 return hr;
             }
         }
@@ -81,18 +89,18 @@ public:
         return m_pError;
     }
 
-    UINT GetDeclCount() const
+    uint32_t GetDeclCount() const
     {
         return m_vDecls.GetSize();
     }
 
     // Return resulting buffer strides
-    void GetStrides( UINT strides[4] )
+    void GetStrides( uint32_t strides[4] )
     {
-        UINT len = GetDeclCount();
+        size_t  len = GetDeclCount();
         strides[0] = strides[1] = strides[2] = strides[3] = 0;
 
-        for( UINT i=0; i < len; i++ )
+        for( size_t  i=0; i < len; i++ )
         {
             strides[m_vDecls[i].OutputSlot] += m_vDecls[i].ComponentCount * sizeof(float);
         }
@@ -101,33 +109,33 @@ public:
 protected:
 
     // Parse a single string "[<slot> :] <semantic>[<index>][.<mask>]; [[<slot> :] <semantic>[<index>][.<mask>][;]]"
-    HRESULT Parse( UINT Stream, __in_z LPCSTR pString )
+    HRESULT Parse( _In_ uint32_t Stream, _In_z_ LPCSTR pString )
     {
         HRESULT hr = S_OK;
 
         m_pError[0] = 0;
 
-        if( pString == NULL )
+        if( pString == nullptr )
             return S_OK;
 
-        UINT len = (UINT)strlen( pString );
+        uint32_t len = (uint32_t)strlen( pString );
         if( len == 0 )
             return S_OK;
 
         SAFE_DELETE_ARRAY( m_SemanticString[Stream] );
-        VN( m_SemanticString[Stream] = NEW char[len + 1] );
-        StringCchCopyA( m_SemanticString[Stream], len + 1, pString );
+        VN( m_SemanticString[Stream] = new char[len + 1] );
+        strcpy_s( m_SemanticString[Stream], len + 1, pString );
 
         LPSTR pSemantic = m_SemanticString[Stream];
 
-        while( TRUE )
+        while( true )
         {
             // Each decl entry is delimited by a semi-colon
             LPSTR pSemi = strchr( pSemantic, ';' );
 
             // strip leading and trailing spaces
             LPSTR pEnd;
-            if( pSemi != NULL )
+            if( pSemi != nullptr )
             {
                 *pSemi = '\0';
                 pEnd = pSemi - 1;
@@ -151,7 +159,7 @@ protected:
 
                 VH( m_vDecls.Add( m_newEntry ) );
             }
-            if( pSemi == NULL )
+            if( pSemi == nullptr )
                 break;
             pSemantic = pSemi + 1;
         }
@@ -161,11 +169,11 @@ lExit:
     }
 
     // Parse a single decl  "[<slot> :] <semantic>[<index>][.<mask>]"
-    HRESULT AddSemantic( __inout_z LPSTR pSemantic )
+    HRESULT AddSemantic( _Inout_z_ LPSTR pSemantic )
     {
         HRESULT hr = S_OK;
 
-        D3DXASSERT( pSemantic );
+        assert( pSemantic );
 
         ZeroMemory( &m_newEntry, sizeof(m_newEntry) );
         VH( ConsumeOutputSlot( &pSemantic ) );
@@ -183,20 +191,20 @@ lExit:
     }
 
     // Parse optional mask "[.<mask>]"
-    HRESULT ConsumeRegisterMask( __inout_z LPSTR pSemantic )
+    HRESULT ConsumeRegisterMask( _Inout_z_ LPSTR pSemantic )
     {
         HRESULT hr = S_OK;
         const char *pFullMask1 = "xyzw";
         const char *pFullMask2 = "rgba";
-        SIZE_T stringLength;
-        SIZE_T startComponent = 0;
+        size_t stringLength;
+        size_t startComponent = 0;
         LPCSTR p;
 
-        D3DXASSERT( pSemantic );
+        assert( pSemantic );
 
         pSemantic = strchr( pSemantic, '.' ); 
 
-        if( pSemantic == NULL )
+        if( pSemantic == nullptr )
         {
             m_newEntry.ComponentCount = 4;
             return S_OK;
@@ -209,16 +217,16 @@ lExit:
         p = strstr(pFullMask1, pSemantic );
         if( p )
         {
-            startComponent = (UINT)( p - pFullMask1 );
+            startComponent = (uint32_t)( p - pFullMask1 );
         }
         else
         {
             p = strstr( pFullMask2, pSemantic );
             if( p )
-                startComponent = (UINT)( p - pFullMask2 );
+                startComponent = (uint32_t)( p - pFullMask2 );
             else
             {
-                StringCchPrintfA( m_pError, MAX_ERROR_SIZE, "ID3D11Effect::ParseSODecl - invalid mask declaration '%s'", pSemantic );
+                sprintf_s( m_pError, MAX_ERROR_SIZE, "ID3D11Effect::ParseSODecl - invalid mask declaration '%s'", pSemantic );
                 VH( E_FAIL );
             }
 
@@ -227,27 +235,28 @@ lExit:
         if( stringLength == 0 )
             stringLength = 4;
 
-        m_newEntry.StartComponent = (BYTE)startComponent;
-        m_newEntry.ComponentCount = (BYTE)stringLength;
+        m_newEntry.StartComponent = (uint8_t)startComponent;
+        m_newEntry.ComponentCount = (uint8_t)stringLength;
 
 lExit:
         return hr;
     }
 
     // Parse optional output slot "[<slot> :]"
-    HRESULT ConsumeOutputSlot( __deref_inout_z LPSTR* ppSemantic )
+    HRESULT ConsumeOutputSlot( _Inout_z_ LPSTR* ppSemantic )
     {
-        D3DXASSERT( ppSemantic && *ppSemantic );
+        assert( ppSemantic && *ppSemantic );
+        _Analysis_assume_( ppSemantic && *ppSemantic );
 
         HRESULT hr = S_OK;
         LPSTR pColon = strchr( *ppSemantic, ':' ); 
 
-        if( pColon == NULL )
+        if( pColon == nullptr )
             return S_OK;
 
         if( pColon == *ppSemantic )
         {
-            StringCchCopyA( m_pError, MAX_ERROR_SIZE,
+            strcpy_s( m_pError, MAX_ERROR_SIZE,
                            "ID3D11Effect::ParseSODecl - Invalid output slot" );
             VH( E_FAIL );
         }
@@ -256,17 +265,17 @@ lExit:
         int outputSlot = atoi( *ppSemantic );
         if( outputSlot < 0 || outputSlot > 255 )
         {
-            StringCchCopyA( m_pError, MAX_ERROR_SIZE,
+            strcpy_s( m_pError, MAX_ERROR_SIZE,
                            "ID3D11Effect::ParseSODecl - Invalid output slot" );
             VH( E_FAIL );
         }
-        m_newEntry.OutputSlot = (BYTE)outputSlot;
+        m_newEntry.OutputSlot = (uint8_t)outputSlot;
 
         while( *ppSemantic < pColon )
         {
             if( !isdigit( (unsigned char)**ppSemantic ) )
             {
-                StringCchPrintfA( m_pError, MAX_ERROR_SIZE, "ID3D11Effect::ParseSODecl - Non-digit '%c' in output slot", **ppSemantic );
+                sprintf_s( m_pError, MAX_ERROR_SIZE, "ID3D11Effect::ParseSODecl - Non-digit '%c' in output slot", **ppSemantic );
                 VH( E_FAIL );
             }
             (*ppSemantic)++;
@@ -283,11 +292,11 @@ lExit:
     }
 
     // Parse optional index "[<index>]"
-    HRESULT ConsumeSemanticIndex( __inout_z LPSTR pSemantic )
+    HRESULT ConsumeSemanticIndex( _Inout_z_ LPSTR pSemantic )
     {
-        D3DXASSERT( pSemantic );
+        assert( pSemantic );
 
-        UINT uLen = (UINT)strlen( pSemantic );
+        uint32_t uLen = (uint32_t)strlen( pSemantic );
 
         // Grab semantic index
         while( uLen > 0 && isdigit( (unsigned char)pSemantic[uLen - 1] ) )
@@ -306,6 +315,5 @@ lExit:
         return S_OK;
     }
 };
-
 
 } // end namespace D3DX11Effects

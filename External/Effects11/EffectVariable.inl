@@ -1,12 +1,21 @@
-//////////////////////////////////////////////////////////////////////////////
+//--------------------------------------------------------------------------------------
+// File: EffectVariable.inl
 //
-//  Copyright (C) Microsoft Corporation.  All Rights Reserved.
+// Direct3D 11 Effects Variable reflection template
+// These templates define the many Effect variable types.
 //
-//  File:       EffectVariable.inl
-//  Content:    D3DX11 Effects Variable reflection template
-//              These templates define the many Effect variable types.
+// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+// PARTICULAR PURPOSE.
 //
-//////////////////////////////////////////////////////////////////////////////
+// Copyright (c) Microsoft Corporation. All rights reserved.
+//
+// http://go.microsoft.com/fwlink/p/?LinkId=271568
+//--------------------------------------------------------------------------------------
+
+#pragma warning(push)
+#pragma warning(disable : 4127)
 
 //////////////////////////////////////////////////////////////////////////
 // Invalid variable forward defines
@@ -56,7 +65,8 @@ enum ETemplateVarType
 {
     ETVT_Bool,
     ETVT_Int,
-    ETVT_Float
+    ETVT_Float,
+    ETVT_bool
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -65,136 +75,169 @@ enum ETemplateVarType
 
 struct SEffectInvalidType : public ID3DX11EffectType
 {
-    STDMETHOD_(BOOL, IsValid)() { return FALSE; }
-    STDMETHOD(GetDesc)(D3DX11_EFFECT_TYPE_DESC *pDesc) { return E_FAIL; }
-    STDMETHOD_(ID3DX11EffectType*, GetMemberTypeByIndex)(UINT Index) { return &g_InvalidType; }
-    STDMETHOD_(ID3DX11EffectType*, GetMemberTypeByName)(LPCSTR Name) { return &g_InvalidType; }
-    STDMETHOD_(ID3DX11EffectType*, GetMemberTypeBySemantic)(LPCSTR Semanti) { return &g_InvalidType; }
-    STDMETHOD_(LPCSTR, GetMemberName)(UINT Index) { return NULL; }
-    STDMETHOD_(LPCSTR, GetMemberSemantic)(UINT Index) { return NULL; }
+    STDMETHOD_(bool, IsValid)() override { return false; }
+    STDMETHOD(GetDesc)(_Out_ D3DX11_EFFECT_TYPE_DESC *pDesc) override { UNREFERENCED_PARAMETER(pDesc); return E_FAIL; }
+    STDMETHOD_(ID3DX11EffectType*, GetMemberTypeByIndex)(_In_ uint32_t Index) override { UNREFERENCED_PARAMETER(Index); return &g_InvalidType; }
+    STDMETHOD_(ID3DX11EffectType*, GetMemberTypeByName)(_In_z_ LPCSTR Name) override { UNREFERENCED_PARAMETER(Name); return &g_InvalidType; }
+    STDMETHOD_(ID3DX11EffectType*, GetMemberTypeBySemantic)(_In_z_ LPCSTR Semantic) override { UNREFERENCED_PARAMETER(Semantic); return &g_InvalidType; }
+    STDMETHOD_(LPCSTR, GetMemberName)(_In_ uint32_t Index) override { UNREFERENCED_PARAMETER(Index); return nullptr; }
+    STDMETHOD_(LPCSTR, GetMemberSemantic)(_In_ uint32_t Index) override { UNREFERENCED_PARAMETER(Index); return nullptr; }
+    IUNKNOWN_IMP(SEffectInvalidType, ID3DX11EffectType, IUnknown);
 };
 
 template<typename IBaseInterface>
 struct TEffectInvalidVariable : public IBaseInterface
 {
 public:
-    STDMETHOD_(BOOL, IsValid)() { return FALSE; }
-    STDMETHOD_(ID3DX11EffectType*, GetType)() { return &g_InvalidType; }
-    STDMETHOD(GetDesc)(D3DX11_EFFECT_VARIABLE_DESC *pDesc) { return E_FAIL; }
+    STDMETHOD_(bool, IsValid)() override { return false; }
+    STDMETHOD_(ID3DX11EffectType*, GetType)() override { return &g_InvalidType; }
+    STDMETHOD(GetDesc)(_Out_ D3DX11_EFFECT_VARIABLE_DESC *pDesc) override { UNREFERENCED_PARAMETER(pDesc); return E_FAIL; }
 
-    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByIndex)(UINT Index) { return &g_InvalidScalarVariable; }
-    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByName)(LPCSTR Name) { return &g_InvalidScalarVariable; }
+    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByIndex)(_In_ uint32_t Index) override { UNREFERENCED_PARAMETER(Index); return &g_InvalidScalarVariable; }
+    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByName)(_In_z_ LPCSTR Name) override { UNREFERENCED_PARAMETER(Name); return &g_InvalidScalarVariable; }
 
-    STDMETHOD_(ID3DX11EffectVariable*, GetMemberByIndex)(UINT Index) { return &g_InvalidScalarVariable; }
-    STDMETHOD_(ID3DX11EffectVariable*, GetMemberByName)(LPCSTR Name) { return &g_InvalidScalarVariable; }
-    STDMETHOD_(ID3DX11EffectVariable*, GetMemberBySemantic)(LPCSTR Semantic) { return &g_InvalidScalarVariable; }
+    STDMETHOD_(ID3DX11EffectVariable*, GetMemberByIndex)(_In_ uint32_t Index) override { UNREFERENCED_PARAMETER(Index); return &g_InvalidScalarVariable; }
+    STDMETHOD_(ID3DX11EffectVariable*, GetMemberByName)(_In_z_ LPCSTR Name) override { UNREFERENCED_PARAMETER(Name); return &g_InvalidScalarVariable; }
+    STDMETHOD_(ID3DX11EffectVariable*, GetMemberBySemantic)(_In_z_ LPCSTR Semantic) override { UNREFERENCED_PARAMETER(Semantic); return &g_InvalidScalarVariable; }
 
-    STDMETHOD_(ID3DX11EffectVariable*, GetElement)(UINT Index) { return &g_InvalidScalarVariable; }
+    STDMETHOD_(ID3DX11EffectVariable*, GetElement)(_In_ uint32_t Index) override { UNREFERENCED_PARAMETER(Index); return &g_InvalidScalarVariable; }
 
-    STDMETHOD_(ID3DX11EffectConstantBuffer*, GetParentConstantBuffer)() { return &g_InvalidConstantBuffer; }
+    STDMETHOD_(ID3DX11EffectConstantBuffer*, GetParentConstantBuffer)() override { return &g_InvalidConstantBuffer; }
 
-    STDMETHOD_(ID3DX11EffectScalarVariable*, AsScalar)() { return &g_InvalidScalarVariable; }
-    STDMETHOD_(ID3DX11EffectVectorVariable*, AsVector)() { return &g_InvalidVectorVariable; }
-    STDMETHOD_(ID3DX11EffectMatrixVariable*, AsMatrix)() { return &g_InvalidMatrixVariable; }
-    STDMETHOD_(ID3DX11EffectStringVariable*, AsString)() { return &g_InvalidStringVariable; }
-    STDMETHOD_(ID3DX11EffectClassInstanceVariable*, AsClassInstance)() { return &g_InvalidClassInstanceVariable; }
-    STDMETHOD_(ID3DX11EffectInterfaceVariable*, AsInterface)() { return &g_InvalidInterfaceVariable; }
-    STDMETHOD_(ID3DX11EffectShaderResourceVariable*, AsShaderResource)() { return &g_InvalidShaderResourceVariable; }
-    STDMETHOD_(ID3DX11EffectUnorderedAccessViewVariable*, AsUnorderedAccessView)() { return &g_InvalidUnorderedAccessViewVariable; }
-    STDMETHOD_(ID3DX11EffectRenderTargetViewVariable*, AsRenderTargetView)() { return &g_InvalidRenderTargetViewVariable; }
-    STDMETHOD_(ID3DX11EffectDepthStencilViewVariable*, AsDepthStencilView)() { return &g_InvalidDepthStencilViewVariable; }
-    STDMETHOD_(ID3DX11EffectConstantBuffer*, AsConstantBuffer)() { return &g_InvalidConstantBuffer; }
-    STDMETHOD_(ID3DX11EffectShaderVariable*, AsShader)() { return &g_InvalidShaderVariable; }
-    STDMETHOD_(ID3DX11EffectBlendVariable*, AsBlend)() { return &g_InvalidBlendVariable; }
-    STDMETHOD_(ID3DX11EffectDepthStencilVariable*, AsDepthStencil)() { return &g_InvalidDepthStencilVariable; }
-    STDMETHOD_(ID3DX11EffectRasterizerVariable*, AsRasterizer)() { return &g_InvalidRasterizerVariable; }
-    STDMETHOD_(ID3DX11EffectSamplerVariable*, AsSampler)() { return &g_InvalidSamplerVariable; }
+    STDMETHOD_(ID3DX11EffectScalarVariable*, AsScalar)() override { return &g_InvalidScalarVariable; }
+    STDMETHOD_(ID3DX11EffectVectorVariable*, AsVector)() override { return &g_InvalidVectorVariable; }
+    STDMETHOD_(ID3DX11EffectMatrixVariable*, AsMatrix)() override { return &g_InvalidMatrixVariable; }
+    STDMETHOD_(ID3DX11EffectStringVariable*, AsString)() override { return &g_InvalidStringVariable; }
+    STDMETHOD_(ID3DX11EffectClassInstanceVariable*, AsClassInstance)() override { return &g_InvalidClassInstanceVariable; }
+    STDMETHOD_(ID3DX11EffectInterfaceVariable*, AsInterface)() override { return &g_InvalidInterfaceVariable; }
+    STDMETHOD_(ID3DX11EffectShaderResourceVariable*, AsShaderResource)() override { return &g_InvalidShaderResourceVariable; }
+    STDMETHOD_(ID3DX11EffectUnorderedAccessViewVariable*, AsUnorderedAccessView)() override { return &g_InvalidUnorderedAccessViewVariable; }
+    STDMETHOD_(ID3DX11EffectRenderTargetViewVariable*, AsRenderTargetView)() override { return &g_InvalidRenderTargetViewVariable; }
+    STDMETHOD_(ID3DX11EffectDepthStencilViewVariable*, AsDepthStencilView)() override { return &g_InvalidDepthStencilViewVariable; }
+    STDMETHOD_(ID3DX11EffectConstantBuffer*, AsConstantBuffer)() override { return &g_InvalidConstantBuffer; }
+    STDMETHOD_(ID3DX11EffectShaderVariable*, AsShader)() override { return &g_InvalidShaderVariable; }
+    STDMETHOD_(ID3DX11EffectBlendVariable*, AsBlend)() override { return &g_InvalidBlendVariable; }
+    STDMETHOD_(ID3DX11EffectDepthStencilVariable*, AsDepthStencil)() override { return &g_InvalidDepthStencilVariable; }
+    STDMETHOD_(ID3DX11EffectRasterizerVariable*, AsRasterizer)() override { return &g_InvalidRasterizerVariable; }
+    STDMETHOD_(ID3DX11EffectSamplerVariable*, AsSampler)() override { return &g_InvalidSamplerVariable; }
 
-    STDMETHOD(SetRawValue)(CONST void *pData, UINT  Offset, UINT  Count) { return E_FAIL; }
-    STDMETHOD(GetRawValue)(void *pData, UINT  Offset, UINT  Count) { return E_FAIL; }
+    STDMETHOD(SetRawValue)(_In_reads_bytes_(Count) const void *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
+    STDMETHOD(GetRawValue)(_Out_writes_bytes_(Count) void *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
 };
 
 struct SEffectInvalidScalarVariable : public TEffectInvalidVariable<ID3DX11EffectScalarVariable>
 {
 public:
 
-    STDMETHOD(SetFloat)(CONST float Value) { return E_FAIL; }
-    STDMETHOD(GetFloat)(float *pValue) { return E_FAIL; }
+    STDMETHOD(SetFloat)(_In_ const float Value) override { UNREFERENCED_PARAMETER(Value); return E_FAIL; }
+    STDMETHOD(GetFloat)(_Out_ float *pValue) override { UNREFERENCED_PARAMETER(pValue); return E_FAIL; }
 
-    STDMETHOD(SetFloatArray)(CONST float *pData, UINT  Offset, UINT  Count) { return E_FAIL; }
-    STDMETHOD(GetFloatArray)(float *pData, UINT  Offset, UINT  Count) { return E_FAIL; }
+    STDMETHOD(SetFloatArray)(_In_reads_(Count) const float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
+    STDMETHOD(GetFloatArray)(_Out_writes_(Count) float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
 
-    STDMETHOD(SetInt)(CONST int Value) { return E_FAIL; }
-    STDMETHOD(GetInt)(int *pValue) { return E_FAIL; }
+    STDMETHOD(SetInt)(_In_ const int Value) override { UNREFERENCED_PARAMETER(Value); return E_FAIL; }
+    STDMETHOD(GetInt)(_Out_ int *pValue) override { UNREFERENCED_PARAMETER(pValue); return E_FAIL; }
 
-    STDMETHOD(SetIntArray)(CONST int *pData, UINT  Offset, UINT  Count) { return E_FAIL; }
-    STDMETHOD(GetIntArray)(int *pData, UINT  Offset, UINT  Count) { return E_FAIL; }
+    STDMETHOD(SetIntArray)(_In_reads_(Count) const int *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
+    STDMETHOD(GetIntArray)(_Out_writes_(Count) int *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
 
-    STDMETHOD(SetBool)(CONST BOOL Value) { return E_FAIL; }
-    STDMETHOD(GetBool)(BOOL *pValue) { return E_FAIL; }
+    STDMETHOD(SetBool)(_In_ const bool Value) override { UNREFERENCED_PARAMETER(Value); return E_FAIL; }
+    STDMETHOD(GetBool)(_Out_ bool *pValue) override { UNREFERENCED_PARAMETER(pValue); return E_FAIL; }
 
-    STDMETHOD(SetBoolArray)(CONST BOOL *pData, UINT  Offset, UINT  Count) { return E_FAIL; }
-    STDMETHOD(GetBoolArray)(BOOL *pData, UINT  Offset, UINT  Count) { return E_FAIL; }
+    STDMETHOD(SetBoolArray)(_In_reads_(Count) const bool *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
+    STDMETHOD(GetBoolArray)(_Out_writes_(Count) bool *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
+
+    IUNKNOWN_IMP(SEffectInvalidScalarVariable, ID3DX11EffectScalarVariable, ID3DX11EffectVariable);
 };
 
 
 struct SEffectInvalidVectorVariable : public TEffectInvalidVariable<ID3DX11EffectVectorVariable>
 {
 public:
-    STDMETHOD(SetFloatVector)(CONST float *pData) { return E_FAIL; };
-    STDMETHOD(SetIntVector)(CONST int *pData) { return E_FAIL; };
-    STDMETHOD(SetBoolVector)(CONST BOOL *pData) { return E_FAIL; };
+    STDMETHOD(SetFloatVector)(_In_reads_(4) const float *pData) override { UNREFERENCED_PARAMETER(pData); return E_FAIL; };
+    STDMETHOD(SetIntVector)(_In_reads_(4) const int *pData) override { UNREFERENCED_PARAMETER(pData); return E_FAIL; };
+    STDMETHOD(SetBoolVector)(_In_reads_(4) const bool *pData) override { UNREFERENCED_PARAMETER(pData); return E_FAIL; };
 
-    STDMETHOD(GetFloatVector)(float *pData) { return E_FAIL; };
-    STDMETHOD(GetIntVector)(int *pData) { return E_FAIL; };
-    STDMETHOD(GetBoolVector)(BOOL *pData) { return E_FAIL; };
+    STDMETHOD(GetFloatVector)(_Out_writes_(4) float *pData) override { UNREFERENCED_PARAMETER(pData); return E_FAIL; };
+    STDMETHOD(GetIntVector)(_Out_writes_(4) int *pData) override { UNREFERENCED_PARAMETER(pData); return E_FAIL; };
+    STDMETHOD(GetBoolVector)(_Out_writes_(4) bool *pData) override { UNREFERENCED_PARAMETER(pData); return E_FAIL; };
 
-    STDMETHOD(SetBoolVectorArray) (CONST BOOL *pData, UINT Offset, UINT Count) { return E_FAIL; };
-    STDMETHOD(SetIntVectorArray)  (CONST int *pData, UINT Offset, UINT Count) { return E_FAIL; };
-    STDMETHOD(SetFloatVectorArray)(CONST float *pData, UINT Offset, UINT Count) { return E_FAIL; };
+    STDMETHOD(SetBoolVectorArray) (_In_reads_(4*Count) const bool *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; };
+    STDMETHOD(SetIntVectorArray)  (_In_reads_(4*Count) const int *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; };
+    STDMETHOD(SetFloatVectorArray)(_In_reads_(4*Count) const float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; };
 
-    STDMETHOD(GetBoolVectorArray) (BOOL *pData, UINT Offset, UINT Count) { return E_FAIL; };
-    STDMETHOD(GetIntVectorArray)  (int *pData, UINT Offset, UINT Count) { return E_FAIL; };
-    STDMETHOD(GetFloatVectorArray)(float *pData, UINT Offset, UINT Count) { return E_FAIL; };
+    STDMETHOD(GetBoolVectorArray) (_Out_writes_(4*Count) bool *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; };
+    STDMETHOD(GetIntVectorArray)  (_Out_writes_(4*Count) int *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; };
+    STDMETHOD(GetFloatVectorArray)(_Out_writes_(4*Count) float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; };
 
+    IUNKNOWN_IMP(SEffectInvalidVectorVariable, ID3DX11EffectVectorVariable, ID3DX11EffectVariable);
 };
 
 struct SEffectInvalidMatrixVariable : public TEffectInvalidVariable<ID3DX11EffectMatrixVariable>
 {
 public:
 
-    STDMETHOD(SetMatrix)(CONST float *pData) { return E_FAIL; }
-    STDMETHOD(GetMatrix)(float *pData) { return E_FAIL; }
+    STDMETHOD(SetMatrix)(_In_reads_(16) const float *pData) override { UNREFERENCED_PARAMETER(pData); return E_FAIL; }
+    STDMETHOD(GetMatrix)(_Out_writes_(16) float *pData) override { UNREFERENCED_PARAMETER(pData); return E_FAIL; }
 
-    STDMETHOD(SetMatrixArray)(CONST float *pData, UINT  Offset, UINT  Count) { return E_FAIL; }
-    STDMETHOD(GetMatrixArray)(float *pData, UINT  Offset, UINT  Count) { return E_FAIL; }
+    STDMETHOD(SetMatrixArray)(_In_reads_(16*Count) const float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
+    STDMETHOD(GetMatrixArray)(_Out_writes_(16*Count) float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
 
-    STDMETHOD(SetMatrixPointerArray)(CONST float **ppData, UINT  Offset, UINT  Count) { return E_FAIL; }
-    STDMETHOD(GetMatrixPointerArray)(float **ppData, UINT  Offset, UINT  Count) { return E_FAIL; }
+    STDMETHOD(SetMatrixPointerArray)(_In_reads_(16*Count) const float **ppData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(ppData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
+    STDMETHOD(GetMatrixPointerArray)(_Out_writes_(16*Count) float **ppData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(ppData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
 
-    STDMETHOD(SetMatrixTranspose)(CONST float *pData) { return E_FAIL; }
-    STDMETHOD(GetMatrixTranspose)(float *pData) { return E_FAIL; }
+    STDMETHOD(SetMatrixTranspose)(_In_reads_(16) const float *pData) override { UNREFERENCED_PARAMETER(pData); return E_FAIL; }
+    STDMETHOD(GetMatrixTranspose)(_Out_writes_(16) float *pData) override { UNREFERENCED_PARAMETER(pData); return E_FAIL; }
 
-    STDMETHOD(SetMatrixTransposeArray)(CONST float *pData, UINT  Offset, UINT  Count) { return E_FAIL; }
-    STDMETHOD(GetMatrixTransposeArray)(float *pData, UINT  Offset, UINT  Count) { return E_FAIL; }
+    STDMETHOD(SetMatrixTransposeArray)(_In_reads_(16*Count) const float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
+    STDMETHOD(GetMatrixTransposeArray)(_Out_writes_(16*Count) float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
 
-    STDMETHOD(SetMatrixTransposePointerArray)(CONST float **ppData, UINT  Offset, UINT  Count) { return E_FAIL; }
-    STDMETHOD(GetMatrixTransposePointerArray)(float **ppData, UINT  Offset, UINT  Count) { return E_FAIL; }
+    STDMETHOD(SetMatrixTransposePointerArray)(_In_reads_(16*Count) const float **ppData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(ppData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
+    STDMETHOD(GetMatrixTransposePointerArray)(_Out_writes_(16*Count) float **ppData, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(ppData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
+
+    IUNKNOWN_IMP(SEffectInvalidMatrixVariable, ID3DX11EffectMatrixVariable, ID3DX11EffectVariable);
 };
 
 struct SEffectInvalidStringVariable : public TEffectInvalidVariable<ID3DX11EffectStringVariable>
 {
 public:
 
-    STDMETHOD(GetString)(LPCSTR *ppString) { return E_FAIL; }
-    STDMETHOD(GetStringArray)(LPCSTR *ppStrings, UINT  Offset, UINT  Count) { return E_FAIL; }
+    STDMETHOD(GetString)(_Outptr_result_z_ LPCSTR *ppString) override { UNREFERENCED_PARAMETER(ppString); return E_FAIL; }
+    STDMETHOD(GetStringArray)(_Out_writes_(Count) LPCSTR *ppStrings, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(ppStrings); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
+
+    IUNKNOWN_IMP(SEffectInvalidStringVariable, ID3DX11EffectStringVariable, ID3DX11EffectVariable);
 };
 
 struct SEffectInvalidClassInstanceVariable : public TEffectInvalidVariable<ID3DX11EffectClassInstanceVariable>
 {
 public:
 
-    STDMETHOD(GetClassInstance)(ID3D11ClassInstance **ppClassInstance) { return E_FAIL; }
+    STDMETHOD(GetClassInstance)(_Outptr_ ID3D11ClassInstance **ppClassInstance) override { UNREFERENCED_PARAMETER(ppClassInstance); return E_FAIL; }
+
+    IUNKNOWN_IMP(SEffectInvalidClassInstanceVariable, ID3DX11EffectClassInstanceVariable, ID3DX11EffectVariable);
 };
 
 
@@ -202,8 +245,12 @@ struct SEffectInvalidInterfaceVariable : public TEffectInvalidVariable<ID3DX11Ef
 {
 public:
 
-    STDMETHOD(SetClassInstance)(ID3DX11EffectClassInstanceVariable *pEffectClassInstance) { return E_FAIL; }
-    STDMETHOD(GetClassInstance)(ID3DX11EffectClassInstanceVariable **ppEffectClassInstance) { return E_FAIL; }
+    STDMETHOD(SetClassInstance)(_In_ ID3DX11EffectClassInstanceVariable *pEffectClassInstance) override
+        { UNREFERENCED_PARAMETER(pEffectClassInstance); return E_FAIL; }
+    STDMETHOD(GetClassInstance)(_Outptr_ ID3DX11EffectClassInstanceVariable **ppEffectClassInstance) override
+        { UNREFERENCED_PARAMETER(ppEffectClassInstance); return E_FAIL; }
+
+    IUNKNOWN_IMP(SEffectInvalidInterfaceVariable, ID3DX11EffectInterfaceVariable, ID3DX11EffectVariable);
 };
 
 
@@ -211,11 +258,15 @@ struct SEffectInvalidShaderResourceVariable : public TEffectInvalidVariable<ID3D
 {
 public:
 
-    STDMETHOD(SetResource)(ID3D11ShaderResourceView *pResource) { return E_FAIL; }
-    STDMETHOD(GetResource)(ID3D11ShaderResourceView **ppResource) { return E_FAIL; }
+    STDMETHOD(SetResource)(_In_ ID3D11ShaderResourceView *pResource) override { UNREFERENCED_PARAMETER(pResource); return E_FAIL; }
+    STDMETHOD(GetResource)(_Outptr_ ID3D11ShaderResourceView **ppResource) override { UNREFERENCED_PARAMETER(ppResource); return E_FAIL; }
 
-    STDMETHOD(SetResourceArray)(ID3D11ShaderResourceView **ppResources, UINT  Offset, UINT  Count) { return E_FAIL; }
-    STDMETHOD(GetResourceArray)(ID3D11ShaderResourceView **ppResources, UINT  Offset, UINT  Count) { return E_FAIL; }
+    STDMETHOD(SetResourceArray)(_In_reads_(Count) ID3D11ShaderResourceView **ppResources, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(ppResources); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
+    STDMETHOD(GetResourceArray)(_Out_writes_(Count) ID3D11ShaderResourceView **ppResources, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(ppResources); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
+
+    IUNKNOWN_IMP(SEffectInvalidShaderResourceVariable, ID3DX11EffectShaderResourceVariable, ID3DX11EffectVariable);
 };
 
 
@@ -223,11 +274,15 @@ struct SEffectInvalidUnorderedAccessViewVariable : public TEffectInvalidVariable
 {
 public:
 
-    STDMETHOD(SetUnorderedAccessView)(ID3D11UnorderedAccessView *pResource) { return E_FAIL; }
-    STDMETHOD(GetUnorderedAccessView)(ID3D11UnorderedAccessView **ppResource) { return E_FAIL; }
+    STDMETHOD(SetUnorderedAccessView)(_In_ ID3D11UnorderedAccessView *pResource) override { UNREFERENCED_PARAMETER(pResource); return E_FAIL; }
+    STDMETHOD(GetUnorderedAccessView)(_Outptr_ ID3D11UnorderedAccessView **ppResource) override { UNREFERENCED_PARAMETER(ppResource); return E_FAIL; }
 
-    STDMETHOD(SetUnorderedAccessViewArray)(ID3D11UnorderedAccessView **ppResources, UINT  Offset, UINT  Count) { return E_FAIL; }
-    STDMETHOD(GetUnorderedAccessViewArray)(ID3D11UnorderedAccessView **ppResources, UINT  Offset, UINT  Count) { return E_FAIL; }
+    STDMETHOD(SetUnorderedAccessViewArray)(_In_reads_(Count) ID3D11UnorderedAccessView **ppResources, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(ppResources); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
+    STDMETHOD(GetUnorderedAccessViewArray)(_Out_writes_(Count) ID3D11UnorderedAccessView **ppResources, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(ppResources); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
+
+    IUNKNOWN_IMP(SEffectInvalidUnorderedAccessViewVariable, ID3DX11EffectUnorderedAccessViewVariable, ID3DX11EffectVariable);
 };
 
 
@@ -235,11 +290,15 @@ struct SEffectInvalidRenderTargetViewVariable : public TEffectInvalidVariable<ID
 {
 public:
 
-    STDMETHOD(SetRenderTarget)(ID3D11RenderTargetView *pResource) { return E_FAIL; }
-    STDMETHOD(GetRenderTarget)(ID3D11RenderTargetView **ppResource) { return E_FAIL; }
+    STDMETHOD(SetRenderTarget)(_In_ ID3D11RenderTargetView *pResource) override { UNREFERENCED_PARAMETER(pResource); return E_FAIL; }
+    STDMETHOD(GetRenderTarget)(_Outptr_ ID3D11RenderTargetView **ppResource) override { UNREFERENCED_PARAMETER(ppResource); return E_FAIL; }
 
-    STDMETHOD(SetRenderTargetArray)(ID3D11RenderTargetView **ppResources, UINT  Offset, UINT  Count) { return E_FAIL; }
-    STDMETHOD(GetRenderTargetArray)(ID3D11RenderTargetView **ppResources, UINT  Offset, UINT  Count) { return E_FAIL; }
+    STDMETHOD(SetRenderTargetArray)(_In_reads_(Count) ID3D11RenderTargetView **ppResources, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(ppResources); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
+    STDMETHOD(GetRenderTargetArray)(_Out_writes_(Count) ID3D11RenderTargetView **ppResources, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(ppResources); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
+
+    IUNKNOWN_IMP(SEffectInvalidRenderTargetViewVariable, ID3DX11EffectRenderTargetViewVariable, ID3DX11EffectVariable);
 };
 
 
@@ -247,11 +306,15 @@ struct SEffectInvalidDepthStencilViewVariable : public TEffectInvalidVariable<ID
 {
 public:
 
-    STDMETHOD(SetDepthStencil)(ID3D11DepthStencilView *pResource) { return E_FAIL; }
-    STDMETHOD(GetDepthStencil)(ID3D11DepthStencilView **ppResource) { return E_FAIL; }
+    STDMETHOD(SetDepthStencil)(_In_ ID3D11DepthStencilView *pResource) override { UNREFERENCED_PARAMETER(pResource); return E_FAIL; }
+    STDMETHOD(GetDepthStencil)(_Outptr_ ID3D11DepthStencilView **ppResource) override { UNREFERENCED_PARAMETER(ppResource); return E_FAIL; }
 
-    STDMETHOD(SetDepthStencilArray)(ID3D11DepthStencilView **ppResources, UINT  Offset, UINT  Count) { return E_FAIL; }
-    STDMETHOD(GetDepthStencilArray)(ID3D11DepthStencilView **ppResources, UINT  Offset, UINT  Count) { return E_FAIL; }
+    STDMETHOD(SetDepthStencilArray)(_In_reads_(Count) ID3D11DepthStencilView **ppResources, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(ppResources); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
+    STDMETHOD(GetDepthStencilArray)(_Out_writes_(Count) ID3D11DepthStencilView **ppResources, _In_ uint32_t Offset, _In_ uint32_t Count) override
+        { UNREFERENCED_PARAMETER(ppResources); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return E_FAIL; }
+
+    IUNKNOWN_IMP(SEffectInvalidDepthStencilViewVariable, ID3DX11EffectDepthStencilViewVariable, ID3DX11EffectVariable);
 };
 
 
@@ -259,119 +322,160 @@ struct SEffectInvalidConstantBuffer : public TEffectInvalidVariable<ID3DX11Effec
 {
 public:
 
-    STDMETHOD(SetConstantBuffer)(ID3D11Buffer *pConstantBuffer) { return E_FAIL; }
-    STDMETHOD(GetConstantBuffer)(ID3D11Buffer **ppConstantBuffer) { return E_FAIL; }
-    STDMETHOD(UndoSetConstantBuffer)() { return E_FAIL; }
+    STDMETHOD(SetConstantBuffer)(_In_ ID3D11Buffer *pConstantBuffer) override { UNREFERENCED_PARAMETER(pConstantBuffer); return E_FAIL; }
+    STDMETHOD(GetConstantBuffer)(_Outptr_ ID3D11Buffer **ppConstantBuffer) override { UNREFERENCED_PARAMETER(ppConstantBuffer); return E_FAIL; }
+    STDMETHOD(UndoSetConstantBuffer)() override { return E_FAIL; }
 
-    STDMETHOD(SetTextureBuffer)(ID3D11ShaderResourceView *pTextureBuffer) { return E_FAIL; }
-    STDMETHOD(GetTextureBuffer)(ID3D11ShaderResourceView **ppTextureBuffer) { return E_FAIL; }
-    STDMETHOD(UndoSetTextureBuffer)() { return E_FAIL; }
+    STDMETHOD(SetTextureBuffer)(_In_ ID3D11ShaderResourceView *pTextureBuffer) override { UNREFERENCED_PARAMETER(pTextureBuffer); return E_FAIL; }
+    STDMETHOD(GetTextureBuffer)(_Outptr_ ID3D11ShaderResourceView **ppTextureBuffer) override { UNREFERENCED_PARAMETER(ppTextureBuffer); return E_FAIL; }
+    STDMETHOD(UndoSetTextureBuffer)() override { return E_FAIL; }
+
+    IUNKNOWN_IMP(SEffectInvalidConstantBuffer, ID3DX11EffectConstantBuffer, ID3DX11EffectVariable);
 };
 
 struct SEffectInvalidShaderVariable : public TEffectInvalidVariable<ID3DX11EffectShaderVariable>
 {
 public:
 
-    STDMETHOD(GetShaderDesc)(UINT ShaderIndex, D3DX11_EFFECT_SHADER_DESC *pDesc) { return E_FAIL; }
+    STDMETHOD(GetShaderDesc)(_In_ uint32_t ShaderIndex, _Out_ D3DX11_EFFECT_SHADER_DESC *pDesc) override
+        { UNREFERENCED_PARAMETER(ShaderIndex); UNREFERENCED_PARAMETER(pDesc); return E_FAIL; }
 
-    STDMETHOD(GetVertexShader)(UINT ShaderIndex, ID3D11VertexShader **ppVS) { return E_FAIL; }
-    STDMETHOD(GetGeometryShader)(UINT ShaderIndex, ID3D11GeometryShader **ppGS) { return E_FAIL; }
-    STDMETHOD(GetPixelShader)(UINT ShaderIndex, ID3D11PixelShader **ppPS) { return E_FAIL; }
-    STDMETHOD(GetHullShader)(UINT ShaderIndex, ID3D11HullShader **ppPS) { return E_FAIL; }
-    STDMETHOD(GetDomainShader)(UINT ShaderIndex, ID3D11DomainShader **ppPS) { return E_FAIL; }
-    STDMETHOD(GetComputeShader)(UINT ShaderIndex, ID3D11ComputeShader **ppPS) { return E_FAIL; }
+    STDMETHOD(GetVertexShader)(_In_ uint32_t ShaderIndex, _Outptr_ ID3D11VertexShader **ppVS) override
+        { UNREFERENCED_PARAMETER(ShaderIndex); UNREFERENCED_PARAMETER(ppVS); return E_FAIL; }
+    STDMETHOD(GetGeometryShader)(_In_ uint32_t ShaderIndex, _Outptr_ ID3D11GeometryShader **ppGS) override
+        { UNREFERENCED_PARAMETER(ShaderIndex); UNREFERENCED_PARAMETER(ppGS); return E_FAIL; }
+    STDMETHOD(GetPixelShader)(_In_ uint32_t ShaderIndex, _Outptr_ ID3D11PixelShader **ppPS) override
+        { UNREFERENCED_PARAMETER(ShaderIndex); UNREFERENCED_PARAMETER(ppPS); return E_FAIL; }
+    STDMETHOD(GetHullShader)(_In_ uint32_t ShaderIndex, _Outptr_ ID3D11HullShader **ppHS) override
+        { UNREFERENCED_PARAMETER(ShaderIndex); UNREFERENCED_PARAMETER(ppHS); return E_FAIL; }
+    STDMETHOD(GetDomainShader)(_In_ uint32_t ShaderIndex, _Outptr_ ID3D11DomainShader **ppDS) override
+        { UNREFERENCED_PARAMETER(ShaderIndex); UNREFERENCED_PARAMETER(ppDS); return E_FAIL; }
+    STDMETHOD(GetComputeShader)(_In_ uint32_t ShaderIndex, _Outptr_ ID3D11ComputeShader **ppCS) override
+        { UNREFERENCED_PARAMETER(ShaderIndex); UNREFERENCED_PARAMETER(ppCS); return E_FAIL; }
 
-    STDMETHOD(GetInputSignatureElementDesc)(UINT ShaderIndex, UINT Element, D3D11_SIGNATURE_PARAMETER_DESC *pDesc) { return E_FAIL; }
-    STDMETHOD(GetOutputSignatureElementDesc)(UINT ShaderIndex, UINT Element, D3D11_SIGNATURE_PARAMETER_DESC *pDesc) { return E_FAIL; }
-    STDMETHOD(GetPatchConstantSignatureElementDesc)(UINT ShaderIndex, UINT Element, D3D11_SIGNATURE_PARAMETER_DESC *pDesc) { return E_FAIL; }
+    STDMETHOD(GetInputSignatureElementDesc)(_In_ uint32_t ShaderIndex, _In_ uint32_t Element, _Out_ D3D11_SIGNATURE_PARAMETER_DESC *pDesc) override
+        { UNREFERENCED_PARAMETER(ShaderIndex); UNREFERENCED_PARAMETER(Element); UNREFERENCED_PARAMETER(pDesc); return E_FAIL; }
+    STDMETHOD(GetOutputSignatureElementDesc)(_In_ uint32_t ShaderIndex, _In_ uint32_t Element, _Out_ D3D11_SIGNATURE_PARAMETER_DESC *pDesc) override
+        { UNREFERENCED_PARAMETER(ShaderIndex); UNREFERENCED_PARAMETER(Element); UNREFERENCED_PARAMETER(pDesc); return E_FAIL; }
+    STDMETHOD(GetPatchConstantSignatureElementDesc)(_In_ uint32_t ShaderIndex, _In_ uint32_t Element, _Out_ D3D11_SIGNATURE_PARAMETER_DESC *pDesc) override
+        { UNREFERENCED_PARAMETER(ShaderIndex); UNREFERENCED_PARAMETER(Element); UNREFERENCED_PARAMETER(pDesc); return E_FAIL; }
+
+    IUNKNOWN_IMP(SEffectInvalidShaderVariable, ID3DX11EffectShaderVariable, ID3DX11EffectVariable);
 };
 
 struct SEffectInvalidBlendVariable : public TEffectInvalidVariable<ID3DX11EffectBlendVariable>
 {
 public:
 
-    STDMETHOD(GetBlendState)(UINT Index, ID3D11BlendState **ppBlendState) { return E_FAIL; }
-    STDMETHOD(SetBlendState)(UINT Index, ID3D11BlendState *pBlendState) { return E_FAIL; }
-    STDMETHOD(UndoSetBlendState)(UINT Index) { return E_FAIL; }
-    STDMETHOD(GetBackingStore)(UINT Index, D3D11_BLEND_DESC *pBlendDesc) { return E_FAIL; }
+    STDMETHOD(GetBlendState)(_In_ uint32_t Index, _Outptr_ ID3D11BlendState **ppState) override
+        { UNREFERENCED_PARAMETER(Index); UNREFERENCED_PARAMETER(ppState); return E_FAIL; }
+    STDMETHOD(SetBlendState)(_In_ uint32_t Index, _In_ ID3D11BlendState *pState) override
+        { UNREFERENCED_PARAMETER(Index); UNREFERENCED_PARAMETER(pState); return E_FAIL; }
+    STDMETHOD(UndoSetBlendState)(_In_ uint32_t Index) override { UNREFERENCED_PARAMETER(Index); return E_FAIL; }
+    STDMETHOD(GetBackingStore)(_In_ uint32_t Index, _Out_ D3D11_BLEND_DESC *pDesc) override
+        { UNREFERENCED_PARAMETER(Index); UNREFERENCED_PARAMETER(pDesc); return E_FAIL; }
+
+    IUNKNOWN_IMP(SEffectInvalidBlendVariable, ID3DX11EffectBlendVariable, ID3DX11EffectVariable);
 };
 
 struct SEffectInvalidDepthStencilVariable : public TEffectInvalidVariable<ID3DX11EffectDepthStencilVariable>
 {
 public:
 
-    STDMETHOD(GetDepthStencilState)(UINT Index, ID3D11DepthStencilState **ppDepthStencilState) { return E_FAIL; }
-    STDMETHOD(SetDepthStencilState)(UINT Index, ID3D11DepthStencilState *pDepthStencilState) { return E_FAIL; }
-    STDMETHOD(UndoSetDepthStencilState)(UINT Index) { return E_FAIL; }
-    STDMETHOD(GetBackingStore)(UINT Index, D3D11_DEPTH_STENCIL_DESC *pDepthStencilDesc) { return E_FAIL; }
+    STDMETHOD(GetDepthStencilState)(_In_ uint32_t Index, _Outptr_ ID3D11DepthStencilState **ppState) override
+        { UNREFERENCED_PARAMETER(Index); UNREFERENCED_PARAMETER(ppState); return E_FAIL; }
+    STDMETHOD(SetDepthStencilState)(_In_ uint32_t Index, _In_ ID3D11DepthStencilState *pState) override
+        { UNREFERENCED_PARAMETER(Index); UNREFERENCED_PARAMETER(pState); return E_FAIL; }
+    STDMETHOD(UndoSetDepthStencilState)(_In_ uint32_t Index) override { UNREFERENCED_PARAMETER(Index); return E_FAIL; }
+    STDMETHOD(GetBackingStore)(_In_ uint32_t Index, _Out_ D3D11_DEPTH_STENCIL_DESC *pDesc) override
+        { UNREFERENCED_PARAMETER(Index); UNREFERENCED_PARAMETER(pDesc); return E_FAIL; }
+
+    IUNKNOWN_IMP(SEffectInvalidDepthStencilVariable, ID3DX11EffectDepthStencilVariable, ID3DX11EffectVariable);
 };
 
 struct SEffectInvalidRasterizerVariable : public TEffectInvalidVariable<ID3DX11EffectRasterizerVariable>
 {
 public:
 
-    STDMETHOD(GetRasterizerState)(UINT Index, ID3D11RasterizerState **ppRasterizerState) { return E_FAIL; }
-    STDMETHOD(SetRasterizerState)(UINT Index, ID3D11RasterizerState *pRasterizerState) { return E_FAIL; }
-    STDMETHOD(UndoSetRasterizerState)(UINT Index) { return E_FAIL; }
-    STDMETHOD(GetBackingStore)(UINT Index, D3D11_RASTERIZER_DESC *pRasterizerDesc) { return E_FAIL; }
+    STDMETHOD(GetRasterizerState)(_In_ uint32_t Index, _Outptr_ ID3D11RasterizerState **ppState) override
+        { UNREFERENCED_PARAMETER(Index); UNREFERENCED_PARAMETER(ppState); return E_FAIL; }
+    STDMETHOD(SetRasterizerState)(_In_ uint32_t Index, _In_ ID3D11RasterizerState *pState) override
+        { UNREFERENCED_PARAMETER(Index); UNREFERENCED_PARAMETER(pState); return E_FAIL; }
+    STDMETHOD(UndoSetRasterizerState)(_In_ uint32_t Index) override { UNREFERENCED_PARAMETER(Index); return E_FAIL; }
+    STDMETHOD(GetBackingStore)(_In_ uint32_t Index, _Out_ D3D11_RASTERIZER_DESC *pDesc) override
+        { UNREFERENCED_PARAMETER(Index); UNREFERENCED_PARAMETER(pDesc); return E_FAIL; }
+
+    IUNKNOWN_IMP(SEffectInvalidRasterizerVariable, ID3DX11EffectRasterizerVariable, ID3DX11EffectVariable);
 };
 
 struct SEffectInvalidSamplerVariable : public TEffectInvalidVariable<ID3DX11EffectSamplerVariable>
 {
 public:
 
-    STDMETHOD(GetSampler)(UINT Index, ID3D11SamplerState **ppSampler) { return E_FAIL; }
-    STDMETHOD(SetSampler)(UINT Index, ID3D11SamplerState *pSampler) { return E_FAIL; }
-    STDMETHOD(UndoSetSampler)(UINT Index) { return E_FAIL; }
-    STDMETHOD(GetBackingStore)(UINT Index, D3D11_SAMPLER_DESC *pSamplerDesc) { return E_FAIL; }
+    STDMETHOD(GetSampler)(_In_ uint32_t Index, _Outptr_ ID3D11SamplerState **ppSampler) override
+        { UNREFERENCED_PARAMETER(Index); UNREFERENCED_PARAMETER(ppSampler); return E_FAIL; }
+    STDMETHOD(SetSampler)(_In_ uint32_t Index, _In_ ID3D11SamplerState *pSampler) override
+        { UNREFERENCED_PARAMETER(Index); UNREFERENCED_PARAMETER(pSampler); return E_FAIL; }
+    STDMETHOD(UndoSetSampler)(_In_ uint32_t Index) override { UNREFERENCED_PARAMETER(Index); return E_FAIL; }
+    STDMETHOD(GetBackingStore)(_In_ uint32_t Index, _Out_ D3D11_SAMPLER_DESC *pDesc) override
+        { UNREFERENCED_PARAMETER(Index); UNREFERENCED_PARAMETER(pDesc); return E_FAIL; }
+
+    IUNKNOWN_IMP(SEffectInvalidSamplerVariable, ID3DX11EffectSamplerVariable, ID3DX11EffectVariable);
 };
 
 struct SEffectInvalidPass : public ID3DX11EffectPass
 {
 public:
-    STDMETHOD_(BOOL, IsValid)() { return FALSE; }
-    STDMETHOD(GetDesc)(D3DX11_PASS_DESC *pDesc) { return E_FAIL; }
+    STDMETHOD_(bool, IsValid)() override { return false; }
+    STDMETHOD(GetDesc)(_Out_ D3DX11_PASS_DESC *pDesc) override { UNREFERENCED_PARAMETER(pDesc); return E_FAIL; }
 
-    STDMETHOD(GetVertexShaderDesc)(D3DX11_PASS_SHADER_DESC *pDesc) { return E_FAIL; }
-    STDMETHOD(GetGeometryShaderDesc)(D3DX11_PASS_SHADER_DESC *pDesc) { return E_FAIL; }
-    STDMETHOD(GetPixelShaderDesc)(D3DX11_PASS_SHADER_DESC *pDesc) { return E_FAIL; }
-    STDMETHOD(GetHullShaderDesc)(D3DX11_PASS_SHADER_DESC *pDesc) { return E_FAIL; }
-    STDMETHOD(GetDomainShaderDesc)(D3DX11_PASS_SHADER_DESC *pDesc) { return E_FAIL; }
-    STDMETHOD(GetComputeShaderDesc)(D3DX11_PASS_SHADER_DESC *pDesc) { return E_FAIL; }
+    STDMETHOD(GetVertexShaderDesc)(_Out_ D3DX11_PASS_SHADER_DESC *pDesc) override { UNREFERENCED_PARAMETER(pDesc); return E_FAIL; }
+    STDMETHOD(GetGeometryShaderDesc)(_Out_ D3DX11_PASS_SHADER_DESC *pDesc) override { UNREFERENCED_PARAMETER(pDesc); return E_FAIL; }
+    STDMETHOD(GetPixelShaderDesc)(_Out_ D3DX11_PASS_SHADER_DESC *pDesc) override { UNREFERENCED_PARAMETER(pDesc); return E_FAIL; }
+    STDMETHOD(GetHullShaderDesc)(_Out_ D3DX11_PASS_SHADER_DESC *pDesc) override { UNREFERENCED_PARAMETER(pDesc); return E_FAIL; }
+    STDMETHOD(GetDomainShaderDesc)(_Out_ D3DX11_PASS_SHADER_DESC *pDesc) override { UNREFERENCED_PARAMETER(pDesc); return E_FAIL; }
+    STDMETHOD(GetComputeShaderDesc)(_Out_ D3DX11_PASS_SHADER_DESC *pDesc) override { UNREFERENCED_PARAMETER(pDesc); return E_FAIL; }
 
-    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByIndex)(UINT Index) { return &g_InvalidScalarVariable; }
-    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByName)(LPCSTR Name) { return &g_InvalidScalarVariable; }
+    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByIndex)(_In_ uint32_t Index) override { UNREFERENCED_PARAMETER(Index); return &g_InvalidScalarVariable; }
+    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByName)(_In_z_ LPCSTR Name) override { UNREFERENCED_PARAMETER(Name); return &g_InvalidScalarVariable; }
 
-    STDMETHOD(Apply)(UINT Flags, ID3D11DeviceContext* pContext) { return E_FAIL; }
-    STDMETHOD(ComputeStateBlockMask)(D3DX11_STATE_BLOCK_MASK *pStateBlockMask) { return E_FAIL; }
+    STDMETHOD(Apply)(_In_ uint32_t Flags, _In_ ID3D11DeviceContext* pContext) override
+        { UNREFERENCED_PARAMETER(Flags); UNREFERENCED_PARAMETER(pContext); return E_FAIL; }
+    STDMETHOD(ComputeStateBlockMask)(_Inout_ D3DX11_STATE_BLOCK_MASK *pStateBlockMask) override { UNREFERENCED_PARAMETER(pStateBlockMask); return E_FAIL; }
+
+    IUNKNOWN_IMP(SEffectInvalidPass, ID3DX11EffectPass, IUnknown);
 };
 
 struct SEffectInvalidTechnique : public ID3DX11EffectTechnique
 {
 public:
-    STDMETHOD_(BOOL, IsValid)() { return FALSE; }
-    STDMETHOD(GetDesc)(D3DX11_TECHNIQUE_DESC *pDesc) { return E_FAIL; }
+    STDMETHOD_(bool, IsValid)() override { return false; }
+    STDMETHOD(GetDesc)(_Out_ D3DX11_TECHNIQUE_DESC *pDesc) override { UNREFERENCED_PARAMETER(pDesc); return E_FAIL; }
 
-    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByIndex)(UINT Index) { return &g_InvalidScalarVariable; }
-    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByName)(LPCSTR Name) { return &g_InvalidScalarVariable; }
+    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByIndex)(_In_ uint32_t Index) override { UNREFERENCED_PARAMETER(Index); return &g_InvalidScalarVariable; }
+    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByName)(_In_z_ LPCSTR Name) override { UNREFERENCED_PARAMETER(Name); return &g_InvalidScalarVariable; }
 
-    STDMETHOD_(ID3DX11EffectPass*, GetPassByIndex)(UINT Index) { return &g_InvalidPass; }
-    STDMETHOD_(ID3DX11EffectPass*, GetPassByName)(LPCSTR Name) { return &g_InvalidPass; }
+    STDMETHOD_(ID3DX11EffectPass*, GetPassByIndex)(_In_ uint32_t Index) override { UNREFERENCED_PARAMETER(Index); return &g_InvalidPass; }
+    STDMETHOD_(ID3DX11EffectPass*, GetPassByName)(_In_z_ LPCSTR Name) override { UNREFERENCED_PARAMETER(Name); return &g_InvalidPass; }
 
-    STDMETHOD(ComputeStateBlockMask)(D3DX11_STATE_BLOCK_MASK *pStateBlockMask) { return E_FAIL; }
+    STDMETHOD(ComputeStateBlockMask)(_Inout_ D3DX11_STATE_BLOCK_MASK *pStateBlockMask) override { UNREFERENCED_PARAMETER(pStateBlockMask); return E_FAIL; }
+
+    IUNKNOWN_IMP(SEffectInvalidTechnique, ID3DX11EffectTechnique, IUnknown);
 };
 
 struct SEffectInvalidGroup : public ID3DX11EffectGroup
 {
 public:
-    STDMETHOD_(BOOL, IsValid)() { return FALSE; }
-    STDMETHOD(GetDesc)(D3DX11_GROUP_DESC *pDesc) { return E_FAIL; }
+    STDMETHOD_(bool, IsValid)() override { return false; }
+    STDMETHOD(GetDesc)(_Out_ D3DX11_GROUP_DESC *pDesc) override { UNREFERENCED_PARAMETER(pDesc); return E_FAIL; }
 
-    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByIndex)(UINT Index) { return &g_InvalidScalarVariable; }
-    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByName)(LPCSTR Name) { return &g_InvalidScalarVariable; }
+    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByIndex)(_In_ uint32_t Index) override { UNREFERENCED_PARAMETER(Index); return &g_InvalidScalarVariable; }
+    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByName)(_In_z_ LPCSTR Name) override { UNREFERENCED_PARAMETER(Name); return &g_InvalidScalarVariable; }
 
-    STDMETHOD_(ID3DX11EffectTechnique*, GetTechniqueByIndex)(UINT Index) { return &g_InvalidTechnique; }
-    STDMETHOD_(ID3DX11EffectTechnique*, GetTechniqueByName)(LPCSTR Name) { return &g_InvalidTechnique; }
+    STDMETHOD_(ID3DX11EffectTechnique*, GetTechniqueByIndex)(_In_ uint32_t Index) override { UNREFERENCED_PARAMETER(Index); return &g_InvalidTechnique; }
+    STDMETHOD_(ID3DX11EffectTechnique*, GetTechniqueByName)(_In_z_ LPCSTR Name) override { UNREFERENCED_PARAMETER(Name); return &g_InvalidTechnique; }
+
+    IUNKNOWN_IMP(SEffectInvalidGroup, ID3DX11EffectGroup, IUnknown);
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -384,7 +488,7 @@ public:
 #pragma warning( disable : 4102 ) // 'label' : unreferenced label
 
 #define VERIFYPARAMETER(x) \
-{ if (!(x)) { DPF(0, "%s: Parameter " #x " was NULL.", pFuncName); \
+{ if (!(x)) { DPF(0, "%s: Parameter " #x " was nullptr.", pFuncName); \
     __BREAK_ON_FAIL; hr = E_INVALIDARG; goto lExit; } }
 
 static HRESULT AnnotationInvalidSetCall(LPCSTR pFuncName)
@@ -407,53 +511,57 @@ static HRESULT ObjectGetRawValue()
 
 ID3DX11EffectConstantBuffer * NoParentCB();
 
-ID3DX11EffectVariable * GetAnnotationByIndexHelper(const char *pClassName, UINT Index, UINT  AnnotationCount, SAnnotation *pAnnotations);
+ID3DX11EffectVariable * GetAnnotationByIndexHelper(_In_z_ const char *pClassName, _In_ uint32_t Index,
+                                                   _In_ uint32_t  AnnotationCount, _In_reads_(AnnotationCount) SAnnotation *pAnnotations);
 
-ID3DX11EffectVariable * GetAnnotationByNameHelper(const char *pClassName, LPCSTR Name, UINT  AnnotationCount, SAnnotation *pAnnotations);
+ID3DX11EffectVariable * GetAnnotationByNameHelper(_In_z_ const char *pClassName, _In_z_ LPCSTR Name,
+                                                   _In_ uint32_t  AnnotationCount, _In_reads_(AnnotationCount) SAnnotation *pAnnotations);
 
 template<typename SVarType>
-BOOL GetVariableByIndexHelper(UINT Index, UINT  VariableCount, SVarType *pVariables, 
-                              BYTE *pBaseAddress, SVarType **ppMember, void **ppDataPtr)
+_Success_(return)
+bool GetVariableByIndexHelper(_In_ uint32_t Index, _In_ uint32_t  VariableCount, _In_reads_(VariableCount) SVarType *pVariables, 
+                              _In_opt_ uint8_t *pBaseAddress, _Outptr_ SVarType **ppMember, _Outptr_ void **ppDataPtr)
 {
-    LPCSTR pFuncName = "ID3DX11EffectVariable::GetMemberByIndex";
+    static LPCSTR pFuncName = "ID3DX11EffectVariable::GetMemberByIndex";
 
     if (Index >= VariableCount)
     {
         DPF(0, "%s: Invalid index (%d, total: %d)", pFuncName, Index, VariableCount);
-        return FALSE;
+        return false;
     }
 
     *ppMember = pVariables + Index;
     *ppDataPtr = pBaseAddress + (*ppMember)->Data.Offset;
-    return TRUE;
+    return true;
 }
 
 template<typename SVarType>
-BOOL GetVariableByNameHelper(LPCSTR Name, UINT  VariableCount, SVarType *pVariables, 
-                             BYTE *pBaseAddress, SVarType **ppMember, void **ppDataPtr, UINT* pIndex)
+_Success_(return)
+bool GetVariableByNameHelper(_In_z_ LPCSTR Name, _In_ uint32_t  VariableCount, _In_reads_(VariableCount) SVarType *pVariables, 
+                             _In_opt_ uint8_t *pBaseAddress, _Outptr_ SVarType **ppMember, _Outptr_ void **ppDataPtr, _Out_ uint32_t* pIndex)
 {
-    LPCSTR pFuncName = "ID3DX11EffectVariable::GetMemberByName";
+    static LPCSTR pFuncName = "ID3DX11EffectVariable::GetMemberByName";
 
-    if (NULL == Name)
+    if (nullptr == Name)
     {
-        DPF(0, "%s: Parameter Name was NULL.", pFuncName);
-        return FALSE;
+        DPF(0, "%s: Parameter Name was nullptr.", pFuncName);
+        return false;
     }
 
-    UINT i;
     bool bHasSuper = false;
 
-    for (i = 0; i < VariableCount; ++ i)
+    for (uint32_t i = 0; i < VariableCount; ++ i)
     {
         *ppMember = pVariables + i;
-        D3DXASSERT(NULL != (*ppMember)->pName);
+        assert((*ppMember)->pName != 0);
+        _Analysis_assume_((*ppMember)->pName != 0);
         if (strcmp((*ppMember)->pName, Name) == 0)
         {
             *ppDataPtr = pBaseAddress + (*ppMember)->Data.Offset;
             *pIndex = i;
-            return TRUE;
+            return true;
         }
-	else if (i == 0 &&
+        else if (i == 0 &&
                  (*ppMember)->pName[0] == '$' &&
                  strcmp((*ppMember)->pName, "$super") == 0)
         {
@@ -475,59 +583,60 @@ BOOL GetVariableByNameHelper(LPCSTR Name, UINT  VariableCount, SVarType *pVariab
     }
 
     DPF(0, "%s: Variable [%s] not found", pFuncName, Name);
-    return FALSE;
+    return false;
 }
 
 template<typename SVarType>
-BOOL GetVariableBySemanticHelper(LPCSTR Semantic, UINT  VariableCount, SVarType *pVariables, 
-                                 BYTE *pBaseAddress, SVarType **ppMember, void **ppDataPtr, UINT* pIndex)
+_Success_(return)
+bool GetVariableBySemanticHelper(_In_z_ LPCSTR Semantic, _In_ uint32_t  VariableCount, _In_reads_(VariableCount) SVarType *pVariables, 
+                                 _In_opt_ uint8_t *pBaseAddress, _Outptr_ SVarType **ppMember, _Outptr_ void **ppDataPtr, _Out_ uint32_t* pIndex)
 {
-    LPCSTR pFuncName = "ID3DX11EffectVariable::GetMemberBySemantic";
+    static LPCSTR pFuncName = "ID3DX11EffectVariable::GetMemberBySemantic";
 
-    if (NULL == Semantic)
+    if (nullptr == Semantic)
     {
-        DPF(0, "%s: Parameter Semantic was NULL.", pFuncName);
-        return FALSE;
+        DPF(0, "%s: Parameter Semantic was nullptr.", pFuncName);
+        return false;
     }
 
-    UINT i;
-
-    for (i = 0; i < VariableCount; ++ i)
+    for (uint32_t i = 0; i < VariableCount; ++ i)
     {
         *ppMember = pVariables + i;
-        if (NULL != (*ppMember)->pSemantic &&
+        if (nullptr != (*ppMember)->pSemantic &&
             _stricmp((*ppMember)->pSemantic, Semantic) == 0)
         {
             *ppDataPtr = pBaseAddress + (*ppMember)->Data.Offset;
             *pIndex = i;
-            return TRUE;
+            return true;
         }
     }
 
     DPF(0, "%s: Variable with semantic [%s] not found", pFuncName, Semantic);
-    return FALSE;
+    return false;
 }
 
-D3DX11INLINE BOOL AreBoundsValid(UINT  Offset, UINT  Count, CONST void *pData, CONST SType *pType, UINT  TotalUnpackedSize)
+inline bool AreBoundsValid(_In_ uint32_t Offset, _In_ uint32_t Count, _In_ const void *pData, _In_ const SType *pType, _In_ uint32_t  TotalUnpackedSize)
 {
-    if (Count == 0) return TRUE;
-    UINT  singleElementSize = pType->GetTotalUnpackedSize(TRUE);
-    D3DXASSERT(singleElementSize <= pType->Stride);
+    if (Count == 0) return true;
+    uint32_t  singleElementSize = pType->GetTotalUnpackedSize(true);
+    assert(singleElementSize <= pType->Stride);
 
     return ((Offset + Count >= Offset) &&
-        ((Offset + Count) < ((UINT)-1) / pType->Stride) &&
-        (Count * pType->Stride + (BYTE*)pData >= (BYTE*)pData) &&
+        ((Offset + Count) < ((uint32_t)-1) / pType->Stride) &&
+        (Count * pType->Stride + (uint8_t*)pData >= (uint8_t*)pData) &&
         ((Offset + Count - 1) * pType->Stride + singleElementSize <= TotalUnpackedSize));
 }
 
 // Note that the branches in this code is based on template parameters and will be compiled out
-template<ETemplateVarType SourceType, ETemplateVarType DestType, typename SRC_TYPE, BOOL ValidatePtr>
-__forceinline HRESULT CopyScalarValue(SRC_TYPE SrcValue, void *pDest, const char *pFuncName)
+template<ETemplateVarType SourceType, ETemplateVarType DestType, typename SRC_TYPE, bool ValidatePtr>
+__forceinline HRESULT CopyScalarValue(_In_ SRC_TYPE SrcValue, _Out_ void *pDest, _In_z_ const char *pFuncName)
 {
     HRESULT hr = S_OK;
 #ifdef _DEBUG
     if (ValidatePtr)
         VERIFYPARAMETER(pDest);
+#else
+    UNREFERENCED_PARAMETER(pFuncName);
 #endif
 
     switch (SourceType)
@@ -547,11 +656,14 @@ __forceinline HRESULT CopyScalarValue(SRC_TYPE SrcValue, void *pDest, const char
             *(float*)pDest = SrcValue ? 1.0f : 0.0f;
             break;
 
+        case ETVT_bool:
+            *(bool*)pDest = (SrcValue != 0) ? true : false;
+            break;
+
         default:
-            D3DXASSERT(0);
+            assert(0);
         }
         break;
-
 
     case ETVT_Int:
         switch (DestType)
@@ -568,8 +680,12 @@ __forceinline HRESULT CopyScalarValue(SRC_TYPE SrcValue, void *pDest, const char
             *(float*)pDest = (float)(SrcValue);
             break;
 
+        case ETVT_bool:
+            *(bool*)pDest = (SrcValue != 0) ? true : false;
+            break;
+
         default:
-            D3DXASSERT(0);
+            assert(0);
         }
         break;
 
@@ -588,69 +704,110 @@ __forceinline HRESULT CopyScalarValue(SRC_TYPE SrcValue, void *pDest, const char
             *(float*)pDest = (float) SrcValue;
             break;
 
+        case ETVT_bool:
+            *(bool*)pDest = (SrcValue != 0.0f) ? true : false;
+            break;
+
         default:
-            D3DXASSERT(0);
+            assert(0);
+        }
+        break;
+
+    case ETVT_bool:
+        switch (DestType)
+        {
+        case ETVT_Bool:
+            *(int*)pDest = SrcValue ? -1 : 0;
+            break;
+
+        case ETVT_Int:
+            *(int*)pDest = SrcValue ? 1 : 0;
+            break;
+
+        case ETVT_Float:
+            *(float*)pDest = SrcValue ? 1.0f : 0.0f;
+            break;
+
+        case ETVT_bool:
+            *(bool*)pDest = (SrcValue != 0) ? true : false;
+            break;
+
+        default:
+            assert(0);
         }
         break;
 
     default:
-        D3DXASSERT(0);
-    }
-
-lExit:
-    return S_OK;
-}
-
-template<ETemplateVarType SourceType, ETemplateVarType DestType, typename SRC_TYPE, typename DEST_TYPE>
-D3DX11INLINE HRESULT SetScalarArray(CONST SRC_TYPE *pSrcValues, DEST_TYPE *pDestValues, UINT  Offset, UINT  Count, 
-                                    SType *pType, UINT  TotalUnpackedSize, const char *pFuncName)
-{
-    HRESULT hr = S_OK;
-
-#ifdef _DEBUG    
-    VERIFYPARAMETER(pSrcValues);
-
-    if (!AreBoundsValid(Offset, Count, pSrcValues, pType, TotalUnpackedSize))
-    {
-        DPF(0, "%s: Invalid range specified", pFuncName);
-        VH(E_INVALIDARG);
-    }
-#endif
-
-    UINT i, j, delta = pType->NumericType.IsPackedArray ? 1 : SType::c_ScalarsPerRegister;
-    pDestValues += Offset * delta;
-    for (i = 0, j = 0; j < Count; i += delta, ++ j)
-    {
-        // pDestValues[i] = (DEST_TYPE)pSrcValues[j];
-        CopyScalarValue<SourceType, DestType, SRC_TYPE, FALSE>(pSrcValues[j], &pDestValues[i], "SetScalarArray");
+        assert(0);
     }
 
 lExit:
     return hr;
 }
 
+#pragma warning(push)
+#pragma warning( disable : 6103 )
 template<ETemplateVarType SourceType, ETemplateVarType DestType, typename SRC_TYPE, typename DEST_TYPE>
-D3DX11INLINE HRESULT GetScalarArray(SRC_TYPE *pSrcValues, DEST_TYPE *pDestValues, UINT  Offset, UINT  Count, 
-                                    SType *pType, UINT  TotalUnpackedSize, const char *pFuncName)
+inline HRESULT SetScalarArray(_In_reads_(Count) const SRC_TYPE *pSrcValues, _Out_writes_(Count) DEST_TYPE *pDestValues,
+                              _In_ uint32_t Offset, _In_ uint32_t Count, 
+                              _In_ const SType *pType, _In_ uint32_t TotalUnpackedSize, _In_z_ const char *pFuncName)
+{
+    HRESULT hr = S_OK;
+
+#ifdef _DEBUG    
+    VERIFYPARAMETER(pSrcValues);
+
+#pragma warning( suppress : 6001 )
+    if (!AreBoundsValid(Offset, Count, pSrcValues, pType, TotalUnpackedSize))
+    {
+        DPF(0, "%s: Invalid range specified", pFuncName);
+        VH(E_INVALIDARG);
+    }
+#else
+    UNREFERENCED_PARAMETER(TotalUnpackedSize);
+    UNREFERENCED_PARAMETER(pFuncName);
+#endif
+
+    uint32_t i, j, delta = pType->NumericType.IsPackedArray ? 1 : SType::c_ScalarsPerRegister;
+    pDestValues += Offset * delta;
+    for (i = 0, j = 0; j < Count; i += delta, ++ j)
+    {
+        // pDestValues[i] = (DEST_TYPE)pSrcValues[j];
+        CopyScalarValue<SourceType, DestType, SRC_TYPE, false>(pSrcValues[j], &pDestValues[i], "SetScalarArray");
+    }
+
+lExit:
+    return hr;
+}
+#pragma warning(pop)
+
+template<ETemplateVarType SourceType, ETemplateVarType DestType, typename SRC_TYPE, typename DEST_TYPE>
+inline HRESULT GetScalarArray(_In_reads_(Count) SRC_TYPE *pSrcValues, _Out_writes_(Count) DEST_TYPE *pDestValues,
+                              _In_ uint32_t Offset, _In_ uint32_t Count, 
+                              _In_ const SType *pType, _In_ uint32_t  TotalUnpackedSize, _In_z_ const char *pFuncName)
 {
     HRESULT hr = S_OK;
 
 #ifdef _DEBUG    
     VERIFYPARAMETER(pDestValues);
 
+#pragma warning( suppress : 6001 )
     if (!AreBoundsValid(Offset, Count, pDestValues, pType, TotalUnpackedSize))
     {
         DPF(0, "%s: Invalid range specified", pFuncName);
         VH(E_INVALIDARG);
     }
+#else
+    UNREFERENCED_PARAMETER(TotalUnpackedSize);
+    UNREFERENCED_PARAMETER(pFuncName);
 #endif
 
-    UINT i, j, delta = pType->NumericType.IsPackedArray ? 1 : SType::c_ScalarsPerRegister;
+    uint32_t i, j, delta = pType->NumericType.IsPackedArray ? 1 : SType::c_ScalarsPerRegister;
     pSrcValues += Offset * delta;
     for (i = 0, j = 0; j < Count; i += delta, ++ j)
     {
         // pDestValues[j] = (DEST_TYPE)pSrcValues[i];
-        CopyScalarValue<SourceType, DestType, SRC_TYPE, FALSE>(pSrcValues[i], &pDestValues[j], "GetScalarArray");
+        CopyScalarValue<SourceType, DestType, SRC_TYPE, false>(pSrcValues[i], &pDestValues[j], "GetScalarArray");
     }
 
 lExit:
@@ -666,9 +823,9 @@ lExit:
 template<typename IBaseInterface>
 struct TVariable : public IBaseInterface
 {
-    STDMETHOD_(BOOL, IsValid)() { return TRUE; }
+    STDMETHOD_(bool, IsValid)() override { return true; }
 
-    STDMETHOD_(ID3DX11EffectVariable*, GetMemberByIndex)(UINT Index)
+    STDMETHOD_(ID3DX11EffectVariable*, GetMemberByIndex)(_In_ uint32_t Index)
     {
         SVariable *pMember;
         UDataPointer dataPtr;
@@ -692,14 +849,14 @@ struct TVariable : public IBaseInterface
             return &g_InvalidScalarVariable;
         }
 
-        return pTopLevelEntity->pEffect->CreatePooledVariableMemberInterface(pTopLevelEntity, pMember, dataPtr, FALSE, Index);
+        return pTopLevelEntity->pEffect->CreatePooledVariableMemberInterface(pTopLevelEntity, pMember, dataPtr, false, Index);
     }
 
-    STDMETHOD_(ID3DX11EffectVariable*, GetMemberByName)(LPCSTR Name)
+    STDMETHOD_(ID3DX11EffectVariable*, GetMemberByName)(_In_z_ LPCSTR Name)
     {
         SVariable *pMember;
         UDataPointer dataPtr;
-        UINT index;
+        uint32_t index;
         TTopLevelVariable<ID3DX11EffectVariable> *pTopLevelEntity = GetTopLevelEntity();
 
         if (pTopLevelEntity->pEffect->IsOptimized())
@@ -721,14 +878,14 @@ struct TVariable : public IBaseInterface
 
         }
 
-        return pTopLevelEntity->pEffect->CreatePooledVariableMemberInterface(pTopLevelEntity, pMember, dataPtr, FALSE, index);
+        return pTopLevelEntity->pEffect->CreatePooledVariableMemberInterface(pTopLevelEntity, pMember, dataPtr, false, index);
     }
 
-    STDMETHOD_(ID3DX11EffectVariable*, GetMemberBySemantic)(LPCSTR Semantic)
+    STDMETHOD_(ID3DX11EffectVariable*, GetMemberBySemantic)(_In_z_ LPCSTR Semantic)
     {
         SVariable *pMember;
         UDataPointer dataPtr;
-        UINT index;
+        uint32_t index;
         TTopLevelVariable<ID3DX11EffectVariable> *pTopLevelEntity = GetTopLevelEntity();
 
         if (pTopLevelEntity->pEffect->IsOptimized())
@@ -750,12 +907,12 @@ struct TVariable : public IBaseInterface
 
         }
 
-        return pTopLevelEntity->pEffect->CreatePooledVariableMemberInterface(pTopLevelEntity, pMember, dataPtr, FALSE, index);
+        return pTopLevelEntity->pEffect->CreatePooledVariableMemberInterface(pTopLevelEntity, pMember, dataPtr, false, index);
     }
 
-    STDMETHOD_(ID3DX11EffectVariable*, GetElement)(UINT Index)
+    STDMETHOD_(ID3DX11EffectVariable*, GetElement)(_In_ uint32_t Index)
     {
-        LPCSTR pFuncName = "ID3DX11EffectVariable::GetElement";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::GetElement";
         TTopLevelVariable<ID3DX11EffectVariable> *pTopLevelEntity = GetTopLevelEntity();
         UDataPointer dataPtr;
 
@@ -784,19 +941,19 @@ struct TVariable : public IBaseInterface
         else
         {
             dataPtr.pGeneric = GetBlockByIndex(pType->VarType, pType->ObjectType, Data.pGeneric, Index);
-            if (NULL == dataPtr.pGeneric)
+            if (nullptr == dataPtr.pGeneric)
             {
                 DPF(0, "%s: Internal error", pFuncName);
                 return &g_InvalidScalarVariable;
             }
         }
 
-        return pTopLevelEntity->pEffect->CreatePooledVariableMemberInterface(pTopLevelEntity, (SVariable *) this, dataPtr, TRUE, Index);
+        return pTopLevelEntity->pEffect->CreatePooledVariableMemberInterface(pTopLevelEntity, (SVariable *) this, dataPtr, true, Index);
     }
 
     STDMETHOD_(ID3DX11EffectScalarVariable*, AsScalar)()
     {
-        LPCSTR pFuncName = "ID3DX11EffectVariable::AsScalar";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::AsScalar";
 
         if (pType->VarType != EVT_Numeric || 
             pType->NumericType.NumericLayout != ENL_Scalar)
@@ -810,7 +967,7 @@ struct TVariable : public IBaseInterface
 
     STDMETHOD_(ID3DX11EffectVectorVariable*, AsVector)()
     {
-        LPCSTR pFuncName = "ID3DX11EffectVariable::AsVector";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::AsVector";
 
         if (pType->VarType != EVT_Numeric || 
             pType->NumericType.NumericLayout != ENL_Vector)
@@ -824,7 +981,7 @@ struct TVariable : public IBaseInterface
 
     STDMETHOD_(ID3DX11EffectMatrixVariable*, AsMatrix)()
     {
-        LPCSTR pFuncName = "ID3DX11EffectVariable::AsMatrix";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::AsMatrix";
 
         if (pType->VarType != EVT_Numeric || 
             pType->NumericType.NumericLayout != ENL_Matrix)
@@ -838,7 +995,7 @@ struct TVariable : public IBaseInterface
 
     STDMETHOD_(ID3DX11EffectStringVariable*, AsString)()
     {
-        LPCSTR pFuncName = "ID3DX11EffectVariable::AsString";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::AsString";
 
         if (!pType->IsObjectType(EOT_String))
         {
@@ -851,14 +1008,14 @@ struct TVariable : public IBaseInterface
 
     STDMETHOD_(ID3DX11EffectClassInstanceVariable*, AsClassInstance)()
     {
-        LPCSTR pFuncName = "ID3DX11EffectVariable::AsClassInstance";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::AsClassInstance";
 
         if (!pType->IsClassInstance() )
         {
             DPF(0, "%s: Invalid typecast", pFuncName);
             return &g_InvalidClassInstanceVariable;
         }
-        else if( pMemberData == NULL )
+        else if( pMemberData == nullptr )
         {
             DPF(0, "%s: Non-global class instance variables (members of structs or classes) and class instances "
                    "inside tbuffers are not supported.", pFuncName );
@@ -870,7 +1027,7 @@ struct TVariable : public IBaseInterface
 
     STDMETHOD_(ID3DX11EffectInterfaceVariable*, AsInterface)()
     {
-        LPCSTR pFuncName = "ID3DX11EffectVariable::AsInterface";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::AsInterface";
 
         if (!pType->IsInterface())
         {
@@ -883,7 +1040,7 @@ struct TVariable : public IBaseInterface
 
     STDMETHOD_(ID3DX11EffectShaderResourceVariable*, AsShaderResource)()
     {
-        LPCSTR pFuncName = "ID3DX11EffectVariable::AsShaderResource";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::AsShaderResource";
 
         if (!pType->IsShaderResource())
         {
@@ -896,7 +1053,7 @@ struct TVariable : public IBaseInterface
 
     STDMETHOD_(ID3DX11EffectUnorderedAccessViewVariable*, AsUnorderedAccessView)()
     {
-        LPCSTR pFuncName = "ID3DX11EffectVariable::AsUnorderedAccessView";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::AsUnorderedAccessView";
 
         if (!pType->IsUnorderedAccessView())
         {
@@ -909,7 +1066,7 @@ struct TVariable : public IBaseInterface
 
     STDMETHOD_(ID3DX11EffectRenderTargetViewVariable*, AsRenderTargetView)()
     {
-        LPCSTR pFuncName = "ID3DX11EffectVariable::AsRenderTargetView";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::AsRenderTargetView";
 
         if (!pType->IsRenderTargetView())
         {
@@ -922,7 +1079,7 @@ struct TVariable : public IBaseInterface
 
     STDMETHOD_(ID3DX11EffectDepthStencilViewVariable*, AsDepthStencilView)()
     {
-        LPCSTR pFuncName = "ID3DX11EffectVariable::AsDepthStencilView";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::AsDepthStencilView";
 
         if (!pType->IsDepthStencilView())
         {
@@ -935,14 +1092,14 @@ struct TVariable : public IBaseInterface
 
     STDMETHOD_(ID3DX11EffectConstantBuffer*, AsConstantBuffer)()
     {
-        LPCSTR pFuncName = "ID3DX11EffectVariable::AsConstantBuffer";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::AsConstantBuffer";
         DPF(0, "%s: Invalid typecast", pFuncName);
         return &g_InvalidConstantBuffer;
     }
 
     STDMETHOD_(ID3DX11EffectShaderVariable*, AsShader)()
     {
-        LPCSTR pFuncName = "ID3DX11EffectVariable::AsShader";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::AsShader";
 
         if (!pType->IsShader())
         {
@@ -955,7 +1112,7 @@ struct TVariable : public IBaseInterface
 
     STDMETHOD_(ID3DX11EffectBlendVariable*, AsBlend)()
     {
-        LPCSTR pFuncName = "ID3DX11EffectVariable::AsBlend";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::AsBlend";
 
         if (!pType->IsObjectType(EOT_Blend))
         {
@@ -968,7 +1125,7 @@ struct TVariable : public IBaseInterface
 
     STDMETHOD_(ID3DX11EffectDepthStencilVariable*, AsDepthStencil)()
     {
-        LPCSTR pFuncName = "ID3DX11EffectVariable::AsDepthStencil";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::AsDepthStencil";
 
         if (!pType->IsObjectType(EOT_DepthStencil))
         {
@@ -981,7 +1138,7 @@ struct TVariable : public IBaseInterface
 
     STDMETHOD_(ID3DX11EffectRasterizerVariable*, AsRasterizer)()
     {
-        LPCSTR pFuncName = "ID3DX11EffectVariable::AsRasterizer";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::AsRasterizer";
 
         if (!pType->IsObjectType(EOT_Rasterizer))
         {
@@ -994,7 +1151,7 @@ struct TVariable : public IBaseInterface
 
     STDMETHOD_(ID3DX11EffectSamplerVariable*, AsSampler)()
     {
-        LPCSTR pFuncName = "ID3DX11EffectVariable::AsSampler";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::AsSampler";
 
         if (!pType->IsSampler())
         {
@@ -1006,8 +1163,10 @@ struct TVariable : public IBaseInterface
     }
 
     // Numeric variables should override this
-    STDMETHOD(SetRawValue)(CONST void *pData, UINT  Offset, UINT  Count) { return ObjectSetRawValue(); }
-    STDMETHOD(GetRawValue)(void *pData, UINT  Offset, UINT  Count) { return ObjectGetRawValue(); }
+    STDMETHOD(SetRawValue)(_In_reads_bytes_(Count) const void *pData, _In_ uint32_t Offset, _In_ uint32_t Count)
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return ObjectSetRawValue(); }
+    STDMETHOD(GetRawValue)(_Out_writes_(Count) void *pData, _In_ uint32_t Offset, _In_ uint32_t Count)
+        { UNREFERENCED_PARAMETER(pData); UNREFERENCED_PARAMETER(Offset); UNREFERENCED_PARAMETER(Count); return ObjectGetRawValue(); }
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -1025,14 +1184,13 @@ struct TTopLevelVariable : public SVariable, public IBaseInterface
         return pEffect;
     }
 
-    TTopLevelVariable()
+    TTopLevelVariable() : pEffect (nullptr)
     {
-        pEffect = NULL;
     }
 
-    UINT  GetTotalUnpackedSize()
+    uint32_t  GetTotalUnpackedSize()
     {
-        return ((SType*)pType)->GetTotalUnpackedSize(FALSE);
+        return ((SType*)pType)->GetTotalUnpackedSize(false);
     }
 
     STDMETHOD_(ID3DX11EffectType*, GetType)()
@@ -1045,7 +1203,7 @@ struct TTopLevelVariable : public SVariable, public IBaseInterface
         return (TTopLevelVariable<ID3DX11EffectVariable> *)this;
     }
 
-    BOOL IsArray()
+    bool IsArray()
     {
         return (pType->Elements > 0);
     }
@@ -1060,15 +1218,15 @@ template<typename IBaseInterface>
 struct TMember : public SVariable, public IBaseInterface
 {
     // Indicates that this is a single element of a containing array
-    UINT                                        IsSingleElement : 1;
+    uint32_t                                    IsSingleElement : 1;
 
     // Required to create member/element variable interfaces
     TTopLevelVariable<ID3DX11EffectVariable>    *pTopLevelEntity;
 
     TMember()
     {
-        IsSingleElement = FALSE;
-        pTopLevelEntity = NULL;
+        IsSingleElement = false;
+        pTopLevelEntity = nullptr;
     }
 
     CEffect* GetEffect()
@@ -1076,12 +1234,12 @@ struct TMember : public SVariable, public IBaseInterface
         return pTopLevelEntity->pEffect;
     }
 
-    UINT  GetTotalUnpackedSize()
+    uint32_t  GetTotalUnpackedSize()
     {
         return pType->GetTotalUnpackedSize(IsSingleElement);
     }
 
-    STDMETHOD_(ID3DX11EffectType*, GetType)()
+    STDMETHOD_(ID3DX11EffectType*, GetType)() override
     {
         if (IsSingleElement)
         {
@@ -1093,12 +1251,12 @@ struct TMember : public SVariable, public IBaseInterface
         }
     }
 
-    STDMETHOD(GetDesc)(D3DX11_EFFECT_VARIABLE_DESC *pDesc)
+    STDMETHOD(GetDesc)(_Out_ D3DX11_EFFECT_VARIABLE_DESC *pDesc) override
     {
         HRESULT hr = S_OK;
-        LPCSTR pFuncName = "ID3DX11EffectVariable::GetDesc";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::GetDesc";
 
-        VERIFYPARAMETER(pDesc != NULL);
+        VERIFYPARAMETER(pDesc != nullptr);
 
         pDesc->Name = pName;
         pDesc->Semantic = pSemantic;
@@ -1107,7 +1265,7 @@ struct TMember : public SVariable, public IBaseInterface
         if (pTopLevelEntity->pEffect->IsReflectionData(pTopLevelEntity))
         {
             // Is part of an annotation
-            D3DXASSERT(pTopLevelEntity->pEffect->IsReflectionData(Data.pGeneric));
+            assert(pTopLevelEntity->pEffect->IsReflectionData(Data.pGeneric));
             pDesc->Annotations = 0;
             pDesc->BufferOffset = 0;
             pDesc->Flags |= D3DX11_EFFECT_VARIABLE_ANNOTATION;
@@ -1115,11 +1273,11 @@ struct TMember : public SVariable, public IBaseInterface
         else
         {
             // Is part of a global variable
-            D3DXASSERT(pTopLevelEntity->pEffect->IsRuntimeData(pTopLevelEntity));
+            assert(pTopLevelEntity->pEffect->IsRuntimeData(pTopLevelEntity));
             if (!pTopLevelEntity->pType->IsObjectType(EOT_String))
             {
                 // strings are funny; their data is reflection data, so ignore those
-                D3DXASSERT(pTopLevelEntity->pEffect->IsRuntimeData(Data.pGeneric));
+                assert(pTopLevelEntity->pEffect->IsRuntimeData(Data.pGeneric));
             }
             
             pDesc->Annotations = ((TGlobalVariable<ID3DX11Effect>*)pTopLevelEntity)->AnnotationCount;
@@ -1128,15 +1286,16 @@ struct TMember : public SVariable, public IBaseInterface
 
             if (pType->BelongsInConstantBuffer())
             {   
-                D3DXASSERT(pCB != NULL);
+                assert(pCB != 0);
+                _Analysis_assume_(pCB != 0);
                 UINT_PTR offset = Data.pNumeric - pCB->pBackingStore;
-                D3DXASSERT(offset == (UINT)offset);
-                pDesc->BufferOffset = (UINT)offset;
-                D3DXASSERT(pDesc->BufferOffset >= 0 && pDesc->BufferOffset + GetTotalUnpackedSize() <= pCB->Size);
+                assert(offset == (uint32_t)offset);
+                pDesc->BufferOffset = (uint32_t)offset;
+                assert(pDesc->BufferOffset >= 0 && pDesc->BufferOffset + GetTotalUnpackedSize() <= pCB->Size);
             }
             else
             {
-                D3DXASSERT(pCB == NULL);
+                assert(pCB == nullptr);
                 pDesc->BufferOffset = 0;
             }
         }
@@ -1150,17 +1309,17 @@ lExit:
         return pTopLevelEntity;
     }
 
-    BOOL IsArray()
+    bool IsArray()
     {
         return (pType->Elements > 0 && !IsSingleElement);
     }
 
-    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByIndex)(UINT Index)
+    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByIndex)(_In_ uint32_t Index) override
     { return pTopLevelEntity->GetAnnotationByIndex(Index); }
-    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByName)(LPCSTR Name)
+    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByName)(_In_z_ LPCSTR Name) override
     { return pTopLevelEntity->GetAnnotationByName(Name); }
 
-    STDMETHOD_(ID3DX11EffectConstantBuffer*, GetParentConstantBuffer)()
+    STDMETHOD_(ID3DX11EffectConstantBuffer*, GetParentConstantBuffer)() override
     { return pTopLevelEntity->GetParentConstantBuffer(); }
 
     // Annotations should never be able to go down this codepath
@@ -1178,12 +1337,12 @@ lExit:
 template<typename IBaseInterface>
 struct TAnnotation : public TVariable<TTopLevelVariable<IBaseInterface> >
 {
-    STDMETHOD(GetDesc)(D3DX11_EFFECT_VARIABLE_DESC *pDesc)
+    STDMETHOD(GetDesc)(_Out_ D3DX11_EFFECT_VARIABLE_DESC *pDesc) override
     {
         HRESULT hr = S_OK;
-        LPCSTR pFuncName = "ID3DX11EffectVariable::GetDesc";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::GetDesc";
 
-        VERIFYPARAMETER(pDesc != NULL);
+        VERIFYPARAMETER(pDesc != nullptr);
 
         pDesc->Name = pName;
         pDesc->Semantic = pSemantic;
@@ -1197,26 +1356,28 @@ lExit:
 
     }
 
-    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByIndex)(UINT Index)
+    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByIndex)(_In_ uint32_t Index) override
     {
-        LPCSTR pFuncName = "ID3DX11EffectVariable::GetAnnotationByIndex";
+        UNREFERENCED_PARAMETER(Index);
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::GetAnnotationByIndex";
         DPF(0, "%s: Only variables may have annotations", pFuncName);
         return &g_InvalidScalarVariable;
     }
 
-    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByName)(LPCSTR Name)
+    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByName)(_In_z_ LPCSTR Name) override
     {
-        LPCSTR pFuncName = "ID3DX11EffectVariable::GetAnnotationByName";
+        UNREFERENCED_PARAMETER(Name);
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::GetAnnotationByName";
         DPF(0, "%s: Only variables may have annotations", pFuncName);
         return &g_InvalidScalarVariable;
     }
 
-    STDMETHOD_(ID3DX11EffectConstantBuffer*, GetParentConstantBuffer)()
+    STDMETHOD_(ID3DX11EffectConstantBuffer*, GetParentConstantBuffer)() override
     { return NoParentCB(); }
 
     void DirtyVariable()
     {
-        D3DXASSERT(0);
+        assert(0);
     }
 };
 
@@ -1232,23 +1393,23 @@ struct TGlobalVariable : public TVariable<TTopLevelVariable<IBaseInterface> >
     // if numeric, pointer to the constant buffer where this variable lives
     SConstantBuffer *pCB;
 
-    UINT            AnnotationCount;
+    uint32_t            AnnotationCount;
     SAnnotation     *pAnnotations;
 
-    TGlobalVariable()
+    TGlobalVariable() :
+        LastModifiedTime(0),
+        pCB(nullptr),
+        AnnotationCount(0),
+        pAnnotations(nullptr)
     {
-        LastModifiedTime = 0;
-        pCB = NULL;
-        AnnotationCount = 0;
-        pAnnotations = NULL;
     }
 
-    STDMETHOD(GetDesc)(D3DX11_EFFECT_VARIABLE_DESC *pDesc)
+    STDMETHOD(GetDesc)(_Out_ D3DX11_EFFECT_VARIABLE_DESC *pDesc)
     {
         HRESULT hr = S_OK;
-        LPCSTR pFuncName = "ID3DX11EffectVariable::GetDesc";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::GetDesc";
 
-        VERIFYPARAMETER(pDesc != NULL);
+        VERIFYPARAMETER(pDesc != nullptr);
 
         pDesc->Name = pName;
         pDesc->Semantic = pSemantic;
@@ -1257,15 +1418,16 @@ struct TGlobalVariable : public TVariable<TTopLevelVariable<IBaseInterface> >
 
         if (pType->BelongsInConstantBuffer())
         {
-            D3DXASSERT(pCB != NULL);
+            assert(pCB != 0);
+            _Analysis_assume_(pCB != 0);
             UINT_PTR offset = Data.pNumeric - pCB->pBackingStore;
-            D3DXASSERT(offset == (UINT)offset);
-            pDesc->BufferOffset = (UINT)offset;
-            D3DXASSERT(pDesc->BufferOffset >= 0 && pDesc->BufferOffset + GetTotalUnpackedSize() <= pCB->Size );
+            assert(offset == (uint32_t)offset);
+            pDesc->BufferOffset = (uint32_t)offset;
+            assert(pDesc->BufferOffset >= 0 && pDesc->BufferOffset + GetTotalUnpackedSize() <= pCB->Size );
         }
         else
         {
-            D3DXASSERT(pCB == NULL);
+            assert(pCB == nullptr);
             pDesc->BufferOffset = 0;
         }
 
@@ -1284,34 +1446,35 @@ lExit:
     }
 
     // these are all well defined for global vars
-    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByIndex)(UINT Index)
+    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByIndex)(_In_ uint32_t Index)
     {
         return GetAnnotationByIndexHelper("ID3DX11EffectVariable", Index, AnnotationCount, pAnnotations);
     }
 
-    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByName)(LPCSTR Name)
+    STDMETHOD_(ID3DX11EffectVariable*, GetAnnotationByName)(_In_z_ LPCSTR Name)
     {
         return GetAnnotationByNameHelper("ID3DX11EffectVariable", Name, AnnotationCount, pAnnotations);
     }
 
     STDMETHOD_(ID3DX11EffectConstantBuffer*, GetParentConstantBuffer)()
     { 
-        if (NULL != pCB)
+        if (nullptr != pCB)
         {
-            D3DXASSERT(pType->BelongsInConstantBuffer());
+            assert(pType->BelongsInConstantBuffer());
             return (ID3DX11EffectConstantBuffer*)pCB; 
         }
         else
         {
-            D3DXASSERT(!pType->BelongsInConstantBuffer());
+            assert(!pType->BelongsInConstantBuffer());
             return &g_InvalidConstantBuffer;
         }
     }
 
-    D3DX11INLINE void DirtyVariable()
+    inline void DirtyVariable()
     {
-        D3DXASSERT(NULL != pCB);
-        pCB->IsDirty = TRUE;
+        assert(pCB != 0);
+        _Analysis_assume_(pCB != 0);
+        pCB->IsDirty = true;
         LastModifiedTime = pEffect->GetCurrentTime();
     }
 
@@ -1327,10 +1490,10 @@ lExit:
 // create arrays of global variables using SGlobalVariable
 
 // Requires that IBaseInterface have SVariable's members, GetTotalUnpackedSize() and DirtyVariable()
-template<typename IBaseInterface, BOOL IsAnnotation>
+template<typename IBaseInterface, bool IsAnnotation>
 struct TNumericVariable : public IBaseInterface
 {
-    STDMETHOD(SetRawValue)(CONST void *pData, UINT  ByteOffset, UINT  ByteCount) 
+    STDMETHOD(SetRawValue)(_In_reads_bytes_(ByteCount) const void *pData, _In_ uint32_t ByteOffset, _In_ uint32_t ByteCount) override 
     {
         if (IsAnnotation)
         {
@@ -1341,12 +1504,12 @@ struct TNumericVariable : public IBaseInterface
             HRESULT hr = S_OK;    
 
 #ifdef _DEBUG
-            LPCSTR pFuncName = "ID3DX11EffectVariable::SetRawValue";
+            static LPCSTR pFuncName = "ID3DX11EffectVariable::SetRawValue";
 
             VERIFYPARAMETER(pData);
 
             if ((ByteOffset + ByteCount < ByteOffset) ||
-                (ByteCount + (BYTE*)pData < (BYTE*)pData) ||
+                (ByteCount + (uint8_t*)pData < (uint8_t*)pData) ||
                 ((ByteOffset + ByteCount) > GetTotalUnpackedSize()))
             {
                 // overflow of some kind
@@ -1363,17 +1526,17 @@ lExit:
         }
     }
 
-    STDMETHOD(GetRawValue)(__out_bcount(ByteCount) void *pData, UINT  ByteOffset, UINT  ByteCount)
+    STDMETHOD(GetRawValue)(_Out_writes_bytes_(ByteCount) void *pData, _In_ uint32_t ByteOffset, _In_ uint32_t ByteCount) override
     {
         HRESULT hr = S_OK;    
 
 #ifdef _DEBUG
-        LPCSTR pFuncName = "ID3DX11EffectVariable::GetRawValue";
+        static LPCSTR pFuncName = "ID3DX11EffectVariable::GetRawValue";
 
         VERIFYPARAMETER(pData);
 
         if ((ByteOffset + ByteCount < ByteOffset) ||
-            (ByteCount + (BYTE*)pData < (BYTE*)pData) ||
+            (ByteCount + (uint8_t*)pData < (uint8_t*)pData) ||
             ((ByteOffset + ByteCount) > GetTotalUnpackedSize()))
         {
             // overflow of some kind
@@ -1393,121 +1556,133 @@ lExit:
 // ID3DX11EffectScalarVariable (TFloatScalarVariable implementation)
 //////////////////////////////////////////////////////////////////////////
 
-template<typename IBaseInterface, BOOL IsAnnotation>
+template<typename IBaseInterface, bool IsAnnotation>
 struct TFloatScalarVariable : public TNumericVariable<IBaseInterface, IsAnnotation>
 {
-    STDMETHOD(SetFloat)(CONST float Value);
-    STDMETHOD(GetFloat)(float *pValue);
+    STDMETHOD(SetFloat)(_In_ const float Value) override;
+    STDMETHOD(GetFloat)(_Out_ float *pValue) override;
 
-    STDMETHOD(SetFloatArray)(CONST float *pData, UINT  Offset, UINT  Count);
-    STDMETHOD(GetFloatArray)(float *pData, UINT  Offset, UINT  Count);
+    STDMETHOD(SetFloatArray)(_In_reads_(Count) const float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
+    STDMETHOD(GetFloatArray)(_Out_writes_(Count) float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
 
-    STDMETHOD(SetInt)(CONST int Value);
-    STDMETHOD(GetInt)(int *pValue);
+    STDMETHOD(SetInt)(_In_ const int Value) override;
+    STDMETHOD(GetInt)(_Out_ int *pValue) override;
 
-    STDMETHOD(SetIntArray)(CONST int *pData, UINT  Offset, UINT  Count);
-    STDMETHOD(GetIntArray)(int *pData, UINT  Offset, UINT  Count);
+    STDMETHOD(SetIntArray)(_In_reads_(Count) const int *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
+    STDMETHOD(GetIntArray)(_Out_writes_(Count) int *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
 
-    STDMETHOD(SetBool)(CONST BOOL Value);
-    STDMETHOD(GetBool)(BOOL *pValue);
+    STDMETHOD(SetBool)(_In_ const bool Value) override;
+    STDMETHOD(GetBool)(_Out_ bool *pValue) override;
 
-    STDMETHOD(SetBoolArray)(CONST BOOL *pData, UINT  Offset, UINT  Count);
-    STDMETHOD(GetBoolArray)(BOOL *pData, UINT  Offset, UINT  Count);
+    STDMETHOD(SetBoolArray)(_In_reads_(Count) const bool *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
+    STDMETHOD(GetBoolArray)(_Out_writes_(Count) bool *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
 };
 
-template<typename IBaseInterface, BOOL IsAnnotation>
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
 HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::SetFloat(float Value)
 {
-    LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetFloat";
+    static LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetFloat";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
-    return CopyScalarValue<ETVT_Float, ETVT_Float, float, FALSE>(Value, Data.pNumericFloat, pFuncName);
+    return CopyScalarValue<ETVT_Float, ETVT_Float, float, false>(Value, Data.pNumericFloat, pFuncName);
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
 HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::GetFloat(float *pValue)
 {
-    return CopyScalarValue<ETVT_Float, ETVT_Float, float, TRUE>(*Data.pNumericFloat, pValue, "ID3DX11EffectScalarVariable::GetFloat");
+    return CopyScalarValue<ETVT_Float, ETVT_Float, float, true>(*Data.pNumericFloat, pValue, "ID3DX11EffectScalarVariable::GetFloat");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::SetFloatArray(CONST float *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::SetFloatArray(const float *pData, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetFloatArray";
+    static LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetFloatArray";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
     return SetScalarArray<ETVT_Float, ETVT_Float, float, float>(pData, Data.pNumericFloat, Offset, Count, 
         pType, GetTotalUnpackedSize(), pFuncName);
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::GetFloatArray(float *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::GetFloatArray(float *pData, uint32_t Offset, uint32_t Count)
 {
     return GetScalarArray<ETVT_Float, ETVT_Float, float, float>(Data.pNumericFloat, pData, Offset, Count, 
         pType, GetTotalUnpackedSize(), "ID3DX11EffectScalarVariable::GetFloatArray");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::SetInt(CONST int Value)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::SetInt(const int Value)
 {
-    LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetInt";
+    static LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetInt";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
-    return CopyScalarValue<ETVT_Int, ETVT_Float, int, FALSE>(Value, Data.pNumericFloat, pFuncName);
+    return CopyScalarValue<ETVT_Int, ETVT_Float, int, false>(Value, Data.pNumericFloat, pFuncName);
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
 HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::GetInt(int *pValue)
 {
-    return CopyScalarValue<ETVT_Float, ETVT_Int, float, TRUE>(*Data.pNumericFloat, pValue, "ID3DX11EffectScalarVariable::GetInt");
+    return CopyScalarValue<ETVT_Float, ETVT_Int, float, true>(*Data.pNumericFloat, pValue, "ID3DX11EffectScalarVariable::GetInt");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::SetIntArray(CONST int *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::SetIntArray(const int *pData, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetIntArray";
+    static LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetIntArray";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
     return SetScalarArray<ETVT_Int, ETVT_Float, int, float>(pData, Data.pNumericFloat, Offset, Count, 
         pType, GetTotalUnpackedSize(), pFuncName);
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::GetIntArray(int *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::GetIntArray(int *pData, uint32_t Offset, uint32_t Count)
 {
     return GetScalarArray<ETVT_Float, ETVT_Int, float, int>(Data.pNumericFloat, pData, Offset, Count, 
         pType, GetTotalUnpackedSize(), "ID3DX11EffectScalarVariable::GetIntArray");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::SetBool(CONST BOOL Value)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::SetBool(const bool Value)
 {
-    LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetBool";
+    static LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetBool";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
-    return CopyScalarValue<ETVT_Bool, ETVT_Float, BOOL, FALSE>(Value, Data.pNumericFloat, pFuncName);
+    return CopyScalarValue<ETVT_bool, ETVT_Float, bool, false>(Value, Data.pNumericFloat, pFuncName);
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::GetBool(BOOL *pValue)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::GetBool(bool *pValue)
 {
-    return CopyScalarValue<ETVT_Float, ETVT_Bool, float, TRUE>(*Data.pNumericFloat, pValue, "ID3DX11EffectScalarVariable::GetBool");
+    return CopyScalarValue<ETVT_Float, ETVT_bool, float, true>(*Data.pNumericFloat, pValue, "ID3DX11EffectScalarVariable::GetBool");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::SetBoolArray(CONST BOOL *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::SetBoolArray(const bool *pData, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetBoolArray";
+    static LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetBoolArray";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
-    return SetScalarArray<ETVT_Bool, ETVT_Float, BOOL, float>(pData, Data.pNumericFloat, Offset, Count, 
+    return SetScalarArray<ETVT_bool, ETVT_Float, bool, float>(pData, Data.pNumericFloat, Offset, Count, 
         pType, GetTotalUnpackedSize(), pFuncName);
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::GetBoolArray(BOOL *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::GetBoolArray(bool *pData, uint32_t Offset, uint32_t Count)
 {
-    return GetScalarArray<ETVT_Float, ETVT_Bool, float, BOOL>(Data.pNumericFloat, pData, Offset, Count, 
+    return GetScalarArray<ETVT_Float, ETVT_bool, float, bool>(Data.pNumericFloat, pData, Offset, Count, 
         pType, GetTotalUnpackedSize(), "ID3DX11EffectScalarVariable::GetBoolArray");
 }
 
@@ -1515,121 +1690,133 @@ HRESULT TFloatScalarVariable<IBaseInterface, IsAnnotation>::GetBoolArray(BOOL *p
 // ID3DX11EffectScalarVariable (TIntScalarVariable implementation)
 //////////////////////////////////////////////////////////////////////////
 
-template<typename IBaseInterface, BOOL IsAnnotation>
+template<typename IBaseInterface, bool IsAnnotation>
 struct TIntScalarVariable : public TNumericVariable<IBaseInterface, IsAnnotation>
 {
-    STDMETHOD(SetFloat)(CONST float Value);
-    STDMETHOD(GetFloat)(float *pValue);
+    STDMETHOD(SetFloat)(_In_ const float Value) override;
+    STDMETHOD(GetFloat)(_Out_ float *pValue) override;
 
-    STDMETHOD(SetFloatArray)(CONST float *pData, UINT  Offset, UINT  Count);
-    STDMETHOD(GetFloatArray)(float *pData, UINT  Offset, UINT  Count);
+    STDMETHOD(SetFloatArray)(_In_reads_(Count) const float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
+    STDMETHOD(GetFloatArray)(_Out_writes_(Count) float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
 
-    STDMETHOD(SetInt)(CONST int Value);
-    STDMETHOD(GetInt)(int *pValue);
+    STDMETHOD(SetInt)(_In_ const int Value) override;
+    STDMETHOD(GetInt)(_Out_ int *pValue) override;
 
-    STDMETHOD(SetIntArray)(CONST int *pData, UINT  Offset, UINT  Count);
-    STDMETHOD(GetIntArray)(int *pData, UINT  Offset, UINT  Count);
+    STDMETHOD(SetIntArray)(_In_reads_(Count) const int *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
+    STDMETHOD(GetIntArray)(_Out_writes_(Count) int *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
 
-    STDMETHOD(SetBool)(CONST BOOL Value);
-    STDMETHOD(GetBool)(BOOL *pValue);
+    STDMETHOD(SetBool)(_In_ const bool Value) override;
+    STDMETHOD(GetBool)(_Out_ bool *pValue) override;
 
-    STDMETHOD(SetBoolArray)(CONST BOOL *pData, UINT  Offset, UINT  Count);
-    STDMETHOD(GetBoolArray)(BOOL *pData, UINT  Offset, UINT  Count);
+    STDMETHOD(SetBoolArray)(_In_reads_(Count) const bool *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
+    STDMETHOD(GetBoolArray)(_Out_writes_(Count) bool *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
 };
 
-template<typename IBaseInterface, BOOL IsAnnotation>
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
 HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::SetFloat(float Value)
 {
-    LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetFloat";
+    static LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetFloat";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
-    return CopyScalarValue<ETVT_Float, ETVT_Int, float, FALSE>(Value, Data.pNumericInt, pFuncName);
+    return CopyScalarValue<ETVT_Float, ETVT_Int, float, false>(Value, Data.pNumericInt, pFuncName);
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
 HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::GetFloat(float *pValue)
 {
-    return CopyScalarValue<ETVT_Int, ETVT_Float, int, TRUE>(*Data.pNumericInt, pValue, "ID3DX11EffectScalarVariable::GetFloat");
+    return CopyScalarValue<ETVT_Int, ETVT_Float, int, true>(*Data.pNumericInt, pValue, "ID3DX11EffectScalarVariable::GetFloat");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::SetFloatArray(CONST float *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::SetFloatArray(const float *pData, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetFloatArray";
+    static LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetFloatArray";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
     return SetScalarArray<ETVT_Float, ETVT_Int, float, int>(pData, Data.pNumericInt, Offset, Count, 
         pType, GetTotalUnpackedSize(), pFuncName);
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::GetFloatArray(float *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::GetFloatArray(float *pData, uint32_t Offset, uint32_t Count)
 {
     return GetScalarArray<ETVT_Int, ETVT_Float, int, float>(Data.pNumericInt, pData, Offset, Count, 
         pType, GetTotalUnpackedSize(), "ID3DX11EffectScalarVariable::GetFloatArray");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::SetInt(CONST int Value)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::SetInt(const int Value)
 {
-    LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetInt";
+    static LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetInt";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
-    return CopyScalarValue<ETVT_Int, ETVT_Int, int, FALSE>(Value, Data.pNumericInt, pFuncName);
+    return CopyScalarValue<ETVT_Int, ETVT_Int, int, false>(Value, Data.pNumericInt, pFuncName);
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
 HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::GetInt(int *pValue)
 {
-    return CopyScalarValue<ETVT_Int, ETVT_Int, int, TRUE>(*Data.pNumericInt, pValue, "ID3DX11EffectScalarVariable::GetInt");
+    return CopyScalarValue<ETVT_Int, ETVT_Int, int, true>(*Data.pNumericInt, pValue, "ID3DX11EffectScalarVariable::GetInt");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::SetIntArray(CONST int *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::SetIntArray(const int *pData, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetIntArray";
+    static LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetIntArray";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
     return SetScalarArray<ETVT_Int, ETVT_Int, int, int>(pData, Data.pNumericInt, Offset, Count, 
         pType, GetTotalUnpackedSize(), pFuncName);
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::GetIntArray(int *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::GetIntArray(int *pData, uint32_t Offset, uint32_t Count)
 {
     return GetScalarArray<ETVT_Int, ETVT_Int, int, int>(Data.pNumericInt, pData, Offset, Count, 
         pType, GetTotalUnpackedSize(), "ID3DX11EffectScalarVariable::GetIntArray");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::SetBool(CONST BOOL Value)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::SetBool(const bool Value)
 {
-    LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetBool";
+    static LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetBool";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
-    return CopyScalarValue<ETVT_Bool, ETVT_Int, BOOL, FALSE>(Value, Data.pNumericInt, pFuncName);
+    return CopyScalarValue<ETVT_bool, ETVT_Int, bool, false>(Value, Data.pNumericInt, pFuncName);
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::GetBool(BOOL *pValue)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::GetBool(bool *pValue)
 {
-    return CopyScalarValue<ETVT_Int, ETVT_Bool, int, TRUE>(*Data.pNumericInt, pValue, "ID3DX11EffectScalarVariable::GetBool");
+    return CopyScalarValue<ETVT_Int, ETVT_bool, int, true>(*Data.pNumericInt, pValue, "ID3DX11EffectScalarVariable::GetBool");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::SetBoolArray(CONST BOOL *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::SetBoolArray(const bool *pData, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetBoolArray";
+    static LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetBoolArray";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
-    return SetScalarArray<ETVT_Bool, ETVT_Int, BOOL, int>(pData, Data.pNumericInt, Offset, Count, 
+    return SetScalarArray<ETVT_bool, ETVT_Int, bool, int>(pData, Data.pNumericInt, Offset, Count, 
         pType, GetTotalUnpackedSize(), pFuncName);
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::GetBoolArray(BOOL *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::GetBoolArray(bool *pData, uint32_t Offset, uint32_t Count)
 {
-    return GetScalarArray<ETVT_Int, ETVT_Bool, int, BOOL>(Data.pNumericInt, pData, Offset, Count, 
+    return GetScalarArray<ETVT_Int, ETVT_bool, int, bool>(Data.pNumericInt, pData, Offset, Count, 
         pType, GetTotalUnpackedSize(), "ID3DX11EffectScalarVariable::GetBoolArray");
 }
 
@@ -1637,121 +1824,133 @@ HRESULT TIntScalarVariable<IBaseInterface, IsAnnotation>::GetBoolArray(BOOL *pDa
 // ID3DX11EffectScalarVariable (TBoolScalarVariable implementation)
 //////////////////////////////////////////////////////////////////////////
 
-template<typename IBaseInterface, BOOL IsAnnotation>
+template<typename IBaseInterface, bool IsAnnotation>
 struct TBoolScalarVariable : public TNumericVariable<IBaseInterface, IsAnnotation>
 {
-    STDMETHOD(SetFloat)(CONST float Value);
-    STDMETHOD(GetFloat)(float *pValue);
+    STDMETHOD(SetFloat)(_In_ const float Value) override;
+    STDMETHOD(GetFloat)(_Out_ float *pValue) override;
 
-    STDMETHOD(SetFloatArray)(CONST float *pData, UINT  Offset, UINT  Count);
-    STDMETHOD(GetFloatArray)(float *pData, UINT  Offset, UINT  Count);
+    STDMETHOD(SetFloatArray)(_In_reads_(Count) const float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
+    STDMETHOD(GetFloatArray)(_Out_writes_(Count) float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
 
-    STDMETHOD(SetInt)(CONST int Value);
-    STDMETHOD(GetInt)(int *pValue);
+    STDMETHOD(SetInt)(_In_ const int Value) override;
+    STDMETHOD(GetInt)(_Out_ int *pValue) override;
 
-    STDMETHOD(SetIntArray)(CONST int *pData, UINT  Offset, UINT  Count);
-    STDMETHOD(GetIntArray)(int *pData, UINT  Offset, UINT  Count);
+    STDMETHOD(SetIntArray)(_In_reads_(Count) const int *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
+    STDMETHOD(GetIntArray)(_Out_writes_(Count) int *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
 
-    STDMETHOD(SetBool)(CONST BOOL Value);
-    STDMETHOD(GetBool)(BOOL *pValue);
+    STDMETHOD(SetBool)(_In_ const bool Value) override;
+    STDMETHOD(GetBool)(_Out_ bool *pValue) override;
 
-    STDMETHOD(SetBoolArray)(CONST BOOL *pData, UINT  Offset, UINT  Count);
-    STDMETHOD(GetBoolArray)(BOOL *pData, UINT  Offset, UINT  Count);
+    STDMETHOD(SetBoolArray)(_In_reads_(Count) const bool *pData, uint32_t Offset, _In_ uint32_t Count) override;
+    STDMETHOD(GetBoolArray)(_Out_writes_(Count) bool *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
 };
 
-template<typename IBaseInterface, BOOL IsAnnotation>
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
 HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::SetFloat(float Value)
 {
-    LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetFloat";
+    static LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetFloat";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
-    return CopyScalarValue<ETVT_Float, ETVT_Bool, float, FALSE>(Value, Data.pNumericBool, pFuncName);
+    return CopyScalarValue<ETVT_Float, ETVT_Bool, float, false>(Value, Data.pNumericBool, pFuncName);
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
 HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::GetFloat(float *pValue)
 {
-    return CopyScalarValue<ETVT_Bool, ETVT_Float, BOOL, TRUE>(*Data.pNumericBool, pValue, "ID3DX11EffectScalarVariable::GetFloat");
+    return CopyScalarValue<ETVT_Bool, ETVT_Float, BOOL, true>(*Data.pNumericBool, pValue, "ID3DX11EffectScalarVariable::GetFloat");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::SetFloatArray(CONST float *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::SetFloatArray(const float *pData, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetFloatArray";
+    static LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetFloatArray";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
     return SetScalarArray<ETVT_Float, ETVT_Bool, float, BOOL>(pData, Data.pNumericBool, Offset, Count, 
         pType, GetTotalUnpackedSize(), pFuncName);
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::GetFloatArray(float *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::GetFloatArray(float *pData, uint32_t Offset, uint32_t Count)
 {
     return GetScalarArray<ETVT_Bool, ETVT_Float, BOOL, float>(Data.pNumericBool, pData, Offset, Count, 
         pType, GetTotalUnpackedSize(), "ID3DX11EffectScalarVariable::GetFloatArray");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::SetInt(CONST int Value)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::SetInt(const int Value)
 {
-    LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetInt";
+    static LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetInt";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
-    return CopyScalarValue<ETVT_Int, ETVT_Bool, int, FALSE>(Value, Data.pNumericBool, pFuncName);
+    return CopyScalarValue<ETVT_Int, ETVT_Bool, int, false>(Value, Data.pNumericBool, pFuncName);
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
 HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::GetInt(int *pValue)
 {
-    return CopyScalarValue<ETVT_Bool, ETVT_Int, BOOL, TRUE>(*Data.pNumericBool, pValue, "ID3DX11EffectScalarVariable::GetInt");
+    return CopyScalarValue<ETVT_Bool, ETVT_Int, BOOL, true>(*Data.pNumericBool, pValue, "ID3DX11EffectScalarVariable::GetInt");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::SetIntArray(CONST int *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::SetIntArray(const int *pData, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetIntArray";
+    static LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetIntArray";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
     return SetScalarArray<ETVT_Int, ETVT_Bool, int, BOOL>(pData, Data.pNumericBool, Offset, Count, 
         pType, GetTotalUnpackedSize(), pFuncName);
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::GetIntArray(int *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::GetIntArray(int *pData, uint32_t Offset, uint32_t Count)
 {
     return GetScalarArray<ETVT_Bool, ETVT_Int, BOOL, int>(Data.pNumericBool, pData, Offset, Count, 
         pType, GetTotalUnpackedSize(), "ID3DX11EffectScalarVariable::GetIntArray");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::SetBool(CONST BOOL Value)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::SetBool(const bool Value)
 {
-    LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetBool";
+    static LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetBool";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
-    return CopyScalarValue<ETVT_Bool, ETVT_Bool, BOOL, FALSE>(Value, Data.pNumericBool, pFuncName);
+    return CopyScalarValue<ETVT_bool, ETVT_Bool, bool, false>(Value, Data.pNumericBool, pFuncName);
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::GetBool(BOOL *pValue)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::GetBool(bool *pValue)
 {
-    return CopyScalarValue<ETVT_Bool, ETVT_Bool, BOOL, TRUE>(*Data.pNumericBool, pValue, "ID3DX11EffectScalarVariable::GetBool");
+    return CopyScalarValue<ETVT_Bool, ETVT_bool, BOOL, true>(*Data.pNumericBool, pValue, "ID3DX11EffectScalarVariable::GetBool");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::SetBoolArray(CONST BOOL *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::SetBoolArray(const bool *pData, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetBoolArray";
+    static LPCSTR pFuncName = "ID3DX11EffectScalarVariable::SetBoolArray";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
-    return SetScalarArray<ETVT_Bool, ETVT_Bool, BOOL, BOOL>(pData, Data.pNumericBool, Offset, Count, 
+    return SetScalarArray<ETVT_bool, ETVT_Bool, bool, BOOL>(pData, Data.pNumericBool, Offset, Count, 
         pType, GetTotalUnpackedSize(), pFuncName);
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::GetBoolArray(BOOL *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::GetBoolArray(bool *pData, uint32_t Offset, uint32_t Count)
 {
-    return GetScalarArray<ETVT_Bool, ETVT_Bool, BOOL, BOOL>(Data.pNumericBool, pData, Offset, Count, 
+    return GetScalarArray<ETVT_Bool, ETVT_bool, BOOL, bool>(Data.pNumericBool, pData, Offset, Count, 
         pType, GetTotalUnpackedSize(), "ID3DX11EffectScalarVariable::GetBoolArray");
 }
 
@@ -1759,42 +1958,45 @@ HRESULT TBoolScalarVariable<IBaseInterface, IsAnnotation>::GetBoolArray(BOOL *pD
 // ID3DX11EffectVectorVariable (TVectorVariable implementation)
 //////////////////////////////////////////////////////////////////////////
 
-template<typename IBaseInterface, BOOL IsAnnotation, ETemplateVarType BaseType >
+template<typename IBaseInterface, bool IsAnnotation, ETemplateVarType BaseType >
 struct TVectorVariable : public TNumericVariable<IBaseInterface, IsAnnotation>
 {
-    STDMETHOD(SetBoolVector) (CONST BOOL *pData); 
-    STDMETHOD(SetIntVector)  (CONST int *pData);
-    STDMETHOD(SetFloatVector)(CONST float *pData);
+    STDMETHOD(SetBoolVector) (_In_reads_(4) const bool *pData) override; 
+    STDMETHOD(SetIntVector)  (_In_reads_(4) const int *pData) override;
+    STDMETHOD(SetFloatVector)(_In_reads_(4) const float *pData) override;
 
-    STDMETHOD(GetBoolVector) (BOOL *pData); 
-    STDMETHOD(GetIntVector)  (int *pData);
-    STDMETHOD(GetFloatVector)(float *pData);
+    STDMETHOD(GetBoolVector) (_Out_writes_(4) bool *pData) override; 
+    STDMETHOD(GetIntVector)  (_Out_writes_(4) int *pData) override;
+    STDMETHOD(GetFloatVector)(_Out_writes_(4) float *pData) override;
 
 
-    STDMETHOD(SetBoolVectorArray) (CONST BOOL *pData, UINT Offset, UINT Count); 
-    STDMETHOD(SetIntVectorArray)  (CONST int *pData, UINT Offset, UINT Count);
-    STDMETHOD(SetFloatVectorArray)(CONST float *pData, UINT Offset, UINT Count);
+    STDMETHOD(SetBoolVectorArray) (_In_reads_(Count*4) const bool *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override; 
+    STDMETHOD(SetIntVectorArray)  (_In_reads_(Count*4) const int *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
+    STDMETHOD(SetFloatVectorArray)(_In_reads_(Count*4) const float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
 
-    STDMETHOD(GetBoolVectorArray) (BOOL *pData, UINT Offset, UINT Count); 
-    STDMETHOD(GetIntVectorArray)  (int *pData, UINT Offset, UINT Count);
-    STDMETHOD(GetFloatVectorArray)(float *pData, UINT Offset, UINT Count);
+    STDMETHOD(GetBoolVectorArray) (_Out_writes_(Count*4) bool *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override; 
+    STDMETHOD(GetIntVectorArray)  (_Out_writes_(Count*4) int *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
+    STDMETHOD(GetFloatVectorArray)(_Out_writes_(Count*4) float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
 };
 
 // Note that branches in this code is based on template parameters and will be compiled out
+#pragma warning (push)
+#pragma warning (disable : 6101)
 template <ETemplateVarType DestType, ETemplateVarType SourceType>
-void __forceinline CopyDataWithTypeConversion(__out_bcount(vecCount * dstVecSize * sizeof(UINT)) void *pDest, CONST void *pSource, UINT dstVecSize, UINT srcVecSize, UINT elementCount, UINT vecCount)
+void __forceinline CopyDataWithTypeConversion(_Out_ void *pDest,
+                                              _In_ const void *pSource,
+                                              _In_ size_t dstVecSize, _In_ size_t srcVecSize,
+                                              _In_ size_t elementCount, _In_ size_t vecCount)
 {
-    UINT i, j;
-
     switch (SourceType)
     {
     case ETVT_Bool:
         switch (DestType)
         {
         case ETVT_Bool:
-            for (j=0; j<vecCount; j++)
+            for (size_t j=0; j<vecCount; j++)
             {
-                dwordMemcpy(pDest, pSource, elementCount * SType::c_ScalarSize);
+                memcpy(pDest, pSource, elementCount * SType::c_ScalarSize);
 
                 pDest = ((float*) pDest) + dstVecSize;
                 pSource = ((float*) pSource) + srcVecSize;
@@ -1802,10 +2004,10 @@ void __forceinline CopyDataWithTypeConversion(__out_bcount(vecCount * dstVecSize
             break;
 
         case ETVT_Int:
-            for (j=0; j<vecCount; j++)
+            for (size_t j=0; j<vecCount; j++)
             {
-                for (i=0; i<elementCount; i++)
-                    ((int*)pDest)[i] = ((BOOL*)pSource)[i] ? -1 : 0;
+                for (size_t i=0; i<elementCount; i++)
+                    ((int*)pDest)[i] = ((bool*)pSource)[i] ? -1 : 0;
 
                 pDest = ((float*) pDest) + dstVecSize;
                 pSource = ((float*) pSource) + srcVecSize;
@@ -1813,29 +2015,39 @@ void __forceinline CopyDataWithTypeConversion(__out_bcount(vecCount * dstVecSize
             break;
 
         case ETVT_Float:
-            for (j=0; j<vecCount; j++)
+            for (size_t j=0; j<vecCount; j++)
             {
-                for (i=0; i<elementCount; i++)
-                    ((float*)pDest)[i] = ((BOOL*)pSource)[i] ? -1.0f : 0.0f;
+                for (size_t i=0; i<elementCount; i++)
+                    ((float*)pDest)[i] = ((bool*)pSource)[i] ? -1.0f : 0.0f;
 
                 pDest = ((float*) pDest) + dstVecSize;
                 pSource = ((float*) pSource) + srcVecSize;
             }
             break;
 
+        case ETVT_bool:
+            for (size_t j=0; j<vecCount; j++)
+            {
+                for (size_t i=0; i<elementCount; i++)
+                    ((bool*)pDest)[i] = (((int*)pSource)[i] != 0) ? true : false;
+
+                pDest = ((bool*) pDest) + dstVecSize;
+                pSource = ((float*) pSource) + srcVecSize;
+            }
+            break;
+
         default:
-            D3DXASSERT(0);
+            assert(0);
         }
         break;
-
 
     case ETVT_Int:
         switch (DestType)
         {
         case ETVT_Bool:
-            for (j=0; j<vecCount; j++)
+            for (size_t j=0; j<vecCount; j++)
             {
-                for (i=0; i<elementCount; i++)
+                for (size_t i=0; i<elementCount; i++)
                     ((int*)pDest)[i] = (((int*)pSource)[i] != 0) ? -1 : 0;
 
                 pDest = ((float*) pDest) + dstVecSize;
@@ -1844,9 +2056,9 @@ void __forceinline CopyDataWithTypeConversion(__out_bcount(vecCount * dstVecSize
             break;
 
         case ETVT_Int:
-            for (j=0; j<vecCount; j++)
+            for (size_t j=0; j<vecCount; j++)
             {
-                dwordMemcpy(pDest, pSource, elementCount * SType::c_ScalarSize);
+                memcpy(pDest, pSource, elementCount * SType::c_ScalarSize);
 
                 pDest = ((float*) pDest) + dstVecSize;
                 pSource = ((float*) pSource) + srcVecSize;
@@ -1854,9 +2066,9 @@ void __forceinline CopyDataWithTypeConversion(__out_bcount(vecCount * dstVecSize
             break;
 
         case ETVT_Float:
-            for (j=0; j<vecCount; j++)
+            for (size_t j=0; j<vecCount; j++)
             {
-                for (i=0; i<elementCount; i++)
+                for (size_t i=0; i<elementCount; i++)
                     ((float*)pDest)[i] = (float)(((int*)pSource)[i]);
 
                 pDest = ((float*) pDest) + dstVecSize;
@@ -1864,8 +2076,19 @@ void __forceinline CopyDataWithTypeConversion(__out_bcount(vecCount * dstVecSize
             }
             break;
 
+        case ETVT_bool:
+            for (size_t j=0; j<vecCount; j++)
+            {
+                for (size_t i=0; i<elementCount; i++)
+                    ((bool*)pDest)[i] = (((int*)pSource)[i] != 0) ? true : false;
+
+                pDest = ((bool*) pDest) + dstVecSize;
+                pSource = ((float*) pSource) + srcVecSize;
+            }
+            break;
+
         default:
-            D3DXASSERT(0);
+            assert(0);
         }
         break;
 
@@ -1873,9 +2096,9 @@ void __forceinline CopyDataWithTypeConversion(__out_bcount(vecCount * dstVecSize
         switch (DestType)
         {
         case ETVT_Bool:
-            for (j=0; j<vecCount; j++)
+            for (size_t j=0; j<vecCount; j++)
             {
-                for (i=0; i<elementCount; i++)
+                for (size_t i=0; i<elementCount; i++)
                     ((int*)pDest)[i] = (((float*)pSource)[i] != 0.0f) ? -1 : 0;
 
                 pDest = ((float*) pDest) + dstVecSize;
@@ -1884,9 +2107,9 @@ void __forceinline CopyDataWithTypeConversion(__out_bcount(vecCount * dstVecSize
             break;
 
         case ETVT_Int:
-            for (j=0; j<vecCount; j++)
+            for (size_t j=0; j<vecCount; j++)
             {
-                for (i=0; i<elementCount; i++)
+                for (size_t i=0; i<elementCount; i++)
                     ((int*)pDest)[i] = (int)((float*)pSource)[i];
 
                 pDest = ((float*) pDest) + dstVecSize;
@@ -1895,32 +2118,96 @@ void __forceinline CopyDataWithTypeConversion(__out_bcount(vecCount * dstVecSize
             break;
 
         case ETVT_Float:
-            for (i=0; i<vecCount; i++)
+            for (size_t i=0; i<vecCount; i++)
             {
-                dwordMemcpy( pDest, pSource, elementCount * SType::c_ScalarSize);
+                memcpy( pDest, pSource, elementCount * SType::c_ScalarSize);
 
                 pDest = ((float*) pDest) + dstVecSize;
                 pSource = ((float*) pSource) + srcVecSize;
             }
             break;
 
+        case ETVT_bool:
+            for (size_t j=0; j<vecCount; j++)
+            {
+                for (size_t i=0; i<elementCount; i++)
+                    ((bool*)pDest)[i] = (((float*)pSource)[i] != 0.0f) ? true : false;
+
+                pDest = ((bool*) pDest) + dstVecSize;
+                pSource = ((float*) pSource) + srcVecSize;
+            }
+            break;
+
         default:
-            D3DXASSERT(0);
+            assert(0);
+        }
+        break;
+
+    case ETVT_bool:
+        switch (DestType)
+        {
+        case ETVT_Bool:
+            for (size_t j=0; j<vecCount; j++)
+            {
+                for (size_t i=0; i<elementCount; i++)
+                    reinterpret_cast<int*>(pDest)[i] = reinterpret_cast<const bool*>(pSource)[i] ? -1 : 0;
+
+                pDest = ((float*) pDest) + dstVecSize;
+                pSource = ((bool*) pSource) + srcVecSize;
+            }
+            break;
+
+        case ETVT_Int:
+            for (size_t j=0; j<vecCount; j++)
+            {
+                for (size_t i=0; i<elementCount; i++)
+                    reinterpret_cast<int*>(pDest)[i] = reinterpret_cast<const bool*>(pSource)[i] ? -1 : 0;
+
+                pDest = ((float*) pDest) + dstVecSize;
+                pSource = ((bool*) pSource) + srcVecSize;
+            }
+            break;
+
+        case ETVT_Float:
+            for (size_t j=0; j<vecCount; j++)
+            {
+                for (size_t i=0; i<elementCount; i++)
+                    reinterpret_cast<float*>(pDest)[i] = reinterpret_cast<const bool*>(pSource)[i] ? -1.0f : 0.0f;
+
+                pDest = ((float*) pDest) + dstVecSize;
+                pSource = ((bool*) pSource) + srcVecSize;
+            }
+            break;
+
+        case ETVT_bool:
+            for (size_t j=0; j<vecCount; j++)
+            {
+                memcpy(pDest, pSource, elementCount);
+
+                pDest = ((bool*) pDest) + dstVecSize;
+                pSource = ((bool*) pSource) + srcVecSize;
+            }
+            break;
+
+        default:
+            assert(0);
         }
         break;
 
     default:
-        D3DXASSERT(0);
+        assert(0);
     }
 }
+#pragma warning (pop)
 
 // Float Vector
 
-template<typename IBaseInterface, BOOL IsAnnotation, ETemplateVarType BaseType>
-HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType >::SetFloatVector(CONST float *pData)
+template<typename IBaseInterface, bool IsAnnotation, ETemplateVarType BaseType>
+_Use_decl_annotations_
+HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType >::SetFloatVector(const float *pData)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectVectorVariable::SetFloatVector";
+    static LPCSTR pFuncName = "ID3DX11EffectVectorVariable::SetFloatVector";
 
 #ifdef _DEBUG
     VERIFYPARAMETER(pData);
@@ -1934,11 +2221,12 @@ lExit:
     return hr;
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation, ETemplateVarType BaseType>
+template<typename IBaseInterface, bool IsAnnotation, ETemplateVarType BaseType>
+_Use_decl_annotations_
 HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::GetFloatVector(float *pData)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectVectorVariable::GetFloatVector";
+    static LPCSTR pFuncName = "ID3DX11EffectVectorVariable::GetFloatVector";
 
 #ifdef _DEBUG
     VERIFYPARAMETER(pData);
@@ -1952,11 +2240,12 @@ lExit:
 
 // Int Vector
 
-template<typename IBaseInterface, BOOL IsAnnotation, ETemplateVarType BaseType>
-HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType >::SetIntVector(CONST int *pData)
+template<typename IBaseInterface, bool IsAnnotation, ETemplateVarType BaseType>
+_Use_decl_annotations_
+HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType >::SetIntVector(const int *pData)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectVectorVariable::SetIntVector";
+    static LPCSTR pFuncName = "ID3DX11EffectVectorVariable::SetIntVector";
 
 #ifdef _DEBUG
     VERIFYPARAMETER(pData);
@@ -1970,13 +2259,14 @@ lExit:
     return hr;
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation, ETemplateVarType BaseType>
+template<typename IBaseInterface, bool IsAnnotation, ETemplateVarType BaseType>
+_Use_decl_annotations_
 HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::GetIntVector(int *pData)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectVectorVariable::GetIntVector";
 
 #ifdef _DEBUG
+    static LPCSTR pFuncName = "ID3DX11EffectVectorVariable::GetIntVector";
     VERIFYPARAMETER(pData);
 #endif
 
@@ -1988,11 +2278,13 @@ lExit:
 
 // Bool Vector
 
-template<typename IBaseInterface, BOOL IsAnnotation, ETemplateVarType BaseType>
-HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType >::SetBoolVector(CONST BOOL *pData)
+template<typename IBaseInterface, bool IsAnnotation, ETemplateVarType BaseType>
+_Use_decl_annotations_
+HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType >::SetBoolVector(const bool *pData)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectVectorVariable::SetBoolVector";
+
+    static LPCSTR pFuncName = "ID3DX11EffectVectorVariable::SetBoolVector";
 
 #ifdef _DEBUG
     VERIFYPARAMETER(pData);
@@ -2000,23 +2292,24 @@ HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType >::SetBoolVector(
 
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
-    CopyDataWithTypeConversion<BaseType, ETVT_Bool>(Data.pVector, pData, 4, pType->NumericType.Columns, pType->NumericType.Columns, 1);
+    CopyDataWithTypeConversion<BaseType, ETVT_bool>(Data.pVector, pData, 4, pType->NumericType.Columns, pType->NumericType.Columns, 1);
 
 lExit:
     return hr;
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation, ETemplateVarType BaseType>
-HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::GetBoolVector(BOOL *pData)
+template<typename IBaseInterface, bool IsAnnotation, ETemplateVarType BaseType>
+_Use_decl_annotations_
+HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::GetBoolVector(bool *pData)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectVectorVariable::GetBoolVector";
 
 #ifdef _DEBUG
+    static LPCSTR pFuncName = "ID3DX11EffectVectorVariable::GetBoolVector";
     VERIFYPARAMETER(pData);
 #endif
 
-    CopyDataWithTypeConversion<ETVT_Bool, BaseType>(pData, Data.pVector, pType->NumericType.Columns, 4, pType->NumericType.Columns, 1);
+    CopyDataWithTypeConversion<ETVT_bool, BaseType>(pData, Data.pVector, pType->NumericType.Columns, 4, pType->NumericType.Columns, 1);
 
 lExit:
     return hr;
@@ -2024,13 +2317,15 @@ lExit:
 
 // Vector Arrays /////////////////////////////////////////////////////////
 
-template<typename IBaseInterface, BOOL IsAnnotation, ETemplateVarType BaseType>
-HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::SetFloatVectorArray(CONST float *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation, ETemplateVarType BaseType>
+_Use_decl_annotations_
+HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::SetFloatVectorArray(const float *pData, uint32_t Offset, uint32_t Count)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectVectorVariable::SetFloatVectorArray";
+    static LPCSTR pFuncName = "ID3DX11EffectVectorVariable::SetFloatVectorArray";
 
 #ifdef _DEBUG
+#pragma warning( suppress : 6001 )
     if (!AreBoundsValid(Offset, Count, pData, pType, GetTotalUnpackedSize()))
     {
         DPF(0, "%s: Invalid range specified", pFuncName);
@@ -2041,19 +2336,21 @@ HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::SetFloatVectorA
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
     // ensure we don't write over the padding at the end of the vector array
-    CopyDataWithTypeConversion<BaseType, ETVT_Float>(Data.pVector + Offset, pData, 4, pType->NumericType.Columns, pType->NumericType.Columns, max(min((int)Count, (int)pType->Elements - (int)Offset), 0));
+    CopyDataWithTypeConversion<BaseType, ETVT_Float>(Data.pVector + Offset, pData, 4, pType->NumericType.Columns, pType->NumericType.Columns, std::max(std::min((int)Count, (int)pType->Elements - (int)Offset), 0));
 
 lExit:
     return hr;
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation, ETemplateVarType BaseType>
-HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::GetFloatVectorArray(float *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation, ETemplateVarType BaseType>
+_Use_decl_annotations_
+HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::GetFloatVectorArray(float *pData, uint32_t Offset, uint32_t Count)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectVectorVariable::GetFloatVectorArray";
 
 #ifdef _DEBUG
+    static LPCSTR pFuncName = "ID3DX11EffectVectorVariable::GetFloatVectorArray";
+#pragma warning( suppress : 6001 )
     if (!AreBoundsValid(Offset, Count, pData, pType, GetTotalUnpackedSize()))
     {
         DPF(0, "%s: Invalid range specified", pFuncName);
@@ -2062,7 +2359,7 @@ HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::GetFloatVectorA
 #endif
 
     // ensure we don't read past the end of the vector array
-    CopyDataWithTypeConversion<ETVT_Float, BaseType>(pData, Data.pVector + Offset, pType->NumericType.Columns, 4, pType->NumericType.Columns, max(min((int)Count, (int)pType->Elements - (int)Offset), 0));
+    CopyDataWithTypeConversion<ETVT_Float, BaseType>(pData, Data.pVector + Offset, pType->NumericType.Columns, 4, pType->NumericType.Columns, std::max(std::min((int)Count, (int)pType->Elements - (int)Offset), 0));
 
 lExit:
     return hr;
@@ -2070,13 +2367,15 @@ lExit:
 
 // int
 
-template<typename IBaseInterface, BOOL IsAnnotation, ETemplateVarType BaseType>
-HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::SetIntVectorArray(CONST int *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation, ETemplateVarType BaseType>
+_Use_decl_annotations_
+HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::SetIntVectorArray(const int *pData, uint32_t Offset, uint32_t Count)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectVectorVariable::SetIntVectorArray";
+    static LPCSTR pFuncName = "ID3DX11EffectVectorVariable::SetIntVectorArray";
 
 #ifdef _DEBUG
+#pragma warning( suppress : 6001 )
     if (!AreBoundsValid(Offset, Count, pData, pType, GetTotalUnpackedSize()))
     {
         DPF(0, "%s: Invalid range specified", pFuncName);
@@ -2087,19 +2386,21 @@ HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::SetIntVectorArr
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
     // ensure we don't write over the padding at the end of the vector array
-    CopyDataWithTypeConversion<BaseType, ETVT_Int>(Data.pVector + Offset, pData, 4, pType->NumericType.Columns, pType->NumericType.Columns, max(min((int)Count, (int)pType->Elements - (int)Offset), 0));
+    CopyDataWithTypeConversion<BaseType, ETVT_Int>(Data.pVector + Offset, pData, 4, pType->NumericType.Columns, pType->NumericType.Columns, std::max(std::min((int)Count, (int)pType->Elements - (int)Offset), 0));
 
 lExit:
     return hr;
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation, ETemplateVarType BaseType>
-HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::GetIntVectorArray(int *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation, ETemplateVarType BaseType>
+_Use_decl_annotations_
+HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::GetIntVectorArray(int *pData, uint32_t Offset, uint32_t Count)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectVectorVariable::GetIntVectorArray";
+    static LPCSTR pFuncName = "ID3DX11EffectVectorVariable::GetIntVectorArray";
 
 #ifdef _DEBUG
+#pragma warning( suppress : 6001 )
     if (!AreBoundsValid(Offset, Count, pData, pType, GetTotalUnpackedSize()))
     {
         DPF(0, "%s: Invalid range specified", pFuncName);
@@ -2108,7 +2409,7 @@ HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::GetIntVectorArr
 #endif
 
     // ensure we don't read past the end of the vector array
-    CopyDataWithTypeConversion<ETVT_Int, BaseType>(pData, Data.pVector + Offset, pType->NumericType.Columns, 4, pType->NumericType.Columns, max(min((int)Count, (int)pType->Elements - (int)Offset), 0));
+    CopyDataWithTypeConversion<ETVT_Int, BaseType>(pData, Data.pVector + Offset, pType->NumericType.Columns, 4, pType->NumericType.Columns, std::max(std::min((int)Count, (int)pType->Elements - (int)Offset), 0));
 
 lExit:
     return hr;
@@ -2116,13 +2417,15 @@ lExit:
 
 // bool
 
-template<typename IBaseInterface, BOOL IsAnnotation, ETemplateVarType BaseType>
-HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::SetBoolVectorArray(CONST BOOL *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation, ETemplateVarType BaseType>
+_Use_decl_annotations_
+HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::SetBoolVectorArray(const bool *pData, uint32_t Offset, uint32_t Count)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectVectorVariable::SetBoolVectorArray";
+    static LPCSTR pFuncName = "ID3DX11EffectVectorVariable::SetBoolVectorArray";
 
 #ifdef _DEBUG
+#pragma warning( suppress : 6001 )
     if (!AreBoundsValid(Offset, Count, pData, pType, GetTotalUnpackedSize()))
     {
         DPF(0, "%s: Invalid range specified", pFuncName);
@@ -2133,19 +2436,21 @@ HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::SetBoolVectorAr
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
     // ensure we don't write over the padding at the end of the vector array
-    CopyDataWithTypeConversion<BaseType, ETVT_Bool>(Data.pVector + Offset, pData, 4, pType->NumericType.Columns, pType->NumericType.Columns, max(min((int)Count, (int)pType->Elements - (int)Offset), 0));
+    CopyDataWithTypeConversion<BaseType, ETVT_bool>(Data.pVector + Offset, pData, 4, pType->NumericType.Columns, pType->NumericType.Columns, std::max(std::min((int)Count, (int)pType->Elements - (int)Offset), 0));
 
 lExit:
     return hr;
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation, ETemplateVarType BaseType>
-HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::GetBoolVectorArray(BOOL *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation, ETemplateVarType BaseType>
+_Use_decl_annotations_
+HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::GetBoolVectorArray(bool *pData, uint32_t Offset, uint32_t Count)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectVectorVariable::GetBoolVectorArray";
+    static LPCSTR pFuncName = "ID3DX11EffectVectorVariable::GetBoolVectorArray";
 
 #ifdef _DEBUG
+#pragma warning( suppress : 6001 )
     if (!AreBoundsValid(Offset, Count, pData, pType, GetTotalUnpackedSize()))
     {
         DPF(0, "%s: Invalid range specified", pFuncName);
@@ -2154,7 +2459,7 @@ HRESULT TVectorVariable<IBaseInterface, IsAnnotation, BaseType>::GetBoolVectorAr
 #endif
 
     // ensure we don't read past the end of the vector array
-    CopyDataWithTypeConversion<ETVT_Bool, BaseType>(pData, Data.pVector + Offset, pType->NumericType.Columns, 4, pType->NumericType.Columns, max(min((int)Count, (int)pType->Elements - (int)Offset), 0));
+    CopyDataWithTypeConversion<ETVT_bool, BaseType>(pData, Data.pVector + Offset, pType->NumericType.Columns, 4, pType->NumericType.Columns, std::max(std::min((int)Count, (int)pType->Elements - (int)Offset), 0));
 
 lExit:
     return hr;
@@ -2165,20 +2470,21 @@ lExit:
 //////////////////////////////////////////////////////////////////////////
 
 template<typename IBaseInterface>
-struct TVector4Variable : public TVectorVariable<IBaseInterface, FALSE, ETVT_Float>
+struct TVector4Variable : public TVectorVariable<IBaseInterface, false, ETVT_Float>
 {
-    STDMETHOD(SetFloatVector)(CONST float *pData);
-    STDMETHOD(GetFloatVector)(float *pData);
+    STDMETHOD(SetFloatVector)(_In_reads_(4) const float *pData) override;
+    STDMETHOD(GetFloatVector)(_Out_writes_(4) float *pData) override;
 
-    STDMETHOD(SetFloatVectorArray)(CONST float *pData, UINT Offset, UINT  Count);
-    STDMETHOD(GetFloatVectorArray)(float *pData, UINT Offset, UINT  Count);
+    STDMETHOD(SetFloatVectorArray)(_In_reads_(Count*4) const float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
+    STDMETHOD(GetFloatVectorArray)(_Out_writes_(Count*4) float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
 };
 
 template<typename IBaseInterface>
-HRESULT TVector4Variable<IBaseInterface>::SetFloatVector(CONST float *pData)
+_Use_decl_annotations_
+HRESULT TVector4Variable<IBaseInterface>::SetFloatVector(const float *pData)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectVectorVariable::SetFloatVector";
+    static LPCSTR pFuncName = "ID3DX11EffectVectorVariable::SetFloatVector";
 
 #ifdef _DEBUG
     VERIFYPARAMETER(pData);
@@ -2192,28 +2498,31 @@ lExit:
 }
 
 template<typename IBaseInterface>
+_Use_decl_annotations_
 HRESULT TVector4Variable<IBaseInterface>::GetFloatVector(float *pData)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectVectorVariable::GetFloatVector";
+    static LPCSTR pFuncName = "ID3DX11EffectVectorVariable::GetFloatVector";
 
 #ifdef _DEBUG
     VERIFYPARAMETER(pData);
 #endif
 
-    dwordMemcpy(pData, Data.pVector, pType->NumericType.Columns * SType::c_ScalarSize);
+    memcpy(pData, Data.pVector, pType->NumericType.Columns * SType::c_ScalarSize);
 
 lExit:
     return hr;
 }
 
 template<typename IBaseInterface>
-HRESULT TVector4Variable<IBaseInterface>::SetFloatVectorArray(CONST float *pData, UINT  Offset, UINT  Count)
+_Use_decl_annotations_
+HRESULT TVector4Variable<IBaseInterface>::SetFloatVectorArray(const float *pData, uint32_t Offset, uint32_t Count)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectVectorVariable::SetFloatVectorArray";
+    static LPCSTR pFuncName = "ID3DX11EffectVectorVariable::SetFloatVectorArray";
 
 #ifdef _DEBUG
+#pragma warning( suppress : 6001 )
     if (!AreBoundsValid(Offset, Count, pData, pType, GetTotalUnpackedSize()))
     {
         DPF(0, "%s: Invalid range specified", pFuncName);
@@ -2223,19 +2532,21 @@ HRESULT TVector4Variable<IBaseInterface>::SetFloatVectorArray(CONST float *pData
 
     DirtyVariable();
     // ensure we don't write over the padding at the end of the vector array
-    dwordMemcpy(Data.pVector + Offset, pData, min((Offset + Count) * sizeof(CEffectVector4), pType->TotalSize));
+    memcpy(Data.pVector + Offset, pData, std::min<size_t>((Offset + Count) * sizeof(CEffectVector4), pType->TotalSize));
 
 lExit:
     return hr;
 }
 
 template<typename IBaseInterface>
-HRESULT TVector4Variable<IBaseInterface>::GetFloatVectorArray(float *pData, UINT  Offset, UINT  Count)
+_Use_decl_annotations_
+HRESULT TVector4Variable<IBaseInterface>::GetFloatVectorArray(float *pData, uint32_t Offset, uint32_t Count)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectVectorVariable::GetFloatVectorArray";
+    static LPCSTR pFuncName = "ID3DX11EffectVectorVariable::GetFloatVectorArray";
 
 #ifdef _DEBUG
+#pragma warning( suppress : 6001 )
     if (!AreBoundsValid(Offset, Count, pData, pType, GetTotalUnpackedSize()))
     {
         DPF(0, "%s: Invalid range specified", pFuncName);
@@ -2244,7 +2555,7 @@ HRESULT TVector4Variable<IBaseInterface>::GetFloatVectorArray(float *pData, UINT
 #endif
 
     // ensure we don't read past the end of the vector array
-    dwordMemcpy(pData, Data.pVector + Offset, min((Offset + Count) * sizeof(CEffectVector4), pType->TotalSize));
+    memcpy(pData, Data.pVector + Offset, std::min<size_t>((Offset + Count) * sizeof(CEffectVector4), pType->TotalSize));
 
 lExit:
     return hr;
@@ -2255,33 +2566,34 @@ lExit:
 // ID3DX11EffectMatrixVariable (TMatrixVariable implementation)
 //////////////////////////////////////////////////////////////////////////
 
-template<typename IBaseInterface, BOOL IsAnnotation>
+template<typename IBaseInterface, bool IsAnnotation>
 struct TMatrixVariable : public TNumericVariable<IBaseInterface, IsAnnotation>
 {
-    STDMETHOD(SetMatrix)(CONST float *pData);
-    STDMETHOD(GetMatrix)(float *pData);
+    STDMETHOD(SetMatrix)(_In_reads_(16) const float *pData) override;
+    STDMETHOD(GetMatrix)(_Out_writes_(16) float *pData) override;
 
-    STDMETHOD(SetMatrixArray)(CONST float *pData, UINT  Offset, UINT  Count);
-    STDMETHOD(GetMatrixArray)(float *pData, UINT  Offset, UINT  Count);
+    STDMETHOD(SetMatrixArray)(_In_reads_(Count*16) const float *pData, uint32_t Offset, uint32_t Count) override;
+    STDMETHOD(GetMatrixArray)(_Out_writes_(Count*16) float *pData, uint32_t Offset, uint32_t Count) override;
 
-    STDMETHOD(SetMatrixPointerArray)(CONST float **ppData, UINT  Offset, UINT  Count);
-    STDMETHOD(GetMatrixPointerArray)(float **ppData, UINT  Offset, UINT  Count);
+    STDMETHOD(SetMatrixPointerArray)(_In_reads_(Count*16) const float **ppData, uint32_t Offset, uint32_t Count) override;
+    STDMETHOD(GetMatrixPointerArray)(_Out_writes_(Count*16) float **ppData, uint32_t Offset, uint32_t Count) override;
 
-    STDMETHOD(SetMatrixTranspose)(CONST float *pData);
-    STDMETHOD(GetMatrixTranspose)(float *pData);
+    STDMETHOD(SetMatrixTranspose)(_In_reads_(16) const float *pData) override;
+    STDMETHOD(GetMatrixTranspose)(_Out_writes_(16) float *pData) override;
 
-    STDMETHOD(SetMatrixTransposeArray)(CONST float *pData, UINT  Offset, UINT  Count);
-    STDMETHOD(GetMatrixTransposeArray)(float *pData, UINT  Offset, UINT  Count);
+    STDMETHOD(SetMatrixTransposeArray)(_In_reads_(Count*16) const float *pData, uint32_t Offset, uint32_t Count) override;
+    STDMETHOD(GetMatrixTransposeArray)(_Out_writes_(Count*16) float *pData, uint32_t Offset, uint32_t Count) override;
 
-    STDMETHOD(SetMatrixTransposePointerArray)(CONST float **ppData, UINT  Offset, UINT  Count);
-    STDMETHOD(GetMatrixTransposePointerArray)(float **ppData, UINT  Offset, UINT  Count);
+    STDMETHOD(SetMatrixTransposePointerArray)(_In_reads_(Count*16) const float **ppData, uint32_t Offset, uint32_t Count) override;
+    STDMETHOD(GetMatrixTransposePointerArray)(_Out_writes_(Count*16) float **ppData, uint32_t Offset, uint32_t Count) override;
 };
 
-template<BOOL Transpose>
-static void SetMatrixTransposeHelper(SType *pType, __out_bcount(64) BYTE *pDestData, CONST float* pMatrix)
+#pragma warning (push)
+#pragma warning (disable : 6101)
+template<bool Transpose>
+static void SetMatrixTransposeHelper(_In_ const SType *pType, _Out_writes_bytes_(64) uint8_t *pDestData, _In_reads_(16) const float* pMatrix)
 {
-    UINT i, j;
-    UINT registers, entries;
+    uint32_t registers, entries;
     
     if (Transpose)
     {
@@ -2295,12 +2607,12 @@ static void SetMatrixTransposeHelper(SType *pType, __out_bcount(64) BYTE *pDestD
         registers = pType->NumericType.Columns;
         entries = pType->NumericType.Rows;
     }
-    __analysis_assume( registers <= 4 );
-    __analysis_assume( entries <= 4 );
+    _Analysis_assume_( registers <= 4 );
+    _Analysis_assume_( entries <= 4 );
 
-    for (i = 0; i < registers; ++ i)
+    for (size_t i = 0; i < registers; ++ i)
     {
-        for (j = 0; j < entries; ++ j)
+        for (size_t j = 0; j < entries; ++ j)
         {
 #pragma prefast(suppress:__WARNING_UNRELATED_LOOP_TERMINATION, "regs / entries <= 4")
             ((float*)pDestData)[j] = ((float*)pMatrix)[j * 4 + i];
@@ -2309,11 +2621,10 @@ static void SetMatrixTransposeHelper(SType *pType, __out_bcount(64) BYTE *pDestD
     }
 }
 
-template<BOOL Transpose>
-static void GetMatrixTransposeHelper(SType *pType, __in_bcount(64) BYTE *pSrcData, __out_ecount(16) float* pMatrix)
+template<bool Transpose>
+static void GetMatrixTransposeHelper(_In_ const SType *pType, _In_reads_bytes_(64) uint8_t *pSrcData, _Out_writes_(16) float* pMatrix)
 {
-    UINT i, j;
-    UINT registers, entries;
+    uint32_t registers, entries;
 
     if (Transpose)
     {
@@ -2327,12 +2638,12 @@ static void GetMatrixTransposeHelper(SType *pType, __in_bcount(64) BYTE *pSrcDat
         registers = pType->NumericType.Columns;
         entries = pType->NumericType.Rows;
     }
-    __analysis_assume( registers <= 4 );
-    __analysis_assume( entries <= 4 );
+    _Analysis_assume_( registers <= 4 );
+    _Analysis_assume_( entries <= 4 );
 
-    for (i = 0; i < registers; ++ i)
+    for (size_t i = 0; i < registers; ++ i)
     {
-        for (j = 0; j < entries; ++ j)
+        for (size_t j = 0; j < entries; ++ j)
         {
             ((float*)pMatrix)[j * 4 + i] = ((float*)pSrcData)[j];
         }
@@ -2340,25 +2651,30 @@ static void GetMatrixTransposeHelper(SType *pType, __in_bcount(64) BYTE *pSrcDat
     }
 }
 
-template<BOOL Transpose, BOOL IsSetting, BOOL ExtraIndirection>
-HRESULT DoMatrixArrayInternal(SType *pType, UINT  TotalUnpackedSize, BYTE *pEffectData, void *pMatrixData, UINT  Offset, UINT  Count, LPCSTR pFuncName)
+template<bool Transpose, bool IsSetting, bool ExtraIndirection>
+HRESULT DoMatrixArrayInternal(_In_ const SType *pType, _In_ uint32_t  TotalUnpackedSize,
+                              _Out_ uint8_t *pEffectData,
+                              void *pMatrixData,
+                              _In_ uint32_t Offset, _In_ uint32_t Count, _In_z_ LPCSTR pFuncName)
 {    
     HRESULT hr = S_OK;
 
 #ifdef _DEBUG
+#pragma warning( suppress : 6001 )
     if (!AreBoundsValid(Offset, Count, pMatrixData, pType, TotalUnpackedSize))
     {
         DPF(0, "%s: Invalid range specified", pFuncName);
         VH(E_INVALIDARG);
     }
+#else
+    UNREFERENCED_PARAMETER(TotalUnpackedSize);
+    UNREFERENCED_PARAMETER(pFuncName);
 #endif
-
-    UINT i;
 
     if ((pType->NumericType.IsColumnMajor && Transpose) || (!pType->NumericType.IsColumnMajor && !Transpose))
     {
         // fast path
-        UINT  dataSize;
+        uint32_t  dataSize;
         if (Transpose)
         {
             dataSize = ((pType->NumericType.Columns - 1) * 4 + pType->NumericType.Rows) * SType::c_ScalarSize;
@@ -2368,7 +2684,7 @@ HRESULT DoMatrixArrayInternal(SType *pType, UINT  TotalUnpackedSize, BYTE *pEffe
             dataSize = ((pType->NumericType.Rows - 1) * 4 + pType->NumericType.Columns) * SType::c_ScalarSize;
         }
 
-        for (i = 0; i < Count; ++ i)
+        for (size_t i = 0; i < Count; ++ i)
         {
             CEffectMatrix *pMatrix;
             if (ExtraIndirection)
@@ -2386,18 +2702,18 @@ HRESULT DoMatrixArrayInternal(SType *pType, UINT  TotalUnpackedSize, BYTE *pEffe
 
             if (IsSetting)
             {
-                dwordMemcpy(pEffectData + pType->Stride * (i + Offset), pMatrix, dataSize);
+                memcpy(pEffectData + pType->Stride * (i + Offset), pMatrix, dataSize);
             }
             else
             {
-                dwordMemcpy(pMatrix, pEffectData + pType->Stride * (i + Offset), dataSize);
+                memcpy(pMatrix, pEffectData + pType->Stride * (i + Offset), dataSize);
             }
         }
     }
     else
     {
         // slow path
-        for (i = 0; i < Count; ++ i)
+        for (size_t i = 0; i < Count; ++ i)
         {
             CEffectMatrix *pMatrix;
             if (ExtraIndirection)
@@ -2427,154 +2743,167 @@ HRESULT DoMatrixArrayInternal(SType *pType, UINT  TotalUnpackedSize, BYTE *pEffe
 lExit:
     return hr;
 }
+#pragma warning (pop)
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::SetMatrix(CONST float *pData)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::SetMatrix(const float *pData)
 {
-    LPCSTR pFuncName = "ID3DX11EffectMatrixVariable::SetMatrix";
+    static LPCSTR pFuncName = "ID3DX11EffectMatrixVariable::SetMatrix";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
-    return DoMatrixArrayInternal<FALSE, TRUE, FALSE>(pType, GetTotalUnpackedSize(), 
+    return DoMatrixArrayInternal<false, true, false>(pType, GetTotalUnpackedSize(), 
         Data.pNumeric, const_cast<float*>(pData), 0, 1, pFuncName);
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
 HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::GetMatrix(float *pData)
 {
-    return DoMatrixArrayInternal<FALSE, FALSE, FALSE>(pType, GetTotalUnpackedSize(), 
+    return DoMatrixArrayInternal<false, false, false>(pType, GetTotalUnpackedSize(), 
         Data.pNumeric, pData, 0, 1, "ID3DX11EffectMatrixVariable::GetMatrix");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::SetMatrixArray(CONST float *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::SetMatrixArray(const float *pData, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectMatrixVariable::SetMatrixArray";
+    static LPCSTR pFuncName = "ID3DX11EffectMatrixVariable::SetMatrixArray";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
-    return DoMatrixArrayInternal<FALSE, TRUE, FALSE>(pType, GetTotalUnpackedSize(), 
+    return DoMatrixArrayInternal<false, true, false>(pType, GetTotalUnpackedSize(), 
         Data.pNumeric, const_cast<float*>(pData), Offset, Count, "ID3DX11EffectMatrixVariable::SetMatrixArray");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::GetMatrixArray(float *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::GetMatrixArray(float *pData, uint32_t Offset, uint32_t Count)
 {
-    return DoMatrixArrayInternal<FALSE, FALSE, FALSE>(pType, GetTotalUnpackedSize(), 
+    return DoMatrixArrayInternal<false, false, false>(pType, GetTotalUnpackedSize(), 
         Data.pNumeric, pData, Offset, Count, "ID3DX11EffectMatrixVariable::GetMatrixArray");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::SetMatrixPointerArray(CONST float **ppData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::SetMatrixPointerArray(const float **ppData, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectMatrixVariable::SetMatrixPointerArray";
+    static LPCSTR pFuncName = "ID3DX11EffectMatrixVariable::SetMatrixPointerArray";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
-    return DoMatrixArrayInternal<FALSE, TRUE, TRUE>(pType, GetTotalUnpackedSize(), 
+    return DoMatrixArrayInternal<false, true, true>(pType, GetTotalUnpackedSize(), 
         Data.pNumeric, const_cast<float**>(ppData), Offset, Count, "ID3DX11EffectMatrixVariable::SetMatrixPointerArray");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::GetMatrixPointerArray(float **ppData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::GetMatrixPointerArray(float **ppData, uint32_t Offset, uint32_t Count)
 {
-    return DoMatrixArrayInternal<FALSE, FALSE, TRUE>(pType, GetTotalUnpackedSize(), 
+    return DoMatrixArrayInternal<false, false, true>(pType, GetTotalUnpackedSize(), 
         Data.pNumeric, ppData, Offset, Count, "ID3DX11EffectMatrixVariable::GetMatrixPointerArray");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::SetMatrixTranspose(CONST float *pData)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::SetMatrixTranspose(const float *pData)
 {
-    LPCSTR pFuncName = "ID3DX11EffectMatrixVariable::SetMatrixTranspose";
+    static LPCSTR pFuncName = "ID3DX11EffectMatrixVariable::SetMatrixTranspose";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
-    return DoMatrixArrayInternal<TRUE, TRUE, FALSE>(pType, GetTotalUnpackedSize(), 
+    return DoMatrixArrayInternal<true, true, false>(pType, GetTotalUnpackedSize(), 
         Data.pNumeric, const_cast<float*>(pData), 0, 1, "ID3DX11EffectMatrixVariable::SetMatrixTranspose");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
 HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::GetMatrixTranspose(float *pData)
 {
-    return DoMatrixArrayInternal<TRUE, FALSE, FALSE>(pType, GetTotalUnpackedSize(), 
+    return DoMatrixArrayInternal<true, false, false>(pType, GetTotalUnpackedSize(), 
         Data.pNumeric, pData, 0, 1, "ID3DX11EffectMatrixVariable::GetMatrixTranspose");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::SetMatrixTransposeArray(CONST float *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::SetMatrixTransposeArray(const float *pData, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectMatrixVariable::SetMatrixTransposeArray";
+    static LPCSTR pFuncName = "ID3DX11EffectMatrixVariable::SetMatrixTransposeArray";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
-    return DoMatrixArrayInternal<TRUE, TRUE, FALSE>(pType, GetTotalUnpackedSize(), 
+    return DoMatrixArrayInternal<true, true, false>(pType, GetTotalUnpackedSize(), 
         Data.pNumeric, const_cast<float*>(pData), Offset, Count, "ID3DX11EffectMatrixVariable::SetMatrixTransposeArray");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::GetMatrixTransposeArray(float *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::GetMatrixTransposeArray(float *pData, uint32_t Offset, uint32_t Count)
 {
-    return DoMatrixArrayInternal<TRUE, FALSE, FALSE>(pType, GetTotalUnpackedSize(), 
+    return DoMatrixArrayInternal<true, false, false>(pType, GetTotalUnpackedSize(), 
         Data.pNumeric, pData, Offset, Count, "ID3DX11EffectMatrixVariable::GetMatrixTransposeArray");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::SetMatrixTransposePointerArray(CONST float **ppData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::SetMatrixTransposePointerArray(const float **ppData, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectMatrixVariable::SetMatrixTransposePointerArray";
+    static LPCSTR pFuncName = "ID3DX11EffectMatrixVariable::SetMatrixTransposePointerArray";
     if (IsAnnotation) return AnnotationInvalidSetCall(pFuncName);
     DirtyVariable();
-    return DoMatrixArrayInternal<TRUE, TRUE, TRUE>(pType, GetTotalUnpackedSize(), 
+    return DoMatrixArrayInternal<true, true, true>(pType, GetTotalUnpackedSize(), 
         Data.pNumeric, const_cast<float**>(ppData), Offset, Count, "ID3DX11EffectMatrixVariable::SetMatrixTransposePointerArray");
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::GetMatrixTransposePointerArray(float **ppData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+HRESULT TMatrixVariable<IBaseInterface, IsAnnotation>::GetMatrixTransposePointerArray(float **ppData, uint32_t Offset, uint32_t Count)
 {
-    return DoMatrixArrayInternal<TRUE, FALSE, TRUE>(pType, GetTotalUnpackedSize(), 
+    return DoMatrixArrayInternal<true, false, true>(pType, GetTotalUnpackedSize(), 
         Data.pNumeric, ppData, Offset, Count, "ID3DX11EffectMatrixVariable::GetMatrixTransposePointerArray");
 }
 
 // Optimize commonly used fast paths
 // (non-annotations only!)
-template<typename IBaseInterface, BOOL IsColumnMajor>
-struct TMatrix4x4Variable : public TMatrixVariable<IBaseInterface, FALSE>
+template<typename IBaseInterface, bool IsColumnMajor>
+struct TMatrix4x4Variable : public TMatrixVariable<IBaseInterface, false>
 {
-    STDMETHOD(SetMatrix)(CONST float *pData);
-    STDMETHOD(GetMatrix)(float *pData);
+    STDMETHOD(SetMatrix)(_In_reads_(16) const float *pData) override;
+    STDMETHOD(GetMatrix)(_Out_writes_(16) float *pData) override;
 
-    STDMETHOD(SetMatrixArray)(CONST float *pData, UINT  Offset, UINT  Count);
-    STDMETHOD(GetMatrixArray)(float *pData, UINT  Offset, UINT  Count);
+    STDMETHOD(SetMatrixArray)(_In_reads_(16*Count) const float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
+    STDMETHOD(GetMatrixArray)(_Out_writes_(16*Count) float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
 
-    STDMETHOD(SetMatrixTranspose)(CONST float *pData);
-    STDMETHOD(GetMatrixTranspose)(float *pData);
+    STDMETHOD(SetMatrixTranspose)(_In_reads_(16) const float *pData) override;
+    STDMETHOD(GetMatrixTranspose)(_Out_writes_(16) float *pData) override;
 
-    STDMETHOD(SetMatrixTransposeArray)(CONST float *pData, UINT  Offset, UINT  Count);
-    STDMETHOD(GetMatrixTransposeArray)(float *pData, UINT  Offset, UINT  Count);
+    STDMETHOD(SetMatrixTransposeArray)(_In_reads_(16*Count) const float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
+    STDMETHOD(GetMatrixTransposeArray)(_Out_writes_(16*Count) float *pData, _In_ uint32_t Offset, _In_ uint32_t Count) override;
 };
 
-D3DX11INLINE static void Matrix4x4TransposeHelper(CONST void *pSrc, void *pDst)
+inline static void Matrix4x4TransposeHelper(_In_reads_bytes_(64) const void *pSrc, _Out_writes_bytes_(64) void *pDst)
 {
-    BYTE *pDestData = (BYTE*)pDst;
-    UINT *pMatrix = (UINT*)pSrc;
+    uint8_t *pDestData = (uint8_t*)pDst;
+    uint32_t *pMatrix = (uint32_t*)pSrc;
 
-    ((UINT*)pDestData)[0 * 4 + 0] = pMatrix[0 * 4 + 0];
-    ((UINT*)pDestData)[0 * 4 + 1] = pMatrix[1 * 4 + 0];
-    ((UINT*)pDestData)[0 * 4 + 2] = pMatrix[2 * 4 + 0];
-    ((UINT*)pDestData)[0 * 4 + 3] = pMatrix[3 * 4 + 0];
+    ((uint32_t*)pDestData)[0 * 4 + 0] = pMatrix[0 * 4 + 0];
+    ((uint32_t*)pDestData)[0 * 4 + 1] = pMatrix[1 * 4 + 0];
+    ((uint32_t*)pDestData)[0 * 4 + 2] = pMatrix[2 * 4 + 0];
+    ((uint32_t*)pDestData)[0 * 4 + 3] = pMatrix[3 * 4 + 0];
 
-    ((UINT*)pDestData)[1 * 4 + 0] = pMatrix[0 * 4 + 1];
-    ((UINT*)pDestData)[1 * 4 + 1] = pMatrix[1 * 4 + 1];
-    ((UINT*)pDestData)[1 * 4 + 2] = pMatrix[2 * 4 + 1];
-    ((UINT*)pDestData)[1 * 4 + 3] = pMatrix[3 * 4 + 1];
+    ((uint32_t*)pDestData)[1 * 4 + 0] = pMatrix[0 * 4 + 1];
+    ((uint32_t*)pDestData)[1 * 4 + 1] = pMatrix[1 * 4 + 1];
+    ((uint32_t*)pDestData)[1 * 4 + 2] = pMatrix[2 * 4 + 1];
+    ((uint32_t*)pDestData)[1 * 4 + 3] = pMatrix[3 * 4 + 1];
 
-    ((UINT*)pDestData)[2 * 4 + 0] = pMatrix[0 * 4 + 2];
-    ((UINT*)pDestData)[2 * 4 + 1] = pMatrix[1 * 4 + 2];
-    ((UINT*)pDestData)[2 * 4 + 2] = pMatrix[2 * 4 + 2];
-    ((UINT*)pDestData)[2 * 4 + 3] = pMatrix[3 * 4 + 2];
+    ((uint32_t*)pDestData)[2 * 4 + 0] = pMatrix[0 * 4 + 2];
+    ((uint32_t*)pDestData)[2 * 4 + 1] = pMatrix[1 * 4 + 2];
+    ((uint32_t*)pDestData)[2 * 4 + 2] = pMatrix[2 * 4 + 2];
+    ((uint32_t*)pDestData)[2 * 4 + 3] = pMatrix[3 * 4 + 2];
 
-    ((UINT*)pDestData)[3 * 4 + 0] = pMatrix[0 * 4 + 3];
-    ((UINT*)pDestData)[3 * 4 + 1] = pMatrix[1 * 4 + 3];
-    ((UINT*)pDestData)[3 * 4 + 2] = pMatrix[2 * 4 + 3];
-    ((UINT*)pDestData)[3 * 4 + 3] = pMatrix[3 * 4 + 3];
+    ((uint32_t*)pDestData)[3 * 4 + 0] = pMatrix[0 * 4 + 3];
+    ((uint32_t*)pDestData)[3 * 4 + 1] = pMatrix[1 * 4 + 3];
+    ((uint32_t*)pDestData)[3 * 4 + 2] = pMatrix[2 * 4 + 3];
+    ((uint32_t*)pDestData)[3 * 4 + 3] = pMatrix[3 * 4 + 3];
 }
 
-D3DX11INLINE static void Matrix4x4Copy(CONST void *pSrc, void *pDst)
+inline static void Matrix4x4Copy(_In_reads_bytes_(64) const void *pSrc, _Out_writes_bytes_(64) void *pDst)
 {
 #if 1
     // In tests, this path ended up generating faster code both on x86 and x64
@@ -2583,8 +2912,8 @@ D3DX11INLINE static void Matrix4x4Copy(CONST void *pSrc, void *pDst)
     // T1: 1.88 T2: 1.92 - with 32 bit copies
     // T1: 1.85 T2: 1.80 - with 64 bit copies
 
-    UINT64 *pDestData = (UINT64*)pDst;
-    UINT64 *pMatrix = (UINT64*)pSrc;
+    uint64_t *pDestData = (uint64_t*)pDst;
+    uint64_t *pMatrix = (uint64_t*)pSrc;
 
     pDestData[0 * 4 + 0] = pMatrix[0 * 4 + 0];
     pDestData[0 * 4 + 1] = pMatrix[0 * 4 + 1];
@@ -2596,8 +2925,8 @@ D3DX11INLINE static void Matrix4x4Copy(CONST void *pSrc, void *pDst)
     pDestData[1 * 4 + 2] = pMatrix[1 * 4 + 2];
     pDestData[1 * 4 + 3] = pMatrix[1 * 4 + 3];
 #else
-    UINT *pDestData = (UINT*)pDst;
-    UINT *pMatrix = (UINT*)pSrc;
+    uint32_t *pDestData = (uint32_t*)pDst;
+    uint32_t *pMatrix = (uint32_t*)pSrc;
 
     pDestData[0 * 4 + 0] = pMatrix[0 * 4 + 0];
     pDestData[0 * 4 + 1] = pMatrix[0 * 4 + 1];
@@ -2623,33 +2952,37 @@ D3DX11INLINE static void Matrix4x4Copy(CONST void *pSrc, void *pDst)
 
 
 // Note that branches in this code is based on template parameters and will be compiled out
-template<BOOL IsColumnMajor, BOOL Transpose, BOOL IsSetting>
-D3DX11INLINE HRESULT DoMatrix4x4ArrayInternal(BYTE *pEffectData, void *pMatrixData, UINT  Offset, UINT  Count
-
+#pragma warning (push)
+#pragma warning (disable : 6101)
+template<bool IsColumnMajor, bool Transpose, bool IsSetting>
+inline HRESULT DoMatrix4x4ArrayInternal(_In_ uint8_t *pEffectData,
+                                        _When_(IsSetting, _In_reads_bytes_(64 * Count))
+                                        _When_(!IsSetting, _Out_writes_bytes_(64 * Count))
+                                        void *pMatrixData,
+                                        _In_ uint32_t Offset, _In_ uint32_t Count
 #ifdef _DEBUG
-                                              , SType *pType, UINT  TotalUnpackedSize, LPCSTR pFuncName)
-#else
-                                              )
+                                        , _In_ const SType *pType, _In_ uint32_t  TotalUnpackedSize, _In_z_ LPCSTR pFuncName
 #endif
+
+                                        )
 {    
     HRESULT hr = S_OK;
 
 #ifdef _DEBUG
+#pragma warning( suppress : 6001 )
     if (!AreBoundsValid(Offset, Count, pMatrixData, pType, TotalUnpackedSize))
     {
         DPF(0, "%s: Invalid range specified", pFuncName);
         VH(E_INVALIDARG);
     }
 
-    D3DXASSERT(pType->NumericType.IsColumnMajor == IsColumnMajor && pType->Stride == (4 * SType::c_RegisterSize));
+    assert(pType->NumericType.IsColumnMajor == IsColumnMajor && pType->Stride == (4 * SType::c_RegisterSize));
 #endif
-
-    UINT i;
 
     if ((IsColumnMajor && Transpose) || (!IsColumnMajor && !Transpose))
     {
         // fast path
-        for (i = 0; i < Count; ++ i)
+        for (size_t i = 0; i < Count; ++ i)
         {
             CEffectMatrix *pMatrix = ((CEffectMatrix *)pMatrixData) + i;
 
@@ -2666,7 +2999,7 @@ D3DX11INLINE HRESULT DoMatrix4x4ArrayInternal(BYTE *pEffectData, void *pMatrixDa
     else
     {
         // slow path
-        for (i = 0; i < Count; ++ i)
+        for (size_t i = 0; i < Count; ++ i)
         {
             CEffectMatrix *pMatrix = ((CEffectMatrix *)pMatrixData) + i;
 
@@ -2684,12 +3017,14 @@ D3DX11INLINE HRESULT DoMatrix4x4ArrayInternal(BYTE *pEffectData, void *pMatrixDa
 lExit:
     return hr;
 }
+#pragma warning (pop)
 
-template<typename IBaseInterface, BOOL IsColumnMajor>
-HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::SetMatrix(CONST float *pData)
+template<typename IBaseInterface, bool IsColumnMajor>
+_Use_decl_annotations_
+HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::SetMatrix(const float *pData)
 {
     DirtyVariable();
-    return DoMatrix4x4ArrayInternal<IsColumnMajor, FALSE, TRUE>(Data.pNumeric, const_cast<float*>(pData), 0, 1
+    return DoMatrix4x4ArrayInternal<IsColumnMajor, false, true>(Data.pNumeric, const_cast<float*>(pData), 0, 1
 #ifdef _DEBUG 
         , pType, GetTotalUnpackedSize(), "ID3DX11EffectMatrixVariable::SetMatrix");
 #else
@@ -2697,10 +3032,11 @@ HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::SetMatrix(CONST float
 #endif
 }
 
-template<typename IBaseInterface, BOOL IsColumnMajor>
+template<typename IBaseInterface, bool IsColumnMajor>
+_Use_decl_annotations_
 HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::GetMatrix(float *pData)
 {
-    return DoMatrix4x4ArrayInternal<IsColumnMajor, FALSE, FALSE>(Data.pNumeric, pData, 0, 1
+    return DoMatrix4x4ArrayInternal<IsColumnMajor, false, false>(Data.pNumeric, pData, 0, 1
 #ifdef _DEBUG 
         , pType, GetTotalUnpackedSize(), "ID3DX11EffectMatrixVariable::GetMatrix");
 #else
@@ -2708,11 +3044,12 @@ HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::GetMatrix(float *pDat
 #endif
 }
 
-template<typename IBaseInterface, BOOL IsColumnMajor>
-HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::SetMatrixArray(CONST float *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsColumnMajor>
+_Use_decl_annotations_
+HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::SetMatrixArray(const float *pData, uint32_t Offset, uint32_t Count)
 {
     DirtyVariable();
-    return DoMatrix4x4ArrayInternal<IsColumnMajor, FALSE, TRUE>(Data.pNumeric, const_cast<float*>(pData), Offset, Count
+    return DoMatrix4x4ArrayInternal<IsColumnMajor, false, true>(Data.pNumeric, const_cast<float*>(pData), Offset, Count
 #ifdef _DEBUG 
         , pType, GetTotalUnpackedSize(), "ID3DX11EffectMatrixVariable::SetMatrixArray");
 #else
@@ -2720,10 +3057,11 @@ HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::SetMatrixArray(CONST 
 #endif
 }
 
-template<typename IBaseInterface, BOOL IsColumnMajor>
-HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::GetMatrixArray(float *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsColumnMajor>
+_Use_decl_annotations_
+HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::GetMatrixArray(float *pData, uint32_t Offset, uint32_t Count)
 {
-    return DoMatrix4x4ArrayInternal<IsColumnMajor, FALSE, FALSE>(Data.pNumeric, pData, Offset, Count
+    return DoMatrix4x4ArrayInternal<IsColumnMajor, false, false>(Data.pNumeric, pData, Offset, Count
 #ifdef _DEBUG 
         , pType, GetTotalUnpackedSize(), "ID3DX11EffectMatrixVariable::GetMatrixArray");
 #else
@@ -2731,11 +3069,12 @@ HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::GetMatrixArray(float 
 #endif
 }
 
-template<typename IBaseInterface, BOOL IsColumnMajor>
-HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::SetMatrixTranspose(CONST float *pData)
+template<typename IBaseInterface, bool IsColumnMajor>
+_Use_decl_annotations_
+HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::SetMatrixTranspose(const float *pData)
 {
     DirtyVariable();
-    return DoMatrix4x4ArrayInternal<IsColumnMajor, TRUE, TRUE>(Data.pNumeric, const_cast<float*>(pData), 0, 1
+    return DoMatrix4x4ArrayInternal<IsColumnMajor, true, true>(Data.pNumeric, const_cast<float*>(pData), 0, 1
 #ifdef _DEBUG 
         , pType, GetTotalUnpackedSize(), "ID3DX11EffectMatrixVariable::SetMatrixTranspose");
 #else
@@ -2743,10 +3082,11 @@ HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::SetMatrixTranspose(CO
 #endif
 }
 
-template<typename IBaseInterface, BOOL IsColumnMajor>
+template<typename IBaseInterface, bool IsColumnMajor>
+_Use_decl_annotations_
 HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::GetMatrixTranspose(float *pData)
 {
-    return DoMatrix4x4ArrayInternal<IsColumnMajor, TRUE, FALSE>(Data.pNumeric, pData, 0, 1
+    return DoMatrix4x4ArrayInternal<IsColumnMajor, true, false>(Data.pNumeric, pData, 0, 1
 #ifdef _DEBUG 
         , pType, GetTotalUnpackedSize(), "ID3DX11EffectMatrixVariable::GetMatrixTranspose");
 #else
@@ -2754,11 +3094,12 @@ HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::GetMatrixTranspose(fl
 #endif
 }
 
-template<typename IBaseInterface, BOOL IsColumnMajor>
-HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::SetMatrixTransposeArray(CONST float *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsColumnMajor>
+_Use_decl_annotations_
+HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::SetMatrixTransposeArray(const float *pData, uint32_t Offset, uint32_t Count)
 {
     DirtyVariable();
-    return DoMatrix4x4ArrayInternal<IsColumnMajor, TRUE, TRUE>(Data.pNumeric, const_cast<float*>(pData), Offset, Count
+    return DoMatrix4x4ArrayInternal<IsColumnMajor, true, true>(Data.pNumeric, const_cast<float*>(pData), Offset, Count
 #ifdef _DEBUG 
         , pType, GetTotalUnpackedSize(), "ID3DX11EffectMatrixVariable::SetMatrixTransposeArray");
 #else
@@ -2766,10 +3107,11 @@ HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::SetMatrixTransposeArr
 #endif
 }
 
-template<typename IBaseInterface, BOOL IsColumnMajor>
-HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::GetMatrixTransposeArray(float *pData, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsColumnMajor>
+_Use_decl_annotations_
+HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::GetMatrixTransposeArray(float *pData, uint32_t Offset, uint32_t Count)
 {
-    return DoMatrix4x4ArrayInternal<IsColumnMajor, TRUE, FALSE>(Data.pNumeric, pData, Offset, Count
+    return DoMatrix4x4ArrayInternal<IsColumnMajor, true, false>(Data.pNumeric, pData, Offset, Count
 #ifdef _DEBUG 
         , pType, GetTotalUnpackedSize(), "ID3DX11EffectMatrixVariable::GetMatrixTransposeArray");
 #else
@@ -2783,7 +3125,7 @@ HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::GetMatrixTransposeArr
 #define CHECK_OBJECT_ARRAY_BOUNDS(Offset, Count, Pointer) \
     HRESULT hr = S_OK; \
     VERIFYPARAMETER(Pointer) \
-    UINT elements = IsArray() ? pType->Elements : 1; \
+    uint32_t elements = IsArray() ? pType->Elements : 1; \
     \
     if ((Offset + Count < Offset) || (elements < Offset + Count)) \
     { \
@@ -2794,7 +3136,7 @@ HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::GetMatrixTransposeArr
 #define CHECK_OBJECT_SCALAR_BOUNDS(Index, Pointer) \
     HRESULT hr = S_OK; \
     VERIFYPARAMETER(Pointer) \
-    UINT elements = IsArray() ? pType->Elements : 1; \
+    uint32_t elements = IsArray() ? pType->Elements : 1; \
     \
     if (Index >= elements) \
     { \
@@ -2804,7 +3146,7 @@ HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::GetMatrixTransposeArr
 
 #define CHECK_SCALAR_BOUNDS(Index) \
     HRESULT hr = S_OK; \
-    UINT elements = IsArray() ? pType->Elements : 1; \
+    uint32_t elements = IsArray() ? pType->Elements : 1; \
     \
     if (Index >= elements) \
 { \
@@ -2829,18 +3171,19 @@ HRESULT TMatrix4x4Variable<IBaseInterface, IsColumnMajor>::GetMatrixTransposeArr
 // ID3DX11EffectStringVariable (TStringVariable implementation)
 //////////////////////////////////////////////////////////////////////////
 
-template<typename IBaseInterface, BOOL IsAnnotation>
+template<typename IBaseInterface, bool IsAnnotation>
 struct TStringVariable : public IBaseInterface
 {
-    STDMETHOD(GetString)(LPCSTR *ppString);
-    STDMETHOD(GetStringArray)( __out_ecount(Count) LPCSTR *ppStrings, UINT  Offset, UINT  Count );
+    STDMETHOD(GetString)(_Outptr_result_z_ LPCSTR *ppString) override;
+    STDMETHOD(GetStringArray)( _Out_writes_(Count) LPCSTR *ppStrings, _In_ uint32_t Offset, _In_ uint32_t Count ) override;
 };
 
-template<typename IBaseInterface, BOOL IsAnnotation>
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
 HRESULT TStringVariable<IBaseInterface, IsAnnotation>::GetString(LPCSTR *ppString)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectStringVariable::GetString";
+    static LPCSTR pFuncName = "ID3DX11EffectStringVariable::GetString";
 
     VERIFYPARAMETER(ppString);
 
@@ -2850,7 +3193,8 @@ HRESULT TStringVariable<IBaseInterface, IsAnnotation>::GetString(LPCSTR *ppStrin
         return D3DERR_INVALIDCALL;
     }
 
-    D3DXASSERT(NULL != Data.pString);
+    assert(Data.pString != 0);
+    _Analysis_assume_(Data.pString != 0);
 
     *ppString = Data.pString->pString;
 
@@ -2858,10 +3202,12 @@ lExit:
     return hr;
 }
 
-template<typename IBaseInterface, BOOL IsAnnotation>
-HRESULT TStringVariable<IBaseInterface, IsAnnotation>::GetStringArray( __out_ecount(Count) LPCSTR *ppStrings, UINT  Offset, UINT  Count)
+template<typename IBaseInterface, bool IsAnnotation>
+_Use_decl_annotations_
+#pragma warning(suppress : 6054)
+HRESULT TStringVariable<IBaseInterface, IsAnnotation>::GetStringArray( LPCSTR *ppStrings, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectStringVariable::GetStringArray";
+    static LPCSTR pFuncName = "ID3DX11EffectStringVariable::GetStringArray";
 
     CHECK_OBJECT_ARRAY_BOUNDS(Offset, Count, ppStrings);
 
@@ -2871,10 +3217,10 @@ HRESULT TStringVariable<IBaseInterface, IsAnnotation>::GetStringArray( __out_eco
         return D3DERR_INVALIDCALL;
     }
 
-    D3DXASSERT(NULL != Data.pString);
+    assert(Data.pString != 0);
+    _Analysis_assume_(Data.pString != 0);
 
-    UINT i;
-    for (i = 0; i < Count; ++ i)
+    for (size_t i = 0; i < Count; ++ i)
     {
         ppStrings[i] = (Data.pString + Offset + i)->pString;
     }
@@ -2890,16 +3236,17 @@ lExit:
 template<typename IBaseInterface>
 struct TClassInstanceVariable : public IBaseInterface
 {
-    STDMETHOD(GetClassInstance)(ID3D11ClassInstance **ppClassInstance);
+    STDMETHOD(GetClassInstance)(_Outptr_ ID3D11ClassInstance **ppClassInstance) override;
 };
 
 template<typename IBaseClassInstance>
-HRESULT TClassInstanceVariable<IBaseClassInstance>::GetClassInstance(ID3D11ClassInstance** ppClassInstance)
+HRESULT TClassInstanceVariable<IBaseClassInstance>::GetClassInstance(_Outptr_ ID3D11ClassInstance** ppClassInstance)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectClassInstanceVariable::GetClassInstance";
+    static LPCSTR pFuncName = "ID3DX11EffectClassInstanceVariable::GetClassInstance";
 
-    D3DXASSERT( pMemberData != NULL );
+    assert( pMemberData != 0 && pMemberData->Data.pD3DClassInstance != 0);
+    _Analysis_assume_( pMemberData != 0 && pMemberData->Data.pD3DClassInstance != 0);
     *ppClassInstance = pMemberData->Data.pD3DClassInstance;
     SAFE_ADDREF(*ppClassInstance);
 
@@ -2914,15 +3261,15 @@ lExit:
 template<typename IBaseInterface>
 struct TInterfaceVariable : public IBaseInterface
 {
-    STDMETHOD(SetClassInstance)(ID3DX11EffectClassInstanceVariable *pEffectClassInstance);
-    STDMETHOD(GetClassInstance)(ID3DX11EffectClassInstanceVariable **ppEffectClassInstance);
+    STDMETHOD(SetClassInstance)(_In_ ID3DX11EffectClassInstanceVariable *pEffectClassInstance) override;
+    STDMETHOD(GetClassInstance)(_Outptr_ ID3DX11EffectClassInstanceVariable **ppEffectClassInstance) override;
 };
 
 template<typename IBaseInterface>
-HRESULT TInterfaceVariable<IBaseInterface>::SetClassInstance(ID3DX11EffectClassInstanceVariable *pEffectClassInstance)
+HRESULT TInterfaceVariable<IBaseInterface>::SetClassInstance(_In_ ID3DX11EffectClassInstanceVariable *pEffectClassInstance)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectInterfaceVariable::SetClassInstance";
+    static LPCSTR pFuncName = "ID3DX11EffectInterfaceVariable::SetClassInstance";
 
     // Note that we don't check if the types are compatible.  The debug layer will complain if it is.
     // IsValid() will not catch type mismatches.
@@ -2934,10 +3281,10 @@ lExit:
 }
 
 template<typename IBaseInterface>
-HRESULT TInterfaceVariable<IBaseInterface>::GetClassInstance(ID3DX11EffectClassInstanceVariable **ppEffectClassInstance)
+HRESULT TInterfaceVariable<IBaseInterface>::GetClassInstance(_Outptr_ ID3DX11EffectClassInstanceVariable **ppEffectClassInstance)
 {
     HRESULT hr = S_OK;
-    LPCSTR pFuncName = "ID3DX11EffectInterfaceVariable::GetClassInstance";
+    static LPCSTR pFuncName = "ID3DX11EffectInterfaceVariable::GetClassInstance";
 
 #ifdef _DEBUG
     VERIFYPARAMETER(ppEffectClassInstance);
@@ -2956,14 +3303,14 @@ lExit:
 template<typename IBaseInterface>
 struct TShaderResourceVariable : public IBaseInterface
 {
-    STDMETHOD(SetResource)(ID3D11ShaderResourceView *pResource);
-    STDMETHOD(GetResource)(ID3D11ShaderResourceView **ppResource);
+    STDMETHOD(SetResource)(_In_ ID3D11ShaderResourceView *pResource) override;
+    STDMETHOD(GetResource)(_Outptr_ ID3D11ShaderResourceView **ppResource) override;
 
-    STDMETHOD(SetResourceArray)(ID3D11ShaderResourceView **ppResources, UINT  Offset, UINT  Count);
-    STDMETHOD(GetResourceArray)(ID3D11ShaderResourceView **ppResources, UINT  Offset, UINT  Count);
+    STDMETHOD(SetResourceArray)(_In_reads_(Count) ID3D11ShaderResourceView **ppResources, _In_ uint32_t Offset, _In_ uint32_t Count) override;
+    STDMETHOD(GetResourceArray)(_Out_writes_(Count) ID3D11ShaderResourceView **ppResources, _In_ uint32_t Offset, _In_ uint32_t Count) override;
 };
 
-static LPCSTR GetTextureTypeNameFromEnum(EObjectType ObjectType)
+static LPCSTR GetTextureTypeNameFromEnum(_In_ EObjectType ObjectType)
 {
     switch (ObjectType)
     {
@@ -3016,7 +3363,7 @@ static LPCSTR GetTextureTypeNameFromEnum(EObjectType ObjectType)
     return "<unknown texture format>";
 }
 
-static LPCSTR GetResourceDimensionNameFromEnum(D3D11_RESOURCE_DIMENSION ResourceDimension)
+static LPCSTR GetResourceDimensionNameFromEnum(_In_ D3D11_RESOURCE_DIMENSION ResourceDimension)
 {
     switch (ResourceDimension)
     {
@@ -3032,7 +3379,7 @@ static LPCSTR GetResourceDimensionNameFromEnum(D3D11_RESOURCE_DIMENSION Resource
     return "<unknown texture format>";
 }
 
-static LPCSTR GetSRVDimensionNameFromEnum(D3D11_SRV_DIMENSION ViewDimension)
+static LPCSTR GetSRVDimensionNameFromEnum(_In_ D3D11_SRV_DIMENSION ViewDimension)
 {
     switch (ViewDimension)
     {
@@ -3059,7 +3406,7 @@ static LPCSTR GetSRVDimensionNameFromEnum(D3D11_SRV_DIMENSION ViewDimension)
     return "<unknown texture format>";
 }
 
-static LPCSTR GetUAVDimensionNameFromEnum(D3D11_UAV_DIMENSION ViewDimension)
+static LPCSTR GetUAVDimensionNameFromEnum(_In_ D3D11_UAV_DIMENSION ViewDimension)
 {
     switch (ViewDimension)
     {
@@ -3079,7 +3426,7 @@ static LPCSTR GetUAVDimensionNameFromEnum(D3D11_UAV_DIMENSION ViewDimension)
     return "<unknown texture format>";
 }
 
-static LPCSTR GetRTVDimensionNameFromEnum(D3D11_RTV_DIMENSION ViewDimension)
+static LPCSTR GetRTVDimensionNameFromEnum(_In_ D3D11_RTV_DIMENSION ViewDimension)
 {
     switch (ViewDimension)
     {
@@ -3103,7 +3450,7 @@ static LPCSTR GetRTVDimensionNameFromEnum(D3D11_RTV_DIMENSION ViewDimension)
     return "<unknown texture format>";
 }
 
-static LPCSTR GetDSVDimensionNameFromEnum(D3D11_DSV_DIMENSION ViewDimension)
+static LPCSTR GetDSVDimensionNameFromEnum(_In_ D3D11_DSV_DIMENSION ViewDimension)
 {
     switch (ViewDimension)
     {
@@ -3123,9 +3470,9 @@ static LPCSTR GetDSVDimensionNameFromEnum(D3D11_DSV_DIMENSION ViewDimension)
     return "<unknown texture format>";
 }
 
-static HRESULT ValidateTextureType(ID3D11ShaderResourceView *pView, EObjectType ObjectType, LPCSTR pFuncName)
+static HRESULT ValidateTextureType(_In_ ID3D11ShaderResourceView *pView, _In_ EObjectType ObjectType, _In_z_ LPCSTR pFuncName)
 {
-    if (NULL != pView)
+    if (nullptr != pView)
     {
         D3D11_SHADER_RESOURCE_VIEW_DESC desc;
         pView->GetDesc(&desc);
@@ -3145,9 +3492,9 @@ static HRESULT ValidateTextureType(ID3D11ShaderResourceView *pView, EObjectType 
             }
             else
             {
-                ID3D11Buffer* pBuffer = NULL;
+                ID3D11Buffer* pBuffer = nullptr;
                 pView->GetResource( (ID3D11Resource**)&pBuffer );
-                D3DXASSERT( pBuffer != NULL );
+                assert( pBuffer != nullptr );
                 D3D11_BUFFER_DESC BufDesc;
                 pBuffer->GetDesc( &BufDesc );
                 SAFE_RELEASE( pBuffer );
@@ -3197,9 +3544,9 @@ static HRESULT ValidateTextureType(ID3D11ShaderResourceView *pView, EObjectType 
         case EOT_StructuredBuffer:
             if (desc.ViewDimension == D3D11_SRV_DIMENSION_BUFFEREX || desc.ViewDimension == D3D11_SRV_DIMENSION_BUFFER)
             {
-                ID3D11Buffer* pBuffer = NULL;
+                ID3D11Buffer* pBuffer = nullptr;
                 pView->GetResource( (ID3D11Resource**)&pBuffer );
-                D3DXASSERT( pBuffer != NULL );
+                assert( pBuffer != nullptr );
                 D3D11_BUFFER_DESC BufDesc;
                 pBuffer->GetDesc( &BufDesc );
                 SAFE_RELEASE( pBuffer );
@@ -3215,7 +3562,7 @@ static HRESULT ValidateTextureType(ID3D11ShaderResourceView *pView, EObjectType 
             }
             break;
         default:
-            D3DXASSERT(0); // internal error, should never get here
+            assert(0); // internal error, should never get here
             return E_FAIL;
         }
         
@@ -3227,12 +3574,13 @@ static HRESULT ValidateTextureType(ID3D11ShaderResourceView *pView, EObjectType 
 }
 
 template<typename IBaseInterface>
+_Use_decl_annotations_
 HRESULT TShaderResourceVariable<IBaseInterface>::SetResource(ID3D11ShaderResourceView *pResource)
 {
     HRESULT hr = S_OK;
 
 #ifdef _DEBUG
-    LPCSTR pFuncName = "ID3DX11EffectShaderResourceVariable::SetResource";
+    static LPCSTR pFuncName = "ID3DX11EffectShaderResourceVariable::SetResource";
 
     VH(ValidateTextureType(pResource, pType->ObjectType, pFuncName));
 #endif
@@ -3247,16 +3595,19 @@ lExit:
 }
 
 template<typename IBaseInterface>
+_Use_decl_annotations_
 HRESULT TShaderResourceVariable<IBaseInterface>::GetResource(ID3D11ShaderResourceView **ppResource)
 {
     HRESULT hr = S_OK;
 
 #ifdef _DEBUG
-    LPCSTR pFuncName = "ID3DX11EffectShaderResourceVariable::GetResource";
+    static LPCSTR pFuncName = "ID3DX11EffectShaderResourceVariable::GetResource";
 
     VERIFYPARAMETER(ppResource);
 #endif
 
+    assert(Data.pShaderResource != 0 && Data.pShaderResource->pShaderResource != 0);
+    _Analysis_assume_(Data.pShaderResource != 0 && Data.pShaderResource->pShaderResource != 0);
     *ppResource = Data.pShaderResource->pShaderResource;
     SAFE_ADDREF(*ppResource);
 
@@ -3265,22 +3616,22 @@ lExit:
 }
 
 template<typename IBaseInterface>
-HRESULT TShaderResourceVariable<IBaseInterface>::SetResourceArray(ID3D11ShaderResourceView **ppResources, UINT  Offset, UINT  Count)
+_Use_decl_annotations_
+HRESULT TShaderResourceVariable<IBaseInterface>::SetResourceArray(ID3D11ShaderResourceView **ppResources, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectShaderResourceVariable::SetResourceArray";
-    UINT i;
+    static LPCSTR pFuncName = "ID3DX11EffectShaderResourceVariable::SetResourceArray";
 
     CHECK_OBJECT_ARRAY_BOUNDS(Offset, Count, ppResources);
 
 #ifdef _DEBUG
-    for (i = 0; i < Count; ++ i)
+    for (size_t i = 0; i < Count; ++ i)
     {
         VH(ValidateTextureType(ppResources[i], pType->ObjectType, pFuncName));
     }
 #endif
 
     // Texture variables don't need to be dirtied.
-    for (i = 0; i < Count; ++ i)
+    for (size_t i = 0; i < Count; ++ i)
     {
         SShaderResource *pResourceBlock = Data.pShaderResource + Offset + i;
         SAFE_ADDREF(ppResources[i]);
@@ -3293,14 +3644,14 @@ lExit:
 }
 
 template<typename IBaseInterface>
-HRESULT TShaderResourceVariable<IBaseInterface>::GetResourceArray(ID3D11ShaderResourceView **ppResources, UINT  Offset, UINT  Count)
+_Use_decl_annotations_
+HRESULT TShaderResourceVariable<IBaseInterface>::GetResourceArray(ID3D11ShaderResourceView **ppResources, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectShaderResourceVariable::GetResourceArray";
+    static LPCSTR pFuncName = "ID3DX11EffectShaderResourceVariable::GetResourceArray";
 
     CHECK_OBJECT_ARRAY_BOUNDS(Offset, Count, ppResources);
 
-    UINT i;
-    for (i = 0; i < Count; ++ i)
+    for (size_t i = 0; i < Count; ++ i)
     {
         ppResources[i] = (Data.pShaderResource + Offset + i)->pShaderResource;
         SAFE_ADDREF(ppResources[i]);
@@ -3317,16 +3668,16 @@ lExit:
 template<typename IBaseInterface>
 struct TUnorderedAccessViewVariable : public IBaseInterface
 {
-    STDMETHOD(SetUnorderedAccessView)(ID3D11UnorderedAccessView *pResource);
-    STDMETHOD(GetUnorderedAccessView)(ID3D11UnorderedAccessView **ppResource);
+    STDMETHOD(SetUnorderedAccessView)(_In_ ID3D11UnorderedAccessView *pResource) override;
+    STDMETHOD(GetUnorderedAccessView)(_Outptr_ ID3D11UnorderedAccessView **ppResource) override;
 
-    STDMETHOD(SetUnorderedAccessViewArray)(ID3D11UnorderedAccessView **ppResources, UINT  Offset, UINT  Count);
-    STDMETHOD(GetUnorderedAccessViewArray)(ID3D11UnorderedAccessView **ppResources, UINT  Offset, UINT  Count);
+    STDMETHOD(SetUnorderedAccessViewArray)(_In_reads_(Count) ID3D11UnorderedAccessView **ppResources, _In_ uint32_t Offset, _In_ uint32_t Count) override;
+    STDMETHOD(GetUnorderedAccessViewArray)(_Out_writes_(Count) ID3D11UnorderedAccessView **ppResources, _In_ uint32_t Offset, _In_ uint32_t Count) override;
 };
 
-static HRESULT ValidateTextureType(ID3D11UnorderedAccessView *pView, EObjectType ObjectType, LPCSTR pFuncName)
+static HRESULT ValidateTextureType(_In_ ID3D11UnorderedAccessView *pView, _In_ EObjectType ObjectType, _In_z_ LPCSTR pFuncName)
 {
-    if (NULL != pView)
+    if (nullptr != pView)
     {
         D3D11_UNORDERED_ACCESS_VIEW_DESC desc;
         pView->GetDesc(&desc);
@@ -3342,9 +3693,9 @@ static HRESULT ValidateTextureType(ID3D11UnorderedAccessView *pView, EObjectType
             }
             else
             {
-                ID3D11Buffer* pBuffer = NULL;
+                ID3D11Buffer* pBuffer = nullptr;
                 pView->GetResource( (ID3D11Resource**)&pBuffer );
-                D3DXASSERT( pBuffer != NULL );
+                assert( pBuffer != nullptr );
                 D3D11_BUFFER_DESC BufDesc;
                 pBuffer->GetDesc( &BufDesc );
                 SAFE_RELEASE( pBuffer );
@@ -3382,9 +3733,9 @@ static HRESULT ValidateTextureType(ID3D11UnorderedAccessView *pView, EObjectType
         case EOT_RWStructuredBuffer:
             if (desc.ViewDimension == D3D11_UAV_DIMENSION_BUFFER)
             {
-                ID3D11Buffer* pBuffer = NULL;
+                ID3D11Buffer* pBuffer = nullptr;
                 pView->GetResource( (ID3D11Resource**)&pBuffer );
-                D3DXASSERT( pBuffer != NULL );
+                assert( pBuffer != nullptr );
                 D3D11_BUFFER_DESC BufDesc;
                 pBuffer->GetDesc( &BufDesc );
                 SAFE_RELEASE( pBuffer );
@@ -3428,7 +3779,7 @@ static HRESULT ValidateTextureType(ID3D11UnorderedAccessView *pView, EObjectType
             }
             break;
         default:
-            D3DXASSERT(0); // internal error, should never get here
+            assert(0); // internal error, should never get here
             return E_FAIL;
         }
 
@@ -3440,12 +3791,13 @@ static HRESULT ValidateTextureType(ID3D11UnorderedAccessView *pView, EObjectType
 }
 
 template<typename IBaseInterface>
+_Use_decl_annotations_
 HRESULT TUnorderedAccessViewVariable<IBaseInterface>::SetUnorderedAccessView(ID3D11UnorderedAccessView *pResource)
 {
     HRESULT hr = S_OK;
 
 #ifdef _DEBUG
-    LPCSTR pFuncName = "ID3DX11EffectUnorderedAccessViewVariable::SetUnorderedAccessView";
+    static LPCSTR pFuncName = "ID3DX11EffectUnorderedAccessViewVariable::SetUnorderedAccessView";
 
     VH(ValidateTextureType(pResource, pType->ObjectType, pFuncName));
 #endif
@@ -3460,16 +3812,19 @@ lExit:
 }
 
 template<typename IBaseInterface>
+_Use_decl_annotations_
 HRESULT TUnorderedAccessViewVariable<IBaseInterface>::GetUnorderedAccessView(ID3D11UnorderedAccessView **ppResource)
 {
     HRESULT hr = S_OK;
 
 #ifdef _DEBUG
-    LPCSTR pFuncName = "ID3DX11EffectUnorderedAccessViewVariable::GetUnorderedAccessView";
+    static LPCSTR pFuncName = "ID3DX11EffectUnorderedAccessViewVariable::GetUnorderedAccessView";
 
     VERIFYPARAMETER(ppResource);
 #endif
 
+    assert(Data.pUnorderedAccessView != 0 && Data.pUnorderedAccessView->pUnorderedAccessView != 0);
+    _Analysis_assume_(Data.pUnorderedAccessView != 0 && Data.pUnorderedAccessView->pUnorderedAccessView != 0);
     *ppResource = Data.pUnorderedAccessView->pUnorderedAccessView;
     SAFE_ADDREF(*ppResource);
 
@@ -3478,22 +3833,22 @@ lExit:
 }
 
 template<typename IBaseInterface>
-HRESULT TUnorderedAccessViewVariable<IBaseInterface>::SetUnorderedAccessViewArray(ID3D11UnorderedAccessView **ppResources, UINT  Offset, UINT  Count)
+_Use_decl_annotations_
+HRESULT TUnorderedAccessViewVariable<IBaseInterface>::SetUnorderedAccessViewArray(ID3D11UnorderedAccessView **ppResources, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectUnorderedAccessViewVariable::SetUnorderedAccessViewArray";
-    UINT i;
+    static LPCSTR pFuncName = "ID3DX11EffectUnorderedAccessViewVariable::SetUnorderedAccessViewArray";
 
     CHECK_OBJECT_ARRAY_BOUNDS(Offset, Count, ppResources);
 
 #ifdef _DEBUG
-    for (i = 0; i < Count; ++ i)
+    for (size_t i = 0; i < Count; ++ i)
     {
         VH(ValidateTextureType(ppResources[i], pType->ObjectType, pFuncName));
     }
 #endif
 
     // Texture variables don't need to be dirtied.
-    for (i = 0; i < Count; ++ i)
+    for (size_t i = 0; i < Count; ++ i)
     {
         SUnorderedAccessView *pResourceBlock = Data.pUnorderedAccessView + Offset + i;
         SAFE_ADDREF(ppResources[i]);
@@ -3506,14 +3861,14 @@ lExit:
 }
 
 template<typename IBaseInterface>
-HRESULT TUnorderedAccessViewVariable<IBaseInterface>::GetUnorderedAccessViewArray(ID3D11UnorderedAccessView **ppResources, UINT  Offset, UINT  Count)
+_Use_decl_annotations_
+HRESULT TUnorderedAccessViewVariable<IBaseInterface>::GetUnorderedAccessViewArray(ID3D11UnorderedAccessView **ppResources, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectUnorderedAccessViewVariable::GetUnorderedAccessViewArray";
+    static LPCSTR pFuncName = "ID3DX11EffectUnorderedAccessViewVariable::GetUnorderedAccessViewArray";
 
     CHECK_OBJECT_ARRAY_BOUNDS(Offset, Count, ppResources);
 
-    UINT i;
-    for (i = 0; i < Count; ++ i)
+    for (size_t i = 0; i < Count; ++ i)
     {
         ppResources[i] = (Data.pUnorderedAccessView + Offset + i)->pUnorderedAccessView;
         SAFE_ADDREF(ppResources[i]);
@@ -3530,22 +3885,22 @@ lExit:
 template<typename IBaseInterface>
 struct TRenderTargetViewVariable : public IBaseInterface
 {
-    STDMETHOD(SetRenderTarget)(ID3D11RenderTargetView *pResource);
-    STDMETHOD(GetRenderTarget)(ID3D11RenderTargetView **ppResource);
+    STDMETHOD(SetRenderTarget)(_In_ ID3D11RenderTargetView *pResource) override;
+    STDMETHOD(GetRenderTarget)(_Outptr_ ID3D11RenderTargetView **ppResource) override;
 
-    STDMETHOD(SetRenderTargetArray)(ID3D11RenderTargetView **ppResources, UINT  Offset, UINT  Count);
-    STDMETHOD(GetRenderTargetArray)(ID3D11RenderTargetView **ppResources, UINT  Offset, UINT  Count);
+    STDMETHOD(SetRenderTargetArray)(_In_reads_(Count) ID3D11RenderTargetView **ppResources, _In_ uint32_t Offset, _In_ uint32_t Count) override;
+    STDMETHOD(GetRenderTargetArray)(_Out_writes_(Count) ID3D11RenderTargetView **ppResources, _In_ uint32_t Offset, _In_ uint32_t Count) override;
 };
 
 
 template<typename IBaseInterface>
+_Use_decl_annotations_
 HRESULT TRenderTargetViewVariable<IBaseInterface>::SetRenderTarget(ID3D11RenderTargetView *pResource)
 {
     HRESULT hr = S_OK;
 
 #ifdef _DEBUG
-    LPCSTR pFuncName = "ID3DX11EffectRenderTargetVariable::SetRenderTarget";
-
+    static LPCSTR pFuncName = "ID3DX11EffectRenderTargetVariable::SetRenderTarget";
 #endif
 
     // Texture variables don't need to be dirtied.
@@ -3558,10 +3913,13 @@ lExit:
 }
 
 template<typename IBaseInterface>
+_Use_decl_annotations_
 HRESULT TRenderTargetViewVariable<IBaseInterface>::GetRenderTarget(ID3D11RenderTargetView **ppResource)
 {
     HRESULT hr = S_OK;
 
+    assert(Data.pRenderTargetView->pRenderTargetView != 0);
+    _Analysis_assume_(Data.pRenderTargetView->pRenderTargetView != 0);
     *ppResource = Data.pRenderTargetView->pRenderTargetView;
     SAFE_ADDREF(*ppResource);
 
@@ -3570,15 +3928,15 @@ lExit:
 }
 
 template<typename IBaseInterface>
-HRESULT TRenderTargetViewVariable<IBaseInterface>::SetRenderTargetArray(ID3D11RenderTargetView **ppResources, UINT  Offset, UINT  Count)
+_Use_decl_annotations_
+HRESULT TRenderTargetViewVariable<IBaseInterface>::SetRenderTargetArray(ID3D11RenderTargetView **ppResources, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectRenderTargetVariable::SetRenderTargetArray";
-    UINT i;
+    static LPCSTR pFuncName = "ID3DX11EffectRenderTargetVariable::SetRenderTargetArray";
 
     CHECK_OBJECT_ARRAY_BOUNDS(Offset, Count, ppResources);
 
     // Texture variables don't need to be dirtied.
-    for (i = 0; i < Count; ++ i)
+    for (size_t i = 0; i < Count; ++ i)
     {
         SRenderTargetView *pResourceBlock = Data.pRenderTargetView + Offset + i;
         SAFE_ADDREF(ppResources[i]);
@@ -3591,14 +3949,14 @@ lExit:
 }
 
 template<typename IBaseInterface>
-HRESULT TRenderTargetViewVariable<IBaseInterface>::GetRenderTargetArray(ID3D11RenderTargetView **ppResources, UINT  Offset, UINT  Count)
+_Use_decl_annotations_
+HRESULT TRenderTargetViewVariable<IBaseInterface>::GetRenderTargetArray(ID3D11RenderTargetView **ppResources, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3DX11EffectRenderTargetVariable::GetRenderTargetArray";
+    static LPCSTR pFuncName = "ID3DX11EffectRenderTargetVariable::GetRenderTargetArray";
 
     CHECK_OBJECT_ARRAY_BOUNDS(Offset, Count, ppResources);
 
-    UINT i;
-    for (i = 0; i < Count; ++ i)
+    for (size_t i = 0; i < Count; ++ i)
     {
         ppResources[i] = (Data.pRenderTargetView + Offset + i)->pRenderTargetView;
         SAFE_ADDREF(ppResources[i]);
@@ -3615,21 +3973,22 @@ lExit:
 template<typename IBaseInterface>
 struct TDepthStencilViewVariable : public IBaseInterface
 {
-    STDMETHOD(SetDepthStencil)(ID3D11DepthStencilView *pResource);
-    STDMETHOD(GetDepthStencil)(ID3D11DepthStencilView **ppResource);
+    STDMETHOD(SetDepthStencil)(_In_ ID3D11DepthStencilView *pResource)  override;
+    STDMETHOD(GetDepthStencil)(_Outptr_ ID3D11DepthStencilView **ppResource)  override;
 
-    STDMETHOD(SetDepthStencilArray)(ID3D11DepthStencilView **ppResources, UINT  Offset, UINT  Count);
-    STDMETHOD(GetDepthStencilArray)(ID3D11DepthStencilView **ppResources, UINT  Offset, UINT  Count);
+    STDMETHOD(SetDepthStencilArray)(_In_reads_(Count) ID3D11DepthStencilView **ppResources, _In_ uint32_t Offset, _In_ uint32_t Count)  override;
+    STDMETHOD(GetDepthStencilArray)(_Out_writes_(Count) ID3D11DepthStencilView **ppResources, _In_ uint32_t Offset, _In_ uint32_t Count)  override;
 };
 
 
 template<typename IBaseInterface>
+_Use_decl_annotations_
 HRESULT TDepthStencilViewVariable<IBaseInterface>::SetDepthStencil(ID3D11DepthStencilView *pResource)
 {
     HRESULT hr = S_OK;
 
 #ifdef _DEBUG
-    LPCSTR pFuncName = "ID3D11DepthStencilViewVariable::SetDepthStencil";
+    static LPCSTR pFuncName = "ID3D11DepthStencilViewVariable::SetDepthStencil";
 
 #endif
 
@@ -3643,16 +4002,19 @@ lExit:
 }
 
 template<typename IBaseInterface>
+_Use_decl_annotations_
 HRESULT TDepthStencilViewVariable<IBaseInterface>::GetDepthStencil(ID3D11DepthStencilView **ppResource)
 {
     HRESULT hr = S_OK;
 
 #ifdef _DEBUG
-    LPCSTR pFuncName = "ID3D11DepthStencilViewVariable::GetDepthStencil";
+    static LPCSTR pFuncName = "ID3D11DepthStencilViewVariable::GetDepthStencil";
 
     VERIFYPARAMETER(ppResource);
 #endif
 
+    assert(Data.pDepthStencilView->pDepthStencilView != 0);
+    _Analysis_assume_(Data.pDepthStencilView->pDepthStencilView != 0);
     *ppResource = Data.pDepthStencilView->pDepthStencilView;
     SAFE_ADDREF(*ppResource);
 
@@ -3661,15 +4023,15 @@ lExit:
 }
 
 template<typename IBaseInterface>
-HRESULT TDepthStencilViewVariable<IBaseInterface>::SetDepthStencilArray(ID3D11DepthStencilView **ppResources, UINT  Offset, UINT  Count)
+_Use_decl_annotations_
+HRESULT TDepthStencilViewVariable<IBaseInterface>::SetDepthStencilArray(ID3D11DepthStencilView **ppResources, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3D11DepthStencilViewVariable::SetDepthStencilArray";
-    UINT i;
+    static LPCSTR pFuncName = "ID3D11DepthStencilViewVariable::SetDepthStencilArray";
 
     CHECK_OBJECT_ARRAY_BOUNDS(Offset, Count, ppResources);
 
     // Texture variables don't need to be dirtied.
-    for (i = 0; i < Count; ++ i)
+    for (size_t i = 0; i < Count; ++ i)
     {
         SDepthStencilView *pResourceBlock = Data.pDepthStencilView + Offset + i;
         SAFE_ADDREF(ppResources[i]);
@@ -3682,14 +4044,14 @@ lExit:
 }
 
 template<typename IBaseInterface>
-HRESULT TDepthStencilViewVariable<IBaseInterface>::GetDepthStencilArray(ID3D11DepthStencilView **ppResources, UINT  Offset, UINT  Count)
+_Use_decl_annotations_
+HRESULT TDepthStencilViewVariable<IBaseInterface>::GetDepthStencilArray(ID3D11DepthStencilView **ppResources, uint32_t Offset, uint32_t Count)
 {
-    LPCSTR pFuncName = "ID3D11DepthStencilViewVariable::GetDepthStencilArray";
+    static LPCSTR pFuncName = "ID3D11DepthStencilViewVariable::GetDepthStencilArray";
 
     CHECK_OBJECT_ARRAY_BOUNDS(Offset, Count, ppResources);
 
-    UINT i;
-    for (i = 0; i < Count; ++ i)
+    for (size_t i = 0; i < Count; ++ i)
     {
         ppResources[i] = (Data.pDepthStencilView + Offset + i)->pDepthStencilView;
         SAFE_ADDREF(ppResources[i]);
@@ -3699,8 +4061,6 @@ lExit:
     return hr;
 }
 
-
-
 ////////////////////////////////////////////////////////////////////////////////
 // ID3DX11EffectShaderVariable (TShaderVariable implementation)
 ////////////////////////////////////////////////////////////////////////////////
@@ -3708,39 +4068,41 @@ lExit:
 template<typename IBaseInterface>
 struct TShaderVariable : public IBaseInterface
 {
-    STDMETHOD(GetShaderDesc)(UINT ShaderIndex, D3DX11_EFFECT_SHADER_DESC *pDesc);
+    STDMETHOD(GetShaderDesc)(_In_ uint32_t ShaderIndex, _Out_ D3DX11_EFFECT_SHADER_DESC *pDesc)  override;
 
-    STDMETHOD(GetVertexShader)(UINT ShaderIndex, ID3D11VertexShader **ppVS);
-    STDMETHOD(GetGeometryShader)(UINT ShaderIndex, ID3D11GeometryShader **ppGS);
-    STDMETHOD(GetPixelShader)(UINT ShaderIndex, ID3D11PixelShader **ppPS);
-    STDMETHOD(GetHullShader)(UINT ShaderIndex, ID3D11HullShader **ppPS);
-    STDMETHOD(GetDomainShader)(UINT ShaderIndex, ID3D11DomainShader **ppPS);
-    STDMETHOD(GetComputeShader)(UINT ShaderIndex, ID3D11ComputeShader **ppPS);
+    STDMETHOD(GetVertexShader)(_In_ uint32_t ShaderIndex, _Outptr_ ID3D11VertexShader **ppVS)  override;
+    STDMETHOD(GetGeometryShader)(_In_ uint32_t ShaderIndex, _Outptr_ ID3D11GeometryShader **ppGS)  override;
+    STDMETHOD(GetPixelShader)(_In_ uint32_t ShaderIndex, _Outptr_ ID3D11PixelShader **ppPS)  override;
+    STDMETHOD(GetHullShader)(_In_ uint32_t ShaderIndex, _Outptr_ ID3D11HullShader **ppHS)  override;
+    STDMETHOD(GetDomainShader)(_In_ uint32_t ShaderIndex, _Outptr_ ID3D11DomainShader **ppDS)  override;
+    STDMETHOD(GetComputeShader)(_In_ uint32_t ShaderIndex, _Outptr_ ID3D11ComputeShader **ppCS)  override;
 
-    STDMETHOD(GetInputSignatureElementDesc)(UINT ShaderIndex, UINT Element, D3D11_SIGNATURE_PARAMETER_DESC *pDesc);
-    STDMETHOD(GetOutputSignatureElementDesc)(UINT ShaderIndex, UINT Element, D3D11_SIGNATURE_PARAMETER_DESC *pDesc);
-    STDMETHOD(GetPatchConstantSignatureElementDesc)(UINT ShaderIndex, UINT Element, D3D11_SIGNATURE_PARAMETER_DESC *pDesc);
+    STDMETHOD(GetInputSignatureElementDesc)(_In_ uint32_t ShaderIndex, _In_ uint32_t Element, _Out_ D3D11_SIGNATURE_PARAMETER_DESC *pDesc)  override;
+    STDMETHOD(GetOutputSignatureElementDesc)(_In_ uint32_t ShaderIndex, _In_ uint32_t Element, _Out_ D3D11_SIGNATURE_PARAMETER_DESC *pDesc)  override;
+    STDMETHOD(GetPatchConstantSignatureElementDesc)(_In_ uint32_t ShaderIndex, _In_ uint32_t Element, _Out_ D3D11_SIGNATURE_PARAMETER_DESC *pDesc)  override;
 
-    STDMETHOD_(BOOL, IsValid)();
+    STDMETHOD_(bool, IsValid)();
 };
 
 template<typename IBaseInterface>
-HRESULT TShaderVariable<IBaseInterface>::GetShaderDesc(UINT ShaderIndex, D3DX11_EFFECT_SHADER_DESC *pDesc)
+_Use_decl_annotations_
+HRESULT TShaderVariable<IBaseInterface>::GetShaderDesc(uint32_t ShaderIndex, D3DX11_EFFECT_SHADER_DESC *pDesc)
 {
-    LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetShaderDesc";
+    static LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetShaderDesc";
 
     CHECK_OBJECT_SCALAR_BOUNDS(ShaderIndex, pDesc);
 
-    Data.pShader[ShaderIndex].GetShaderDesc(pDesc, FALSE);
+    hr = Data.pShader[ShaderIndex].GetShaderDesc(pDesc, false);
 
 lExit:
     return hr;
 }
 
 template<typename IBaseInterface>
-HRESULT TShaderVariable<IBaseInterface>::GetVertexShader(UINT ShaderIndex, ID3D11VertexShader **ppVS)
+_Use_decl_annotations_
+HRESULT TShaderVariable<IBaseInterface>::GetVertexShader(uint32_t ShaderIndex, ID3D11VertexShader **ppVS)
 {
-    LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetVertexShader";
+    static LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetVertexShader";
 
     CHECK_OBJECT_SCALAR_BOUNDS(ShaderIndex, ppVS);
 
@@ -3751,9 +4113,10 @@ lExit:
 }
 
 template<typename IBaseInterface>
-HRESULT TShaderVariable<IBaseInterface>::GetGeometryShader(UINT ShaderIndex, ID3D11GeometryShader **ppGS)
+_Use_decl_annotations_
+HRESULT TShaderVariable<IBaseInterface>::GetGeometryShader(uint32_t ShaderIndex, ID3D11GeometryShader **ppGS)
 {
-    LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetGeometryShader";
+    static LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetGeometryShader";
 
     CHECK_OBJECT_SCALAR_BOUNDS(ShaderIndex, ppGS);
 
@@ -3764,9 +4127,10 @@ lExit:
 }
 
 template<typename IBaseInterface>
-HRESULT TShaderVariable<IBaseInterface>::GetPixelShader(UINT ShaderIndex, ID3D11PixelShader **ppPS)
+_Use_decl_annotations_
+HRESULT TShaderVariable<IBaseInterface>::GetPixelShader(uint32_t ShaderIndex, ID3D11PixelShader **ppPS)
 {
-    LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetPixelShader";
+    static LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetPixelShader";
 
     CHECK_OBJECT_SCALAR_BOUNDS(ShaderIndex, ppPS);
 
@@ -3777,9 +4141,10 @@ lExit:
 }
 
 template<typename IBaseInterface>
-HRESULT TShaderVariable<IBaseInterface>::GetHullShader(UINT ShaderIndex, ID3D11HullShader **ppHS)
+_Use_decl_annotations_
+HRESULT TShaderVariable<IBaseInterface>::GetHullShader(uint32_t ShaderIndex, ID3D11HullShader **ppHS)
 {
-    LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetHullShader";
+    static LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetHullShader";
 
     CHECK_OBJECT_SCALAR_BOUNDS(ShaderIndex, ppHS);
 
@@ -3790,9 +4155,10 @@ lExit:
 }
 
 template<typename IBaseInterface>
-HRESULT TShaderVariable<IBaseInterface>::GetDomainShader(UINT ShaderIndex, ID3D11DomainShader **ppDS)
+_Use_decl_annotations_
+HRESULT TShaderVariable<IBaseInterface>::GetDomainShader(uint32_t ShaderIndex, ID3D11DomainShader **ppDS)
 {
-    LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetDomainShader";
+    static LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetDomainShader";
 
     CHECK_OBJECT_SCALAR_BOUNDS(ShaderIndex, ppDS);
 
@@ -3803,9 +4169,10 @@ lExit:
 }
 
 template<typename IBaseInterface>
-HRESULT TShaderVariable<IBaseInterface>::GetComputeShader(UINT ShaderIndex, ID3D11ComputeShader **ppCS)
+_Use_decl_annotations_
+HRESULT TShaderVariable<IBaseInterface>::GetComputeShader(uint32_t ShaderIndex, ID3D11ComputeShader **ppCS)
 {
-    LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetComputeShader";
+    static LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetComputeShader";
 
     CHECK_OBJECT_SCALAR_BOUNDS(ShaderIndex, ppCS);
 
@@ -3816,9 +4183,10 @@ lExit:
 }
 
 template<typename IBaseInterface>
-HRESULT TShaderVariable<IBaseInterface>::GetInputSignatureElementDesc(UINT ShaderIndex, UINT Element, D3D11_SIGNATURE_PARAMETER_DESC *pDesc)
+_Use_decl_annotations_
+HRESULT TShaderVariable<IBaseInterface>::GetInputSignatureElementDesc(uint32_t ShaderIndex, uint32_t Element, D3D11_SIGNATURE_PARAMETER_DESC *pDesc)
 {
-    LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetInputSignatureElementDesc";
+    static LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetInputSignatureElementDesc";
 
     CHECK_OBJECT_SCALAR_BOUNDS(ShaderIndex, pDesc);
 
@@ -3829,9 +4197,10 @@ lExit:
 }
 
 template<typename IBaseInterface>
-HRESULT TShaderVariable<IBaseInterface>::GetOutputSignatureElementDesc(UINT ShaderIndex, UINT Element, D3D11_SIGNATURE_PARAMETER_DESC *pDesc)
+_Use_decl_annotations_
+HRESULT TShaderVariable<IBaseInterface>::GetOutputSignatureElementDesc(uint32_t ShaderIndex, uint32_t Element, D3D11_SIGNATURE_PARAMETER_DESC *pDesc)
 {
-    LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetOutputSignatureElementDesc";
+    static LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetOutputSignatureElementDesc";
 
     CHECK_OBJECT_SCALAR_BOUNDS(ShaderIndex, pDesc);
 
@@ -3842,9 +4211,10 @@ lExit:
 }
 
 template<typename IBaseInterface>
-HRESULT TShaderVariable<IBaseInterface>::GetPatchConstantSignatureElementDesc(UINT ShaderIndex, UINT Element, D3D11_SIGNATURE_PARAMETER_DESC *pDesc)
+_Use_decl_annotations_
+HRESULT TShaderVariable<IBaseInterface>::GetPatchConstantSignatureElementDesc(uint32_t ShaderIndex, uint32_t Element, D3D11_SIGNATURE_PARAMETER_DESC *pDesc)
 {
-    LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetPatchConstantSignatureElementDesc";
+    static LPCSTR pFuncName = "ID3DX11EffectShaderVariable::GetPatchConstantSignatureElementDesc";
 
     CHECK_OBJECT_SCALAR_BOUNDS(ShaderIndex, pDesc);
 
@@ -3855,10 +4225,10 @@ lExit:
 }
 
 template<typename IBaseInterface>
-BOOL TShaderVariable<IBaseInterface>::IsValid()
+bool TShaderVariable<IBaseInterface>::IsValid()
 {
-    UINT numElements = IsArray()? pType->Elements : 1;
-    BOOL valid = TRUE;
+    uint32_t numElements = IsArray()? pType->Elements : 1;
+    bool valid = true;
     while( numElements > 0 && ( valid = Data.pShader[ numElements-1 ].IsValid ) )
         numElements--;
     return valid;
@@ -3872,56 +4242,61 @@ template<typename IBaseInterface>
 struct TBlendVariable : public IBaseInterface
 {
 public:
-    STDMETHOD(GetBlendState)(UINT Index, ID3D11BlendState **ppBlendState);
-    STDMETHOD(SetBlendState)(UINT Index, ID3D11BlendState *pBlendState);
-    STDMETHOD(UndoSetBlendState)(UINT Index);
-    STDMETHOD(GetBackingStore)(UINT Index, D3D11_BLEND_DESC *pBlendDesc);
-    STDMETHOD_(BOOL, IsValid)();
+    STDMETHOD(GetBlendState)(_In_ uint32_t Index, _Outptr_ ID3D11BlendState **ppState)  override;
+    STDMETHOD(SetBlendState)(_In_ uint32_t Index, _In_ ID3D11BlendState *pState)  override;
+    STDMETHOD(UndoSetBlendState)(_In_ uint32_t Index)  override;
+    STDMETHOD(GetBackingStore)(_In_ uint32_t Index, _Out_ D3D11_BLEND_DESC *pDesc)  override;
+    STDMETHOD_(bool, IsValid)()  override;
 };
 
 template<typename IBaseInterface>
-HRESULT TBlendVariable<IBaseInterface>::GetBlendState(UINT Index, ID3D11BlendState **ppBlendState)
+_Use_decl_annotations_
+HRESULT TBlendVariable<IBaseInterface>::GetBlendState(uint32_t Index, ID3D11BlendState **ppState)
 {
-    LPCSTR pFuncName = "ID3DX11EffectBlendVariable::GetBlendState";
+    static LPCSTR pFuncName = "ID3DX11EffectBlendVariable::GetBlendState";
 
-    CHECK_OBJECT_SCALAR_BOUNDS(Index, ppBlendState);
+    CHECK_OBJECT_SCALAR_BOUNDS(Index, ppState);
 
-    *ppBlendState = Data.pBlend[Index].pBlendObject;
-    SAFE_ADDREF(*ppBlendState);
+    assert(Data.pBlend[Index].pBlendObject != 0);
+    _Analysis_assume_(Data.pBlend[Index].pBlendObject != 0);
+    *ppState = Data.pBlend[Index].pBlendObject;
+    SAFE_ADDREF(*ppState);
 
 lExit:
     return hr;
 }
 
 template<typename IBaseInterface>
-HRESULT TBlendVariable<IBaseInterface>::SetBlendState(UINT Index, ID3D11BlendState *pBlendState)
+_Use_decl_annotations_
+HRESULT TBlendVariable<IBaseInterface>::SetBlendState(uint32_t Index, ID3D11BlendState *pState)
 {
-    LPCSTR pFuncName = "ID3DX11EffectBlendState::SetBlendState";
+    static LPCSTR pFuncName = "ID3DX11EffectBlendState::SetBlendState";
 
     CHECK_SCALAR_BOUNDS(Index);
 
     if( !Data.pBlend[Index].IsUserManaged )
     {
         // Save original state object in case we UndoSet
-        D3DXASSERT( pMemberData[Index].Type == MDT_BlendState );
-        VB( pMemberData[Index].Data.pD3DEffectsManagedBlendState == NULL );
+        assert( pMemberData[Index].Type == MDT_BlendState );
+        VB( pMemberData[Index].Data.pD3DEffectsManagedBlendState == nullptr );
         pMemberData[Index].Data.pD3DEffectsManagedBlendState = Data.pBlend[Index].pBlendObject;
-        Data.pBlend[Index].pBlendObject = NULL;
-        Data.pBlend[Index].IsUserManaged = TRUE;
+        Data.pBlend[Index].pBlendObject = nullptr;
+        Data.pBlend[Index].IsUserManaged = true;
     }
 
-    SAFE_ADDREF( pBlendState );
+    SAFE_ADDREF( pState );
     SAFE_RELEASE( Data.pBlend[Index].pBlendObject );
-    Data.pBlend[Index].pBlendObject = pBlendState;
-    Data.pBlend[Index].IsValid = TRUE;
+    Data.pBlend[Index].pBlendObject = pState;
+    Data.pBlend[Index].IsValid = true;
 lExit:
     return hr;
 }
 
 template<typename IBaseInterface>
-HRESULT TBlendVariable<IBaseInterface>::UndoSetBlendState(UINT Index)
+_Use_decl_annotations_
+HRESULT TBlendVariable<IBaseInterface>::UndoSetBlendState(uint32_t Index)
 {
-    LPCSTR pFuncName = "ID3DX11EffectBlendState::UndoSetBlendState";
+    static LPCSTR pFuncName = "ID3DX11EffectBlendState::UndoSetBlendState";
 
     CHECK_SCALAR_BOUNDS(Index);
 
@@ -3933,17 +4308,18 @@ HRESULT TBlendVariable<IBaseInterface>::UndoSetBlendState(UINT Index)
     // Revert to original state object
     SAFE_RELEASE( Data.pBlend[Index].pBlendObject );
     Data.pBlend[Index].pBlendObject = pMemberData[Index].Data.pD3DEffectsManagedBlendState;
-    pMemberData[Index].Data.pD3DEffectsManagedBlendState = NULL;
-    Data.pBlend[Index].IsUserManaged = FALSE;
+    pMemberData[Index].Data.pD3DEffectsManagedBlendState = nullptr;
+    Data.pBlend[Index].IsUserManaged = false;
 
 lExit:
     return hr;
 }
 
 template<typename IBaseInterface>
-HRESULT TBlendVariable<IBaseInterface>::GetBackingStore(UINT Index, D3D11_BLEND_DESC *pBlendDesc)
+_Use_decl_annotations_
+HRESULT TBlendVariable<IBaseInterface>::GetBackingStore(uint32_t Index, D3D11_BLEND_DESC *pBlendDesc)
 {
-    LPCSTR pFuncName = "ID3DX11EffectBlendVariable::GetBackingStore";
+    static LPCSTR pFuncName = "ID3DX11EffectBlendVariable::GetBackingStore";
 
     CHECK_OBJECT_SCALAR_BOUNDS(Index, pBlendDesc);
 
@@ -3974,10 +4350,10 @@ lExit:
 }
 
 template<typename IBaseInterface>
-BOOL TBlendVariable<IBaseInterface>::IsValid()
+bool TBlendVariable<IBaseInterface>::IsValid()
 {
-    UINT numElements = IsArray()? pType->Elements : 1;
-    BOOL valid = TRUE;
+    uint32_t numElements = IsArray()? pType->Elements : 1;
+    bool valid = true;
     while( numElements > 0 && ( valid = Data.pBlend[ numElements-1 ].IsValid ) )
         numElements--;
     return valid;
@@ -3992,56 +4368,60 @@ template<typename IBaseInterface>
 struct TDepthStencilVariable : public IBaseInterface
 {
 public:
-    STDMETHOD(GetDepthStencilState)(UINT Index, ID3D11DepthStencilState **ppDepthStencilState);
-    STDMETHOD(SetDepthStencilState)(UINT Index, ID3D11DepthStencilState *pDepthStencilState);
-    STDMETHOD(UndoSetDepthStencilState)(UINT Index);
-    STDMETHOD(GetBackingStore)(UINT Index, D3D11_DEPTH_STENCIL_DESC *pDepthStencilDesc);
-    STDMETHOD_(BOOL, IsValid)();
+    STDMETHOD(GetDepthStencilState)(_In_ uint32_t Index, _Outptr_ ID3D11DepthStencilState **ppState)  override;
+    STDMETHOD(SetDepthStencilState)(_In_ uint32_t Index, _In_ ID3D11DepthStencilState *pState)  override;
+    STDMETHOD(UndoSetDepthStencilState)(_In_ uint32_t Index)  override;
+    STDMETHOD(GetBackingStore)(_In_ uint32_t Index, _Out_ D3D11_DEPTH_STENCIL_DESC *pDesc) override;
+    STDMETHOD_(bool, IsValid)()  override;
 };
 
 template<typename IBaseInterface>
-HRESULT TDepthStencilVariable<IBaseInterface>::GetDepthStencilState(UINT Index, ID3D11DepthStencilState **ppDepthStencilState)
+_Use_decl_annotations_
+HRESULT TDepthStencilVariable<IBaseInterface>::GetDepthStencilState(uint32_t Index, ID3D11DepthStencilState **ppState)
 {
-    LPCSTR pFuncName = "ID3DX11EffectDepthStencilVariable::GetDepthStencilState";
+    static LPCSTR pFuncName = "ID3DX11EffectDepthStencilVariable::GetDepthStencilState";
 
-    CHECK_OBJECT_SCALAR_BOUNDS(Index, ppDepthStencilState);
+    CHECK_OBJECT_SCALAR_BOUNDS(Index, ppState);
 
-    *ppDepthStencilState = Data.pDepthStencil[Index].pDSObject;
-    SAFE_ADDREF(*ppDepthStencilState);
+    assert(Data.pDepthStencil[Index].pDSObject != 0);
+    _Analysis_assume_(Data.pDepthStencil[Index].pDSObject != 0);
+    *ppState = Data.pDepthStencil[Index].pDSObject;
+    SAFE_ADDREF(*ppState);
 
 lExit:
     return hr;
 }
 
 template<typename IBaseInterface>
-HRESULT TDepthStencilVariable<IBaseInterface>::SetDepthStencilState(UINT Index, ID3D11DepthStencilState *pDepthStencilState)
+_Use_decl_annotations_
+HRESULT TDepthStencilVariable<IBaseInterface>::SetDepthStencilState(uint32_t Index, ID3D11DepthStencilState *pState)
 {
-    LPCSTR pFuncName = "ID3DX11EffectDepthStencilState::SetDepthStencilState";
+    static LPCSTR pFuncName = "ID3DX11EffectDepthStencilState::SetDepthStencilState";
 
     CHECK_SCALAR_BOUNDS(Index);
 
     if( !Data.pDepthStencil[Index].IsUserManaged )
     {
         // Save original state object in case we UndoSet
-        D3DXASSERT( pMemberData[Index].Type == MDT_DepthStencilState );
-        VB( pMemberData[Index].Data.pD3DEffectsManagedDepthStencilState == NULL );
+        assert( pMemberData[Index].Type == MDT_DepthStencilState );
+        VB( pMemberData[Index].Data.pD3DEffectsManagedDepthStencilState == nullptr );
         pMemberData[Index].Data.pD3DEffectsManagedDepthStencilState = Data.pDepthStencil[Index].pDSObject;
-        Data.pDepthStencil[Index].pDSObject = NULL;
-        Data.pDepthStencil[Index].IsUserManaged = TRUE;
+        Data.pDepthStencil[Index].pDSObject = nullptr;
+        Data.pDepthStencil[Index].IsUserManaged = true;
     }
 
-    SAFE_ADDREF( pDepthStencilState );
+    SAFE_ADDREF( pState );
     SAFE_RELEASE( Data.pDepthStencil[Index].pDSObject );
-    Data.pDepthStencil[Index].pDSObject = pDepthStencilState;
-    Data.pDepthStencil[Index].IsValid = TRUE;
+    Data.pDepthStencil[Index].pDSObject = pState;
+    Data.pDepthStencil[Index].IsValid = true;
 lExit:
     return hr;
 }
 
 template<typename IBaseInterface>
-HRESULT TDepthStencilVariable<IBaseInterface>::UndoSetDepthStencilState(UINT Index)
+HRESULT TDepthStencilVariable<IBaseInterface>::UndoSetDepthStencilState(_In_ uint32_t Index)
 {
-    LPCSTR pFuncName = "ID3DX11EffectDepthStencilState::UndoSetDepthStencilState";
+    static LPCSTR pFuncName = "ID3DX11EffectDepthStencilState::UndoSetDepthStencilState";
 
     CHECK_SCALAR_BOUNDS(Index);
 
@@ -4053,17 +4433,18 @@ HRESULT TDepthStencilVariable<IBaseInterface>::UndoSetDepthStencilState(UINT Ind
     // Revert to original state object
     SAFE_RELEASE( Data.pDepthStencil[Index].pDSObject );
     Data.pDepthStencil[Index].pDSObject = pMemberData[Index].Data.pD3DEffectsManagedDepthStencilState;
-    pMemberData[Index].Data.pD3DEffectsManagedDepthStencilState = NULL;
-    Data.pDepthStencil[Index].IsUserManaged = FALSE;
+    pMemberData[Index].Data.pD3DEffectsManagedDepthStencilState = nullptr;
+    Data.pDepthStencil[Index].IsUserManaged = false;
 
 lExit:
     return hr;
 }
 
 template<typename IBaseInterface>
-HRESULT TDepthStencilVariable<IBaseInterface>::GetBackingStore(UINT Index, D3D11_DEPTH_STENCIL_DESC *pDepthStencilDesc)
+_Use_decl_annotations_
+HRESULT TDepthStencilVariable<IBaseInterface>::GetBackingStore(uint32_t Index, D3D11_DEPTH_STENCIL_DESC *pDepthStencilDesc)
 {
-    LPCSTR pFuncName = "ID3DX11EffectDepthStencilVariable::GetBackingStore";
+    static LPCSTR pFuncName = "ID3DX11EffectDepthStencilVariable::GetBackingStore";
 
     CHECK_OBJECT_SCALAR_BOUNDS(Index, pDepthStencilDesc);
 
@@ -4094,10 +4475,10 @@ lExit:
 }
 
 template<typename IBaseInterface>
-BOOL TDepthStencilVariable<IBaseInterface>::IsValid()
+bool TDepthStencilVariable<IBaseInterface>::IsValid()
 {
-    UINT numElements = IsArray()? pType->Elements : 1;
-    BOOL valid = TRUE;
+    uint32_t numElements = IsArray()? pType->Elements : 1;
+    bool valid = true;
     while( numElements > 0 && ( valid = Data.pDepthStencil[ numElements-1 ].IsValid ) )
         numElements--;
     return valid;
@@ -4112,56 +4493,61 @@ struct TRasterizerVariable : public IBaseInterface
 {
 public:
 
-    STDMETHOD(GetRasterizerState)(UINT Index, ID3D11RasterizerState **ppRasterizerState);
-    STDMETHOD(SetRasterizerState)(UINT Index, ID3D11RasterizerState *pRasterizerState);
-    STDMETHOD(UndoSetRasterizerState)(UINT Index);
-    STDMETHOD(GetBackingStore)(UINT Index, D3D11_RASTERIZER_DESC *pRasterizerDesc);
-    STDMETHOD_(BOOL, IsValid)();
+    STDMETHOD(GetRasterizerState)(_In_ uint32_t Index, _Outptr_ ID3D11RasterizerState **ppState)  override;
+    STDMETHOD(SetRasterizerState)(_In_ uint32_t Index, _In_ ID3D11RasterizerState *pState)  override;
+    STDMETHOD(UndoSetRasterizerState)(_In_ uint32_t Index)  override;
+    STDMETHOD(GetBackingStore)(_In_ uint32_t Index, _Out_ D3D11_RASTERIZER_DESC *pDesc)  override;
+    STDMETHOD_(bool, IsValid)()  override;
 };
 
 template<typename IBaseInterface>
-HRESULT TRasterizerVariable<IBaseInterface>::GetRasterizerState(UINT Index, ID3D11RasterizerState **ppRasterizerState)
+_Use_decl_annotations_
+HRESULT TRasterizerVariable<IBaseInterface>::GetRasterizerState(uint32_t Index, ID3D11RasterizerState **ppState)
 {
-    LPCSTR pFuncName = "ID3DX11EffectRasterizerVariable::GetRasterizerState";
+    static LPCSTR pFuncName = "ID3DX11EffectRasterizerVariable::GetRasterizerState";
 
-    CHECK_OBJECT_SCALAR_BOUNDS(Index, ppRasterizerState);
+    CHECK_OBJECT_SCALAR_BOUNDS(Index, ppState);
 
-    *ppRasterizerState = Data.pRasterizer[Index].pRasterizerObject;
-    SAFE_ADDREF(*ppRasterizerState);
+    assert(Data.pRasterizer[Index].pRasterizerObject != 0);
+    _Analysis_assume_(Data.pRasterizer[Index].pRasterizerObject != 0);
+    *ppState = Data.pRasterizer[Index].pRasterizerObject;
+    SAFE_ADDREF(*ppState);
 
 lExit:
     return hr;
 }
 
 template<typename IBaseInterface>
-HRESULT TRasterizerVariable<IBaseInterface>::SetRasterizerState(UINT Index, ID3D11RasterizerState *pRasterizerState)
+_Use_decl_annotations_
+HRESULT TRasterizerVariable<IBaseInterface>::SetRasterizerState(uint32_t Index, ID3D11RasterizerState *pState)
 {
-    LPCSTR pFuncName = "ID3DX11EffectRasterizerState::SetRasterizerState";
+    static LPCSTR pFuncName = "ID3DX11EffectRasterizerState::SetRasterizerState";
 
     CHECK_SCALAR_BOUNDS(Index);
 
     if( !Data.pRasterizer[Index].IsUserManaged )
     {
         // Save original state object in case we UndoSet
-        D3DXASSERT( pMemberData[Index].Type == MDT_RasterizerState );
-        VB( pMemberData[Index].Data.pD3DEffectsManagedRasterizerState == NULL );
+        assert( pMemberData[Index].Type == MDT_RasterizerState );
+        VB( pMemberData[Index].Data.pD3DEffectsManagedRasterizerState == nullptr );
         pMemberData[Index].Data.pD3DEffectsManagedRasterizerState = Data.pRasterizer[Index].pRasterizerObject;
-        Data.pRasterizer[Index].pRasterizerObject = NULL;
-        Data.pRasterizer[Index].IsUserManaged = TRUE;
+        Data.pRasterizer[Index].pRasterizerObject = nullptr;
+        Data.pRasterizer[Index].IsUserManaged = true;
     }
 
-    SAFE_ADDREF( pRasterizerState );
+    SAFE_ADDREF( pState );
     SAFE_RELEASE( Data.pRasterizer[Index].pRasterizerObject );
-    Data.pRasterizer[Index].pRasterizerObject = pRasterizerState;
-    Data.pRasterizer[Index].IsValid = TRUE;
+    Data.pRasterizer[Index].pRasterizerObject = pState;
+    Data.pRasterizer[Index].IsValid = true;
 lExit:
     return hr;
 }
 
 template<typename IBaseInterface>
-HRESULT TRasterizerVariable<IBaseInterface>::UndoSetRasterizerState(UINT Index)
+_Use_decl_annotations_
+HRESULT TRasterizerVariable<IBaseInterface>::UndoSetRasterizerState(uint32_t Index)
 {
-    LPCSTR pFuncName = "ID3DX11EffectRasterizerState::UndoSetRasterizerState";
+    static LPCSTR pFuncName = "ID3DX11EffectRasterizerState::UndoSetRasterizerState";
 
     CHECK_SCALAR_BOUNDS(Index);
 
@@ -4173,17 +4559,18 @@ HRESULT TRasterizerVariable<IBaseInterface>::UndoSetRasterizerState(UINT Index)
     // Revert to original state object
     SAFE_RELEASE( Data.pRasterizer[Index].pRasterizerObject );
     Data.pRasterizer[Index].pRasterizerObject = pMemberData[Index].Data.pD3DEffectsManagedRasterizerState;
-    pMemberData[Index].Data.pD3DEffectsManagedRasterizerState = NULL;
-    Data.pRasterizer[Index].IsUserManaged = FALSE;
+    pMemberData[Index].Data.pD3DEffectsManagedRasterizerState = nullptr;
+    Data.pRasterizer[Index].IsUserManaged = false;
 
 lExit:
     return hr;
 }
 
 template<typename IBaseInterface>
-HRESULT TRasterizerVariable<IBaseInterface>::GetBackingStore(UINT Index, D3D11_RASTERIZER_DESC *pRasterizerDesc)
+_Use_decl_annotations_
+HRESULT TRasterizerVariable<IBaseInterface>::GetBackingStore(uint32_t Index, D3D11_RASTERIZER_DESC *pRasterizerDesc)
 {
-    LPCSTR pFuncName = "ID3DX11EffectRasterizerVariable::GetBackingStore";
+    static LPCSTR pFuncName = "ID3DX11EffectRasterizerVariable::GetBackingStore";
 
     CHECK_OBJECT_SCALAR_BOUNDS(Index, pRasterizerDesc);
 
@@ -4214,10 +4601,10 @@ lExit:
 }
 
 template<typename IBaseInterface>
-BOOL TRasterizerVariable<IBaseInterface>::IsValid()
+bool TRasterizerVariable<IBaseInterface>::IsValid()
 {
-    UINT numElements = IsArray()? pType->Elements : 1;
-    BOOL valid = TRUE;
+    uint32_t numElements = IsArray()? pType->Elements : 1;
+    bool valid = true;
     while( numElements > 0 && ( valid = Data.pRasterizer[ numElements-1 ].IsValid ) )
         numElements--;
     return valid;
@@ -4232,19 +4619,21 @@ struct TSamplerVariable : public IBaseInterface
 {
 public:
 
-    STDMETHOD(GetSampler)(UINT Index, ID3D11SamplerState **ppSampler);
-    STDMETHOD(SetSampler)(UINT Index, ID3D11SamplerState *pSampler);
-    STDMETHOD(UndoSetSampler)(UINT Index);
-    STDMETHOD(GetBackingStore)(UINT Index, D3D11_SAMPLER_DESC *pSamplerDesc);
+    STDMETHOD(GetSampler)(_In_ uint32_t Index, _Outptr_ ID3D11SamplerState **ppSampler) override;
+    STDMETHOD(SetSampler)(_In_ uint32_t Index, _In_ ID3D11SamplerState *pSampler) override;
+    STDMETHOD(UndoSetSampler)(_In_ uint32_t Index)  override;
+    STDMETHOD(GetBackingStore)(_In_ uint32_t Index, _Out_ D3D11_SAMPLER_DESC *pDesc)  override;
 };
 
 template<typename IBaseInterface>
-HRESULT TSamplerVariable<IBaseInterface>::GetSampler(UINT Index, ID3D11SamplerState **ppSampler)
+_Use_decl_annotations_
+HRESULT TSamplerVariable<IBaseInterface>::GetSampler(uint32_t Index, ID3D11SamplerState **ppSampler)
 {
-    LPCSTR pFuncName = "ID3DX11EffectSamplerVariable::GetSampler";
+    static LPCSTR pFuncName = "ID3DX11EffectSamplerVariable::GetSampler";
 
     CHECK_OBJECT_SCALAR_BOUNDS(Index, ppSampler);
 
+    _Analysis_assume_( Data.pSampler[Index].pD3DObject != 0 );
     *ppSampler = Data.pSampler[Index].pD3DObject;
     SAFE_ADDREF(*ppSampler);
 
@@ -4253,9 +4642,10 @@ lExit:
 }
 
 template<typename IBaseInterface>
-HRESULT TSamplerVariable<IBaseInterface>::SetSampler(UINT Index, ID3D11SamplerState *pSampler)
+_Use_decl_annotations_
+HRESULT TSamplerVariable<IBaseInterface>::SetSampler(uint32_t Index, ID3D11SamplerState *pSampler)
 {
-    LPCSTR pFuncName = "ID3DX11EffectSamplerState::SetSampler";
+    static LPCSTR pFuncName = "ID3DX11EffectSamplerState::SetSampler";
 
     CHECK_SCALAR_BOUNDS(Index);
 
@@ -4265,11 +4655,11 @@ HRESULT TSamplerVariable<IBaseInterface>::SetSampler(UINT Index, ID3D11SamplerSt
     if( !Data.pSampler[Index].IsUserManaged )
     {
         // Save original state object in case we UndoSet
-        D3DXASSERT( pMemberData[Index].Type == MDT_SamplerState );
-        VB( pMemberData[Index].Data.pD3DEffectsManagedSamplerState == NULL );
+        assert( pMemberData[Index].Type == MDT_SamplerState );
+        VB( pMemberData[Index].Data.pD3DEffectsManagedSamplerState == nullptr );
         pMemberData[Index].Data.pD3DEffectsManagedSamplerState = Data.pSampler[Index].pD3DObject;
-        Data.pSampler[Index].pD3DObject = NULL;
-        Data.pSampler[Index].IsUserManaged = TRUE;
+        Data.pSampler[Index].pD3DObject = nullptr;
+        Data.pSampler[Index].IsUserManaged = true;
     }
 
     SAFE_ADDREF( pSampler );
@@ -4280,9 +4670,9 @@ lExit:
 }
 
 template<typename IBaseInterface>
-HRESULT TSamplerVariable<IBaseInterface>::UndoSetSampler(UINT Index)
+HRESULT TSamplerVariable<IBaseInterface>::UndoSetSampler(_In_ uint32_t Index)
 {
-    LPCSTR pFuncName = "ID3DX11EffectSamplerState::UndoSetSampler";
+    static LPCSTR pFuncName = "ID3DX11EffectSamplerState::UndoSetSampler";
 
     CHECK_SCALAR_BOUNDS(Index);
 
@@ -4297,29 +4687,30 @@ HRESULT TSamplerVariable<IBaseInterface>::UndoSetSampler(UINT Index)
     // Revert to original state object
     SAFE_RELEASE( Data.pSampler[Index].pD3DObject );
     Data.pSampler[Index].pD3DObject = pMemberData[Index].Data.pD3DEffectsManagedSamplerState;
-    pMemberData[Index].Data.pD3DEffectsManagedSamplerState = NULL;
-    Data.pSampler[Index].IsUserManaged = FALSE;
+    pMemberData[Index].Data.pD3DEffectsManagedSamplerState = nullptr;
+    Data.pSampler[Index].IsUserManaged = false;
 
 lExit:
     return hr;
 }
 
 template<typename IBaseInterface>
-HRESULT TSamplerVariable<IBaseInterface>::GetBackingStore(UINT Index, D3D11_SAMPLER_DESC *pSamplerDesc)
+_Use_decl_annotations_
+HRESULT TSamplerVariable<IBaseInterface>::GetBackingStore(uint32_t Index, D3D11_SAMPLER_DESC *pDesc)
 {
-    LPCSTR pFuncName = "ID3DX11EffectSamplerVariable::GetBackingStore";
+    static LPCSTR pFuncName = "ID3DX11EffectSamplerVariable::GetBackingStore";
 
-    CHECK_OBJECT_SCALAR_BOUNDS(Index, pSamplerDesc);
+    CHECK_OBJECT_SCALAR_BOUNDS(Index, pDesc);
 
     if( Data.pSampler[Index].IsUserManaged )
     {
         if( Data.pSampler[Index].pD3DObject )
         {
-            Data.pSampler[Index].pD3DObject->GetDesc( pSamplerDesc );
+            Data.pSampler[Index].pD3DObject->GetDesc( pDesc );
         }
         else
         {
-            *pSamplerDesc = CD3D11_SAMPLER_DESC( D3D11_DEFAULT );
+            *pDesc = CD3D11_SAMPLER_DESC( D3D11_DEFAULT );
         }
     }
     else
@@ -4330,7 +4721,7 @@ HRESULT TSamplerVariable<IBaseInterface>::GetBackingStore(UINT Index, D3D11_SAMP
             pBlock->pAssignments[0].LastRecomputedTime = 0; // Force a recreate of this block the next time ApplyRenderStateBlock is called
         }
 
-        memcpy(pSamplerDesc, &pBlock->BackingStore.SamplerDesc, sizeof(D3D11_SAMPLER_DESC));
+        memcpy(pDesc, &pBlock->BackingStore.SamplerDesc, sizeof(D3D11_SAMPLER_DESC));
     }
 
 lExit:
@@ -4344,28 +4735,28 @@ lExit:
 template<typename IBaseInterface>
 struct TUncastableVariable : public IBaseInterface
 {
-    STDMETHOD_(ID3DX11EffectScalarVariable*, AsScalar)();
-    STDMETHOD_(ID3DX11EffectVectorVariable*, AsVector)();
-    STDMETHOD_(ID3DX11EffectMatrixVariable*, AsMatrix)();
-    STDMETHOD_(ID3DX11EffectStringVariable*, AsString)();
-    STDMETHOD_(ID3DX11EffectClassInstanceVariable*, AsClassInstance)();
-    STDMETHOD_(ID3DX11EffectInterfaceVariable*, AsInterface)();
-    STDMETHOD_(ID3DX11EffectShaderResourceVariable*, AsShaderResource)();
-    STDMETHOD_(ID3DX11EffectUnorderedAccessViewVariable*, AsUnorderedAccessView)();
-    STDMETHOD_(ID3DX11EffectRenderTargetViewVariable*, AsRenderTargetView)();
-    STDMETHOD_(ID3DX11EffectDepthStencilViewVariable*, AsDepthStencilView)();
-    STDMETHOD_(ID3DX11EffectConstantBuffer*, AsConstantBuffer)();
-    STDMETHOD_(ID3DX11EffectShaderVariable*, AsShader)();
-    STDMETHOD_(ID3DX11EffectBlendVariable*, AsBlend)();
-    STDMETHOD_(ID3DX11EffectDepthStencilVariable*, AsDepthStencil)();
-    STDMETHOD_(ID3DX11EffectRasterizerVariable*, AsRasterizer)();
-    STDMETHOD_(ID3DX11EffectSamplerVariable*, AsSampler)();
+    STDMETHOD_(ID3DX11EffectScalarVariable*, AsScalar)() override;
+    STDMETHOD_(ID3DX11EffectVectorVariable*, AsVector)() override;
+    STDMETHOD_(ID3DX11EffectMatrixVariable*, AsMatrix)() override;
+    STDMETHOD_(ID3DX11EffectStringVariable*, AsString)() override;
+    STDMETHOD_(ID3DX11EffectClassInstanceVariable*, AsClassInstance)() override;
+    STDMETHOD_(ID3DX11EffectInterfaceVariable*, AsInterface)() override;
+    STDMETHOD_(ID3DX11EffectShaderResourceVariable*, AsShaderResource)() override;
+    STDMETHOD_(ID3DX11EffectUnorderedAccessViewVariable*, AsUnorderedAccessView)() override;
+    STDMETHOD_(ID3DX11EffectRenderTargetViewVariable*, AsRenderTargetView)() override;
+    STDMETHOD_(ID3DX11EffectDepthStencilViewVariable*, AsDepthStencilView)() override;
+    STDMETHOD_(ID3DX11EffectConstantBuffer*, AsConstantBuffer)() override;
+    STDMETHOD_(ID3DX11EffectShaderVariable*, AsShader)() override;
+    STDMETHOD_(ID3DX11EffectBlendVariable*, AsBlend)() override;
+    STDMETHOD_(ID3DX11EffectDepthStencilVariable*, AsDepthStencil)() override;
+    STDMETHOD_(ID3DX11EffectRasterizerVariable*, AsRasterizer)() override;
+    STDMETHOD_(ID3DX11EffectSamplerVariable*, AsSampler)() override;
 };
 
 template<typename IBaseInterface>
 ID3DX11EffectScalarVariable * TUncastableVariable<IBaseInterface>::AsScalar()
 {
-    LPCSTR pFuncName = "ID3DX11EffectVariable::AsScalar";
+    static LPCSTR pFuncName = "ID3DX11EffectVariable::AsScalar";
     DPF(0, "%s: Invalid typecast", pFuncName);
     return &g_InvalidScalarVariable;
 }
@@ -4373,7 +4764,7 @@ ID3DX11EffectScalarVariable * TUncastableVariable<IBaseInterface>::AsScalar()
 template<typename IBaseInterface>
 ID3DX11EffectVectorVariable * TUncastableVariable<IBaseInterface>::AsVector()
 {
-    LPCSTR pFuncName = "ID3DX11EffectVariable::AsVector";
+    static LPCSTR pFuncName = "ID3DX11EffectVariable::AsVector";
     DPF(0, "%s: Invalid typecast", pFuncName);
     return &g_InvalidVectorVariable;
 }
@@ -4381,7 +4772,7 @@ ID3DX11EffectVectorVariable * TUncastableVariable<IBaseInterface>::AsVector()
 template<typename IBaseInterface>
 ID3DX11EffectMatrixVariable * TUncastableVariable<IBaseInterface>::AsMatrix()
 {
-    LPCSTR pFuncName = "ID3DX11EffectVariable::AsMatrix";
+    static LPCSTR pFuncName = "ID3DX11EffectVariable::AsMatrix";
     DPF(0, "%s: Invalid typecast", pFuncName);
     return &g_InvalidMatrixVariable;
 }
@@ -4389,7 +4780,7 @@ ID3DX11EffectMatrixVariable * TUncastableVariable<IBaseInterface>::AsMatrix()
 template<typename IBaseInterface>
 ID3DX11EffectStringVariable * TUncastableVariable<IBaseInterface>::AsString()
 {
-    LPCSTR pFuncName = "ID3DX11EffectVariable::AsString";
+    static LPCSTR pFuncName = "ID3DX11EffectVariable::AsString";
     DPF(0, "%s: Invalid typecast", pFuncName);
     return &g_InvalidStringVariable;
 }
@@ -4397,7 +4788,7 @@ ID3DX11EffectStringVariable * TUncastableVariable<IBaseInterface>::AsString()
 template<typename IBaseClassInstance>
 ID3DX11EffectClassInstanceVariable * TUncastableVariable<IBaseClassInstance>::AsClassInstance()
 {
-    LPCSTR pFuncName = "ID3DX11EffectVariable::AsClassInstance";
+    static LPCSTR pFuncName = "ID3DX11EffectVariable::AsClassInstance";
     DPF(0, "%s: Invalid typecast", pFuncName);
     return &g_InvalidClassInstanceVariable;
 }
@@ -4405,7 +4796,7 @@ ID3DX11EffectClassInstanceVariable * TUncastableVariable<IBaseClassInstance>::As
 template<typename IBaseInterface>
 ID3DX11EffectInterfaceVariable * TUncastableVariable<IBaseInterface>::AsInterface()
 {
-    LPCSTR pFuncName = "ID3DX11EffectVariable::AsInterface";
+    static LPCSTR pFuncName = "ID3DX11EffectVariable::AsInterface";
     DPF(0, "%s: Invalid typecast", pFuncName);
     return &g_InvalidInterfaceVariable;
 }
@@ -4413,7 +4804,7 @@ ID3DX11EffectInterfaceVariable * TUncastableVariable<IBaseInterface>::AsInterfac
 template<typename IBaseInterface>
 ID3DX11EffectShaderResourceVariable * TUncastableVariable<IBaseInterface>::AsShaderResource()
 {
-    LPCSTR pFuncName = "ID3DX11EffectVariable::AsShaderResource";
+    static LPCSTR pFuncName = "ID3DX11EffectVariable::AsShaderResource";
     DPF(0, "%s: Invalid typecast", pFuncName);
     return &g_InvalidShaderResourceVariable;
 }
@@ -4421,7 +4812,7 @@ ID3DX11EffectShaderResourceVariable * TUncastableVariable<IBaseInterface>::AsSha
 template<typename IBaseInterface>
 ID3DX11EffectUnorderedAccessViewVariable * TUncastableVariable<IBaseInterface>::AsUnorderedAccessView()
 {
-    LPCSTR pFuncName = "ID3DX11EffectVariable::AsUnorderedAccessView";
+    static LPCSTR pFuncName = "ID3DX11EffectVariable::AsUnorderedAccessView";
     DPF(0, "%s: Invalid typecast", pFuncName);
     return &g_InvalidUnorderedAccessViewVariable;
 }
@@ -4429,7 +4820,7 @@ ID3DX11EffectUnorderedAccessViewVariable * TUncastableVariable<IBaseInterface>::
 template<typename IBaseInterface>
 ID3DX11EffectRenderTargetViewVariable * TUncastableVariable<IBaseInterface>::AsRenderTargetView()
 {
-    LPCSTR pFuncName = "ID3DX11EffectVariable::AsRenderTargetView";
+    static LPCSTR pFuncName = "ID3DX11EffectVariable::AsRenderTargetView";
     DPF(0, "%s: Invalid typecast", pFuncName);
     return &g_InvalidRenderTargetViewVariable;
 }
@@ -4437,7 +4828,7 @@ ID3DX11EffectRenderTargetViewVariable * TUncastableVariable<IBaseInterface>::AsR
 template<typename IBaseInterface>
 ID3DX11EffectDepthStencilViewVariable * TUncastableVariable<IBaseInterface>::AsDepthStencilView()
 {
-    LPCSTR pFuncName = "ID3DX11EffectVariable::AsDepthStencilView";
+    static LPCSTR pFuncName = "ID3DX11EffectVariable::AsDepthStencilView";
     DPF(0, "%s: Invalid typecast", pFuncName);
     return &g_InvalidDepthStencilViewVariable;
 }
@@ -4445,7 +4836,7 @@ ID3DX11EffectDepthStencilViewVariable * TUncastableVariable<IBaseInterface>::AsD
 template<typename IBaseInterface>
 ID3DX11EffectConstantBuffer * TUncastableVariable<IBaseInterface>::AsConstantBuffer()
 {
-    LPCSTR pFuncName = "ID3DX11EffectVariable::AsConstantBuffer";
+    static LPCSTR pFuncName = "ID3DX11EffectVariable::AsConstantBuffer";
     DPF(0, "%s: Invalid typecast", pFuncName);
     return &g_InvalidConstantBuffer;
 }
@@ -4453,7 +4844,7 @@ ID3DX11EffectConstantBuffer * TUncastableVariable<IBaseInterface>::AsConstantBuf
 template<typename IBaseInterface>
 ID3DX11EffectShaderVariable * TUncastableVariable<IBaseInterface>::AsShader()
 {
-    LPCSTR pFuncName = "ID3DX11EffectVariable::AsShader";
+    static LPCSTR pFuncName = "ID3DX11EffectVariable::AsShader";
     DPF(0, "%s: Invalid typecast", pFuncName);
     return &g_InvalidShaderVariable;
 }
@@ -4461,7 +4852,7 @@ ID3DX11EffectShaderVariable * TUncastableVariable<IBaseInterface>::AsShader()
 template<typename IBaseInterface>
 ID3DX11EffectBlendVariable * TUncastableVariable<IBaseInterface>::AsBlend()
 {
-    LPCSTR pFuncName = "ID3DX11EffectVariable::AsBlend";
+    static LPCSTR pFuncName = "ID3DX11EffectVariable::AsBlend";
     DPF(0, "%s: Invalid typecast", pFuncName);
     return &g_InvalidBlendVariable;
 }
@@ -4469,7 +4860,7 @@ ID3DX11EffectBlendVariable * TUncastableVariable<IBaseInterface>::AsBlend()
 template<typename IBaseInterface>
 ID3DX11EffectDepthStencilVariable * TUncastableVariable<IBaseInterface>::AsDepthStencil()
 {
-    LPCSTR pFuncName = "ID3DX11EffectVariable::AsDepthStencil";
+    static LPCSTR pFuncName = "ID3DX11EffectVariable::AsDepthStencil";
     DPF(0, "%s: Invalid typecast", pFuncName);
     return &g_InvalidDepthStencilVariable;
 }
@@ -4477,7 +4868,7 @@ ID3DX11EffectDepthStencilVariable * TUncastableVariable<IBaseInterface>::AsDepth
 template<typename IBaseInterface>
 ID3DX11EffectRasterizerVariable * TUncastableVariable<IBaseInterface>::AsRasterizer()
 {
-    LPCSTR pFuncName = "ID3DX11EffectVariable::AsRasterizer";
+    static LPCSTR pFuncName = "ID3DX11EffectVariable::AsRasterizer";
     DPF(0, "%s: Invalid typecast", pFuncName);
     return &g_InvalidRasterizerVariable;
 }
@@ -4485,7 +4876,7 @@ ID3DX11EffectRasterizerVariable * TUncastableVariable<IBaseInterface>::AsRasteri
 template<typename IBaseInterface>
 ID3DX11EffectSamplerVariable * TUncastableVariable<IBaseInterface>::AsSampler()
 {
-    LPCSTR pFuncName = "ID3DX11EffectVariable::AsSampler";
+    static LPCSTR pFuncName = "ID3DX11EffectVariable::AsSampler";
     DPF(0, "%s: Invalid typecast", pFuncName);
     return &g_InvalidSamplerVariable;
 }
@@ -4496,20 +4887,20 @@ ID3DX11EffectSamplerVariable * TUncastableVariable<IBaseInterface>::AsSampler()
 
 // generates a global variable, annotation, global variable member, and annotation member of each struct type
 #define GenerateReflectionClasses(Type, BaseInterface) \
-struct S##Type##GlobalVariable : public T##Type##Variable<TGlobalVariable<BaseInterface>, FALSE> { }; \
-struct S##Type##Annotation : public T##Type##Variable<TAnnotation<BaseInterface>, TRUE> { }; \
-struct S##Type##GlobalVariableMember : public T##Type##Variable<TVariable<TMember<BaseInterface> >, FALSE> { }; \
-struct S##Type##AnnotationMember : public T##Type##Variable<TVariable<TMember<BaseInterface> >, TRUE> { };
+struct S##Type##GlobalVariable : public T##Type##Variable<TGlobalVariable<BaseInterface>, false> { IUNKNOWN_IMP(S##Type##GlobalVariable, BaseInterface, ID3DX11EffectVariable); }; \
+struct S##Type##Annotation : public T##Type##Variable<TAnnotation<BaseInterface>, true> { IUNKNOWN_IMP(S##Type##Annotation, BaseInterface, ID3DX11EffectVariable);}; \
+struct S##Type##GlobalVariableMember : public T##Type##Variable<TVariable<TMember<BaseInterface> >, false> { IUNKNOWN_IMP(S##Type##GlobalVariableMember, BaseInterface, ID3DX11EffectVariable); }; \
+struct S##Type##AnnotationMember : public T##Type##Variable<TVariable<TMember<BaseInterface> >, true> { IUNKNOWN_IMP(S##Type##AnnotationMember, BaseInterface, ID3DX11EffectVariable); };
 
 #define GenerateVectorReflectionClasses(Type, BaseType, BaseInterface) \
-struct S##Type##GlobalVariable : public TVectorVariable<TGlobalVariable<BaseInterface>, FALSE, BaseType> { }; \
-struct S##Type##Annotation : public TVectorVariable<TAnnotation<BaseInterface>, TRUE, BaseType> { }; \
-struct S##Type##GlobalVariableMember : public TVectorVariable<TVariable<TMember<BaseInterface> >, FALSE, BaseType> { }; \
-struct S##Type##AnnotationMember : public TVectorVariable<TVariable<TMember<BaseInterface> >, TRUE, BaseType> { };
+struct S##Type##GlobalVariable : public TVectorVariable<TGlobalVariable<BaseInterface>, false, BaseType> { IUNKNOWN_IMP(S##Type##GlobalVariable, BaseInterface, ID3DX11EffectVariable); }; \
+struct S##Type##Annotation : public TVectorVariable<TAnnotation<BaseInterface>, true, BaseType> { IUNKNOWN_IMP(S##Type##Annotation, BaseInterface, ID3DX11EffectVariable);}; \
+struct S##Type##GlobalVariableMember : public TVectorVariable<TVariable<TMember<BaseInterface> >, false, BaseType> { IUNKNOWN_IMP(S##Type##GlobalVariableMember, BaseInterface, ID3DX11EffectVariable);}; \
+struct S##Type##AnnotationMember : public TVectorVariable<TVariable<TMember<BaseInterface> >, true, BaseType> { IUNKNOWN_IMP(S##Type##AnnotationMember, BaseInterface, ID3DX11EffectVariable);};
 
 #define GenerateReflectionGlobalOnlyClasses(Type) \
-struct S##Type##GlobalVariable : public T##Type##Variable<TGlobalVariable<ID3DX11Effect##Type##Variable> > { }; \
-struct S##Type##GlobalVariableMember : public T##Type##Variable<TVariable<TMember<ID3DX11Effect##Type##Variable> > > { }; \
+struct S##Type##GlobalVariable : public T##Type##Variable<TGlobalVariable<ID3DX11Effect##Type##Variable> > { IUNKNOWN_IMP(S##Type##GlobalVariable, ID3DX11Effect##Type##Variable, ID3DX11EffectVariable); }; \
+struct S##Type##GlobalVariableMember : public T##Type##Variable<TVariable<TMember<ID3DX11Effect##Type##Variable> > > { IUNKNOWN_IMP(S##Type##GlobalVariableMember, ID3DX11Effect##Type##Variable, ID3DX11EffectVariable); }; \
 
 GenerateReflectionClasses(Numeric, ID3DX11EffectVariable);
 GenerateReflectionClasses(FloatScalar, ID3DX11EffectScalarVariable);
@@ -4533,15 +4924,15 @@ GenerateReflectionGlobalOnlyClasses(Rasterizer);
 GenerateReflectionGlobalOnlyClasses(Sampler);
 
 // Optimized matrix classes
-struct SMatrix4x4ColumnMajorGlobalVariable : public TMatrix4x4Variable<TGlobalVariable<ID3DX11EffectMatrixVariable>, TRUE> { };
-struct SMatrix4x4RowMajorGlobalVariable : public TMatrix4x4Variable<TGlobalVariable<ID3DX11EffectMatrixVariable>, FALSE> { };
+struct SMatrix4x4ColumnMajorGlobalVariable : public TMatrix4x4Variable<TGlobalVariable<ID3DX11EffectMatrixVariable>, true> { IUNKNOWN_IMP(SMatrix4x4ColumnMajorGlobalVariable, ID3DX11EffectMatrixVariable, ID3DX11EffectVariable); };
+struct SMatrix4x4RowMajorGlobalVariable : public TMatrix4x4Variable<TGlobalVariable<ID3DX11EffectMatrixVariable>, false> { IUNKNOWN_IMP(SMatrix4x4RowMajorGlobalVariable, ID3DX11EffectMatrixVariable, ID3DX11EffectVariable); };
 
-struct SMatrix4x4ColumnMajorGlobalVariableMember : public TMatrix4x4Variable<TVariable<TMember<ID3DX11EffectMatrixVariable> >, TRUE> { };
-struct SMatrix4x4RowMajorGlobalVariableMember : public TMatrix4x4Variable<TVariable<TMember<ID3DX11EffectMatrixVariable> >, FALSE> { };
+struct SMatrix4x4ColumnMajorGlobalVariableMember : public TMatrix4x4Variable<TVariable<TMember<ID3DX11EffectMatrixVariable> >, true> { IUNKNOWN_IMP(SMatrix4x4ColumnMajorGlobalVariableMember, ID3DX11EffectMatrixVariable, ID3DX11EffectVariable); };
+struct SMatrix4x4RowMajorGlobalVariableMember : public TMatrix4x4Variable<TVariable<TMember<ID3DX11EffectMatrixVariable> >, false> { IUNKNOWN_IMP(SMatrix4x4RowMajorGlobalVariableMember, ID3DX11EffectMatrixVariable, ID3DX11EffectVariable); };
 
 // Optimized vector classes
-struct SFloatVector4GlobalVariable : public TVector4Variable<TGlobalVariable<ID3DX11EffectVectorVariable> > { };
-struct SFloatVector4GlobalVariableMember : public TVector4Variable<TVariable<TMember<ID3DX11EffectVectorVariable> > > { };
+struct SFloatVector4GlobalVariable : public TVector4Variable<TGlobalVariable<ID3DX11EffectVectorVariable> > { IUNKNOWN_IMP(SFloatVector4GlobalVariable, ID3DX11EffectVectorVariable, ID3DX11EffectVariable); };
+struct SFloatVector4GlobalVariableMember : public TVector4Variable<TVariable<TMember<ID3DX11EffectVectorVariable> > > { IUNKNOWN_IMP(SFloatVector4GlobalVariableMember, ID3DX11EffectVectorVariable, ID3DX11EffectVariable); };
 
 // These 3 classes should never be used directly
 
@@ -4567,7 +4958,7 @@ struct SMember : public TVariable<TMember<ID3DX11EffectVariable> >
 };
 
 // creates a new variable of the appropriate polymorphic type where pVar was
-HRESULT PlacementNewVariable(void *pVar, SType *pType, BOOL IsAnnotation);
-SMember * CreateNewMember(SType *pType, BOOL IsAnnotation);
+HRESULT PlacementNewVariable(_In_ void *pVar, _In_ SType *pType, _In_ bool IsAnnotation);
+SMember * CreateNewMember(_In_ SType *pType, _In_ bool IsAnnotation);
 
-
+#pragma warning(pop)
