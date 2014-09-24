@@ -180,7 +180,7 @@ namespace SharpDX.XAudio2
         {
             unsafe
             {
-                if (outputVoices != null)
+                if (outputVoices != null && outputVoices.Length > 0)
                 {
                     var tempSendDescriptor = new VoiceSendDescriptors {SendCount = outputVoices.Length};
                     fixed (void* pVoiceSendDescriptors = &outputVoices[0])
