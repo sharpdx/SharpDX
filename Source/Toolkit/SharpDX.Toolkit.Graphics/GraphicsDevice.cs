@@ -1468,13 +1468,17 @@ namespace SharpDX.Toolkit.Graphics
                     Presenter = null;
                 }
 
-                // dispose EffectPools in reverse order as they will remove themselves from the list
-                for(var i = EffectPools.Count - 1; i >= 0; i--)
+                // effect pools will be disposed only by the master graphics device
+                if(!IsDeferred)
                 {
-                    EffectPools[i].Dispose();
-                }
+                    // dispose EffectPools in reverse order as they will remove themselves from the list
+                    for(var i = EffectPools.Count - 1; i >= 0; i--)
+                    {
+                        EffectPools[i].Dispose();
+                    }
 
-                EffectPools = null;
+                    EffectPools = null;
+                }
             }
 
             base.Dispose(disposeManagedResources);
