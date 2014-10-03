@@ -31,7 +31,11 @@
 
   <namespace>SharpDX.Direct3D12</namespace>  
   <assembly>SharpDX.Direct3D12</assembly>
-  
+
+  <include-prolog>
+    #define D3D12_NO_HELPERS
+  </include-prolog>
+
   <!-- D3D12 includes -->
   <include file="d3d12.h" attach="true"/>
   <include file="d3d12sdklayers.h" attach="true" />
@@ -56,7 +60,7 @@
   </extension>
 
   <!-- D3D12 bindings -->
-  <bindings>
+  <bindings> 
     
   </bindings>
 
@@ -70,6 +74,17 @@
     -->
 
     <map enum-item="D3D12_RESOURCE_BINDING_TIER_(.*)" name="Tier$1"/>
+    
+    <map enum-item="D3D12_SHADER_MIN_PRECISION_10_BIT" name="Bit10"/>
+    <map enum-item="D3D12_SHADER_MIN_PRECISION_16_BIT" name="Bit16"/>
+
+    <map enum-item="D3D12_TEXTURE_LAYOUT_64KB_TILE_UNDEFINED_SWIZZLE" name="Tile64KbUndefinedSwizzle"/>
+
+    <map enum="D3DRootSignatureVersion" name="RootSignatureVersion"/>
+    <map enum-item="D3D_ROOT_SIGNATURE_V1" name="V1"/>
+
+    <map enum-item="D3D12_ROOT_PARAMETER_32BIT_CONSTANTS" name="Constant32Bits"/>
+    <map enum-item="D3D12_ROOT_PARAMETER_CBV" name="ConstantBufferView"/>
 
     <!--
     // *****************************************************************
@@ -90,12 +105,17 @@
     <map field="D3D12_RESOURCE_ALIASING_BARRIER_DESC::pResourceBefore" name="ResourceBeforePointer" visibility="private"/>
     <map field="D3D12_RESOURCE_ALIASING_BARRIER_DESC::pResourceAfter" name="ResourceAfterPointer" visibility="private"/>
 
-    <map field="D3D11_RESOURCE_DESC::BindFlags" type="D3D11_BIND_FLAG" />
-    <map field="D3D11_RESOURCE_DESC::CPUAccessFlags" name="CpuAccessFlags" type="D3D11_CPU_ACCESS_FLAG" />
-    <map field="D3D11_RESOURCE_DESC::MiscFlags" name="OptionFlags" type="D3D11_RESOURCE_MISC_FLAG" />
+    <map field="D3D12_RESOURCE_DESC::BindFlags" type="D3D12_BIND_FLAG" />
+    <map field="D3D12_RESOURCE_DESC::CPUAccessFlags" name="CpuAccessFlags" type="D3D12_CPU_ACCESS_FLAG" />
+    <map field="D3D12_RESOURCE_DESC::MiscFlags" name="OptionFlags" type="D3D12_RESOURCE_MISC_FLAG" />
 
+    <map field="D3D12_ROOT_CONSTANTS::Num32BitValues" name="Value32BitCount"/>
+    
+    <map struct="D3D12_ROOT_SIGNATURE" name="RootSignatureDescription"/>
+    
     <!--Remove all fields for D3D12_RESOURCE_BARRIER_DESC as the union with pointers cannot be mapped safely in x86/x64 with C# explicit layout-->
     <remove field="D3D12_RESOURCE_BARRIER_DESC::.*"/>
+    <remove field="D3D12_ROOT_PARAMETER::.*"/>
 
     <!--
     // *****************************************************************
@@ -149,11 +169,14 @@
     // *****************************************************************
     -->
    
+    <remove function=".*_Stub"/>
+    <remove function=".*_Proxy"/>
     <map function="D3D12(.+)" name-tmp="$1" />
     <map function="D3D12.*" dll='"d3d12.dll"' group="SharpDX.Direct3D12.D3D12" />
+    <map function="D3D11CreateDeviceForD3D12" dll='"d3d12.dll"' group="SharpDX.Direct3D12.D3D12" />
     <map param="D3D12CreateDevice::ppDevice" attribute="out fast" />
     <map function="D3D12CreateDevice" check="false"/>
-    <map param="D3D12CreateDevice.*?::Flags" type="D3D11_CREATE_DEVICE_FLAG" />
+    <map param="D3D12CreateDevice.*?::Flags" type="D3D12_CREATE_DEVICE_FLAG" />
 
     <!--
     // *****************************************************************

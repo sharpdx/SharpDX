@@ -42,6 +42,7 @@
     <Compile Include="ResourceBarrierDescription.cs" />
     <Compile Include="ResourceDescription.cs" />
     <Compile Include="ResourceTransitionBarrierDescription.cs" />
+    <Compile Include="RootParameter.cs" />
     <Compile Include="Sampler.cs" />
     <Compile Include="ShaderResourceView.cs" />
     <Compile Include="StreamOutputView.cs" />
