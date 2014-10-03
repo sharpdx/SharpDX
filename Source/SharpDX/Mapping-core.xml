@@ -96,7 +96,9 @@
     <short name="EMPTY">Empty</short>
     <short name="FULLY">Fully</short>
     <short name="FULL">Full</short>
+    <short name="VBV">VertexBufferView</short>
     <short name="VB">VertexBuffer</short>
+    <short name="IBV">IndexBufferView</short>
     <short name="IB">IndexBuffer</short>
     <short name="CHECKING">Checking</short>
     <short name="CHECK">Check</short>
@@ -264,6 +266,7 @@
     <short name="UNEXPECTED">Unexpected</short>
     <short name="USAGE">Usage</short>
     <short name="NULL">Null</short>
+    <short name="CONSTANTS">Constants</short>
     <short name="CONSTANT">Constant</short>
     <short name="LARGE">Large</short>
     <short name="LAST">Last</short>
@@ -296,6 +299,7 @@
     <short name="DESCRIPTOR">Descriptor</short>
     <short name="DESCRIPTION">Description</short>
     <short name="DESC">Description</short>
+    <short name="CBV">ConstantBufferView</short>
     <short name="CBUFFER">ConstantBuffer</short>
     <short name="TBUFFER">TextureBuffer</short>
     <short name="BUFFEREX">ExtendedBuffer</short>
@@ -365,6 +369,7 @@
     <short name="READER">Reader</short>
     <short name="SOURCE">Source</short>
     <short name="SOLID">Solid</short>
+    <short name="SOV">StreamOutputView</short>
     <short name="SO">StreamOutput</short>
     <short name="OP">Operation</short>
     <short name="OPAQUE">Opaque</short>
