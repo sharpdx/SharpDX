@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,18 @@ using System;
 
 namespace SharpDX.Direct3D12
 {
-    public sealed class Buffer : Resource
+    public partial class ComputePipelineStateDescription
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDX.Direct3D12.Resource" /> class.
-        /// </summary>
-        /// <param name="nativePtr">The native pointer.</param>
-        public Buffer(IntPtr nativePtr)
-            : base(nativePtr)
-        {
-        }
+        private RootSignature rootSignature;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Buffer"/> class.
-        /// </summary>
-        /// <param name="device">The device.</param>
-        /// <param name="type">The type.</param>
-        /// <param name="byteSize">Size of the byte.</param>
-        /// <exception cref="System.ArgumentNullException">device</exception>
-        public Buffer(Device device, HeapType type, long byteSize)
-            : base(IntPtr.Zero)
+        public RootSignature RootSignature
         {
-            if (device == null) throw new ArgumentNullException("device");
-            device.CreateBuffer(type, byteSize, ResourceOptionFlags.None, Utilities.GetGuidFromType(typeof(Resource)), this);
+            get { return rootSignature; }
+            set
+            {
+                rootSignature = value;
+                RootSignaturePointer = value != null ? value.NativePointer : IntPtr.Zero;
+            }
         }
     }
 }

@@ -35,7 +35,7 @@ namespace SharpDX.Direct3D12
         public DescriptorHeap(Device device, SharpDX.Direct3D12.DescriptorHeapDescription descriptorHeapDesc) : base(IntPtr.Zero)
         {
             if(device == null) throw new ArgumentNullException("device");
-            device.CreateDescriptorHeap(ref descriptorHeapDesc, this);
+            //device.CreateDescriptorHeap(descriptorHeapDesc, this);
         }
     }
 }

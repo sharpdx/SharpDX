@@ -22,23 +22,18 @@ using System;
 
 namespace SharpDX.Direct3D12
 {
-    public partial class VertexBufferView
+    public partial class GraphicsPipelineStateDescription
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VertexBufferView"/> class.
-        /// </summary>
-        /// <param name="device">The device.</param>
-        /// <param name="buffer">The buffer.</param>
-        /// <param name="desc">The desc.</param>
-        /// <exception cref="System.ArgumentNullException">device</exception>
-        /// <unmanaged>HRESULT ID3D12Device::CreateVertexBufferView([In] ID3D12Resource* pBuffer,[In] const D3D12_VERTEX_BUFFER_VIEW_DESC* pDesc,[Out, Fast] ID3D12VertexBufferView** ppView)</unmanaged>
-        ///   <unmanaged-short>ID3D12Device::CreateVertexBufferView</unmanaged-short>
-        public VertexBufferView(Device device, SharpDX.Direct3D12.Resource buffer,
-            SharpDX.Direct3D12.VertexBufferViewDescription desc
-            ) : base(IntPtr.Zero)
+        private RootSignature rootSignature;
+
+        public RootSignature RootSignature
         {
-            if(device == null) throw new ArgumentNullException("device");
-            device.CreateVertexBufferView(buffer, desc, this);
-        }
+            get { return rootSignature; }
+            set
+            {
+                rootSignature = value;
+                RootSignaturePointer = value != null ? value.NativePointer : IntPtr.Zero;
+            }
+        }         
     }
 }

@@ -92,7 +92,6 @@
     // *****************************************************************
     -->
 
-    <map struct="D3D12_RESOURCE_DESC" name="ResourceDescription2"/>
     <map struct="D3D12_PIPELINE_STATE_DESC" struct-to-class="true"/>
     <map field="D3D12_PIPELINE_STATE_DESC::p([A-Z].*)" name="$1Pointer" visibility="private"/>
     <map field="D3D12_PIPELINE_STATE_DESC::RTVFormats" name="RenderTargetFormats"/>
@@ -105,17 +104,30 @@
     <map field="D3D12_RESOURCE_ALIASING_BARRIER_DESC::pResourceBefore" name="ResourceBeforePointer" visibility="private"/>
     <map field="D3D12_RESOURCE_ALIASING_BARRIER_DESC::pResourceAfter" name="ResourceAfterPointer" visibility="private"/>
 
-    <map field="D3D12_RESOURCE_DESC::BindFlags" type="D3D12_BIND_FLAG" />
-    <map field="D3D12_RESOURCE_DESC::CPUAccessFlags" name="CpuAccessFlags" type="D3D12_CPU_ACCESS_FLAG" />
-    <map field="D3D12_RESOURCE_DESC::MiscFlags" name="OptionFlags" type="D3D12_RESOURCE_MISC_FLAG" />
+    <map field="D3D12_RESOURCE_DESC::CPUAccessFlags" name="CpuAccessFlags" />
+    <map field="D3D12_RESOURCE_DESC::MiscFlags" name="OptionFlags"/>
 
     <map field="D3D12_ROOT_CONSTANTS::Num32BitValues" name="Value32BitCount"/>
     
     <map struct="D3D12_ROOT_SIGNATURE" name="RootSignatureDescription"/>
     
+    <map field="D3D12_STREAM_OUTPUT_VIEW_DESC::pSOCurrentOffset" type="void"/>
+    <map field="D3D12_BUFFER_UAV::pUAVCounter" type="void"/>
+    
+    <map struct="D3D12_BLEND_DESC" marshalto="true"/>
+    
+    <map struct="D3D12_GRAPHICS_PIPELINE_STATE_DESC" struct-to-class="true"/>
+    <map field="D3D12_GRAPHICS_PIPELINE_STATE_DESC::pRootSignature" name="RootSignaturePointer" visibility="private"/>
+    
+    <map struct="D3D12_COMPUTE_PIPELINE_STATE_DESC" struct-to-class="true"/>
+    <map field="D3D12_COMPUTE_PIPELINE_STATE_DESC::pRootSignature" name="RootSignaturePointer" visibility="private"/>
+
     <!--Remove all fields for D3D12_RESOURCE_BARRIER_DESC as the union with pointers cannot be mapped safely in x86/x64 with C# explicit layout-->
     <remove field="D3D12_RESOURCE_BARRIER_DESC::.*"/>
     <remove field="D3D12_ROOT_PARAMETER::.*"/>
+    
+    <!-- Remove temporary D3D11 types -->
+    <remove struct="D3D11_RESOURCE_DESC"/>
 
     <!--
     // *****************************************************************
@@ -127,11 +139,7 @@
     <map param="ID3D12Device::CreateBuffer::ppvBuffer" attribute="out"/>
     <map method="ID3D12Device::GetDefaultCommandQueue" property="false" visibility="private"/>
     <map method="ID3D12Resource::GetDesc11" name="Description1"/>
-
-    <map param="ID3D12Device::CreateBuffer::ppvBuffer" type="ID3D12Resource" attribute="out fast"/>
-    <map param="ID3D12Device::CreateDefaultResource::ppvResource" type="ID3D12Resource" attribute="out fast"/>
-    
-    
+   
     <map method="ID3D12CommandList::SetIndexBufferTable" property="false"/>
     <map param="ID3D12CommandList::.*::BindAsTable" type="bool" default="false"/>
     <map method="ID3D12CommandList::IA(.*)" name="$1"/>
@@ -162,6 +170,70 @@
     
     <move method="ID3D12CommandList::(.*)Table" to="DescriptorManager" property="Descriptors" />
 
+    <map method="ID3D12Device::RegisterBudgetChangeCallback" visibility="internal"/>
+
+    <!--Revert changes inherited from D3D11. Leave all Device.CreateXXX method as-is-->
+    <map method="ID3D12Device::CreateCommandAllocator" visibility="public"/>
+    <map param="ID3D12Device::CreateCommandAllocator::ppCommandAllocator" attribute="out" return="true"/>
+
+    <map method="ID3D12Device::CreateGraphicsPipelineState" visibility="public"/>
+    <map param="ID3D12Device::CreateGraphicsPipelineState::ppPipelineState" attribute="out" return="true"/>
+
+    <map method="ID3D12Device::CreateComputePipelineState" visibility="public"/>
+    <map param="ID3D12Device::CreateComputePipelineState::ppPipelineState" attribute="out" return="true"/>
+
+    <map method="ID3D12Device::CreateCommandList" visibility="public"/>
+    <map param="ID3D12Device::CreateCommandList::ppCommandList" attribute="out" return="true"/>
+
+    <map method="ID3D12Device::CreateBuffer" visibility="private"/>
+    <map param="ID3D12Device::CreateBuffer::ppvBuffer" attribute="out" type="ID3D12Resource" return="true"/>
+
+    <map method="ID3D12Device::CreateDescriptorHeap" visibility="private"/>
+    <map param="ID3D12Device::CreateDescriptorHeap::ppvHeap" attribute="out" type="ID3D12DescriptorHeap" return="true"/>
+
+    <map method="ID3D12Device::CreateRootSignature" visibility="private"/>
+    <map param="ID3D12Device::CreateRootSignature::ppvRootSignature" attribute="out" type="ID3D12RootSignature" return="true"/>
+
+    <map method="ID3D12Device::CreateCommittedResource" visibility="private"/>
+    <map param="ID3D12Device::CreateCommittedResource::pResourceDesc" attribute="in value"/>
+    <map param="ID3D12Device::CreateCommittedResource::ppvResource" attribute="out" type="ID3D12Resource" return="true"/>
+
+    <map method="ID3D12Device::CreateFence" visibility="public"/>
+    <map param="ID3D12Device::CreateFence::ppFence" attribute="out" return="true"/>
+
+    <map method="ID3D12Device::CreateCommandQueue" visibility="private"/>
+    <map param="ID3D12Device::CreateCommandQueue::ppCommandQueue" attribute="out" type="ID3D12CommandQueue" return="true"/>
+
+    <map method="ID3D12Device::CreateHeap" visibility="private"/>
+    <map param="ID3D12Device::CreateHeap::ppvHeap" attribute="out" type="ID3D12Heap" return="true"/>
+
+    <map method="ID3D12Device::CreatePlacedResource" visibility="private"/>
+    <map param="ID3D12Device::CreatePlacedResource::ppvResource" attribute="out" type="ID3D12Resource" return="true"/>
+
+    <map method="ID3D12Device::CreatePlacedResource" visibility="private"/>
+    <map param="ID3D12Device::CreatePlacedResource::ppvResource" attribute="out" type="ID3D12Resource" return="true"/>
+
+    <map method="ID3D12Device::CreateReservedResource" visibility="private"/>
+    <map param="ID3D12Device::CreateReservedResource::ppvResource" attribute="out" type="ID3D12Resource" return="true"/>
+
+    <map method="ID3D12Device::Create\w+View" visibility="public"/>
+
+    <map method="ID3D12Device::CreateSampler" visibility="public"/>
+
+    <map param="ID3D12Device::CreateSampler::pDesc" attribute="in value"/>
+    <map param="ID3D12Device::CreateIndexBufferView::pDesc" attribute="in value"/>
+    <map param="ID3D12Device::CreateVertexBufferView::pDesc" attribute="in value"/>
+    <map param="ID3D12Device::CreateGraphicsPipelineState::pDesc" attribute="in value"/>
+
+
+    <!-- Temporary remove d3d11 types -->
+    <remove method="ID3D12CommandList::BeginQuery"/>
+    <remove method="ID3D12CommandList::EndQuery"/>
+    <remove method="ID3D12CommandList::SetPredication"/>
+    <remove method="ID3D12CommandList::SetStreamOutputBufferOffset"/>
+    <remove method="ID3D12CommandList::SetUnorderedAccessViewCounterValue"/>
+    <remove method="ID3D12CommandList::CopyStructureCount"/>
+    <remove method="ID3D12Device::CreateDefaultResource"/>
 
     <!--
     // *****************************************************************
@@ -174,9 +246,12 @@
     <map function="D3D12(.+)" name-tmp="$1" />
     <map function="D3D12.*" dll='"d3d12.dll"' group="SharpDX.Direct3D12.D3D12" />
     <map function="D3D11CreateDeviceForD3D12" dll='"d3d12.dll"' group="SharpDX.Direct3D12.D3D12" />
-    <map param="D3D12CreateDevice::ppDevice" attribute="out fast" />
+    <map param="D3D12CreateDevice::ppDevice" type="ID3D12Device" attribute="out fast" />
     <map function="D3D12CreateDevice" check="false"/>
     <map param="D3D12CreateDevice.*?::Flags" type="D3D12_CREATE_DEVICE_FLAG" />
+    
+    <!-- Temporary remove d3d11 types -->
+    <remove function="D3D11CreateDeviceForD3D12"/>
 
     <!--
     // *****************************************************************

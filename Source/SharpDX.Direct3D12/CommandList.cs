@@ -24,24 +24,6 @@ namespace SharpDX.Direct3D12
 {
     public partial class CommandList
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CommandList"/> class.
-        /// </summary>
-        /// <param name="device">The device.</param>
-        /// <param name="type">The type.</param>
-        /// <param name="commandAllocator">The command allocator.</param>
-        /// <param name="initialState">The initial state.</param>
-        /// <param name="descriptorHeap">The descriptor heap.</param>
-        /// <exception cref="System.ArgumentNullException">device</exception>
-        /// <unmanaged>HRESULT ID3D12Device::CreateCommandList([In] D3D12_COMMAND_LIST_TYPE type,[In] ID3D12CommandAllocator* pCommandAllocator,[In] ID3D12PipelineState* pInitialState,[In, Optional] ID3D12DescriptorHeap* pDescriptorHeap,[Out, Fast] ID3D12CommandList** ppCommandList)</unmanaged>
-        ///   <unmanaged-short>ID3D12Device::CreateCommandList</unmanaged-short>
-        public CommandList(Device device, SharpDX.Direct3D12.CommandListType type, SharpDX.Direct3D12.CommandAllocator commandAllocator, 
-            SharpDX.Direct3D12.PipelineState initialState, SharpDX.Direct3D12.DescriptorHeap descriptorHeap) : base(IntPtr.Zero)
-        {
-            if(device == null) throw new ArgumentNullException("device");
-            device.CreateCommandList(type, commandAllocator, initialState, descriptorHeap, this);
-        }
-
         /// <unmanaged>void ID3D12CommandList::ResourceBarrier([In] unsigned int Count,[In, Buffer] const D3D12_RESOURCE_BARRIER_DESC* pDesc)</unmanaged>	
         /// <unmanaged-short>ID3D12CommandList::ResourceBarrier</unmanaged-short>	
         public void ResourceBarrierTransition(Resource resource, ResourceUsage stateBefore, ResourceUsage stateAfter)
@@ -87,7 +69,11 @@ namespace SharpDX.Direct3D12
         public void SetViewports(params SharpDX.ViewportF[] viewports)
         {
             if(viewports == null) throw new ArgumentNullException("viewports");
-            SetViewports(viewports.Length, viewports);
+            unsafe
+            {
+                fixed (void* pViewPorts = viewports)
+                    SetViewports(viewports.Length, (IntPtr)pViewPorts);
+            }
         }
 
         /// <unmanaged>void ID3D12CommandList::RSSetViewports([In] unsigned int Count,[In, Buffer] const D3D11_VIEWPORT* pViewports)</unmanaged>	
