@@ -20,7 +20,6 @@
     <Compile Include="CommandList.cs" />
     <Compile Include="CommandQueue.cs" />
     <Compile Include="ComputePipelineStateDescription.cs" />
-    <Compile Include="DescriptorHeap.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
@@ -28,13 +27,13 @@
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Structures.cs" />
     <Compile Include="GraphicsPipelineStateDescription.cs" />
-    <Compile Include="Library.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceAliasingBarrierDescription.cs" />
     <Compile Include="ResourceBarrierDescription.cs" />
     <Compile Include="ResourceDescription.cs" />
     <Compile Include="ResourceTransitionBarrierDescription.cs" />
     <Compile Include="RootParameter.cs" />
+    <Compile Include="RootSignatureDescription.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />

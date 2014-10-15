@@ -85,6 +85,12 @@
 
     <map enum-item="D3D12_ROOT_PARAMETER_32BIT_CONSTANTS" name="Constant32Bits"/>
     <map enum-item="D3D12_ROOT_PARAMETER_CBV" name="ConstantBufferView"/>
+    
+    <map enum-item="D3D12_(.*)_DESCRIPTOR_HEAP$" name-tmp="$1"/>
+    <remove enum-item="D3D12_NUM_DESCRIPTOR_HEAP_TYPES"/>
+    <map enum-item="D3D12_CBV_SRV_UAV_DESCRIPTOR_HEAP" name="ConstantBufferShaderResourceUnorderedAccessView"/>    
+    
+    <map enum="D3D_ROOT_SIGNATURE_VERSION" name="RootSignatureVersion"/>
 
     <!--
     // *****************************************************************
@@ -122,6 +128,12 @@
     <map struct="D3D12_COMPUTE_PIPELINE_STATE_DESC" struct-to-class="true"/>
     <map field="D3D12_COMPUTE_PIPELINE_STATE_DESC::pRootSignature" name="RootSignaturePointer" visibility="private"/>
 
+    <map field="D3D12_ROOT_SIGNATURE::pParameters" name="ParametersPointer"/>
+
+    <map struct="D3D12_ROOT_SIGNATURE" struct-to-class="true"/>
+    <remove field="D3D12_ROOT_SIGNATURE::.*"/>
+    
+    
     <!--Remove all fields for D3D12_RESOURCE_BARRIER_DESC as the union with pointers cannot be mapped safely in x86/x64 with C# explicit layout-->
     <remove field="D3D12_RESOURCE_BARRIER_DESC::.*"/>
     <remove field="D3D12_ROOT_PARAMETER::.*"/>
@@ -219,13 +231,18 @@
     <map method="ID3D12Device::Create\w+View" visibility="public"/>
 
     <map method="ID3D12Device::CreateSampler" visibility="public"/>
+    
+    <map method="ID3D12Device::CreateLibrary" visibility="private"/>
+    <map param="ID3D12Device::CreateLibrary::ppLibrary" attribute="out" return="true"/>
 
     <map param="ID3D12Device::CreateSampler::pDesc" attribute="in value"/>
     <map param="ID3D12Device::CreateIndexBufferView::pDesc" attribute="in value"/>
     <map param="ID3D12Device::CreateVertexBufferView::pDesc" attribute="in value"/>
     <map param="ID3D12Device::CreateGraphicsPipelineState::pDesc" attribute="in value"/>
 
-
+    <map method="ID3D12RootSignatureDeserializer::GetRootSignature" type="void" property="false" visibility="private"/>
+    
+    
     <!-- Temporary remove d3d11 types -->
     <remove method="ID3D12CommandList::BeginQuery"/>
     <remove method="ID3D12CommandList::EndQuery"/>
@@ -249,6 +266,10 @@
     <map param="D3D12CreateDevice::ppDevice" type="ID3D12Device" attribute="out fast" />
     <map function="D3D12CreateDevice" check="false"/>
     <map param="D3D12CreateDevice.*?::Flags" type="D3D12_CREATE_DEVICE_FLAG" />
+    
+    <map param="D3D12SerializeRootSignature::pRootSignature" type="void"/>
+    <map function="D3D12SerializeRootSignature" check="false"/>
+    
     
     <!-- Temporary remove d3d11 types -->
     <remove function="D3D11CreateDeviceForD3D12"/>

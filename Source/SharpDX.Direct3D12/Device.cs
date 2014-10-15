@@ -65,6 +65,42 @@ namespace SharpDX.Direct3D12
             get { return defaultCommandQueue; }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Library"/> class.
+        /// </summary>
+        /// <param name="buffer">The buffer.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// device
+        /// or
+        /// buffer
+        /// </exception>
+        /// <unmanaged>HRESULT ID3D12Device::CreateLibrary([In, Buffer] const void* pLibraryBlob,[In] SIZE_T BlobLength,[Out, Fast] ID3D12Library** ppLibrary)</unmanaged>
+        ///   <unmanaged-short>ID3D12Device::CreateLibrary</unmanaged-short>
+        public unsafe Library CreateLibrary(byte[] buffer)
+        {
+            if(buffer == null) throw new ArgumentNullException("buffer");
+            fixed(void* ptr = buffer)
+            {
+                return CreateLibrary((IntPtr)ptr, buffer.Length);
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Library"/> class.
+        /// </summary>
+        /// <param name="buffer">The buffer.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// device
+        /// or
+        /// buffer
+        /// </exception>
+        public Library CreateLibrary(DataPointer buffer)
+        {
+            if (buffer.Pointer == IntPtr.Zero) throw new ArgumentNullException("buffer");
+            return CreateLibrary(buffer.Pointer, buffer.Size);
+        }
+
+
         /// <summary>	
         /// No documentation for Direct3D12	
         /// </summary>	

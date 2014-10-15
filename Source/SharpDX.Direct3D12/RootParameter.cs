@@ -17,19 +17,52 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System.Runtime.InteropServices;
+
 namespace SharpDX.Direct3D12
 {
     public partial struct RootParameter
     {
-        // TODO
+        public RootParameterType ParameterType;
 
-        //D3D12_ROOT_PARAMETER_TYPE ParameterType;
-        //union
-        //{
-        //    D3D12_ROOT_DESCRIPTOR_TABLE    DescriptorTable;
-        //    D3D12_ROOT_CONSTANTS           Constants;
-        //    D3D12_ROOT_DESCRIPTOR          Descriptor;
-        //};
-        //D3D12_SHADER_VISIBILITY ShaderVisibility;
+        private Union union;
+
+        public RootDescriptorTable DescriptorTable
+        {
+            get { return union.DescriptorTable; }
+            set { union.DescriptorTable = value; }
+        }
+
+        public RootConstants Constants
+        {
+            get { return union.Constants; }
+            set { union.Constants = value; }
+        }
+
+        public RootDescriptor Descriptor
+        {
+            get { return union.Descriptor; }
+            set { union.Descriptor = value; }
+        }
+
+        public ShaderVisibility ShaderVisibility;
+
+        /// <summary>
+        /// Because this union contains pointers, it is aligned on 8 bytes boundary, making the field ResourceBarrierDescription.Type 
+        /// to be aligned on 8 bytes instead of 4 bytes, so we can't use directly Explicit layout on ResourceBarrierDescription
+        /// </summary>
+        [StructLayout(LayoutKind.Explicit, Pack = 0)]
+        private partial struct Union
+        {
+            [FieldOffset(0)]
+            public RootDescriptorTable DescriptorTable;
+
+            [FieldOffset(0)]
+            public RootConstants Constants;
+
+            [FieldOffset(0)]
+            public RootDescriptor Descriptor;
+        }
     }
 }
