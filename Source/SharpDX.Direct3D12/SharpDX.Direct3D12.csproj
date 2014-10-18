@@ -17,9 +17,11 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="BlendStateDescription.cs" />
     <Compile Include="CommandList.cs" />
     <Compile Include="CommandQueue.cs" />
     <Compile Include="ComputePipelineStateDescription.cs" />
+    <Compile Include="DepthStencilStateDescription.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
@@ -27,13 +29,18 @@
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Structures.cs" />
     <Compile Include="GraphicsPipelineStateDescription.cs" />
+    <Compile Include="HeapProperties.cs" />
+    <Compile Include="InputElement.cs" />
+    <Compile Include="InputLayoutDescription.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RasterizerStateDescription.cs" />
     <Compile Include="ResourceAliasingBarrierDescription.cs" />
     <Compile Include="ResourceBarrierDescription.cs" />
     <Compile Include="ResourceDescription.cs" />
     <Compile Include="ResourceTransitionBarrierDescription.cs" />
     <Compile Include="RootParameter.cs" />
     <Compile Include="RootSignatureDescription.cs" />
+    <Compile Include="ShaderBytecode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />

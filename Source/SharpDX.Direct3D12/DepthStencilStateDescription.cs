@@ -17,24 +17,29 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
-using System;
-
 namespace SharpDX.Direct3D12
 {
-    public partial struct ResourceAliasingBarrierDescription
+    public partial struct DepthStencilStateDescription
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResourceAliasingBarrierDescription"/> struct.
+        /// Returns default values for <see cref="DepthStencilStateDescription"/>. 
         /// </summary>
-        /// <param name="resourceBefore">The resource before.</param>
-        /// <param name="resourceAfter">The resource after.</param>
-        /// <exception cref="System.ArgumentNullException">resourceBefore</exception>
-        public ResourceAliasingBarrierDescription(Resource resourceBefore, Resource resourceAfter)
+        /// <remarks>
+        /// See MSDN documentation for default values.
+        /// </remarks>
+        public static DepthStencilStateDescription Default()
         {
-            if(resourceBefore == null) throw new ArgumentNullException("resourceBefore");
-            ResourceBeforePointer = resourceBefore.NativePointer;
-            ResourceAfterPointer = resourceAfter != null ? resourceAfter.NativePointer : IntPtr.Zero;
+            return new DepthStencilStateDescription()
+                       {
+                           IsDepthEnabled = true,
+                           DepthWriteMask = DepthWriteMask.All,
+                           DepthComparison = Comparison.Less,
+                           IsStencilEnabled = false,
+                           StencilReadMask = 0xFF,
+                           StencilWriteMask = 0xFF,
+                           FrontFace = {Comparison = Comparison.Always, DepthFailOperation = StencilOperation.Keep, FailOperation = StencilOperation.Keep, PassOperation = StencilOperation.Keep},
+                           BackFace = {Comparison = Comparison.Always, DepthFailOperation = StencilOperation.Keep, FailOperation = StencilOperation.Keep, PassOperation = StencilOperation.Keep},
+                       };
         }
     }
 }

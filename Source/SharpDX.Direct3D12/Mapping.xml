@@ -98,10 +98,10 @@
     // *****************************************************************
     -->
 
-    <map struct="D3D12_PIPELINE_STATE_DESC" struct-to-class="true"/>
-    <map field="D3D12_PIPELINE_STATE_DESC::p([A-Z].*)" name="$1Pointer" visibility="private"/>
-    <map field="D3D12_PIPELINE_STATE_DESC::RTVFormats" name="RenderTargetFormats"/>
-    <map field="D3D12_PIPELINE_STATE_DESC::DSVFormat" name="DepthStencilFormat"/>
+    <map struct="D3D12_.*_PIPELINE_STATE_DESC" struct-to-class="true" marshalto="true"/>
+    <map field="D3D12_.*_PIPELINE_STATE_DESC::p([A-Z].*)" name="$1Pointer" visibility="private"/>
+    <map field="D3D12_GRAPHICS_PIPELINE_STATE_DESC::RTVFormats" name="RenderTargetFormats"/>
+    <map field="D3D12_GRAPHICS_PIPELINE_STATE_DESC::DSVFormat" name="DepthStencilFormat"/>
 
     <map field="D3D12_RESOURCE_TRANSITION_BARRIER_DESC::pResource" name="ResourcePointer" visibility="private"/>
     <map field="D3D12_RESOURCE_TRANSITION_BARRIER_DESC::StateBefore" type="D3D12_RESOURCE_USAGE"/>
@@ -121,19 +121,22 @@
     <map field="D3D12_BUFFER_UAV::pUAVCounter" type="void"/>
     
     <map struct="D3D12_BLEND_DESC" marshalto="true"/>
-    
-    <map struct="D3D12_GRAPHICS_PIPELINE_STATE_DESC" struct-to-class="true"/>
-    <map field="D3D12_GRAPHICS_PIPELINE_STATE_DESC::pRootSignature" name="RootSignaturePointer" visibility="private"/>
-    
-    <map struct="D3D12_COMPUTE_PIPELINE_STATE_DESC" struct-to-class="true"/>
-    <map field="D3D12_COMPUTE_PIPELINE_STATE_DESC::pRootSignature" name="RootSignaturePointer" visibility="private"/>
 
     <map field="D3D12_ROOT_SIGNATURE::pParameters" name="ParametersPointer"/>
 
     <map struct="D3D12_ROOT_SIGNATURE" struct-to-class="true"/>
     <remove field="D3D12_ROOT_SIGNATURE::.*"/>
     
-    
+    <map struct="D3D12_INPUT_LAYOUT_DESC" struct-to-class="true" marshalto="true"/>
+    <map field="D3D12_INPUT_LAYOUT_DESC::pInputElementDescs" name="InputElementsPointer" visibility="private"/>
+    <map field="D3D12_INPUT_LAYOUT_DESC::NumElements" visibility="private"/>
+
+    <map struct="D3D12_INPUT_ELEMENT_DESC" marshalto="true"/>
+
+    <map struct="D3D12_SHADER_BYTECODE" native="true" marshalto="true"/>
+    <map field="D3D12_SHADER_BYTECODE::pShaderBytecode" name="Pointer" visibility="private"/>
+    <map field="D3D12_SHADER_BYTECODE::BytecodeLength" name="Size" visibility="private"/>
+
     <!--Remove all fields for D3D12_RESOURCE_BARRIER_DESC as the union with pointers cannot be mapped safely in x86/x64 with C# explicit layout-->
     <remove field="D3D12_RESOURCE_BARRIER_DESC::.*"/>
     <remove field="D3D12_ROOT_PARAMETER::.*"/>
@@ -238,10 +241,12 @@
     <map param="ID3D12Device::CreateSampler::pDesc" attribute="in value"/>
     <map param="ID3D12Device::CreateIndexBufferView::pDesc" attribute="in value"/>
     <map param="ID3D12Device::CreateVertexBufferView::pDesc" attribute="in value"/>
-    <map param="ID3D12Device::CreateGraphicsPipelineState::pDesc" attribute="in value"/>
+    <map method="ID3D12Device::CreateGraphicsPipelineState" visibility="private"/>
+    <map param="ID3D12Device::CreateGraphicsPipelineState::pDesc" attribute="in" type="void"/>
 
     <map method="ID3D12RootSignatureDeserializer::GetRootSignature" type="void" property="false" visibility="private"/>
     
+    <map param="ID3D12Resource::Map::ppData" return="true"/>
     
     <!-- Temporary remove d3d11 types -->
     <remove method="ID3D12CommandList::BeginQuery"/>
@@ -270,7 +275,10 @@
     <map param="D3D12SerializeRootSignature::pRootSignature" type="void"/>
     <map function="D3D12SerializeRootSignature" check="false"/>
     
-    
+    <map param="D3D12CreateDeviceAndSwapChain::ppSwapChain" type="IDXGISwapChain"/>
+    <map param="D3D12CreateDeviceAndSwapChain::ppDevice" type="ID3D12Device"/>
+
+
     <!-- Temporary remove d3d11 types -->
     <remove function="D3D11CreateDeviceForD3D12"/>
 

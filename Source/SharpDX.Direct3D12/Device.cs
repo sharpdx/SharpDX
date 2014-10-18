@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,40 +26,73 @@ namespace SharpDX.Direct3D12
 {
     public partial class Device
     {
-        private FeatureLevel selectedLevel;
         private CommandQueue defaultCommandQueue;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Device"/> class.
+        /// </summary>
+        /// <param name="driverType">Type of the driver.</param>
         public Device(DriverType driverType)
             : this(driverType, DeviceCreationFlags.None)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Device"/> class.
+        /// </summary>
+        /// <param name="adapter">The adapter.</param>
         public Device(Adapter adapter)
             : this(adapter, DeviceCreationFlags.None)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Device"/> class.
+        /// </summary>
+        /// <param name="driverType">Type of the driver.</param>
+        /// <param name="flags">The flags.</param>
         public Device(DriverType driverType, DeviceCreationFlags flags)
             :this(driverType, flags, FeatureLevel.Level_9_1)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Device"/> class.
+        /// </summary>
+        /// <param name="adapter">The adapter.</param>
+        /// <param name="flags">The flags.</param>
         public Device(Adapter adapter, DeviceCreationFlags flags)
             : this(adapter, flags, FeatureLevel.Level_9_1)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Device"/> class.
+        /// </summary>
+        /// <param name="driverType">Type of the driver.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="minFeatureLevel">The minimum feature level.</param>
         public Device(DriverType driverType, DeviceCreationFlags flags, FeatureLevel minFeatureLevel)
             : base(IntPtr.Zero)
         {
-            CreateDevice(null, driverType, flags, minFeatureLevel);
+            CreateDevice(null, driverType, flags, minFeatureLevel, this);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Device"/> class.
+        /// </summary>
+        /// <param name="adapter">The adapter.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="minFeatureLevel">The minimum feature level.</param>
         public Device(Adapter adapter, DeviceCreationFlags flags, FeatureLevel minFeatureLevel) : base(IntPtr.Zero)
         {
-            CreateDevice(adapter, DriverType.Unknown, flags, minFeatureLevel);
+            CreateDevice(adapter, DriverType.Unknown, flags, minFeatureLevel, this);
         }
 
+        /// <summary>
+        /// Gets the default command queue.
+        /// </summary>
+        /// <value>The default command queue.</value>
         public CommandQueue DefaultCommandQueue
         {
             get { return defaultCommandQueue; }
@@ -163,6 +196,60 @@ namespace SharpDX.Direct3D12
             return CreateDescriptorHeap(descriptorHeapDesc, Utilities.GetGuidFromType(typeof(DescriptorHeap)));
         }
 
+        public unsafe SharpDX.Direct3D12.PipelineState CreateGraphicsPipelineState(SharpDX.Direct3D12.GraphicsPipelineStateDescription desc)
+        {
+            // Use a custom marshalling routine for this class
+            var nativeDesc = new GraphicsPipelineStateDescription.__Native();
+            desc.__MarshalTo(ref nativeDesc);
+
+            // Pin buffers if necessary
+            fixed (void* pVertexShader = desc.VertexShader.Buffer)
+            fixed (void* pGeometryShader = desc.GeometryShader.Buffer)
+            fixed (void* pDomainShader = desc.DomainShader.Buffer)
+            fixed (void* pHullShader = desc.HullShader.Buffer)
+            fixed (void* pPixelShader = desc.PixelShader.Buffer)
+            {
+                // Transfer pin buffer address to marshal
+                desc.VertexShader.UpdateNative(ref nativeDesc.VertexShader, pVertexShader);
+                desc.GeometryShader.UpdateNative(ref nativeDesc.GeometryShader, pGeometryShader);
+                desc.DomainShader.UpdateNative(ref nativeDesc.DomainShader, pDomainShader);
+                desc.HullShader.UpdateNative(ref nativeDesc.HullShader, pHullShader);
+                desc.PixelShader.UpdateNative(ref nativeDesc.PixelShader, pPixelShader);
+
+                // Marshal input elements
+                var elements = desc.InputLayout.Elements;
+                var nativeElements = (InputElement.__Native*)0;
+                if (elements != null && elements.Length > 0)
+                {
+                    var ptr = stackalloc InputElement.__Native[elements.Length];
+                    nativeElements = ptr;
+                    for (int i = 0; i < elements.Length; i++)
+                    {
+                        elements[i].__MarshalTo(ref nativeElements[i]);
+                    }
+
+                    nativeDesc.InputLayout.InputElementsPointer = new IntPtr(nativeElements);
+                    nativeDesc.InputLayout.ElementCount = elements.Length;
+                }
+
+                try
+                {
+                    // Create the pipeline state
+                    return CreateGraphicsPipelineState(new IntPtr(&nativeDesc));
+                }
+                finally
+                {
+                    if (elements != null)
+                    {
+                        for (int i = 0; i < elements.Length; i++)
+                        {
+                            nativeElements[i].__MarshalFree();
+                        }
+                    }
+                }
+            }
+        }
+
         protected override
             void NativePointerUpdated(IntPtr oldNativePointer)
         {
@@ -186,11 +273,64 @@ namespace SharpDX.Direct3D12
             base.Dispose(disposing);
         }
 
-        private void CreateDevice(Adapter adapter, DriverType driverType, DeviceCreationFlags flags,
-                                  FeatureLevel minFeatureLevel)
-        {
 
-            D3D12.CreateDevice(adapter, driverType, flags, minFeatureLevel, D3D12.SdkVersion, Utilities.GetGuidFromType(typeof(Device)), this).CheckError();
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SharpDX.Direct3D12.Device" /> class along with a new <see cref="T:SharpDX.DXGI.SwapChain" /> used for rendering.
+        /// </summary>
+        /// <param name="driverType">Type of the driver.</param>
+        /// <param name="flags">A list of runtime layers to enable.</param>
+        /// <param name="minFeatureLevel">The minimum feature level.</param>
+        /// <param name="swapChainDescription">Details used to create the swap chain.</param>
+        /// <param name="swapChain">When the method completes, contains the created swap chain instance.</param>
+        /// <returns>The created device instance.</returns>
+        public static Device CreateWithSwapChain(DriverType driverType, DeviceCreationFlags flags,
+                                                 FeatureLevel minFeatureLevel, SwapChainDescription swapChainDescription,
+                                                 out SwapChain swapChain)
+        {
+            Device device;
+            CreateWithSwapChain(null, driverType, flags, minFeatureLevel, swapChainDescription, out device, out swapChain);
+            return device;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SharpDX.Direct3D12.Device" /> class along with a new <see cref="T:SharpDX.DXGI.SwapChain" /> used for rendering.
+        /// </summary>
+        /// <param name="adapter">The video adapter on which the device should be created.</param>
+        /// <param name="flags">A list of runtime layers to enable.</param>
+        /// <param name="minFeatureLevel">The minimum feature level.</param>
+        /// <param name="swapChainDescription">Details used to create the swap chain.</param>
+        /// <param name="swapChain">When the method completes, contains the created swap chain instance.</param>
+        /// <returns>The created device instance.</returns>
+        public static Device CreateWithSwapChain(Adapter adapter, DeviceCreationFlags flags,
+                                                 FeatureLevel minFeatureLevel, SwapChainDescription swapChainDescription,
+                                                 out SwapChain swapChain)
+        {
+            Device device;
+            CreateWithSwapChain(adapter, DriverType.Unknown, flags, minFeatureLevel, swapChainDescription,
+                                       out device, out swapChain);
+            return device;
+        }
+
+        private static void CreateWithSwapChain(Adapter adapter, DriverType driverType, DeviceCreationFlags flags,
+                                                 FeatureLevel minFeatureLevel, SwapChainDescription swapChainDescription,
+                                                 out Device device, out SwapChain swapChain)
+        {
+            D3D12.CreateDeviceAndSwapChain(adapter,
+                driverType,
+                flags,
+                minFeatureLevel,
+                D3D12.SdkVersion,
+                ref swapChainDescription,
+                Utilities.GetGuidFromType(typeof(SwapChain)),
+                out swapChain,
+                Utilities.GetGuidFromType(typeof(Device)),
+                out device);
+        }
+
+        private static void CreateDevice(Adapter adapter, DriverType driverType, DeviceCreationFlags flags,
+                                  FeatureLevel minFeatureLevel, Device instance)
+        {
+            D3D12.CreateDevice(adapter, driverType, flags, minFeatureLevel, D3D12.SdkVersion, Utilities.GetGuidFromType(typeof(Device)), instance).CheckError();
         }
     }
 }

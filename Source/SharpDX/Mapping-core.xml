@@ -57,6 +57,7 @@
   <!-- SharpDX global naming -->
   <naming>
     <short name="ASPECT">Aspect</short>
+    <short name="BYTECODE">Bytecode</short>
     <short name="HULL">Hull</short>
     <short name="VERTEX">Vertex</short>
     <short name="RATIONAL">Rational</short>
@@ -90,6 +91,7 @@
     <short name="CHECKER">Checker</short>
     <short name="CLEANUP">Cleanup</short>
     <short name="CLEAN">Clean</short>
+    <short name="ALLOCATION">Allocation</short>
     <short name="ALL">All</short>
     <short name="DATA">Data</short>
     <short name="PREFER">Prefer</short>

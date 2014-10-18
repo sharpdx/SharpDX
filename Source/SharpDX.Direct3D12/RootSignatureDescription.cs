@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,10 @@ namespace SharpDX.Direct3D12
         //    /// <unmanaged-short>unsigned int Flags</unmanaged-short>	
         //    public int Flags;
         //}
+
+        public RootSignatureDescription() : this(null)
+        {
+        }
 
         public RootSignatureDescription(RootParameter[] parameters)
         {

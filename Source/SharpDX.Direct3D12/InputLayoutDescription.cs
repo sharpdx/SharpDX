@@ -17,24 +17,22 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
-using System;
-
 namespace SharpDX.Direct3D12
 {
-    public partial struct ResourceAliasingBarrierDescription
+    public partial class InputLayoutDescription
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ResourceAliasingBarrierDescription"/> struct.
-        /// </summary>
-        /// <param name="resourceBefore">The resource before.</param>
-        /// <param name="resourceAfter">The resource after.</param>
-        /// <exception cref="System.ArgumentNullException">resourceBefore</exception>
-        public ResourceAliasingBarrierDescription(Resource resourceBefore, Resource resourceAfter)
+        public InputLayoutDescription() {}
+
+        public InputLayoutDescription(InputElement[] elements)
         {
-            if(resourceBefore == null) throw new ArgumentNullException("resourceBefore");
-            ResourceBeforePointer = resourceBefore.NativePointer;
-            ResourceAfterPointer = resourceAfter != null ? resourceAfter.NativePointer : IntPtr.Zero;
+            Elements = elements;
+        }
+
+        public InputElement[] Elements { get; set; }
+
+        public static implicit operator InputLayoutDescription(InputElement[] elements)
+        {
+            return new InputLayoutDescription(elements);
         }
     }
 }

@@ -17,24 +17,31 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
-using System;
-
 namespace SharpDX.Direct3D12
 {
-    public partial struct ResourceAliasingBarrierDescription
+    public partial struct RasterizerStateDescription
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResourceAliasingBarrierDescription"/> struct.
+        /// Returns default values for <see cref="RasterizerStateDescription"/>. 
         /// </summary>
-        /// <param name="resourceBefore">The resource before.</param>
-        /// <param name="resourceAfter">The resource after.</param>
-        /// <exception cref="System.ArgumentNullException">resourceBefore</exception>
-        public ResourceAliasingBarrierDescription(Resource resourceBefore, Resource resourceAfter)
+        /// <remarks>
+        /// See MSDN documentation for default values.
+        /// </remarks>
+        public static RasterizerStateDescription Default()
         {
-            if(resourceBefore == null) throw new ArgumentNullException("resourceBefore");
-            ResourceBeforePointer = resourceBefore.NativePointer;
-            ResourceAfterPointer = resourceAfter != null ? resourceAfter.NativePointer : IntPtr.Zero;
+            return new RasterizerStateDescription()
+            {
+                FillMode = FillMode.Solid,
+                CullMode = CullMode.Back,
+                IsFrontCounterClockwise = false,
+                DepthBias = 0,
+                SlopeScaledDepthBias = 0.0f,
+                DepthBiasClamp = 0.0f,
+                IsDepthClipEnabled = true,
+                IsMultisampleEnabled = false,
+                IsAntialiasedLineEnabled = false,
+                ForcedSampleCount = 0,
+            };
         }
     }
 }
