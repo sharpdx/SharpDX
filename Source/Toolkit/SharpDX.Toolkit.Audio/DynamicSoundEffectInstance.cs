@@ -12,6 +12,8 @@ namespace SharpDX.Toolkit.Audio
     /// </summary>
     public sealed class DynamicSoundEffectInstance : SoundEffectInstance
     {
+        static int instNum = 0;
+
         /// <summary>
         /// Gets the sample rate of the <see cref="DynamicSoundEffectInstance" />.
         /// </summary>
@@ -41,17 +43,6 @@ namespace SharpDX.Toolkit.Audio
         }
 
         /// <summary>
-        /// Gets the state of the current sound effect instance.
-        /// </summary>
-        public override SoundEffect Effect
-        {
-            get
-            {
-                throw new InvalidOperationException("Cannot get the SoundEffect of a DynamicSoundEffectInstance.");
-            }
-        }
-
-        /// <summary>
         /// Event that occurs when the number of audio capture buffers awaiting playback is less than or equal to two.
         /// </summary>
         public event Action<DynamicSoundEffectInstance> BufferNeeded;
@@ -66,6 +57,9 @@ namespace SharpDX.Toolkit.Audio
         public DynamicSoundEffectInstance(AudioManager manager, int sampleRate, AudioChannels channels, bool isFireAndForget)
             : base(null, GetVoice(manager, sampleRate, channels), isFireAndForget)
         {
+            Effect = new SoundEffect(manager, "SharpDX.Toolkit.Audio.DSEI.__INST_" + instNum,
+                new WaveFormat(sampleRate, sizeof(ushort) * 8, (int)channels), DataStream.Create(new byte[8192], true, true), null);
+
             voice.BufferEnd += p =>
             {
                 if (PendingBufferCount < 3 && BufferNeeded != null)
@@ -103,25 +97,43 @@ namespace SharpDX.Toolkit.Audio
             if (PendingBufferCount >= 63)
                 throw new InvalidOperationException("There cannot be more than 63 buffers pending in the DynamicSoundEffectInstance.");
 
+            if (CurrentAudioBuffer.Stream.RemainingLength < count)
+            {
+                long newSize = CurrentAudioBuffer.Stream.Length * 2;
+                while (newSize < count)
+                    newSize *= 2;
+
+                DataStream stream = new DataStream((int)newSize, true, true);
+
+                CurrentAudioBuffer.Stream.CopyTo(stream);
+
+                CurrentAudioBuffer.Stream = stream;
+            }
+
             CurrentAudioBuffer.Stream.Write(buffer, offset, count);
         }
 
         static SourceVoice GetVoice(AudioManager manager, int sampleRate, AudioChannels channels)
         {
-            WaveFormat format = new WaveFormat(sampleRate, sizeof(ushort) * 8, (int)channels);
-
-            SourceVoicePool pool = manager.InstancePool.GetVoicePool(format);
+            SourceVoicePool pool = manager.InstancePool.GetVoicePool(new WaveFormat(sampleRate, sizeof(ushort) * 8, (int)channels));
 
             SourceVoice ret = null;
             if (pool.TryAcquire(true, out ret))
                 return ret;
             else
-                throw new InvalidOperationException("");
+                throw new InvalidOperationException("Couldn't get a SourceVoice for the DynamicSoundEffectInstance.");
         }
 
         protected internal override void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
+            if (!IsDisposed)
+            {
+                IsDisposed = true;
+                ReleaseSourceVoice();
+                //Effect.ChildDisposed(this);
+                //Effect = null;
+                outputMatrix = null;
+            }
 
             SampleRate = 0;
             Channels   = 0;

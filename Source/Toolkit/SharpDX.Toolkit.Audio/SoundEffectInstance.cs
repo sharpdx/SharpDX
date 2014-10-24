@@ -64,12 +64,12 @@ namespace SharpDX.Toolkit.Audio
         /// <summary>
         /// Gets the base sound effect.
         /// </summary>
-        public virtual SoundEffect Effect { get; private set; }
+        public SoundEffect Effect { get; protected internal set; }
 
         /// <summary>
         /// Gets a value indicating whether this instance is diposed.
         /// </summary>
-        public bool IsDisposed { get; private set; }
+        public bool IsDisposed { get; protected internal set; }
 
         /// <summary>
         /// Gets a value indicating whether this instance is looped.
