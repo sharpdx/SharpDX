@@ -19,11 +19,13 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="AudioChannels.cs" />
     <Compile Include="AudioContentReader.cs" />
     <Compile Include="AudioContentReaderFactory.cs" />
     <Compile Include="AudioException.cs" />
     <Compile Include="AudioManager.cs" />
     <Compile Include="BitField.cs" />
+    <Compile Include="DynamicSoundEffectInstance.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="Pool.cs" />
     <Compile Include="ReverbPresets.cs" />

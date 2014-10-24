@@ -28,19 +28,19 @@ namespace SharpDX.Toolkit.Audio
     /// <summary>
     /// Provides a single playing, paused, or stopped instance of a <see cref="SoundEffect"/> sound.
     /// </summary>
-    public sealed class SoundEffectInstance : IDisposable
+    public class SoundEffectInstance : IDisposable
     {
-        private DspSettings dspSettings;
-        private Emitter emitter;
-        private bool isReverbSubmixEnabled;
-        private Listener listener;
-        private float[] outputMatrix;
-        private float pan;
-        private bool paused;
-        private float pitch;
-        private float[] reverbLevels;
-        private SourceVoice voice;
-        private float volume;
+        protected internal DspSettings dspSettings;
+        protected internal Emitter emitter;
+        protected internal bool isReverbSubmixEnabled;
+        protected internal Listener listener;
+        protected internal float[] outputMatrix;
+        protected internal float pan;
+        protected internal bool paused;
+        protected internal float pitch;
+        protected internal float[] reverbLevels;
+        protected internal SourceVoice voice;
+        protected internal float volume;
 
         /// <summary>
         /// Creates a new instance of the <see cref="SoundEffectInstance"/> class.
@@ -64,7 +64,7 @@ namespace SharpDX.Toolkit.Audio
         /// <summary>
         /// Gets the base sound effect.
         /// </summary>
-        public SoundEffect Effect { get; private set; }
+        public virtual SoundEffect Effect { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether this instance is diposed.
@@ -176,7 +176,7 @@ namespace SharpDX.Toolkit.Audio
         /// <summary>
         /// Gets the current audio buffer.
         /// </summary>
-        private AudioBuffer CurrentAudioBuffer
+        protected internal AudioBuffer CurrentAudioBuffer
         {
             get
             {
@@ -353,7 +353,7 @@ namespace SharpDX.Toolkit.Audio
         /// <param name="soundEffect">The new parent sound effect.</param>
         /// <param name="sourceVoice">The new source voice.</param>
         /// <param name="isFireAndForget">The new <see cref="IsFireAndForget"/> value.</param>
-        internal void Reset(SoundEffect soundEffect, SourceVoice sourceVoice, bool isFireAndForget)
+        internal virtual void Reset(SoundEffect soundEffect, SourceVoice sourceVoice, bool isFireAndForget)
         {
             Effect = soundEffect;
             voice = sourceVoice;
@@ -363,7 +363,7 @@ namespace SharpDX.Toolkit.Audio
                 Reset();
         }
 
-        private void Apply3D(Vector3 listenerForward, Vector3 listenerUp, Vector3 listenerPosition, Vector3 listenerVelocity, Vector3 emitterForward, Vector3 emitterUp, Vector3 emitterPosition, Vector3 emitterVelocity)
+        protected internal void Apply3D(Vector3 listenerForward, Vector3 listenerUp, Vector3 listenerPosition, Vector3 listenerVelocity, Vector3 emitterForward, Vector3 emitterUp, Vector3 emitterPosition, Vector3 emitterVelocity)
         {
             if (!Effect.AudioManager.IsSpatialAudioEnabled)
                 throw new InvalidOperationException("Spatial audio must be enabled first.");
@@ -465,7 +465,7 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
-        private void Dispose(bool disposing)
+        protected internal virtual void Dispose(bool disposing)
         {
             if (!IsDisposed)
             {
@@ -477,7 +477,7 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
-        private void InitializeOutputMatrix(out int destinationChannels, out int sourceChannels)
+        protected internal void InitializeOutputMatrix(out int destinationChannels, out int sourceChannels)
         {
             destinationChannels = Effect.AudioManager.MasteringVoice.VoiceDetails.InputChannelCount;
             sourceChannels = Effect.Format.Channels;
@@ -492,7 +492,7 @@ namespace SharpDX.Toolkit.Audio
                 outputMatrix[i] = 1.0f;
         }
 
-        private void ReleaseSourceVoice()
+        protected internal void ReleaseSourceVoice()
         {
             if (voice != null && !voice.IsDisposed)
             {
@@ -517,7 +517,7 @@ namespace SharpDX.Toolkit.Audio
             voice = null;
         }
 
-        private void SetPanOutputMatrix()
+        protected internal void SetPanOutputMatrix()
         {
             int destinationChannels;
             int sourceChannels;
@@ -575,10 +575,10 @@ namespace SharpDX.Toolkit.Audio
         }
 
         /// <summary>
-        /// Returns this SoundEffectInstance to the SoundEffect InstancePool.
+        /// Returns this <see cref="SoundEffectInstance" /> to the <see cref="SoundEffect" /> InstancePool.
         /// You should not continue to call other functions on this object.
         /// </summary>
-        public void Return()
+        public virtual void Return()
         {
             ReleaseSourceVoice();
             Effect.AudioManager.InstancePool.Return(this);

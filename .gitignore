@@ -50,3 +50,4 @@ Temp*/
 BuildErrors.log
 #ignore certification test results
 Source/CertificationTests/Results/*
+/SharpDX.sln.ide

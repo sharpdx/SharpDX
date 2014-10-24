@@ -303,7 +303,7 @@ namespace SharpDX.Toolkit.Audio
             if (!IsMasteringLimiterEnabled)
                 return;
 
-            if(MasteringVoice != null && masteringLimiter != null)
+            if (MasteringVoice != null && masteringLimiter != null)
                 MasteringVoice.DisableEffect(0);
 
             IsMasteringLimiterEnabled = false;
