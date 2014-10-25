@@ -64,7 +64,7 @@ namespace SharpDX.Toolkit.Audio
         /// <summary>
         /// Gets the base sound effect.
         /// </summary>
-        public SoundEffect Effect { get; protected internal set; }
+        public virtual SoundEffect Effect { get; protected internal set; }
 
         /// <summary>
         /// Gets a value indicating whether this instance is diposed.
@@ -129,7 +129,7 @@ namespace SharpDX.Toolkit.Audio
         /// <summary>
         /// Gets the state of the current sound effect instance.
         /// </summary>
-        public SoundState State
+        public virtual SoundState State
         {
             get
             {
@@ -225,7 +225,7 @@ namespace SharpDX.Toolkit.Audio
         /// Pauses the playback of the current instance.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is thrown if the current instance was already disposed.</exception>
-        public void Pause()
+        public virtual void Pause()
         {
             if (IsDisposed)
                 throw new ObjectDisposedException(this.GetType().FullName);
@@ -238,7 +238,7 @@ namespace SharpDX.Toolkit.Audio
         /// Plays the current instance. If it is already playing - the call is ignored.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is thrown if the current instance was already disposed.</exception>
-        public void Play()
+        public virtual void Play()
         {
             if (IsDisposed)
                 throw new ObjectDisposedException(this.GetType().FullName);
@@ -273,19 +273,16 @@ namespace SharpDX.Toolkit.Audio
         /// Resumes playback of the current instance.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is thrown if the current instance was already disposed.</exception>
-        public void Resume()
+        public virtual void Resume()
         {
             if (IsDisposed)
                 throw new ObjectDisposedException(this.GetType().FullName);
 
-            if (!IsLooped)
+            if (!IsLooped && voice.State.BuffersQueued == 0)
             {
-                if (voice.State.BuffersQueued == 0)
-                {
-                    voice.Stop();
-                    voice.FlushSourceBuffers();
-                    voice.SubmitSourceBuffer(CurrentAudioBuffer, Effect.DecodedPacketsInfo);
-                }
+                voice.Stop();
+                voice.FlushSourceBuffers();
+                voice.SubmitSourceBuffer(CurrentAudioBuffer, Effect.DecodedPacketsInfo);
             }
 
             voice.Start();
@@ -296,7 +293,7 @@ namespace SharpDX.Toolkit.Audio
         /// Stops the playback of the current instance.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is thrown if the current instance was already disposed.</exception>
-        public void Stop()
+        public virtual void Stop()
         {
             if (IsDisposed)
                 throw new ObjectDisposedException(this.GetType().FullName);
@@ -312,7 +309,7 @@ namespace SharpDX.Toolkit.Audio
         /// </summary>
         /// <param name="immediate">A value indicating whether the playback should be stopped immediately or at the end of the sound.</param>
         /// <exception cref="ObjectDisposedException">Is thrown if the current instance was already disposed.</exception>
-        public void Stop(bool immediate)
+        public virtual void Stop(bool immediate)
         {
             if (IsDisposed)
                 throw new ObjectDisposedException(this.GetType().FullName);

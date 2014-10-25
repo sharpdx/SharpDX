@@ -12,7 +12,15 @@ namespace SharpDX.Toolkit.Audio
     /// </summary>
     public sealed class DynamicSoundEffectInstance : SoundEffectInstance
     {
-        static int instNum = 0;
+        readonly static string
+            NO_EFFECT        = "A DynamicSoundEffectInstance doesn't have a SoundEffect object.",
+            BUFFERS_DISABLED = "Submitting audio buffers is disabled because Discontinuity() is called on the source voice.",
+            TOO_MANY_BUFFERS = "Cannot queue more than 63 audio buffers for a DynamicSoundEffectInstance.";
+
+        //static int instNum = 0;
+
+        SoundState state = SoundState.Stopped;
+        bool disabled    = false;
 
         /// <summary>
         /// Gets the sample rate of the <see cref="DynamicSoundEffectInstance" />.
@@ -38,7 +46,33 @@ namespace SharpDX.Toolkit.Audio
         {
             get
             {
-                return voice.State.BuffersQueued - 1;
+                return voice.State.BuffersQueued;// - 1;
+            }
+        }
+
+        /// <summary>
+        /// Gets the base sound effect.
+        /// </summary>
+        public override SoundEffect Effect
+        {
+            get
+            {
+                throw new InvalidOperationException(NO_EFFECT);
+            }
+            protected internal set
+            {
+                //throw new InvalidOperationException(NO_EFFECT);
+            }
+        }
+
+        /// <summary>
+        /// Gets the state of the current sound effect instance.
+        /// </summary>
+        public override SoundState State
+        {
+            get
+            {
+                return state;
             }
         }
 
@@ -55,10 +89,12 @@ namespace SharpDX.Toolkit.Audio
         /// <param name="channels">Number of channels in the audio data.</param>
         /// <param name="isFireAndForget">A value indicating whether this instance is not monitored after it is being send to playback.</param>
         public DynamicSoundEffectInstance(AudioManager manager, int sampleRate, AudioChannels channels, bool isFireAndForget)
-            : base(null, GetVoice(manager, sampleRate, channels), isFireAndForget)
+            : base(//new SoundEffect(manager, "SharpDX.Toolkit.Audio.DSEI.__INST_" + instNum++,
+            //       new WaveFormat(sampleRate, sizeof(ushort) * 8, (int)channels), DataStream.Create(new byte[8192], true, true), null)
+                  null, GetVoice(manager, sampleRate, channels), isFireAndForget)
         {
-            Effect = new SoundEffect(manager, "SharpDX.Toolkit.Audio.DSEI.__INST_" + instNum,
-                new WaveFormat(sampleRate, sizeof(ushort) * 8, (int)channels), DataStream.Create(new byte[8192], true, true), null);
+            SampleRate = sampleRate;
+            Channels   = channels  ;
 
             voice.BufferEnd += p =>
             {
@@ -82,7 +118,7 @@ namespace SharpDX.Toolkit.Audio
         /// Submits an audio buffer for playback. Playback starts at the beginning, and the buffer is played in its entirety.
         /// </summary>
         /// <param name="buffer">Buffer that contains the audio data. The audio format must be PCM wave data.</param>
-        public void SubmitBuffer(byte[] buffer)
+        public        void SubmitBuffer(byte[] buffer)
         {
             SubmitBuffer(buffer, 0, buffer.Length);
         }
@@ -92,25 +128,144 @@ namespace SharpDX.Toolkit.Audio
         /// <param name="buffer">Buffer that contains the audio data. The audio format must be PCM wave data.</param>
         /// <param name="offset">Offset, in bytes, to the starting position of the data.</param>
         /// <param name="count">Amount, in bytes, of data sent.</param>
-        public void SubmitBuffer(byte[] buffer, int offset, int count)
+        public unsafe void SubmitBuffer(byte[] buffer, int offset, int count)
         {
+            if (disabled)
+                throw new InvalidOperationException(BUFFERS_DISABLED);
             if (PendingBufferCount >= 63)
-                throw new InvalidOperationException("There cannot be more than 63 buffers pending in the DynamicSoundEffectInstance.");
+                throw new InvalidOperationException(TOO_MANY_BUFFERS);
 
-            if (CurrentAudioBuffer.Stream.RemainingLength < count)
+            fixed (byte* ptr = buffer)
             {
-                long newSize = CurrentAudioBuffer.Stream.Length * 2;
-                while (newSize < count)
-                    newSize *= 2;
+                voice.SubmitSourceBuffer(new AudioBuffer(new DataPointer(ptr + offset, count)), null);
+            }
+        }
 
-                DataStream stream = new DataStream((int)newSize, true, true);
+        /// <summary>
+        /// Removes all pending buffers from the <see cref="DynamicSoundEffectInstance" />.
+        /// </summary>
+        public void FlushPendingBuffers    ()
+        {
+            voice.FlushSourceBuffers();
+        }
+        /// <summary>
+        /// Disables the usage of <see cref="SubmitBuffer(byte[], int, int)" /> and notifies the XAudio2 voice that no more buffers will be enqueued.
+        /// </summary>
+        public void DisableBufferSubmission()
+        {
+            voice.Discontinuity();
 
-                CurrentAudioBuffer.Stream.CopyTo(stream);
+            disabled = true;
+        }
 
-                CurrentAudioBuffer.Stream = stream;
+        /// <summary>
+        /// Plays the current instance. If it is already playing - the call is ignored.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is thrown if the current instance was already disposed.</exception>
+        /// <exception cref="InvalidOperationException">There are no buffers queued. <see cref="BufferNeeded" /> will then be invoked before throwing the exception.</exception>
+        public override void Play  ()
+        {
+            if (IsDisposed)
+                throw new ObjectDisposedException(GetType().FullName);
+
+            if (state == SoundState.Playing)
+                return;
+
+            if (voice.State.BuffersQueued <= 0)
+            {
+                if (BufferNeeded != null)
+                    BufferNeeded(this);
+
+                if (voice.State.BuffersQueued <= 0)
+                    throw new InvalidOperationException("Cannot play a DynamicSoundEffectInstance with no buffers.");
             }
 
-            CurrentAudioBuffer.Stream.Write(buffer, offset, count);
+            voice.Start();
+
+            state  = SoundState.Playing;
+            paused = false;
+        }
+        /// <summary>
+        /// Resumes playback of the current instance.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is thrown if the current instance was already disposed.</exception>
+        public override void Resume()
+        {
+            if (IsDisposed)
+                throw new ObjectDisposedException(GetType().FullName);
+
+            if (state == SoundState.Playing)
+                return;
+            if (state == SoundState.Stopped)
+            {
+                Play();
+                return;
+            }
+
+            if (!IsLooped && voice.State.BuffersQueued == 0)
+                voice.Stop();
+
+            voice.Start();
+
+            state  = SoundState.Playing;
+            paused = false;
+        }
+
+        /// <summary>
+        /// Pauses the playback of the current instance.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is thrown if the current instance was already disposed.</exception>
+        public override void Pause()
+        {
+            if (IsDisposed)
+                throw new ObjectDisposedException(this.GetType().FullName);
+
+            voice.Stop();
+
+            state  = SoundState.Paused;
+            paused = true;
+        }
+
+        /// <summary>
+        /// Stops the playback of the current instance.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is thrown if the current instance was already disposed.</exception>
+        public override void Stop()
+        {
+            if (IsDisposed)
+                throw new ObjectDisposedException(this.GetType().FullName);
+
+            if (state == SoundState.Stopped)
+                return;
+
+            voice.Stop(0);
+            voice.FlushSourceBuffers();
+
+            state  = SoundState.Stopped;
+            paused = false;
+        }
+        /// <summary>
+        /// Stops the playback of the current instance indicating whether the stop should occur immediately of at the end of the sound.
+        /// </summary>
+        /// <param name="immediate">A value indicating whether the playback should be stopped immediately or at the end of the sound.</param>
+        /// <exception cref="ObjectDisposedException">Is thrown if the current instance was already disposed.</exception>
+        public override void Stop(bool immediate)
+        {
+            if (IsDisposed)
+                throw new ObjectDisposedException(GetType().FullName);
+
+            if (state == SoundState.Stopped)
+                return;
+
+            if (immediate)
+                voice.Stop(0);
+            else if (IsLooped)
+                voice.ExitLoop();
+            else
+                voice.Stop((int)PlayFlags.Tails);
+
+            state  = SoundState.Stopped;
+            paused = false;
         }
 
         static SourceVoice GetVoice(AudioManager manager, int sampleRate, AudioChannels channels)
