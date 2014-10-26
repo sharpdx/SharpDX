@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using SharpDX.Multimedia;
-using SharpDX.XAPO;
 using SharpDX.XAudio2;
 
 namespace SharpDX.Toolkit.Audio
@@ -13,6 +12,12 @@ namespace SharpDX.Toolkit.Audio
     public sealed class DynamicSoundEffectInstance : SoundEffectInstance
     {
         readonly static string
+            BUFFER      = "buffer"    ,
+            MANAGER     = "manager"   ,
+            SAMPLE_RATE = "sampleRate",
+            CHANNELS    = "channels"  ,
+
+            INVALID_RANGE    = "The buffer does not contain the given range of [offset, offset + count[.",
             NO_EFFECT        = "A DynamicSoundEffectInstance doesn't have a SoundEffect object.",
             NO_SOURCE_VOICE  = "Couldn't get a SourceVoice for the DynamicSoundEffectInstance.",
             BUFFERS_DISABLED = "Submitting audio buffers is disabled because Discontinuity() is called on the source voice.",
@@ -131,6 +136,10 @@ namespace SharpDX.Toolkit.Audio
         /// <param name="count">Amount, in bytes, of data sent.</param>
         public unsafe void SubmitBuffer(byte[] buffer, int offset, int count)
         {
+            if (buffer == null)
+                throw new ArgumentNullException(BUFFER);
+            if (buffer.Length < offset + count)
+                throw new ArgumentException(INVALID_RANGE, BUFFER);
             if (disabled)
                 throw new InvalidOperationException(BUFFERS_DISABLED);
             if (PendingBufferCount >= 63)
@@ -271,6 +280,13 @@ namespace SharpDX.Toolkit.Audio
 
         static SourceVoice GetVoice(AudioManager manager, int sampleRate, AudioChannels channels)
         {
+            if (manager == null)
+                throw new ArgumentNullException(MANAGER);
+            if (sampleRate < 8000 || sampleRate > 48000)
+                throw new ArgumentOutOfRangeException(SAMPLE_RATE);
+            if (channels < AudioChannels.Mono)
+                throw new ArgumentOutOfRangeException(CHANNELS);
+
             SourceVoicePool pool = manager.InstancePool.GetVoicePool(new WaveFormat(sampleRate, sizeof(ushort) * 8, (int)channels));
 
             SourceVoice ret = null;
