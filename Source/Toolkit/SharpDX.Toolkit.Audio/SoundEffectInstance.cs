@@ -30,17 +30,18 @@ namespace SharpDX.Toolkit.Audio
     /// </summary>
     public class SoundEffectInstance : IDisposable
     {
-        protected internal DspSettings dspSettings;
-        protected internal Emitter emitter;
-        protected internal bool isReverbSubmixEnabled;
-        protected internal Listener listener;
-        protected internal float[] outputMatrix;
-        protected internal float pan;
-        protected internal bool paused;
-        protected internal float pitch;
-        protected internal float[] reverbLevels;
-        protected internal SourceVoice voice;
-        protected internal float volume;
+        DspSettings dspSettings;
+        Emitter emitter;
+        bool isReverbSubmixEnabled;
+        Listener listener;
+        float[] outputMatrix;
+        float pan;
+        bool paused;
+        float pitch;
+        float[] reverbLevels;
+        float volume;
+
+        protected SourceVoice voice;
 
         /// <summary>
         /// Creates a new instance of the <see cref="SoundEffectInstance"/> class.
