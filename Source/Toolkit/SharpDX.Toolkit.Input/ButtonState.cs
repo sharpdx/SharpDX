@@ -141,7 +141,7 @@ namespace SharpDX.Toolkit.Input
         /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
         public bool Equals(ButtonState other)
         {
-            return flags.Equals(other.flags);
+            return flags == other.flags; // http://stackoverflow.com/a/17492722/1589881
         }
 
         public override bool Equals(object obj)
