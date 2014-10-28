@@ -32,15 +32,15 @@ namespace SharpDX.Toolkit.Audio
     {
         DspSettings dspSettings;
         Emitter emitter;
-        bool isReverbSubmixEnabled;
         Listener listener;
-        float[] outputMatrix;
         float pan;
-        bool paused;
         float pitch;
         float[] reverbLevels;
         float volume;
 
+        protected bool isReverbSubmixEnabled;
+        protected float[] outputMatrix;
+        protected bool paused;
         protected SourceVoice voice;
 
         /// <summary>
@@ -361,7 +361,7 @@ namespace SharpDX.Toolkit.Audio
                 Reset();
         }
 
-        protected internal void Apply3D(Vector3 listenerForward, Vector3 listenerUp, Vector3 listenerPosition, Vector3 listenerVelocity, Vector3 emitterForward, Vector3 emitterUp, Vector3 emitterPosition, Vector3 emitterVelocity)
+        protected void Apply3D(Vector3 listenerForward, Vector3 listenerUp, Vector3 listenerPosition, Vector3 listenerVelocity, Vector3 emitterForward, Vector3 emitterUp, Vector3 emitterPosition, Vector3 emitterVelocity)
         {
             if (!Effect.AudioManager.IsSpatialAudioEnabled)
                 throw new InvalidOperationException("Spatial audio must be enabled first.");
@@ -463,7 +463,7 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
-        protected internal virtual void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!IsDisposed)
             {
@@ -475,7 +475,7 @@ namespace SharpDX.Toolkit.Audio
             }
         }
 
-        protected internal void InitializeOutputMatrix(out int destinationChannels, out int sourceChannels)
+        protected void InitializeOutputMatrix(out int destinationChannels, out int sourceChannels)
         {
             destinationChannels = Effect.AudioManager.MasteringVoice.VoiceDetails.InputChannelCount;
             sourceChannels = Effect.Format.Channels;
@@ -490,7 +490,7 @@ namespace SharpDX.Toolkit.Audio
                 outputMatrix[i] = 1.0f;
         }
 
-        protected internal void ReleaseSourceVoice()
+        protected virtual void ReleaseSourceVoice()
         {
             if (voice != null && !voice.IsDisposed)
             {
@@ -515,7 +515,7 @@ namespace SharpDX.Toolkit.Audio
             voice = null;
         }
 
-        protected internal void SetPanOutputMatrix()
+        protected void SetPanOutputMatrix()
         {
             int destinationChannels;
             int sourceChannels;

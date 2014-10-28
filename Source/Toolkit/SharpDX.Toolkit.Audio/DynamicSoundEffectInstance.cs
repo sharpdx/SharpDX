@@ -19,7 +19,6 @@ namespace SharpDX.Toolkit.Audio
 
             INVALID_RANGE    = "The buffer does not contain the given range of [offset, offset + count[.",
             NO_EFFECT        = "A DynamicSoundEffectInstance doesn't have a SoundEffect object.",
-            NO_SOURCE_VOICE  = "Couldn't get a SourceVoice for the DynamicSoundEffectInstance.",
             BUFFERS_DISABLED = "Submitting audio buffers is disabled because Discontinuity() is called on the source voice.",
             TOO_MANY_BUFFERS = "Cannot queue more than 63 audio buffers for a DynamicSoundEffectInstance.";
 
@@ -287,16 +286,10 @@ namespace SharpDX.Toolkit.Audio
             if (channels < AudioChannels.Mono)
                 throw new ArgumentOutOfRangeException(CHANNELS);
 
-            SourceVoicePool pool = manager.InstancePool.GetVoicePool(new WaveFormat(sampleRate, sizeof(ushort) * 8, (int)channels));
-
-            SourceVoice ret = null;
-            if (pool.TryAcquire(true, out ret))
-                return ret;
-            else
-                throw new InvalidOperationException(NO_SOURCE_VOICE);
+            return new SourceVoice(manager.Device, new WaveFormat(sampleRate, sizeof(ushort) * 8, (int)channels), VoiceFlags.None);
         }
 
-        protected internal override void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             if (!IsDisposed)
             {
@@ -317,6 +310,25 @@ namespace SharpDX.Toolkit.Audio
 
             SampleRate = 0;
             Channels   = 0;
+        }
+
+        protected override void ReleaseSourceVoice()
+        {
+            if (voice != null && !voice.IsDisposed)
+            {
+                voice.Stop(0);
+                voice.FlushSourceBuffers();
+
+                if (isReverbSubmixEnabled)
+                {
+                    voice.SetOutputVoices(null);
+                    isReverbSubmixEnabled = false;
+                }
+
+                voice.DestroyVoice();
+                voice.Dispose();
+            }
+            voice = null;
         }
 
         /// <summary>
