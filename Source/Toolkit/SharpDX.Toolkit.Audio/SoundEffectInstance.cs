@@ -30,14 +30,14 @@ namespace SharpDX.Toolkit.Audio
     /// </summary>
     public class SoundEffectInstance : IDisposable
     {
-        DspSettings dspSettings;
-        Emitter emitter;
-        Listener listener;
         float pan;
         float pitch;
-        float[] reverbLevels;
         float volume;
 
+        protected float[] reverbLevels;
+        protected DspSettings dspSettings;
+        protected Listener listener;
+        protected Emitter emitter;
         protected bool isReverbSubmixEnabled;
         protected float[] outputMatrix;
         protected bool paused;
@@ -361,7 +361,7 @@ namespace SharpDX.Toolkit.Audio
                 Reset();
         }
 
-        protected void Apply3D(Vector3 listenerForward, Vector3 listenerUp, Vector3 listenerPosition, Vector3 listenerVelocity, Vector3 emitterForward, Vector3 emitterUp, Vector3 emitterPosition, Vector3 emitterVelocity)
+        protected virtual void Apply3D(Vector3 listenerForward, Vector3 listenerUp, Vector3 listenerPosition, Vector3 listenerVelocity, Vector3 emitterForward, Vector3 emitterUp, Vector3 emitterPosition, Vector3 emitterVelocity)
         {
             if (!Effect.AudioManager.IsSpatialAudioEnabled)
                 throw new InvalidOperationException("Spatial audio must be enabled first.");

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SharpDX.Multimedia;
+using SharpDX.X3DAudio;
 using SharpDX.XAudio2;
 
 namespace SharpDX.Toolkit.Audio
@@ -27,6 +28,9 @@ namespace SharpDX.Toolkit.Audio
         SoundState state = SoundState.Stopped;
         bool disabled    = false;
 
+        [ThreadStatic]
+        static WaveFormat lastFmt;
+
         /// <summary>
         /// Gets the sample rate of the <see cref="DynamicSoundEffectInstance" />.
         /// </summary>
@@ -39,6 +43,22 @@ namespace SharpDX.Toolkit.Audio
         /// Gets the audio channels the <see cref="DynamicSoundEffectInstance" /> has.
         /// </summary>
         public AudioChannels Channels
+        {
+            get;
+            private set;
+        }
+        /// <summary>
+        /// Gets the audio manager of the <see cref="DynamicSoundEffectInstance" />.
+        /// </summary>
+        public AudioManager  Manager
+        {
+            get;
+            private set;
+        }
+        /// <summary>
+        /// Gets the wave format of the <see cref="DynamicSoundEffectInstance" />.
+        /// </summary>
+        public WaveFormat    Format
         {
             get;
             private set;
@@ -98,6 +118,9 @@ namespace SharpDX.Toolkit.Audio
             //       new WaveFormat(sampleRate, sizeof(ushort) * 8, (int)channels), DataStream.Create(new byte[8192], true, true), null)
                   null, GetVoice(manager, sampleRate, channels), isFireAndForget)
         {
+            Format  = lastFmt; // lastFmt is set in GetVoice
+            Manager = manager;
+
             SampleRate = sampleRate;
             Channels   = channels  ;
 
@@ -286,7 +309,7 @@ namespace SharpDX.Toolkit.Audio
             if (channels < AudioChannels.Mono)
                 throw new ArgumentOutOfRangeException(CHANNELS);
 
-            return new SourceVoice(manager.Device, new WaveFormat(sampleRate, sizeof(ushort) * 8, (int)channels), VoiceFlags.None);
+            return new SourceVoice(manager.Device, lastFmt = new WaveFormat(sampleRate, sizeof(ushort) * 8, (int)channels), VoiceFlags.None, XAudio2.XAudio2.MaximumFrequencyRatio);
         }
 
         protected override void Dispose(bool disposing)
@@ -329,6 +352,108 @@ namespace SharpDX.Toolkit.Audio
                 voice.Dispose();
             }
             voice = null;
+        }
+
+        protected override void Apply3D(Vector3 listenerForward, Vector3 listenerUp, Vector3 listenerPosition, Vector3 listenerVelocity, Vector3 emitterForward, Vector3 emitterUp, Vector3 emitterPosition, Vector3 emitterVelocity)
+        {
+            if (!Manager.IsSpatialAudioEnabled)
+                throw new InvalidOperationException("Spatial audio must be enabled first.");
+
+            if (emitter == null)
+                emitter = new Emitter();
+
+            emitter.OrientFront = emitterForward;
+            emitter.OrientTop = emitterUp;
+            emitter.Position = emitterPosition;
+            emitter.Velocity = emitterVelocity;
+            emitter.DopplerScaler = SoundEffect.DopplerScale;
+            emitter.CurveDistanceScaler = SoundEffect.DistanceScale;
+            emitter.ChannelCount = Format.Channels;
+
+            //TODO: work out what ChannelAzimuths is supposed to be.
+            if (emitter.ChannelCount > 1)
+                emitter.ChannelAzimuths = new float[emitter.ChannelCount];
+
+            if (listener == null)
+                listener = new Listener();
+
+            listener.OrientFront = listenerForward;
+            listener.OrientTop = listenerUp;
+            listener.Position = listenerPosition;
+            listener.Velocity = listenerVelocity;
+
+            if (dspSettings == null)
+                dspSettings = new DspSettings(Format.Channels, Manager.MasteringVoice.VoiceDetails.InputChannelCount);
+
+            CalculateFlags flags = CalculateFlags.Matrix | CalculateFlags.Doppler | CalculateFlags.LpfDirect;
+
+            if ((Manager.Speakers & Speakers.LowFrequency) > 0)
+            {
+                // On devices with an LFE channel, allow the mono source data to be routed to the LFE destination channel.
+                flags |= CalculateFlags.RedirectToLfe;
+            }
+
+            if (Manager.IsReverbEffectEnabled)
+            {
+                flags |= CalculateFlags.Reverb | CalculateFlags.LpfReverb;
+
+                if (!isReverbSubmixEnabled)
+                {
+                    VoiceSendFlags sendFlags = Manager.IsReverbFilterEnabled ? VoiceSendFlags.UseFilter : VoiceSendFlags.None;
+                    VoiceSendDescriptor[] outputVoices = new VoiceSendDescriptor[]
+                    {
+                        new VoiceSendDescriptor { OutputVoice = Manager.MasteringVoice, Flags = sendFlags },
+                        new VoiceSendDescriptor { OutputVoice = Manager.ReverbVoice, Flags = sendFlags }
+                    };
+
+                    voice.SetOutputVoices(outputVoices);
+                    isReverbSubmixEnabled = true;
+                }
+            }
+
+            Manager.Calculate3D(listener, emitter, flags, dspSettings);
+
+            voice.SetFrequencyRatio(dspSettings.DopplerFactor);
+            voice.SetOutputMatrix(Manager.MasteringVoice, dspSettings.SourceChannelCount, dspSettings.DestinationChannelCount, dspSettings.MatrixCoefficients);
+
+            if (Manager.IsReverbEffectEnabled)
+            {
+                if (reverbLevels == null || reverbLevels.Length != Format.Channels)
+                    reverbLevels = new float[Format.Channels];
+
+                for (int i = 0; i < reverbLevels.Length; i++)
+                {
+                    reverbLevels[i] = dspSettings.ReverbLevel;
+                }
+
+                voice.SetOutputMatrix(Manager.ReverbVoice, Format.Channels, 1, reverbLevels);
+            }
+
+            if (Manager.IsReverbFilterEnabled)
+            {
+                FilterParameters filterDirect = new FilterParameters
+                {
+                    Type = FilterType.LowPassFilter,
+                    // see XAudio2CutoffFrequencyToRadians() in XAudio2.h for more information on the formula used here
+                    Frequency = 2.0f * (float)Math.Sin(X3DAudio.X3DAudio.PI / 6.0f * dspSettings.LpfDirectCoefficient),
+                    OneOverQ = 1.0f
+                };
+
+                voice.SetOutputFilterParameters(Manager.MasteringVoice, filterDirect);
+
+                if (Manager.IsReverbEffectEnabled)
+                {
+                    FilterParameters filterReverb = new FilterParameters
+                    {
+                        Type = FilterType.LowPassFilter,
+                        // see XAudio2CutoffFrequencyToRadians() in XAudio2.h for more information on the formula used here
+                        Frequency = 2.0f * (float)Math.Sin(X3DAudio.X3DAudio.PI / 6.0f * dspSettings.LpfReverbCoefficient),
+                        OneOverQ = 1.0f
+                    };
+
+                    voice.SetOutputFilterParameters(Manager.ReverbVoice, filterReverb);
+                }
+            }
         }
 
         /// <summary>
