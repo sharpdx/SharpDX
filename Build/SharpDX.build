@@ -86,6 +86,8 @@
     <CallTarget Targets="DesktopNet20" />
     <CallTarget Targets="DesktopNet40" />
     <CallTarget Targets="MetroWin8" />
+    <CallTarget Targets="MetroWin8-x86" />
+    <CallTarget Targets="MetroWin8-ARM" />
     <CallTarget Targets="DesktopDx112" />
     <CallTarget Targets="WP8-x86" />
     <CallTarget Targets="WP8-ARM" />
@@ -159,6 +161,14 @@
 
   <Target Name="MetroWin8">
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=Win8"/>
+  </Target>
+
+  <Target Name="MetroWin8">
+    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=Win8-x86"/>
+  </Target>
+
+  <Target Name="MetroWin8">
+    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=Win8-ARM"/>
   </Target>
 
   <Target Name="DesktopDx112">
