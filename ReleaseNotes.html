@@ -1,17 +1,124 @@
 <html>
     <head>
-        <title>SharpDX 2.6.2 Release Notes (17 Juin 2014)</title>
+        <title>SharpDX 2.6.3 Release Notes (29 Oct 2014)</title>
     </head>
     <body>
-        <p>Release Notes (2014-06-17)</p>
+        <p>Release Notes (2014-10-29)</p>
         <h2 class="title">General Information</h2>
-        <p>Small release fixing two issues:</p>
+        <p>This <strong>2.6.3 version</strong> is a maintenance version of legacy APIs (Direct3D1, Direct2D...etc.), some new features and several issues fixed.</p>
+		<p>This should be the last 2.6.x version, as the next version (3.0) SharpDX will go on a diet and will focus to provide DirectX core assemblies. Things that will change in this next version:</p>
         <ul>
-            <li>Fix an access violation exception occuring on WP8/WP81 when using the Toolkit</li>
-            <li>Fix nuget package/target to allow install SharpDX into a UniversalApps package</li>
+            <li><strong>All maths struct/helpers (Vector4, Vector3...etc.) will be moved to a separate <code>SharpDX.Mathematics</code> assembly</strong>. SharpDX DirectX assemblies won't use anymore these types directly but will use only simplified structs for marshalling.</li>
+            <li><strong>The Toolkit will be deprecated</strong> and moved to a separate SharpDX repository. We recommend you to switch to <a href="http://paradox3d.net" target="_blank">Paradox</a> or <a href="http://sharpdx.org/about/related">other alternatives</a>.</li>
         </ul>
-        Best regards,<br/>
-        The SharpDX team
-        </p>
+		<p><strong>SharpDX is also being updated to latest DirectX12</strong> and should hopefully be available when DirectX12 SDK is released for developers.</p>
+		<p><strong>Concerning support for Xbox One</strong>, we don't have any news, until Microsoft <a href="http://visualstudio.uservoice.com/forums/121579-visual-studio/suggestions/4233646-allow-net-games-on-xbox-one" target="_blank">allows .NET on Xbox One</a> (Please keep voting for it, as it seems to be pending!)</p>
+		<p>This release is integrating several patches and contribution made by the community on github. Thanks to all of them!</p>
+        <p>Best regards,<br/>
+        The SharpDX team</p>
+        <h2 class="title">Changes and bugfixes</h2>		
+<p>Please find below an auto-generated list of all changes and fixes from previous 2.6.2 version.</p>
+		<h4>Build</h4>
+<ul>
+  <li>Cleanup build and mapping.xml. Make sure we are not using generated files by a previous target (<a href='https://github.com/sharpdx/SharpDX/commit/12014aa7a4f8eb172dd0ff83db3fe178ffcd191d' target='_blank'>changes</a>)</li>
+  <li>Fixed compilation from Visual Studio. (<a href='https://github.com/sharpdx/SharpDX/commit/77fe7026c8e147d11aea5bb12ae8d82e6a606518' target='_blank'>changes</a>)</li>
+  <li>Restored BeforeClean target to delete generated files as it causes issues only when Visual Studio &apos;Rebuild&apos; command is used. (<a href='https://github.com/sharpdx/SharpDX/commit/a08e2359f0a98c1acc534f5e7e42489caa85b1bf' target='_blank'>changes</a>)</li>
+  <li>Update license (<a href='https://github.com/sharpdx/SharpDX/commit/484f76aa9c7b59945ff0936831b4a6b6def6927d' target='_blank'>changes</a>)</li>
+  <li>Update version to 2.6.3 for dev (<a href='https://github.com/sharpdx/SharpDX/commit/c16d2983ee64521199f4813e180483a89f7745df' target='_blank'>changes</a>)</li>
+</ul>
+<h4>Direct2D1</h4>
+<ul>
+  <li>Added ComputeFlatteningTolerance function (#417). (<a href='https://github.com/sharpdx/SharpDX/commit/5366e7f9c8bed538781a301b4206fa4f306ceeb7' target='_blank'>changes</a>)</li>
+</ul>
+<h4>Direct3D10</h4>
+<ul>
+  <li>Fixed Query.IsDataAvailable to correctly process the result returned from native function (#476). (<a href='https://github.com/sharpdx/SharpDX/commit/108bdc72399f060d3ab40dba63a0717d73e87c90' target='_blank'>changes</a>)</li>
+</ul>
+<h4>DirectInput</h4>
+<ul>
+  <li>Fixed typos in the mapping file (#482). (<a href='https://github.com/sharpdx/SharpDX/commit/a41ec4cb965ae19271e325a789d4ba1e52b73642' target='_blank'>changes</a>)</li>
+</ul>
+<h4>MediaFoundation</h4>
+<ul>
+  <li>Fixed DLL binding for MFCreateSingWriterFrom* functions. (<a href='https://github.com/sharpdx/SharpDX/commit/d8fb59d1edcadb77c493522fdf98509513fe633d' target='_blank'>changes</a>)</li>
+  <li>SourceReader.GetCurrentMediaType passes index through properly (<a href='https://github.com/sharpdx/SharpDX/commit/af53b7a51db57e992722a7873d7086a2aa75c439' target='_blank'>changes</a>)</li>
+</ul>
+<h4>Misc</h4>
+<ul>
+  <li>Adding MFCreateSinkWriterFromMediaSink and MFCreateSinkWriterFromURL back to W8CORE. (<a href='https://github.com/sharpdx/SharpDX/commit/f7a09c1364b977dee246353a9443fb79be254896' target='_blank'>changes</a>)</li>
+  <li>Fixed dictionary serialization of reference values (<a href='https://github.com/sharpdx/SharpDX/commit/69bbbd22b969a7c5fcd5869054390d12c12f328c' target='_blank'>changes</a>)</li>
+  <li>Fixed serialization of Dictionary reference values (<a href='https://github.com/sharpdx/SharpDX/commit/a4e4673df86f866ebd374ce7efe31feddf6a642e' target='_blank'>changes</a>)</li>
+  <li>Revert &quot;Fixed serialization of Dictionary reference values&quot; (<a href='https://github.com/sharpdx/SharpDX/commit/0eacfba0c11f9ddd48617cdab0e3a554a2b7c2ed' target='_blank'>changes</a>)</li>
+</ul>
+<h4>RawInput</h4>
+<ul>
+  <li>Added logic to remove trailing null char from device name (#492). (<a href='https://github.com/sharpdx/SharpDX/commit/499326918d96c874a16ef93a11ba5159e32aa820' target='_blank'>changes</a>)</li>
+</ul>
+<h4>SharpDX</h4>
+<ul>
+  <li>Fixed MathUtil.Gauss function (#489). (<a href='https://github.com/sharpdx/SharpDX/commit/2c5d6d7b58bdcf66ffb494dd8eb82557d88c079b' target='_blank'>changes</a>)</li>
+  <li>Fixed Plane-Ray intersection (#438). (<a href='https://github.com/sharpdx/SharpDX/commit/7a7f10018b4c1bb3606db3971fbfdfaded675cc4' target='_blank'>changes</a>)</li>
+  <li>Hack ObjectTracker.Track to allow to get a stacktrace on Windows Store Apps. Only for dev time, do not use in production! (<a href='https://github.com/sharpdx/SharpDX/commit/9fc5b65f40a0aed19a1fcfed097d2262a9661c70' target='_blank'>changes</a>)</li>
+  <li>Removed Utilities.LoadLibrary from WinRT and WP8 builds (#420). (<a href='https://github.com/sharpdx/SharpDX/commit/12588327c37cf18e20ccea7116147aedbfa86a65' target='_blank'>changes</a>)</li>
+  <li>Restored Quaternion.RotationLookAtRH/LH (<a href='https://github.com/sharpdx/SharpDX/commit/771978a82d69f7c7da7f5807b497f1dd4c4e2165' target='_blank'>changes</a>)</li>
+  <li>Revised Quaternion, Matrix3x3 and Matrix LookAt and Billboard methods (<a href='https://github.com/sharpdx/SharpDX/commit/1293f99e4af8a128f062af3156275c7963285a15' target='_blank'>changes</a>)</li>
+</ul>
+<h4>SharpDX.XAudio2</h4>
+<ul>
+  <li>Added USeFilter enum-item back to VoiceFlags. (<a href='https://github.com/sharpdx/SharpDX/commit/3f9931e53ebf0b46d185aa3e1c9ad8eddcaa6400' target='_blank'>changes</a>)</li>
+</ul>
+<h4>Toolkit</h4>
+<ul>
+  <li>Changed keyframes to SrtTransforms and added linear keyframe reduction (<a href='https://github.com/sharpdx/SharpDX/commit/e6f37bf20e4da9bdfe0c6171efa6b3bf273fee84' target='_blank'>changes</a>)</li>
+  <li>First pass on model animation (<a href='https://github.com/sharpdx/SharpDX/commit/bb76fe3f6bde4e3989a56cb61c7b77c316425845' target='_blank'>changes</a>)</li>
+  <li>Fixes to ModelCompiler and preparation of data structures (<a href='https://github.com/sharpdx/SharpDX/commit/7e5cb70d77544101c7d309c3fbd1bd2e32f26d7d' target='_blank'>changes</a>)</li>
+  <li>Forced ModelCompiler to collect all bones for now, and updated data structures (<a href='https://github.com/sharpdx/SharpDX/commit/71fa40ec6c77e84a4a2bf0c0c6b949e99ef1a380' target='_blank'>changes</a>)</li>
+  <li>More documentation and cleanup. (<a href='https://github.com/sharpdx/SharpDX/commit/05d4f67aa03f38706deb1bebad4d0e52f44bd5e9' target='_blank'>changes</a>)</li>
+  <li>Renamed SrtTransform to CompositeTransform (<a href='https://github.com/sharpdx/SharpDX/commit/80d946923e972699269db2eeaf58d7e4a633ed7b' target='_blank'>changes</a>)</li>
+  <li>Updated license date (<a href='https://github.com/sharpdx/SharpDX/commit/82f6b0352190d80237f976e39197a79b36483707' target='_blank'>changes</a>)</li>
+</ul>
+<h4>Toolkit WPF</h4>
+<ul>
+  <li>Change D3d11Image.Dispose to execute on the it&apos;s dispatcher thread. (<a href='https://github.com/sharpdx/SharpDX/commit/72a73dd10c1ae2337393b9574f82367e273012e5' target='_blank'>changes</a>)</li>
+  <li>Fix exceptions with D3D9 DeviceEx. (<a href='https://github.com/sharpdx/SharpDX/commit/98a73719c1c8c19a0c450e9166f74ffe88f016e2' target='_blank'>changes</a>)</li>
+</ul>
+<h4>Toolkit.Compiler</h4>
+<ul>
+  <li>Added check for non-existing collections (<a href='https://github.com/sharpdx/SharpDX/commit/4fcd95c87e28106246bfbdd9ece6cf3c192ee39d' target='_blank'>changes</a>)</li>
+  <li>Bounding spheres of skinned meshes are now calculated in mesh space (in default pose), instead of bone space. (<a href='https://github.com/sharpdx/SharpDX/commit/f4a3d1fb53a5685f2d20a5d4ba114eff8e667a1a' target='_blank'>changes</a>)</li>
+  <li>Create bones before referencing them, while creating meshes (<a href='https://github.com/sharpdx/SharpDX/commit/9d712270020c0500b8ec3bffd4e65a47e3730c63' target='_blank'>changes</a>)</li>
+  <li>Fixed bind transform calculation. (This is unwieldy, since Assimp does not provide the actual bind pose) (<a href='https://github.com/sharpdx/SharpDX/commit/9d59a15659a011b15643f58a5b4fe7cf77073749' target='_blank'>changes</a>)</li>
+  <li>Fixed bind transforms for meshes that have additional tranformations in bind pose (<a href='https://github.com/sharpdx/SharpDX/commit/556a3529cda27142e317ae2294a4daf446c8640c' target='_blank'>changes</a>)</li>
+  <li>Revert to using offset matrices, as &quot;improvised&quot; bind poses didn&apos;t achieve the actual intent to 1. Effortlessly support additive animations 2. Share skinning matrices between multiple models (<a href='https://github.com/sharpdx/SharpDX/commit/c41159830d5ddc20787844b09107a1e18ca90dac' target='_blank'>changes</a>)</li>
+</ul>
+<h4>Toolkit.Game</h4>
+<ul>
+  <li>Added AnimationSystem (<a href='https://github.com/sharpdx/SharpDX/commit/c11dd303cb514c869280bfd5f25b946e07b37967' target='_blank'>changes</a>)</li>
+  <li>Fixed merge conflict (#380). (<a href='https://github.com/sharpdx/SharpDX/commit/6a95c8fac4f03e9dd378ff0f66c3fb3261e992c9' target='_blank'>changes</a>)</li>
+  <li>Improved SharpDXElement to avoid memory leaks and to make element reusable between multiple Load/Unload calls. (<a href='https://github.com/sharpdx/SharpDX/commit/5ea239dc7303750a70aaaa0d6d67f265ee973ad5' target='_blank'>changes</a>)</li>
+</ul>
+<h4>Toolkit.Graphics</h4>
+<ul>
+  <li>Added possibility to dispose WicHelper to avoid messages about undisposed objects (#370). (<a href='https://github.com/sharpdx/SharpDX/commit/3752d927c9b4f3e347951bed62c21200e5e943fc' target='_blank'>changes</a>)</li>
+  <li>Added selector for depth-stencil subresources (<a href='https://github.com/sharpdx/SharpDX/commit/3925b5b380bda84371343de70716ed5ff7d75cd8' target='_blank'>changes</a>)</li>
+  <li>Fixed disposal of effect pools for deferred GraphicsDevice (#480). (<a href='https://github.com/sharpdx/SharpDX/commit/3b2f73b94cf4c7fc4b08496dcef9aa3c63ecd6d6' target='_blank'>changes</a>)</li>
+  <li>Fixed PrimitiveBatchBase drawing of non-indexed primitives (#481). (<a href='https://github.com/sharpdx/SharpDX/commit/336a400aa43cf0faeca2a37859514acfcf9ecafd' target='_blank'>changes</a>)</li>
+  <li>Fixed size calculation for multisampled TextureView (<a href='http://code.google.com/p/sharpdx/issues/detail?id=425' target='_blank'>issue #425</a>) (<a href='https://github.com/sharpdx/SharpDX/commit/db52c2b47cc8501e19d2ad2ddf3aceefdd75011a' target='_blank'>changes</a>)</li>
+  <li>Fixed SwapChain2 instance creation to avoid silend AccessViolationException on dispose (#477). (<a href='https://github.com/sharpdx/SharpDX/commit/c0691a5835ec7f8028fcb442882d817b84d2f08f' target='_blank'>changes</a>)</li>
+</ul>
+<h4>Toolkit.Input</h4>
+<ul>
+  <li>Breaking changes on MouseManager.GetState(). Add MouseState.DeltaX/DeltaY. Make WheelDelta a real delta between updates. Only update mouse position on update instead of GetState() (#464) (<a href='https://github.com/sharpdx/SharpDX/commit/eaa9029d93b6b7046de30ef94833c8bcbc1363ea' target='_blank'>changes</a>)</li>
+  <li>Fix comments (#464) (<a href='https://github.com/sharpdx/SharpDX/commit/7b12e311ab55a715c6d34b5b0a5c2f895ef6d51c' target='_blank'>changes</a>)</li>
+  <li>Fixed memory garbage generation while checking button states (#497). (<a href='https://github.com/sharpdx/SharpDX/commit/a4f91bca550d18c7bb64679a9f86898edb40b0da' target='_blank'>changes</a>)</li>
+</ul>
+<h4>XAudio2</h4>
+<ul>
+  <li>Added constructors to Source/Submix voices to add effect chains (<a href='https://github.com/sharpdx/SharpDX/commit/ec975ac3deac8f15b915193d241de182a38b24c6' target='_blank'>changes</a>)</li>
+  <li>Attempt to fix memory leak in X3DAudio.Calculate (#393). (<a href='https://github.com/sharpdx/SharpDX/commit/6318cc56a4ff307f5b0e619332b428db05e16e61' target='_blank'>changes</a>)</li>
+  <li>Fixed compilation - removed unused namespaces (#461). (<a href='https://github.com/sharpdx/SharpDX/commit/37ea198a2c0c18d608f61b875d352fde5135dde7' target='_blank'>changes</a>)</li>
+  <li>Fixed empty array handling for Voice.SetOutputVoices method (#483). (<a href='https://github.com/sharpdx/SharpDX/commit/4af91b9f748d7aea97554c0ca2024440bc4015bb' target='_blank'>changes</a>)</li>
+  <li>Fixed Voice.SetOutputVoices(...) to allow routing to null (#483). (<a href='https://github.com/sharpdx/SharpDX/commit/7d1c4fdcd6fcc5b8889caff8a62de4e10da0594b' target='_blank'>changes</a>)</li>
+</ul>
     </body>
 </html>

@@ -230,12 +230,12 @@ namespace SharpDX.Toolkit.Graphics
                 throw new ArgumentNullException("indices", "Indices cannot be null.");
             }
 
-            if (indexCount >= maxIndices)
+            if (indexCount > maxIndices)
             {
                 throw new ArgumentException("Too many indices", "indexCount");
             }
 
-            if (vertexCount >= maxVertices)
+            if (vertexCount > maxVertices)
             {
                 throw new ArgumentException("Too many vertices");
             }
