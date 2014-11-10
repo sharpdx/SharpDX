@@ -19,10 +19,7 @@
 // THE SOFTWARE.
 
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 [assembly: AssemblyProduct("SharpDX.Mathematics")]
 [assembly: AssemblyTitle("SharpDX.Mathematics")]
 [assembly: AssemblyDescription("Assembly providing Mathematics managed API")]
-
-[assembly: InternalsVisibleTo("SharpDX.Toolkit")]
