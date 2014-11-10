@@ -183,10 +183,18 @@ namespace SharpDX.XAudio2
                 if (outputVoices != null)
                 {
                     var tempSendDescriptor = new VoiceSendDescriptors {SendCount = outputVoices.Length};
-                    fixed (void* pVoiceSendDescriptors = &outputVoices[0])
+
+                    if(outputVoices.Length > 0)
                     {
-                        tempSendDescriptor.SendPointer = (IntPtr)pVoiceSendDescriptors;
-                        SetOutputVoices(tempSendDescriptor);
+                        fixed(void* pVoiceSendDescriptors = &outputVoices[0])
+                        {
+                            tempSendDescriptor.SendPointer = (IntPtr)pVoiceSendDescriptors;
+                            SetOutputVoices(tempSendDescriptor);
+                        }
+                    }
+                    else
+                    {
+                        tempSendDescriptor.SendPointer = IntPtr.Zero;
                     }
                 }
                 else

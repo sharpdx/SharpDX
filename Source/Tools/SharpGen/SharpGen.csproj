@@ -62,16 +62,16 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|WP8-x86'">
-    <DefineConstants>TRACE;DEBUG;WP8;DIRECTX11_1</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WP8;W8CORE;DIRECTX11_1</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|WP8-x86'">
-    <DefineConstants>TRACE;WP8;DIRECTX11_1</DefineConstants>
+    <DefineConstants>TRACE;WP8;W8CORE;DIRECTX11_1</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|WP8-ARM'">
-    <DefineConstants>TRACE;DEBUG;WP8;DIRECTX11_1</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WP8;W8CORE;DIRECTX11_1</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|WP8-ARM'">
-    <DefineConstants>TRACE;WP8;DIRECTX11_1</DefineConstants>
+    <DefineConstants>TRACE;WP8;W8CORE;DIRECTX11_1</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|DIRECTX11_2'">
     <DefineConstants>TRACE;DEBUG;DIRECTX11_1;DIRECTX11_2</DefineConstants>
@@ -80,10 +80,10 @@
     <DefineConstants>TRACE;DIRECTX11_1;DIRECTX11_2</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win8' ">
-    <DefineConstants>TRACE;DEBUG;WIN8METRO;DIRECTX11_1;DIRECTX11_2</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WIN8METRO;W8CORE;DIRECTX11_1;DIRECTX11_2</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win8' ">
-    <DefineConstants>TRACE;WIN8METRO;DIRECTX11_1;DIRECTX11_2</DefineConstants>
+    <DefineConstants>TRACE;WIN8METRO;W8CORE;DIRECTX11_1;DIRECTX11_2</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|WP81' ">
     <DefineConstants>TRACE;DEBUG;W8CORE;WP81;WIN8METRO;DIRECTX11_1;DIRECTX11_2</DefineConstants>

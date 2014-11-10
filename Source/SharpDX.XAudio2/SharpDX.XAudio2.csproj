@@ -49,6 +49,7 @@
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="SourceVoice.cs" />
     <Compile Include="SubmixVoice.cs" />
+    <Compile Include="SubmixVoiceFlags.cs" />
     <Compile Include="Voice.cs" />
     <Compile Include="VoiceShadow.cs" />
     <Compile Include="X3DAudio\DistanceCurve.cs" />

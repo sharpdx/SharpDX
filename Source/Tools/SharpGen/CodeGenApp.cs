@@ -40,7 +40,7 @@ namespace SharpGen
         /// </summary>
         public CodeGenApp()
         {
-            Macros = new List<string>();
+            Macros = new HashSet<string>();
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace SharpGen
         /// <value>
         /// The macros.
         /// </value>
-        public List<string> Macros { get; set; }
+        public HashSet<string> Macros { get; set; }
 
         private ConfigFile Config { get; set; }
 
@@ -152,26 +152,25 @@ namespace SharpGen
 
             Logger.Message("Loading config files...");
 
-#if WIN8METRO
-            // Load configuration
-            Macros.Add("WIN8METRO");
+#if W8CORE
             Macros.Add("W8CORE");
+#endif
+#if WIN8METRO
+            Macros.Add("WIN8METRO");
 #endif
 #if WP81
             Macros.Add("WP81");
 #endif
 #if WP8
-            // Load configuration
             Macros.Add("WP8");
-            Macros.Add("W8CORE");
 #endif
 #if DIRECTX11_2
-            // Load configuration
             Macros.Add("DIRECTX11_2");
+#endif
+#if DIRECTX11_1
             Macros.Add("DIRECTX11_1");
-#elif DIRECTX11_1
-            Macros.Add("DIRECTX11_1");
-#else
+#endif
+#if !DIRECTX11_1 && !DIRECTX11_2
             if (GccXml.GetWindowsFramework7Version("7.0a", "7.1") == "7.0a")
             {
                 Macros.Add("WINSDK_70a");

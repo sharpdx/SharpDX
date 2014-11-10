@@ -37,6 +37,8 @@ namespace SharpDX.Toolkit.Input
         internal ButtonState xButton2;
         internal float x;
         internal float y;
+        internal float deltaX;
+        internal float deltaY;
         internal int wheelDelta;
 
         /// <summary>
@@ -50,7 +52,7 @@ namespace SharpDX.Toolkit.Input
         /// <param name="x">X-position of the mouse cursor</param>
         /// <param name="y">Y-position of the mouse cursor</param>
         /// <param name="wheelDelta">Delta of mouse wheel relative to previous input event</param>
-        public MouseState(ButtonState leftButton, ButtonState middleButton, ButtonState rightButton, ButtonState xButton1, ButtonState xButton2, float x, float y, int wheelDelta)
+        public MouseState(ButtonState leftButton, ButtonState middleButton, ButtonState rightButton, ButtonState xButton1, ButtonState xButton2, float x, float y, float deltaX, float deltaY, int wheelDelta)
         {
             this.leftButton = leftButton;
             this.middleButton = middleButton;
@@ -59,6 +61,8 @@ namespace SharpDX.Toolkit.Input
             this.xButton2 = xButton2;
             this.x = x;
             this.y = y;
+            this.deltaX = deltaX;
+            this.deltaY = deltaY;
             this.wheelDelta = wheelDelta;
         }
 
@@ -98,9 +102,30 @@ namespace SharpDX.Toolkit.Input
         public float Y { get { return y; } }
 
         /// <summary>
-        /// Gets the cumulative mouse scroll wheel value since the game was started.
+        /// Gets the delta on x since the previous update.
         /// </summary>
-        public int WheelDelta { get { return wheelDelta; } }
+        /// <value>The delta x.</value>
+        public float DeltaX
+        {
+            get { return deltaX; }
+        }
+
+        /// <summary>
+        /// Gets the delta y since the previous update.
+        /// </summary>
+        /// <value>The delta y.</value>
+        public float DeltaY
+        {
+            get { return deltaY; }
+        }
+
+        /// <summary>
+        /// Gets the mouse scroll wheel value since the previous update.
+        /// </summary>
+        public int WheelDelta
+        {
+            get { return wheelDelta; }
+        }
 
         public bool Equals(MouseState other)
         {

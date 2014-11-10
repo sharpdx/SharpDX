@@ -43,8 +43,7 @@
     <context>xaudio2</context>
     <context>xaudio2fx</context>
     <create-cpp enum="XAUDIO2_VOICE_SEND_FLAGS" macro="XAUDIO2_SEND_(USEFILTER)" />
-    <create-cpp enum="XAUDIO2_SUBMIX_VOICE_FLAGS" macro="XAUDIO2_VOICE_USEFILTER" />
-    <create-cpp enum="XAUDIO2_VOICE_FLAGS" macro="XAUDIO2_VOICE_[^U].*" />
+    <create-cpp enum="XAUDIO2_VOICE_FLAGS" macro="XAUDIO2_VOICE_.*" />
     <create-cpp enum="XAUDIO2_FLAGS" macro="XAUDIO2_DEBUG_ENGINE" />
     <create-cpp enum="XAUDIO2_PLAY_FLAGS" macro="XAUDIO2_PLAY_.*" />
     <create-cpp enum="XAUDIO2_LOG_TYPE" macro="XAUDIO2_LOG_.*" />
@@ -178,8 +177,6 @@
     <map enum-item="XAUDIO2_VOICE_NOSRC" name="NoSampleRateConversion"/>
     <map enum-item="XAUDIO2_VOICE_USEFILTER" name="UseFilter"/>
     <map enum-item="XAUDIO2_VOICE_MUSIC" name="Music"/>
-
-    <map enum="XAUDIO2_SUBMIX_VOICE_FLAGS" name="SubmixVoiceFlags" />
     
     <map enum-item="XAUDIO2_SEND_(USEFILTER)" name="UseFilter"/>
 
@@ -244,7 +241,6 @@
     <map param="IXAudio2::CreateSourceVoice::ppSourceVoice" attribute="out fast" />
     <map param="IXAudio2::CreateSubmixVoice::ppSubmixVoice" attribute="out fast" />
     <map param="IXAudio2::CreateSourceVoice::Flags" type="XAUDIO2_VOICE_FLAGS" />
-    <map param="IXAudio2::CreateSubmixVoice::Flags" type="XAUDIO2_SUBMIX_VOICE_FLAGS" />
     <map param="IXAudio2::CreateSourceVoice::pSourceFormat" type="void" />
     <map method="IXAudio2Voice::SetEffectChain" visibility="internal" property="false" />
     <map param="IXAudio2::SetDebugConfiguration::pDebugConfiguration" attribute="in value"/>

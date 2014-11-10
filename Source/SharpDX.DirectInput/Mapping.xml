@@ -842,7 +842,7 @@
     <map struct="DIDEVICEIMAGEINFOW" name="DeviceImage"/>
     <map struct="DIDEVICEIMAGEINFOHEADERW" name="DeviceImageHeader"/>
     <map struct="DIEFFECT" name="EffectParameters"/>
-    <map struct="DIDEVICEOBJECTDATA" name="ObjectData" visbility="internal"/>
+    <map struct="DIDEVICEOBJECTDATA" name="ObjectData" visibility="internal"/>
     <remove struct="DICONFIGUREDEVICESPARAMSW"/>
     <remove struct="DICOLORSET"/>
     <map struct="DIEFFESCAPE" name="EffectEscape" visibility="internal"/>
@@ -1033,8 +1033,8 @@
     <map param="IDirectInputDevice8W::SendDeviceData::arg1" attribute="in buffer"/>
     <map param="IDirectInputDevice8W::SendDeviceData::arg2" attribute="inout"/>
 
-    <map method="IDirectInputDevice8W::SetDataFormat" visibility="internal" propery="false"/>
-    <map method="IDirectInputDevice8W::SetEventNotification" visibility="internal" propery="false"/>
+    <map method="IDirectInputDevice8W::SetDataFormat" visibility="internal" property="false"/>
+    <map method="IDirectInputDevice8W::SetEventNotification" visibility="internal" property="false"/>
 
     <map param="IDirectInputDevice8W::SetCooperativeLevel::arg1" type="DISCL"/>
 

@@ -97,7 +97,7 @@ namespace SharpDX.Mathematics
             int bInt = *(int*)&b;
 
             // Different signs means they do not match.
-            if((aInt < 0) != (bInt < 0))
+            if ((aInt < 0) != (bInt < 0))
                 return false;
 
             // Find the difference in ULPs.
@@ -425,38 +425,42 @@ namespace SharpDX.Mathematics
 
         /// <summary>
         /// Gauss function.
+        /// http://en.wikipedia.org/wiki/Gaussian_function#Two-dimensional_Gaussian_function
         /// </summary>
         /// <param name="amplitude">Curve amplitude.</param>
         /// <param name="x">Position X.</param>
         /// <param name="y">Position Y</param>
-        /// <param name="radX">Radius X.</param>
-        /// <param name="radY">Radius Y.</param>
+        /// <param name="centerX">Center X.</param>
+        /// <param name="centerY">Center Y.</param>
         /// <param name="sigmaX">Curve sigma X.</param>
         /// <param name="sigmaY">Curve sigma Y.</param>
         /// <returns>The result of Gaussian function.</returns>
-        public static float Gauss(float amplitude, float x, float y, float radX, float radY, float sigmaX, float sigmaY)
+        public static float Gauss(float amplitude, float x, float y, float centerX, float centerY, float sigmaX, float sigmaY)
         {
-            return (float)Gauss((double)amplitude, x, y, radX, radY, sigmaX, sigmaY);
+            return (float)Gauss((double)amplitude, x, y, centerX, centerY, sigmaX, sigmaY);
         }
 
         /// <summary>
         /// Gauss function.
+        /// http://en.wikipedia.org/wiki/Gaussian_function#Two-dimensional_Gaussian_function
         /// </summary>
         /// <param name="amplitude">Curve amplitude.</param>
         /// <param name="x">Position X.</param>
         /// <param name="y">Position Y</param>
-        /// <param name="radX">Radius X.</param>
-        /// <param name="radY">Radius Y.</param>
+        /// <param name="centerX">Center X.</param>
+        /// <param name="centerY">Center Y.</param>
         /// <param name="sigmaX">Curve sigma X.</param>
         /// <param name="sigmaY">Curve sigma Y.</param>
         /// <returns>The result of Gaussian function.</returns>
-        public static double Gauss(double amplitude, double x, double y, double radX, double radY, double sigmaX, double sigmaY)
+        public static double Gauss(double amplitude, double x, double y, double centerX, double centerY, double sigmaX, double sigmaY)
         {
-            return (amplitude * Math.E) -
-                (
-                    Math.Pow(x - (radX / 2), 2) / (2 * Math.Pow(sigmaX, 2)) +
-                    Math.Pow(y - (radY / 2), 2) / (2 * Math.Pow(sigmaY, 2))
-                );
+            var cx = x - centerX;
+            var cy = y - centerY;
+
+            var componentX = (cx * cx) / (2 * sigmaX * sigmaX);
+            var componentY = (cy * cy) / (2 * sigmaY * sigmaY);
+
+            return amplitude * Math.Exp(-(componentX + componentY));
         }
     }
 }
