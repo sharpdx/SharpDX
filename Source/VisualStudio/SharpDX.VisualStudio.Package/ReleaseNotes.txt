@@ -1,3 +1,0 @@
-SharpDX Toolkit For Visual Studio
-Version 1.2 - 2014-05-10
-- Add support for SharpDX 2.6.0 with nuget packages
