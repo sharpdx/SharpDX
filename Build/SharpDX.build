@@ -212,12 +212,12 @@
 
   <Target Name="ZipBuild">
     <Delete Files="$(SharpDXDevZip)"/>
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(SharpDXRepo)\External\7-Zip\7z.exe a -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.pri -xr!*.exp $(SharpDXDevZip) Bin\*\*.* Build\SharpDX.targets Build\SharpDX.Toolkit.targets License.txt CommitLog.txt Readme.md'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(SharpDXRepo)\External\7-Zip\7z.exe a -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.pri -xr!*.exp $(SharpDXDevZip) Bin\*\*.* Build\SharpDX.targets License.txt CommitLog.txt Readme.md'/>
   </Target>
 
   <Target Name="ZipRelease">
     <Delete Files="$(SharpDXReleaseZip)"/>
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(SharpDXRepo)\External\7-Zip\7z.exe a -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.pri -xr!*.exp $(SharpDXReleaseZip) Bin\*\*.* Build\SharpDX.targets Build\SharpDX.Toolkit.targets License.txt ReleaseNotes.html Readme.md'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(SharpDXRepo)\External\7-Zip\7z.exe a -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.pri -xr!*.exp $(SharpDXReleaseZip) Bin\*\*.* Build\SharpDX.targets License.txt ReleaseNotes.html Readme.md'/>
   </Target>
 
   <Target Name="LocalCopy">
