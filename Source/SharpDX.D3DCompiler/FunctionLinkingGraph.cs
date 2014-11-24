@@ -142,6 +142,24 @@ namespace SharpDX.D3DCompiler
         {
             PassValue(sourceNode, ReturnParameterIndex, destinationNode, destinationParameterIndex);
         }
+
+        /// <summary>	
+        /// <p>Generates Microsoft High Level Shader Language (HLSL) shader code that represents the function-linking-graph.</p>	
+        /// </summary>	
+        /// <param name="uFlags"><dd>  <p>Reserved</p> </dd></param>	
+        /// <returns>Hlsl code as c# string</returns>
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D11FunctionLinkingGraph::GenerateHlsl']/*"/>	
+        /// <msdn-id>dn280538</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11FunctionLinkingGraph::GenerateHlsl([In] unsigned int uFlags,[Out] ID3D10Blob** ppBuffer)</unmanaged>	
+        /// <unmanaged-short>ID3D11FunctionLinkingGraph::GenerateHlsl</unmanaged-short>	
+        public string GenerateHlsl(int uFlags)
+        {
+            Blob blob;
+            GenerateHlsl(uFlags, out blob);
+            string code = Utilities.BlobToString(blob);
+            blob.Dispose();
+            return code;
+        }
     }
 }
 
