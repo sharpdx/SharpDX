@@ -1,3 +1,3 @@
 LIBRARY
 EXPORTS
-D3DX11CreateEffectFromMemory=_D3DX11CreateEffectFromMemory@24
+D3DX11CreateEffectFromMemory
