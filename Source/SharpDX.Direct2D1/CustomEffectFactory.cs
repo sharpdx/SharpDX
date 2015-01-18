@@ -47,11 +47,16 @@ namespace SharpDX.Direct2D1
         private XDocument xml;
 
         public CustomEffectFactory(CustomEffectFactoryDelegate factory, Type customEffectType)
+            : this (factory, customEffectType, Utilities.GetGuidFromType(customEffectType))
+        {
+        }
+
+        public CustomEffectFactory(CustomEffectFactoryDelegate factory, Type customEffectType, Guid effectId)
         {
             this.customEffectType = customEffectType;
 
             // Gets the guid of this class
-            Guid = Utilities.GetGuidFromType(customEffectType);
+            Guid = effectId;
 
             unsafe
             {

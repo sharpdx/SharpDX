@@ -83,7 +83,22 @@ namespace SharpDX.Direct2D1
         /// </remarks>	
         /// <unmanaged>HRESULT ID2D1DeviceContext::CreateEffect([In] const GUID&amp; effectId,[Out, Fast] ID2D1Effect** effect)</unmanaged>	
         public Effect(DeviceContext deviceContext)
-            : base(deviceContext, Utilities.GetGuidFromType(typeof(T)))
+            : this(deviceContext, Utilities.GetGuidFromType(typeof(T)))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of a custom <see cref="Effect"/> class.
+        /// </summary>
+        /// <param name="deviceContext">The device context.</param>
+        /// <param name="effectId">Effect ID.</param>
+        /// <exception cref="SharpDXException">If no sufficient memory to complete the call, or if it does not have enough display memory to perform the operation, or if the specified effect is not registered by the system.</exception>
+        /// <remarks>
+        /// The created effect does not increment the reference count for the dynamic-link library (DLL) from which the effect was created. If the application deletes an effect while that effect is loaded, the resulting behavior will be unpredictable.	
+        /// </remarks>	
+        /// <unmanaged>HRESULT ID2D1DeviceContext::CreateEffect([In] const GUID&amp; effectId,[Out, Fast] ID2D1Effect** effect)</unmanaged>	
+        public Effect(DeviceContext deviceContext, Guid effectId)
+            : base(deviceContext, effectId)
         {
         }
 
