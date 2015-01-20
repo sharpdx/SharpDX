@@ -1,14 +1,27 @@
-//////////////////////////////////////////////////////////////////////////////
+//--------------------------------------------------------------------------------------
+// File: d3dxGlobal.cpp
 //
-//  Copyright (C) Microsoft Corporation.  All Rights Reserved.
+// Direct3D 11 Effects implementation for helper data structures
 //
-//  File:       d3dxGlobal.cpp
-//  Content:    D3DX11 Effects implementation for helper data structures
+// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+// PARTICULAR PURPOSE.
 //
-//////////////////////////////////////////////////////////////////////////////
+// Copyright (c) Microsoft Corporation. All rights reserved.
+//
+// http://go.microsoft.com/fwlink/p/?LinkId=271568
+//--------------------------------------------------------------------------------------
 
 #include "pchfx.h"
+
+#pragma warning(push)
+#pragma warning(disable : 4005)
 #include <intsafe.h>
+#pragma warning(pop)
+
+#include <stdio.h>
+#include <stdarg.h>
 
 namespace D3DX11Core
 {
@@ -17,27 +30,26 @@ namespace D3DX11Core
 // CMemoryStream - A class to simplify reading binary data
 //////////////////////////////////////////////////////////////////////////
 
-CMemoryStream::CMemoryStream()
+CMemoryStream::CMemoryStream() : m_pData(nullptr), m_cbData(0), m_readPtr(0)
 {
-    m_pData = NULL;
-    m_cbData = 0;
-    m_readPtr = 0;
 }
 
 CMemoryStream::~CMemoryStream()
 {
 }
 
-HRESULT CMemoryStream::SetData(const void *pData, SIZE_T size)
+_Use_decl_annotations_
+HRESULT CMemoryStream::SetData(const void *pData, size_t size)
 {
-    m_pData = (BYTE*) pData;
+    m_pData = (uint8_t*) pData;
     m_cbData = size;
     m_readPtr = 0;
 
     return S_OK;
 }
 
-HRESULT CMemoryStream::ReadAtOffset(SIZE_T offset, SIZE_T size, void **ppData)
+_Use_decl_annotations_
+HRESULT CMemoryStream::ReadAtOffset(size_t offset, size_t size, void **ppData)
 {
     if (offset >= m_cbData)
         return E_FAIL;
@@ -46,7 +58,8 @@ HRESULT CMemoryStream::ReadAtOffset(SIZE_T offset, SIZE_T size, void **ppData)
     return Read(ppData, size);
 }
 
-HRESULT CMemoryStream::ReadAtOffset(SIZE_T offset, LPCSTR *ppString)
+_Use_decl_annotations_
+HRESULT CMemoryStream::ReadAtOffset(size_t offset, LPCSTR *ppString)
 {
     if (offset >= m_cbData)
         return E_FAIL;
@@ -55,9 +68,10 @@ HRESULT CMemoryStream::ReadAtOffset(SIZE_T offset, LPCSTR *ppString)
     return Read(ppString);
 }
 
-HRESULT CMemoryStream::Read(void **ppData, SIZE_T size)
+_Use_decl_annotations_
+HRESULT CMemoryStream::Read(void **ppData, size_t size)
 {
-    SIZE_T temp = m_readPtr + size;
+    size_t temp = m_readPtr + size;
 
     if (temp < m_readPtr || temp > m_cbData)
         return E_FAIL;
@@ -67,12 +81,13 @@ HRESULT CMemoryStream::Read(void **ppData, SIZE_T size)
     return S_OK;
 }
 
-HRESULT CMemoryStream::Read(UINT *pDword)
+_Use_decl_annotations_
+HRESULT CMemoryStream::Read(uint32_t *pDword)
 {
-    UINT *pTempDword;
+    uint32_t *pTempDword;
     HRESULT hr;
 
-    hr = Read((void**) &pTempDword, sizeof(UINT));
+    hr = Read((void**) &pTempDword, sizeof(uint32_t));
     if (FAILED(hr))
         return E_FAIL;
 
@@ -80,11 +95,11 @@ HRESULT CMemoryStream::Read(UINT *pDword)
     return S_OK;
 }
 
+_Use_decl_annotations_
 HRESULT CMemoryStream::Read(LPCSTR *ppString)
 {
-    SIZE_T iChar;
-
-    for(iChar=m_readPtr; m_pData[iChar]; iChar++)
+    size_t iChar=m_readPtr;
+    for(; m_pData[iChar]; iChar++)
     {
         if (iChar > m_cbData)
             return E_FAIL;      
@@ -96,12 +111,12 @@ HRESULT CMemoryStream::Read(LPCSTR *ppString)
     return S_OK;
 }
 
-SIZE_T CMemoryStream::GetPosition()
+size_t CMemoryStream::GetPosition()
 {
     return m_readPtr;
 }
 
-HRESULT CMemoryStream::Seek(SIZE_T offset)
+HRESULT CMemoryStream::Seek(_In_ size_t offset)
 {
     if (offset > m_cbData)
         return E_FAIL;
@@ -116,13 +131,13 @@ HRESULT CMemoryStream::Seek(SIZE_T offset)
 // CDataBlock - used to dynamically build up the effect file in memory
 //////////////////////////////////////////////////////////////////////////
 
-CDataBlock::CDataBlock()
+CDataBlock::CDataBlock() :
+    m_size(0),
+    m_maxSize(0),
+    m_pData(nullptr),
+    m_pNext(nullptr),
+    m_IsAligned(false)
 {
-    m_size = 0;
-    m_maxSize = 0;
-    m_pData = NULL;
-    m_pNext = NULL;
-    m_IsAligned = FALSE;
 }
 
 CDataBlock::~CDataBlock()
@@ -133,32 +148,33 @@ CDataBlock::~CDataBlock()
 
 void CDataBlock::EnableAlignment()
 {
-    m_IsAligned = TRUE;
+    m_IsAligned = true;
 }
 
-HRESULT CDataBlock::AddData(const void *pvNewData, UINT bufferSize, CDataBlock **ppBlock)
+_Use_decl_annotations_
+HRESULT CDataBlock::AddData(const void *pvNewData, uint32_t bufferSize, CDataBlock **ppBlock)
 {
     HRESULT hr = S_OK;
-    UINT bytesToCopy;
-    const BYTE *pNewData = (const BYTE*) pvNewData;
+    uint32_t bytesToCopy;
+    const uint8_t *pNewData = (const uint8_t*) pvNewData;
 
     if (m_maxSize == 0)
     {
         // This is a brand new DataBlock, fill it up
-        m_maxSize = max(8192, bufferSize);
+        m_maxSize = std::max<uint32_t>(8192, bufferSize);
 
-        VN( m_pData = NEW BYTE[m_maxSize] );
+        VN( m_pData = new uint8_t[m_maxSize] );
     }
 
-    D3DXASSERT(m_pData == AlignToPowerOf2(m_pData, c_DataAlignment));
+    assert(m_pData == AlignToPowerOf2(m_pData, c_DataAlignment));
 
-    bytesToCopy = min(m_maxSize - m_size, bufferSize);
+    bytesToCopy = std::min(m_maxSize - m_size, bufferSize);
     memcpy(m_pData + m_size, pNewData, bytesToCopy);
     pNewData += bytesToCopy;
     
     if (m_IsAligned)
     {
-        D3DXASSERT(m_size == AlignToPowerOf2(m_size, c_DataAlignment));
+        assert(m_size == AlignToPowerOf2(m_size, c_DataAlignment));
         m_size += AlignToPowerOf2(bytesToCopy, c_DataAlignment);
     }
     else
@@ -171,10 +187,10 @@ HRESULT CDataBlock::AddData(const void *pvNewData, UINT bufferSize, CDataBlock *
 
     if (bufferSize != 0)
     {
-        D3DXASSERT(NULL == m_pNext); // make sure we're not overwriting anything
+        assert(nullptr == m_pNext); // make sure we're not overwriting anything
 
         // Couldn't fit all data into this block, spill over into next
-        VN( m_pNext = NEW CDataBlock() );
+        VN( m_pNext = new CDataBlock() );
         if (m_IsAligned)
         {
             m_pNext->EnableAlignment();
@@ -186,34 +202,35 @@ lExit:
     return hr;
 }
 
-void* CDataBlock::Allocate(UINT bufferSize, CDataBlock **ppBlock)
+_Use_decl_annotations_
+void* CDataBlock::Allocate(uint32_t bufferSize, CDataBlock **ppBlock)
 {
     void *pRetValue;
-    UINT temp = m_size + bufferSize;
+    uint32_t temp = m_size + bufferSize;
 
     if (temp < m_size)
-        return NULL;
+        return nullptr;
 
     *ppBlock = this;
 
     if (m_maxSize == 0)
     {
         // This is a brand new DataBlock, fill it up
-        m_maxSize = max(8192, bufferSize);
+        m_maxSize = std::max<uint32_t>(8192, bufferSize);
 
-        m_pData = NEW BYTE[m_maxSize];
+        m_pData = new uint8_t[m_maxSize];
         if (!m_pData)
-            return NULL;
+            return nullptr;
         memset(m_pData, 0xDD, m_maxSize);
     }
     else if (temp > m_maxSize)
     {
-        D3DXASSERT(NULL == m_pNext); // make sure we're not overwriting anything
+        assert(nullptr == m_pNext); // make sure we're not overwriting anything
 
         // Couldn't fit data into this block, spill over into next
-        m_pNext = NEW CDataBlock();
+        m_pNext = new CDataBlock();
         if (!m_pNext)
-            return NULL;
+            return nullptr;
         if (m_IsAligned)
         {
             m_pNext->EnableAlignment();
@@ -222,12 +239,12 @@ void* CDataBlock::Allocate(UINT bufferSize, CDataBlock **ppBlock)
         return m_pNext->Allocate(bufferSize, ppBlock);
     }
 
-    D3DXASSERT(m_pData == AlignToPowerOf2(m_pData, c_DataAlignment));
+    assert(m_pData == AlignToPowerOf2(m_pData, c_DataAlignment));
 
     pRetValue = m_pData + m_size;
     if (m_IsAligned)
     {
-        D3DXASSERT(m_size == AlignToPowerOf2(m_size, c_DataAlignment));
+        assert(m_size == AlignToPowerOf2(m_size, c_DataAlignment));
         m_size = AlignToPowerOf2(temp, c_DataAlignment);
     }
     else
@@ -241,14 +258,13 @@ void* CDataBlock::Allocate(UINT bufferSize, CDataBlock **ppBlock)
 
 //////////////////////////////////////////////////////////////////////////
 
-CDataBlockStore::CDataBlockStore()
+CDataBlockStore::CDataBlockStore() :
+    m_pFirst(nullptr),
+    m_pLast(nullptr),
+    m_Size(0),
+    m_Offset(0),
+    m_IsAligned(false)
 {
-    m_pFirst = NULL;
-    m_pLast = NULL;
-    m_Size = 0;
-    m_Offset = 0;
-    m_IsAligned = FALSE;
-
 #if _DEBUG
     m_cAllocations = 0;
 #endif
@@ -262,7 +278,7 @@ CDataBlockStore::~CDataBlockStore()
     {
         CDataBlock* pCurrent = pData;
         pData = pData->m_pNext;
-        pCurrent->m_pNext = NULL;
+        pCurrent->m_pNext = nullptr;
         delete pCurrent;
     }
 
@@ -271,17 +287,19 @@ CDataBlockStore::~CDataBlockStore()
 
 void CDataBlockStore::EnableAlignment()
 {
-    m_IsAligned = TRUE;
+    m_IsAligned = true;
 }
 
-HRESULT CDataBlockStore::AddString(LPCSTR pString, UINT *pOffset)
+_Use_decl_annotations_
+HRESULT CDataBlockStore::AddString(LPCSTR pString, uint32_t *pOffset)
 {
     size_t strSize = strlen(pString) + 1;
-    D3DXASSERT( strSize <= 0xffffffff );
-    return AddData(pString, (UINT)strSize, pOffset);
+    assert( strSize <= 0xffffffff );
+    return AddData(pString, (uint32_t)strSize, pOffset);
 }
 
-HRESULT CDataBlockStore::AddData(const void *pNewData, UINT bufferSize, UINT *pCurOffset)
+_Use_decl_annotations_
+HRESULT CDataBlockStore::AddData(const void *pNewData, uint32_t bufferSize, uint32_t *pCurOffset)
 {
     HRESULT hr = S_OK;
 
@@ -296,7 +314,7 @@ HRESULT CDataBlockStore::AddData(const void *pNewData, UINT bufferSize, UINT *pC
 
     if (!m_pFirst)
     {
-        VN( m_pFirst = NEW CDataBlock() );
+        VN( m_pFirst = new CDataBlock() );
         if (m_IsAligned)
         {
             m_pFirst->EnableAlignment();
@@ -314,9 +332,9 @@ lExit:
     return hr;
 }
 
-void* CDataBlockStore::Allocate(UINT bufferSize)
+void* CDataBlockStore::Allocate(_In_ uint32_t bufferSize)
 {
-    void *pRetValue = NULL;
+    void *pRetValue = nullptr;
 
 #if _DEBUG
     m_cAllocations++;
@@ -324,9 +342,9 @@ void* CDataBlockStore::Allocate(UINT bufferSize)
 
     if (!m_pFirst)
     {
-        m_pFirst = NEW CDataBlock();
+        m_pFirst = new CDataBlock();
         if (!m_pFirst)
-            return NULL;
+            return nullptr;
 
         if (m_IsAligned)
         {
@@ -336,16 +354,41 @@ void* CDataBlockStore::Allocate(UINT bufferSize)
     }
 
     if (FAILED(UIntAdd(m_Size, bufferSize, &m_Size)))
-        return NULL;
+        return nullptr;
 
     pRetValue = m_pLast->Allocate(bufferSize, &m_pLast);
     if (!pRetValue)
-        return NULL;
+        return nullptr;
 
     return pRetValue;
 }
 
-UINT CDataBlockStore::GetSize()
+uint32_t CDataBlockStore::GetSize()
 {
     return m_Size;
 }
+
+
+//////////////////////////////////////////////////////////////////////////
+
+#ifdef _DEBUG
+void __cdecl D3DXDebugPrintf(UINT lvl, LPCSTR szFormat, ...)
+{
+    UNREFERENCED_PARAMETER(lvl);
+
+    char strA[4096];
+    char strB[4096];
+
+    va_list ap;
+    va_start(ap, szFormat);
+    vsprintf_s(strA, sizeof(strA), szFormat, ap);
+    strA[4095] = '\0';
+    va_end(ap);
+
+    sprintf_s(strB, sizeof(strB), "Effects11: %s\r\n", strA);
+
+    strB[4095] = '\0';
+
+    OutputDebugStringA(strB);
+}
+#endif // _DEBUG

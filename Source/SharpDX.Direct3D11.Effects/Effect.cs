@@ -31,10 +31,11 @@ namespace SharpDX.Direct3D11
         /// <param name="device">The device.</param>
         /// <param name="effectByteCode">The effect byte code.</param>
         /// <param name="fxFlags">Effect compile options</param>
-        public unsafe Effect(Device device, byte[] effectByteCode, EffectFlags fxFlags = EffectFlags.None)
+        /// <param name="srcName">Name of the effect source file.</param>
+        public unsafe Effect(Device device, byte[] effectByteCode, EffectFlags fxFlags = EffectFlags.None, string srcName = "<unknown>")
         {
             fixed (void* ptr = effectByteCode)
-                D3DX11Effects.CreateEffectFromMemory((IntPtr)ptr, effectByteCode.Length, (int)fxFlags, device, this);
+                D3DX11Effects.CreateEffectFromMemory((IntPtr)ptr, effectByteCode.Length, (int)fxFlags, device, this, srcName);
         }
    }
 }

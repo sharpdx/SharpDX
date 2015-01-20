@@ -35,6 +35,7 @@
     <Compile Include="Mathematics\Interop\RawColor4.cs" />
     <Compile Include="Mathematics\Interop\RawColorBGRA.cs" />
     <Compile Include="Diagnostics\VSGraphicsDebugger.cs" />
+    <Compile Include="DisposeEventArgs.cs" />
     <Compile Include="Mathematics\Interop\RawInt3.cs" />
     <Compile Include="Mathematics\Interop\RawInt4.cs" />
     <Compile Include="Mathematics\Interop\RawMatrix.cs" />
