@@ -172,7 +172,7 @@ namespace SharpDX.MediaFoundation
             CheckIfDisposed();
 
             // Set the position
-            sourceReader.SetCurrentPosition((long)(startingPositionInSeconds.TotalSeconds * 1e7));
+            sourceReader.SetCurrentPosition((long)(startingPositionInSeconds.Ticks));
 
             while (true)
             {
