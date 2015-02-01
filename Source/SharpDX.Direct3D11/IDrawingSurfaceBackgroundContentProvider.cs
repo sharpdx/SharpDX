@@ -77,18 +77,17 @@ namespace SharpDX.Direct3D11
         private DrawingSurfaceRuntimeHost host;
         private Device device;
         private DeviceContext context;
-        private Queue<RenderTargetView> renderTargetViewQueue = new Queue<RenderTargetView>(3);
+        private RenderTargetView[] renderTargetViewCache = new RenderTargetView[3];
+        int renderTargetViewCacheIdx = 0;
+
 
         private void ClearPointers()
         {
             CleanPointer(ref host);
             CleanPointer(ref device);
             CleanPointer(ref context);
-            while (renderTargetViewQueue.Count>0)
-            {
-                var renderTargetView = renderTargetViewQueue.Dequeue();
-                CleanPointer(ref renderTargetView);
-            }
+            for (int i = 0; i < renderTargetViewCache.Length; i++)
+                CleanPointer(ref renderTargetViewCache[i]);
         }
 
         /// <summary>
@@ -187,27 +186,22 @@ namespace SharpDX.Direct3D11
                         shadow.context = new DeviceContext(hostDeviceContext);
                     }
 
-                    var queue = shadow.renderTargetViewQueue;
+                    var cache = shadow.renderTargetViewCache;
                     RenderTargetView renderTargetView = null;
                     // circle through the queue and search for cached hostRenderTargetView
-                    for (int i = 0; i < queue.Count; i++)
-                    {   
-                        renderTargetView = queue.Dequeue();
-                        queue.Enqueue(renderTargetView);
-                        if (renderTargetView.NativePointer == hostRenderTargetView) break;
+                    for (int i = 0; i < cache.Length; i++)
+                    {
+                        renderTargetView = cache[shadow.renderTargetViewCacheIdx];
+                        shadow.renderTargetViewCacheIdx = (++shadow.renderTargetViewCacheIdx) % 3;
+                        if (renderTargetView!=null && renderTargetView.NativePointer == hostRenderTargetView) break;
                         renderTargetView = null;
                     }
-                    if(renderTargetView == null)
+                    if (renderTargetView == null)
                     {
-                        // clear oldest item when queue is full (count == 3) 
-                        if(queue.Count == 3)
-                        {
-                            var oldestRenderTargetView = queue.Dequeue();
-                            CleanPointer(ref oldestRenderTargetView); 
-                        }
-                        //create new
+                        CleanPointer(ref cache[shadow.renderTargetViewCacheIdx]);
                         renderTargetView = new RenderTargetView(hostRenderTargetView);
-                        queue.Enqueue(renderTargetView);
+                        cache[shadow.renderTargetViewCacheIdx] = renderTargetView;
+                        shadow.renderTargetViewCacheIdx = (++shadow.renderTargetViewCacheIdx) % 3;
                     }
 
                     callback.Draw(shadow.device, shadow.context, renderTargetView);
