@@ -190,7 +190,7 @@ namespace SharpDX.Direct3D11
                     var queue = shadow.renderTargetViewQueue;
                     RenderTargetView renderTargetView = null;
                     // circle through the queue and search for cached hostRenderTargetView
-                    for (int i = 0; i < queue.Count && !found; i++)
+                    for (int i = 0; i < queue.Count; i++)
                     {   
                         renderTargetView = queue.Dequeue();
                         queue.Enqueue(renderTargetView);
