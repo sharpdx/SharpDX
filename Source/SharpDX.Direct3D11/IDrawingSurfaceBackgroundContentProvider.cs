@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 #if WP8
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace SharpDX.Direct3D11
@@ -76,14 +77,18 @@ namespace SharpDX.Direct3D11
         private DrawingSurfaceRuntimeHost host;
         private Device device;
         private DeviceContext context;
-        private RenderTargetView renderTargetView;
+        private Queue<RenderTargetView> renderTargetViewQueue = new Queue<RenderTargetView>(3);
 
         private void ClearPointers()
         {
             CleanPointer(ref host);
             CleanPointer(ref device);
             CleanPointer(ref context);
-            CleanPointer(ref renderTargetView);
+            while (renderTargetViewQueue.Count>0)
+            {
+                var renderTargetView = renderTargetViewQueue.Dequeue();
+                CleanPointer(ref renderTargetView);
+            }
         }
 
         /// <summary>
@@ -182,13 +187,30 @@ namespace SharpDX.Direct3D11
                         shadow.context = new DeviceContext(hostDeviceContext);
                     }
 
-                    if(shadow.renderTargetView == null || shadow.renderTargetView.NativePointer != hostRenderTargetView)
+                    var queue = shadow.renderTargetViewQueue;
+                    RenderTargetView renderTargetView = null;
+                    // circle through the queue and search for cached hostRenderTargetView
+                    for (int i = 0; i < queue.Count && !found; i++)
+                    {   
+                        renderTargetView = queue.Dequeue();
+                        queue.Enqueue(renderTargetView);
+                        if (renderTargetView.NativePointer == hostRenderTargetView) break;
+                        renderTargetView = null;
+                    }
+                    if(renderTargetView == null)
                     {
-                        CleanPointer(ref shadow.renderTargetView);
-                        shadow.renderTargetView = new RenderTargetView(hostRenderTargetView);
+                        // clear oldest item when queue is full (count == 3) 
+                        if(queue.Count == 3)
+                        {
+                            var oldestRenderTargetView = queue.Dequeue();
+                            CleanPointer(ref oldestRenderTargetView); 
+                        }
+                        //create new
+                        renderTargetView = new RenderTargetView(hostRenderTargetView);
+                        queue.Enqueue(renderTargetView);
                     }
 
-                    callback.Draw(shadow.device, shadow.context, shadow.renderTargetView);
+                    callback.Draw(shadow.device, shadow.context, renderTargetView);
                 }
                 catch (Exception exception)
                 {
