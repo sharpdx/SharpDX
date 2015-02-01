@@ -76,14 +76,17 @@ namespace SharpDX.Direct3D11
         private DrawingSurfaceRuntimeHost host;
         private Device device;
         private DeviceContext context;
-        private RenderTargetView renderTargetView;
+        private RenderTargetView[] renderTargetViewCache = new RenderTargetView[3];
+        int renderTargetViewCacheIdx = 0;
+
 
         private void ClearPointers()
         {
             CleanPointer(ref host);
             CleanPointer(ref device);
             CleanPointer(ref context);
-            CleanPointer(ref renderTargetView);
+            for (int i = 0; i < renderTargetViewCache.Length; i++)
+                CleanPointer(ref renderTargetViewCache[i]);
         }
 
         /// <summary>
@@ -182,13 +185,25 @@ namespace SharpDX.Direct3D11
                         shadow.context = new DeviceContext(hostDeviceContext);
                     }
 
-                    if(shadow.renderTargetView == null || shadow.renderTargetView.NativePointer != hostRenderTargetView)
+                    var cache = shadow.renderTargetViewCache;
+                    RenderTargetView renderTargetView = null;
+                    // circle through the queue and search for cached hostRenderTargetView
+                    for (int i = 0; i < cache.Length; i++)
                     {
-                        CleanPointer(ref shadow.renderTargetView);
-                        shadow.renderTargetView = new RenderTargetView(hostRenderTargetView);
+                        renderTargetView = cache[shadow.renderTargetViewCacheIdx];
+                        shadow.renderTargetViewCacheIdx = (++shadow.renderTargetViewCacheIdx) % 3;
+                        if (renderTargetView!=null && renderTargetView.NativePointer == hostRenderTargetView) break;
+                        renderTargetView = null;
+                    }
+                    if (renderTargetView == null)
+                    {
+                        CleanPointer(ref cache[shadow.renderTargetViewCacheIdx]);
+                        renderTargetView = new RenderTargetView(hostRenderTargetView);
+                        cache[shadow.renderTargetViewCacheIdx] = renderTargetView;
+                        shadow.renderTargetViewCacheIdx = (++shadow.renderTargetViewCacheIdx) % 3;
                     }
 
-                    callback.Draw(shadow.device, shadow.context, shadow.renderTargetView);
+                    callback.Draw(shadow.device, shadow.context, renderTargetView);
                 }
                 catch (Exception exception)
                 {
