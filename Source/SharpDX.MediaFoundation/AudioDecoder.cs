@@ -151,7 +151,7 @@ namespace SharpDX.MediaFoundation
         /// This method is only working as a single enumerator at a time.
         /// The <see cref="SetSourceStream(System.IO.Stream)"/> must be set before calling <see cref="GetSamples()"/>
         /// </remarks>
-        public IEnumerable<DataPointer> GetSamples(TimeSpan startingPositionInSeconds)
+        public IEnumerable<DataPointer> GetSamples(TimeSpan startingPosition)
         {
             // A new reader is setup, so initialize it.
             lock (sourceReaderLock)
@@ -173,7 +173,7 @@ namespace SharpDX.MediaFoundation
             CheckIfDisposed();
 
             // Set the position
-            sourceReader.SetCurrentPosition((long)(startingPositionInSeconds.TotalSeconds * 1e7));
+            sourceReader.SetCurrentPosition((long)(startingPositionInSeconds.Ticks));
 
             while (true)
             {
