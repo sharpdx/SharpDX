@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,7 @@
 using System;
 using SharpDX.DirectWrite;
 using SharpDX.DXGI;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1
 {
@@ -83,7 +84,7 @@ namespace SharpDX.Direct2D1
         /// <param name="opacity">A value between 0.0f and 1.0f, inclusive, that specifies an opacity value to apply to the bitmap; this value is multiplied against the alpha values of the bitmap's contents.  The default value is 1.0f. </param>
         /// <param name="interpolationMode">The interpolation mode to use if the bitmap is scaled or rotated by the drawing operation. The default value is <see cref="SharpDX.Direct2D1.BitmapInterpolationMode.Linear"/>.  </param>
         /// <unmanaged>void ID2D1RenderTarget::DrawBitmap([In] ID2D1Bitmap* bitmap,[In, Optional] const D2D1_RECT_F* destinationRectangle,[None] float opacity,[None] D2D1_BITMAP_INTERPOLATION_MODE interpolationMode,[In, Optional] const D2D1_RECT_F* sourceRectangle)</unmanaged>
-        public void DrawBitmap(SharpDX.Direct2D1.Bitmap bitmap, SharpDX.RectangleF destinationRectangle, float opacity, SharpDX.Direct2D1.BitmapInterpolationMode interpolationMode)
+        public void DrawBitmap(SharpDX.Direct2D1.Bitmap bitmap, RawRectangleF destinationRectangle, float opacity, SharpDX.Direct2D1.BitmapInterpolationMode interpolationMode)
         {
             DrawBitmap(bitmap, destinationRectangle, opacity, interpolationMode, null);
         }
@@ -99,7 +100,7 @@ namespace SharpDX.Direct2D1
         /// <param name="interpolationMode">The interpolation mode to use if the bitmap is scaled or rotated by the drawing operation. The default value is <see cref="F:SharpDX.Direct2D1.BitmapInterpolationMode.Linear" />.  </param>
         /// <param name="sourceRectangle">The size and position, in device-independent pixels in the bitmap's coordinate space, of the area within the bitmap to be drawn; NULL to draw the entire bitmap.  </param>
         /// <unmanaged>void ID2D1RenderTarget::DrawBitmap([In] ID2D1Bitmap* bitmap,[In, Optional] const D2D1_RECT_F* destinationRectangle,[None] float opacity,[None] D2D1_BITMAP_INTERPOLATION_MODE interpolationMode,[In, Optional] const D2D1_RECT_F* sourceRectangle)</unmanaged>
-        public void DrawBitmap(Bitmap bitmap, float opacity, BitmapInterpolationMode interpolationMode, RectangleF sourceRectangle)
+        public void DrawBitmap(Bitmap bitmap, float opacity, BitmapInterpolationMode interpolationMode, RawRectangleF sourceRectangle)
         {
             DrawBitmap(bitmap, null, opacity, interpolationMode, sourceRectangle);
         }
@@ -172,7 +173,7 @@ namespace SharpDX.Direct2D1
         /// <param name="point1">The end point of the line, in device-independent pixels. </param>
         /// <param name="brush">The brush used to paint the line's stroke. </param>
         /// <unmanaged>void ID2D1RenderTarget::DrawLine([None] D2D1_POINT_2F point0,[None] D2D1_POINT_2F point1,[In] ID2D1Brush* brush,[None] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle)</unmanaged>
-        public void DrawLine(Vector2 point0, Vector2 point1, Brush brush)
+        public void DrawLine(RawVector2 point0, RawVector2 point1, Brush brush)
         {
             DrawLine(point0, point1, brush, StrokeWidth, null);
         }
@@ -188,7 +189,7 @@ namespace SharpDX.Direct2D1
         /// <param name="brush">The brush used to paint the line's stroke. </param>
         /// <param name="strokeWidth">A value greater than or equal to 0.0f that specifies the width of the stroke. If this parameter isn't specified, it defaults to 1.0f.  The stroke is centered on the line. </param>
         /// <unmanaged>void ID2D1RenderTarget::DrawLine([None] D2D1_POINT_2F point0,[None] D2D1_POINT_2F point1,[In] ID2D1Brush* brush,[None] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle)</unmanaged>
-        public void DrawLine(Vector2 point0, Vector2 point1, Brush brush, float strokeWidth)
+        public void DrawLine(RawVector2 point0, RawVector2 point1, Brush brush, float strokeWidth)
         {
             DrawLine(point0, point1, brush, strokeWidth, null);
         }
@@ -202,7 +203,7 @@ namespace SharpDX.Direct2D1
         /// <param name="rect">The dimensions of the rectangle to draw, in device-independent pixels. </param>
         /// <param name="brush">The brush used to paint the rectangle's stroke. </param>
         /// <unmanaged>void ID2D1RenderTarget::DrawRectangle([In] const D2D1_RECT_F* rect,[In] ID2D1Brush* brush,[None] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle)</unmanaged>
-        public void DrawRectangle(RectangleF rect, Brush brush)
+        public void DrawRectangle(RawRectangleF rect, Brush brush)
         {
             DrawRectangle(rect, brush, StrokeWidth, null);
         }
@@ -217,7 +218,7 @@ namespace SharpDX.Direct2D1
         /// <param name="brush">The brush used to paint the rectangle's stroke. </param>
         /// <param name="strokeWidth">A value greater than or equal to 0.0f that specifies the width of the rectangle's stroke. The stroke is centered on the rectangle's outline. </param>
         /// <unmanaged>void ID2D1RenderTarget::DrawRectangle([In] const D2D1_RECT_F* rect,[In] ID2D1Brush* brush,[None] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle)</unmanaged>
-        public void DrawRectangle(RectangleF rect, Brush brush, float strokeWidth)
+        public void DrawRectangle(RawRectangleF rect, Brush brush, float strokeWidth)
         {
             DrawRectangle(rect, brush, strokeWidth, null);
         }
@@ -278,7 +279,7 @@ namespace SharpDX.Direct2D1
         /// <param name="layoutRect">The size and position of the area in which the text is drawn.  </param>
         /// <param name="defaultForegroundBrush">The brush used to paint the text. </param>
         /// <unmanaged>void ID2D1RenderTarget::DrawTextA([In, Buffer] const wchar_t* string,[None] int stringLength,[In] IDWriteTextFormat* textFormat,[In] const D2D1_RECT_F* layoutRect,[In] ID2D1Brush* defaultForegroundBrush,[None] D2D1_DRAW_TEXT_OPTIONS options,[None] DWRITE_MEASURING_MODE measuringMode)</unmanaged>
-        public void DrawText(string text, TextFormat textFormat, RectangleF layoutRect, Brush defaultForegroundBrush)
+        public void DrawText(string text, TextFormat textFormat, RawRectangleF layoutRect, Brush defaultForegroundBrush)
         {
             DrawText(text, text.Length, textFormat, layoutRect, defaultForegroundBrush, DrawTextOptions.None, MeasuringMode.Natural);
         }
@@ -295,7 +296,7 @@ namespace SharpDX.Direct2D1
         /// <param name="defaultForegroundBrush">The brush used to paint the text. </param>
         /// <param name="options">A value that indicates whether the text should be snapped to pixel boundaries and whether the text should be clipped to the layout rectangle. The default value is <see cref="F:SharpDX.Direct2D1.DrawTextOptions.None" />, which indicates that text should be snapped to pixel boundaries and it should not be clipped to the layout rectangle. </param>
         /// <unmanaged>void ID2D1RenderTarget::DrawTextA([In, Buffer] const wchar_t* string,[None] int stringLength,[In] IDWriteTextFormat* textFormat,[In] const D2D1_RECT_F* layoutRect,[In] ID2D1Brush* defaultForegroundBrush,[None] D2D1_DRAW_TEXT_OPTIONS options,[None] DWRITE_MEASURING_MODE measuringMode)</unmanaged>
-        public void DrawText(string text, TextFormat textFormat, RectangleF layoutRect, Brush defaultForegroundBrush, DrawTextOptions options)
+        public void DrawText(string text, TextFormat textFormat, RawRectangleF layoutRect, Brush defaultForegroundBrush, DrawTextOptions options)
         {
             DrawText(text, text.Length, textFormat, layoutRect, defaultForegroundBrush, options, MeasuringMode.Natural);
         }
@@ -313,7 +314,7 @@ namespace SharpDX.Direct2D1
         /// <param name="options">A value that indicates whether the text should be snapped to pixel boundaries and whether the text should be clipped to the layout rectangle. The default value is <see cref="F:SharpDX.Direct2D1.DrawTextOptions.None" />, which indicates that text should be snapped to pixel boundaries and it should not be clipped to the layout rectangle. </param>
         /// <param name="measuringMode">A value that indicates how glyph metrics are used to measure text when it is formatted.  The default value is DWRITE_MEASURING_MODE_NATURAL.  </param>
         /// <unmanaged>void ID2D1RenderTarget::DrawTextA([In, Buffer] const wchar_t* string,[None] int stringLength,[In] IDWriteTextFormat* textFormat,[In] const D2D1_RECT_F* layoutRect,[In] ID2D1Brush* defaultForegroundBrush,[None] D2D1_DRAW_TEXT_OPTIONS options,[None] DWRITE_MEASURING_MODE measuringMode)</unmanaged>
-        public void DrawText(string text, TextFormat textFormat, RectangleF layoutRect, Brush defaultForegroundBrush, DrawTextOptions options, MeasuringMode measuringMode)
+        public void DrawText(string text, TextFormat textFormat, RawRectangleF layoutRect, Brush defaultForegroundBrush, DrawTextOptions options, MeasuringMode measuringMode)
         {
             DrawText(text, text.Length, textFormat, layoutRect, defaultForegroundBrush, options, measuringMode);
         }
@@ -328,7 +329,7 @@ namespace SharpDX.Direct2D1
         /// <param name="textLayout">The formatted text to draw. Any drawing effects that do not inherit from <see cref="T:SharpDX.Direct2D1.Resource" /> are ignored. If there are drawing effects that inherit from ID2D1Resource that are not brushes, this method fails and the render target is put in an error state.  </param>
         /// <param name="defaultForegroundBrush">The brush used to paint any text in textLayout that does not already have a brush associated with it as a drawing effect (specified by the <see cref="M:SharpDX.DirectWrite.TextLayout.SetDrawingEffect(SharpDX.ComObject,SharpDX.DirectWrite.TextRange)" /> method).  </param>
         /// <unmanaged>void ID2D1RenderTarget::DrawTextLayout([None] D2D1_POINT_2F origin,[In] IDWriteTextLayout* textLayout,[In] ID2D1Brush* defaultForegroundBrush,[None] D2D1_DRAW_TEXT_OPTIONS options)</unmanaged>
-        public void DrawTextLayout(Vector2 origin, TextLayout textLayout, Brush defaultForegroundBrush)
+        public void DrawTextLayout(RawVector2 origin, TextLayout textLayout, Brush defaultForegroundBrush)
         {
             DrawTextLayout(origin, textLayout, defaultForegroundBrush, DrawTextOptions.None);
         }

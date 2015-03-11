@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D9
 {
@@ -123,7 +124,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXBaseEffect::SetMatrix([In] D3DXHANDLE hConstant,[In] const D3DXMATRIX* pMatrix)</unmanaged>
-        public void SetValue(EffectHandle effectHandle, Matrix value)
+        public void SetValue(EffectHandle effectHandle, RawMatrix value)
         {
             SetMatrix(effectHandle, ref value);
         }
@@ -137,7 +138,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXBaseEffect::SetVector([In] D3DXHANDLE hConstant,[In] const D3DXVECTOR4* pVector)</unmanaged>
-        public void SetValue(EffectHandle effectHandle, Vector4 value)
+        public void SetValue(EffectHandle effectHandle, RawVector4 value)
         {
             SetVector(effectHandle, value);
         }
@@ -212,7 +213,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXBaseEffect::SetMatrixArray([In] D3DXHANDLE hConstant,[In, Buffer] const D3DXMATRIX* pMatrix,[In] unsigned int Count)</unmanaged>
-        public void SetValue(EffectHandle effectHandle, Matrix[] values)
+        public void SetValue(EffectHandle effectHandle, RawMatrix[] values)
         {
             SetMatrixArray(effectHandle, values, values.Length);
         }
@@ -226,7 +227,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXBaseEffect::SetVectorArray([In] D3DXHANDLE hConstant,[In, Buffer] const D3DXVECTOR4* pVector,[In] unsigned int Count)</unmanaged>
-        public void SetValue(EffectHandle effectHandle, Vector4[] values)
+        public void SetValue(EffectHandle effectHandle, RawVector4[] values)
         {
             SetVectorArray(effectHandle, values, values.Length);
         }

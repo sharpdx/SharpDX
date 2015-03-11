@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,6 +17,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using SharpDX.Mathematics.Interop;
 #if !WIN8METRO
 using System;
 
@@ -186,7 +188,7 @@ namespace SharpDX.Direct3D11
         /// <unmanaged>HRESULT ID3D10EffectScalarVariable::GetBool([Out] BOOL* pValue)</unmanaged>
         public bool GetBool()
         {
-            Bool temp;
+            RawBool temp;
             GetBool(out temp);
             return temp;
         }
@@ -223,7 +225,7 @@ namespace SharpDX.Direct3D11
         /// <unmanaged>HRESULT ID3D10EffectScalarVariable::GetBoolArray([Out, Buffer] BOOL* pData,[None] int Offset,[None] int Count)</unmanaged>
         public bool[] GetBoolArray(int offset, int count)
         {
-            Bool[] temp = new Bool[count];
+            RawBool[] temp = new RawBool[count];
             GetBoolArray(temp, offset, count);
             return Utilities.ConvertToBoolArray(temp);
         }        

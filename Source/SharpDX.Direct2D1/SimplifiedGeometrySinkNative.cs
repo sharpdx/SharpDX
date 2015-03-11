@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,6 +17,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1
 {
@@ -41,7 +43,7 @@ namespace SharpDX.Direct2D1
         /// Creates a sequence of lines using the specified points and adds them to the geometry sink.
         /// </summary>
         /// <param name="points">An array of one or more points that describe the lines to draw. A line is drawn from the geometry sink's current point (the end point of the last segment drawn or the location specified by <strong>BeginFigure</strong>) to the first point in the array. If the array contains additional points, a line is drawn from the first point to the second point in the array, from the second point to the third point, and so on.</param>
-        public void AddLines(Vector2[] points)
+        public void AddLines(RawVector2[] points)
         {
             AddLines_(points, points.Length);
         }
@@ -54,7 +56,7 @@ namespace SharpDX.Direct2D1
         /// <remarks>
         /// If this method is called while a figure is currently in progress, the interface is invalidated and all future methods will fail.
         /// </remarks>
-        public void BeginFigure(Vector2 startPoint, FigureBegin figureBegin)
+        public void BeginFigure(RawVector2 startPoint, FigureBegin figureBegin)
         {
             BeginFigure_(startPoint, figureBegin);
         }

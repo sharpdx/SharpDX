@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,31 +32,20 @@
     <iconUrl>http://sharpdx.org/logo_100x100.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Assembly providing DirectX - Direct3D11, Direct3D11.1 and Effects11 managed API.</description>
-    <copyright>Copyright (c) 2010-2013 Alexandre Mutel</copyright>
+    <copyright>Copyright (c) 2010-2014 Alexandre Mutel</copyright>
     <tags>SharpDX DirectX Direct3D MDX 3D Direct3D11 D3D11 Effects11</tags>
     <!-- Release notes for this version-->
     <releaseNotes></releaseNotes>
     <dependencies>
       <dependency id="SharpDX" version="$version$"/>
-      <dependency id="SharpDX.D3DCompiler" version="$version$"/>
       <dependency id="SharpDX.DXGI" version="$version$"/>
     </dependencies>
   </metadata>
 
   <files>
-    <file src="..\..\Bin\DirectX11-Signed-net20\SharpDX.Direct3D11.dll" target="lib\net20" />
-    <file src="..\..\Bin\DirectX11-Signed-net20\SharpDX.Direct3D11.pdb" target="lib\net20" />
-    <file src="..\..\Bin\DirectX11-Signed-net20\SharpDX.Direct3D11.xml" target="lib\net20" />
-
-    <file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.Direct3D11.dll" target="lib\net40" />
-    <file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.Direct3D11.pdb" target="lib\net40" />
-    <file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.Direct3D11.xml" target="lib\net40" />
-
-    <file src="..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.Direct3D11.dll" target="lib\win8" />
-    <file src="..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.Direct3D11.pdb" target="lib\win8" />
-    <file src="..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.Direct3D11.xml" target="lib\win8" />
-
-    <file src="**\*.cs" target="src" />
+    <file src="..\dummy.txt" target="lib" />
+    <file src="..\Install.ps1" target="tools\Install.ps1" />
+    <file src="..\UnInstall.ps1" target="tools\UnInstall.ps1" />
   </files>
   
 </package>

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -285,12 +285,11 @@ namespace SharpDX
                 // If object is disposed by the finalizer, emits a warning
                 if(!disposing && Configuration.EnableTrackingReleaseOnFinalizer)
                 {
-                    var objectReference = ObjectTracker.Find(this);
-                    var additionalMessage = Configuration.EnableReleaseOnFinalizer
-                                                ? "will be released automatically"
-                                                : "memory leak detected";
-
-                    System.Diagnostics.Debug.WriteLine(string.Format("Warning: Live ComObject, {0}: {1}", additionalMessage, objectReference));
+                    if(!Configuration.EnableReleaseOnFinalizer)
+                    {
+                        var objectReference = ObjectTracker.Find(this);
+                        System.Diagnostics.Debug.WriteLine(string.Format("Warning: Live ComObject [0x{0:X}], potential memory leak: {1}", NativePointer.ToInt64(), objectReference));
+                    }
                 }
 
                 // Release the object
@@ -299,7 +298,7 @@ namespace SharpDX
 
                 // Untrack the object
                 if (Configuration.EnableObjectTracking)
-                    ObjectTracker.UnTrack(this);                
+                    ObjectTracker.UnTrack(this);
 
                 // Set pointer to null (using protected members in order to avoid NativePointerUpdat* callbacks.
                 _nativePointer = (void*)0;

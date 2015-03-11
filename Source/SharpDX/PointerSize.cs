@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,11 @@ namespace SharpDX
     public struct PointerSize
     {
         private IntPtr _size;
+
+        /// <summary>
+        /// An empty pointer size initialized to zero.
+        /// </summary>
+        public static readonly PointerSize Zero = new PointerSize(0);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PointerSize"/> struct.

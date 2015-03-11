@@ -21,6 +21,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 using SharpDX.Win32;
 using SharpDX.IO;
 
@@ -179,7 +180,7 @@ namespace SharpDX.MediaFoundation
         {
             get
             {
-                Bool result;
+                RawBool result;
                 IsEndOfStream_(out result);
                 return result;
             }

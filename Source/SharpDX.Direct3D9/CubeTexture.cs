@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +21,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D9
 {
@@ -157,7 +158,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="DataRectangle"/> describing the region locked.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DCubeTexture9::LockRect([In] D3DCUBEMAP_FACES FaceType,[In] unsigned int Level,[In] D3DLOCKED_RECT* pLockedRect,[In] const void* pRect,[In] D3DLOCK Flags)</unmanaged>
-        public DataRectangle LockRectangle(SharpDX.Direct3D9.CubeMapFace faceType, int level, Rectangle rectangle, SharpDX.Direct3D9.LockFlags flags) {
+        public DataRectangle LockRectangle(SharpDX.Direct3D9.CubeMapFace faceType, int level, RawRectangle rectangle, SharpDX.Direct3D9.LockFlags flags) {
             unsafe
             {
                 LockedRectangle lockedRect;
@@ -178,7 +179,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="DataRectangle"/> describing the region locked.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DCubeTexture9::LockRect([In] D3DCUBEMAP_FACES FaceType,[In] unsigned int Level,[In] D3DLOCKED_RECT* pLockedRect,[In] const void* pRect,[In] D3DLOCK Flags)</unmanaged>
-        public DataRectangle LockRectangle(SharpDX.Direct3D9.CubeMapFace faceType, int level, Rectangle rectangle, SharpDX.Direct3D9.LockFlags flags, out DataStream stream)
+        public DataRectangle LockRectangle(SharpDX.Direct3D9.CubeMapFace faceType, int level, RawRectangle rectangle, SharpDX.Direct3D9.LockFlags flags, out DataStream stream)
         {
             unsafe
             {
@@ -207,7 +208,7 @@ namespace SharpDX.Direct3D9
         /// <param name="dirtyRectRef">The dirty rect ref.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT IDirect3DCubeTexture9::AddDirtyRect([In] D3DCUBEMAP_FACES FaceType,[In] const void* pDirtyRect)</unmanaged>
-        public void AddDirtyRectangle(SharpDX.Direct3D9.CubeMapFace faceType, Rectangle dirtyRectRef)
+        public void AddDirtyRectangle(SharpDX.Direct3D9.CubeMapFace faceType, RawRectangle dirtyRectRef)
         {
             unsafe
             {
@@ -705,7 +706,7 @@ namespace SharpDX.Direct3D9
                 pool,
                 (int)filter,
                 (int)mipFilter,
-                (Color)colorKey,
+                *(RawColorBGRA*)&colorKey,
                 imageInformation,
                 palette,
                 out cubeTexture);
@@ -732,7 +733,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="CubeTexture"/>
         /// </returns>
         /// <unmanaged>HRESULT D3DXCreateCubeTextureFromFileInMemoryEx([In] IDirect3DDevice9* pDevice,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] unsigned int Size,[In] unsigned int MipLevels,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[In] unsigned int Filter,[In] unsigned int MipFilter,[In] D3DCOLOR ColorKey,[Out] D3DXIMAGE_INFO* pSrcInfo,[Out, Buffer] PALETTEENTRY* pPalette,[In] IDirect3DCubeTexture9** ppCubeTexture)</unmanaged>
-        private static CubeTexture CreateFromFile(Device device, string fileName, int size, int levelCount, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey, IntPtr imageInformation, PaletteEntry[] palette)
+        private unsafe static CubeTexture CreateFromFile(Device device, string fileName, int size, int levelCount, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey, IntPtr imageInformation, PaletteEntry[] palette)
         {
             CubeTexture cubeTexture;
             D3DX9.CreateCubeTextureFromFileExW(
@@ -745,7 +746,7 @@ namespace SharpDX.Direct3D9
                 pool,
                 (int)filter,
                 (int)mipFilter,
-                (Color)colorKey,
+                *(RawColorBGRA*)&colorKey, 
                 imageInformation,
                 palette,
                 out cubeTexture);

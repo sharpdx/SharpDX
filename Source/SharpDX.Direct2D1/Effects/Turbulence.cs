@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,10 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
-using System;
-using System.Collections.Generic;
-using System.Text;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1.Effects
 {
@@ -44,7 +43,7 @@ namespace SharpDX.Direct2D1.Effects
         /// <remarks>
         /// The offset does not have the same effect as a translation because the noise function output is infinite and the function will wrap around the tile.
         /// </remarks>
-        public Vector2 Offset
+        public RawVector2 Offset
         {
             get
             {
@@ -61,7 +60,7 @@ namespace SharpDX.Direct2D1.Effects
         /// A value of 1 (1/DIPs) for the base frequency results in the Perlin noise completing an entire cycle between two pixels. The ease interpolation for these pixels results in completely random pixels, since there is no correlation between the pixels.
         /// A value of 0.1(1/DIPs) for the base frequency, the Perlin noise function repeats every 10 DIPs. This results in correlation between pixels and the typical turbulence effect is visible
         /// </summary>
-        public Vector2 BaseFrequency
+        public RawVector2 BaseFrequency
         {
             get
             {

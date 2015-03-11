@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,7 @@
 using System;
 
 using SharpDX.Direct2D1;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.DirectWrite
 {
@@ -30,7 +31,7 @@ namespace SharpDX.DirectWrite
         ///  IDWriteTextLayout::Draw calls this function to instruct the client to render a run of glyphs. 	
         /// </summary>	
         /// <remarks>	
-        /// The <see cref="SharpDX.DirectWrite.TextLayout.Draw_"/> function calls this callback function with all the information about glyphs to render. The application implements this callback by mostly delegating the call to the underlying platform's graphics API such as {{Direct2D}} to draw glyphs on the drawing context. An application that uses GDI can implement this callback in terms of the <see cref="BitmapRenderTarget.DrawGlyphRun(float,float,MeasuringMode,SharpDX.DirectWrite.GlyphRun,SharpDX.DirectWrite.RenderingParams,SharpDX.Color4)"/> method.	
+        /// The <see cref="SharpDX.DirectWrite.TextLayout.Draw_"/> function calls this callback function with all the information about glyphs to render. The application implements this callback by mostly delegating the call to the underlying platform's graphics API such as {{Direct2D}} to draw glyphs on the drawing context. An application that uses GDI can implement this callback in terms of the <see cref="BitmapRenderTarget.DrawGlyphRun(float,float,MeasuringMode,SharpDX.DirectWrite.GlyphRun,SharpDX.DirectWrite.RenderingParams,RawColor4)"/> method.	
         /// </remarks>	
         /// <param name="clientDrawingContext">The application-defined drawing context passed to  <see cref="SharpDX.DirectWrite.TextLayout.Draw_"/>.</param>
         /// <param name="baselineOriginX">The pixel location (X-coordinate) at the baseline origin of the glyph run.</param>

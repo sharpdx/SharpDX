@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 using System;
 using System.Drawing;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D9
 {
@@ -175,7 +176,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9Ex::PresentEx([In] const void* pSourceRect,[In] const void* pDestRect,[In] HWND hDestWindowOverride,[In] const RGNDATA* pDirtyRegion,[In] unsigned int dwFlags)</unmanaged>
-        public void PresentEx(Present flags, Rectangle sourceRectangle, Rectangle destinationRectangle)
+        public void PresentEx(Present flags, RawRectangle sourceRectangle, RawRectangle destinationRectangle)
         {
             PresentEx(flags, sourceRectangle, destinationRectangle, IntPtr.Zero);
         }
@@ -191,7 +192,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9Ex::PresentEx([In] const void* pSourceRect,[In] const void* pDestRect,[In] HWND hDestWindowOverride,[In] const RGNDATA* pDirtyRegion,[In] unsigned int dwFlags)</unmanaged>
-        public void PresentEx(Present flags, Rectangle sourceRectangle, Rectangle destinationRectangle, IntPtr windowOverride)
+        public void PresentEx(Present flags, RawRectangle sourceRectangle, RawRectangle destinationRectangle, IntPtr windowOverride)
         {
             unsafe
             {
@@ -211,7 +212,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9Ex::PresentEx([In] const void* pSourceRect,[In] const void* pDestRect,[In] HWND hDestWindowOverride,[In] const RGNDATA* pDirtyRegion,[In] unsigned int dwFlags)</unmanaged>
-        public void PresentEx(Present flags, Rectangle sourceRectangle, Rectangle destinationRectangle, IntPtr windowOverride, Region region)
+        public void PresentEx(Present flags, RawRectangle sourceRectangle, RawRectangle destinationRectangle, IntPtr windowOverride, Region region)
         {
             unsafe
             {

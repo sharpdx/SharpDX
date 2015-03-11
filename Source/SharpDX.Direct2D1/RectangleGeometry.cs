@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1
 {
@@ -28,7 +29,7 @@ namespace SharpDX.Direct2D1
         /// </summary>	
         /// <param name="factory">an instance of <see cref = "SharpDX.Direct2D1.Factory" /></param>
         /// <param name="rectangle">The coordinates of the rectangle geometry. </param>
-        public RectangleGeometry(Factory factory, RectangleF rectangle)
+        public RectangleGeometry(Factory factory, RawRectangleF rectangle)
             : base(IntPtr.Zero)
         {
             factory.CreateRectangleGeometry(rectangle, this);

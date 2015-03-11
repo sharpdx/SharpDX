@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ namespace SharpDX
     /// This class doesn't validate the position read/write from. It is the responsibility of the client of this class
     /// to verify that access is done within the size of the buffer.
     /// </remarks>
-    public class DataBuffer : Component
+    public class DataBuffer : DisposeBase
     {
         private unsafe sbyte* _buffer;
         private GCHandle _gCHandle;
@@ -92,6 +92,16 @@ namespace SharpDX
                 _ownsBuffer = true;
             }
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataBuffer"/> class.
+        /// </summary>
+        /// <param name="dataPointer">The data pointer.</param>
+        public DataBuffer(DataPointer dataPointer)
+            : this(dataPointer.Pointer, dataPointer.Size)
+        {
+        }
+
 
         /// <summary>
         ///   Initializes a new instance of the <see cref = "SharpDX.DataBuffer" /> class, using an unmanaged buffer as a backing store.
@@ -166,9 +176,7 @@ namespace SharpDX
                     Utilities.FreeMemory((IntPtr)_buffer);
                     _buffer = (sbyte*)0;
                 }
-            }
-
-            base.Dispose(disposing);
+            }            
         }
 
         /// <summary>
@@ -207,201 +215,6 @@ namespace SharpDX
             unsafe
             {
                 Utilities.ReadOut((IntPtr)(_buffer + positionInBytes), out value);
-            }
-        }
-
-        /// <summary>
-        /// Gets a float.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to get the data from.</param>
-        /// <returns>a float from the buffer</returns>
-        public float GetFloat(int positionInBytes)
-        {
-            unsafe
-            {
-                return *((float*)(_buffer + positionInBytes));
-            }
-        }
-
-        /// <summary>
-        /// Gets a int.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to get the data from.</param>
-        /// <returns>an int from the buffer</returns>
-        public int GetInt(int positionInBytes)
-        {
-            unsafe
-            {
-                return *((int*)(_buffer + positionInBytes));
-            }
-        }
-
-        /// <summary>
-        /// Gets a short.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to get the data from.</param>
-        /// <returns>an short from the buffer</returns>
-        public short GetShort(int positionInBytes)
-        {
-            unsafe
-            {
-                return *((short*)(_buffer + positionInBytes));
-            }
-        }
-
-        /// <summary>
-        /// Gets a bool.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to get the data from.</param>
-        /// <returns>an bool from the buffer</returns>
-        public bool GetBoolean(int positionInBytes)
-        {
-            unsafe
-            {
-                return *((int*) (_buffer + positionInBytes)) != 0;
-            }
-        }
-
-        /// <summary>
-        /// Gets a Vector2.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to get the data from.</param>
-        /// <returns>an Vector2 from the buffer</returns>
-        public Vector2 GetVector2(int positionInBytes)
-        {
-            unsafe
-            {
-                return *((Vector2*)(_buffer + positionInBytes));
-            }
-        }
-
-        /// <summary>
-        /// Gets a Vector3.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to get the data from.</param>
-        /// <returns>an Vector3 from the buffer</returns>
-        public Vector3 GetVector3(int positionInBytes)
-        {
-            unsafe
-            {
-                return *((Vector3*)(_buffer + positionInBytes));
-            }
-        }
-
-        /// <summary>
-        /// Gets a Vector4.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to get the data from.</param>
-        /// <returns>an Vector4 from the buffer</returns>
-        public Vector4 GetVector4(int positionInBytes)
-        {
-            unsafe
-            {
-                return *((Vector4*)(_buffer + positionInBytes));
-            }
-        }
-
-        /// <summary>
-        /// Gets a Color3.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to get the data from.</param>
-        /// <returns>an Color3 from the buffer</returns>
-        public Color3 GetColor3(int positionInBytes)
-        {
-            unsafe
-            {
-                return *((Color3*)(_buffer + positionInBytes));
-            }
-        }
-
-        /// <summary>
-        /// Gets a Color4.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to get the data from.</param>
-        /// <returns>an Color4 from the buffer</returns>
-        public Color4 GetColor4(int positionInBytes)
-        {
-            unsafe
-            {
-                return *((Color4*)(_buffer + positionInBytes));
-            }
-        }
-
-        /// <summary>
-        /// Gets a Half.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to get the data from.</param>
-        /// <returns>an Half from the buffer</returns>
-        public Half GetHalf(int positionInBytes)
-        {
-            unsafe
-            {
-                return *((Half*)(_buffer + positionInBytes));
-            }
-        }
-
-        /// <summary>
-        /// Gets a Half2.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to get the data from.</param>
-        /// <returns>an Half2 from the buffer</returns>
-        public Half2 GetHalf2(int positionInBytes)
-        {
-            unsafe
-            {
-                return *((Half2*)(_buffer + positionInBytes));
-            }
-        }
-
-        /// <summary>
-        /// Gets a Half3.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to get the data from.</param>
-        /// <returns>an Half3 from the buffer</returns>
-        public Half3 GetHalf3(int positionInBytes)
-        {
-            unsafe
-            {
-                return *((Half3*)(_buffer + positionInBytes));
-            }
-        }
-
-        /// <summary>
-        /// Gets a Half4.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to get the data from.</param>
-        /// <returns>an Half4 from the buffer</returns>
-        public Half4 GetHalf4(int positionInBytes)
-        {
-            unsafe
-            {
-                return *((Half4*)(_buffer + positionInBytes));
-            }
-        }
-
-        /// <summary>
-        /// Gets a Matrix.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to get the data from.</param>
-        /// <returns>a Matrix from the buffer</returns>
-        public Matrix GetMatrix(int positionInBytes)
-        {
-            unsafe
-            {
-                return *((Matrix*)(_buffer + positionInBytes));
-            }
-        }
-
-        /// <summary>
-        /// Gets a Quaternion.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to get the data from.</param>
-        /// <returns>a Quaternion from the buffer</returns>
-        public Quaternion GetQuaternion(int positionInBytes)
-        {
-            unsafe
-            {
-                return *((Quaternion*)(_buffer + positionInBytes));
             }
         }
 
@@ -471,193 +284,11 @@ namespace SharpDX
         /// </summary>
         /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to set the data to.</param>
         /// <param name="value">The value.</param>
-        public void Set(int positionInBytes, float value)
-        {
-            unsafe
-            {
-                *((float*)(_buffer + positionInBytes)) = value;
-            }
-        }
-
-        /// <summary>
-        /// Sets the specified value.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to set the data to.</param>
-        /// <param name="value">The value.</param>
-        public void Set(int positionInBytes, int value)
-        {
-            unsafe
-            {
-                *((int*)(_buffer + positionInBytes)) = value;
-            }
-        }
-
-        /// <summary>
-        /// Sets the specified value.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to set the data to.</param>
-        /// <param name="value">The value.</param>
-        public void Set(int positionInBytes, short value)
-        {
-            unsafe
-            {
-                *((short*)(_buffer + positionInBytes)) = value;
-            }
-        }
-
-        /// <summary>
-        /// Sets the specified value.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to set the data to.</param>
-        /// <param name="value">The value.</param>
         public void Set(int positionInBytes, bool value)
         {
             unsafe
             {
                 *((int*)(_buffer + positionInBytes)) = value?1:0;
-            }
-        }
-
-        /// <summary>
-        /// Sets the specified value.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to set the data to.</param>
-        /// <param name="value">The value.</param>
-        public void Set(int positionInBytes, Vector2 value)
-        {
-            unsafe
-            {
-                *((Vector2*)(_buffer + positionInBytes)) = value;
-            }
-        }
-
-        /// <summary>
-        /// Sets the specified value.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to set the data to.</param>
-        /// <param name="value">The value.</param>
-        public void Set(int positionInBytes, Vector3 value)
-        {
-            unsafe
-            {
-                *((Vector3*)(_buffer + positionInBytes)) = value;
-            }
-        }
-
-        /// <summary>
-        /// Sets the specified value.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to set the data to.</param>
-        /// <param name="value">The value.</param>
-        public void Set(int positionInBytes, Vector4 value)
-        {
-            unsafe
-            {
-                *((Vector4*)(_buffer + positionInBytes)) = value;
-            }
-        }
-
-        /// <summary>
-        /// Sets the specified value.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to set the data to.</param>
-        /// <param name="value">The value.</param>
-        public void Set(int positionInBytes, Color3 value)
-        {
-            unsafe
-            {
-                *((Color3*)(_buffer + positionInBytes)) = value;
-            }
-        }
-
-        /// <summary>
-        /// Sets the specified value.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to set the data to.</param>
-        /// <param name="value">The value.</param>
-        public void Set(int positionInBytes, Color4 value)
-        {
-            unsafe
-            {
-                *((Color4*)(_buffer + positionInBytes)) = value;
-            }
-        }
-
-        /// <summary>
-        /// Sets the specified value.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to set the data to.</param>
-        /// <param name="value">The value.</param>
-        public void Set(int positionInBytes, Half value)
-        {
-            unsafe
-            {
-                *((Half*)(_buffer + positionInBytes)) = value;
-            }
-        }
-
-        /// <summary>
-        /// Sets the specified value.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to set the data to.</param>
-        /// <param name="value">The value.</param>
-        public void Set(int positionInBytes, Half2 value)
-        {
-            unsafe
-            {
-                *((Half2*)(_buffer + positionInBytes)) = value;
-            }
-        }
-
-        /// <summary>
-        /// Sets the specified value.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to set the data to.</param>
-        /// <param name="value">The value.</param>
-        public void Set(int positionInBytes, Half3 value)
-        {
-            unsafe
-            {
-                *((Half3*)(_buffer + positionInBytes)) = value;
-            }
-        }
-
-        /// <summary>
-        /// Sets the specified value.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to set the data to.</param>
-        /// <param name="value">The value.</param>
-        public void Set(int positionInBytes, Half4 value)
-        {
-            unsafe
-            {
-                *((Half4*)(_buffer + positionInBytes)) = value;
-            }
-        }
-
-        /// <summary>
-        /// Sets the specified value.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to set the data to.</param>
-        /// <param name="value">The value.</param>
-        public void Set(int positionInBytes, Matrix value)
-        {
-            unsafe
-            {
-                *((Matrix*)(_buffer + positionInBytes)) = value;
-            }
-        }
-
-        /// <summary>
-        /// Sets the specified value.
-        /// </summary>
-        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to set the data to.</param>
-        /// <param name="value">The value.</param>
-        public void Set(int positionInBytes, Quaternion value)
-        {
-            unsafe
-            {
-                *((Quaternion*)(_buffer + positionInBytes)) = value;
             }
         }
 

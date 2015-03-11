@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30324.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.WP81", "Test.WP81\Test.WP81.csproj", "{B3AFEA62-E0A0-4335-BADC-C0EB2CD55F08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.WinRT", "Test.WinRT\Test.WinRT.csproj", "{F6F173E4-2F97-45AD-A662-C4B4DC7B8106}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Certification.Tasks", "Certification.Tasks\Certification.Tasks.csproj", "{D2DE70AF-5B08-4B3F-8F19-481A86533B48}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B3AFEA62-E0A0-4335-BADC-C0EB2CD55F08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3AFEA62-E0A0-4335-BADC-C0EB2CD55F08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3AFEA62-E0A0-4335-BADC-C0EB2CD55F08}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F6F173E4-2F97-45AD-A662-C4B4DC7B8106}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6F173E4-2F97-45AD-A662-C4B4DC7B8106}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6F173E4-2F97-45AD-A662-C4B4DC7B8106}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{D2DE70AF-5B08-4B3F-8F19-481A86533B48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

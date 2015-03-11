@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +21,7 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Reflection;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Win32
 {
@@ -145,7 +146,7 @@ namespace SharpDX.Win32
                         {
                             case VariantElementType.Bool:
                                 {
-                                    var array = new Bool[size];
+                                    var array = new RawBool[size];
                                     Utilities.Read(variantValue.recordValue.RecordPointer, array, 0, size);
                                     return Utilities.ConvertToBoolArray(array);
                                 }

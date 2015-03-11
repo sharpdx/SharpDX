@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(SolutionDir)\SharpDX.PreSettings.targets" />
+  <Import Project="$(SolutionDir)\Build\SharpDX.PreSettings.targets" />
   <PropertyGroup>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -8,7 +8,7 @@
     <RootNamespace>SharpDX.Direct2D1</RootNamespace>
     <AssemblyName>SharpDX.Direct2D1</AssemblyName>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(SharpDXWin8)' == 'false'">
+  <ItemGroup Condition=" '$(SharpDXWin8)' == 'false' ">
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -37,9 +37,11 @@
     <Compile Include="ComputeTransform.cs" />
     <Compile Include="ComputeTransformNative.cs" />
     <Compile Include="ComputeTransformShadow.cs" />
+    <Compile Include="D2D1.cs" />
     <Compile Include="Device1.cs" />
     <Compile Include="DeviceContext1.cs" />
     <Compile Include="DirectWrite\Factory1.cs" />
+    <Compile Include="DirectWrite\LocalFontFileLoader.cs" />
     <Compile Include="DirectWrite\TextAnalyzer1.cs" />
     <Compile Include="DirectWrite\TextAnalysisSource1Shadow.cs" />
     <Compile Include="DirectWrite\TextAnalysisSource1.cs" />
@@ -51,6 +53,7 @@
     <Compile Include="Effects\PerspectiveTransform3D.cs" />
     <Compile Include="Effects\YCbCr.cs" />
     <Compile Include="Factory2.cs" />
+    <Compile Include="GeometryRealization.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="VertexRange.cs" />
     <Compile Include="InputDescription.cs" />
@@ -312,7 +315,7 @@
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
+  <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -299,7 +299,7 @@ namespace SharpDX.Multimedia
             if (newPosition < startPositionOfData || newPosition > (startPositionOfData+length))
                 throw new InvalidOperationException("Cannot seek outside the range of this stream");
 
-            return input.Seek(offset, origin);
+            return input.Seek(newPosition, SeekOrigin.Begin);
         }
 
         /// <summary>
@@ -356,9 +356,7 @@ namespace SharpDX.Multimedia
         ///   </exception>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if ( (input.Position + count) > (startPositionOfData +length))
-                throw new InvalidOperationException("Cannot read more than the length of the stream");
-            return input.Read(buffer, offset, count);
+            return input.Read(buffer, offset, Math.Min(count, (int)Math.Max(startPositionOfData + length - input.Position, 0)));
         }
 
         /// <summary>

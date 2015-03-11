@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,12 +17,24 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
+
 #if !WP8
 
 namespace SharpDX.MediaFoundation
 {
     public partial class Transform
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SharpDX.MediaFoundation.Transform"/> class.
+        /// </summary>
+        /// <param name="guid">Guid of the Media Foundation Transform.</param>
+        public Transform(Guid guid)
+        {
+            Utilities.CreateComInstance(guid, Utilities.CLSCTX.ClsctxInprocServer, Utilities.GetGuidFromType(typeof(Transform)), this);
+        }
+
         /// <summary>
         /// Gets the stream identifiers for the input and output streams on this Media Foundation transform (MFT).
         /// </summary>

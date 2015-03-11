@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@ using Microsoft.Win32;
 
 namespace SharpGen
 {
-    public class Utility
+    public static class Utility
     {
         /// <summary>
         /// Escapes the xml/html text in order to use it inside xml.

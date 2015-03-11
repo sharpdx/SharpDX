@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using SharpDX.Serialization;
 
 namespace SharpDX
 {
@@ -28,7 +27,7 @@ namespace SharpDX
     /// Structure using the same layout than <see cref="System.Drawing.Size"/>.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct Size2 : IEquatable<Size2>, IDataSerializable
+    public struct Size2 : IEquatable<Size2>
     {
         /// <summary>
         /// A zero size with (width, height) = (0,0)
@@ -119,22 +118,6 @@ namespace SharpDX
         public override string ToString()
         {
             return string.Format("({0},{1})", Width, Height);
-        }
-    
-        /// <inheritdoc/>
-        void IDataSerializable.Serialize(BinarySerializer serializer)
-        {
-            // Write optimized version without using Serialize methods
-            if (serializer.Mode == SerializerMode.Write)
-            {
-                serializer.Writer.Write(Width);
-                serializer.Writer.Write(Height);
-            }
-            else
-            {
-                Width = serializer.Reader.ReadInt32();
-                Height = serializer.Reader.ReadInt32();
-            }
         }
     }
 }

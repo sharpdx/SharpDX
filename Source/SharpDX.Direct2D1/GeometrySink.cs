@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,6 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using SharpDX.Mathematics.Interop;
+
 namespace SharpDX.Direct2D1
 {
     [ShadowAttribute(typeof(GeometrySinkShadow))]
@@ -27,7 +30,7 @@ namespace SharpDX.Direct2D1
         /// </summary>	
         /// <param name="point">The end point of the line to draw.</param>
         /// <unmanaged>void AddLine([None] D2D1_POINT_2F point)</unmanaged>
-        void AddLine(Vector2 point);
+        void AddLine(RawVector2 point);
 
 
         /// <summary>	

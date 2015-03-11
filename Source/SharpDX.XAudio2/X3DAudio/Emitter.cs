@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.X3DAudio
 {
@@ -33,10 +34,10 @@ namespace SharpDX.X3DAudio
         internal partial struct __Native
         {
             public System.IntPtr ConePointer;
-            public SharpDX.Vector3 OrientFront;
-            public SharpDX.Vector3 OrientTop;
-            public SharpDX.Vector3 Position;
-            public SharpDX.Vector3 Velocity;
+            public RawVector3 OrientFront;
+            public RawVector3 OrientTop;
+            public RawVector3 Position;
+            public RawVector3 Velocity;
             public float InnerRadius;
             public float InnerRadiusAngle;
             public int ChannelCount;
@@ -57,20 +58,20 @@ namespace SharpDX.X3DAudio
             {
                 // FreeHGlobal is crashing? Does X3DAudio perform deallocation?
 
-                //if (ChannelAzimuthsPointer != IntPtr.Zero)
-                //    Marshal.FreeHGlobal(ChannelAzimuthsPointer);
-                //if (VolumeCurvePointer != IntPtr.Zero)
-                //    Marshal.FreeHGlobal(VolumeCurvePointer);
-                //if (LFECurvePointer != IntPtr.Zero)
-                //    Marshal.FreeHGlobal(LFECurvePointer);
-                //if (LPFDirectCurvePointer != IntPtr.Zero)
-                //    Marshal.FreeHGlobal(LPFDirectCurvePointer);
-                //if (LPFReverbCurvePointer != IntPtr.Zero)
-                //    Marshal.FreeHGlobal(LPFReverbCurvePointer);
-                //if (ReverbCurvePointer != IntPtr.Zero)
-                //    Marshal.FreeHGlobal(ReverbCurvePointer);
-                //if (VolumeCurvePointer != IntPtr.Zero)
-                //    Marshal.FreeHGlobal(VolumeCurvePointer);
+                if (ConePointer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(ConePointer);
+                if (ChannelAzimuthsPointer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(ChannelAzimuthsPointer);
+                if (VolumeCurvePointer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(VolumeCurvePointer);
+                if (LFECurvePointer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(LFECurvePointer);
+                if (LPFDirectCurvePointer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(LPFDirectCurvePointer);
+                if (LPFReverbCurvePointer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(LPFReverbCurvePointer);
+                if (ReverbCurvePointer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(ReverbCurvePointer);
             }
         }
 

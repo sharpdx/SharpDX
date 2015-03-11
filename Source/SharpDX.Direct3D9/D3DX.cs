@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D9
 {
@@ -186,34 +187,34 @@ namespace SharpDX.Direct3D9
         }
 
         /// <summary>
-        /// Gets an array of <see cref="Vector3"/> from a <see cref="DataStream"/>.
+        /// Gets an array of <see cref="RawVector3"/> from a <see cref="DataStream"/>.
         /// </summary>
         /// <param name="stream">The stream.</param>
         /// <param name="vertexCount">The vertex count.</param>
         /// <param name="format">The format.</param>
-        /// <returns>An array of <see cref="Vector3"/> </returns>
-        public static Vector3[] GetVectors(DataStream stream, int vertexCount, VertexFormat format)
+        /// <returns>An array of <see cref="RawVector3"/> </returns>
+        public static RawVector3[] GetVectors(DataStream stream, int vertexCount, VertexFormat format)
         {
             int stride = GetFVFVertexSize(format);
             return GetVectors(stream, vertexCount, stride);
         }
 
         /// <summary>
-        /// Gets an array of <see cref="Vector3"/> from a <see cref="DataStream"/>.
+        /// Gets an array of <see cref="RawVector3"/> from a <see cref="DataStream"/>.
         /// </summary>
         /// <param name="stream">The stream.</param>
         /// <param name="vertexCount">The vertex count.</param>
         /// <param name="stride">The stride.</param>
-        /// <returns>An array of <see cref="Vector3"/> </returns>
-        public static Vector3[] GetVectors(DataStream stream, int vertexCount, int stride)
+        /// <returns>An array of <see cref="RawVector3"/> </returns>
+        public static RawVector3[] GetVectors(DataStream stream, int vertexCount, int stride)
         {
             unsafe
             {
-                var results = new Vector3[vertexCount];
+                var results = new RawVector3[vertexCount];
                 for (int i = 0; i < vertexCount; i++)
                 {
-                    results[i] = stream.Read<Vector3>();
-                    stream.Position += stride - sizeof(Vector3);
+                    results[i] = stream.Read<RawVector3>();
+                    stream.Position += stride - sizeof(RawVector3);
                 }
                 return results;
             }

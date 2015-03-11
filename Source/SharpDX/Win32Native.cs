@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,8 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
+using SharpDX.Mathematics.Interop;
+using SharpDX.Win32;
 
 namespace SharpDX
 {
@@ -28,26 +30,6 @@ namespace SharpDX
     /// </summary>
     internal partial class Win32Native
     {
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public class LogFont
-        {
-            public int lfHeight;
-            public int lfWidth;
-            public int lfEscapement;
-            public int lfOrientation;
-            public int lfWeight;
-            public byte lfItalic;
-            public byte lfUnderline;
-            public byte lfStrikeOut;
-            public byte lfCharSet;
-            public byte lfOutPrecision;
-            public byte lfClipPrecision;
-            public byte lfQuality;
-            public byte lfPitchAndFamily;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x20)]
-            public string lfFaceName;
-        }
-
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct TextMetric
         {
@@ -74,17 +56,6 @@ namespace SharpDX
         }
 
 #if !W8CORE
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct NativeMessage
-        {
-            public IntPtr handle;
-            public uint msg;
-            public IntPtr wParam;
-            public IntPtr lParam;
-            public uint time;
-            public Point p;
-        }
 
         [DllImport("user32.dll", EntryPoint = "PeekMessage"), SuppressUnmanagedCodeSecurity]
         public static extern int PeekMessage(out NativeMessage lpMsg, IntPtr hWnd, int wMsgFilterMin,
@@ -162,7 +133,7 @@ namespace SharpDX
         public static extern IntPtr CallWindowProc(IntPtr wndProc, IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll", EntryPoint = "GetClientRect")]
-        public static extern bool GetClientRect(IntPtr hWnd, out Rectangle lpRect);
+        public static extern bool GetClientRect(IntPtr hWnd, out RawRectangle lpRect);
 
         [DllImport("kernel32.dll", EntryPoint = "GetModuleHandle", CharSet = CharSet.Unicode)]
         public static extern IntPtr GetModuleHandle(string lpModuleName);

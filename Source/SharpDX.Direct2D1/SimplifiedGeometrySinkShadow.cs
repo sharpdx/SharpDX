@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1
 {
@@ -70,8 +71,8 @@ namespace SharpDX.Direct2D1
             }
 
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate void BeginFigureDelegate(IntPtr thisPtr, Vector2 startPoint, SharpDX.Direct2D1.FigureBegin figureBegin);
-            private static void BeginFigureImpl(IntPtr thisPtr, Vector2 startPoint, SharpDX.Direct2D1.FigureBegin figureBegin)
+            private delegate void BeginFigureDelegate(IntPtr thisPtr, RawVector2 startPoint, SharpDX.Direct2D1.FigureBegin figureBegin);
+            private static void BeginFigureImpl(IntPtr thisPtr, RawVector2 startPoint, SharpDX.Direct2D1.FigureBegin figureBegin)
             {
                 var shadow = ToShadow<SimplifiedGeometrySinkShadow>(thisPtr);
                 var callback = (SimplifiedGeometrySink)shadow.Callback;
@@ -86,7 +87,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<SimplifiedGeometrySinkShadow>(thisPtr);
                     var callback = (SimplifiedGeometrySink)shadow.Callback;
-                    var managedPoints = new Vector2[pointsCount];
+                    var managedPoints = new RawVector2[pointsCount];
                     Utilities.Read(points, managedPoints, 0, pointsCount);
                     callback.AddLines(managedPoints);
                 }

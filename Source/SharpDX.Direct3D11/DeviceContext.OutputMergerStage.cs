@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,7 @@
 
 using System;
 using SharpDX;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D11
 {
@@ -84,7 +85,7 @@ namespace SharpDX.Direct3D11
         /// <param name="sampleMaskRef">Pointer to a {{sample mask}}. </param>
         /// <returns>a reference to a blend-state interface (see <see cref="SharpDX.Direct3D11.BlendState"/>).</returns>
         /// <unmanaged>void OMGetBlendState([Out, Optional] ID3D10BlendState** ppBlendState,[Out, Optional] float BlendFactor[4],[Out, Optional] int* pSampleMask)</unmanaged>
-        public SharpDX.Direct3D11.BlendState GetBlendState(out SharpDX.Color4 blendFactor, out int sampleMaskRef)
+        public SharpDX.Direct3D11.BlendState GetBlendState(out RawColor4 blendFactor, out int sampleMaskRef)
         {
             BlendState blendState;
             GetBlendState(out blendState, out blendFactor, out sampleMaskRef);
@@ -645,7 +646,7 @@ namespace SharpDX.Direct3D11
         /// Blend state is used by the output-merger stage to determine how to blend together two pixel values. The two values are commonly the current pixel value and the pixel value already in the output render target. Use the blend operation to control where the two pixel values come from and how they are mathematically combined.To create a blend-state interface, call <see cref="SharpDX.Direct3D11.Device.CreateBlendState"/>.Passing in <c>null</c> for the blend-state interface indicates to the runtime to set a default blending state.  The following table indicates the default blending parameters.StateDefault Value AlphaToCoverageEnableFALSE BlendEnableFALSE[8] SrcBlendD3D11_BLEND_ONE DstBlendD3D11_BLEND_ZERO BlendOpD3D11_BLEND_OP_ADD SrcBlendAlphaD3D11_BLEND_ONE DstBlendAlphaD3D11_BLEND_ZERO BlendOpAlphaD3D11_BLEND_OP_ADD RenderTargetWriteMask[8]<see cref="SharpDX.Direct3D11.ColorWriteMaskFlags.All"/>[8]?A sample mask determines which samples get updated in all the active render targets. The mapping of bits in a sample mask to samples in a multisample render target is the responsibility of an individual application. A sample mask is always applied; it is independent of whether multisampling is enabled, and does not depend on whether an application uses multisample render targets.The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10.	
         /// </remarks>	
         /// <unmanaged>void ID3D11DeviceContext::OMSetBlendState([In, Optional] ID3D11BlendState* pBlendState,[In, Optional] const SHARPDX_COLOR4* BlendFactor,[In] unsigned int SampleMask)</unmanaged>	
-        public void SetBlendState(SharpDX.Direct3D11.BlendState blendStateRef, SharpDX.Color4? blendFactor, uint sampleMask)
+        public void SetBlendState(SharpDX.Direct3D11.BlendState blendStateRef, RawColor4? blendFactor, uint sampleMask)
         {
             SetBlendState(blendStateRef, blendFactor, unchecked((int)sampleMask));
         }
@@ -654,12 +655,12 @@ namespace SharpDX.Direct3D11
         /// Gets or sets the blend factor.
         /// </summary>
         /// <value>The blend factor.</value>
-        public Color4 BlendFactor
+        public RawColor4 BlendFactor
         {
             get
             {
                 BlendState state;
-                Color4 blendFactor;
+                RawColor4 blendFactor;
                 int sampleMaskRef;
                 GetBlendState(out state, out blendFactor, out sampleMaskRef);
                 if (state != null)
@@ -670,7 +671,7 @@ namespace SharpDX.Direct3D11
             set
             {
                 BlendState state;
-                Color4 blendFactor;
+                RawColor4 blendFactor;
                 int sampleMaskRef;
                 GetBlendState(out state, out blendFactor, out sampleMaskRef);
                 SetBlendState(state, value, sampleMaskRef);
@@ -688,7 +689,7 @@ namespace SharpDX.Direct3D11
             get
             {
                 BlendState state;
-                Color4 blendFactor;
+                RawColor4 blendFactor;
                 int sampleMaskRef;
                 GetBlendState(out state, out blendFactor, out sampleMaskRef);
                 if (state != null)
@@ -698,7 +699,7 @@ namespace SharpDX.Direct3D11
             set
             {
                 BlendState state;
-                Color4 blendFactor;
+                RawColor4 blendFactor;
                 int sampleMaskRef;
                 GetBlendState(out state, out blendFactor, out sampleMaskRef);
                 SetBlendState(state, blendFactor, value);
@@ -716,7 +717,7 @@ namespace SharpDX.Direct3D11
             get
             {
                 BlendState state;
-                Color4 blendFactor;
+                RawColor4 blendFactor;
                 int sampleMaskRef;
                 GetBlendState(out state, out blendFactor, out sampleMaskRef);
                 return state;
@@ -724,7 +725,7 @@ namespace SharpDX.Direct3D11
             set
             {
                 BlendState state;
-                Color4 blendFactor;
+                RawColor4 blendFactor;
                 int sampleMaskRef;
                 GetBlendState(out state, out blendFactor, out sampleMaskRef);
                 if (state != null)

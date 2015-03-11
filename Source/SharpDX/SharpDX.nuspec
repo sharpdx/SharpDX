@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@
     <iconUrl>http://sharpdx.org/logo_100x100.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Core assembly for all SharpDX assemblies.</description>
-    <copyright>Copyright (c) 2010-2013 Alexandre Mutel</copyright>
+    <copyright>Copyright (c) 2010-2014 Alexandre Mutel</copyright>
     <tags>SharpDX DirectX Direct3D Multimedia MDX 3D</tags>
 
     <!-- Release notes for this version-->
@@ -45,22 +45,15 @@
   </metadata>
 
   <files>
-    <file src="..\..\Bin\DirectX11-Signed-net20\SharpDX.dll" target="lib\net20" />
-    <file src="..\..\Bin\DirectX11-Signed-net20\SharpDX.pdb" target="lib\net20" />
-    <file src="..\..\Bin\DirectX11-Signed-net20\SharpDX.xml" target="lib\net20" />
+    <file src="..\..\Bin\**\*.exe" target="Bin" />
+    <file src="..\..\Bin\**\*.dll" target="Bin" />
+    <file src="..\..\Bin\**\*.xml" target="Bin" />
+    <file src="..\..\Bin\**\*.winmd" target="Bin" />
 
-    <file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.dll" target="lib\net40" />
-    <file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.pdb" target="lib\net40" />
-    <file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.xml" target="lib\net40" />
-
-    <!--<file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.dll" target="lib\net40" />-->
-    <!--<file src="..\..\Bin\DirectX11-Signed-net40\SharpDX.xml" target="lib\net40" />-->
-
-    <file src="..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.dll" target="lib\win8" />
-    <file src="..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.pdb" target="lib\win8" />
-    <file src="..\..\Bin\DirectX11_1-Signed-winrt\SharpDX.xml" target="lib\win8" />
-
-    <file src="**\*.cs" target="src" />
+    <file src="..\dummy.txt" target="lib" />
+    <file src="..\..\Build\SharpDX.targets" target="build" />
+    <file src="..\Install.ps1" target="tools\Install.ps1" />
+    <file src="..\UnInstall.ps1" target="tools\UnInstall.ps1" />
   </files>
 
 </package>

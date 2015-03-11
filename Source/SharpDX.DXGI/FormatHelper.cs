@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -33,13 +33,14 @@ namespace SharpDX.DXGI
         private static readonly bool[] typelessFormats = new bool[256];
 
         /// <summary>
-        /// Calculates the size of a <see cref="Format"/> in bytes.
+        /// Calculates the size of a <see cref="Format"/> in bytes. Can be 0 for compressed format (as they are less than 1 byte)
         /// </summary>
         /// <param name="format">The DXGI format.</param>
         /// <returns>size of in bytes</returns>
-        public static float SizeOfInBytes(Format format)
+        public static int SizeOfInBytes(Format format)
         {
-            return (float) SizeOfInBits(format)/8;
+            var sizeInBits = SizeOfInBits(format);
+            return sizeInBits >> 3;
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,11 +17,10 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
 using System;
-using System.Collections.Generic;
-using System.Text;
-using SharpDX.WIC;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1.Effects
 {
@@ -168,7 +167,7 @@ namespace SharpDX.Direct2D1.Effects
         /// Shifts the convolution kernel from a centered position on the output pixel to a position you specify left/right and up/down. The offset is defined in kernel units.
         /// With some offsets and kernel sizes, the convolution kernel’s samples won't land on a pixel image center. The pixel values for the kernel sample are computed by bilinear interpolation.
         /// </summary>
-        public Vector2 KernelOffset
+        public RawVector2 KernelOffset
         {
             get
             {

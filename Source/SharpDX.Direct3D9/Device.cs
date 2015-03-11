@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,7 @@
 
 using System;
 using System.Globalization;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D9
 {
@@ -97,7 +98,7 @@ namespace SharpDX.Direct3D9
         /// <param name="stencil">The value that will be used to fill the cleared stencil buffer.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::Clear([None] int Count,[In, Buffer, Optional] const D3DRECT* pRects,[None] int Flags,[None] D3DCOLOR Color,[None] float Z,[None] int Stencil)</unmanaged>
-        public void Clear(ClearFlags clearFlags, ColorBGRA color, float zdepth, int stencil)
+        public void Clear(ClearFlags clearFlags, RawColorBGRA color, float zdepth, int stencil)
         {
             this.Clear_(0, null, clearFlags, color, zdepth, stencil);
         }
@@ -112,7 +113,7 @@ namespace SharpDX.Direct3D9
         /// <param name="rectangles">The areas on the surfaces that will be cleared.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::Clear([None] int Count,[In, Buffer, Optional] const D3DRECT* pRects,[None] int Flags,[None] D3DCOLOR Color,[None] float Z,[None] int Stencil)</unmanaged>
-        public void Clear(ClearFlags clearFlags, ColorBGRA color, float zdepth, int stencil, Rectangle[] rectangles)
+        public void Clear(ClearFlags clearFlags, RawColorBGRA color, float zdepth, int stencil, RawRectangle[] rectangles)
         {
             this.Clear_( rectangles == null?0:rectangles.Length, rectangles, clearFlags, color, zdepth, stencil);
         }
@@ -127,7 +128,7 @@ namespace SharpDX.Direct3D9
         /// <param name="color"> Color used for filling. </param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::ColorFill([None] IDirect3DSurface9* pSurface,[In, Optional] const RECT* pRect,[None] D3DCOLOR color)</unmanaged>
-        public void ColorFill(SharpDX.Direct3D9.Surface surfaceRef, SharpDX.ColorBGRA color)
+        public void ColorFill(SharpDX.Direct3D9.Surface surfaceRef, RawColorBGRA color)
         {
             this.ColorFill(surfaceRef, null, color);
         }
@@ -340,7 +341,7 @@ namespace SharpDX.Direct3D9
                 }
                 else
                 {
-                    var result = new Bool[count];
+                    var result = new RawBool[count];
                     fixed (void* pResult = result)
                         GetPixelShaderConstantB(startRegister, (IntPtr)pResult, count);
                     return Utilities.ConvertToBoolArray(result);
@@ -505,7 +506,7 @@ namespace SharpDX.Direct3D9
                 }
                 else
                 {
-                    var result = new Bool[count];
+                    var result = new RawBool[count];
                     fixed (void* pResult = result)
                         GetVertexShaderConstantB(startRegister, (IntPtr)pResult, count);
                     return Utilities.ConvertToBoolArray(result);
@@ -547,7 +548,7 @@ namespace SharpDX.Direct3D9
         /// <param name="point">The point.</param>
         /// <param name="flags">if set to <c>true</c> [flags].</param>
         /// <unmanaged>void IDirect3DDevice9::SetCursorPosition([In] int X,[In] int Y,[In] unsigned int Flags)</unmanaged>
-        public void SetCursorPosition(Point point, bool flags)
+        public void SetCursorPosition(RawPoint point, bool flags)
         {
             SetCursorPosition(point.X, point.Y, flags);
         }
@@ -571,7 +572,7 @@ namespace SharpDX.Direct3D9
         /// <param name="cursorBitmapRef">The cursor bitmap ref.</param>
         /// <returns></returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetCursorProperties([In] unsigned int XHotSpot,[In] unsigned int YHotSpot,[In] IDirect3DSurface9* pCursorBitmap)</unmanaged>
-        public void SetCursorProperties(Point point, SharpDX.Direct3D9.Surface cursorBitmapRef)
+        public void SetCursorProperties(RawPoint point, SharpDX.Direct3D9.Surface cursorBitmapRef)
         {
             SetCursorProperties(point.X, point.Y, cursorBitmapRef);
         }
@@ -605,7 +606,7 @@ namespace SharpDX.Direct3D9
         /// <param name="destinationRectangle">The area of the front buffer that should receive the result of the presentation.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>IDirect3DDevice9::Present</unmanaged>
-        public void Present(Rectangle sourceRectangle, Rectangle destinationRectangle)
+        public void Present(RawRectangle sourceRectangle, RawRectangle destinationRectangle)
         {
             Present(sourceRectangle, destinationRectangle, IntPtr.Zero);
         }
@@ -618,7 +619,7 @@ namespace SharpDX.Direct3D9
         /// <param name="windowOverride">The destination window whose client area is taken as the target for this presentation.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>IDirect3DDevice9::Present</unmanaged>
-        public void Present(Rectangle sourceRectangle, Rectangle destinationRectangle, IntPtr windowOverride)
+        public void Present(RawRectangle sourceRectangle, RawRectangle destinationRectangle, IntPtr windowOverride)
         {
             unsafe
             {
@@ -636,7 +637,7 @@ namespace SharpDX.Direct3D9
         /// <param name="region">Specifies a region on the back buffer that contains the minimal amount of pixels that need to be updated.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>IDirect3DDevice9::Present</unmanaged>
-        public void Present(Rectangle sourceRectangle, Rectangle destinationRectangle, IntPtr windowOverride, System.Drawing.Region region)
+        public void Present(RawRectangle sourceRectangle, RawRectangle destinationRectangle, IntPtr windowOverride, System.Drawing.Region region)
         {
             unsafe
             {
@@ -667,7 +668,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
-        public void SetPixelShaderConstant(int startRegister, Matrix[] data)
+        public void SetPixelShaderConstant(int startRegister, RawMatrix[] data)
         {
             unsafe
             {
@@ -685,7 +686,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
-        public void SetPixelShaderConstant(int startRegister, Vector4[] data)
+        public void SetPixelShaderConstant(int startRegister, RawVector4[] data)
         {
             unsafe
             {
@@ -767,7 +768,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
-        public unsafe void SetPixelShaderConstant(int startRegister, Matrix* data)
+        public unsafe void SetPixelShaderConstant(int startRegister, RawMatrix* data)
         {
             SetPixelShaderConstantF(startRegister, (IntPtr)data, 4); // a matrix is only 4 registers
         }
@@ -781,7 +782,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
-        public void SetPixelShaderConstant(int startRegister, Matrix data)
+        public void SetPixelShaderConstant(int startRegister, RawMatrix data)
         {
             unsafe
             {
@@ -799,7 +800,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
-        public unsafe void SetPixelShaderConstant(int startRegister, Matrix* data, int count)
+        public unsafe void SetPixelShaderConstant(int startRegister, RawMatrix* data, int count)
         {
             SetPixelShaderConstantF(startRegister, (IntPtr)data, count << 2); // *4 is enough as a matrix is still 4 registers
         }
@@ -815,7 +816,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
-        public void SetPixelShaderConstant(int startRegister, Matrix[] data, int offset, int count)
+        public void SetPixelShaderConstant(int startRegister, RawMatrix[] data, int offset, int count)
         {
             unsafe
             {
@@ -833,7 +834,7 @@ namespace SharpDX.Direct3D9
         /// <param name="count">The count.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
-        public void SetPixelShaderConstant(int startRegister, Vector4[] data, int offset, int count)
+        public void SetPixelShaderConstant(int startRegister, RawVector4[] data, int offset, int count)
         {
             unsafe
             {
@@ -1076,7 +1077,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetTransform([In] D3DTRANSFORMSTATETYPE State,[In] const D3DMATRIX* pMatrix)</unmanaged>
-        public void SetTransform(SharpDX.Direct3D9.TransformState state, ref SharpDX.Matrix matrixRef)
+        public void SetTransform(SharpDX.Direct3D9.TransformState state, ref RawMatrix matrixRef)
         {
             SetTransform_((int)state, ref matrixRef);
         }
@@ -1090,7 +1091,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetTransform([In] D3DTRANSFORMSTATETYPE State,[In] const D3DMATRIX* pMatrix)</unmanaged>
-        public void SetTransform(int index, ref SharpDX.Matrix matrixRef)
+        public void SetTransform(int index, ref RawMatrix matrixRef)
         {
             SetTransform_(index + 256, ref matrixRef);
         }
@@ -1104,7 +1105,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetTransform([In] D3DTRANSFORMSTATETYPE State,[In] const D3DMATRIX* pMatrix)</unmanaged>
-        public void SetTransform(SharpDX.Direct3D9.TransformState state, SharpDX.Matrix matrixRef)
+        public void SetTransform(SharpDX.Direct3D9.TransformState state, RawMatrix matrixRef)
         {
             SetTransform_((int)state, ref matrixRef);
         }
@@ -1118,7 +1119,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetTransform([In] D3DTRANSFORMSTATETYPE State,[In] const D3DMATRIX* pMatrix)</unmanaged>
-        public void SetTransform(int index, SharpDX.Matrix matrixRef)
+        public void SetTransform(int index, RawMatrix matrixRef)
         {
             SetTransform_(index + 256, ref matrixRef);
         }
@@ -1132,7 +1133,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetVertexShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
-        public void SetVertexShaderConstant(int startRegister, Matrix[] data)
+        public void SetVertexShaderConstant(int startRegister, RawMatrix[] data)
         {
             unsafe
             {
@@ -1150,7 +1151,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetVertexShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
-        public void SetVertexShaderConstant(int startRegister, Vector4[] data)
+        public void SetVertexShaderConstant(int startRegister, RawVector4[] data)
         {
             unsafe
             {
@@ -1232,7 +1233,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetVertexShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
-        public unsafe void SetVertexShaderConstant(int startRegister, Matrix* data)
+        public unsafe void SetVertexShaderConstant(int startRegister, RawMatrix* data)
         {
             SetVertexShaderConstantF(startRegister, (IntPtr)data, 4);
         }
@@ -1246,7 +1247,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetVertexShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
-        public void SetVertexShaderConstant(int startRegister, Matrix data)
+        public void SetVertexShaderConstant(int startRegister, RawMatrix data)
         {
             unsafe
             {
@@ -1264,7 +1265,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetVertexShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
-        public unsafe void SetVertexShaderConstant(int startRegister, Matrix* data, int count)
+        public unsafe void SetVertexShaderConstant(int startRegister, RawMatrix* data, int count)
         {
             SetVertexShaderConstantF(startRegister, (IntPtr)data, count << 2);
         }
@@ -1280,7 +1281,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetVertexShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
-        public void SetVertexShaderConstant(int startRegister, Matrix[] data, int offset, int count)
+        public void SetVertexShaderConstant(int startRegister, RawMatrix[] data, int offset, int count)
         {
             unsafe
             {
@@ -1298,7 +1299,7 @@ namespace SharpDX.Direct3D9
         /// <param name="count">The count.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetVertexShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
-        public void SetVertexShaderConstant(int startRegister, Vector4[] data, int offset, int count)
+        public void SetVertexShaderConstant(int startRegister, RawVector4[] data, int offset, int count)
         {
             unsafe
             {

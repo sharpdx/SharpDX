@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,9 +17,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1
 {
@@ -201,7 +203,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.Transform = *(SharpDX.Matrix3x2*)transform;
+                    callback.Transform = *(RawMatrix3x2*)transform;
                 }
                 catch (Exception exception)
                 {
@@ -261,7 +263,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.Clear(color == IntPtr.Zero ? (Color4?)null : *(Color4*)color);
+                    callback.Clear(color == IntPtr.Zero ? (RawColor4?)null : *(RawColor4*)color);
                 }
                 catch (Exception exception)
                 {
@@ -272,8 +274,8 @@ namespace SharpDX.Direct2D1
 
             /// <unmanaged>HRESULT ID2D1CommandSink::DrawGlyphRun([In] D2D_POINT_2F baselineOrigin,[In] const DWRITE_GLYPH_RUN* glyphRun,[In, Optional] const DWRITE_GLYPH_RUN_DESCRIPTION* glyphRunDescription,[In] ID2D1Brush* foregroundBrush,[In] DWRITE_MEASURING_MODE measuringMode)</unmanaged>	
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate int DrawGlyphRunDelegate(IntPtr thisPtr, SharpDX.Vector2 baselineOrigin, IntPtr glyphRun, IntPtr glyphRunDescriptionPtr, IntPtr foregroundBrush, SharpDX.Direct2D1.MeasuringMode measuringMode);
-            private unsafe static int DrawGlyphRunImpl(IntPtr thisPtr, SharpDX.Vector2 baselineOrigin, IntPtr glyphRunNative, IntPtr glyphRunDescriptionPtr, IntPtr foregroundBrush, SharpDX.Direct2D1.MeasuringMode measuringMode)
+            private delegate int DrawGlyphRunDelegate(IntPtr thisPtr, RawVector2 baselineOrigin, IntPtr glyphRun, IntPtr glyphRunDescriptionPtr, IntPtr foregroundBrush, SharpDX.Direct2D1.MeasuringMode measuringMode);
+            private unsafe static int DrawGlyphRunImpl(IntPtr thisPtr, RawVector2 baselineOrigin, IntPtr glyphRunNative, IntPtr glyphRunDescriptionPtr, IntPtr foregroundBrush, SharpDX.Direct2D1.MeasuringMode measuringMode)
             {
                 var glyphRun = new DirectWrite.GlyphRun();
                 try
@@ -301,8 +303,8 @@ namespace SharpDX.Direct2D1
 
             /// <unmanaged>HRESULT ID2D1CommandSink::DrawLine([In] D2D_POINT_2F point0,[In] D2D_POINT_2F point1,[In] ID2D1Brush* brush,[In] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle)</unmanaged>	
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate int DrawLineDelegate(IntPtr thisPtr, SharpDX.Vector2 point0, SharpDX.Vector2 point1, IntPtr brush, float strokeWidth, IntPtr strokeStyle);
-            private unsafe static int DrawLineImpl(IntPtr thisPtr, SharpDX.Vector2 point0, SharpDX.Vector2 point1, IntPtr brush, float strokeWidth, IntPtr strokeStyle)
+            private delegate int DrawLineDelegate(IntPtr thisPtr, RawVector2 point0, RawVector2 point1, IntPtr brush, float strokeWidth, IntPtr strokeStyle);
+            private unsafe static int DrawLineImpl(IntPtr thisPtr, RawVector2 point0, RawVector2 point1, IntPtr brush, float strokeWidth, IntPtr strokeStyle)
             {
                 try
                 {
@@ -344,7 +346,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.DrawRectangle(*(SharpDX.RectangleF*)rect, new Brush(brush), strokeWidth, new StrokeStyle(strokeStyle));
+                    callback.DrawRectangle(*(RawRectangleF*)rect, new Brush(brush), strokeWidth, new StrokeStyle(strokeStyle));
                 }
                 catch (Exception exception)
                 {
@@ -363,11 +365,11 @@ namespace SharpDX.Direct2D1
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
                     callback.DrawBitmap(new Bitmap(bitmap),
-                        destinationRectangle == IntPtr.Zero ? (SharpDX.RectangleF?)null : *(SharpDX.RectangleF*)destinationRectangle,
+                        destinationRectangle == IntPtr.Zero ? (RawRectangleF?)null : *(RawRectangleF*)destinationRectangle,
                         opacity,
                         interpolationMode,
-                        sourceRectangle == IntPtr.Zero ? (SharpDX.RectangleF?)null : *(SharpDX.RectangleF*)sourceRectangle,
-                        erspectiveTransformRef == IntPtr.Zero ? (SharpDX.Matrix?)null : *(SharpDX.Matrix*)erspectiveTransformRef);
+                        sourceRectangle == IntPtr.Zero ? (RawRectangleF?)null : *(RawRectangleF*)sourceRectangle,
+                        erspectiveTransformRef == IntPtr.Zero ? (RawMatrix?)null : *(RawMatrix*)erspectiveTransformRef);
                 }
                 catch (Exception exception)
                 {
@@ -386,8 +388,8 @@ namespace SharpDX.Direct2D1
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
                     callback.DrawImage(new Image(image),
-                        targetOffset == IntPtr.Zero ? (SharpDX.Vector2?)null : *(SharpDX.Vector2*)targetOffset,
-                        imageRectangle == IntPtr.Zero ? (SharpDX.RectangleF?)null : *(SharpDX.RectangleF*)imageRectangle,
+                        targetOffset == IntPtr.Zero ? (RawVector2?)null : *(RawVector2*)targetOffset,
+                        imageRectangle == IntPtr.Zero ? (RawRectangleF?)null : *(RawRectangleF*)imageRectangle,
                         interpolationMode,
                         compositeMode);
                 }
@@ -408,7 +410,7 @@ namespace SharpDX.Direct2D1
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
                     callback.DrawGdiMetafile(new GdiMetafile(gdiMetafile),
-                        targetOffset == IntPtr.Zero ? (SharpDX.Vector2?)null : *(SharpDX.Vector2*)targetOffset);
+                        targetOffset == IntPtr.Zero ? (RawVector2?)null : *(RawVector2*)targetOffset);
                 }
                 catch (Exception exception)
                 {
@@ -450,8 +452,8 @@ namespace SharpDX.Direct2D1
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
                     callback.FillOpacityMask(new Bitmap(opacityMask), new Brush(brush),
-                        destinationRectangle == IntPtr.Zero ? (SharpDX.RectangleF?)null : *(SharpDX.RectangleF*)destinationRectangle,
-                        sourceRectangle == IntPtr.Zero ? (SharpDX.RectangleF?)null : *(SharpDX.RectangleF*)sourceRectangle);
+                        destinationRectangle == IntPtr.Zero ? (RawRectangleF?)null : *(RawRectangleF*)destinationRectangle,
+                        sourceRectangle == IntPtr.Zero ? (RawRectangleF?)null : *(RawRectangleF*)sourceRectangle);
                 }
                 catch (Exception exception)
                 {
@@ -487,7 +489,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.FillRectangle(*(SharpDX.RectangleF*)rect, new Brush(brush));
+                    callback.FillRectangle(*(RawRectangleF*)rect, new Brush(brush));
                 }
                 catch (Exception exception)
                 {
@@ -513,7 +515,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.PushAxisAlignedClip(*(SharpDX.RectangleF*)clipRect, antialiasMode);
+                    callback.PushAxisAlignedClip(*(RawRectangleF*)clipRect, antialiasMode);
                 }
                 catch (Exception exception)
                 {

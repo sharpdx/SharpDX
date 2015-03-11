@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.DirectWrite
 {
@@ -39,7 +40,7 @@ namespace SharpDX.DirectWrite
         /// <param name="clientDrawingContext">The drawing context passed to <see cref="SharpDX.DirectWrite.TextLayout.Draw_"/>.</param>
         /// <returns>a structure which has transform information for  pixel snapping.</returns>
         /// <unmanaged>HRESULT GetCurrentTransform([None] void* clientDrawingContext,[Out] DWRITE_MATRIX* transform)</unmanaged>
-        Matrix3x2 GetCurrentTransform(object clientDrawingContext);
+        RawMatrix3x2 GetCurrentTransform(object clientDrawingContext);
 
         /// <summary>	
         ///  Gets the number of physical pixels per DIP. 	

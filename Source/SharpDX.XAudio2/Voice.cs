@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -183,10 +183,18 @@ namespace SharpDX.XAudio2
                 if (outputVoices != null)
                 {
                     var tempSendDescriptor = new VoiceSendDescriptors {SendCount = outputVoices.Length};
-                    fixed (void* pVoiceSendDescriptors = &outputVoices[0])
+
+                    if(outputVoices.Length > 0)
                     {
-                        tempSendDescriptor.SendPointer = (IntPtr)pVoiceSendDescriptors;
-                        SetOutputVoices(tempSendDescriptor);
+                        fixed(void* pVoiceSendDescriptors = &outputVoices[0])
+                        {
+                            tempSendDescriptor.SendPointer = (IntPtr)pVoiceSendDescriptors;
+                            SetOutputVoices(tempSendDescriptor);
+                        }
+                    }
+                    else
+                    {
+                        tempSendDescriptor.SendPointer = IntPtr.Zero;
                     }
                 }
                 else

@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="MathUtilNearEqualTests.cs" />
     <Compile Include="MathUtilWrapTests.cs" />
+    <Compile Include="RayTests.cs" />
     <Compile Include="ShaderBytecodeProfileTests.cs" />
     <Compile Include="TestUtilityCompare.cs" />
     <Compile Include="TestMediaAttributes.cs" />
@@ -55,7 +56,6 @@
     <Compile Include="TestInterop.cs" />
     <Compile Include="TestNativeFileStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestSerialization.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj">
@@ -69,6 +69,10 @@
     <ProjectReference Include="..\..\SharpDX.DXGI\SharpDX.DXGI.csproj">
       <Project>{3FC6DE77-B412-4101-9E64-6B9AA831179B}</Project>
       <Name>SharpDX.DXGI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpDX.Mathematics\SharpDX.Mathematics.csproj">
+      <Project>{49e4485f-3a2a-4c35-a159-12eccfc00396}</Project>
+      <Name>SharpDX.Mathematics</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\SharpDX.MediaFoundation\SharpDX.MediaFoundation.csproj">
       <Project>{CA21A201-078B-4EBE-A2AB-C3B1FFEC99F9}</Project>

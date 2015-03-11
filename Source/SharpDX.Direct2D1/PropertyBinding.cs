@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,10 +17,12 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1
 {
@@ -79,49 +81,49 @@ namespace SharpDX.Direct2D1
                 binding.nativeGetSet = new NativeGetSetValue<int>(customEffectType, propertyInfo);
                 effectPropType = PropertyType.Bool;
             }
-            else if (propType == typeof(Vector2))
+            else if (propType == typeof(RawVector2))
             {
-                binding.nativeGetSet = new NativeGetSetValue<Vector2>(customEffectType, propertyInfo);
+                binding.nativeGetSet = new NativeGetSetValue<RawVector2>(customEffectType, propertyInfo);
                 effectPropType = PropertyType.Vector2;
             }
-            else if (propType == typeof(Vector3))
+            else if (propType == typeof(RawVector3))
             {
-                binding.nativeGetSet = new NativeGetSetValue<Vector3>(customEffectType, propertyInfo);
+                binding.nativeGetSet = new NativeGetSetValue<RawVector3>(customEffectType, propertyInfo);
                 effectPropType = PropertyType.Vector3;
             }
-            else if (propType == typeof(RectangleF))
+            else if (propType == typeof(RawRectangleF))
             {
-                binding.nativeGetSet = new NativeGetSetValue<RectangleF>(customEffectType, propertyInfo);
+                binding.nativeGetSet = new NativeGetSetValue<RawRectangleF>(customEffectType, propertyInfo);
                 effectPropType = PropertyType.Vector4;
             }
-            else if (propType == typeof(Vector4))
+            else if (propType == typeof(RawVector4))
             {
-                binding.nativeGetSet = new NativeGetSetValue<Vector4>(customEffectType, propertyInfo);
+                binding.nativeGetSet = new NativeGetSetValue<RawVector4>(customEffectType, propertyInfo);
                 effectPropType = PropertyType.Vector4;
             }
-            else if (propType == typeof(Color3))
+            else if (propType == typeof(RawColor3))
             {
-                binding.nativeGetSet = new NativeGetSetValue<Color3>(customEffectType, propertyInfo);
+                binding.nativeGetSet = new NativeGetSetValue<RawColor3>(customEffectType, propertyInfo);
                 effectPropType = PropertyType.Vector3;
             }
-            else if (propType == typeof(Color4))
+            else if (propType == typeof(RawColor4))
             {
-                binding.nativeGetSet = new NativeGetSetValue<Color4>(customEffectType, propertyInfo);
+                binding.nativeGetSet = new NativeGetSetValue<RawColor4>(customEffectType, propertyInfo);
                 effectPropType = PropertyType.Vector4;
             }
-            else if (propType == typeof(Matrix))
+            else if (propType == typeof(RawMatrix))
             {
-                binding.nativeGetSet = new NativeGetSetValue<Matrix>(customEffectType, propertyInfo);
+                binding.nativeGetSet = new NativeGetSetValue<RawMatrix>(customEffectType, propertyInfo);
                 effectPropType = PropertyType.Matrix4x4;
             }
-            else if (propType == typeof(Matrix3x2))
+            else if (propType == typeof(RawMatrix3x2))
             {
-                binding.nativeGetSet = new NativeGetSetValue<Matrix3x2>(customEffectType, propertyInfo);
+                binding.nativeGetSet = new NativeGetSetValue<RawMatrix3x2>(customEffectType, propertyInfo);
                 effectPropType = PropertyType.Matrix3x2;
             }
-            else if (propType == typeof(Matrix5x4))
+            else if (propType == typeof(RawMatrix5x4))
             {
-                binding.nativeGetSet = new NativeGetSetValue<Matrix5x4>(customEffectType, propertyInfo);
+                binding.nativeGetSet = new NativeGetSetValue<RawMatrix5x4>(customEffectType, propertyInfo);
                 effectPropType = PropertyType.Matrix5x4;
             }
             else if (Utilities.IsEnum(propType))

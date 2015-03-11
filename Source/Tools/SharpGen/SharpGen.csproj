@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">Net40</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{31F85A16-CB01-4456-BE3C-76E9FF3A1343}</ProjectGuid>
@@ -15,9 +15,9 @@
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Net20Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>Bin\Net20Debug\</OutputPath>
+    <OutputPath>Bin\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -28,36 +28,8 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Net20Release|AnyCPU'">
-    <OutputPath>Bin\Net20Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
-    <DocumentationFile>
-    </DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Net40Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>Bin\Net40Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Net40Release|AnyCPU'">
-    <OutputPath>Bin\Net40Release\</OutputPath>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <OutputPath>Bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -77,80 +49,47 @@
   <PropertyGroup>
     <ApplicationIcon>SharpGen.ico</ApplicationIcon>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\WP8Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WP8;DIRECTX11_1</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Net20'">
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|AnyCPU'">
-    <OutputPath>bin\WP8Release\</OutputPath>
-    <DefineConstants>TRACE;WP8;DIRECTX11_1</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Net20'">
+    <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DIRECTX11_2Release|AnyCPU'">
-    <OutputPath>bin\DIRECTX11_2Release\</OutputPath>
-    <DefineConstants>TRACE;DIRECTX11_1;DIRECTX11_2</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Net40'">
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DIRECTX11_2Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\DIRECTX11_2Debug\</OutputPath>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Net40'">
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|WP8-x86'">
+    <DefineConstants>TRACE;DEBUG;WP8;W8CORE;DIRECTX11_1</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|WP8-x86'">
+    <DefineConstants>TRACE;WP8;W8CORE;DIRECTX11_1</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|WP8-ARM'">
+    <DefineConstants>TRACE;DEBUG;WP8;W8CORE;DIRECTX11_1</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|WP8-ARM'">
+    <DefineConstants>TRACE;WP8;W8CORE;DIRECTX11_1</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|DIRECTX11_2'">
     <DefineConstants>TRACE;DEBUG;DIRECTX11_1;DIRECTX11_2</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Win8Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WIN8METRO;DIRECTX11_1;DIRECTX11_2</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|DIRECTX11_2'">
+    <DefineConstants>TRACE;DIRECTX11_1;DIRECTX11_2</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU' ">
-    <OutputPath>bin\Win8Release\</OutputPath>
-    <DefineConstants>TRACE;WIN8METRO;DIRECTX11_1;DIRECTX11_2</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win8' ">
+    <DefineConstants>TRACE;DEBUG;WIN8METRO;W8CORE;DIRECTX11_1;DIRECTX11_2</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win8' ">
+    <DefineConstants>TRACE;WIN8METRO;W8CORE;DIRECTX11_1;DIRECTX11_2</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|WP81' ">
+    <DefineConstants>TRACE;DEBUG;W8CORE;WP81;WIN8METRO;DIRECTX11_1;DIRECTX11_2</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|WP81' ">
+    <DefineConstants>TRACE;W8CORE;WP81;WIN8METRO;DIRECTX11_1;DIRECTX11_2</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="HtmlAgilityPack, Version=1.4.0.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
@@ -434,11 +373,6 @@
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>mkdir "$(SolutionDir)Build\Tools\Bin\"
-copy  "$(TargetPath)" "$(SolutionDir)Build\Tools\Bin\"
-copy  "$(TargetDir)\*.dll" "$(SolutionDir)Build\Tools\Bin\"</PostBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,9 +17,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if WP8
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D11
 {
@@ -35,14 +37,14 @@ namespace SharpDX.Direct3D11
         // DrawingSurfaceSizeF *desiredRenderTargetSize
         /* public void PrepareResources(long resentTargetTimeRef, out SharpDX.Bool isContentDirty) */
         /* public void PrepareResources(long resentTargetTimeRef, ref SharpDX.Size2F desiredRenderTargetSize) */
-        void PrepareResources(DateTime presentTargetTime, out Bool isContentDirty);
+        void PrepareResources(DateTime presentTargetTime, out RawBool isContentDirty);
 
         //_In_  ID3D11Device1 *hostDevice,
         //_In_  ID3D11DeviceContext1 *hostDeviceContext,
         //_In_  ID3D11RenderTargetView *hostRenderTargetView) = 0;
         /* public void GetTexture(SharpDX.Size2F surfaceSize, out SharpDX.Direct3D11.DrawingSurfaceSynchronizedTexture synchronizedTexture, out SharpDX.RectangleF textureSubRectangle) */
         /* public void Draw(SharpDX.Direct3D11.Device1 hostDevice, SharpDX.Direct3D11.DeviceContext1 hostDeviceContext, SharpDX.Direct3D11.RenderTargetView hostRenderTargetView) */
-        void GetTexture(Size2F surfaceSize, out DrawingSurfaceSynchronizedTexture synchronizedTexture, out RectangleF textureSubRectangle);
+        void GetTexture(Size2F surfaceSize, out DrawingSurfaceSynchronizedTexture synchronizedTexture, out RawRectangleF textureSubRectangle);
     }
 
     public abstract class DrawingSurfaceContentProviderNativeBase : CallbackBase, IDrawingSurfaceContentProviderNative, IInspectable, ICustomQueryInterface
@@ -58,9 +60,9 @@ namespace SharpDX.Direct3D11
 
         public abstract void Disconnect();
 
-        public abstract void PrepareResources(DateTime presentTargetTime, out Bool isContentDirty);
+        public abstract void PrepareResources(DateTime presentTargetTime, out RawBool isContentDirty);
 
-        public abstract void GetTexture(Size2F surfaceSize, out DrawingSurfaceSynchronizedTexture synchronizedTexture, out RectangleF textureSubRectangle);
+        public abstract void GetTexture(Size2F surfaceSize, out DrawingSurfaceSynchronizedTexture synchronizedTexture, out RawRectangleF textureSubRectangle);
 
         CustomQueryInterfaceResult ICustomQueryInterface.GetInterface(ref Guid iid, out IntPtr ppv)
         {
@@ -77,10 +79,13 @@ namespace SharpDX.Direct3D11
         private static readonly DrawingSurfaceContentProviderVtbl Vtbl = new DrawingSurfaceContentProviderVtbl();
 
         private DrawingSurfaceRuntimeHost host;
-        //private Device device;
-        //private DeviceContext context;
-        //private RenderTargetView renderTargetView;
         private DrawingSurfaceSynchronizedTexture synchronizedTexture;
+
+        private void ClearPointers()
+        {
+            ClearPointer(ref host);
+            ClearPointer(ref synchronizedTexture);
+        }
 
         /// <summary>
         /// Return a pointer to the unmanaged version of this callback.
@@ -113,9 +118,8 @@ namespace SharpDX.Direct3D11
                     var callback = (IDrawingSurfaceContentProviderNative)shadow.Callback;
 
                     // Precache values.
+                    shadow.ClearPointers();
                     shadow.host = new DrawingSurfaceRuntimeHost(hostPtr);
-                    //shadow.device = new Device(hostDevicePtr);
-                    //shadow.context = shadow.device.ImmediateContext;
 
                     callback.Connect(shadow.host);
                 }
@@ -134,6 +138,7 @@ namespace SharpDX.Direct3D11
                 var shadow = ToShadow<DrawingSurfaceContentProviderShadow>(thisPtr);
                 var callback = (IDrawingSurfaceContentProviderNative)shadow.Callback;
                 callback.Disconnect();
+                shadow.ClearPointers();
             }
 
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
@@ -144,7 +149,7 @@ namespace SharpDX.Direct3D11
                 {
                     var shadow = ToShadow<DrawingSurfaceContentProviderShadow>(thisPtr);
                     var callback = (IDrawingSurfaceContentProviderNative)shadow.Callback;
-                    callback.PrepareResources(new DateTime(*(long*)presentTargetTime), out *(Bool*)isContentDirty);
+                    callback.PrepareResources(new DateTime(*(long*)presentTargetTime), out *(RawBool*)isContentDirty);
                 }
                 catch (Exception exception)
                 {
@@ -166,7 +171,7 @@ namespace SharpDX.Direct3D11
                         throw new ArgumentException();
 
                     // Call the callback GetTexture method    
-                    callback.GetTexture(*(Size2F*)surfaceSize, out shadow.synchronizedTexture, out *(RectangleF*)textureSubRectangle);
+                    callback.GetTexture(*(Size2F*)surfaceSize, out shadow.synchronizedTexture, out *(RawRectangleF*)textureSubRectangle);
 
                     // Copy back synchronized texture pointer to native code
                     if (shadow.synchronizedTexture != null)
@@ -184,6 +189,15 @@ namespace SharpDX.Direct3D11
                 }
                 return Result.Ok.Code;
             }
+        }
+
+        private static void ClearPointer<T>(ref T comObject) where T : ComObject
+        {
+            if (comObject != null)
+            {
+                comObject.NativePointer = IntPtr.Zero;
+            }
+            comObject = null;
         }
 
         protected override CppObjectVtbl GetVtbl

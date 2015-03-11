@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-dmanip" xmlns="urn:SharpGen.Config">
+  <depends>sharpdx</depends>
+
+  <namespace>SharpDX.DirectManipulation</namespace>
+  <assembly>SharpDX.DirectManipulation</assembly>
+
+  <include file="directmanipulation.h" attach="true"/>
+
+  <naming />
+
+  <extension>
+    <context>sharpdx-dmanip-ext</context>
+    <context>directmanipulation</context>
+
+		<const from-guid="CLSID_VerticalIndicatorContent" class="SharpDX.DirectManipulation.Manager" type="System.Guid" name="VerticalIndicatorContent" visibility="public static readonly">new System.Guid("$1")</const>
+		<const from-guid="CLSID_HorizontalIndicatorContent" class="SharpDX.DirectManipulation.Manager" type="System.Guid" name="HorizontalIndicatorContent" visibility="public static readonly">new System.Guid("$1")</const>
+		<const from-guid="CLSID_VirtualViewportContent" class="SharpDX.DirectManipulation.Manager" type="System.Guid" name="VirtualViewportContent" visibility="public static readonly">new System.Guid("$1")</const>
+
+		<const from-guid="CLSID_DragDropConfigurationBehavior" class="SharpDX.DirectManipulation.Manager2" type="System.Guid" name="DragDropConfigurationBehavior" visibility="public static readonly">new System.Guid("$1")</const>
+		<const from-guid="CLSID_AutoScrollBehavior" class="SharpDX.DirectManipulation.Manager2" type="System.Guid" name="AutoScrollBehavior" visibility="public static readonly">new System.Guid("$1")</const>
+
+		<const from-macro="DIRECTMANIPULATION_KEYBOARDFOCUS" class="SharpDX.DirectManipulation.PointerId" type="int" name="KeyboardFocus" />
+		<const from-macro="DIRECTMANIPULATION_MOUSEFOCUS" class="SharpDX.DirectManipulation.PointerId" type="int" name="MouseFocus" />
+		<const from-macro="DIRECTMANIPULATION_MINIMUM_ZOOM" class="SharpDX.DirectManipulation.PointerId" type="double" name="MinimumZoom" />
+
+		<create class="DManip" />
+		<create class="PointerId" visibility="public" />
+    <context-clear />
+  </extension>
+
+  <bindings>
+  </bindings>
+
+  <mapping>
+    <context>sharpdx-dmanip-ext</context>
+    <context>directmanipulation</context>
+
+    <!--
+    // *****************************************************************
+    // DManip Enumerations
+    // *****************************************************************
+    -->
+    <map enum="DIRECTMANIPULATION_(.*)" name-tmp="$1" />
+
+		<map enum="DIRECTMANIPULATION_HORIZONTALALIGNMENT" name-tmp="HorizontalAlignment" />
+		<map enum="DIRECTMANIPULATION_VERTICALALIGNMENT" name-tmp="VerticalAlignment" />
+		<map enum="DIRECTMANIPULATION_AUTOSCROLL_CONFIGURATION" name-tmp="AutoScrollConfiguration" />
+		<map enum="DIRECTMANIPULATION_HITTEST_TYPE" name-tmp="HitTestType" />
+		<map enum="DIRECTMANIPULATION_SNAPPOINT_COORDINATE" name-tmp="SnapPointCoordinate" />
+		<map enum="DIRECTMANIPULATION_SNAPPOINT_TYPE" name-tmp="SnapPointType" />
+
+		<map enum-item="DIRECTMANIPULATION_VIEWPORT_OPTIONS_AUTODISABLE" name-tmp="AutoDisable" />
+		<map enum-item="DIRECTMANIPULATION_VIEWPORT_OPTIONS_MANUALUPDATE" name-tmp="ManualUpdate" />
+		<map enum-item="DIRECTMANIPULATION_VIEWPORT_OPTIONS_EXPLICITHITTEST" name-tmp="ExplicitHitTest" />
+
+		<map enum-item="DIRECTMANIPULATION_(HORIZONTAL|VERTICAL)ALIGNMENT_UNLOCKCENTER" name-tmp="UnlockCenter" />
+		<map enum-item="DIRECTMANIPULATION_VIEWPORT_OPTIONS_EXPLICITHITTEST" name-tmp="ExplicitHitTest" />
+
+		<map enum-item="DIRECTMANIPULATION_MOTION_TYPES_(TRANSLATE|CENTER)(.)" name-tmp="Translate$2" />
+
+    <!--
+    // *****************************************************************
+    // DManip Structures
+    // *****************************************************************
+    -->
+
+
+    <!--
+    // *****************************************************************
+    // DManip Interfaces
+    // *****************************************************************
+    -->
+    <map interface="IDirectManipulation(.+)" name-tmp="$1" />
+
+		<map interface="IDirectManipulationCompositor" callback-visibility="public" callback="true" callback-dual="true" />
+
+		<map method="IDirectManipulationContent::GetContentTransform" visibility="internal" />
+		<map method="IDirectManipulationContent::GetOutputTransform" visibility="internal" />
+		<map method="IDirectManipulationContent::SyncContentTransform" visibility="internal" />
+		<map method="IDirectManipulationManager::CreateViewport" visibility="internal" />
+		<map method="IDirectManipulationManager::CreateContent" visibility="internal" />
+		<map method="IDirectManipulationManager2::CreateBehavior" visibility="internal" />
+
+    <!--
+    // *****************************************************************
+    // DManip Functions
+    // *****************************************************************
+    -->
+
+    <context-clear />
+  </mapping>
+</config>

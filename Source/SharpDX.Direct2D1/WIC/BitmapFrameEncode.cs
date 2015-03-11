@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,7 @@
 
 using System;
 using System.ComponentModel;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.WIC
 {
@@ -147,9 +148,8 @@ namespace SharpDX.WIC
         /// <msdn-id>ee690159</msdn-id>	
         /// <unmanaged>HRESULT IWICBitmapFrameEncode::WriteSource([In, Optional] IWICBitmapSource* pIBitmapSource,[In, Optional] WICRect* prc)</unmanaged>	
         /// <unmanaged-short>IWICBitmapFrameEncode::WriteSource</unmanaged-short>	
-        public unsafe void WriteSource(SharpDX.WIC.BitmapSource bitmapSourceRef, Rectangle rectangleRef)
+        public unsafe void WriteSource(SharpDX.WIC.BitmapSource bitmapSourceRef, RawBox rectangleRef)
         {
-            rectangleRef.MakeXYAndWidthHeight();
             WriteSource(bitmapSourceRef, new IntPtr(&rectangleRef));
         }
 

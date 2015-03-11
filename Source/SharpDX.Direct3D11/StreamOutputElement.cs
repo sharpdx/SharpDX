@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,11 +19,9 @@
 // THE SOFTWARE.
 using System;
 
-using SharpDX.Serialization;
-
 namespace SharpDX.Direct3D11
 {
-    public partial struct StreamOutputElement : IDataSerializable
+    public partial struct StreamOutputElement
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StreamOutputElement"/> struct.
@@ -42,16 +40,6 @@ namespace SharpDX.Direct3D11
             StartComponent = startComponent;
             ComponentCount = componentCount;
             OutputSlot = outputSlot;
-        }
-
-        void IDataSerializable.Serialize(BinarySerializer serializer)
-        {
-            serializer.Serialize(ref Stream);
-            serializer.Serialize(ref SemanticName);
-            serializer.Serialize(ref SemanticIndex);
-            serializer.Serialize(ref StartComponent);
-            serializer.Serialize(ref ComponentCount);
-            serializer.Serialize(ref OutputSlot);
         }
     }
 }

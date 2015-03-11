@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,11 +20,9 @@
 
 using System;
 
-using SharpDX.Serialization;
-
 namespace SharpDX.Direct3D
 {
-    public partial struct ShaderMacro : IEquatable<ShaderMacro>, IDataSerializable
+    public partial struct ShaderMacro : IEquatable<ShaderMacro>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ShaderMacro"/> struct. 
@@ -59,12 +57,6 @@ namespace SharpDX.Direct3D
             {
                 return ((this.Name != null ? this.Name.GetHashCode() : 0) * 397) ^ (this.Definition != null ? this.Definition.GetHashCode() : 0);
             }
-        }
-
-        void IDataSerializable.Serialize(BinarySerializer serializer)
-        {
-            serializer.Serialize(ref Name);
-            serializer.Serialize(ref Definition, SerializeFlags.Nullable);
         }
 
         public static bool operator ==(ShaderMacro left, ShaderMacro right)

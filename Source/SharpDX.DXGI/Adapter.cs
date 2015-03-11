@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -127,7 +127,6 @@ namespace SharpDX.DXGI
         /// <msdn-id>bb174525</msdn-id>	
         /// <unmanaged>HRESULT IDXGIAdapter::EnumOutputs([In] unsigned int Output,[Out] IDXGIOutput** ppOutput)</unmanaged>	
         /// <unmanaged-short>IDXGIAdapter::EnumOutputs</unmanaged-short>	
-        [Obsolete("Use Adapeter.Outputs property instead")]
         public SharpDX.DXGI.Output GetOutput(int outputIndex)
         {
             Output output;
@@ -142,7 +141,6 @@ namespace SharpDX.DXGI
         /// <msdn-id>bb174525</msdn-id>	
         /// <unmanaged>HRESULT IDXGIAdapter::EnumOutputs([In] unsigned int Output,[Out] IDXGIOutput** ppOutput)</unmanaged>	
         /// <unmanaged-short>IDXGIAdapter::EnumOutputs</unmanaged-short>	
-        [Obsolete("Use Adapeter.Outputs property instead")]
         public int GetOutputCount()
         {
             var nbOutputs = 0;

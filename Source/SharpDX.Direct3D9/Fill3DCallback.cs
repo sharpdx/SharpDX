@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D9
 {
@@ -30,7 +31,7 @@ namespace SharpDX.Direct3D9
     /// <param name="texelSize">Dimensions of the texel.</param>
     /// <returns>The desired color of the specified texel.</returns>
     /// <unmanaged>typedef VOID (WINAPI *LPD3DXFILL2D)(D3DXVECTOR4 *pOut, CONST D3DXVECTOR2 *pTexCoord, CONST D3DXVECTOR2 *pTexelSize, LPVOID pData);</unmanaged>
-    public delegate Color4 Fill2DCallback(Vector2 coordinate, Vector2 texelSize);
+    public delegate RawColor4 Fill2DCallback(RawVector2 coordinate, RawVector2 texelSize);
 
     /// <summary>
     /// A callback function used to fill 3D texture.
@@ -39,7 +40,7 @@ namespace SharpDX.Direct3D9
     /// <param name="texelSize">Dimensions of the texel.</param>
     /// <returns>The desired color of the specified texel.</returns>
     /// <unmanaged>typedef VOID (WINAPI *LPD3DXFILL2D)(D3DXVECTOR4 *pOut, CONST D3DXVECTOR2 *pTexCoord, CONST D3DXVECTOR2 *pTexelSize, LPVOID pData);</unmanaged>
-    public delegate Color4 Fill3DCallback(Vector3 coordinate, Vector3 texelSize);
+    public delegate RawColor4 Fill3DCallback(RawVector3 coordinate, RawVector3 texelSize);
 
     /// <summary>
     /// Fill callback helper class.
@@ -66,8 +67,8 @@ namespace SharpDX.Direct3D9
         }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private unsafe delegate Result Fill2DCallbackDelegate(Color4* outVector, Vector2* textCoord, Vector2* textelSize, IntPtr data);
-        private static unsafe Result Fill2DCallbackImpl(Color4* outVector, Vector2* textCoord, Vector2* textelSize, IntPtr data)
+        private unsafe delegate Result Fill2DCallbackDelegate(RawColor4* outVector, RawVector2* textCoord, RawVector2* textelSize, IntPtr data);
+        private static unsafe Result Fill2DCallbackImpl(RawColor4* outVector, RawVector2* textCoord, RawVector2* textelSize, IntPtr data)
         {
             try
             {
@@ -86,8 +87,8 @@ namespace SharpDX.Direct3D9
         }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private unsafe delegate Result Fill3DCallbackDelegate(Color4* outVector, Vector3* textCoord, Vector3* textelSize, IntPtr data);
-        private static unsafe Result Fill3DCallbackImpl(Color4* outVector, Vector3* textCoord, Vector3* textelSize, IntPtr data)
+        private unsafe delegate Result Fill3DCallbackDelegate(RawColor4* outVector, RawVector3* textCoord, RawVector3* textelSize, IntPtr data);
+        private static unsafe Result Fill3DCallbackImpl(RawColor4* outVector, RawVector3* textCoord, RawVector3* textelSize, IntPtr data)
         {
             try
             {

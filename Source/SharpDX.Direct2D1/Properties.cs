@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,11 +17,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1
 {
@@ -134,10 +134,10 @@ namespace SharpDX.Direct2D1
         /// <param name="index"><para>The index of the property from which the data is to be obtained.</para></param>	
         /// <returns>The value of the specified property by index.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValue([In] unsigned int index,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe Vector2 GetVector2Value(int index)
+        public unsafe RawVector2 GetVector2Value(int index)
         {
-            Vector2 value;
-            this.GetValue(index, PropertyType.Vector2, new IntPtr(&value), Utilities.SizeOf<Vector2>());
+            RawVector2 value;
+            this.GetValue(index, PropertyType.Vector2, new IntPtr(&value), Utilities.SizeOf<RawVector2>());
             return value;
         }
 
@@ -147,10 +147,10 @@ namespace SharpDX.Direct2D1
         /// <param name="index"><para>The index of the property from which the data is to be obtained.</para></param>	
         /// <returns>The value of the specified property by index.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValue([In] unsigned int index,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe Vector3 GetVector3Value(int index)
+        public unsafe RawVector3 GetVector3Value(int index)
         {
-            Vector3 value;
-            this.GetValue(index, PropertyType.Vector3, new IntPtr(&value), Utilities.SizeOf<Vector3>());
+            RawVector3 value;
+            this.GetValue(index, PropertyType.Vector3, new IntPtr(&value), Utilities.SizeOf<RawVector3>());
             return value;
         }
 
@@ -160,10 +160,10 @@ namespace SharpDX.Direct2D1
         /// <param name="index"><para>The index of the property from which the data is to be obtained.</para></param>	
         /// <returns>The value of the specified property by index.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValue([In] unsigned int index,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe Color3 GetColor3Value(int index)
+        public unsafe RawColor3 GetColor3Value(int index)
         {
-            Color3 value;
-            this.GetValue(index, PropertyType.Vector3, new IntPtr(&value), Utilities.SizeOf<Color3>());
+            RawColor3 value;
+            this.GetValue(index, PropertyType.Vector3, new IntPtr(&value), Utilities.SizeOf<RawColor3>());
             return value;
         }
 
@@ -173,10 +173,10 @@ namespace SharpDX.Direct2D1
         /// <param name="index"><para>The index of the property from which the data is to be obtained.</para></param>	
         /// <returns>The value of the specified property by index.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValue([In] unsigned int index,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe Vector4 GetVector4Value(int index)
+        public unsafe RawVector4 GetVector4Value(int index)
         {
-            Vector4 value;
-            this.GetValue(index, PropertyType.Vector4, new IntPtr(&value), Utilities.SizeOf<Vector4>());
+            RawVector4 value;
+            this.GetValue(index, PropertyType.Vector4, new IntPtr(&value), Utilities.SizeOf<RawVector4>());
             return value;
         }
 
@@ -186,10 +186,10 @@ namespace SharpDX.Direct2D1
         /// <param name="index"><para>The index of the property from which the data is to be obtained.</para></param>	
         /// <returns>The value of the specified property by index.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValue([In] unsigned int index,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe RectangleF GetRectangleFValue(int index)
+        public unsafe RawRectangleF GetRectangleFValue(int index)
         {
-            RectangleF value;
-            this.GetValue(index, PropertyType.Vector4, new IntPtr(&value), Utilities.SizeOf<RectangleF>());
+            RawRectangleF value;
+            this.GetValue(index, PropertyType.Vector4, new IntPtr(&value), Utilities.SizeOf<RawRectangleF>());
             return value;
         }
 
@@ -199,10 +199,10 @@ namespace SharpDX.Direct2D1
         /// <param name="index"><para>The index of the property from which the data is to be obtained.</para></param>	
         /// <returns>The value of the specified property by index.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValue([In] unsigned int index,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe Color4 GetColor4Value(int index)
+        public unsafe RawColor4 GetColor4Value(int index)
         {
-            Color4 value;
-            this.GetValue(index, PropertyType.Vector4, new IntPtr(&value), Utilities.SizeOf<Color4>());
+            RawColor4 value;
+            this.GetValue(index, PropertyType.Vector4, new IntPtr(&value), Utilities.SizeOf<RawColor4>());
             return value;
         }
 
@@ -212,10 +212,10 @@ namespace SharpDX.Direct2D1
         /// <param name="index"><para>The index of the property from which the data is to be obtained.</para></param>	
         /// <returns>The value of the specified property by index.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValue([In] unsigned int index,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe Matrix GetMatrixValue(int index)
+        public unsafe RawMatrix GetMatrixValue(int index)
         {
-            Matrix value;
-            this.GetValue(index, PropertyType.Matrix4x4, new IntPtr(&value), Utilities.SizeOf<Matrix>());
+            RawMatrix value;
+            this.GetValue(index, PropertyType.Matrix4x4, new IntPtr(&value), Utilities.SizeOf<RawMatrix>());
             return value;
         }
 
@@ -225,10 +225,10 @@ namespace SharpDX.Direct2D1
         /// <param name="index"><para>The index of the property from which the data is to be obtained.</para></param>	
         /// <returns>The value of the specified property by index.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValue([In] unsigned int index,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe Matrix3x2 GetMatrix3x2Value(int index)
+        public unsafe RawMatrix3x2 GetMatrix3x2Value(int index)
         {
-            Matrix3x2 value;
-            this.GetValue(index, PropertyType.Matrix3x2, new IntPtr(&value), Utilities.SizeOf<Matrix3x2>());
+            RawMatrix3x2 value;
+            this.GetValue(index, PropertyType.Matrix3x2, new IntPtr(&value), Utilities.SizeOf<RawMatrix3x2>());
             return value;
         }
 
@@ -238,10 +238,10 @@ namespace SharpDX.Direct2D1
         /// <param name="index"><para>The index of the property from which the data is to be obtained.</para></param>	
         /// <returns>The value of the specified property by index.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValue([In] unsigned int index,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe Matrix5x4 GetMatrix5x4Value(int index)
+        public unsafe RawMatrix5x4 GetMatrix5x4Value(int index)
         {
-            Matrix5x4 value;
-            this.GetValue(index, PropertyType.Matrix5x4, new IntPtr(&value), Utilities.SizeOf<Matrix5x4>());
+            RawMatrix5x4 value;
+            this.GetValue(index, PropertyType.Matrix5x4, new IntPtr(&value), Utilities.SizeOf<RawMatrix5x4>());
             return value;
         }
 
@@ -344,10 +344,10 @@ namespace SharpDX.Direct2D1
         /// <param name="name">The name of the property.</param>	
         /// <returns>The value of the specified property by name.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe Vector2 GetVector2ValueByName(string name)
+        public unsafe RawVector2 GetVector2ValueByName(string name)
         {
-            Vector2 value;
-            this.GetValueByName(name, PropertyType.Vector2, new IntPtr(&value), Utilities.SizeOf<Vector2>());
+            RawVector2 value;
+            this.GetValueByName(name, PropertyType.Vector2, new IntPtr(&value), Utilities.SizeOf<RawVector2>());
             return value;
         }
 
@@ -357,10 +357,10 @@ namespace SharpDX.Direct2D1
         /// <param name="name">The name of the property.</param>	
         /// <returns>The value of the specified property by name.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe Vector3 GetVector3ValueByName(string name)
+        public unsafe RawVector3 GetVector3ValueByName(string name)
         {
-            Vector3 value;
-            this.GetValueByName(name, PropertyType.Vector3, new IntPtr(&value), Utilities.SizeOf<Vector3>());
+            RawVector3 value;
+            this.GetValueByName(name, PropertyType.Vector3, new IntPtr(&value), Utilities.SizeOf<RawVector3>());
             return value;
         }
 
@@ -370,10 +370,10 @@ namespace SharpDX.Direct2D1
         /// <param name="name">The name of the property.</param>	
         /// <returns>The value of the specified property by name.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe Color3 GetColor3ValueByName(string name)
+        public unsafe RawColor3 GetColor3ValueByName(string name)
         {
-            Color3 value;
-            this.GetValueByName(name, PropertyType.Vector3, new IntPtr(&value), Utilities.SizeOf<Color3>());
+            RawColor3 value;
+            this.GetValueByName(name, PropertyType.Vector3, new IntPtr(&value), Utilities.SizeOf<RawColor3>());
             return value;
         }
 
@@ -383,10 +383,10 @@ namespace SharpDX.Direct2D1
         /// <param name="name">The name of the property.</param>	
         /// <returns>The value of the specified property by name.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe Vector4 GetVector4ValueByName(string name)
+        public unsafe RawVector4 GetVector4ValueByName(string name)
         {
-            Vector4 value;
-            this.GetValueByName(name, PropertyType.Vector4, new IntPtr(&value), Utilities.SizeOf<Vector4>());
+            RawVector4 value;
+            this.GetValueByName(name, PropertyType.Vector4, new IntPtr(&value), Utilities.SizeOf<RawVector4>());
             return value;
         }
 
@@ -396,10 +396,10 @@ namespace SharpDX.Direct2D1
         /// <param name="name">The name of the property.</param>	
         /// <returns>The value of the specified property by name.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe RectangleF GetRectangleFValueByName(string name)
+        public unsafe RawRectangleF GetRectangleFValueByName(string name)
         {
-            RectangleF value;
-            this.GetValueByName(name, PropertyType.Vector4, new IntPtr(&value), Utilities.SizeOf<RectangleF>());
+            RawRectangleF value;
+            this.GetValueByName(name, PropertyType.Vector4, new IntPtr(&value), Utilities.SizeOf<RawRectangleF>());
             return value;
         }
 
@@ -409,10 +409,10 @@ namespace SharpDX.Direct2D1
         /// <param name="name">The name of the property.</param>	
         /// <returns>The value of the specified property by name.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe Color4 GetColor4ValueByName(string name)
+        public unsafe RawColor4 GetColor4ValueByName(string name)
         {
-            Color4 value;
-            this.GetValueByName(name, PropertyType.Vector4, new IntPtr(&value), Utilities.SizeOf<Color4>());
+            RawColor4 value;
+            this.GetValueByName(name, PropertyType.Vector4, new IntPtr(&value), Utilities.SizeOf<RawColor4>());
             return value;
         }
 
@@ -422,10 +422,10 @@ namespace SharpDX.Direct2D1
         /// <param name="name">The name of the property.</param>	
         /// <returns>The value of the specified property by name.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe Matrix GetMatrixValueByName(string name)
+        public unsafe RawMatrix GetMatrixValueByName(string name)
         {
-            Matrix value;
-            this.GetValueByName(name, PropertyType.Matrix4x4, new IntPtr(&value), Utilities.SizeOf<Matrix>());
+            RawMatrix value;
+            this.GetValueByName(name, PropertyType.Matrix4x4, new IntPtr(&value), Utilities.SizeOf<RawMatrix>());
             return value;
         }
 
@@ -435,10 +435,10 @@ namespace SharpDX.Direct2D1
         /// <param name="name">The name of the property.</param>	
         /// <returns>The value of the specified property by name.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe Matrix3x2 GetMatrix3x2ValueByName(string name)
+        public unsafe RawMatrix3x2 GetMatrix3x2ValueByName(string name)
         {
-            Matrix3x2 value;
-            this.GetValueByName(name, PropertyType.Matrix3x2, new IntPtr(&value), Utilities.SizeOf<Matrix3x2>());
+            RawMatrix3x2 value;
+            this.GetValueByName(name, PropertyType.Matrix3x2, new IntPtr(&value), Utilities.SizeOf<RawMatrix3x2>());
             return value;
         }
 
@@ -448,10 +448,10 @@ namespace SharpDX.Direct2D1
         /// <param name="name">The name of the property.</param>	
         /// <returns>The value of the specified property by name.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe Matrix5x4 GetMatrix5x4ValueByName(string name)
+        public unsafe RawMatrix5x4 GetMatrix5x4ValueByName(string name)
         {
-            Matrix5x4 value;
-            this.GetValueByName(name, PropertyType.Matrix5x4, new IntPtr(&value), Utilities.SizeOf<Matrix5x4>());
+            RawMatrix5x4 value;
+            this.GetValueByName(name, PropertyType.Matrix5x4, new IntPtr(&value), Utilities.SizeOf<RawMatrix5x4>());
             return value;
         }
 
@@ -559,9 +559,9 @@ namespace SharpDX.Direct2D1
         /// <param name="name">Name of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValueByName(string name, Vector2 value)
+        public unsafe void SetValueByName(string name, RawVector2 value)
         {
-            SetValueByName(name, PropertyType.Vector2, new IntPtr(&value), sizeof(Vector2));
+            SetValueByName(name, PropertyType.Vector2, new IntPtr(&value), sizeof(RawVector2));
         }
 
         /// <summary>
@@ -570,9 +570,9 @@ namespace SharpDX.Direct2D1
         /// <param name="name">Name of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValueByName(string name, Color3 value)
+        public unsafe void SetValueByName(string name, RawColor3 value)
         {
-            SetValueByName(name, PropertyType.Vector3, new IntPtr(&value), sizeof(Color3));
+            SetValueByName(name, PropertyType.Vector3, new IntPtr(&value), sizeof(RawColor3));
         }
 
         /// <summary>
@@ -581,9 +581,9 @@ namespace SharpDX.Direct2D1
         /// <param name="name">Name of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValueByName(string name, Vector4 value)
+        public unsafe void SetValueByName(string name, RawVector4 value)
         {
-            SetValueByName(name, PropertyType.Vector4, new IntPtr(&value), sizeof(Vector4));
+            SetValueByName(name, PropertyType.Vector4, new IntPtr(&value), sizeof(RawVector4));
         }
 
         /// <summary>
@@ -592,9 +592,9 @@ namespace SharpDX.Direct2D1
         /// <param name="name">Name of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValueByName(string name, RectangleF value)
+        public unsafe void SetValueByName(string name, RawRectangleF value)
         {
-            SetValueByName(name, PropertyType.Vector4, new IntPtr(&value), sizeof(RectangleF));
+            SetValueByName(name, PropertyType.Vector4, new IntPtr(&value), sizeof(RawRectangleF));
         }
 
         /// <summary>
@@ -603,9 +603,9 @@ namespace SharpDX.Direct2D1
         /// <param name="name">Name of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValueByName(string name, Color4 value)
+        public unsafe void SetValueByName(string name, RawColor4 value)
         {
-            SetValueByName(name, PropertyType.Vector4, new IntPtr(&value), sizeof(Color4));
+            SetValueByName(name, PropertyType.Vector4, new IntPtr(&value), sizeof(RawColor4));
         }
 
         /// <summary>
@@ -614,9 +614,9 @@ namespace SharpDX.Direct2D1
         /// <param name="name">Name of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValueByName(string name, Matrix3x2 value)
+        public unsafe void SetValueByName(string name, RawMatrix3x2 value)
         {
-            SetValueByName(name, PropertyType.Matrix3x2, new IntPtr(&value), sizeof(Matrix3x2));
+            SetValueByName(name, PropertyType.Matrix3x2, new IntPtr(&value), sizeof(RawMatrix3x2));
         }
 
         /// <summary>
@@ -625,9 +625,9 @@ namespace SharpDX.Direct2D1
         /// <param name="name">Name of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValueByName(string name, Matrix value)
+        public unsafe void SetValueByName(string name, RawMatrix value)
         {
-            SetValueByName(name, PropertyType.Matrix4x4, new IntPtr(&value), sizeof(Matrix));
+            SetValueByName(name, PropertyType.Matrix4x4, new IntPtr(&value), sizeof(RawMatrix));
         }
 
         /// <summary>
@@ -636,9 +636,9 @@ namespace SharpDX.Direct2D1
         /// <param name="name">Name of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValueByName(string name, Matrix5x4 value)
+        public unsafe void SetValueByName(string name, RawMatrix5x4 value)
         {
-            SetValueByName(name, PropertyType.Matrix4x4, new IntPtr(&value), sizeof(Matrix5x4));
+            SetValueByName(name, PropertyType.Matrix5x4, new IntPtr(&value), sizeof(RawMatrix5x4));
         }
 
         /// <summary>
@@ -740,9 +740,9 @@ namespace SharpDX.Direct2D1
         /// <param name="index">Index of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValue([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValue(int index, Vector2 value)
+        public unsafe void SetValue(int index, RawVector2 value)
         {
-            SetValue(index, PropertyType.Vector2, new IntPtr(&value), sizeof(Vector2));
+            SetValue(index, PropertyType.Vector2, new IntPtr(&value), sizeof(RawVector2));
         }
 
         /// <summary>
@@ -751,9 +751,9 @@ namespace SharpDX.Direct2D1
         /// <param name="index">Index of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValue([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValue(int index, Vector3 value)
+        public unsafe void SetValue(int index, RawVector3 value)
         {
-            SetValue(index, PropertyType.Vector3, new IntPtr(&value), sizeof(Vector3));
+            SetValue(index, PropertyType.Vector3, new IntPtr(&value), sizeof(RawVector3));
         }
 
         /// <summary>
@@ -762,9 +762,9 @@ namespace SharpDX.Direct2D1
         /// <param name="index">Index of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValue([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValue(int index, Color3 value)
+        public unsafe void SetValue(int index, RawColor3 value)
         {
-            SetValue(index, PropertyType.Vector3, new IntPtr(&value), sizeof(Color3));
+            SetValue(index, PropertyType.Vector3, new IntPtr(&value), sizeof(RawColor3));
         }
 
         /// <summary>
@@ -773,9 +773,9 @@ namespace SharpDX.Direct2D1
         /// <param name="index">Index of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValue([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValue(int index, Vector4 value)
+        public unsafe void SetValue(int index, RawVector4 value)
         {
-            SetValue(index, PropertyType.Vector4, new IntPtr(&value), sizeof(Vector4));
+            SetValue(index, PropertyType.Vector4, new IntPtr(&value), sizeof(RawVector4));
         }
 
         /// <summary>
@@ -784,9 +784,9 @@ namespace SharpDX.Direct2D1
         /// <param name="index">Index of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValue([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValue(int index, RectangleF value)
+        public unsafe void SetValue(int index, RawRectangleF value)
         {
-            SetValue(index, PropertyType.Vector4, new IntPtr(&value), sizeof(RectangleF));
+            SetValue(index, PropertyType.Vector4, new IntPtr(&value), sizeof(RawRectangleF));
         }
 
         /// <summary>
@@ -795,9 +795,9 @@ namespace SharpDX.Direct2D1
         /// <param name="index">Index of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValue([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValue(int index, Color4 value)
+        public unsafe void SetValue(int index, RawColor4 value)
         {
-            SetValue(index, PropertyType.Vector4, new IntPtr(&value), sizeof(Color4));
+            SetValue(index, PropertyType.Vector4, new IntPtr(&value), sizeof(RawColor4));
         }
 
         /// <summary>
@@ -806,9 +806,9 @@ namespace SharpDX.Direct2D1
         /// <param name="index">Index of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValue([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValue(int index, Matrix3x2 value)
+        public unsafe void SetValue(int index, RawMatrix3x2 value)
         {
-            SetValue(index, PropertyType.Matrix3x2, new IntPtr(&value), sizeof(Matrix3x2));
+            SetValue(index, PropertyType.Matrix3x2, new IntPtr(&value), sizeof(RawMatrix3x2));
         }
 
         /// <summary>
@@ -817,9 +817,9 @@ namespace SharpDX.Direct2D1
         /// <param name="index">Index of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValue([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValue(int index, Matrix value)
+        public unsafe void SetValue(int index, RawMatrix value)
         {
-            SetValue(index, PropertyType.Matrix4x4, new IntPtr(&value), sizeof(Matrix));
+            SetValue(index, PropertyType.Matrix4x4, new IntPtr(&value), sizeof(RawMatrix));
         }
 
         /// <summary>
@@ -828,9 +828,9 @@ namespace SharpDX.Direct2D1
         /// <param name="index">Index of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValue([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValue(int index, Matrix5x4 value)
+        public unsafe void SetValue(int index, RawMatrix5x4 value)
         {
-            SetValue(index, PropertyType.Matrix5x4, new IntPtr(&value), sizeof(Matrix5x4));
+            SetValue(index, PropertyType.Matrix5x4, new IntPtr(&value), sizeof(RawMatrix5x4));
         }
 
         /// <summary>

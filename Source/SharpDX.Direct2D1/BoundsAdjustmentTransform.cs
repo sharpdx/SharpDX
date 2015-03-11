@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,10 +17,10 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
 using System;
-using System.Collections.Generic;
-using System.Text;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1
 {
@@ -32,7 +32,7 @@ namespace SharpDX.Direct2D1
         /// <param name="context">The effect context</param>
         /// <param name="outputRectangle">The output rectangle region used for this transformation</param>
         /// <unmanaged>HRESULT ID2D1EffectContext::CreateBoundsAdjustmentTransform([In] const RECT* outputRectangle,[Out, Fast] ID2D1BoundsAdjustmentTransform** transform)</unmanaged>	
-        public BoundsAdjustmentTransform(EffectContext context, SharpDX.Rectangle outputRectangle) : base(IntPtr.Zero)
+        public BoundsAdjustmentTransform(EffectContext context, RawRectangle outputRectangle) : base(IntPtr.Zero)
         {
             context.CreateBoundsAdjustmentTransform(outputRectangle, this);
         }

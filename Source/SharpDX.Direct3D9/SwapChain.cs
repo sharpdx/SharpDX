@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D9
 {
@@ -63,7 +64,7 @@ namespace SharpDX.Direct3D9
         /// <param name="sourceRectangle">The area of the back buffer that should be presented.</param>
         /// <param name="destinationRectangle">The area of the front buffer that should receive the result of the presentation.</param>
         /// <unmanaged>HRESULT IDirect3DSwapChain9::Present([In, Optional] const void* pSourceRect,[InOut, Optional] const void* pDestRect,[In] HWND hDestWindowOverride,[In] const RGNDATA* pDirtyRegion,[In] unsigned int dwFlags)</unmanaged>
-        public void Present(Present presentFlags, Rectangle sourceRectangle, Rectangle destinationRectangle)
+        public void Present(Present presentFlags, RawRectangle sourceRectangle, RawRectangle destinationRectangle)
         {
             Present(presentFlags, sourceRectangle, destinationRectangle, IntPtr.Zero);
         }
@@ -76,16 +77,16 @@ namespace SharpDX.Direct3D9
         /// <param name="destinationRectangle">The area of the front buffer that should receive the result of the presentation.</param>
         /// <param name="windowOverride">The destination window whose client area is taken as the target for this presentation.</param>
         /// <unmanaged>HRESULT IDirect3DSwapChain9::Present([In, Optional] const void* pSourceRect,[InOut, Optional] const void* pDestRect,[In] HWND hDestWindowOverride,[In] const RGNDATA* pDirtyRegion,[In] unsigned int dwFlags)</unmanaged>
-        public void Present(Present presentFlags, Rectangle sourceRectangle, Rectangle destinationRectangle, IntPtr windowOverride)
+        public void Present(Present presentFlags, RawRectangle sourceRectangle, RawRectangle destinationRectangle, IntPtr windowOverride)
         {
             unsafe
             {
                 var srcPtr = IntPtr.Zero;
-                if (sourceRectangle != Rectangle.Empty)
+                if (!sourceRectangle.IsEmpty)
                     srcPtr = new IntPtr(&sourceRectangle);
 
                 var destPtr = IntPtr.Zero;
-                if (destinationRectangle != Rectangle.Empty)
+                if (!destinationRectangle.IsEmpty)
                     destPtr = new IntPtr(&destinationRectangle);
 
                 Present(srcPtr, destPtr, windowOverride, IntPtr.Zero, (int)presentFlags);
@@ -102,7 +103,7 @@ namespace SharpDX.Direct3D9
         /// <param name="windowOverride">The destination window whose client area is taken as the target for this presentation.</param>
         /// <param name="region">Specifies a region on the back buffer that contains the minimal amount of pixels that need to be updated.</param>
         /// <unmanaged>HRESULT IDirect3DSwapChain9::Present([In, Optional] const void* pSourceRect,[InOut, Optional] const void* pDestRect,[In] HWND hDestWindowOverride,[In] const RGNDATA* pDirtyRegion,[In] unsigned int dwFlags)</unmanaged>
-        public void Present(Present flags, Rectangle sourceRectangle, Rectangle destinationRectangle, IntPtr windowOverride, System.Drawing.Region region)
+        public void Present(Present flags, RawRectangle sourceRectangle, RawRectangle destinationRectangle, IntPtr windowOverride, System.Drawing.Region region)
         {
             unsafe
             {
@@ -111,11 +112,11 @@ namespace SharpDX.Direct3D9
                 graphics.Dispose();
 
                 var srcPtr = IntPtr.Zero;
-                if (sourceRectangle != Rectangle.Empty)
+                if (!sourceRectangle.IsEmpty)
                     srcPtr = new IntPtr(&sourceRectangle);
 
                 var destPtr = IntPtr.Zero;
-                if (destinationRectangle != Rectangle.Empty)
+                if (!destinationRectangle.IsEmpty)
                     destPtr = new IntPtr(&destinationRectangle);
 
                 Present(srcPtr, destPtr, windowOverride, regionPtr, (int)flags);

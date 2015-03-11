@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -117,7 +117,7 @@
     <bind from="D3D10_MAPPED_TEXTURE2D" to="SharpDX.DataRectangle"/>
     <bind from="D3D10_MAPPED_TEXTURE3D" to="SharpDX.DataBox"/>
     <bind from="ID3DX10ThreadPump" to="System.IntPtr" />
-    <bind from="D3D10_VIEWPORT" to="SharpDX.Viewport"/>
+    <bind from="D3D10_VIEWPORT" to="SharpDX.Mathematics.Interop.RawViewport"/>
   </bindings>
 
   <!-- D3D10 mapping -->
@@ -221,7 +221,7 @@
     -->
     <remove interface="ID3D10ShaderReflection.*" />
     <remove interface="ID3D10ShaderReflection.*" />
-    <map method="ID3D10Asynchronous::Get.*" visibility="internal" property="false" />
+    <map method="ID3D10Asynchronous::Get.*" visibility="internal" property="false" check="false" />
     <map method="ID3D10Debug::(.*)FeatureMask" visibility="internal" property="false" name="$1FeatureFlags" />
     <map method="ID3D10Buffer::Map.*" visibility="internal" />
     <map method="ID3D10Device::IA(.*)" name="$1" />

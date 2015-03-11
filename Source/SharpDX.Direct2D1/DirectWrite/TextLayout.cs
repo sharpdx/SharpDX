@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,7 @@
 using System;
 using System.Runtime.InteropServices;
 using SharpDX.Direct2D1;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.DirectWrite
 {
@@ -74,7 +75,7 @@ namespace SharpDX.DirectWrite
         /// <param name="transform">An optional transform applied to the glyphs and their positions. This transform is applied after the scaling specifies the font size and pixels per DIP. </param>
         /// <param name="useGdiNatural">Instructs the text layout to use the same metrics as GDI bi-level text when set to FALSE. When set to TRUE, instructs the text layout to use the same metrics as text measured by GDI using a font created with CLEARTYPE_NATURAL_QUALITY.  </param>
         /// <unmanaged>HRESULT IDWriteFactory::CreateGdiCompatibleTextLayout([In, Buffer] const wchar_t* string,[None] int stringLength,[None] IDWriteTextFormat* textFormat,[None] float layoutWidth,[None] float layoutHeight,[None] float pixelsPerDip,[In, Optional] const DWRITE_MATRIX* transform,[None] BOOL useGdiNatural,[Out] IDWriteTextLayout** textLayout)</unmanaged>
-        public TextLayout(Factory factory, string text, TextFormat textFormat, float layoutWidth, float layoutHeight, float pixelsPerDip, Matrix? transform, bool useGdiNatural) : base(IntPtr.Zero)
+        public TextLayout(Factory factory, string text, TextFormat textFormat, float layoutWidth, float layoutHeight, float pixelsPerDip, RawMatrix3x2? transform, bool useGdiNatural) : base(IntPtr.Zero)
         {
             factory.CreateGdiCompatibleTextLayout(text, text.Length, textFormat, layoutWidth, layoutHeight, pixelsPerDip, transform, useGdiNatural, this);
         }

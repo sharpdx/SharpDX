@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D10
 {
@@ -26,15 +27,15 @@ namespace SharpDX.Direct3D10
         /// <summary>	
         /// Get the array of {{viewports}} bound  to the {{rasterizer stage}} 	
         /// </summary>	
-        /// <returns>An array of viewports (see <see cref="SharpDX.Viewport"/>).</returns>
+        /// <returns>An array of viewports (see <see cref="RawViewport"/>).</returns>
         /// <unmanaged>void RSGetViewports([InOut] int* NumViewports,[Out, Buffer, Optional] D3D10_VIEWPORT* pViewports)</unmanaged>
-        public SharpDX.Viewport[] GetViewports()
+        public RawViewport[] GetViewports()
         {
             int numViewports = 0;
 
             GetViewports(ref numViewports, null);
 
-            SharpDX.Viewport[] viewports = new SharpDX.Viewport[numViewports];
+            RawViewport[] viewports = new RawViewport[numViewports];
             GetViewports(ref numViewports, viewports);
 
             return viewports;
@@ -43,9 +44,9 @@ namespace SharpDX.Direct3D10
         /// <summary>	
         /// Get the array of {{viewports}} bound  to the {{rasterizer stage}} 	
         /// </summary>	
-        /// <returns>An array of viewports (see <see cref="SharpDX.Viewport"/>).</returns>
+        /// <returns>An array of viewports (see <see cref="RawViewport"/>).</returns>
         /// <unmanaged>void RSGetViewports([InOut] int* NumViewports,[Out, Buffer, Optional] D3D10_VIEWPORT* pViewports)</unmanaged>
-        public void GetViewports(SharpDX.Viewport[] viewports)
+        public void GetViewports(RawViewport[] viewports)
         {
             int numViewports = viewports.Length;
             GetViewports(ref numViewports, viewports);
@@ -54,14 +55,14 @@ namespace SharpDX.Direct3D10
         /// <summary>	
         /// Get the array of {{scissor rectangles}} bound to the {{rasterizer stage}}.	
         /// </summary>	
-        /// <returns>An array of scissor rectangles (see <see cref="SharpDX.Rectangle"/>).</returns>
+        /// <returns>An array of scissor rectangles (see <see cref="RawRectangle"/>).</returns>
         /// <unmanaged>void RSGetScissorRects([InOut] int* NumRects,[Out, Buffer, Optional] D3D10_RECT* pRects)</unmanaged>
-        public SharpDX.Rectangle[] GetScissorRectangles()
+        public RawRectangle[] GetScissorRectangles()
         {
             int numRects = 0;
             GetScissorRects(ref numRects, null);
 
-            SharpDX.Rectangle[] scissorRectangles = new Rectangle[numRects];
+            RawRectangle[] scissorRectangles = new RawRectangle[numRects];
             GetScissorRects(ref numRects, scissorRectangles);
 
             return scissorRectangles;
@@ -70,9 +71,9 @@ namespace SharpDX.Direct3D10
         /// <summary>	
         /// Get the array of {{scissor rectangles}} bound to the {{rasterizer stage}}.	
         /// </summary>	
-        /// <returns>An array of scissor rectangles (see <see cref="SharpDX.Rectangle"/>).</returns>
+        /// <returns>An array of scissor rectangles (see <see cref="RawRectangle"/>).</returns>
         /// <unmanaged>void RSGetScissorRects([InOut] int* NumRects,[Out, Buffer, Optional] D3D10_RECT* pRects)</unmanaged>
-        public void GetScissorRectangles(SharpDX.Rectangle[] scissorRectangles)
+        public void GetScissorRectangles(RawRectangle[] scissorRectangles)
         {
             int numRects = scissorRectangles.Length;
             GetScissorRects(ref numRects, scissorRectangles);
@@ -82,16 +83,16 @@ namespace SharpDX.Direct3D10
         ///   Binds a single scissor rectangle to the rasterizer stage.
         /// </summary>
         /// <param name = "scissorRectangle">The scissor rectangle to bind.</param>
-        public void SetScissorRectangles(Rectangle scissorRectangle)
+        public void SetScissorRectangles(RawRectangle scissorRectangle)
         {
-            SetScissorRectangles(new Rectangle[] { scissorRectangle });
+            SetScissorRectangles(new RawRectangle[] { scissorRectangle });
         }
 
         /// <summary>
         ///   Binds a set of scissor rectangles to the rasterizer stage.
         /// </summary>
         /// <param name = "scissorRectangles">The set of scissor rectangles to bind.</param>
-        public void SetScissorRectangles(params Rectangle[] scissorRectangles)
+        public void SetScissorRectangles(params RawRectangle[] scissorRectangles)
         {
             SetScissorRects(scissorRectangles.Length, scissorRectangles);
         }
@@ -100,7 +101,7 @@ namespace SharpDX.Direct3D10
         ///   Binds a set of viewports to the rasterizer stage.
         /// </summary>
         /// <param name = "viewports">The set of viewports to bind.</param>
-        public void SetViewports(params Viewport[] viewports)
+        public void SetViewports(params RawViewport[] viewports)
         {
             SetViewports(viewports.Length, viewports);
         }
@@ -109,9 +110,9 @@ namespace SharpDX.Direct3D10
         ///   Binds a single viewport to the rasterizer stage.
         /// </summary>
         /// <param name = "viewport">The viewport to bind.</param>
-        public void SetViewports(Viewport viewport)
+        public void SetViewports(RawViewport viewport)
         {
-            SetViewports(new Viewport[] { viewport });
+            SetViewports(new RawViewport[] { viewport });
         }
     }
 }

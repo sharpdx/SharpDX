@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -68,6 +68,11 @@ namespace SharpDX.DXGI
         public static bool operator !=(Rational left, Rational right)
         {
             return !left.Equals(right);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}/{1}", Numerator, Denominator);
         }
     }
 }

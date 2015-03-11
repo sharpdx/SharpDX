@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -69,15 +69,9 @@ namespace SharpDX.Direct3D10
         {
             get
             {
-                try
-                {
-                    GetData(IntPtr.Zero, 0, 0);
-                    return true;
-                }
-                catch (SharpDXException)
-                {
-                    return false;
-                }
+                // http://msdn.microsoft.com/en-us/library/windows/desktop/bb173503%28v=vs.85%29.aspx
+                // any result other than S_OK will indicate that there is no data available.
+                return GetData(IntPtr.Zero, 0, 0) == Result.Ok;
             }
         }
     }

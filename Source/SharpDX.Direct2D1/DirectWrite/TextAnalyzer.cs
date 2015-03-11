@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.DirectWrite
 {
@@ -243,7 +244,7 @@ namespace SharpDX.DirectWrite
         /// If the method succeeds, it returns <see cref="Result.Ok"/>.
         /// </returns>
         /// <unmanaged>HRESULT IDWriteTextAnalyzer::GetGdiCompatibleGlyphPlacements([In, Buffer] const wchar_t* textString,[In, Buffer] const unsigned short* clusterMap,[In, Buffer] DWRITE_SHAPING_TEXT_PROPERTIES* textProps,[In] unsigned int textLength,[In, Buffer] const unsigned short* glyphIndices,[In, Buffer] const DWRITE_SHAPING_GLYPH_PROPERTIES* glyphProps,[In] unsigned int glyphCount,[In] IDWriteFontFace* fontFace,[In] float fontEmSize,[In] float pixelsPerDip,[In, Optional] const DWRITE_MATRIX* transform,[In] BOOL useGdiNatural,[In] BOOL isSideways,[In] BOOL isRightToLeft,[In] const DWRITE_SCRIPT_ANALYSIS* scriptAnalysis,[In, Buffer, Optional] const wchar_t* localeName,[In, Optional] const void** features,[In, Buffer, Optional] const unsigned int* featureRangeLengths,[In] unsigned int featureRanges,[Out, Buffer] float* glyphAdvances,[Out, Buffer] DWRITE_GLYPH_OFFSET* glyphOffsets)</unmanaged>
-        public void GetGdiCompatibleGlyphPlacements(string textString, short[] clusterMap, SharpDX.DirectWrite.ShapingTextProperties[] textProps, int textLength, short[] glyphIndices, SharpDX.DirectWrite.ShapingGlyphProperties[] glyphProps, int glyphCount, SharpDX.DirectWrite.FontFace fontFace, float fontEmSize, float pixelsPerDip, Matrix3x2? transform, bool useGdiNatural, bool isSideways, bool isRightToLeft, SharpDX.DirectWrite.ScriptAnalysis scriptAnalysis, string localeName, FontFeature[][] features, int[] featureRangeLengths, float[] glyphAdvances, SharpDX.DirectWrite.GlyphOffset[] glyphOffsets)
+        public void GetGdiCompatibleGlyphPlacements(string textString, short[] clusterMap, SharpDX.DirectWrite.ShapingTextProperties[] textProps, int textLength, short[] glyphIndices, SharpDX.DirectWrite.ShapingGlyphProperties[] glyphProps, int glyphCount, SharpDX.DirectWrite.FontFace fontFace, float fontEmSize, float pixelsPerDip, RawMatrix3x2? transform, bool useGdiNatural, bool isSideways, bool isRightToLeft, SharpDX.DirectWrite.ScriptAnalysis scriptAnalysis, string localeName, FontFeature[][] features, int[] featureRangeLengths, float[] glyphAdvances, SharpDX.DirectWrite.GlyphOffset[] glyphOffsets)
         {
             var pFeatures = AllocateFeatures(features);
             try

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -40,6 +40,7 @@ using System.Linq.Expressions;
 using SharpDX.Text;
 
 #endif
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX
 {
@@ -376,41 +377,41 @@ namespace SharpDX
         }
  
         /// <summary>
-        /// Converts bool array to <see cref="Bool"/> array.
+        /// Converts bool array to <see cref="RawBool"/> array.
         /// </summary>
         /// <param name="array">The bool array.</param>
-        /// <returns>Converted array of <see cref="Bool"/>.</returns>
-        public static Bool[] ConvertToIntArray(bool[] array)
+        /// <returns>Converted array of <see cref="RawBool"/>.</returns>
+        public static RawBool[] ConvertToIntArray(bool[] array)
         {
-            var temp = new Bool[array.Length];
+            var temp = new RawBool[array.Length];
             for (int i = 0; i < temp.Length; i++)
                 temp[i] = array[i];
             return temp;
         }
 
-    /// <summary>
+        /// <summary>
         /// Converts integer pointer array to bool array.
         /// </summary>
         /// <param name="array">The array of integer pointers.</param>
         /// <param name="length">Array size.</param>
         /// <returns>Converted array of bool.</returns>
-    public unsafe static bool[] ConvertToBoolArray(int* array, int length)
+        public static unsafe bool[] ConvertToBoolArray(int* array, int length)
         {
             var temp = new bool[length];
-            for (int i = 0; i < temp.Length; i++)
+            for(int i = 0; i < temp.Length; i++)
                 temp[i] = array[i] != 0;
             return temp;
         }
 
         /// <summary>
-        /// Converts <see cref="Bool"/> array to bool array.
+        /// Converts <see cref="RawBool"/> array to bool array.
         /// </summary>
         /// <param name="array">The array.</param>
         /// <returns>Converted array of bool.</returns>
-        public static bool[] ConvertToBoolArray(Bool[] array)
+        public static bool[] ConvertToBoolArray(RawBool[] array)
         {
             var temp = new bool[array.Length];
-            for (int i = 0; i < temp.Length; i++)
+            for(int i = 0; i < temp.Length; i++)
                 temp[i] = array[i];
             return temp;
         }
@@ -1323,7 +1324,15 @@ namespace SharpDX
             comObject.NativePointer = localQuery.IUnknownPointer;
         }
 #else
-        // TODO THIS IS NOT TESTED under W8CORE
+        #if W8CORE
+        [DllImport("api-ms-win-core-com-l1-1-0.dll", ExactSpelling = true, EntryPoint = "CoCreateInstanceFromApp", PreserveSig = true)]
+        private static extern Result CoCreateInstanceFromApp([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, 
+            IntPtr pUnkOuter, 
+            CLSCTX dwClsContext, 
+            IntPtr reserved,
+            int countMultiQuery,
+            ref MultiQueryInterface query);
+        #else
         [DllImport("ole32.dll", ExactSpelling = true, EntryPoint = "CoCreateInstanceFromApp", PreserveSig = true)]
         private static extern Result CoCreateInstanceFromApp([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, 
             IntPtr pUnkOuter, 
@@ -1331,6 +1340,7 @@ namespace SharpDX
             IntPtr reserved,
             int countMultiQuery,
             ref MultiQueryInterface query);
+         #endif
 
         internal unsafe static void CreateComInstance(Guid clsid, CLSCTX clsctx, Guid riid, ComObject comObject)
         {
@@ -1396,10 +1406,16 @@ namespace SharpDX
             get { return closeHandle ?? (closeHandle = (CloseHandleDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.CloseHandle()), typeof(CloseHandleDelegate))); }
         }
 #else
+#if W8CORE
+        [DllImport("api-ms-win-core-handle-l1-1-0.dll", EntryPoint = "CloseHandle", SetLastError = true)]
+        internal static extern bool CloseHandle(IntPtr handle);
+#else
         [DllImport("kernel32.dll", EntryPoint = "CloseHandle", SetLastError = true)]
         internal static extern bool CloseHandle(IntPtr handle);
 #endif
+#endif
 
+#if !W8CORE
         /// <summary>
         /// Loads a native library.
         /// </summary>
@@ -1414,18 +1430,6 @@ namespace SharpDX
             return result;
         }
 
-#if WP8
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate IntPtr LoadLibraryDelegate([MarshalAs(UnmanagedType.LPWStr)] string lpFileName, int reserved = 0);
-        private static LoadLibraryDelegate loadLibrary_;
-        private static LoadLibraryDelegate LoadLibrary_
-        {
-            get { return loadLibrary_ ?? (loadLibrary_ = (LoadLibraryDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.LoadPackagedLibrary()), typeof(LoadLibraryDelegate))); }
-        }
-#elif WIN8METRO
-        [DllImport("kernel32", EntryPoint = "LoadPackagedLibrary", SetLastError = true)]
-        static extern IntPtr LoadLibrary_(string lpFileName, int reserved = 0);
-#else
         [DllImport("kernel32", EntryPoint = "LoadLibrary", SetLastError = true, CharSet = CharSet.Unicode)]
         static extern IntPtr LoadLibrary_(string lpFileName);
 #endif
@@ -1455,10 +1459,16 @@ namespace SharpDX
             get { return getProcAddress_ ?? (getProcAddress_ = (GetProcAddressDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.GetProcAddress()), typeof(GetProcAddressDelegate))); }
         }
 #else
+#if W8CORE
+        [DllImport("api-ms-win-core-libraryloader-l1-1-1.dll", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+        static extern IntPtr GetProcAddress_(IntPtr hModule, string procName);
+#else
         // http://www.pinvoke.net/default.aspx/kernel32.getprocaddress
         // http://stackoverflow.com/questions/3754264/c-sharp-getprocaddress-returns-zero
         [DllImport("kernel32", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
         static extern IntPtr GetProcAddress_(IntPtr hModule, string procName);
+#endif
+
 #endif
 
         /// <summary>

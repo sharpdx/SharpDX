@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,8 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyDescription("Assembly providing DirectX - DXGI 1.0, 1.1 and 1.2 managed API")]
 
 #if SHARPDX_SIGNED
-[assembly: InternalsVisibleTo("SharpDX.Direct3D10,PublicKey=00240000048000009400000006020000002400005253413100040000010001000941e9108cca1ea51fbd8d3c1a834aab15d98ee7dbee30b31b2c5a8e399fe012d91e5b849ca36812696ee573283399eb487822154971496b06304fd02637ef8e9026904ab2632bd5c9f6f6e13c2bf449157ae79d4a12871e7743404f8f40dbd66dca7321fc507f6a25eb87f5c52d7f5e6145e4172092eecca14425714dc5609a")]
-[assembly: InternalsVisibleTo("SharpDX.Direct3D11,PublicKey=00240000048000009400000006020000002400005253413100040000010001000941e9108cca1ea51fbd8d3c1a834aab15d98ee7dbee30b31b2c5a8e399fe012d91e5b849ca36812696ee573283399eb487822154971496b06304fd02637ef8e9026904ab2632bd5c9f6f6e13c2bf449157ae79d4a12871e7743404f8f40dbd66dca7321fc507f6a25eb87f5c52d7f5e6145e4172092eecca14425714dc5609a")]
+[assembly: InternalsVisibleTo("SharpDX.Direct3D10,PublicKey=00240000048000009400000006020000002400005253413100040000010001004543d77b41222cfd48f4e0d8dd9b2f83dc15fbede312a422a7454a0b723e988718ebba619773fc8dfed2bc69c97aec4063f51dc5821f5eaa72f331b2782755754dfd998ade0dcbf92a734e532870f661cbe4388f544befa2f32a8e4568e0be071a90fa546c8b4e6efcea755703ae03f6479e787632688be8f6aaae808f6f43ba")]
+[assembly: InternalsVisibleTo("SharpDX.Direct3D11,PublicKey=00240000048000009400000006020000002400005253413100040000010001004543d77b41222cfd48f4e0d8dd9b2f83dc15fbede312a422a7454a0b723e988718ebba619773fc8dfed2bc69c97aec4063f51dc5821f5eaa72f331b2782755754dfd998ade0dcbf92a734e532870f661cbe4388f544befa2f32a8e4568e0be071a90fa546c8b4e6efcea755703ae03f6479e787632688be8f6aaae808f6f43ba")]
 #else
 // Make internals SharpDX visible to all SharpDX assemblies
 [assembly: InternalsVisibleTo("SharpDX.Direct3D10")]

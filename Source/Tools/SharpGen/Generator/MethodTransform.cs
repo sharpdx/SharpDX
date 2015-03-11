@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -197,6 +197,9 @@ namespace SharpGen.Generator
             var tag = cppMethod.GetTagOrDefault<MappingRule>();
             if (tag.MappingType != null)
                 cppMethod.ReturnType.Tag = new MappingRule() { MappingType = tag.MappingType };
+
+            // Apply any offset to the method's vtable
+            method.Offset += tag.LayoutOffsetTranslate;
 
             // Get the inferred return type
             method.ReturnType = Manager.GetCsType<CsMarshalBase>(cppMethod.ReturnType);

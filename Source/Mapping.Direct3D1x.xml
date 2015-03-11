@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -418,9 +418,11 @@
     <map method="ID3D(\d+)DeviceContext::OMGet.*" visibility="internal" />
     <map method="ID3D(\d+)DeviceContext::SO.*" visibility="internal" />
     <map method="ID3D(\d+)DeviceContext::RSGetScissorRects" visibility="internal" />
+    <map param="ID3D(\d+)DeviceContext::RSGetScissorRects::pRects" type="void" />
     <map method="ID3D(\d+)DeviceContext::RSSetScissorRects" visibility="internal" />
     <map param="ID3D(\d+)DeviceContext::RSSetScissorRects::pRects" type="void" />
     <map method="ID3D(\d+)DeviceContext::RSGetViewports" visibility="internal" />
+    <map param="ID3D(\d+)DeviceContext::RSGetViewports::pViewports" type="void" />
     <map method="ID3D(\d+)DeviceContext::RSSetViewports" visibility="internal" />
     <map param="ID3D(\d+)DeviceContext::RSSetViewports::pViewports" type="void" />
     <map param="ID3D(\d+)DeviceContext::OMGetBlendState::BlendFactor" type="SHARPDX_COLOR4" pointer="*" array="0" />

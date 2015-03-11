@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -297,8 +297,14 @@ namespace SharpDX
             get { return formatMessageW ?? (formatMessageW = (FormatMessageWDelegate) Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.FormatMessageW()), typeof (FormatMessageWDelegate))); }
         }
 #else
+        #if W8CORE
+        [DllImport("api-ms-win-core-localization-l1-2-0.dll", EntryPoint = "FormatMessageW")]
+        private static extern uint FormatMessageW(int dwFlags, IntPtr lpSource, int dwMessageId, int dwLanguageId, ref IntPtr lpBuffer, int nSize, IntPtr Arguments);
+        #else
         [DllImport("kernel32.dll", EntryPoint = "FormatMessageW")]
         private static extern uint FormatMessageW(int dwFlags, IntPtr lpSource, int dwMessageId, int dwLanguageId, ref IntPtr lpBuffer, int nSize, IntPtr Arguments);
+#endif
+
 #endif
 
     }

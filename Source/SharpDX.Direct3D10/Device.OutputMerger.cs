@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,7 @@
 
 using System;
 using SharpDX;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D10
 {
@@ -84,7 +85,7 @@ namespace SharpDX.Direct3D10
         /// <param name="sampleMaskRef">Pointer to a {{sample mask}}. </param>
         /// <returns>a reference to a blend-state interface (see <see cref="SharpDX.Direct3D10.BlendState"/>).</returns>
         /// <unmanaged>void OMGetBlendState([Out, Optional] ID3D10BlendState** ppBlendState,[Out, Optional] float BlendFactor[4],[Out, Optional] int* pSampleMask)</unmanaged>
-        public SharpDX.Direct3D10.BlendState GetBlendState(out SharpDX.Color4 blendFactor, out int sampleMaskRef)
+        public SharpDX.Direct3D10.BlendState GetBlendState(out RawColor4 blendFactor, out int sampleMaskRef)
         {
             BlendState blendState;
             GetBlendState(out blendState, out blendFactor, out sampleMaskRef);
@@ -149,12 +150,12 @@ namespace SharpDX.Direct3D10
         /// Gets or sets the blend factor.
         /// </summary>
         /// <value>The blend factor.</value>
-        public Color4 BlendFactor
+        public RawColor4 BlendFactor
         {
             get
             {
                 BlendState state;
-                Color4 blendFactor;
+                RawColor4 blendFactor;
                 int sampleMaskRef;
                 GetBlendState(out state, out blendFactor, out sampleMaskRef);
                 if (state != null)
@@ -165,7 +166,7 @@ namespace SharpDX.Direct3D10
             set
             {
                 BlendState state;
-                Color4 blendFactor;
+                RawColor4 blendFactor;
                 int sampleMaskRef;
                 GetBlendState(out state, out blendFactor, out sampleMaskRef);
                 SetBlendState(state, value, sampleMaskRef);
@@ -183,7 +184,7 @@ namespace SharpDX.Direct3D10
             get
             {
                 BlendState state;
-                Color4 blendFactor;
+                RawColor4 blendFactor;
                 int sampleMaskRef;
                 GetBlendState(out state, out blendFactor, out sampleMaskRef);
                 if (state != null)
@@ -193,7 +194,7 @@ namespace SharpDX.Direct3D10
             set
             {
                 BlendState state;
-                Color4 blendFactor;
+                RawColor4 blendFactor;
                 int sampleMaskRef;
                 GetBlendState(out state, out blendFactor, out sampleMaskRef);
                 SetBlendState(state, blendFactor, value);
@@ -211,7 +212,7 @@ namespace SharpDX.Direct3D10
             get
             {
                 BlendState state;
-                Color4 blendFactor;
+                RawColor4 blendFactor;
                 int sampleMaskRef;
                 GetBlendState(out state, out blendFactor, out sampleMaskRef);
                 return state;
@@ -219,7 +220,7 @@ namespace SharpDX.Direct3D10
             set
             {
                 BlendState state;
-                Color4 blendFactor;
+                RawColor4 blendFactor;
                 int sampleMaskRef;
                 GetBlendState(out state, out blendFactor, out sampleMaskRef);
                 if (state != null)

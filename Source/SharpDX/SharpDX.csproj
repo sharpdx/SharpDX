@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(SolutionDir)\SharpDX.PreSettings.targets" />
+  <Import Project="$(SolutionDir)\Build\SharpDX.PreSettings.targets" />
   <PropertyGroup>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -21,90 +21,60 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Angle.cs" />
-    <Compile Include="Bool.cs" />
-    <Compile Include="BoundingBox.cs" />
-    <Compile Include="BoundingFrustum.cs" />
-    <Compile Include="BoundingSphere.cs" />
+    <Compile Include="Direct3D\CompilationException.cs" />
+    <Compile Include="Direct3D\CompilationResultBase.cs" />
+    <Compile Include="Direct3D\PixHelper.cs" />
+    <Compile Include="Mathematics\Interop\RawBox.cs" />
+    <Compile Include="Mathematics\Interop\RawMatrix5x4.cs" />
+    <Compile Include="Mathematics\Interop\RawPlane.cs" />
+    <Compile Include="Mathematics\Interop\RawBool.cs" />
+    <Compile Include="Mathematics\Interop\RawBool4.cs" />
     <Compile Include="CallbackBase.cs" />
     <Compile Include="Collections\EqualityComparer.cs" />
-    <Compile Include="Collections\ObservableCollection.cs" />
-    <Compile Include="Collections\ObservableCollectionEventArgs.cs" />
-    <Compile Include="Collections\ObservableDictionary.cs" />
-    <Compile Include="Collections\ObservableDictionaryEventArgs.cs" />
-    <Compile Include="ComponentCollection.cs" />
-    <Compile Include="Diagnostics\CollectionDebugView.cs" />
+    <Compile Include="Mathematics\Interop\RawColor3.cs" />
+    <Compile Include="Mathematics\Interop\RawColor4.cs" />
+    <Compile Include="Mathematics\Interop\RawColorBGRA.cs" />
     <Compile Include="Diagnostics\VSGraphicsDebugger.cs" />
-    <Compile Include="Matrix3x3.cs" />
+    <Compile Include="Mathematics\Interop\RawInt3.cs" />
+    <Compile Include="Mathematics\Interop\RawInt4.cs" />
+    <Compile Include="Mathematics\Interop\RawMatrix.cs" />
+    <Compile Include="Mathematics\Interop\RawMatrix3x2.cs" />
+    <Compile Include="Mathematics\Interop\RawQuaternion.cs" />
+    <Compile Include="Mathematics\Interop\RawRectangleF.cs" />
     <Compile Include="ModuleInit.cs" />
-    <Compile Include="OrientedBoundingBox.cs" />
-    <Compile Include="RandomUtil.cs" />
+    <Compile Include="Mathematics\Interop\RawPoint.cs" />
+    <Compile Include="Mathematics\Interop\RawRectangle.cs" />
     <Compile Include="Reflection\ObfuscationAttributes.cs" />
-    <Compile Include="Threading\TaskUtil.cs" />
-    <Compile Include="ViewportF.cs" />
     <Compile Include="ComArray.cs" />
-    <Compile Include="CompilationResultBase.cs" />
-    <Compile Include="Bool4.cs" />
     <Compile Include="AssemblyDoc.cs" />
-    <Compile Include="Color.cs" />
-    <Compile Include="ColorBGRA.cs" />
-    <Compile Include="IComponent.cs" />
-    <Compile Include="IServiceRegistry.cs" />
-    <Compile Include="IO\PathUtility.cs" />
-    <Compile Include="IO\RandomStream.cs" />
-    <Compile Include="Multimedia\WavWriter.cs" />
     <Compile Include="IInspectable.cs" />
     <Compile Include="InspectableShadow.cs" />
-    <Compile Include="Serialization\ArrayLengthType.cs" />
-    <Compile Include="Serialization\NamespaceDoc.cs" />
-    <Compile Include="Serialization\SerializeFlags.cs" />
     <Compile Include="ServiceEventArgs.cs" />
-    <Compile Include="SingletonString.cs" />
-    <Compile Include="ComponentBase.cs" />
     <Compile Include="DataPointer.cs" />
     <Compile Include="Diagnostics\NamespaceDoc.cs" />
     <Compile Include="Direct3D\NamespaceDoc.cs" />
     <Compile Include="DisposeCollector.cs" />
-    <Compile Include="FrustumCameraParams.cs" />
-    <Compile Include="IdentityEqualityComparer.cs" />
-    <Compile Include="Int3.cs" />
     <Compile Include="IO\NamespaceDoc.cs" />
     <Compile Include="Multimedia\AudioEndpointRole.cs" />
     <Compile Include="Multimedia\NamespaceDoc.cs" />
-    <Compile Include="Serialization\DynamicSerializerAttribute.cs" />
-    <Compile Include="Serialization\InvalidChunkException.cs" />
-    <Compile Include="Serialization\IDataSerializable.cs" />
-    <Compile Include="Serialization\BinarySerializer.cs" />
-    <Compile Include="Serialization\SerializerMode.cs" />
     <Compile Include="ShadowAttribute.cs" />
-    <Compile Include="Matrix5x4.cs" />
     <Compile Include="ResultDescriptor.cs" />
-    <Compile Include="Size2F.cs" />
-    <Compile Include="Size2.cs" />
-    <Compile Include="Point.cs" />
-    <Compile Include="Direct3D\PixHelper.cs" />
     <Compile Include="IO\NativeFile.cs" />
     <Compile Include="IO\NativeFileStream.cs" />
     <Compile Include="IO\NativeFileAccess.cs" />
     <Compile Include="IO\NativeFileOptions.cs" />
     <Compile Include="IO\NativeFileMode.cs" />
     <Compile Include="IO\NativeFileShare.cs" />
-    <Compile Include="Matrix3x2.cs" />
     <Compile Include="Properties\Resources.Designer.cs" Condition=" '$(SharpDXWin8Core)' == 'false'">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ShadowContainer.cs" />
-    <Compile Include="Collision.cs" />
-    <Compile Include="Color3.cs" />
-    <Compile Include="Color4.cs" />
     <Compile Include="ComBaseStreamNative.cs" />
     <Compile Include="ComObject.cs" />
     <Compile Include="ComObjectCallback.cs" />
     <Compile Include="ComObjectShadow.cs" />
-    <Compile Include="CompilationException.cs" />
-    <Compile Include="Component.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="CppObject.cs" />
     <Compile Include="CppObjectShadow.cs" />
@@ -116,7 +86,6 @@
     <Compile Include="Diagnostics\ObjectReference.cs" />
     <Compile Include="Diagnostics\ObjectTracker.cs" />
     <Compile Include="DisposeBase.cs" />
-    <Compile Include="Enums.cs" />
     <Compile Include="FunctionCallback.cs" />
     <Compile Include="Generated\Direct3D\Enumerations.cs" />
     <Compile Include="Generated\Direct3D\Functions.cs" />
@@ -128,17 +97,9 @@
     <Compile Include="Generated\Win32\Functions.cs" />
     <Compile Include="Generated\Win32\Interfaces.cs" />
     <Compile Include="Generated\Win32\Structures.cs" />
-    <Compile Include="Half.cs" />
-    <Compile Include="Half2.cs" />
-    <Compile Include="Half3.cs" />
-    <Compile Include="Half4.cs" />
-    <Compile Include="HalfUtils.cs" />
     <Compile Include="ICallbackable.cs" />
-    <Compile Include="Int4.cs" />
     <Compile Include="Interop.cs" />
     <Compile Include="IUnknown.cs" />
-    <Compile Include="MathUtil.cs" />
-    <Compile Include="Matrix.cs" />
     <Compile Include="Multimedia\SoundStream.cs" />
     <Compile Include="Multimedia\WaveFormatAdpcm.cs" />
     <Compile Include="Multimedia\FourCC.cs" />
@@ -148,26 +109,23 @@
     <Compile Include="Multimedia\WaveFormat.cs" />
     <Compile Include="Multimedia\WaveFormatExtensible.cs" />
     <Compile Include="NamespaceDoc.cs" />
+    <Compile Include="Size2.cs" />
+    <Compile Include="Size2F.cs" />
     <Compile Include="TagAttribute.cs" />
     <Compile Include="Text\ASCIIEncoding.cs" />
     <Compile Include="Text\NamespaceDoc.cs" />
-    <Compile Include="TimerTick.cs" />
-    <Compile Include="Viewport.cs" />
+    <Compile Include="Mathematics\Interop\RawVector2.cs" />
+    <Compile Include="Mathematics\Interop\RawVector3.cs" />
+    <Compile Include="Mathematics\Interop\RawVector4.cs" />
+    <Compile Include="Mathematics\Interop\RawViewport.cs" />
+    <Compile Include="Mathematics\Interop\RawViewportF.cs" />
     <Compile Include="Win32Native.cs" />
-    <Compile Include="Plane.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Quaternion.cs" />
-    <Compile Include="Ray.cs" />
-    <Compile Include="Rectangle.cs" />
-    <Compile Include="RectangleF.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="Direct3D\ShaderMacro.cs" />
     <Compile Include="PointerSize.cs" />
     <Compile Include="SharpDXException.cs" />
     <Compile Include="Utilities.cs" />
-    <Compile Include="Vector2.cs" />
-    <Compile Include="Vector3.cs" />
-    <Compile Include="Vector4.cs" />
     <Compile Include="Win32\BitmapInfoHeader.cs" />
     <Compile Include="Win32\ComStream.cs" />
     <Compile Include="Win32\ComStreamProxy.cs" />
@@ -176,6 +134,7 @@
     <Compile Include="Win32\ErrorCode.cs" />
     <Compile Include="Win32\MessageFilterHook.cs" />
     <Compile Include="Win32\NamespaceDoc.cs" />
+    <Compile Include="Win32\NativeMessage.cs" />
     <Compile Include="Win32\PropertyBag.cs" />
     <Compile Include="Win32\IStream.cs" />
     <Compile Include="Win32\IStreamBase.cs" />
@@ -185,17 +144,8 @@
     <Compile Include="Win32\Variant.cs" />
     <Compile Include="Win32\VariantElementType.cs" />
     <Compile Include="Win32\VariantType.cs" />
-    <Compile Include="Windows\NamespaceDoc.cs" />
-    <Compile Include="Windows\RenderLoop.cs" />
-    <Compile Include="Windows\RenderControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Windows\RenderForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Color.Palette.cs" />
     <None Include="Mapping-core.xml">
       <SubType>Designer</SubType>
     </None>
@@ -218,11 +168,12 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
-  <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
+  <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />
   <Target Name="BeforeBuild">
     <Exec Command="&quot;$(SolutionDir)Source\Tools\SharpGen\RunGenerator.bat&quot; $(ConfigurationName)" />
   </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!--  
+   To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="AfterBuild">
   </Target>

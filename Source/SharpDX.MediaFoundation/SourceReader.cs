@@ -17,6 +17,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using SharpDX.Mathematics.Interop;
 #if !WP8
 using System;
 using System.IO;
@@ -82,6 +84,22 @@ namespace SharpDX.MediaFoundation
             int capabilities = byteStream.Capabilities;
 
             MediaFactory.CreateSourceReaderFromByteStream(byteStream.NativePointer, attributes, this);
+        }
+
+        /// <summary>
+        /// Creates the source reader from a <see cref="SharpDX.MediaFoundation.MediaSource"/>
+        /// </summary>
+        /// <param name="source">Reference to the mediasource interface</param>
+        /// <param name="attributes"><dd> <p>Pointer to the <strong><see cref="SharpDX.MediaFoundation.MediaAttributes"/></strong> interface. You can use this parameter to configure the source reader. For more information, see Source Reader Attributes. This parameter can be <strong><c>null</c></strong>.</p> </dd></param>	
+        /// <remarks>	
+        /// <p>Call <strong>CoInitialize(Ex)</strong> and <strong><see cref="SharpDX.MediaFoundation.MediaFactory.Startup"/></strong> before calling this function.</p><p>By default, when the application releases the source reader, the source reader shuts down the media source by calling <strong><see cref="SharpDX.MediaFoundation.MediaSource.Shutdown"/></strong> on the media source. At that point, the application can no longer use the media source.</p><p>To change this default behavior, set the <see cref="SharpDX.MediaFoundation.SourceReaderAttributeKeys.DisconnectMediasourceOnShutdown"/> attribute in the <em>pAttributes</em> parameter. If this attribute is <strong>TRUE</strong>, the application is responsible for  shutting down the media source.</p><p>When using the Source Reader, do not call any of the following methods on the media source:</p><ul> <li> <strong><see cref="SharpDX.MediaFoundation.MediaSource.Pause"/></strong> </li> <li> <strong><see cref="SharpDX.MediaFoundation.MediaSource.Start"/></strong> </li> <li> <strong><see cref="SharpDX.MediaFoundation.MediaSource.Stop"/></strong> </li> <li>All <strong><see cref="SharpDX.MediaFoundation.MediaEventGenerator"/></strong> methods</li> </ul><p>This function is available on Windows?Vista if Platform Update Supplement for Windows?Vista is installed.</p><p><strong>Windows Phone 8.1:</strong> This API is supported.</p>	
+        /// </remarks>	
+        /// <msdn-id>dd388108</msdn-id>	
+        /// <unmanaged>HRESULT MFCreateSourceReaderFromMediaSource([In] IMFMediaSource* pMediaSource,[In, Optional] IMFAttributes* pAttributes,[Out, Fast] IMFSourceReader** ppSourceReader)</unmanaged>	
+        /// <unmanaged-short>MFCreateSourceReaderFromMediaSource</unmanaged-short>	
+        public SourceReader(MediaSource source, MediaAttributes attributes = null)
+        {
+            MediaFactory.CreateSourceReaderFromMediaSource(source, attributes, this);
         }
 #if WIN8METRO
         /// <summary>	
@@ -150,7 +168,7 @@ namespace SharpDX.MediaFoundation
         /// <msdn-id>dd374669</msdn-id>	
         /// <unmanaged>HRESULT IMFSourceReader::SetStreamSelection([In] unsigned int dwStreamIndex,[In] BOOL fSelected)</unmanaged>	
         /// <unmanaged-short>IMFSourceReader::SetStreamSelection</unmanaged-short>	
-        public void SetStreamSelection(SourceReaderIndex readerIndex, SharpDX.Bool fSelected)
+        public void SetStreamSelection(SourceReaderIndex readerIndex, RawBool fSelected)
         {
             SetStreamSelection((int)readerIndex, fSelected);
         }
@@ -216,7 +234,7 @@ namespace SharpDX.MediaFoundation
         /// <unmanaged-short>IMFSourceReader::GetCurrentMediaType</unmanaged-short>	
         public SharpDX.MediaFoundation.MediaType GetCurrentMediaType(SourceReaderIndex readerIndex)
         {
-            return GetCurrentMediaType((int)SourceReaderIndex.FirstAudioStream);
+            return GetCurrentMediaType((int)readerIndex);
         }
 
         /// <summary>	

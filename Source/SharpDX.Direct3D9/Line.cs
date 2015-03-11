@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D9
 {
@@ -37,12 +38,12 @@ namespace SharpDX.Direct3D9
         }
 
         /// <summary>	
-        /// Draws a line strip in screen space. Input is in the form of an array that defines points (of <see cref="SharpDX.Vector2"/>) on the line strip.	
+        /// Draws a line strip in screen space. Input is in the form of an array that defines points (of <see cref="RawVector2"/>) on the line strip.	
         /// </summary>	
         /// <param name="vertices">No documentation.</param>	
         /// <param name="color">No documentation.</param>	
         /// <unmanaged>HRESULT ID3DXLine::Draw([In] const void* pVertexList,[In] unsigned int dwVertexListCount,[In] D3DCOLOR Color)</unmanaged>	
-        public void Draw(SharpDX.Vector2[] vertices, SharpDX.ColorBGRA color)
+        public void Draw(RawVector2[] vertices, RawColorBGRA color)
         {
             unsafe
             {
@@ -52,16 +53,16 @@ namespace SharpDX.Direct3D9
         }
 
         /// <summary>	
-        /// Draws a line strip in screen space. Input is in the form of an array that defines points (of <see cref="SharpDX.Vector2"/>) on the line strip.	
+        /// Draws a line strip in screen space. Input is in the form of an array that defines points (of <see cref="RawVector2"/>) on the line strip.	
         /// </summary>	
         /// <param name="vertices">No documentation.</param>	
         /// <param name="color">No documentation.</param>	
         /// <unmanaged>HRESULT ID3DXLine::Draw([In] const void* pVertexList,[In] unsigned int dwVertexListCount,[In] D3DCOLOR Color)</unmanaged>	
-        public void Draw<T>(T[] vertices, SharpDX.ColorBGRA color) where T : struct
+        public void Draw<T>(T[] vertices, RawColorBGRA color) where T : struct
         {
             unsafe
             {
-                if (Utilities.SizeOf<T>() != sizeof(Vector3))
+                if (Utilities.SizeOf<T>() != sizeof(RawVector3))
                     throw new ArgumentException("Invalid size for T. Must be 3 floats (12 bytes)");
 
                 Draw((IntPtr)Interop.Fixed(vertices), vertices.Length, color);
@@ -71,12 +72,12 @@ namespace SharpDX.Direct3D9
         /// <summary>	
         /// Draws a line strip in screen space with a specified input transformation matrix.	
         /// </summary>	
-        /// <param name="vertices"><para>Array of vertices that make up the line. See <see cref="SharpDX.Vector3"/>.</para></param>	
-        /// <param name="transform"><para>A scale, rotate, and translate (SRT) matrix for transforming the points. See <see cref="SharpDX.Matrix"/>. If this matrix is a projection matrix, any stippled lines will be drawn with a perspective-correct stippling pattern. Or, you can transform the vertices and use <see cref="SharpDX.Direct3D9.Line.Draw"/> to draw the line with a nonperspective-correct stipple pattern.</para></param>	
-        /// <param name="color"><para>Color of the line. See <see cref="SharpDX.Color4"/>.</para></param>	
+        /// <param name="vertices"><para>Array of vertices that make up the line. See <see cref="RawVector3"/>.</para></param>	
+        /// <param name="transform"><para>A scale, rotate, and translate (SRT) matrix for transforming the points. See <see cref="RawMatrix"/>. If this matrix is a projection matrix, any stippled lines will be drawn with a perspective-correct stippling pattern. Or, you can transform the vertices and use <see cref="SharpDX.Direct3D9.Line.Draw"/> to draw the line with a nonperspective-correct stipple pattern.</para></param>	
+        /// <param name="color"><para>Color of the line. See <see cref="RawColor4"/>.</para></param>	
         /// <returns>If the method succeeds, the return value is <see cref="SharpDX.Direct3D9.ResultCode.Success"/>. If the method fails, the return value can be one of the following: <see cref="SharpDX.Direct3D9.ResultCode.InvalidCall"/>, D3DXERR_INVALIDDATA.</returns>	
         /// <unmanaged>HRESULT ID3DXLine::DrawTransform([In] const void* pVertexList,[In] unsigned int dwVertexListCount,[In] const D3DXMATRIX* pTransform,[In] D3DCOLOR Color)</unmanaged>	
-        public void DrawTransform(Vector3[] vertices, SharpDX.Matrix transform, SharpDX.ColorBGRA color)
+        public void DrawTransform(RawVector3[] vertices, RawMatrix transform, RawColorBGRA color)
         {
             unsafe
             {
@@ -88,16 +89,16 @@ namespace SharpDX.Direct3D9
         /// <summary>	
         /// Draws a line strip in screen space with a specified input transformation matrix.	
         /// </summary>	
-        /// <param name="vertices"><para>Array of vertices that make up the line. See <see cref="SharpDX.Vector3"/>.</para></param>	
-        /// <param name="transform"><para>A scale, rotate, and translate (SRT) matrix for transforming the points. See <see cref="SharpDX.Matrix"/>. If this matrix is a projection matrix, any stippled lines will be drawn with a perspective-correct stippling pattern. Or, you can transform the vertices and use <see cref="SharpDX.Direct3D9.Line.Draw"/> to draw the line with a nonperspective-correct stipple pattern.</para></param>	
-        /// <param name="color"><para>Color of the line. See <see cref="SharpDX.Color4"/>.</para></param>	
+        /// <param name="vertices"><para>Array of vertices that make up the line. See <see cref="RawVector3"/>.</para></param>	
+        /// <param name="transform"><para>A scale, rotate, and translate (SRT) matrix for transforming the points. See <see cref="RawMatrix"/>. If this matrix is a projection matrix, any stippled lines will be drawn with a perspective-correct stippling pattern. Or, you can transform the vertices and use <see cref="SharpDX.Direct3D9.Line.Draw"/> to draw the line with a nonperspective-correct stipple pattern.</para></param>	
+        /// <param name="color"><para>Color of the line. See <see cref="RawColor4"/>.</para></param>	
         /// <returns>If the method succeeds, the return value is <see cref="SharpDX.Direct3D9.ResultCode.Success"/>. If the method fails, the return value can be one of the following: <see cref="SharpDX.Direct3D9.ResultCode.InvalidCall"/>, D3DXERR_INVALIDDATA.</returns>	
         /// <unmanaged>HRESULT ID3DXLine::DrawTransform([In] const void* pVertexList,[In] unsigned int dwVertexListCount,[In] const D3DXMATRIX* pTransform,[In] D3DCOLOR Color)</unmanaged>	
-        public void DrawTransform<T>(T[] vertices, SharpDX.Matrix transform, SharpDX.ColorBGRA color) where T : struct
+        public void DrawTransform<T>(T[] vertices, RawMatrix transform, RawColorBGRA color) where T : struct
         {
             unsafe
             {
-                if (Utilities.SizeOf<T>() != sizeof(Vector3))
+                if (Utilities.SizeOf<T>() != sizeof(RawVector3))
                     throw new ArgumentException("Invalid size for T. Must be 3 floats (12 bytes)");
 
                 DrawTransform((IntPtr)Interop.Fixed(vertices), vertices.Length, ref transform, color);

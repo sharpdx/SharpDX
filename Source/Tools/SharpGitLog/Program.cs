@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -183,7 +183,8 @@ namespace SharpGitLog
             commitProjectOverrides["d742d444fc1dfad934a0e708bb23b011220a75b0"] = "WIC";
             commitProjectOverrides["524969cbaa982a43d4b96d441e361a0375ddc5d5"] = "WIC";
 
-            var projectOverrides = new Dictionary<string, string>();
+            var projectOverrides = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            projectOverrides[string.Empty] = "Misc";
             projectOverrides["Toolkit.input"] = "Toolkit.Input";
             projectOverrides["Toolkit.WP8"] = "WP8";
             projectOverrides["SharpDX.MathUtil"] = "SharpDX";
@@ -197,10 +198,14 @@ namespace SharpGitLog
             projectOverrides["WP8 Sample"] = "WP8";
             projectOverrides["Sample"] = "Samples";
             projectOverrides["Direct3D11.Effects"] = "Direct3D11";
+            projectOverrides["DirectX11"] = "Direct3D11";
             projectOverrides["SharpDX.Core"] = "SharpDX";
             projectOverrides["SharpDX.Direct2D1"] = "Direct2D1";
             projectOverrides["SharpDX.Direct3D11"] = "Direct3D11";
             projectOverrides["SharpDX.DirectWrite"] = "DirectWrite";
+            projectOverrides["SharpDX.WIC"] = "WIC";
+            projectOverrides["SharpDX.DXGI"] = "DXGI";
+            projectOverrides["SharpDX.Compiler"] = "D3DCompiler";
             projectOverrides["SharpDX.Tests"] = "Tests";
             projectOverrides["SharpDX.Toolkit"] = "Toolkit";
             projectOverrides["SharpDX.Toolkit.Compiler"] = "Toolkit.Compiler";

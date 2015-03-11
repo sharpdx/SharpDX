@@ -23,6 +23,7 @@ using System;
 using NUnit.Framework;
 
 using SharpDX.Direct3D;
+using SharpDX.Mathematics;
 
 namespace SharpDX.Tests
 {

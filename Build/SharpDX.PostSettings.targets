@@ -1,0 +1,57 @@
+<!-- Common Targets used by SharpDX projects -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
+    <VisualStudioVersion>11.0</VisualStudioVersion>
+  </PropertyGroup>
+   
+  <!--Include automatically SharpDXWP8 interop assembly-->
+  <ItemGroup>
+    <ProjectReference Condition="'$(SharpDXWP8)' == 'true'" Include="$(SolutionDir)Source\SharpDX.WP8\SharpDX.WP8.vcxproj">
+      <Name>SharpDX.WP8</Name>
+    </ProjectReference>
+  </ItemGroup>
+
+  <!--Import Windows 8 WINRT targets only for WIN8 platforms-->
+  <Import Condition="'$(SharpDXWin8)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+
+  <!--Import Windows Phone 8 targets only for WP8 -->
+  <Import Condition="'$(SharpDXWP8)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
+  <Import Condition="'$(SharpDXWP8)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
+
+  <PropertyGroup Condition="'$(SharpDXWP81)' == 'true'">
+    <TargetPlatformIdentifier>WindowsPhoneApp</TargetPlatformIdentifier>
+  </PropertyGroup>
+  
+  <!--Import Windows Phone 8.1 targets only for WP81 -->
+  <Import Condition="'$(SharpDXWP81)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+
+  <!--Import standard targets for all non-Windows(Phone) 8 platforms-->
+  <Import Condition="'$(SharpDXWin8Core)' == 'false'" Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ProjectExtensions/>
+
+  <Target Name="BeforeClean">
+    <RemoveDir Condition="Exists('$(ProjectDir)Generated')" Directories="$(ProjectDir)Generated"/>
+  </Target>
+
+  <Target Name="AfterBuild">
+    <Exec Command='"$(SolutionDir)\Source\Bin\SharpCLI.exe" "$(TargetPath)"'/>
+
+    <GetFrameworkSdkPath>
+      <Output TaskParameter="Path" PropertyName="FrameworkSdkPath" />
+    </GetFrameworkSdkPath>
+
+    <Exec Command='"$(FrameworkSdkPath)\bin\NETFX 4.5.1 Tools\x64\sn.exe" -Ra $(TargetPath) $(SolutionDir)sharpdx.snk' Condition="'$(SharpDXSign)' == 'true'"/>
+
+    <!-- Copy back *.dll from bin/Debug|Release to obj/Debug/Release directory -->
+    <Copy SourceFiles="@(MainAssembly)" DestinationFolder="$(IntermediateOutputPath)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"/>
+    <!-- Copy back *.pdb from bin/Debug|Release to obj/Debug/Release directory -->
+    <Copy SourceFiles="@(_DebugSymbolsOutputPath)" DestinationFiles="@(_DebugSymbolsIntermediatePath)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)" Condition="'$(_DebugSymbolsProduced)'=='true' and '$(SkipCopyingSymbolsToOutputDirectory)' != 'true'"/>
+
+  </Target>
+</Project>

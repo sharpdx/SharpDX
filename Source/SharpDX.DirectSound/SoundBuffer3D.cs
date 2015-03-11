@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.DirectSound
 {
@@ -79,10 +80,10 @@ namespace SharpDX.DirectSound
         /// <summary>
         /// The orientation of the sound projection cone.
         /// </summary>
-        public Vector3 ConeOrientation
+        public RawVector3 ConeOrientation
         {
             get {
-                Vector3 temp;
+                RawVector3 temp;
                 GetConeOrientation(out temp);
                 return temp;
             }
@@ -204,11 +205,11 @@ namespace SharpDX.DirectSound
         /// <summary>
         /// The position of the sound source.
         /// </summary>
-        public Vector3 Position
+        public RawVector3 Position
         {
             get
             {
-                Vector3 temp;
+                RawVector3 temp;
                 GetPosition(out temp);
                 return temp;
             }
@@ -221,11 +222,11 @@ namespace SharpDX.DirectSound
         /// <summary>
         /// The velocity of the sound source.
         /// </summary>
-        public Vector3 Velocity
+        public RawVector3 Velocity
         {
             get
             {
-                Vector3 temp;
+                RawVector3 temp;
                 GetVelocity(out temp);
                 return temp;
             }

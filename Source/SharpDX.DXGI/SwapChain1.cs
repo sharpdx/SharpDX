@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,10 +17,10 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
 using System;
-using System.Collections.Generic;
-using System.Text;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.DXGI
 {
@@ -85,8 +85,8 @@ namespace SharpDX.DXGI
             bool hasScrollRectangle = presentParameters.ScrollRectangle.HasValue;
             bool hasScrollOffset = presentParameters.ScrollOffset.HasValue;
 
-            var scrollRectangle = hasScrollRectangle ? presentParameters.ScrollRectangle.Value : Rectangle.Empty;
-            var scrollOffset = hasScrollOffset ? presentParameters.ScrollOffset.Value : default(Point);
+            var scrollRectangle = hasScrollRectangle ? presentParameters.ScrollRectangle.Value : new RawRectangle();
+            var scrollOffset = hasScrollOffset ? presentParameters.ScrollOffset.Value : default(RawPoint);
 
             fixed (void* pDirtyRects = presentParameters.DirtyRectangles)
             {

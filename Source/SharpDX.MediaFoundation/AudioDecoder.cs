@@ -36,7 +36,7 @@ namespace SharpDX.MediaFoundation
     /// <remarks>
     /// This class was developed following the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd757929%28v=vs.85%29.aspx">"Tutorial: Decoding Audio"</a>
     /// </remarks>
-    public class AudioDecoder : Component
+    public class AudioDecoder : DisposeBase
     {
         private SourceReader sourceReader;
         private SourceReader nextSourceReader;
@@ -236,16 +236,12 @@ namespace SharpDX.MediaFoundation
 
         private void CheckIfDisposed()
         {
-            if (IsDisposing)
-                throw new InvalidOperationException("This instance is being disposed while enumerating the samples.");
             if (IsDisposed)
                 throw new InvalidOperationException("This instance is disposed while enumerating the samples.");
         }
 
         protected override void Dispose(bool disposeManagedResources)
         {
-            base.Dispose(disposeManagedResources);
-
             CleanupAndDispose();
 
             if (nextSourceReader != null)

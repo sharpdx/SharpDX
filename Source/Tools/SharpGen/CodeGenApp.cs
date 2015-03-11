@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Mono.Options;
 using SharpGen.Logging;
@@ -39,7 +40,7 @@ namespace SharpGen
         /// </summary>
         public CodeGenApp()
         {
-            Macros = new List<string>();
+            Macros = new HashSet<string>();
         }
 
         /// <summary>
@@ -68,7 +69,7 @@ namespace SharpGen
         /// <value>
         /// The macros.
         /// </value>
-        public List<string> Macros { get; set; }
+        public HashSet<string> Macros { get; set; }
 
         private ConfigFile Config { get; set; }
 
@@ -104,7 +105,7 @@ namespace SharpGen
 
             var options = new OptionSet()
                               {
-                                  "Copyright (c) 2010-2013 SharpDX - Alexandre Mutel",
+                                  "Copyright (c) 2010-2014 SharpDX - Alexandre Mutel",
                                   "Usage: SharpGen [options] config_file.xml",
                                   "Code generator from C++ to C# for .Net languages",
                                   "",
@@ -147,28 +148,29 @@ namespace SharpGen
             _isAssemblyNew = (File.GetLastWriteTime(_thisAssemblyPath) != File.GetLastWriteTime(_assemblyCheckFile));
             _generatedPath = Path.GetDirectoryName(_configRootPath);
 
-            if (_isAssemblyNew)
-                Logger.Message("Assembly [{0}] changed. All files will be generated", _thisAssemblyPath);
+
 
             Logger.Message("Loading config files...");
 
-#if WIN8METRO
-            // Load configuration
-            Macros.Add("WIN8METRO");
+#if W8CORE
             Macros.Add("W8CORE");
+#endif
+#if WIN8METRO
+            Macros.Add("WIN8METRO");
+#endif
+#if WP81
+            Macros.Add("WP81");
 #endif
 #if WP8
-            // Load configuration
             Macros.Add("WP8");
-            Macros.Add("W8CORE");
 #endif
 #if DIRECTX11_2
-            // Load configuration
             Macros.Add("DIRECTX11_2");
+#endif
+#if DIRECTX11_1
             Macros.Add("DIRECTX11_1");
-#elif DIRECTX11_1
-            Macros.Add("DIRECTX11_1");
-#else
+#endif
+#if !DIRECTX11_1 && !DIRECTX11_2
             if (GccXml.GetWindowsFramework7Version("7.0a", "7.1") == "7.0a")
             {
                 Macros.Add("WINSDK_70a");
@@ -183,8 +185,18 @@ namespace SharpGen
 
             _allConfigCheck = Config.Id + "-CodeGen.check";
 
+            var isConfigFileChanged = !File.Exists(_allConfigCheck) || latestConfigTime > File.GetLastWriteTime(_allConfigCheck);
+            if(_isAssemblyNew)
+            {
+                Logger.Message("Assembly [{0}] changed. All files will be generated", _thisAssemblyPath);
+            }
+            else if(isConfigFileChanged)
+            {
+                Logger.Message("Config files [{0}] changed", string.Join(",", Config.ConfigFilesLoaded.Select(file => Path.GetFileName(file.AbsoluteFilePath))));
+            }
+
             // Return true if a config file changed or the assembly changed
-            return !File.Exists(_allConfigCheck) || latestConfigTime > File.GetLastWriteTime(_allConfigCheck) || _isAssemblyNew;
+            return isConfigFileChanged || _isAssemblyNew;
         }
 
         /// <summary>

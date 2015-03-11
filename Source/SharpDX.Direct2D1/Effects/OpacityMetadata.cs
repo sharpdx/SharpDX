@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #if DIRECTX11_1
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1.Effects
 {
@@ -42,7 +43,7 @@ namespace SharpDX.Direct2D1.Effects
         /// <summary>
         /// The portion of the source image that is opaque. The default is the entire input image.
         /// </summary>
-        public Vector4 OpaqueRectangle
+        public RawVector4 OpaqueRectangle
         {
             get { return GetVector4Value((int)OpacityMetadataProperties.InputOpaqueRectangle); }
             set { SetValue((int)OpacityMetadataProperties.InputOpaqueRectangle, value); }

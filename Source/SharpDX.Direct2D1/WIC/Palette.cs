@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -40,29 +40,19 @@ namespace SharpDX.WIC
         /// <summary>
         /// Initializes with the specified colors.
         /// </summary>
+        /// <typeparam name="T">Type of the color (must be 4 bytes, RGBA)</typeparam>
         /// <param name="colors">The colors.</param>
-        /// <msdn-id>ee719750</msdn-id>	
-        /// <unmanaged>HRESULT IWICPalette::InitializeCustom([In, Buffer] void* pColors,[In] unsigned int cCount)</unmanaged>	
-        /// <unmanaged-short>IWICPalette::InitializeCustom</unmanaged-short>	
-        public unsafe void Initialize(Color[] colors)
+        /// <exception cref="System.ArgumentException">Color type must be 4 bytes</exception>
+        /// <msdn-id>ee719750</msdn-id>
+        ///   <unmanaged>HRESULT IWICPalette::InitializeCustom([In, Buffer] void* pColors,[In] unsigned int cCount)</unmanaged>
+        ///   <unmanaged-short>IWICPalette::InitializeCustom</unmanaged-short>
+        public unsafe void Initialize<T>(T[] colors) where T : struct
         {
-            fixed (void* pColors = colors)
-                Initialize((IntPtr)pColors, colors.Length);
-        }
+            if (Utilities.SizeOf<T>() != 4)
+                throw new ArgumentException("Color type must be 4 bytes RGBA");
 
-        /// <summary>
-        /// Initializes with the specified colors.
-        /// </summary>
-        /// <param name="colors">The colors.</param>
-        /// <msdn-id>ee719750</msdn-id>	
-        /// <unmanaged>HRESULT IWICPalette::InitializeCustom([In, Buffer] void* pColors,[In] unsigned int cCount)</unmanaged>	
-        /// <unmanaged-short>IWICPalette::InitializeCustom</unmanaged-short>	
-        public void Initialize(Color4[] colors)
-        {
-            var rawColors = new Color[colors.Length];
-            for (int i = 0; i < rawColors.Length; i++)
-                rawColors[i] = (Color)colors[i];
-            Initialize(rawColors);
+            void* pColors = Interop.Fixed(colors);
+            Initialize((IntPtr)pColors, colors.Length);
         }
 
         /// <summary>
@@ -71,29 +61,31 @@ namespace SharpDX.WIC
         /// <msdn-id>ee719744</msdn-id>	
         /// <unmanaged>HRESULT IWICPalette::GetColors([In] unsigned int cCount,[Out, Buffer] void* pColors,[Out] unsigned int* pcActualColors)</unmanaged>	
         /// <unmanaged-short>IWICPalette::GetColors</unmanaged-short>	
-        public Color[] Colors
+        public T[] GetColors<T>() where T : struct
         {
-            get
+            if (Utilities.SizeOf<T>() != 4)
+                throw new ArgumentException("Color type must be 4 bytes RGBA");
+
+            unsafe
             {
-                unsafe
+                //http://msdn.microsoft.com/en-us/library/windows/desktop/ee719741(v=vs.85).aspx
+                int actualCount;
+                int count = this.ColorCount;
+                var rawColors = new T[count];
                 {
-                    //http://msdn.microsoft.com/en-us/library/windows/desktop/ee719741(v=vs.85).aspx
-                    int actualCount;
-                    int count = this.ColorCount;
-                    var rawColors = new Color[count];
-                    fixed (void* pColors = rawColors)
-                        GetColors(count, (IntPtr)pColors , out actualCount);
-                    if (actualCount == 0)
-                        return new Color[0];
-                    
-                    if (count != actualCount)
-                    {
-                        rawColors = new Color[actualCount];
-                        fixed (void* pColors = rawColors)
-                            GetColors(actualCount, (IntPtr)pColors, out actualCount);
-                    }
-                    return rawColors;
+                    void* pColors = Interop.Fixed(rawColors);
+                    GetColors(count, (IntPtr)pColors, out actualCount);
                 }
+                if (actualCount == 0)
+                    return new T[0];
+                    
+                if (count != actualCount)
+                {
+                    rawColors = new T[actualCount];
+                    void* pColors = Interop.Fixed(rawColors);
+                    GetColors(actualCount, (IntPtr)pColors, out actualCount);
+                }
+                return rawColors;
             }
         }
     }

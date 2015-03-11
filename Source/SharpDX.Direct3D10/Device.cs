@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@ using System.Runtime.InteropServices;
 using SharpDX.Direct3D;
 using SharpDX.DXGI;
 using SharpDX;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D10
 {
@@ -164,7 +165,7 @@ namespace SharpDX.Direct3D10
         public Predicate GetPredication(out bool predicateValue)
         {
             Predicate temp;
-            Bool tempPredicateValue;
+            RawBool tempPredicateValue;
             GetPredication(out temp, out tempPredicateValue);
             predicateValue = tempPredicateValue;
             return temp;

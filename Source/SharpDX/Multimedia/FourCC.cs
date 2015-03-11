@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,15 +20,13 @@
 using System;
 using System.Runtime.InteropServices;
 
-using SharpDX.Serialization;
-
 namespace SharpDX.Multimedia
 {
     /// <summary>
     /// A FourCC descriptor.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Size = 4)]
-    public struct FourCC : IEquatable<FourCC>, IDataSerializable
+    public struct FourCC : IEquatable<FourCC>
     {
         /// <summary>
         /// Empty FourCC.
@@ -175,11 +173,6 @@ namespace SharpDX.Multimedia
         public override int GetHashCode()
         {
             return (int) value;
-        }
-
-        public void Serialize(BinarySerializer serializer)
-        {
-            serializer.Serialize(ref value);
         }
 
         public static bool operator ==(FourCC left, FourCC right)

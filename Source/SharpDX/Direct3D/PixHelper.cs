@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,8 +17,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using SharpDX.Mathematics.Interop;
 #if !W8CORE
 using System.Runtime.InteropServices;
+
 namespace SharpDX.Direct3D
 {
     /// <summary>
@@ -33,9 +36,9 @@ namespace SharpDX.Direct3D
         /// <param name="name">The Event Name.</param>
         /// <returns>The zero-based level of the hierarchy that this event is starting in. If an error occurs, the return value will be negative.</returns>
         /// <unmanaged>D3DPERF_BeginEvent</unmanaged>
-        public static int BeginEvent(Color color, string name)
+        public static int BeginEvent(RawColorBGRA color, string name)
         {
-            return D3DPERF_BeginEvent(color.ToBgra(), name);
+            return D3DPERF_BeginEvent(color, name);
         }
 
         /// <summary>
@@ -48,9 +51,9 @@ namespace SharpDX.Direct3D
         /// The zero-based level of the hierarchy that this event is starting in. If an error occurs, the return value will be negative.
         /// </returns>
         /// <unmanaged>D3DPERF_BeginEvent</unmanaged>
-        public static int BeginEvent(Color color, string name, params object[] parameters)
+        public static int BeginEvent(RawColorBGRA color, string name, params object[] parameters)
         {
-            return D3DPERF_BeginEvent(color.ToBgra(), string.Format(name, parameters));
+            return D3DPERF_BeginEvent(color, string.Format(name, parameters));
         }
 
         /// <summary>
@@ -69,9 +72,9 @@ namespace SharpDX.Direct3D
         /// <param name="color">The color.</param>
         /// <param name="name">The name.</param>
         /// <unmanaged>D3DPERF_SetMarker</unmanaged>
-        public static void SetMarker(Color color, string name)
+        public static void SetMarker(RawColorBGRA color, string name)
         {
-            D3DPERF_SetMarker(color.ToBgra(), name);
+            D3DPERF_SetMarker(color, name);
         }
 
         /// <summary>
@@ -81,9 +84,9 @@ namespace SharpDX.Direct3D
         /// <param name="name">The name to format.</param>
         /// <param name="parameters">The parameters to use to format the name.</param>
         /// <unmanaged>D3DPERF_SetMarker</unmanaged>
-        public static void SetMarker(Color color, string name, params object[] parameters)
+        public static void SetMarker(RawColorBGRA color, string name, params object[] parameters)
         {
-            D3DPERF_SetMarker(color.ToBgra(), string.Format(name, parameters));
+            D3DPERF_SetMarker(color, string.Format(name, parameters));
         }
 
         /// <summary>
@@ -112,13 +115,13 @@ namespace SharpDX.Direct3D
         }
 
         [DllImport("d3d9.dll", EntryPoint = "D3DPERF_BeginEvent", CharSet = CharSet.Unicode)]
-        private extern static int D3DPERF_BeginEvent( int color, string name );
+        private extern static int D3DPERF_BeginEvent(RawColorBGRA color, string name);
 
         [DllImport("d3d9.dll", EntryPoint = "D3DPERF_EndEvent", CharSet = CharSet.Unicode)]
         private extern static int D3DPERF_EndEvent();
 
         [DllImport("d3d9.dll", EntryPoint = "D3DPERF_SetMarker", CharSet = CharSet.Unicode)]
-        private extern static void D3DPERF_SetMarker( int color, string wszName );
+        private extern static void D3DPERF_SetMarker(RawColorBGRA color, string wszName);
 
         [DllImport("d3d9.dll", EntryPoint = "D3DPERF_SetOptions", CharSet = CharSet.Unicode)]
         private extern static void D3DPERF_SetOptions( int options);

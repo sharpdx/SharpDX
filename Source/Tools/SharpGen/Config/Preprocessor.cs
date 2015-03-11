@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -69,20 +69,19 @@ namespace SharpGen.Config
             foreach (var ifdef in list)
             {
                 var attr = ifdef.Attribute("name");
-                if (attr == null || !macros.Contains(attr.Value))
+                if(attr != null && !string.IsNullOrWhiteSpace(attr.Value))
                 {
-                    ifdef.Remove();
-                } 
-                else
-                {
-                    foreach(var element in ifdef.Elements())
+                    var values = attr.Value.Split(new []{ "|" }, StringSplitOptions.RemoveEmptyEntries);
+                    if(values.Any(macros.Contains))
                     {
-                        //Console.WriteLine("=============== ifdef Add element {0}", element);
-                        ifdef.AddBeforeSelf(element);
+                        foreach(var element in ifdef.Elements())
+                        {
+                            //Console.WriteLine("=============== ifdef Add element {0}", element);
+                            ifdef.AddBeforeSelf(element);
+                        }
                     }
-
-                    ifdef.Remove();
                 }
+                ifdef.Remove();
             }
 
             var writer = new StringWriter();

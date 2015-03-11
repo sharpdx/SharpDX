@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #if DIRECTX11_1
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1.Effects
 {
@@ -69,7 +70,7 @@ namespace SharpDX.Direct2D1.Effects
         /// <summary>
         /// The perspective origin.
         /// </summary>
-        public Vector2 PerspectiveOrigin
+        public RawVector2 PerspectiveOrigin
         {
             get { return GetVector2Value((int)PerspectiveTransform3DProperties.PerspectiveOrigin); }
             set { SetValue((int)PerspectiveTransform3DProperties.PerspectiveOrigin, value); }
@@ -78,7 +79,7 @@ namespace SharpDX.Direct2D1.Effects
         /// <summary>
         /// The transformation local offset.
         /// </summary>
-        public Vector3 LocalOffset
+        public RawVector3 LocalOffset
         {
             get { return GetVector3Value((int)PerspectiveTransform3DProperties.LocalOffset); }
             set { SetValue((int)PerspectiveTransform3DProperties.LocalOffset, value); }
@@ -87,7 +88,7 @@ namespace SharpDX.Direct2D1.Effects
         /// <summary>
         /// The transformation global offset.
         /// </summary>
-        public Vector3 GlobalOffset
+        public RawVector3 GlobalOffset
         {
             get { return GetVector3Value((int)PerspectiveTransform3DProperties.GlobalOffset); }
             set { SetValue((int)PerspectiveTransform3DProperties.GlobalOffset, value); }
@@ -96,7 +97,7 @@ namespace SharpDX.Direct2D1.Effects
         /// <summary>
         /// The transformation rotation origin.
         /// </summary>
-        public Vector3 RotationOrigin
+        public RawVector3 RotationOrigin
         {
             get { return GetVector3Value((int)PerspectiveTransform3DProperties.RotationOrigin); }
             set { SetValue((int)PerspectiveTransform3DProperties.RotationOrigin, value); }
@@ -105,7 +106,7 @@ namespace SharpDX.Direct2D1.Effects
         /// <summary>
         /// The transformation rotation.
         /// </summary>
-        public Vector3 Rotation
+        public RawVector3 Rotation
         {
             get { return GetVector3Value((int)PerspectiveTransform3DProperties.Rotation); }
             set { SetValue((int)PerspectiveTransform3DProperties.Rotation, value); }

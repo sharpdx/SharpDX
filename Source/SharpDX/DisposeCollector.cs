@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -98,12 +98,6 @@ namespace SharpDX
                     throw new ArgumentException("Memory pointer is invalid. Memory must have been allocated with Utilties.AllocateMemory");
             }
 
-            var toDisposeComponent = toDispose as Component;
-
-            // If this is a component and It's already attached, don't add it
-            if (toDisposeComponent != null && toDisposeComponent.IsAttached)
-                return toDispose;
-
             if (!Equals(toDispose, default(T)))
             {
                 if (disposables == null)
@@ -112,10 +106,6 @@ namespace SharpDX
                 if (!disposables.Contains(toDispose))
                 {
                     disposables.Add(toDispose);
-
-                    // Set attached flag for Component
-                    if (toDisposeComponent != null)
-                        toDisposeComponent.IsAttached = true;
                 }
             }
             return toDispose;
@@ -157,11 +147,6 @@ namespace SharpDX
             if (disposables != null && disposables.Contains(toDisposeArg))
             {
                 disposables.Remove(toDisposeArg);
-
-                // Set not attached flag
-                var toDisposeComponent = toDisposeArg as Component;
-                if (toDisposeComponent != null)
-                    toDisposeComponent.IsAttached = false;
             }
         }
     }

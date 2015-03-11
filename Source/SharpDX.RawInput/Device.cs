@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -75,16 +75,19 @@ namespace SharpDX.RawInput
                 int countDeviceNameChars = 0;
                 RawInputFunctions.GetRawInputDeviceInfo(deviceHandle, RawInputDeviceInfoType.DeviceName, IntPtr.Zero, ref countDeviceNameChars);
                 char* deviceNamePtr = stackalloc char[countDeviceNameChars];
-                RawInputFunctions.GetRawInputDeviceInfo(deviceHandle, RawInputDeviceInfoType.DeviceName, (IntPtr) deviceNamePtr, ref countDeviceNameChars);
-                var deviceName = new string(deviceNamePtr, 0, countDeviceNameChars);
+                RawInputFunctions.GetRawInputDeviceInfo(deviceHandle, RawInputDeviceInfoType.DeviceName, (IntPtr)deviceNamePtr, ref countDeviceNameChars);
+
+                var nullCharIndex = 0;
+                while (nullCharIndex <= countDeviceNameChars && deviceNamePtr[nullCharIndex++] != '\0') ;
+                var deviceName = new string(deviceNamePtr, 0, nullCharIndex == 0 ? 0 : nullCharIndex - 1);
 
                 // Get the DeviceInfo
                 int sizeOfDeviceInfo = 0;
                 RawInputFunctions.GetRawInputDeviceInfo(deviceHandle, RawInputDeviceInfoType.DeviceInfo, IntPtr.Zero, ref sizeOfDeviceInfo);
                 byte* deviceInfoPtr = stackalloc byte[sizeOfDeviceInfo];
-                RawInputFunctions.GetRawInputDeviceInfo(deviceHandle, RawInputDeviceInfoType.DeviceInfo, (IntPtr) deviceInfoPtr, ref sizeOfDeviceInfo);
+                RawInputFunctions.GetRawInputDeviceInfo(deviceHandle, RawInputDeviceInfoType.DeviceInfo, (IntPtr)deviceInfoPtr, ref sizeOfDeviceInfo);
 
-                deviceInfoList.Add(DeviceInfo.Convert(ref *(RawDeviceInformation*) deviceInfoPtr, deviceName, deviceHandle));
+                deviceInfoList.Add(DeviceInfo.Convert(ref *(RawDeviceInformation*)deviceInfoPtr, deviceName, deviceHandle));
             }
 
             return deviceInfoList;
@@ -112,9 +115,9 @@ namespace SharpDX.RawInput
         public static void RegisterDevice(UsagePage usagePage, UsageId usageId, DeviceFlags flags, IntPtr target, RegisterDeviceOptions options = RegisterDeviceOptions.Default)
         {
             var rawInputDevices = new RawInputDevice[1];
-            rawInputDevices[0].UsagePage = (short) usagePage;
-            rawInputDevices[0].Usage = (short) usageId;
-            rawInputDevices[0].Flags = (int) flags;
+            rawInputDevices[0].UsagePage = (short)usagePage;
+            rawInputDevices[0].Usage = (short)usageId;
+            rawInputDevices[0].Flags = (int)flags;
             rawInputDevices[0].Target = target;
 
             // Register this device

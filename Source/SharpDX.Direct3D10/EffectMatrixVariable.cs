@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System.Diagnostics;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D10
 {
@@ -47,7 +48,7 @@ namespace SharpDX.Direct3D10
         public unsafe T GetMatrix<T>() where T : struct
         {
             T value;
-            GetMatrix(out *(Matrix*)Interop.CastOut(out value));
+            GetMatrix(out *(RawMatrix*)Interop.CastOut(out value));
             return value;
         }
 
@@ -59,9 +60,9 @@ namespace SharpDX.Direct3D10
         /// Note??The DirectX SDK does not supply any compiled binaries for effects. You must use Effects 11 source to build  your effects-type application. For more information about using Effects 11 source, see Differences Between Effects 10 and Effects 11.	
         /// </remarks>	
         /// <unmanaged>HRESULT ID3DX11EffectMatrixVariable::GetMatrix([Out] SHARPDX_MATRIX* pData)</unmanaged>	
-        public Matrix GetMatrix()
+        public RawMatrix GetMatrix()
         {
-            Matrix value;
+            RawMatrix value;
             GetMatrix(out value);
             return value;
         }
@@ -75,7 +76,7 @@ namespace SharpDX.Direct3D10
         public unsafe void SetMatrix<T>(ref T matrix) where T : struct
         {
             Trace.Assert(Utilities.SizeOf<T>() == 64, MatrixInvalidSize);
-            SetMatrix(ref *(Matrix*)Interop.Fixed(ref matrix));
+            SetMatrix(ref *(RawMatrix*)Interop.Fixed(ref matrix));
         }
 
         /// <summary>	
@@ -99,7 +100,7 @@ namespace SharpDX.Direct3D10
         public void SetMatrix<T>(T[] matrixArray, int offset) where T : struct
         {
             Trace.Assert(Utilities.SizeOf<T>() == 64, MatrixInvalidSize);
-            SetMatrixArray(Interop.CastArray<Matrix, T>(matrixArray), offset, matrixArray.Length);
+            SetMatrixArray(Interop.CastArray<RawMatrix, T>(matrixArray), offset, matrixArray.Length);
         }
 
         /// <summary>	
@@ -123,7 +124,7 @@ namespace SharpDX.Direct3D10
         public T[] GetMatrixArray<T>(int offset, int count) where T : struct
         {
             var temp = new T[count];
-            GetMatrixArray(Interop.CastArray<Matrix, T>(temp), offset, count);
+            GetMatrixArray(Interop.CastArray<RawMatrix, T>(temp), offset, count);
             return temp;
         }
 
@@ -153,7 +154,7 @@ namespace SharpDX.Direct3D10
         public unsafe void SetMatrixTranspose<T>(ref T matrix) where T : struct
         {
             Trace.Assert(Utilities.SizeOf<T>() == 64, MatrixInvalidSize);
-            SetMatrixTranspose(ref *(Matrix*)Interop.Cast(ref matrix));
+            SetMatrixTranspose(ref *(RawMatrix*)Interop.Cast(ref matrix));
         }
 
         /// <summary>	
@@ -182,7 +183,7 @@ namespace SharpDX.Direct3D10
         /// <unmanaged>HRESULT ID3D10EffectMatrixVariable::SetMatrixTransposeArray([In] float* pData,[None] int Offset,[None] int Count)</unmanaged>
         public void SetMatrixTranspose<T>(T[] matrixArray, int offset) where T : struct
         {
-            SetMatrixTransposeArray(Interop.CastArray<Matrix, T>(matrixArray), offset, matrixArray.Length);
+            SetMatrixTransposeArray(Interop.CastArray<RawMatrix, T>(matrixArray), offset, matrixArray.Length);
         }
 
         /// <summary>	
@@ -196,7 +197,7 @@ namespace SharpDX.Direct3D10
         public unsafe T GetMatrixTranspose<T>() where T : struct
         {
             T value;
-            GetMatrixTranspose(out *(Matrix*)Interop.CastOut(out value));
+            GetMatrixTranspose(out *(RawMatrix*)Interop.CastOut(out value));
             return value;
         }
 
@@ -208,9 +209,9 @@ namespace SharpDX.Direct3D10
         /// Transposing a matrix will rearrange the data order from row-column order to column-row order (or vice versa).Note??The DirectX SDK does not supply any compiled binaries for effects. You must use Effects 11 source to build  your effects-type application. For more information about using Effects 11 source, see Differences Between Effects 10 and Effects 11.	
         /// </remarks>	
         /// <unmanaged>HRESULT ID3DX11EffectMatrixVariable::GetMatrixTranspose([Out] SHARPDX_MATRIX* pData)</unmanaged>	
-        public Matrix GetMatrixTranspose()
+        public RawMatrix GetMatrixTranspose()
         {
-            Matrix value;
+            RawMatrix value;
             GetMatrixTranspose(out value);
             return value;
         }
@@ -222,7 +223,7 @@ namespace SharpDX.Direct3D10
         ///  Transposing a matrix will rearrange the data order from row-column order to column-row order (or vice versa). 	
         /// </remarks>	
         /// <param name="count"> The number of matrices in the array to get. </param>
-        /// <returns>Returns an array of transposed <see cref="SharpDX.Matrix"/>. </returns>
+        /// <returns>Returns an array of transposed <see cref="RawMatrix"/>. </returns>
         /// <unmanaged>HRESULT ID3D10EffectMatrixVariable::GetMatrixTransposeArray([Out, Buffer] float* pData,[None] int Offset,[None] int Count)</unmanaged>
         public T[] GetMatrixTransposeArray<T>(int count) where T : struct
         {
@@ -237,12 +238,12 @@ namespace SharpDX.Direct3D10
         /// </remarks>	
         /// <param name="offset"> The offset (in number of matrices) between the start of the array and the first matrix to get. </param>
         /// <param name="count"> The number of matrices in the array to get. </param>
-        /// <returns>Returns an array of transposed <see cref="SharpDX.Matrix"/>. </returns>
+        /// <returns>Returns an array of transposed <see cref="RawMatrix"/>. </returns>
         /// <unmanaged>HRESULT ID3D10EffectMatrixVariable::GetMatrixTransposeArray([Out, Buffer] float* pData,[None] int Offset,[None] int Count)</unmanaged>
         public T[] GetMatrixTransposeArray<T>(int offset, int count) where T : struct
         {
             var temp = new T[count];
-            GetMatrixTransposeArray(Interop.CastArray<Matrix, T>(temp), offset, count);
+            GetMatrixTransposeArray(Interop.CastArray<RawMatrix, T>(temp), offset, count);
             return temp;
         }
     }

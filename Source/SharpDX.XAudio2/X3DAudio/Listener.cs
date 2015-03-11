@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.X3DAudio
 {
@@ -20,10 +21,10 @@ namespace SharpDX.X3DAudio
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         internal partial struct __Native
         {
-            public SharpDX.Vector3 OrientFront;
-            public SharpDX.Vector3 OrientTop;
-            public SharpDX.Vector3 Position;
-            public SharpDX.Vector3 Velocity;
+            public RawVector3 OrientFront;
+            public RawVector3 OrientTop;
+            public RawVector3 Position;
+            public RawVector3 Velocity;
             public System.IntPtr ConePointer;
             public Cone.__Native Cone;
             // Method to free unmanaged allocation

@@ -1,3 +1,0 @@
-SharpDX Toolkit For Visual Studio
-Version 1.1 - 2013-11-03
-- Add support for Visual Studio 2013

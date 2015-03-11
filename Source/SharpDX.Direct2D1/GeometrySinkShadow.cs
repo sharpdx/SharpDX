@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1
 {
@@ -52,8 +53,8 @@ namespace SharpDX.Direct2D1
             }
 
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate void AddLineDelegate(IntPtr thisPtr, Vector2 point);
-            private static unsafe void AddLineImpl(IntPtr thisPtr, Vector2 point)
+            private delegate void AddLineDelegate(IntPtr thisPtr, RawVector2 point);
+            private static unsafe void AddLineImpl(IntPtr thisPtr, RawVector2 point)
             {
                 var shadow = ToShadow<GeometrySinkShadow>(thisPtr);
                 var callback = (GeometrySink)shadow.Callback; 

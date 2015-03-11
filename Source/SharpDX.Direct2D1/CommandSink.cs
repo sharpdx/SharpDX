@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,8 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 #if DIRECTX11_1
-using System;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1
 {
@@ -67,7 +68,7 @@ namespace SharpDX.Direct2D1
         /// The transform will be applied to the corresponding device context.	
         /// </remarks>	
         /// <unmanaged>HRESULT ID2D1CommandSink::SetTransform([In] const D2D_MATRIX_3X2_F* transform)</unmanaged>	
-        SharpDX.Matrix3x2 Transform { set; }
+        RawMatrix3x2 Transform { set; }
 
         /// <summary>	
         /// Sets the blending for primitives.
@@ -89,7 +90,7 @@ namespace SharpDX.Direct2D1
         /// The clear color is restricted by the currently selected clip and layer bounds.If no color is specified, the color should be interpreted by context. Examples include but are not limited to:Transparent black for a premultiplied bitmap target. Opaque black for an ignore bitmap target. Containing no content (or white) for a printer page.	
         /// </remarks>	
         /// <unmanaged>HRESULT ID2D1CommandSink::Clear([In, Optional] const D2D_COLOR_F* color)</unmanaged>	
-        void Clear(SharpDX.Color4? color = null);
+        void Clear(RawColor4? color = null);
 
         /// <summary>	
         /// [This documentation is preliminary and is subject to change.]	
@@ -100,7 +101,7 @@ namespace SharpDX.Direct2D1
         /// <param name="foregroundBrush"><para>The measuring mode to apply to the glyphs.</para></param>	
         /// <param name="measuringMode">No documentation.</param>	
         /// <unmanaged>HRESULT ID2D1CommandSink::DrawGlyphRun([In] D2D_POINT_2F baselineOrigin,[In] const DWRITE_GLYPH_RUN* glyphRun,[In, Optional] const DWRITE_GLYPH_RUN_DESCRIPTION* glyphRunDescription,[In] ID2D1Brush* foregroundBrush,[In] DWRITE_MEASURING_MODE measuringMode)</unmanaged>	
-        void DrawGlyphRun(SharpDX.Vector2 baselineOrigin, SharpDX.DirectWrite.GlyphRun glyphRun, SharpDX.DirectWrite.GlyphRunDescription glyphRunDescription, SharpDX.Direct2D1.Brush foregroundBrush, SharpDX.Direct2D1.MeasuringMode measuringMode);
+        void DrawGlyphRun(RawVector2 baselineOrigin, SharpDX.DirectWrite.GlyphRun glyphRun, SharpDX.DirectWrite.GlyphRunDescription glyphRunDescription, SharpDX.Direct2D1.Brush foregroundBrush, SharpDX.Direct2D1.MeasuringMode measuringMode);
 
         /// <summary>	
         /// [This documentation is preliminary and is subject to change.]	
@@ -114,7 +115,7 @@ namespace SharpDX.Direct2D1
         /// Additional References	
         /// </remarks>	
         /// <unmanaged>HRESULT ID2D1CommandSink::DrawLine([In] D2D_POINT_2F point0,[In] D2D_POINT_2F point1,[In] ID2D1Brush* brush,[In] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle)</unmanaged>	
-        void DrawLine(SharpDX.Vector2 point0, SharpDX.Vector2 point1, SharpDX.Direct2D1.Brush brush, float strokeWidth, SharpDX.Direct2D1.StrokeStyle strokeStyle);
+        void DrawLine(RawVector2 point0, RawVector2 point1, SharpDX.Direct2D1.Brush brush, float strokeWidth, SharpDX.Direct2D1.StrokeStyle strokeStyle);
 
         /// <summary>	
         /// [This documentation is preliminary and is subject to change.]	
@@ -137,7 +138,7 @@ namespace SharpDX.Direct2D1
         /// <param name="strokeWidth">No documentation.</param>	
         /// <param name="strokeStyle">No documentation.</param>	
         /// <unmanaged>HRESULT ID2D1CommandSink::DrawRectangle([In] const D2D_RECT_F* rect,[In] ID2D1Brush* brush,[In] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle)</unmanaged>	
-        void DrawRectangle(SharpDX.RectangleF rect, SharpDX.Direct2D1.Brush brush, float strokeWidth, SharpDX.Direct2D1.StrokeStyle strokeStyle);
+        void DrawRectangle(RawRectangleF rect, SharpDX.Direct2D1.Brush brush, float strokeWidth, SharpDX.Direct2D1.StrokeStyle strokeStyle);
 
         /// <summary>	
         /// No documentation.	
@@ -149,7 +150,7 @@ namespace SharpDX.Direct2D1
         /// <param name="sourceRectangle">No documentation.</param>	
         /// <param name="erspectiveTransformRef">No documentation.</param>	
         /// <unmanaged>HRESULT ID2D1CommandSink::DrawBitmap([In] ID2D1Bitmap* bitmap,[In, Optional] const D2D_RECT_F* destinationRectangle,[In] float opacity,[In] D2D1_INTERPOLATION_MODE interpolationMode,[In, Optional] const D2D_RECT_F* sourceRectangle,[In, Optional] const D2D_MATRIX_4X4_F* perspectiveTransform)</unmanaged>	
-        void DrawBitmap(SharpDX.Direct2D1.Bitmap bitmap, SharpDX.RectangleF? destinationRectangle, float opacity, SharpDX.Direct2D1.InterpolationMode interpolationMode, SharpDX.RectangleF? sourceRectangle, SharpDX.Matrix? erspectiveTransformRef);
+        void DrawBitmap(SharpDX.Direct2D1.Bitmap bitmap, RawRectangleF? destinationRectangle, float opacity, SharpDX.Direct2D1.InterpolationMode interpolationMode, RawRectangleF? sourceRectangle, RawMatrix? erspectiveTransformRef);
 
         /// <summary>	
         /// [This documentation is preliminary and is subject to change.]	
@@ -163,7 +164,7 @@ namespace SharpDX.Direct2D1
         /// Because the image can itself be a command list or contain an effect graph that in turn contains a command list, this method can result in recursive processing.	
         /// </remarks>	
         /// <unmanaged>HRESULT ID2D1CommandSink::DrawImage([In] ID2D1Image* image,[In, Optional] const D2D_POINT_2F* targetOffset,[In, Optional] const D2D_RECT_F* imageRectangle,[In] D2D1_INTERPOLATION_MODE interpolationMode,[In] D2D1_COMPOSITE_MODE compositeMode)</unmanaged>	
-        void DrawImage(SharpDX.Direct2D1.Image image, SharpDX.Vector2? targetOffset, SharpDX.RectangleF? imageRectangle, SharpDX.Direct2D1.InterpolationMode interpolationMode, SharpDX.Direct2D1.CompositeMode compositeMode);
+        void DrawImage(SharpDX.Direct2D1.Image image, RawVector2? targetOffset, RawRectangleF? imageRectangle, SharpDX.Direct2D1.InterpolationMode interpolationMode, SharpDX.Direct2D1.CompositeMode compositeMode);
 
         /// <summary>	
         /// No documentation.	
@@ -171,7 +172,7 @@ namespace SharpDX.Direct2D1
         /// <param name="gdiMetafile">No documentation.</param>	
         /// <param name="targetOffset">No documentation.</param>	
         /// <unmanaged>HRESULT ID2D1CommandSink::DrawGdiMetafile([In] ID2D1GdiMetafile* gdiMetafile,[In, Optional] const D2D_POINT_2F* targetOffset)</unmanaged>	
-        void DrawGdiMetafile(SharpDX.Direct2D1.GdiMetafile gdiMetafile, SharpDX.Vector2? targetOffset);
+        void DrawGdiMetafile(SharpDX.Direct2D1.GdiMetafile gdiMetafile, RawVector2? targetOffset);
 
         /// <summary>	
         /// [This documentation is preliminary and is subject to change.]	
@@ -192,7 +193,7 @@ namespace SharpDX.Direct2D1
         /// The opacity mask bitmap must be considered to be clamped on each axis.	
         /// </remarks>	
         /// <unmanaged>HRESULT ID2D1CommandSink::FillOpacityMask([In] ID2D1Bitmap* opacityMask,[In] ID2D1Brush* brush,[In, Optional] const D2D_RECT_F* destinationRectangle,[In, Optional] const D2D_RECT_F* sourceRectangle)</unmanaged>	
-        void FillOpacityMask(SharpDX.Direct2D1.Bitmap opacityMask, SharpDX.Direct2D1.Brush brush, SharpDX.RectangleF? destinationRectangle, SharpDX.RectangleF? sourceRectangle);
+        void FillOpacityMask(SharpDX.Direct2D1.Bitmap opacityMask, SharpDX.Direct2D1.Brush brush, RawRectangleF? destinationRectangle, RawRectangleF? sourceRectangle);
 
         /// <summary>	
         /// [This documentation is preliminary and is subject to change.]	
@@ -212,7 +213,7 @@ namespace SharpDX.Direct2D1
         /// <param name="rect"><para>The rectangle to fill.</para></param>	
         /// <param name="brush"><para>The brush with which to fill the rectangle.</para></param>	
         /// <unmanaged>HRESULT ID2D1CommandSink::FillRectangle([In] const D2D_RECT_F* rect,[In] ID2D1Brush* brush)</unmanaged>	
-        void FillRectangle(SharpDX.RectangleF rect, SharpDX.Direct2D1.Brush brush);
+        void FillRectangle(RawRectangleF rect, SharpDX.Direct2D1.Brush brush);
 
         /// <summary>	
         /// [This documentation is preliminary and is subject to change.]	
@@ -223,7 +224,7 @@ namespace SharpDX.Direct2D1
         /// If the current world transform is not preserving the axis, clipRectangle is transformed and the bounds of the transformed rectangle are used instead.	
         /// </remarks>	
         /// <unmanaged>HRESULT ID2D1CommandSink::PushAxisAlignedClip([In] const D2D_RECT_F* clipRect,[In] D2D1_ANTIALIAS_MODE antialiasMode)</unmanaged>	
-        void PushAxisAlignedClip(SharpDX.RectangleF clipRect, SharpDX.Direct2D1.AntialiasMode antialiasMode);
+        void PushAxisAlignedClip(RawRectangleF clipRect, SharpDX.Direct2D1.AntialiasMode antialiasMode);
 
         /// <summary>	
         /// No documentation.	
