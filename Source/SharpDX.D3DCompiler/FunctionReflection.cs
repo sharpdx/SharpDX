@@ -69,5 +69,59 @@ namespace SharpDX.D3DCompiler
                 return this.GetFunctionParameter(-1);
             }
         }
+
+        /// <summary>	
+        /// <p>Gets a description of how a resource is bound to a function. </p>	
+        /// </summary>	
+        /// <param name="resourceIndex"><dd>  <p>A zero-based resource index.</p> </dd></param>	
+        /// <returns><p>A reference to a <strong><see cref="SharpDX.D3DCompiler.InputBindingDescription"/></strong> structure that describes input binding of the resource. </p> </dd></returns>	
+        /// <remarks>	
+        /// <p>A shader consists of executable code (the compiled HLSL functions) and a set of resources that supply the shader with input data. <strong>GetResourceBindingDesc</strong> gets info about how one resource in the set is bound as an input to the shader. The  <em>ResourceIndex</em> parameter specifies the index for the resource.</p>	
+        /// </remarks>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D11FunctionReflection::GetResourceBindingDesc']/*"/>	
+        /// <msdn-id>dn280551</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11FunctionReflection::GetResourceBindingDesc([In] unsigned int ResourceIndex,[Out] D3D11_SHADER_INPUT_BIND_DESC* pDesc)</unmanaged>	
+        /// <unmanaged-short>ID3D11FunctionReflection::GetResourceBindingDesc</unmanaged-short>	
+        public InputBindingDescription GetResourceBindingDescription(int index)
+        {
+            InputBindingDescription result;
+            this.GetResourceBindingDescription(index, out result);
+            return result;
+        }
+
+        /// <summary>	
+        /// <p>Gets a description of how a resource is bound to a function. </p>	
+        /// </summary>	
+        /// <param name="name"><dd>  <p>Resource name.</p> </dd></param>	
+        /// <returns><p>A reference to a <strong><see cref="SharpDX.D3DCompiler.InputBindingDescription"/></strong> structure that describes input binding of the resource. </p> </dd></returns>	
+        /// <remarks>	
+        /// <p>A shader consists of executable code (the compiled HLSL functions) and a set of resources that supply the shader with input data. <strong>GetResourceBindingDesc</strong> gets info about how one resource in the set is bound as an input to the shader. The  <em>ResourceIndex</em> parameter specifies the index for the resource.</p>	
+        /// </remarks>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D11FunctionReflection::GetResourceBindingDesc']/*"/>	
+        /// <msdn-id>dn280551</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11FunctionReflection::GetResourceBindingDesc([In] unsigned int ResourceIndex,[Out] D3D11_SHADER_INPUT_BIND_DESC* pDesc)</unmanaged>	
+        /// <unmanaged-short>ID3D11FunctionReflection::GetResourceBindingDesc</unmanaged-short>	
+        public InputBindingDescription GetResourceBindingDescription(string name)
+        {
+            InputBindingDescription result;
+            this.GetResourceBindingDescByName(name, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Returns all resource bindings attached to this resource
+        /// </summary>
+        public InputBindingDescription[] ResourceBindings
+        {
+            get
+            {
+                InputBindingDescription[] result = new InputBindingDescription[this.Description.BoundResources];
+                for (int i = 0; i < result.Length;i++)
+                {
+                    this.GetResourceBindingDescription(i, out result[i]);
+                }
+                return result;
+            }
+        }
     }
 }
