@@ -32,6 +32,8 @@ namespace SharpDX.Direct3D12
             Type = type;
             CPUPageProperties = cpuPageProperties;
             MemoryPoolPreference = memoryPoolPreference;
+            this.CreationNodeMask = 1;
+            this.VisibleNodeMask = 1;
         }
 
         /// <summary>
@@ -44,6 +46,8 @@ namespace SharpDX.Direct3D12
             Type = HeapType.Custom;
             CPUPageProperties = cpuPageProperties;
             MemoryPoolPreference = memoryPoolPreference;
+            this.CreationNodeMask = 1;
+            this.VisibleNodeMask = 1;
         }
 
         /// <summary>
@@ -55,6 +59,8 @@ namespace SharpDX.Direct3D12
             Type = type;
             CPUPageProperties = CpuPageProperties.Unknown;
             MemoryPoolPreference = MemoryPool.Unknown;
+            this.CreationNodeMask = 1;
+            this.VisibleNodeMask = 1;
         }
 
         /// <summary>

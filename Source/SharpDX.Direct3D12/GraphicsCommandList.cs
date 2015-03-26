@@ -22,7 +22,7 @@ using System;
 
 namespace SharpDX.Direct3D12
 {
-    public partial class CommandList
+    public partial class GraphicsCommandList
     {
         /// <unmanaged>void ID3D12CommandList::ResourceBarrier([In] unsigned int Count,[In, Buffer] const D3D12_RESOURCE_BARRIER_DESC* pDesc)</unmanaged>	
         /// <unmanaged-short>ID3D12CommandList::ResourceBarrier</unmanaged-short>	

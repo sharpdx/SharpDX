@@ -18,7 +18,7 @@
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="BlendStateDescription.cs" />
-    <Compile Include="CommandList.cs" />
+    <Compile Include="GraphicsCommandList.cs" />
     <Compile Include="CommandQueue.cs" />
     <Compile Include="ComputePipelineStateDescription.cs" />
     <Compile Include="DepthStencilStateDescription.cs" />
@@ -30,6 +30,7 @@
     <Compile Include="Generated\Structures.cs" />
     <Compile Include="GraphicsPipelineStateDescription.cs" />
     <Compile Include="HeapProperties.cs" />
+    <Compile Include="InfoQueueFilterDescription.cs" />
     <Compile Include="InputElement.cs" />
     <Compile Include="InputLayoutDescription.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

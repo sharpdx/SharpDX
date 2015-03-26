@@ -31,26 +31,28 @@ namespace SharpDX.Direct3D12
         /// <param name="stateBefore">The state before.</param>
         /// <param name="stateAfter">The state after.</param>
         /// <exception cref="System.ArgumentNullException">resource</exception>
-        public ResourceTransitionBarrierDescription(Resource resource, ResourceUsage stateBefore, ResourceUsage stateAfter)
-            : this(resource, -1, stateBefore, stateAfter)
+        public ResourceTransitionBarrierDescription(Resource resource, ResourceUsage stateBefore, ResourceUsage stateAfter, ResourceTransitionBarrierFlags flags = ResourceTransitionBarrierFlags.None)
+            : this(resource, -1, stateBefore, stateAfter, flags)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResourceTransitionBarrierDescription"/> struct.
+        /// Initializes a new instance of the <see cref="ResourceTransitionBarrierDescription" /> struct.
         /// </summary>
         /// <param name="resource">The resource.</param>
         /// <param name="subresource">The subresource.</param>
         /// <param name="stateBefore">The state before.</param>
         /// <param name="stateAfter">The state after.</param>
+        /// <param name="flags">The flags.</param>
         /// <exception cref="System.ArgumentNullException">resource</exception>
-        public ResourceTransitionBarrierDescription(Resource resource, int subresource, ResourceUsage stateBefore, ResourceUsage stateAfter)
+        public ResourceTransitionBarrierDescription(Resource resource, int subresource, ResourceUsage stateBefore, ResourceUsage stateAfter, ResourceTransitionBarrierFlags flags = ResourceTransitionBarrierFlags.None)
         {
             if (resource == null) throw new ArgumentNullException("resource");
             ResourcePointer = resource.NativePointer;
             Subresource = subresource;
             StateBefore = stateBefore;
             StateAfter = stateAfter;
+            Flags = flags;
         }
     }
 }

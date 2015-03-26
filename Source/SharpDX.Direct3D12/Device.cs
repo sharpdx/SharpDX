@@ -26,8 +26,6 @@ namespace SharpDX.Direct3D12
 {
     public partial class Device
     {
-        private CommandQueue defaultCommandQueue;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Device"/> class.
         /// </summary>
@@ -89,63 +87,70 @@ namespace SharpDX.Direct3D12
             CreateDevice(adapter, DriverType.Unknown, flags, minFeatureLevel, this);
         }
 
-        /// <summary>
-        /// Gets the default command queue.
-        /// </summary>
-        /// <value>The default command queue.</value>
-        public CommandQueue DefaultCommandQueue
+        /// <summary>	
+        /// No documentation for Direct3D12	
+        /// </summary>	
+        /// <param name="descRef">No documentation.</param>	
+        /// <param name="riid">No documentation.</param>	
+        /// <returns>No documentation.</returns>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommandQueue']/*"/>	
+        /// <unmanaged>HRESULT ID3D12Device::CreateCommandQueue([In] const D3D12_COMMAND_QUEUE_DESC* pDesc,[In] const GUID&amp; riid,[Out] ID3D12CommandQueue** ppCommandQueue)</unmanaged>	
+        /// <unmanaged-short>ID3D12Device::CreateCommandQueue</unmanaged-short>	
+        public SharpDX.Direct3D12.CommandQueue CreateCommandQueue(SharpDX.Direct3D12.CommandQueueDescription description)
         {
-            get { return defaultCommandQueue; }
+            return CreateCommandQueue(description, Utilities.GetGuidFromType(typeof(CommandQueue)));
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Library"/> class.
-        /// </summary>
-        /// <param name="buffer">The buffer.</param>
-        /// <exception cref="System.ArgumentNullException">
-        /// device
-        /// or
-        /// buffer
-        /// </exception>
-        /// <unmanaged>HRESULT ID3D12Device::CreateLibrary([In, Buffer] const void* pLibraryBlob,[In] SIZE_T BlobLength,[Out, Fast] ID3D12Library** ppLibrary)</unmanaged>
-        ///   <unmanaged-short>ID3D12Device::CreateLibrary</unmanaged-short>
-        public unsafe Library CreateLibrary(byte[] buffer)
-        {
-            if(buffer == null) throw new ArgumentNullException("buffer");
-            fixed(void* ptr = buffer)
-            {
-                return CreateLibrary((IntPtr)ptr, buffer.Length);
-            }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Library"/> class.
-        /// </summary>
-        /// <param name="buffer">The buffer.</param>
-        /// <exception cref="System.ArgumentNullException">
-        /// device
-        /// or
-        /// buffer
-        /// </exception>
-        public Library CreateLibrary(DataPointer buffer)
-        {
-            if (buffer.Pointer == IntPtr.Zero) throw new ArgumentNullException("buffer");
-            return CreateLibrary(buffer.Pointer, buffer.Size);
-        }
-
 
         /// <summary>	
         /// No documentation for Direct3D12	
         /// </summary>	
         /// <param name="type">No documentation.</param>	
-        /// <param name="priority">No documentation.</param>	
+        /// <param name="riid">No documentation.</param>	
         /// <returns>No documentation.</returns>	
-        /// <unmanaged>HRESULT ID3D12Device::CreateCommandQueue([In] D3D12_COMMAND_LIST_TYPE type,[In] int priority,[In] const GUID&amp; riid,[Out] ID3D12CommandQueue** ppCommandQueue)</unmanaged>	
-        /// <unmanaged-short>ID3D12Device::CreateCommandQueue</unmanaged-short>	
-        public SharpDX.Direct3D12.CommandQueue CreateCommandQueue(SharpDX.Direct3D12.CommandListType type, int priority)
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommandAllocator']/*"/>	
+        /// <unmanaged>HRESULT ID3D12Device::CreateCommandAllocator([In] D3D12_COMMAND_LIST_TYPE type,[In] const GUID&amp; riid,[Out] ID3D12CommandAllocator** ppCommandAllocator)</unmanaged>	
+        /// <unmanaged-short>ID3D12Device::CreateCommandAllocator</unmanaged-short>	
+        public SharpDX.Direct3D12.CommandAllocator CreateCommandAllocator(SharpDX.Direct3D12.CommandListType type)
         {
-            return CreateCommandQueue(type, priority, Utilities.GetGuidFromType(typeof(CommandQueue)));
+            return CreateCommandAllocator(type, Utilities.GetGuidFromType(typeof(CommandAllocator)));
         }
+
+        /// <summary>	
+        /// No documentation for Direct3D12	
+        /// </summary>	
+        /// <param name="nodeMask">No documentation.</param>	
+        /// <param name="type">No documentation.</param>	
+        /// <param name="commandAllocatorRef">No documentation.</param>	
+        /// <param name="initialStateRef">No documentation.</param>	
+        /// <param name="riid">No documentation.</param>	
+        /// <returns>No documentation.</returns>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommandList']/*"/>	
+        /// <unmanaged>HRESULT ID3D12Device::CreateCommandList([In] unsigned int nodeMask,[In] D3D12_COMMAND_LIST_TYPE type,[In] ID3D12CommandAllocator* pCommandAllocator,[In, Optional] ID3D12PipelineState* pInitialState,[In] const GUID&amp; riid,[Out] void** ppCommandList)</unmanaged>	
+        /// <unmanaged-short>ID3D12Device::CreateCommandList</unmanaged-short>	
+        public GraphicsCommandList CreateGraphicsCommandList(int nodeMask,
+            SharpDX.Direct3D12.CommandListType type,
+            SharpDX.Direct3D12.CommandAllocator commandAllocatorRef,
+            SharpDX.Direct3D12.PipelineState initialStateRef)
+        {
+            var nativePointer = CreateCommandList(nodeMask, type, commandAllocatorRef, initialStateRef, Utilities.GetGuidFromType(typeof(GraphicsCommandList)));
+            return new GraphicsCommandList(nativePointer);
+        }
+
+        /// <summary>	
+        /// No documentation for Direct3D12	
+        /// </summary>	
+        /// <param name="descRef">No documentation.</param>	
+        /// <param name="rootSignatureRef">No documentation.</param>	
+        /// <param name="riid">No documentation.</param>	
+        /// <returns>No documentation.</returns>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommandSignature']/*"/>	
+        /// <unmanaged>HRESULT ID3D12Device::CreateCommandSignature([In] const D3D12_COMMAND_SIGNATURE* pDesc,[In, Optional] ID3D12RootSignature* pRootSignature,[In] const GUID&amp; riid,[Out] ID3D12CommandSignature** ppvCommandSignature)</unmanaged>	
+        /// <unmanaged-short>ID3D12Device::CreateCommandSignature</unmanaged-short>	
+        public CommandSignature CreateCommandSignature(SharpDX.Direct3D12.CommandSignatureDescription descRef, SharpDX.Direct3D12.RootSignature rootSignatureRef)
+        {
+            return CreateCommandSignature(descRef, rootSignatureRef, Utilities.GetGuidFromType(typeof(CommandSignature)));
+        }
+
 
         /// <summary>
         /// No documentation for Direct3D12
@@ -157,31 +162,39 @@ namespace SharpDX.Direct3D12
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT ID3D12Device::CreateCommittedResource([In] const D3D12_HEAP_PROPERTIES* pHeapProperties,[In] D3D12_HEAP_MISC_FLAG HeapMiscFlags,[In, Value] const D3D12_RESOURCE_DESC* pResourceDesc,[In] D3D12_RESOURCE_USAGE InitialResourceState,[In] const GUID&amp; riidResource,[Out] ID3D12Resource** ppvResource)</unmanaged>
         ///   <unmanaged-short>ID3D12Device::CreateCommittedResource</unmanaged-short>
-        public SharpDX.Direct3D12.Resource CreateCommittedResource(SharpDX.Direct3D12.HeapProperties heapPropertiesRef,
-            SharpDX.Direct3D12.HeapMiscFlags heapMiscFlags,
-            SharpDX.Direct3D12.ResourceDescription resourceDescRef,
-            SharpDX.Direct3D12.ResourceUsage initialResourceState)
+        public SharpDX.Direct3D12.Resource CreateCommittedResource(SharpDX.Direct3D12.HeapProperties heapPropertiesRef, SharpDX.Direct3D12.HeapMiscFlags heapMiscFlags, SharpDX.Direct3D12.ResourceDescription resourceDescRef, SharpDX.Direct3D12.ResourceUsage initialResourceState, SharpDX.Direct3D12.ClearValue? optimizedClearValueRef = null)
         {
-            return CreateCommittedResource(heapPropertiesRef, heapMiscFlags, resourceDescRef, initialResourceState, Utilities.GetGuidFromType(typeof(Resource)));
+            return CreateCommittedResource(ref heapPropertiesRef, heapMiscFlags, resourceDescRef, initialResourceState, optimizedClearValueRef, Utilities.GetGuidFromType(typeof(Resource)));
         }
 
-        /// <summary>
-        /// No documentation for Direct3D12
-        /// </summary>
-        /// <param name="heapType">No documentation.</param>
-        /// <param name="byteSize">No documentation.</param>
-        /// <param name="miscFlags">No documentation.</param>
-        /// <returns>No documentation.</returns>
-        /// <unmanaged>HRESULT ID3D12Device::CreateBuffer([In] D3D12_HEAP_TYPE HeapType,[In] unsigned longlong ByteSize,[In] D3D12_RESOURCE_MISC_FLAG MiscFlags,[In] const GUID&amp; riid,[Out] ID3D12Resource** ppvBuffer)</unmanaged>
-        ///   <unmanaged-short>ID3D12Device::CreateBuffer</unmanaged-short>
-        public SharpDX.Direct3D12.Resource CreateBuffer(SharpDX.Direct3D12.HeapType heapType, long byteSize, SharpDX.Direct3D12.ResourceOptionFlags miscFlags)
+        /// <summary>	
+        /// No documentation for Direct3D12	
+        /// </summary>	
+        /// <param name="descRef">No documentation.</param>	
+        /// <param name="riid">No documentation.</param>	
+        /// <returns>No documentation.</returns>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateComputePipelineState']/*"/>	
+        /// <unmanaged>HRESULT ID3D12Device::CreateComputePipelineState([In] const D3D12_COMPUTE_PIPELINE_STATE_DESC* pDesc,[In] const GUID&amp; riid,[Out] ID3D12PipelineState** ppPipelineState)</unmanaged>	
+        /// <unmanaged-short>ID3D12Device::CreateComputePipelineState</unmanaged-short>	
+        public SharpDX.Direct3D12.PipelineState CreateComputePipelineState(SharpDX.Direct3D12.ComputePipelineStateDescription descRef)
         {
-            return CreateBuffer(heapType, byteSize, miscFlags, Utilities.GetGuidFromType(typeof(Resource)));
+            return CreateComputePipelineState(descRef, Utilities.GetGuidFromType(typeof(PipelineState)));
         }
 
-        public SharpDX.Direct3D12.RootSignature CreateRootSignature(DataPointer rootSignaturePointer)
+        /// <summary>	
+        /// No documentation for Direct3D12	
+        /// </summary>	
+        /// <param name="nodeMask">No documentation.</param>	
+        /// <param name="blobWithRootSignatureRef">No documentation.</param>	
+        /// <param name="blobLengthInBytes">No documentation.</param>	
+        /// <param name="riid">No documentation.</param>	
+        /// <returns>No documentation.</returns>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateRootSignature']/*"/>	
+        /// <unmanaged>HRESULT ID3D12Device::CreateRootSignature([In] unsigned int nodeMask,[In, Buffer] const void* pBlobWithRootSignature,[In] SIZE_T blobLengthInBytes,[In] const GUID&amp; riid,[Out] ID3D12RootSignature** ppvRootSignature)</unmanaged>	
+        /// <unmanaged-short>ID3D12Device::CreateRootSignature</unmanaged-short>	
+        public SharpDX.Direct3D12.RootSignature CreateRootSignature(int nodeMask, DataPointer rootSignaturePointer)
         {
-            return CreateRootSignature(rootSignaturePointer.Pointer, rootSignaturePointer.Size, Utilities.GetGuidFromType(typeof(RootSignature)));
+            return CreateRootSignature(nodeMask, rootSignaturePointer.Pointer, rootSignaturePointer.Size, Utilities.GetGuidFromType(typeof(RootSignature)));
         }
 
         /// <summary>	
@@ -196,6 +209,30 @@ namespace SharpDX.Direct3D12
             return CreateDescriptorHeap(descriptorHeapDesc, Utilities.GetGuidFromType(typeof(DescriptorHeap)));
         }
 
+        /// <summary>	
+        /// No documentation for Direct3D12	
+        /// </summary>	
+        /// <param name="initialValue">No documentation.</param>	
+        /// <param name="flags">No documentation.</param>	
+        /// <param name="riid">No documentation.</param>	
+        /// <returns>No documentation.</returns>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateFence']/*"/>	
+        /// <unmanaged>HRESULT ID3D12Device::CreateFence([In] unsigned longlong InitialValue,[In] D3D12_FENCE_MISC_FLAG Flags,[In] const GUID&amp; riid,[Out] void** ppFence)</unmanaged>	
+        /// <unmanaged-short>ID3D12Device::CreateFence</unmanaged-short>	
+        public Fence CreateFence(long initialValue, SharpDX.Direct3D12.FenceMiscFlags flags)
+        {
+            return CreateFence(initialValue, flags, Utilities.GetGuidFromType(typeof(Fence)));
+        }
+
+        /// <summary>	
+        /// No documentation for Direct3D12	
+        /// </summary>	
+        /// <param name="descRef">No documentation.</param>	
+        /// <param name="riid">No documentation.</param>	
+        /// <returns>No documentation.</returns>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateGraphicsPipelineState']/*"/>	
+        /// <unmanaged>HRESULT ID3D12Device::CreateGraphicsPipelineState([In] const void* pDesc,[In] const GUID&amp; riid,[Out] ID3D12PipelineState** ppPipelineState)</unmanaged>	
+        /// <unmanaged-short>ID3D12Device::CreateGraphicsPipelineState</unmanaged-short>	
         public unsafe SharpDX.Direct3D12.PipelineState CreateGraphicsPipelineState(SharpDX.Direct3D12.GraphicsPipelineStateDescription desc)
         {
             // Use a custom marshalling routine for this class
@@ -235,7 +272,7 @@ namespace SharpDX.Direct3D12
                 try
                 {
                     // Create the pipeline state
-                    return CreateGraphicsPipelineState(new IntPtr(&nativeDesc));
+                    return CreateGraphicsPipelineState(new IntPtr(&nativeDesc), Utilities.GetGuidFromType(typeof(PipelineState)));
                 }
                 finally
                 {
@@ -250,81 +287,73 @@ namespace SharpDX.Direct3D12
             }
         }
 
-        protected override
-            void NativePointerUpdated(IntPtr oldNativePointer)
+        /// <summary>	
+        /// No documentation for Direct3D12	
+        /// </summary>	
+        /// <param name="descRef">No documentation.</param>	
+        /// <param name="riid">No documentation.</param>	
+        /// <returns>No documentation.</returns>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateHeap']/*"/>	
+        /// <unmanaged>HRESULT ID3D12Device::CreateHeap([In] const D3D12_HEAP_DESC* pDesc,[In] const GUID&amp; riid,[Out] ID3D12Heap** ppvHeap)</unmanaged>	
+        /// <unmanaged-short>ID3D12Device::CreateHeap</unmanaged-short>	
+        public SharpDX.Direct3D12.Heap CreateHeap(SharpDX.Direct3D12.HeapDescription descRef)
         {
-            base.NativePointerUpdated(oldNativePointer);
-
-            Utilities.Dispose(ref defaultCommandQueue);
-
-            if(NativePointer != IntPtr.Zero)
-            {
-                GetDefaultCommandQueue(out defaultCommandQueue);
-            }
+            return CreateHeap(ref descRef, Utilities.GetGuidFromType(typeof(Heap)));
         }
 
-        protected override void Dispose(bool disposing)
+        /// <summary>	
+        /// No documentation for Direct3D12	
+        /// </summary>	
+        /// <param name="descRef">No documentation.</param>	
+        /// <param name="riid">No documentation.</param>	
+        /// <returns>No documentation.</returns>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateQueryHeap']/*"/>	
+        /// <unmanaged>HRESULT ID3D12Device::CreateQueryHeap([In] const D3D12_QUERY_HEAP_DESC* pDesc,[In] const GUID&amp; riid,[Out] ID3D12QueryHeap** ppvHeap)</unmanaged>	
+        /// <unmanaged-short>ID3D12Device::CreateQueryHeap</unmanaged-short>	
+        public SharpDX.Direct3D12.QueryHeap CreateQueryHeap(SharpDX.Direct3D12.QueryHeapDescription descRef)
         {
-            if(disposing)
-            {
-                Utilities.Dispose(ref defaultCommandQueue);
-            }
-
-            base.Dispose(disposing);
+            return CreateQueryHeap(descRef, Utilities.GetGuidFromType(typeof(QueryHeap)));
         }
 
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Direct3D12.Device" /> class along with a new <see cref="T:SharpDX.DXGI.SwapChain" /> used for rendering.
-        /// </summary>
-        /// <param name="driverType">Type of the driver.</param>
-        /// <param name="flags">A list of runtime layers to enable.</param>
-        /// <param name="minFeatureLevel">The minimum feature level.</param>
-        /// <param name="swapChainDescription">Details used to create the swap chain.</param>
-        /// <param name="swapChain">When the method completes, contains the created swap chain instance.</param>
-        /// <returns>The created device instance.</returns>
-        public static Device CreateWithSwapChain(DriverType driverType, DeviceCreationFlags flags,
-                                                 FeatureLevel minFeatureLevel, SwapChainDescription swapChainDescription,
-                                                 out SwapChain swapChain)
+        /// <summary>	
+        /// No documentation for Direct3D12	
+        /// </summary>	
+        /// <param name="heapRef">No documentation.</param>	
+        /// <param name="heapOffset">No documentation.</param>	
+        /// <param name="descRef">No documentation.</param>	
+        /// <param name="initialState">No documentation.</param>	
+        /// <param name="optimizedClearValueRef">No documentation.</param>	
+        /// <param name="riid">No documentation.</param>	
+        /// <returns>No documentation.</returns>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreatePlacedResource']/*"/>	
+        /// <unmanaged>HRESULT ID3D12Device::CreatePlacedResource([In] ID3D12Heap* pHeap,[In] unsigned longlong HeapOffset,[In] const D3D12_RESOURCE_DESC* pDesc,[In] D3D12_RESOURCE_USAGE InitialState,[In, Optional] const D3D12_CLEAR_VALUE* pOptimizedClearValue,[In] const GUID&amp; riid,[Out] ID3D12Resource** ppvResource)</unmanaged>	
+        /// <unmanaged-short>ID3D12Device::CreatePlacedResource</unmanaged-short>	
+        public SharpDX.Direct3D12.Resource CreatePlacedResource(SharpDX.Direct3D12.Heap heapRef,
+            long heapOffset,
+            SharpDX.Direct3D12.ResourceDescription descRef,
+            SharpDX.Direct3D12.ResourceUsage initialState,
+            SharpDX.Direct3D12.ClearValue? optimizedClearValueRef = null)
         {
-            Device device;
-            CreateWithSwapChain(null, driverType, flags, minFeatureLevel, swapChainDescription, out device, out swapChain);
-            return device;
+            return CreatePlacedResource(heapRef, heapOffset, ref descRef, initialState, optimizedClearValueRef, Utilities.GetGuidFromType(typeof(Resource)));
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Direct3D12.Device" /> class along with a new <see cref="T:SharpDX.DXGI.SwapChain" /> used for rendering.
-        /// </summary>
-        /// <param name="adapter">The video adapter on which the device should be created.</param>
-        /// <param name="flags">A list of runtime layers to enable.</param>
-        /// <param name="minFeatureLevel">The minimum feature level.</param>
-        /// <param name="swapChainDescription">Details used to create the swap chain.</param>
-        /// <param name="swapChain">When the method completes, contains the created swap chain instance.</param>
-        /// <returns>The created device instance.</returns>
-        public static Device CreateWithSwapChain(Adapter adapter, DeviceCreationFlags flags,
-                                                 FeatureLevel minFeatureLevel, SwapChainDescription swapChainDescription,
-                                                 out SwapChain swapChain)
+        /// <summary>	
+        /// No documentation for Direct3D12	
+        /// </summary>	
+        /// <param name="descRef">No documentation.</param>	
+        /// <param name="initialState">No documentation.</param>	
+        /// <param name="optimizedClearValueRef">No documentation.</param>	
+        /// <param name="riid">No documentation.</param>	
+        /// <returns>No documentation.</returns>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateReservedResource']/*"/>	
+        /// <unmanaged>HRESULT ID3D12Device::CreateReservedResource([In] const D3D12_RESOURCE_DESC* pDesc,[In] D3D12_RESOURCE_USAGE InitialState,[In, Optional] const D3D12_CLEAR_VALUE* pOptimizedClearValue,[In] const GUID&amp; riid,[Out] ID3D12Resource** ppvResource)</unmanaged>	
+        /// <unmanaged-short>ID3D12Device::CreateReservedResource</unmanaged-short>	
+        public SharpDX.Direct3D12.Resource CreateReservedResource(SharpDX.Direct3D12.ResourceDescription descRef,
+            SharpDX.Direct3D12.ResourceUsage initialState,
+            SharpDX.Direct3D12.ClearValue? optimizedClearValueRef = null)
         {
-            Device device;
-            CreateWithSwapChain(adapter, DriverType.Unknown, flags, minFeatureLevel, swapChainDescription,
-                                       out device, out swapChain);
-            return device;
-        }
-
-        private static void CreateWithSwapChain(Adapter adapter, DriverType driverType, DeviceCreationFlags flags,
-                                                 FeatureLevel minFeatureLevel, SwapChainDescription swapChainDescription,
-                                                 out Device device, out SwapChain swapChain)
-        {
-            D3D12.CreateDeviceAndSwapChain(adapter,
-                driverType,
-                flags,
-                minFeatureLevel,
-                D3D12.SdkVersion,
-                ref swapChainDescription,
-                Utilities.GetGuidFromType(typeof(SwapChain)),
-                out swapChain,
-                Utilities.GetGuidFromType(typeof(Device)),
-                out device);
+            return CreateReservedResource(ref descRef, initialState, optimizedClearValueRef, Utilities.GetGuidFromType(typeof(Resource)));
         }
 
         private static void CreateDevice(Adapter adapter, DriverType driverType, DeviceCreationFlags flags,

@@ -67,7 +67,7 @@ namespace SharpDX.Direct3D12
             short mipLevels = 0,
             int sampleCount = 1,
             int sampleQuality = 0,
-            ResourceOptionFlags flags = ResourceOptionFlags.NoStreamOutput,
+            ResourceOptionFlags flags = ResourceOptionFlags.None,
             TextureLayout layout = TextureLayout.Unknown,
             long alignment = 0)
         {
@@ -79,7 +79,7 @@ namespace SharpDX.Direct3D12
             int height,
             short depth,
             short mipLevels = 0,
-            ResourceOptionFlags flags = ResourceOptionFlags.NoStreamOutput,
+            ResourceOptionFlags flags = ResourceOptionFlags.None,
             TextureLayout layout = TextureLayout.Unknown,
             long alignment = 0)
         {

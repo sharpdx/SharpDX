@@ -91,6 +91,12 @@
     <map enum-item="D3D12_CBV_SRV_UAV_DESCRIPTOR_HEAP" name="ConstantBufferShaderResourceUnorderedAccessView"/>    
     
     <map enum="D3D_ROOT_SIGNATURE_VERSION" name="RootSignatureVersion"/>
+    
+    <map enum-item="D3D12_TEXTURE_LAYOUT_64KB_UNDEFINED_SWIZZLE" name="UndefinedSwizzle64kb"/>
+    <map enum-item="D3D12_TEXTURE_LAYOUT_64KB_STANDARD_SWIZZLE" name="StandardSwizzle64kb"/>
+
+    <map enum-item="D3D12_MESSAGE_ID_MAP_INVALID_SUBRESOURCE" name="MapInvalidSubResource2"/>
+    <map enum-item="D3D12_MESSAGE_ID_UNMAP_INVALID_SUBRESOURCE" name="UnmapInvalidSubResource2"/>
 
     <!--
     // *****************************************************************
@@ -137,6 +143,10 @@
     <map field="D3D12_SHADER_BYTECODE::pShaderBytecode" name="Pointer" visibility="private"/>
     <map field="D3D12_SHADER_BYTECODE::BytecodeLength" name="Size" visibility="private"/>
 
+    <map struct="D3D12_COMMAND_SIGNATURE" name="CommandSignatureDescription"/>
+    
+    <map field="D3D12_CLEAR_VALUE::Color" type="SHARPDX_VECTOR4" array="" />
+    
     <!--Remove all fields for D3D12_RESOURCE_BARRIER_DESC as the union with pointers cannot be mapped safely in x86/x64 with C# explicit layout-->
     <remove field="D3D12_RESOURCE_BARRIER_DESC::.*"/>
     <remove field="D3D12_ROOT_PARAMETER::.*"/>
@@ -155,35 +165,35 @@
     <map method="ID3D12Device::GetDefaultCommandQueue" property="false" visibility="private"/>
     <map method="ID3D12Resource::GetDesc11" name="Description1"/>
    
-    <map method="ID3D12CommandList::SetIndexBufferTable" property="false"/>
-    <map param="ID3D12CommandList::.*::BindAsTable" type="bool" default="false"/>
-    <map method="ID3D12CommandList::IA(.*)" name="$1"/>
-    <map method="ID3D12CommandList::IASetPrimitiveTopology" name="SetPrimitiveTopology"/>
-    <map method="ID3D12CommandList::OM(.*)" name="$1"/>
-    <map method="ID3D12CommandList::RS(.*)" name="$1"/>
-    <map method="ID3D12CommandList::OMSetStencilRef" name="SetStencilReference"/>
-    <map param="ID3D12CommandList::OMSetBlendFactor::BlendFactor" type="SHARPDX_VECTOR4"/>
-    <map param="ID3D12CommandList::ClearRenderTargetView::ColorRGBA" type="SHARPDX_COLOR4"/>
-    <map param="ID3D12CommandList::ClearUnorderedAccessViewUint::Values" type="SHARPDX_INT4"/>
-    <map param="ID3D12CommandList::ClearUnorderedAccessViewFloat::Values" type="SHARPDX_VECTOR4"/>
-    <map param="ID3D12CommandList::ResourceBarrier::pDesc" type="void"/>
-    <map method="ID3D12CommandList::ResourceBarrier" visibility="private"/>
+    <map method="ID3D12GraphicsCommandList::SetIndexBufferTable" property="false"/>
+    <map param="ID3D12GraphicsCommandList::.*::BindAsTable" type="bool" default="false"/>
+    <map method="ID3D12GraphicsCommandList::IA(.*)" name="$1"/>
+    <map method="ID3D12GraphicsCommandList::IASetPrimitiveTopology" name="SetPrimitiveTopology"/>
+    <map method="ID3D12GraphicsCommandList::OM(.*)" name="$1"/>
+    <map method="ID3D12GraphicsCommandList::RS(.*)" name="$1"/>
+    <map method="ID3D12GraphicsCommandList::OMSetStencilRef" name="SetStencilReference"/>
+    <map param="ID3D12GraphicsCommandList::OMSetBlendFactor::BlendFactor" type="SHARPDX_VECTOR4"/>
+    <map param="ID3D12GraphicsCommandList::ClearRenderTargetView::ColorRGBA" type="SHARPDX_COLOR4"/>
+    <map param="ID3D12GraphicsCommandList::ClearUnorderedAccessViewUint::Values" type="SHARPDX_INT4"/>
+    <map param="ID3D12GraphicsCommandList::ClearUnorderedAccessViewFloat::Values" type="SHARPDX_VECTOR4"/>
+    <map param="ID3D12GraphicsCommandList::ResourceBarrier::pDesc" type="void"/>
+    <map method="ID3D12GraphicsCommandList::ResourceBarrier" visibility="private"/>
     
-    <map method="ID3D12CommandList::RSSetViewports" rawptr="true"/>
-    <map method="ID3D12CommandList::RSSetScissorRects" name="SetScissorRectangles" rawptr="true"/>
+    <map method="ID3D12GraphicsCommandList::RSSetViewports" rawptr="true"/>
+    <map method="ID3D12GraphicsCommandList::RSSetScissorRects" name="SetScissorRectangles" rawptr="true"/>
 
 
-    <map method="ID3D12CommandList::(.*)ToHeap" name="$1To" />
-    <move method="ID3D12CommandList::(.*)ToHeap" to="DescriptorManager" property="Descriptors" />
+    <map method="ID3D12GraphicsCommandList::(.*)ToHeap" name="$1To" />
+    <move method="ID3D12GraphicsCommandList::(.*)ToHeap" to="DescriptorManager" property="Descriptors" />
 
-    <map method="ID3D12CommandList::(.*)InHeap" name="$1" />
-    <move method="ID3D12CommandList::(.*)InHeap" to="DescriptorManager" property="Descriptors" />
-    <map method="ID3D12CommandList::SetDescriptorHeap" name="SetHeap" />
-    <move method="ID3D12CommandList::SetDescriptorHeap" to="DescriptorManager" property="Descriptors" />
+    <map method="ID3D12GraphicsCommandList::(.*)InHeap" name="$1" />
+    <move method="ID3D12GraphicsCommandList::(.*)InHeap" to="DescriptorManager" property="Descriptors" />
+    <map method="ID3D12GraphicsCommandList::SetDescriptorHeap" name="SetHeap" />
+    <move method="ID3D12GraphicsCommandList::SetDescriptorHeap" to="DescriptorManager" property="Descriptors" />
     
-    <move method="ID3D12CommandList::CopyDescriptors" to="DescriptorManager" property="Descriptors" />
+    <move method="ID3D12GraphicsCommandList::CopyDescriptors" to="DescriptorManager" property="Descriptors" />
     
-    <move method="ID3D12CommandList::(.*)Table" to="DescriptorManager" property="Descriptors" />
+    <move method="ID3D12GraphicsCommandList::(.*)Table" to="DescriptorManager" property="Descriptors" />
 
     <map method="ID3D12Device::RegisterBudgetChangeCallback" visibility="internal"/>
 
@@ -192,10 +202,10 @@
     <map param="ID3D12Device::CreateCommandAllocator::ppCommandAllocator" attribute="out" return="true"/>
 
     <map method="ID3D12Device::CreateGraphicsPipelineState" visibility="public"/>
-    <map param="ID3D12Device::CreateGraphicsPipelineState::ppPipelineState" attribute="out" return="true"/>
+    <map param="ID3D12Device::CreateGraphicsPipelineState::ppPipelineState" attribute="out" type="ID3D12PipelineState" return="true"/>
 
-    <map method="ID3D12Device::CreateComputePipelineState" visibility="public"/>
-    <map param="ID3D12Device::CreateComputePipelineState::ppPipelineState" attribute="out" return="true"/>
+    <map method="ID3D12Device::CreateComputePipelineState" visibility="private"/>
+    <map param="ID3D12Device::CreateComputePipelineState::ppPipelineState" attribute="out" type ="ID3D12PipelineState" return="true"/>
 
     <map method="ID3D12Device::CreateCommandList" visibility="public"/>
     <map param="ID3D12Device::CreateCommandList::ppCommandList" attribute="out" return="true"/>
@@ -213,12 +223,20 @@
     <map param="ID3D12Device::CreateCommittedResource::pResourceDesc" attribute="in value"/>
     <map param="ID3D12Device::CreateCommittedResource::ppvResource" attribute="out" type="ID3D12Resource" return="true"/>
 
-    <map method="ID3D12Device::CreateFence" visibility="public"/>
-    <map param="ID3D12Device::CreateFence::ppFence" attribute="out" return="true"/>
+    <map method="ID3D12Device::CreateFence" visibility="private"/>
+    <map param="ID3D12Device::CreateFence::ppFence" attribute="out" type="ID3D12Fence" return="true"/>
 
     <map method="ID3D12Device::CreateCommandQueue" visibility="private"/>
     <map param="ID3D12Device::CreateCommandQueue::ppCommandQueue" attribute="out" type="ID3D12CommandQueue" return="true"/>
+    
+    <map method="ID3D12Device::CreateCommandList" visibility="private"/>
 
+    <map method="ID3D12Device::CreateCommandAllocator" visibility="private"/>
+    <map param="ID3D12Device::CreateCommandAllocator::ppCommandAllocator" attribute="out" type="ID3D12CommandAllocator" return="true"/>
+    
+    <map method="ID3D12Device::CreateCommandSignature" visibility="private"/>
+    <map param="ID3D12Device::CreateCommandSignature::ppvCommandSignature" attribute="out" type="ID3D12CommandSignature" return="true"/>
+    
     <map method="ID3D12Device::CreateHeap" visibility="private"/>
     <map param="ID3D12Device::CreateHeap::ppvHeap" attribute="out" type="ID3D12Heap" return="true"/>
 
@@ -230,6 +248,9 @@
 
     <map method="ID3D12Device::CreateReservedResource" visibility="private"/>
     <map param="ID3D12Device::CreateReservedResource::ppvResource" attribute="out" type="ID3D12Resource" return="true"/>
+    
+    <map method="ID3D12Device::CreateQueryHeap" visibility="private"/>
+    <map param="ID3D12Device::CreateQueryHeap::ppvHeap" attribute="out" type="ID3D12QueryHeap" return="true"/>
 
     <map method="ID3D12Device::Create\w+View" visibility="public"/>
 
@@ -246,16 +267,16 @@
 
     <map method="ID3D12RootSignatureDeserializer::GetRootSignature" type="void" property="false" visibility="private"/>
     
-    <map param="ID3D12Resource::Map::ppData" return="true"/>
+    <map param="ID3D12Resource::Map::ppData" attribute="out" return="true"/>
     
     <!-- Temporary remove d3d11 types -->
-    <remove method="ID3D12CommandList::BeginQuery"/>
-    <remove method="ID3D12CommandList::EndQuery"/>
-    <remove method="ID3D12CommandList::SetPredication"/>
-    <remove method="ID3D12CommandList::SetStreamOutputBufferOffset"/>
-    <remove method="ID3D12CommandList::SetUnorderedAccessViewCounterValue"/>
-    <remove method="ID3D12CommandList::CopyStructureCount"/>
-    <remove method="ID3D12Device::CreateDefaultResource"/>
+    <!--<remove method="ID3D12GraphicsCommandList::BeginQuery"/>
+    <remove method="ID3D12GraphicsCommandList::EndQuery"/>
+    <remove method="ID3D12GraphicsCommandList::SetPredication"/>
+    <remove method="ID3D12GraphicsCommandList::SetStreamOutputBufferOffset"/>
+    <remove method="ID3D12GraphicsCommandList::SetUnorderedAccessViewCounterValue"/>
+    <remove method="ID3D12GraphicsCommandList::CopyStructureCount"/>-->
+    <!--<remove method="ID3D12Device::CreateDefaultResource"/>-->
 
     <!--
     // *****************************************************************

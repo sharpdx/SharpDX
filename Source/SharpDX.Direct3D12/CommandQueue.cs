@@ -22,13 +22,13 @@ using System.Threading;
 
 namespace SharpDX.Direct3D12
 {
-    public partial class CommandQueue
+    public partial class Fence
     {
         /// <unmanaged>HRESULT ID3D12CommandQueue::SetEventOnFenceCompletion([In] unsigned longlong Value,[In] void* hEvent)</unmanaged>	
         /// <unmanaged-short>ID3D12CommandQueue::SetEventOnFenceCompletion</unmanaged-short>	
-        public void SetEventOnFenceCompletion(long value, EventWaitHandle evt)
+        public void SetEventOnCompletion(long value, EventWaitHandle evt)
         {
-            SetEventOnFenceCompletion(value, evt.SafeWaitHandle.DangerousGetHandle());
+            SetEventOnCompletion(value, evt.SafeWaitHandle.DangerousGetHandle());
         }
     }
 }
