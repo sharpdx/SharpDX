@@ -115,6 +115,14 @@ namespace SharpDX.Direct3D12
             return CreateCommandAllocator(type, Utilities.GetGuidFromType(typeof(CommandAllocator)));
         }
 
+        public GraphicsCommandList CreateCommandList(
+    SharpDX.Direct3D12.CommandListType type,
+    SharpDX.Direct3D12.CommandAllocator commandAllocatorRef,
+    SharpDX.Direct3D12.PipelineState initialStateRef)
+        {
+            return CreateCommandList(0, type, commandAllocatorRef, initialStateRef);
+        }
+
         /// <summary>	
         /// No documentation for Direct3D12	
         /// </summary>	
@@ -127,7 +135,7 @@ namespace SharpDX.Direct3D12
         /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommandList']/*"/>	
         /// <unmanaged>HRESULT ID3D12Device::CreateCommandList([In] unsigned int nodeMask,[In] D3D12_COMMAND_LIST_TYPE type,[In] ID3D12CommandAllocator* pCommandAllocator,[In, Optional] ID3D12PipelineState* pInitialState,[In] const GUID&amp; riid,[Out] void** ppCommandList)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateCommandList</unmanaged-short>	
-        public GraphicsCommandList CreateGraphicsCommandList(int nodeMask,
+        public GraphicsCommandList CreateCommandList(int nodeMask,
             SharpDX.Direct3D12.CommandListType type,
             SharpDX.Direct3D12.CommandAllocator commandAllocatorRef,
             SharpDX.Direct3D12.PipelineState initialStateRef)
@@ -179,6 +187,11 @@ namespace SharpDX.Direct3D12
         public SharpDX.Direct3D12.PipelineState CreateComputePipelineState(SharpDX.Direct3D12.ComputePipelineStateDescription descRef)
         {
             return CreateComputePipelineState(descRef, Utilities.GetGuidFromType(typeof(PipelineState)));
+        }
+
+        public SharpDX.Direct3D12.RootSignature CreateRootSignature(DataPointer rootSignaturePointer)
+        {
+            return CreateRootSignature(0, rootSignaturePointer);
         }
 
         /// <summary>	

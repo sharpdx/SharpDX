@@ -18,8 +18,10 @@
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="BlendStateDescription.cs" />
-    <Compile Include="GraphicsCommandList.cs" />
     <Compile Include="CommandQueue.cs" />
+    <Compile Include="CommandQueueDescription.cs" />
+    <Compile Include="GraphicsCommandList.cs" />
+    <Compile Include="Fence.cs" />
     <Compile Include="ComputePipelineStateDescription.cs" />
     <Compile Include="DepthStencilStateDescription.cs" />
     <Compile Include="Device.cs" />

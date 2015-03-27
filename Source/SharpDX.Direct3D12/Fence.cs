@@ -18,18 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
 using System.Threading;
 
 namespace SharpDX.Direct3D12
 {
-    public partial class CommandQueue
+    public partial class Fence
     {
-        public unsafe void ExecuteCommandList(CommandList commandList)
+        /// <unmanaged>HRESULT ID3D12CommandQueue::SetEventOnFenceCompletion([In] unsigned longlong Value,[In] void* hEvent)</unmanaged>	
+        /// <unmanaged-short>ID3D12CommandQueue::SetEventOnFenceCompletion</unmanaged-short>	
+        public void SetEventOnCompletion(long value, EventWaitHandle evt)
         {
-            if(commandList == null) throw new ArgumentNullException("commandList");
-            var ptr = commandList.NativePointer;
-            this.ExecuteCommandLists(1, new IntPtr(&ptr));
+            SetEventOnCompletion(value, evt.SafeWaitHandle.DangerousGetHandle());
         }
     }
 }

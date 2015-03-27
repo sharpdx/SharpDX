@@ -164,7 +164,10 @@
     <map param="ID3D12Device::CreateBuffer::ppvBuffer" attribute="out"/>
     <map method="ID3D12Device::GetDefaultCommandQueue" property="false" visibility="private"/>
     <map method="ID3D12Resource::GetDesc11" name="Description1"/>
-   
+
+    <map method="ID3D12GraphicsCommandList::SetComputeRootSignature" property="false"/>
+    <map method="ID3D12GraphicsCommandList::SetGraphicsRootSignature" property="false"/>
+
     <map method="ID3D12GraphicsCommandList::SetIndexBufferTable" property="false"/>
     <map param="ID3D12GraphicsCommandList::.*::BindAsTable" type="bool" default="false"/>
     <map method="ID3D12GraphicsCommandList::IA(.*)" name="$1"/>
@@ -266,7 +269,9 @@
     <map param="ID3D12Device::CreateGraphicsPipelineState::pDesc" attribute="in" type="void"/>
 
     <map method="ID3D12RootSignatureDeserializer::GetRootSignature" type="void" property="false" visibility="private"/>
-    
+
+    <map param="ID3D12Resource::Map::pReadRange" default="null"/>
+    <map param="ID3D12Resource::Unmap::pWrittenRange" default="null"/>
     <map param="ID3D12Resource::Map::ppData" attribute="out" return="true"/>
     
     <!-- Temporary remove d3d11 types -->
