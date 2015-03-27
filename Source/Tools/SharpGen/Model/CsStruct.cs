@@ -111,5 +111,25 @@ namespace SharpGen.Model
         {
             get { return Items.OfType<CsStruct>(); }
         }
+
+        public override int CalculateAlignment()
+        {
+            int structAlignment = 0;
+            foreach(var field in Fields)
+            {
+                var fieldAlignment = (field.MarshalType ?? field.PublicType).CalculateAlignment();
+                if(fieldAlignment < 0)
+                {
+                    structAlignment = fieldAlignment;
+                    break;
+                }
+                if(fieldAlignment > structAlignment)
+                {
+                    structAlignment = fieldAlignment;
+                }
+            }
+
+            return structAlignment;
+        }
     }
 }

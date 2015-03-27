@@ -17,34 +17,29 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-namespace SharpDX.DXGI
+namespace SharpDX.Direct3D12
 {
-    public partial struct ModeDescription
+    public partial struct DepthStencilStateDescription
     {
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "T:SharpDX.DXGI.ModeDescription" /> structure.
+        /// Returns default values for <see cref="DepthStencilStateDescription"/>. 
         /// </summary>
-        /// <param name = "width">The width.</param>
-        /// <param name = "height">The height.</param>
-        /// <param name = "refreshRate">The refresh rate.</param>
-        /// <param name = "format">The format.</param>
-        public ModeDescription(int width, int height, Rational refreshRate, Format format)
+        /// <remarks>
+        /// See MSDN documentation for default values.
+        /// </remarks>
+        public static DepthStencilStateDescription Default()
         {
-            this.Width = width;
-            this.Height = height;
-            this.RefreshRate = refreshRate;
-            this.Format = format;
-            this.ScanlineOrdering = DisplayModeScanlineOrder.Unspecified;
-            this.Scaling = DisplayModeScaling.Unspecified;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModeDescription"/> struct.
-        /// </summary>
-        /// <param name="format">The format.</param>
-        public ModeDescription(Format format) : this()
-        {
-            Format = format;
+            return new DepthStencilStateDescription()
+                       {
+                           IsDepthEnabled = true,
+                           DepthWriteMask = DepthWriteMask.All,
+                           DepthComparison = Comparison.Less,
+                           IsStencilEnabled = false,
+                           StencilReadMask = 0xFF,
+                           StencilWriteMask = 0xFF,
+                           FrontFace = {Comparison = Comparison.Always, DepthFailOperation = StencilOperation.Keep, FailOperation = StencilOperation.Keep, PassOperation = StencilOperation.Keep},
+                           BackFace = {Comparison = Comparison.Always, DepthFailOperation = StencilOperation.Keep, FailOperation = StencilOperation.Keep, PassOperation = StencilOperation.Keep},
+                       };
         }
     }
 }

@@ -17,34 +17,24 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-namespace SharpDX.DXGI
+
+using System;
+
+namespace SharpDX.Direct3D12
 {
-    public partial struct ModeDescription
+    public partial struct ResourceAliasingBarrierDescription
     {
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "T:SharpDX.DXGI.ModeDescription" /> structure.
+        /// Initializes a new instance of the <see cref="ResourceAliasingBarrierDescription"/> struct.
         /// </summary>
-        /// <param name = "width">The width.</param>
-        /// <param name = "height">The height.</param>
-        /// <param name = "refreshRate">The refresh rate.</param>
-        /// <param name = "format">The format.</param>
-        public ModeDescription(int width, int height, Rational refreshRate, Format format)
+        /// <param name="resourceBefore">The resource before.</param>
+        /// <param name="resourceAfter">The resource after.</param>
+        /// <exception cref="System.ArgumentNullException">resourceBefore</exception>
+        public ResourceAliasingBarrierDescription(Resource resourceBefore, Resource resourceAfter)
         {
-            this.Width = width;
-            this.Height = height;
-            this.RefreshRate = refreshRate;
-            this.Format = format;
-            this.ScanlineOrdering = DisplayModeScanlineOrder.Unspecified;
-            this.Scaling = DisplayModeScaling.Unspecified;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModeDescription"/> struct.
-        /// </summary>
-        /// <param name="format">The format.</param>
-        public ModeDescription(Format format) : this()
-        {
-            Format = format;
+            if(resourceBefore == null) throw new ArgumentNullException("resourceBefore");
+            ResourceBeforePointer = resourceBefore.NativePointer;
+            ResourceAfterPointer = resourceAfter != null ? resourceAfter.NativePointer : IntPtr.Zero;
         }
     }
 }

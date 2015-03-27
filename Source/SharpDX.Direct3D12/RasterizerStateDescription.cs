@@ -17,34 +17,31 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-namespace SharpDX.DXGI
+namespace SharpDX.Direct3D12
 {
-    public partial struct ModeDescription
+    public partial struct RasterizerStateDescription
     {
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "T:SharpDX.DXGI.ModeDescription" /> structure.
+        /// Returns default values for <see cref="RasterizerStateDescription"/>. 
         /// </summary>
-        /// <param name = "width">The width.</param>
-        /// <param name = "height">The height.</param>
-        /// <param name = "refreshRate">The refresh rate.</param>
-        /// <param name = "format">The format.</param>
-        public ModeDescription(int width, int height, Rational refreshRate, Format format)
+        /// <remarks>
+        /// See MSDN documentation for default values.
+        /// </remarks>
+        public static RasterizerStateDescription Default()
         {
-            this.Width = width;
-            this.Height = height;
-            this.RefreshRate = refreshRate;
-            this.Format = format;
-            this.ScanlineOrdering = DisplayModeScanlineOrder.Unspecified;
-            this.Scaling = DisplayModeScaling.Unspecified;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModeDescription"/> struct.
-        /// </summary>
-        /// <param name="format">The format.</param>
-        public ModeDescription(Format format) : this()
-        {
-            Format = format;
+            return new RasterizerStateDescription()
+            {
+                FillMode = FillMode.Solid,
+                CullMode = CullMode.Back,
+                IsFrontCounterClockwise = false,
+                DepthBias = 0,
+                SlopeScaledDepthBias = 0.0f,
+                DepthBiasClamp = 0.0f,
+                IsDepthClipEnabled = true,
+                IsMultisampleEnabled = false,
+                IsAntialiasedLineEnabled = false,
+                ForcedSampleCount = 0,
+            };
         }
     }
 }

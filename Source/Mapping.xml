@@ -38,39 +38,54 @@
     </ifdef>
 
     <ifndef name="WP8">
-
-      <ifdef name="WP81">
+      
+      <ifdef name="DirectX12">
+        <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides\shared</include-dir>
+        <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides\um</include-dir>
         <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides</include-dir>
-        <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides\wp81</include-dir>
-        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\Setup\VC\ProductDir;include</include-dir>
-        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include</include-dir>
-        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include\abi</include-dir>
-        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include\mincore</include-dir>
-        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include\minwin</include-dir>
-        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include\wrl</include-dir>
+        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\Setup\VC\ProductDir;Include</include-dir>
+        <include-dir override="true">$(THIS_CONFIG_PATH)\..\..\DX12-SDK\include\</include-dir>
+        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\Setup\VC\ProductDir;Include</include-dir>
+        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot81;Include\shared</include-dir>
+        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot81;Include\um</include-dir>
       </ifdef>
 
-      <ifndef name="WP81">
-
-        <ifndef name="DIRECTX11_2">
-          <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides\shared</include-dir>
-          <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides\um</include-dir>
-          <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides</include-dir>
-          <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\11.0\Setup\VC\ProductDir;Include</include-dir>
-          <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot;Include\shared</include-dir>
-          <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot;Include\um</include-dir>
-        </ifndef>
-
-        <ifdef name="DIRECTX11_2">
-          <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides\shared</include-dir>
-          <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides\um</include-dir>
+      <ifndef name="DirectX12">
+        
+        <ifdef name="WP81">
           <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides</include-dir>
-          <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\Setup\VC\ProductDir;Include</include-dir>
-          <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot81;Include\shared</include-dir>
-          <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot81;Include\um</include-dir>
+          <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides\wp81</include-dir>
+          <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\Setup\VC\ProductDir;include</include-dir>
+          <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include</include-dir>
+          <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include\abi</include-dir>
+          <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include\mincore</include-dir>
+          <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include\minwin</include-dir>
+          <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include\wrl</include-dir>
         </ifdef>
-      </ifndef>
 
+        <ifndef name="WP81">
+
+          <ifndef name="DIRECTX11_2">
+            <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides\shared</include-dir>
+            <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides\um</include-dir>
+            <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides</include-dir>
+            <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\11.0\Setup\VC\ProductDir;Include</include-dir>
+            <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot;Include\shared</include-dir>
+            <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot;Include\um</include-dir>
+          </ifndef>
+
+          <ifdef name="DIRECTX11_2">
+            <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides\shared</include-dir>
+            <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides\um</include-dir>
+            <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides</include-dir>
+            <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\Setup\VC\ProductDir;Include</include-dir>
+            <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot81;Include\shared</include-dir>
+            <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot81;Include\um</include-dir>
+          </ifdef>
+        </ifndef>
+        
+      </ifndef>
+      
     </ifndef>
   </ifdef>
 
@@ -144,7 +159,17 @@
   </ifndef>
 
   <!-- Reference Mapping Files -->
-
+  <ifdef name="DirectX12">
+    <file>SharpDX\Mapping.xml</file>
+    <file>SharpDX.DXGI\Mapping.xml</file>
+    <file>SharpDX.D3DCompiler\Mapping.xml</file>
+    <file>Mapping.Direct3D1x.xml</file>
+    <file>SharpDX.Direct3D11\Mapping.xml</file>
+    <file>SharpDX.Direct3D12\Mapping.xml</file>
+  </ifdef>
+  
+  <ifndef name="DirectX12"> 
+  
   <!-- All platforms -->
   <file>SharpDX\Mapping.xml</file>
   <file>SharpDX.DXGI\Mapping.xml</file>
@@ -199,4 +224,5 @@
       <file>SharpDX.RawInput\Mapping.xml</file>
     </ifndef>
   </ifndef>
+  </ifndef>  
 </config>

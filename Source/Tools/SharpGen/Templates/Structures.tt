@@ -26,13 +26,14 @@ foreach (var sharpStruct in Namespace.Structs)
 <#+			
 	}
 	
+	var packLayout = sharpStruct.Align != 0 ? ", Pack = " + sharpStruct.Align : string.Empty;
 	if (!sharpStruct.HasMarshalType) {
 		if (sharpStruct.ExplicitLayout) {#>
-    [StructLayout(LayoutKind.Explicit, Pack = <#= sharpStruct.Align #> )]
+    [StructLayout(LayoutKind.Explicit<#= packLayout #>)]
 <#+ 
 		} else { 
 #>
-    [StructLayout(LayoutKind.Sequential, Pack = <#= sharpStruct.Align #> )]
+    [StructLayout(LayoutKind.Sequential<#= packLayout #>)]
 <#+  
 		} 
 	}
@@ -153,11 +154,11 @@ foreach (var sharpStruct in Namespace.Structs)
 <#+
 		if (sharpStruct.ExplicitLayout) {
 #>
-        [StructLayout(LayoutKind.Explicit, Pack = <#= sharpStruct.Align #> )]
+        [StructLayout(LayoutKind.Explicit<#= packLayout #>)]
 <#+  
 		} else { 
 #>
-        [StructLayout(LayoutKind.Sequential, Pack = <#= sharpStruct.Align #> )]
+        [StructLayout(LayoutKind.Sequential<#= packLayout #>)]
 <#+ 
 		} 			
 #>

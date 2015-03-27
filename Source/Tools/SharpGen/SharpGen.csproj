@@ -79,6 +79,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|DIRECTX11_2'">
     <DefineConstants>TRACE;DIRECTX11_1;DIRECTX11_2</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|DirectX12'">
+    <DefineConstants>TRACE;DEBUG;DIRECTX11_1;DIRECTX11_2;DirectX12</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|DirectX12'">
+    <DefineConstants>TRACE;DIRECTX11_1;DIRECTX11_2;DirectX12</DefineConstants>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win8' ">
     <DefineConstants>TRACE;DEBUG;WIN8METRO;W8CORE;DIRECTX11_1;DIRECTX11_2</DefineConstants>
   </PropertyGroup>

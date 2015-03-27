@@ -197,6 +197,9 @@
     <map enum-item="D3D11_VIDEO_PROCESSOR_NOMINAL_RANGE_16_235" name="Range_16_235"/>
     <map enum-item="D3D11_VIDEO_PROCESSOR_NOMINAL_RANGE_0_255" name="Range_0_255"/>
 
+    <map enum-item="D3D11_(MESSAGE_ID.*)" name-tmp="$1" />
+    <map enum-item="D3D12_(MESSAGE_ID.*)" name-tmp="$1" />
+
     <!--
     // *****************************************************************
     // D3D11 Struct

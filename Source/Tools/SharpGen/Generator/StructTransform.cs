@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using SharpGen.Logging;
 using SharpGen.CppModel;
@@ -203,6 +204,41 @@ namespace SharpGen.Generator
 
                     });
                 }
+
+            // In case of explicit layout, check that we can safely generate it on both x86 and x64 (in case of an union
+            // using pointers, we can't)
+            if(csStruct.ExplicitLayout)
+            {
+                var fieldList = csStruct.Fields.ToList();
+                for(int i = 0; i < fieldList.Count; i++)
+                {
+                    var field = fieldList[i];
+                    var fieldAlignment = (field.MarshalType ?? field.PublicType).CalculateAlignment();
+
+                    if(fieldAlignment < 0 && field.Offset > 0)
+                    {
+                        // Check if this is an union on last field, in this case we can generate an explicit layout
+                        bool isUnionOnLastField = true;
+                        for(int j = i + 1; j < fieldList.Count; j++)
+                        {
+                            var nextField = fieldList[j];
+                            if(nextField.Offset != field.Offset)
+                            {
+                                isUnionOnLastField = false;
+                            }
+                        }
+
+                        if(!isUnionOnLastField)
+                        {
+                            Logger.Error(
+                                "The field [{0}] in structure [{1}] has an explicit layout that cannot be handled on both x86/x64. This structure needs manual layout (remove fields from definition) and write them manually",
+                                field.CppElementName,
+                                csStruct.CppElementName);
+                        }
+                    }
+                }
+            }
+
             csStruct.SizeOf = currentOffset + lastFieldSize;
             csStruct.HasMarshalType = hasMarshalType;
         }
