@@ -247,11 +247,11 @@ namespace SharpDX.Direct3D12
             fixed (void* pPixelShader = desc.PixelShader.Buffer)
             {
                 // Transfer pin buffer address to marshal
-                desc.VertexShader.UpdateNative(ref nativeDesc.VertexShader, pVertexShader);
-                desc.GeometryShader.UpdateNative(ref nativeDesc.GeometryShader, pGeometryShader);
-                desc.DomainShader.UpdateNative(ref nativeDesc.DomainShader, pDomainShader);
-                desc.HullShader.UpdateNative(ref nativeDesc.HullShader, pHullShader);
-                desc.PixelShader.UpdateNative(ref nativeDesc.PixelShader, pPixelShader);
+                desc.VertexShader.UpdateNative(ref nativeDesc.VertexShader, (IntPtr)pVertexShader);
+                desc.GeometryShader.UpdateNative(ref nativeDesc.GeometryShader, (IntPtr)pGeometryShader);
+                desc.DomainShader.UpdateNative(ref nativeDesc.DomainShader, (IntPtr)pDomainShader);
+                desc.HullShader.UpdateNative(ref nativeDesc.HullShader, (IntPtr)pHullShader);
+                desc.PixelShader.UpdateNative(ref nativeDesc.PixelShader, (IntPtr)pPixelShader);
 
                 // Marshal input elements
                 var elements = desc.InputLayout.Elements;

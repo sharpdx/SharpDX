@@ -68,12 +68,11 @@ namespace SharpDX.Direct3D12
             return new ShaderBytecode(buffer);
         }
 
-
-        internal unsafe void UpdateNative(ref __Native native, void* pinBuffer)
+        internal void UpdateNative(ref __Native native, IntPtr pinBuffer)
         {
-            if(managedData != null && managedData.Length == 0)
+            native.Pointer = pinBuffer;
+            if (managedData != null)
             {
-                native.Pointer = (IntPtr)pinBuffer;
                 native.Size = managedData.Length;
             }
         }
