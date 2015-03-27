@@ -34,18 +34,21 @@ namespace SharpDX.Direct3D12
         //    public int Flags;
         //}
 
-        public RootSignatureDescription() : this(null)
+        public RootSignatureDescription() : this(RootSignatureFlags.None)
         {
         }
 
-        public RootSignatureDescription(RootParameter[] parameters)
+        public RootSignatureDescription(RootSignatureFlags flags, RootParameter[] parameters = null, StaticSampler[] samplers = null)
         {
             Parameters = new RootParameterArray(parameters);
+            StaticSamplers = new StaticSamplerArray(samplers);
+            Flags = flags;
         }
 
-        private RootSignatureDescription(int count, IntPtr nativeParameters, RootSignatureFlags flags)
+        private RootSignatureDescription(int parameterCount, IntPtr nativeParameters, int samplerCount, IntPtr nativeSamplers, RootSignatureFlags flags)
         {
-            Parameters = new RootParameterArray(count, nativeParameters);
+            Parameters = new RootParameterArray(parameterCount, nativeParameters);
+            StaticSamplers = new StaticSamplerArray(samplerCount, nativeSamplers);
             Flags = flags;
         }
 
@@ -55,9 +58,92 @@ namespace SharpDX.Direct3D12
         public RootParameterArray Parameters;
 
         /// <summary>
+        /// The static samplers.
+        /// </summary>
+        public StaticSamplerArray StaticSamplers;
+
+        /// <summary>
         /// The flags
         /// </summary>
         public RootSignatureFlags Flags;
+
+        /// <summary>
+        /// Serializes this description to a blob.
+        /// </summary>
+        /// <returns>A serialized version of this description.</returns>
+        /// <exception cref="SharpDXException">If an error occured while serializing the description</exception>
+        public Blob Serialize()
+        {
+            string errorText;
+            Blob blob;
+            var result = Serialize(out blob, out errorText);
+            if(result.Failure)
+            {
+                throw new SharpDXException(result, errorText);
+            }
+            return blob;
+        }
+
+        /// <summary>
+        /// Serializes this description to a blob.
+        /// </summary>
+        /// <returns>A serialized version of this description.</returns>
+        private unsafe Result Serialize(out Blob result, out string errorText)
+        {
+            Blob error;
+            errorText = null;
+            fixed(void* pParameters = Parameters.managedParameters)
+            fixed(void *pSamplers = StaticSamplers.managedParameters)
+            {
+                __Native native;
+                native.ParameterCount = Parameters.Count;
+                native.ParametersPointer = Parameters.nativeParameters;
+                if(Parameters.managedParameters != null)
+                {
+                    native.ParametersPointer = (IntPtr)pParameters;
+                }
+                native.StaticSamplerCount = StaticSamplers.Count;
+                native.StaticSamplerPointer = StaticSamplers.nativeParameters;
+                if(StaticSamplers.managedParameters != null)
+                {
+                    native.StaticSamplerPointer = (IntPtr)pSamplers;
+                }
+                native.Flags = Flags;
+                var hresult = D3D12.SerializeRootSignature(new IntPtr(&native), RootSignatureVersion.V1, out result, out error);
+                // TODO: check hresult or just rely on error?
+                if(error != null)
+                {
+                    errorText = Utilities.BlobToString(error);
+                }
+                return hresult;
+            }
+        }
+
+        internal static RootSignatureDescription FromPointer(IntPtr nativePtr)
+        {
+            unsafe
+            {
+                var pNative = (__Native*)nativePtr;
+                return new RootSignatureDescription(pNative->ParameterCount, pNative->ParametersPointer, pNative->StaticSamplerCount, pNative->StaticSamplerPointer, pNative->Flags);
+            }
+        }
+
+        internal partial struct __Native
+        {
+            /// <unmanaged-short>unsigned int NumParameters</unmanaged-short>	
+            public int ParameterCount;
+
+            /// <unmanaged-short>D3D12_ROOT_PARAMETER pParameters</unmanaged-short>	
+            public System.IntPtr ParametersPointer;
+
+            public int StaticSamplerCount;
+
+            public System.IntPtr StaticSamplerPointer;
+
+            /// <unmanaged-short>unsigned int Flags</unmanaged-short>	
+            public RootSignatureFlags Flags;
+        }
+
 
         public struct RootParameterArray
         {
@@ -133,69 +219,78 @@ namespace SharpDX.Direct3D12
             }
         }
 
-        /// <summary>
-        /// Serializes this description to a blob.
-        /// </summary>
-        /// <returns>A serialized version of this description.</returns>
-        /// <exception cref="SharpDXException">If an error occured while serializing the description</exception>
-        public Blob Serialize()
+        public struct StaticSamplerArray
         {
-            string errorText;
-            Blob blob;
-            var result = Serialize(out blob, out errorText);
-            if(result.Failure)
-            {
-                throw new SharpDXException(result, errorText);
-            }
-            return blob;
-        }
+            internal readonly IntPtr nativeParameters;
+            internal readonly StaticSampler[] managedParameters;
+            internal readonly int count;
 
-        /// <summary>
-        /// Serializes this description to a blob.
-        /// </summary>
-        /// <returns>A serialized version of this description.</returns>
-        private unsafe Result Serialize(out Blob result, out string errorText)
-        {
-            Blob error;
-            errorText = null;
-            fixed(void* pParameters = Parameters.managedParameters)
+            internal StaticSamplerArray(StaticSampler[] parameters)
             {
-                __Native native;
-                native.ParameterCount = Parameters.Count;
-                native.ParametersPointer = Parameters.nativeParameters;
-                if(Parameters.managedParameters != null)
+                count = 0;
+                nativeParameters = IntPtr.Zero;
+                managedParameters = parameters;
+                if (parameters != null)
                 {
-                    native.ParametersPointer = (IntPtr)pParameters;
+                    count = parameters.Length;
                 }
-                var hresult = D3D12.SerializeRootSignature(new IntPtr(&native), RootSignatureVersion.V1, out result, out error);
-                // TODO: check hresult or just rely on error?
-                if(error != null)
-                {
-                    errorText = Utilities.BlobToString(error);
-                }
-                return hresult;
             }
-        }
 
-        internal static RootSignatureDescription FromPointer(IntPtr nativePtr)
-        {
-            unsafe
+            internal StaticSamplerArray(int count, IntPtr nativeParameters)
+                : this()
             {
-                var pNative = (__Native*)nativePtr;
-                return new RootSignatureDescription(pNative->ParameterCount, pNative->ParametersPointer, pNative->Flags);
+                this.count = count;
+                this.nativeParameters = nativeParameters;
             }
-        }
 
-        internal partial struct __Native
-        {
-            /// <unmanaged-short>unsigned int NumParameters</unmanaged-short>	
-            public int ParameterCount;
+            public int Count
+            {
+                get { return count; }
+            }
 
-            /// <unmanaged-short>D3D12_ROOT_PARAMETER pParameters</unmanaged-short>	
-            public System.IntPtr ParametersPointer;
+            public unsafe StaticSampler this[int index]
+            {
+                get
+                {
+                    if (index < 0 || index >= Count)
+                    {
+                        throw new ArgumentOutOfRangeException("index");
+                    }
 
-            /// <unmanaged-short>unsigned int Flags</unmanaged-short>	
-            public RootSignatureFlags Flags;
+                    if (managedParameters != null)
+                    {
+                        return managedParameters[index];
+                    }
+                    if (nativeParameters != IntPtr.Zero)
+                    {
+                        return ((StaticSampler*)nativeParameters)[index];
+                    }
+
+                    return new StaticSampler();
+                }
+                set
+                {
+                    if (index < 0 || index >= Count)
+                    {
+                        throw new ArgumentOutOfRangeException("index");
+                    }
+
+                    if (managedParameters != null)
+                    {
+                        managedParameters[index] = value;
+                    }
+
+                    if (nativeParameters != IntPtr.Zero)
+                    {
+                        ((StaticSampler*)nativeParameters)[index] = value;
+                    }
+                }
+            }
+
+            public static implicit operator StaticSamplerArray(StaticSampler[] fromArray)
+            {
+                return new StaticSamplerArray(fromArray);
+            }
         }
     }
 }
