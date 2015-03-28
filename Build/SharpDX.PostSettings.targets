@@ -36,7 +36,7 @@
   <ProjectExtensions/>
 
   <Target Name="BeforeClean">
-    <RemoveDir Condition="Exists('$(ProjectDir)Generated')" Directories="$(ProjectDir)Generated"/>
+    <!--<RemoveDir Condition="Exists('$(ProjectDir)Generated')" Directories="$(ProjectDir)Generated"/>-->
   </Target>
 
   <Target Name="AfterBuild">
