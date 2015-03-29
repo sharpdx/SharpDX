@@ -38,7 +38,6 @@
   <include id="d3d10_1" file="d3d10_1.h" attach="true" />
   <include id="d3d10" file="d3d10.h" attach="true" />
   <include id="d3d10_1shader" file="d3d10_1shader.h" attach="true" />
-  <include id="d3d10effect" file="d3d10effect.h" attach="true" />
   <include id="d3d10misc" file="d3d10misc.h" attach="true" />
   <include id="d3d10sdklayers" file="d3d10sdklayers.h" attach="true" />
   <include id="d3d10shader" file="d3d10shader.h" attach="true" />
@@ -56,7 +55,6 @@
     <context>d3d10</context>
     <context>d3d10_1</context>
     <context>d3d10_1shader</context>
-    <context>d3d10effect</context>
     <context>d3d10misc</context>
     <context>d3d10sdklayers</context>
     <context>d3d10shader</context>

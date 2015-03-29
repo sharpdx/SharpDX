@@ -17,13 +17,13 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if !WIN8METRO
 using System;
 
 namespace SharpDX.Direct2D1
 {
     public partial class GdiInteropRenderTarget
     {
+#if DESKTOP_APP
         /// <summary>	
         /// Indicates that drawing with the device context retrieved using the {{GetDC}} method is finished.  	
         /// </summary>	
@@ -36,6 +36,6 @@ namespace SharpDX.Direct2D1
         {
             ReleaseDC(null);
         }
+#endif
     }
 }
-#endif

@@ -69,7 +69,6 @@ namespace SharpDX.Direct3D10
             device.CreateTexture2D(ref description, subResourceDatas, this);
         }
 
-#if !WIN8METRO
         /// <summary>
         ///   Converts a height map into a normal map. The (x,y,z) components of each normal are mapped to the (r,g,b) channels of the output texture.
         /// </summary>
@@ -84,7 +83,6 @@ namespace SharpDX.Direct3D10
         {
             D3DX10.ComputeNormalMap(source, flags, channel, amplitude, destination);
         }
-#endif
 
         /// <summary>
         /// Maps the texture, providing CPU access to its contents.

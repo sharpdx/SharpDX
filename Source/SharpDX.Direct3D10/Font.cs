@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 using SharpDX.Mathematics.Interop;
-#if !WIN8METRO
 using System;
 using SharpDX;
 
@@ -159,4 +158,3 @@ namespace SharpDX.Direct3D10
         private static readonly RawColor4 whiteColor = new RawColor4(1,1,1,1);
     }
 }
-#endif

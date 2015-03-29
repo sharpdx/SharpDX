@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 using SharpDX.Mathematics.Interop;
-#if !W8CORE
 using System.Runtime.InteropServices;
 
 namespace SharpDX.Direct3D
@@ -130,4 +129,3 @@ namespace SharpDX.Direct3D
         private extern static int D3DPERF_GetStatus();
     }
 }
-#endif

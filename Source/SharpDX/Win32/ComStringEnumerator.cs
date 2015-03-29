@@ -17,7 +17,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if !WP8
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -40,11 +39,7 @@ namespace SharpDX.Win32
         /// <param name="ptrToIEnumString">The PTR to I enum string.</param>
         public ComStringEnumerator(IntPtr ptrToIEnumString)
         {
-#if W8CORE
             enumString = (IEnumString)Marshal.GetObjectForIUnknown(ptrToIEnumString);
-#else
-            enumString = (IEnumString)Marshal.GetTypedObjectForIUnknown(ptrToIEnumString, typeof(IEnumString));
-#endif
         }
 
         public void Dispose()
@@ -89,4 +84,3 @@ namespace SharpDX.Win32
         }
     }
 }
-#endif

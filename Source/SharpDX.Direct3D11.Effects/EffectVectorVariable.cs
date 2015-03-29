@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 using SharpDX.Mathematics.Interop;
-#if !WIN8METRO
 using System;
 using System.Diagnostics;
 
@@ -111,9 +110,7 @@ namespace SharpDX.Direct3D11
         /// <unmanaged>HRESULT ID3D11EffectVectorVariable::SetFloatVectorArray([In, Buffer] float* pData,[None] int Offset,[None] int Count)</unmanaged>
         public void Set<T>(T[] array) where T : struct
         {
-#if !WIN8METRO
-            Trace.Assert(Utilities.SizeOf<T>() == 16, VectorInvalidSize);
-#endif
+            System.Diagnostics.Debug.Assert(Utilities.SizeOf<T>() == 16, VectorInvalidSize);
             Set(Interop.CastArray<RawVector4,T>(array), 0, array.Length);
         }
 
@@ -136,9 +133,7 @@ namespace SharpDX.Direct3D11
         /// <unmanaged>HRESULT ID3D11EffectVectorVariable::SetFloatVector([In] float* pData)</unmanaged>
         public unsafe void Set<T>(ref T value) where T : struct
         {
-#if !WIN8METRO
-            Trace.Assert(Utilities.SizeOf<T>() <= 16, VectorInvalidSize);
-#endif
+            System.Diagnostics.Debug.Assert(Utilities.SizeOf<T>() <= 16, VectorInvalidSize);
             SetRawValue(new IntPtr(Interop.Fixed(ref value)), 0, Utilities.SizeOf<T>());
         }
 
@@ -252,4 +247,3 @@ namespace SharpDX.Direct3D11
         }    
     }
 }
-#endif

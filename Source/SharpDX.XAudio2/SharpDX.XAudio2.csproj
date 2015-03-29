@@ -8,10 +8,6 @@
     <RootNamespace>SharpDX.XAudio2</RootNamespace>
     <AssemblyName>SharpDX.XAudio2</AssemblyName>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(SharpDXWin8Core)' == 'false'">
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
@@ -93,9 +89,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Mapping-xaudio2.xml" />
-    <None Include="X3DAudio\Mapping.xml" />
-    <None Include="XAPO\Mapping.xml" />
+    <None Include="Mapping-xaudio2.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="X3DAudio\Mapping.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XAPO\Mapping.xml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -44,7 +44,7 @@ namespace SharpDX.IO
         /// <param name="share">The share mode.</param>
         public unsafe NativeFileStream(string fileName, NativeFileMode fileMode, NativeFileAccess access, NativeFileShare share = NativeFileShare.Read)
         {
-#if W8CORE
+#if STORE_APP
             //uint newAccess = 0;
             //const int FILE_ATTRIBUTE_NORMAL = 0x00000080;
             //const int FILE_FLAG_RANDOM_ACCESS = 0x10000000;
@@ -97,13 +97,15 @@ namespace SharpDX.IO
             canSeek = true;
 
         }
+
+        public IntPtr Handle
+        {
+            get { return handle; }
+        }
+
         private static int MarshalGetLastWin32Error()
         {
-#if WP8
-            return 0;
-#else
             return Marshal.GetLastWin32Error();
-#endif
         }
 
         /// <inheritdoc/>

@@ -273,11 +273,7 @@ namespace SharpDX.Win32
                 var type = value.GetType();
 
                 Type = VariantType.Default;
-#if W8CORE
                 if (type.GetTypeInfo().IsPrimitive)
-#else
-                if (type.IsPrimitive)
-#endif
                 {
                     if (type == typeof(int))
                     {
@@ -347,14 +343,12 @@ namespace SharpDX.Win32
                     variantValue.longValue = ((DateTime)value).ToFileTime();
                     return;
                 }
-#if !WP8
                 else if (value is string)
                 {
                     ElementType = VariantElementType.WStringPointer;
                     variantValue.pointerValue = Marshal.StringToCoTaskMemUni((string)value);
                     return;
                 }
-#endif
                 throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Type [{0}] is not handled", type.Name));
             }
         }

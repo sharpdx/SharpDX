@@ -28,9 +28,7 @@
   <assembly>SharpDX.Direct2D1</assembly>
   
   <include file="dwrite.h" attach="true" output="DirectWrite"/>
-  <ifdef name="DIRECTX11_1">
-    <include file="dwrite_1.h" attach="true" output="DirectWrite"/>
-  </ifdef>
+  <include file="dwrite_1.h" attach="true" output="DirectWrite"/>
 
   <naming />
   

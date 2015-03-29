@@ -17,10 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if W8CORE
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
+//using System.Runtime.InteropServices.WindowsRuntime; // TODO: TO fix
 
 namespace SharpDX
 {
@@ -98,8 +97,10 @@ namespace SharpDX
                     var shadow = ToShadow<InspectableShadow>(thisPtr);
                     var callback = (IInspectable)shadow.Callback;
                     // Use the name of the callback class
-                    var hstring = WindowsRuntimeMarshal.StringToHString(callback.GetType().FullName);
-                    Marshal.WriteIntPtr(className, hstring);
+                    
+                    // TODO: TO FIX FOR Windows Runtime
+                    //var hstring = WindowsRuntimeMarshal.StringToHString(callback.GetType().FullName);
+                    //Marshal.WriteIntPtr(className, hstring);
                 }
                 catch (Exception exception)
                 {
@@ -143,4 +144,3 @@ namespace SharpDX
         }
     }
 }
-#endif

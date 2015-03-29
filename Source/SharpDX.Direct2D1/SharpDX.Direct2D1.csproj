@@ -8,11 +8,6 @@
     <RootNamespace>SharpDX.Direct2D1</RootNamespace>
     <AssemblyName>SharpDX.Direct2D1</AssemblyName>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(SharpDXWin8)' == 'false' ">
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>

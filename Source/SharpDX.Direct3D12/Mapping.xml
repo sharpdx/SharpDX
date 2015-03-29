@@ -23,9 +23,7 @@
 <config id="sharpdx-direct3d12" xmlns="urn:SharpGen.Config">
   <depends>sharpdx</depends>
   <depends>sharpdx-dxgi</depends>
-  <ifndef name="WP8">
-    <depends>sharpdx-d3dcompiler</depends>
-  </ifndef>
+  <depends>sharpdx-d3dcompiler</depends>
   <depends>sharpdx-direct3d1x</depends>
   <depends>sharpdx-direct3d11</depends>
 

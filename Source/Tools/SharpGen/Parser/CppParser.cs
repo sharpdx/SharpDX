@@ -1339,8 +1339,8 @@ namespace SharpGen.Parser
 
                         // If the structure being processed is an external include
                         // and the type is not binded, then there is probably a missing binding
-                        if (!IsTypeBinded(xType))
-                            Logger.Error("Binding is missing for type [{0}] defined in file [{1}]", string.Join("/", fullTypeName), _mapIdToXElement[xType.AttributeValue("file")].AttributeValue("name"));
+                        //if (!IsTypeBinded(xType))
+                            //Logger.Error("Binding is missing for type [{0}] defined in file [{1}]", string.Join("/", fullTypeName), _mapIdToXElement[xType.AttributeValue("file")].AttributeValue("name"));
 
                         isTypeResolved = true;
                         break;

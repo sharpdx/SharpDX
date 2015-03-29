@@ -73,11 +73,10 @@ namespace SharpDX.XACT3
             this.audioEngine = audioEngine;
             isAudioEngineReadonly = true;
 
-            var handle = NativeFile.Create(fileName, NativeFileAccess.Read, NativeFileShare.Read | NativeFileShare.Write,
+            var handle = Win32Native.Create(fileName, NativeFileAccess.Read, NativeFileShare.Read | NativeFileShare.Write,
                                   IntPtr.Zero, NativeFileMode.Open,
                                   NativeFileOptions.Normal | NativeFileOptions.NoBuffering |
                                   NativeFileOptions.Overlapped | NativeFileOptions.SequentialScan, IntPtr.Zero);
-
 
             if (handle == IntPtr.Zero || handle.ToInt32() == -1)
                 throw new FileNotFoundException("Unable to open the specified file.", fileName);

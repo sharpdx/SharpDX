@@ -45,7 +45,6 @@
 
 using System.Diagnostics;
 using SharpDX.Mathematics.Interop;
-#if !W8CORE
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -450,4 +449,3 @@ namespace SharpDX.Windows
         }
     }
 }
-#endif

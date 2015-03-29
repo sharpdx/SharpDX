@@ -22,208 +22,69 @@
 -->
 <config id="sharpdx-root" xmlns="urn:SharpGen.Config">
 
-  <ifdef name="DIRECTX11_1">
-    <ifdef name="WP8">
-      <!--<include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides\shared</include-dir>
-      <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides\um</include-dir>
-      <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides</include-dir>-->
-      <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides\wp8</include-dir>-->
-      <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides</include-dir>
-      <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\11.0\Setup\VC\ProductDir;Include</include-dir>
-      <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows Phone\v8.0\InstallationFolder;Include</include-dir>
-      <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows Phone\v8.0\InstallationFolder;Include\abi</include-dir>
-      <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows Phone\v8.0\InstallationFolder;Include\mincore</include-dir>
-      <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows Phone\v8.0\InstallationFolder;Include\minwin</include-dir>
-      <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows Phone\v8.0\InstallationFolder;Include\wrl</include-dir>
-    </ifdef>
+  <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides\shared</include-dir>
+  <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides\um</include-dir>
+  <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides</include-dir>
+  <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\Setup\VC\ProductDir;Include</include-dir>
+  <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot81;Include\shared</include-dir>
+  <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot81;Include\um</include-dir>
 
-    <ifndef name="WP8">
-      
-      <ifdef name="DirectX12">
-        <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides\shared</include-dir>
-        <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides\um</include-dir>
-        <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides</include-dir>
-        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\Setup\VC\ProductDir;Include</include-dir>
-        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\Setup\VC\ProductDir;Include</include-dir>
-        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot81;Include\shared</include-dir>
-        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot81;Include\um</include-dir>
-        <!-- TODO: workaround. We put Windows 10 headers AFTER Windows 8 headers just to grab Direct3D12 headers. We will have to do a proper full port of the Windows 10 headers so it will require much more work -->
-        <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot10;Include\10.0.10041.0\um</include-dir>
-      </ifdef>
-
-      <ifndef name="DirectX12">
-        
-        <ifdef name="WP81">
-          <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides</include-dir>
-          <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides\wp81</include-dir>
-          <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\Setup\VC\ProductDir;include</include-dir>
-          <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include</include-dir>
-          <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include\abi</include-dir>
-          <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include\mincore</include-dir>
-          <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include\minwin</include-dir>
-          <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\WindowsPhoneApp\v8.1\InstallationFolder;Include\wrl</include-dir>
-        </ifdef>
-
-        <ifndef name="WP81">
-
-          <ifndef name="DIRECTX11_2">
-            <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides\shared</include-dir>
-            <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides\um</include-dir>
-            <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides</include-dir>
-            <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\11.0\Setup\VC\ProductDir;Include</include-dir>
-            <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot;Include\shared</include-dir>
-            <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot;Include\um</include-dir>
-          </ifndef>
-
-          <ifdef name="DIRECTX11_2">
-            <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides\shared</include-dir>
-            <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides\um</include-dir>
-            <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides</include-dir>
-            <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\Setup\VC\ProductDir;Include</include-dir>
-            <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot81;Include\shared</include-dir>
-            <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot81;Include\um</include-dir>
-          </ifdef>
-        </ifndef>
-        
-      </ifndef>
-      
-    </ifndef>
-  </ifdef>
-
-  <ifndef name="W8CORE">
-    <!-- Add DirectX SDK by default -->
-    <include-dir>$(DXSDK_DIR)\include</include-dir>
-  </ifndef>
-
-  <ifndef name="DIRECTX11_1">
-    <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc10\Include</include-dir>
-    <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc10\PlatformSDK</include-dir>
-    <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\10.0\Setup\VC\ProductDir;Include</include-dir>
-    <ifdef name="WINSDK_71">
-      <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.1\InstallationFolder;Include</include-dir>
-    </ifdef>
-    <ifdef name="WINSDK_70a">
-      <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0a\InstallationFolder;Include</include-dir>
-    </ifdef>
-  </ifndef>
+  <!-- TODO: workaround. We put Windows 10 headers AFTER Windows 8 headers just to grab Direct3D12 headers. We will have to do a proper full port of the Windows 10 headers so it will require much more work -->
+  <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot10;Include\10.0.10041.0\um</include-dir>
+  <include-dir>$(DXSDK_DIR)\include</include-dir>
 
   <var name="FILTER_PASTING_ERROR">error: pasting .*a valid preprocessing token</var>
 
-  <!-- For Win8 we need to force to use include headers for MetroApp only -->
-  <ifdef name="WIN8METRO">
-    <ifndef name="DIRECTX11_2">
-      <include-prolog>
-        // For Win8 we need to force to use include headers for MetroApp only
-        #define WINAPI_FAMILY WINAPI_PARTITION_APP
-      </include-prolog>
-    </ifndef>
-    <ifdef name="DIRECTX11_2">
-      <include-prolog>
-        // For Win8 we need to force to use include headers for MetroApp only
-        #define WINAPI_FAMILY WINAPI_FAMILY_PC_APP
-      </include-prolog>
-    </ifdef>
-  </ifdef>
-
-  <ifdef name="WP8">
+  <ifdef name="STORE_APP">
     <include-prolog>
-      // For WP8 we need to force to use include headers for WPPhone App only
-      #define WINAPI_FAMILY WINAPI_FAMILY_PHONE_APP
-    </include-prolog>
+      // For Win8 we need to force to use include headers for MetroApp only
+      #define WINAPI_FAMILY WINAPI_FAMILY_PC_APP
+    </include-prolog>    
   </ifdef>
-
-  <ifdef name="WP81">
-    <include-prolog>
-      // For WP8.1 we need to force to use include headers for MetroApp only
-      #define WINAPI_FAMILY WINAPI_FAMILY_PHONE_APP
-    </include-prolog>
-  </ifdef>
-
+  
+  
   <!-- Include prolog for GCC-XML -->
   <include-prolog>
     // Use unicode
     #define UNICODE
+    
     // for SAL annotations
     #define _PREFAST_
+    
     // To force GUID to be declared
     #define INITGUID
+    
     // Wrap all declspec with gccxml
     #define __declspec(x) __attribute__((gccxml(#x)))
+    
     // For XAudio2 patch
     #define __unaligned __attribute((__unaligned))
+    
+    enum __SAL_YesNo {};
   </include-prolog>
 
-  <ifndef name="WP8">
-    <include-prolog>
-      enum __SAL_YesNo {};
-    </include-prolog>
-  </ifndef>
-
-  <!-- Reference Mapping Files -->
-  <ifdef name="DirectX12">
-    <file>SharpDX\Mapping.xml</file>
-    <file>SharpDX.DXGI\Mapping.xml</file>
-    <file>SharpDX.D3DCompiler\Mapping.xml</file>
-    <file>Mapping.Direct3D1x.xml</file>
-    <file>SharpDX.Direct3D11\Mapping.xml</file>
-    <file>SharpDX.Direct3D12\Mapping.xml</file>
-  </ifdef>
-  
-  <ifndef name="DirectX12"> 
-  
   <!-- All platforms -->
   <file>SharpDX\Mapping.xml</file>
   <file>SharpDX.DXGI\Mapping.xml</file>
-  
-  <ifndef name="WP8">
-    <file>SharpDX.D3DCompiler\Mapping.xml</file>
-  </ifndef>
-
-  <!-- All platforms -->
+  <file>SharpDX.D3DCompiler\Mapping.xml</file>
   <file>Mapping.Direct3D1x.xml</file>
-
-  <!-- Only Desktop -->
-  <ifndef name="W8CORE">
-    <file>SharpDX.Direct3D10\Mapping.xml</file>
-  </ifndef>
-
-  <!--All platforms -->
   <file>SharpDX.Direct3D11\Mapping.xml</file>
-
-  <!-- Desktop only -->
-  <ifndef name="W8CORE">
-    <file>SharpDX.Direct3D11.Effects\Mapping.xml</file>
+  <file>SharpDX.Direct3D12\Mapping.xml</file>
+  <file>SharpDX.Direct3D11.Effects\Mapping.xml</file>
     
-    <!--Only Desktop and DirectX 11.1/11.x -->
-    <ifdef name="DIRECTX11_1|DIRECTX11_2">
-      <file>SharpDX.Animation\Mapping.xml</file>
-      <file>SharpDX.DirectComposition\Mapping.xml</file>
-      <file>SharpDX.DirectManipulation\Mapping.xml</file>
-    </ifdef>
-    
-    <file>SharpDX.Direct3D9\Mapping.xml</file>
-  </ifndef>
-
   <!-- All platforms -->
   <file>SharpDX.XAudio2\Mapping.xml</file>
   <file>SharpDX.MediaFoundation\Mapping.xml</file>
 
-  <!-- Specifics -->
-  <ifndef name="WP8">
-    <file>SharpDX.Direct2D1\Mapping.xml</file>
+  <file>SharpDX.Direct2D1\Mapping.xml</file>
 
-    <!-- Available only desktop prior DirectX11.1 -->
-    <ifndef name="DIRECTX11_1">
-      <file>SharpDX.DirectInput\Mapping.xml</file>
-      <file>SharpDX.DirectSound\Mapping.xml</file>
-      <file>SharpDX.XACT3\Mapping.xml</file>
-    </ifndef>
-    
-    <!-- Available on all platforms except WP8, WP81 -->
-    <ifndef name="WP81">
-      <file>SharpDX.XInput\Mapping.xml</file>
-      <file>SharpDX.RawInput\Mapping.xml</file>
-    </ifndef>
-  </ifndef>
-  </ifndef>  
+  <ifdef name="DESKTOP_APP">
+    <file>SharpDX.Animation\Mapping.xml</file>
+    <file>SharpDX.DirectComposition\Mapping.xml</file>
+    <file>SharpDX.DirectManipulation\Mapping.xml</file>
+    <file>SharpDX.RawInput\Mapping.xml</file>
+  </ifdef>
+
+  <!--<file>SharpDX.XInput\Mapping.xml</file>-->
+
 </config>

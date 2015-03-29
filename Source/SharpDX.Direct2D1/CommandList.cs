@@ -17,7 +17,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if DIRECTX11_1
 using System;
 
 namespace SharpDX.Direct2D1
@@ -42,8 +41,6 @@ namespace SharpDX.Direct2D1
             Stream_(CommandSinkShadow.ToIntPtr(sink));
         }
 
-#if DIRECTX11_2
-
         /// <summary>
         /// Streams the contents of the command list to the specified command sink. 
         /// </summary>
@@ -52,8 +49,5 @@ namespace SharpDX.Direct2D1
         {
             Stream_(CommandSink1Shadow.ToIntPtr(sink));
         }
-
-#endif
     }
 }
-#endif

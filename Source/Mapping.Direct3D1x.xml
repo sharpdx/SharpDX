@@ -28,52 +28,15 @@
   <!-- Includes are not attached to any namespace/assembly here -->
   <!-- Attach is done in specific D3D10/D3D11 mapping file -->
 
-  <!-- D3D10 includes -->
-  <!-- d3d10_1.h must be included before d3d10.h -->
-  <ifndef name="W8CORE">
-    <include file="d3d10_1.h" />
-    <include file="d3d10.h" />
-    <include file="d3d10_1shader.h" />
-    <include file="d3d10effect.h" />
-    <include file="d3d10misc.h" />
-    <include file="d3d10sdklayers.h" />
-    <include file="d3d10shader.h" />
-  </ifndef>
-
-  <ifndef name="DIRECTX11_1">
-    <include file="d3dx10.h" />
-    <include file="d3dx10core.h" />
-    <include file="d3dx10tex.h" />
-    <include file="d3dx10mesh.h" />
-    <include file="d3dx10async.h"  />
-  </ifndef>
-  
   <!-- D3D11 includes -->
   <include file="d3d11.h" />
-  
-  <ifdef name="DIRECTX11_1">
-    <include file="d3d11_1.h" />
-  </ifdef>
+  <include file="d3d11_1.h" />
+  <include file="d3d11_2.h" />
+  <include file="d3d12.h" />
 
-  <ifdef name="DIRECTX11_2">
-    <include file="d3d11_2.h" />
-  </ifdef>
-
-  <ifdef name="DirectX12">
-    <include file="d3d12.h" />
-    <include file="d3d12sdklayers.h" />
-  </ifdef>
-
+  <include file="d3d12sdklayers.h" />
   <include file="d3d11sdklayers.h" />
-
-  <ifndef name="W8CORE">
-    <include file="d3dx11.h" />
-    <include file="d3dx11core.h" />
-    <include file="d3dx11tex.h" />
-    <include file="d3dx11async.h" />
-    <include file="d3dcsx.h" />
-    <include file="d3dx11effect.h"/>
-  </ifndef>
+  <include file="d3dx11effect.h"/>
 
   <naming />
   <binding/>
@@ -83,40 +46,17 @@
     <context>d3d10</context>
     <context>d3d10_1</context>
     <context>d3d10_1shader</context>
-    <context>d3d10effect</context>
     <context>d3d10misc</context>
     <context>d3d10sdklayers</context>
     <context>d3d10shader</context>
-    <ifndef name="DIRECTX11_1">
-      <context>d3dx10</context>
-      <context>d3dx10core</context>
-      <context>d3dx10tex</context>
-      <context>d3dx10mesh</context>
-      <context>d3dx10async</context>
-    </ifndef>
     
     <context>d3d11</context>
-    <ifdef name="DIRECTX11_1">
-      <context>d3d11_1</context>
-    </ifdef>
-    <ifdef name="DIRECTX11_2">
-      <context>d3d11_2</context>
-    </ifdef>
-    <ifdef name="DirectX12">
-      <context>d3d12</context>
-      <context>d3d12sdklayers</context>
-    </ifdef>
-
+    <context>d3d11_1</context>
+    <context>d3d11_2</context>
+    <context>d3d12</context>
+    <context>d3d12sdklayers</context>
     <context>d3d11sdklayers</context>
-
-    <ifndef name="W8CORE">
-      <context>d3dx11</context>
-      <context>d3dx11core</context>
-      <context>d3dx11tex</context>
-      <context>d3dx11async</context>
-      <context>d3dcsx</context>
-      <context>d3dx11effect</context>
-    </ifndef>
+    <context>d3dx11effect</context>
 
     <!--
     // *****************************************************************

@@ -4,30 +4,10 @@
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>
-   
-  <!--Include automatically SharpDXWP8 interop assembly-->
-  <ItemGroup>
-    <ProjectReference Condition="'$(SharpDXWP8)' == 'true'" Include="$(SolutionDir)Source\SharpDX.WP8\SharpDX.WP8.vcxproj">
-      <Name>SharpDX.WP8</Name>
-    </ProjectReference>
-  </ItemGroup>
-
-  <!--Import Windows 8 WINRT targets only for WIN8 platforms-->
-  <Import Condition="'$(SharpDXWin8)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
-
-  <!--Import Windows Phone 8 targets only for WP8 -->
-  <Import Condition="'$(SharpDXWP8)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
-  <Import Condition="'$(SharpDXWP8)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
-
-  <PropertyGroup Condition="'$(SharpDXWP81)' == 'true'">
-    <TargetPlatformIdentifier>WindowsPhoneApp</TargetPlatformIdentifier>
-  </PropertyGroup>
-  
-  <!--Import Windows Phone 8.1 targets only for WP81 -->
-  <Import Condition="'$(SharpDXWP81)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
 
   <!--Import standard targets for all non-Windows(Phone) 8 platforms-->
-  <Import Condition="'$(SharpDXWin8Core)' == 'false'" Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Condition="'$(SharpDXDesktopOnly)' == 'true'" Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Condition="'$(SharpDXDesktopOnly)' == 'false'" Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>

@@ -18,8 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#if DIRECTX11_2
-
 namespace SharpDX.Direct2D1
 {
     public partial interface CommandSink1
@@ -36,5 +34,3 @@ namespace SharpDX.Direct2D1
         PrimitiveBlend PrimitiveBlend1 { set; }
     }
 }
-
-#endif

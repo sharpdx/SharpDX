@@ -41,10 +41,6 @@
     <context>d3dcommon</context>
 
     <const from-guid="WKPDID_D3DDebugObjectName" class="SharpDX.Direct3D.CommonGuid" type="System.Guid" name="DebugObjectName">new System.Guid("$1")</const>
-
-    <ifndef name="W8CORE">
-      <create class="D3DCommon" />
-    </ifndef>
     <create class="CommonGuid" visibility="public" />
 
     <context-clear/>

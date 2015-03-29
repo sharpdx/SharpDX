@@ -24,7 +24,6 @@ namespace SharpDX.Direct2D1
 {
     public static partial class D2D1
     {
-#if DIRECTX11_2
         /// <summary>
         /// The default tolerance for geometric flattening operations.
         /// http://msdn.microsoft.com/en-us/library/windows/desktop/dd370975%28v=vs.85%29.aspx
@@ -62,6 +61,5 @@ namespace SharpDX.Direct2D1
             var absMaxZoomFactor = maxZoomFactor > 0f ? maxZoomFactor : -maxZoomFactor;
             return DefaultFlatteningTolerance / (absMaxZoomFactor * ComputeMaximumScaleFactor(ref dpiDependentTransform));
         }
-#endif
     }
 }

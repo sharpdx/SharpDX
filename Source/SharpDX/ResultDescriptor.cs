@@ -248,7 +248,6 @@ namespace SharpDX
 
         private static void AddDescriptorsFromType(Type type)
         {
-#if W8CORE
             foreach(var field in type.GetTypeInfo().DeclaredFields)
             {
                 if (field.FieldType == typeof(ResultDescriptor) && field.IsPublic && field.IsStatic)
@@ -260,19 +259,6 @@ namespace SharpDX
                     }
                 }
             }
-#else
-            foreach(var field in type.GetFields(BindingFlags.Static | BindingFlags.Public))
-            {
-                if (field.FieldType == typeof(ResultDescriptor))
-                {
-                    var descriptor = (ResultDescriptor)field.GetValue(null);
-                    if (!Descriptors.ContainsKey(descriptor.Result))
-                    {
-                        Descriptors.Add(descriptor.Result, descriptor);
-                    }
-                }
-            }
-#endif
         }
 
         private static string GetDescriptionFromResultCode(int resultCode)
@@ -288,24 +274,12 @@ namespace SharpDX
             return description;
         }
 
-#if WP8
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate uint FormatMessageWDelegate(int dwFlags, IntPtr lpSource, int dwMessageId, int dwLanguageId, ref IntPtr lpBuffer, int nSize, IntPtr Arguments);
-        private static FormatMessageWDelegate formatMessageW;
-        private static FormatMessageWDelegate FormatMessageW
-        {
-            get { return formatMessageW ?? (formatMessageW = (FormatMessageWDelegate) Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.FormatMessageW()), typeof (FormatMessageWDelegate))); }
-        }
-#else
-        #if W8CORE
+    #if WINDOWS_API_SET
         [DllImport("api-ms-win-core-localization-l1-2-0.dll", EntryPoint = "FormatMessageW")]
         private static extern uint FormatMessageW(int dwFlags, IntPtr lpSource, int dwMessageId, int dwLanguageId, ref IntPtr lpBuffer, int nSize, IntPtr Arguments);
-        #else
+    #else
         [DllImport("kernel32.dll", EntryPoint = "FormatMessageW")]
         private static extern uint FormatMessageW(int dwFlags, IntPtr lpSource, int dwMessageId, int dwLanguageId, ref IntPtr lpBuffer, int nSize, IntPtr Arguments);
-#endif
-
-#endif
-
+    #endif
     }
 }

@@ -20,8 +20,6 @@
 
 using System;
 
-#if !WP8
-
 namespace SharpDX.MediaFoundation
 {
     public partial class Transform
@@ -119,4 +117,3 @@ namespace SharpDX.MediaFoundation
         }
     }
 }
-#endif

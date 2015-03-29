@@ -8,10 +8,6 @@
     <RootNamespace>SharpDX.Direct3D11</RootNamespace>
     <AssemblyName>SharpDX.Direct3D11</AssemblyName>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(SharpDXWin8Core)' == 'false'">
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
@@ -28,11 +24,9 @@
     <Compile Include="BlendStateDescription1.cs" />
     <Compile Include="Device2.cs" />
     <Compile Include="DeviceContext2.cs" />
-    <Compile Include="IDrawingSurfaceContentProvider.cs" />
     <Compile Include="RasterizerStateDescription1.cs" />
     <Compile Include="DepthStencilStateDescription.cs" />
     <Compile Include="Device1.cs" />
-    <Compile Include="IDrawingSurfaceBackgroundContentProvider.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="RasterizerStateDescription.cs" />
     <Compile Include="RaterizerState1.cs" />
@@ -52,7 +46,6 @@
     <Compile Include="DeviceContext.OutputMergerStage.cs" />
     <Compile Include="DeviceContext.RasterizerStage.cs" />
     <Compile Include="DomainShader.cs" />
-    <Compile Include="FastFourierTransform.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
     <Compile Include="Generated\Interfaces.cs" />
@@ -60,8 +53,6 @@
     <Compile Include="Generated\Structures.cs" />
     <Compile Include="GeometryShader.cs" />
     <Compile Include="HullShader.cs" />
-    <Compile Include="ImageInformation.cs" />
-    <Compile Include="ImageLoadInformation.cs" />
     <Compile Include="InfoQueue.cs" />
     <Compile Include="InfoQueueFilterDescription.cs" />
     <Compile Include="InputElement.cs" />
@@ -80,15 +71,12 @@
     <Compile Include="ResourceView.cs" />
     <Compile Include="SamplerState.cs" />
     <Compile Include="SamplerStateDescription.cs" />
-    <Compile Include="Scan.cs" />
-    <Compile Include="SegmentedScan.cs" />
     <Compile Include="ShaderResourceView.cs" />
     <Compile Include="StreamOutputBufferBinding.cs" />
     <Compile Include="StreamOutputElement.cs" />
     <Compile Include="Texture1D.cs" />
     <Compile Include="Texture2D.cs" />
     <Compile Include="Texture3D.cs" />
-    <Compile Include="TextureLoadInformation.cs" />
     <Compile Include="UnorderedAccessView.cs" />
     <Compile Include="VertexBufferBinding.cs" />
     <Compile Include="VertexShader.cs" />

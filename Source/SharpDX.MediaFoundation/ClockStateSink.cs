@@ -18,8 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#if !WP8
-
 using System;
 
 namespace SharpDX.MediaFoundation
@@ -85,5 +83,3 @@ namespace SharpDX.MediaFoundation
         void OnClockStop(long hnsSystemTime);
     }
 }
-
-#endif

@@ -30,47 +30,39 @@
   <include id="dxgi" file="dxgi.h" attach="true" />
   <include id="dxgiformat" file="dxgiformat.h" attach="true" />
   <include id="dxgitype" file="dxgitype.h" attach="true">
-    <ifdef name="DIRECTX11_1">
-      <post>
-        #define _FACDXGI    0x87a
-        #define MAKE_DXGI_HRESULT(code) MAKE_HRESULT(1, _FACDXGI, code)
-        #define MAKE_DXGI_STATUS(code)  MAKE_HRESULT(0, _FACDXGI, code)
+    <post>
+      #define _FACDXGI    0x87a
+      #define MAKE_DXGI_HRESULT(code) MAKE_HRESULT(1, _FACDXGI, code)
+      #define MAKE_DXGI_STATUS(code)  MAKE_HRESULT(0, _FACDXGI, code)
 
-        #define DXGI_STATUS_OCCLUDED                    MAKE_DXGI_STATUS(1)
-        #define DXGI_STATUS_CLIPPED                     MAKE_DXGI_STATUS(2)
-        #define DXGI_STATUS_NO_REDIRECTION              MAKE_DXGI_STATUS(4)
-        #define DXGI_STATUS_NO_DESKTOP_ACCESS           MAKE_DXGI_STATUS(5)
-        #define DXGI_STATUS_GRAPHICS_VIDPN_SOURCE_IN_USE MAKE_DXGI_STATUS(6)
-        #define DXGI_STATUS_MODE_CHANGED                MAKE_DXGI_STATUS(7)
-        #define DXGI_STATUS_MODE_CHANGE_IN_PROGRESS     MAKE_DXGI_STATUS(8)
+      #define DXGI_STATUS_OCCLUDED                    MAKE_DXGI_STATUS(1)
+      #define DXGI_STATUS_CLIPPED                     MAKE_DXGI_STATUS(2)
+      #define DXGI_STATUS_NO_REDIRECTION              MAKE_DXGI_STATUS(4)
+      #define DXGI_STATUS_NO_DESKTOP_ACCESS           MAKE_DXGI_STATUS(5)
+      #define DXGI_STATUS_GRAPHICS_VIDPN_SOURCE_IN_USE MAKE_DXGI_STATUS(6)
+      #define DXGI_STATUS_MODE_CHANGED                MAKE_DXGI_STATUS(7)
+      #define DXGI_STATUS_MODE_CHANGE_IN_PROGRESS     MAKE_DXGI_STATUS(8)
 
-        #define DXGI_ERROR_INVALID_CALL                 MAKE_DXGI_HRESULT(1)
-        #define DXGI_ERROR_NOT_FOUND                    MAKE_DXGI_HRESULT(2)
-        #define DXGI_ERROR_MORE_DATA                    MAKE_DXGI_HRESULT(3)
-        #define DXGI_ERROR_UNSUPPORTED                  MAKE_DXGI_HRESULT(4)
-        #define DXGI_ERROR_DEVICE_REMOVED               MAKE_DXGI_HRESULT(5)
-        #define DXGI_ERROR_DEVICE_HUNG                  MAKE_DXGI_HRESULT(6)
-        #define DXGI_ERROR_DEVICE_RESET                 MAKE_DXGI_HRESULT(7)
-        #define DXGI_ERROR_WAS_STILL_DRAWING            MAKE_DXGI_HRESULT(10)
-        #define DXGI_ERROR_FRAME_STATISTICS_DISJOINT    MAKE_DXGI_HRESULT(11)
-        #define DXGI_ERROR_GRAPHICS_VIDPN_SOURCE_IN_USE MAKE_DXGI_HRESULT(12)
-        #define DXGI_ERROR_DRIVER_INTERNAL_ERROR        MAKE_DXGI_HRESULT(32)
-        #define DXGI_ERROR_NONEXCLUSIVE                 MAKE_DXGI_HRESULT(33)
-        #define DXGI_ERROR_NOT_CURRENTLY_AVAILABLE      MAKE_DXGI_HRESULT(34)
-        #define DXGI_ERROR_REMOTE_CLIENT_DISCONNECTED   MAKE_DXGI_HRESULT(35)
-        #define DXGI_ERROR_REMOTE_OUTOFMEMORY           MAKE_DXGI_HRESULT(36)
-      </post>
-    </ifdef>
+      #define DXGI_ERROR_INVALID_CALL                 MAKE_DXGI_HRESULT(1)
+      #define DXGI_ERROR_NOT_FOUND                    MAKE_DXGI_HRESULT(2)
+      #define DXGI_ERROR_MORE_DATA                    MAKE_DXGI_HRESULT(3)
+      #define DXGI_ERROR_UNSUPPORTED                  MAKE_DXGI_HRESULT(4)
+      #define DXGI_ERROR_DEVICE_REMOVED               MAKE_DXGI_HRESULT(5)
+      #define DXGI_ERROR_DEVICE_HUNG                  MAKE_DXGI_HRESULT(6)
+      #define DXGI_ERROR_DEVICE_RESET                 MAKE_DXGI_HRESULT(7)
+      #define DXGI_ERROR_WAS_STILL_DRAWING            MAKE_DXGI_HRESULT(10)
+      #define DXGI_ERROR_FRAME_STATISTICS_DISJOINT    MAKE_DXGI_HRESULT(11)
+      #define DXGI_ERROR_GRAPHICS_VIDPN_SOURCE_IN_USE MAKE_DXGI_HRESULT(12)
+      #define DXGI_ERROR_DRIVER_INTERNAL_ERROR        MAKE_DXGI_HRESULT(32)
+      #define DXGI_ERROR_NONEXCLUSIVE                 MAKE_DXGI_HRESULT(33)
+      #define DXGI_ERROR_NOT_CURRENTLY_AVAILABLE      MAKE_DXGI_HRESULT(34)
+      #define DXGI_ERROR_REMOTE_CLIENT_DISCONNECTED   MAKE_DXGI_HRESULT(35)
+      #define DXGI_ERROR_REMOTE_OUTOFMEMORY           MAKE_DXGI_HRESULT(36)
+    </post>
   </include>
-  <ifdef name="DIRECTX11_1">
-    <include id="dxgi1_2" file="dxgi1_2.h" attach="true" />
-    <ifndef name="WP8">
-      <include id="windows.ui.xaml.media.dxinterop" file="windows.ui.xaml.media.dxinterop.h" attach="true" />
-    </ifndef>
-  </ifdef>
-  <ifdef name="DIRECTX11_2">
-    <include id="dxgi1_3" file="dxgi1_3.h" attach="true" />
-  </ifdef>
+  <include id="dxgi1_2" file="dxgi1_2.h" attach="true" />
+  <include id="windows.ui.xaml.media.dxinterop" file="windows.ui.xaml.media.dxinterop.h" attach="true" />
+  <include id="dxgi1_3" file="dxgi1_3.h" attach="true" />
 
   <context-set id="dxgi-all">
     <context>sharpdx-dxgi</context>
@@ -242,40 +234,28 @@
 
     <map method="IDXGIKeyedMutex::AcquireSync" hresult="true"/>
 
-    <ifdef name="W8CORE">
-      <map method="IDXGIOutput1::DuplicateOutput" visibility="internal"/>
-      <map param="IDXGIOutput1::DuplicateOutput::ppOutputDuplication" type="void"/>
-    </ifdef>
+    <map method="IDXGIOutput1::DuplicateOutput" visibility="internal"/>
+    <map param="IDXGIOutput1::DuplicateOutput::ppOutputDuplication" type="void"/>
 
-    <ifndef name="W8CORE">
-      <map param="IDXGIOutput1::DuplicateOutput::ppOutputDuplication" return="true"/>
-    </ifndef>
+    <map param="IDXGIOutput1::DuplicateOutput::ppOutputDuplication" return="true"/>
 
-    <ifdef name="DIRECTX11_1">
-      <map param="ISurfaceImageSourceNative::BeginDraw::surface" return="true"/>
+    <map param="ISurfaceImageSourceNative::BeginDraw::surface" return="true"/>
 
-      <map interface="IVirtualSurfaceUpdatesCallbackNative" visibility="internal" callback="true" callback-dual="true" />
-      <map method="IVirtualSurfaceImageSourceNative::RegisterForUpdatesNeeded" visibility="internal"/>
+    <map interface="IVirtualSurfaceUpdatesCallbackNative" visibility="internal" callback="true" callback-dual="true" />
+    <map method="IVirtualSurfaceImageSourceNative::RegisterForUpdatesNeeded" visibility="internal"/>
 
-      <map method="IVirtualSurfaceImageSourceNative::GetUpdateRectCount" visibility="internal" property="false"/>
-      <ifndef name="DIRECTX11_2">
-        <map param="IVirtualSurfaceImageSourceNative::GetUpdateRectCount::pCount" return="true"/>
-      </ifndef>
-      <ifdef name="DIRECTX11_2">
-        <map param="IVirtualSurfaceImageSourceNative::GetUpdateRectCount::count" return="true"/>
-      </ifdef>
-      <map method="IVirtualSurfaceImageSourceNative::GetUpdateRects" visibility="internal"/>
+    <map method="IVirtualSurfaceImageSourceNative::GetUpdateRectCount" visibility="internal" property="false"/>
+    <map param="IVirtualSurfaceImageSourceNative::GetUpdateRectCount::pCount" return="true"/>
+    <map param="IVirtualSurfaceImageSourceNative::GetUpdateRectCount::count" return="true"/>
+    <map method="IVirtualSurfaceImageSourceNative::GetUpdateRects" visibility="internal"/>
 
-      <map method="IDXGISwapChain1::Present1" visibility="internal"/>
-      <map param="IDXGISwapChain1::Present1::pPresentParameters" type="void"/>
-      <map param="IDXGISwapChain1::Present1::PresentFlags" type="DXGI_PRESENT_FLAGS" />
-    </ifdef>
+    <map method="IDXGISwapChain1::Present1" visibility="internal"/>
+    <map param="IDXGISwapChain1::Present1::pPresentParameters" type="void"/>
+    <map param="IDXGISwapChain1::Present1::PresentFlags" type="DXGI_PRESENT_FLAGS" />
 
-    <ifdef name="DIRECTX11_2">
-      <map param="IDXGISwapChain2::GetMaximumFrameLatency::pMaxLatency" attribute="out" />
-      <map param="IDXGISwapChain2::GetMatrixTransform::pMatrix" attribute="out" />
-      <map method="IDXGISwapChain2::[GS]etSourceSize" visibility="internal" />
-    </ifdef>
+    <map param="IDXGISwapChain2::GetMaximumFrameLatency::pMaxLatency" attribute="out" />
+    <map param="IDXGISwapChain2::GetMatrixTransform::pMatrix" attribute="out" />
+    <map method="IDXGISwapChain2::[GS]etSourceSize" visibility="internal" />
 
     <!--
     // *****************************************************************
@@ -283,16 +263,12 @@
     // *****************************************************************
     -->
 
-    <ifdef name="W8CORE">
-      <remove function="CreateDXGIFactory"/>
-    </ifdef>
+    <remove function="CreateDXGIFactory"/>
     <map function="CreateDXGIFactory.*" dll='"dxgi.dll"' group="SharpDX.DXGI.DXGI" />
     <map param="CreateDXGIFactory.*?::ppFactory" attribute="out" />
 
-    <ifdef name="DIRECTX11_2">
-      <!-- TODO: No documentation - don't know how to map it. -->
-      <remove function="DXGIGetDebugInterface1" />
-    </ifdef>
+    <!-- TODO: No documentation - don't know how to map it. -->
+    <remove function="DXGIGetDebugInterface1" />
 
     <context-clear/>
   </mapping>

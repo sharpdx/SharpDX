@@ -154,7 +154,6 @@ namespace SharpDX.WIC
             factory.CreateDecoderFromFilename(filename, guidVendorRef, (int)desiredAccess, metadataOptions, this);
         }
 
-#if !WIN8METRO
         /// <summary>
         /// Initializes a new instance of the <see cref="BitmapDecoder"/> class from a file stream.
         /// </summary>
@@ -162,9 +161,9 @@ namespace SharpDX.WIC
         /// <param name="fileStream">The filename.</param>
         /// <param name="metadataOptions">The metadata options.</param>
         /// <unmanaged>HRESULT IWICImagingFactory::CreateDecoderFromFileHandle([In] unsigned int hFile,[In, Optional] const GUID* pguidVendor,[In] WICDecodeOptions metadataOptions,[Out, Fast] IWICBitmapDecoder** ppIDecoder)</unmanaged>	
-        public BitmapDecoder(ImagingFactory factory, FileStream fileStream, SharpDX.WIC.DecodeOptions metadataOptions)
+        public BitmapDecoder(ImagingFactory factory, NativeFileStream fileStream, SharpDX.WIC.DecodeOptions metadataOptions)
         {
-            factory.CreateDecoderFromFileHandle(fileStream.SafeFileHandle.DangerousGetHandle(), null, metadataOptions, this);
+            factory.CreateDecoderFromFileHandle(fileStream.Handle, null, metadataOptions, this);
         }
 
         /// <summary>
@@ -175,11 +174,11 @@ namespace SharpDX.WIC
         /// <param name="guidVendorRef">The GUID vendor ref.</param>
         /// <param name="metadataOptions">The metadata options.</param>
         /// <unmanaged>HRESULT IWICImagingFactory::CreateDecoderFromFileHandle([In] unsigned int hFile,[In, Optional] const GUID* pguidVendor,[In] WICDecodeOptions metadataOptions,[Out, Fast] IWICBitmapDecoder** ppIDecoder)</unmanaged>	
-        public BitmapDecoder(ImagingFactory factory, FileStream fileStream, System.Guid guidVendorRef, SharpDX.WIC.DecodeOptions metadataOptions)
+        public BitmapDecoder(ImagingFactory factory, NativeFileStream fileStream, System.Guid guidVendorRef, SharpDX.WIC.DecodeOptions metadataOptions)
         {
-            factory.CreateDecoderFromFileHandle(fileStream.SafeFileHandle.DangerousGetHandle(), guidVendorRef, metadataOptions, this);
+            factory.CreateDecoderFromFileHandle(fileStream.Handle, guidVendorRef, metadataOptions, this);
         }
-#endif
+
         /// <summary>
         /// Queries the capabilities of the decoder based on the specified stream.
         /// </summary>

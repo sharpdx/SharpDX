@@ -33,7 +33,7 @@ namespace SharpDX.Direct3D10
         {
             get
             {
-                return ShaderSignature.GetInputSignature(Bytecode);
+                return new ShaderSignature(Bytecode);
             }
         }
 

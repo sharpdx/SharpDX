@@ -69,32 +69,6 @@ namespace SharpDX.Diagnostics
         /// </summary>
         public static event EventHandler<ComObjectEventArgs> UnTracked;
 
-#if !W8CORE
-        /// <summary>
-        /// Initializes the <see cref="ObjectTracker"/> class.
-        /// </summary>
-        static ObjectTracker()
-        {
-            AppDomain.CurrentDomain.DomainUnload += OnProcessExit;
-            AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
-        }
-
-        /// <summary>
-        /// Called when [process exit].
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        static void OnProcessExit(object sender, EventArgs e)
-        {
-            if (Configuration.EnableObjectTracking)
-            {
-                var text = ReportActiveObjects();
-                if (!string.IsNullOrEmpty(text))
-                    Console.WriteLine(text);
-            }
-        }
-#endif
-
         private static Dictionary<IntPtr, List<ObjectReference>> ObjectReferences
         {
             get
@@ -138,7 +112,7 @@ namespace SharpDX.Diagnostics
                     ObjectReferences.Add(comObject.NativePointer, referenceList);
                 }
 
-#if W8CORE
+#if STORE_APP
                 var stacktrace = "Stacktrace is not available on this platform";
 
                 // This code is a workaround to be able to get a full stacktrace on Windows Store App. 
@@ -194,19 +168,14 @@ namespace SharpDX.Diagnostics
                 }
                 referenceList.Add(new ObjectReference(DateTime.Now, comObject, stacktrace));
 #else
-                var stackTraceText = new StringBuilder();
-                var stackTrace = new StackTrace(3, true);
-                foreach (var stackFrame in stackTrace.GetFrames())
+                try
                 {
-                    // Skip system/generated frame
-                    if (stackFrame.GetFileLineNumber() == 0)
-                        continue;
-                    stackTraceText.AppendFormat(System.Globalization.CultureInfo.InvariantCulture, "\t{0}({1},{2}) : {3}", stackFrame.GetFileName(), stackFrame.GetFileLineNumber(),
-                                         stackFrame.GetFileColumnNumber(),
-                                         stackFrame.GetMethod()).AppendLine();
+                    throw new Exception();
                 }
-
-                referenceList.Add(new ObjectReference(DateTime.Now, comObject, stackTraceText.ToString()));
+                catch(Exception ex)
+                {
+                    referenceList.Add(new ObjectReference(DateTime.Now, comObject, ex.StackTrace));
+                }
 #endif
                 // Fire Tracked event.
                 OnTracked(comObject);

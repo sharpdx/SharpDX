@@ -18,8 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#if !WP8
-
 using System;
 using System.Runtime.InteropServices;
 
@@ -154,5 +152,3 @@ namespace SharpDX.MediaFoundation
 
     }
 }
-
-#endif

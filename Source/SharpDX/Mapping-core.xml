@@ -26,25 +26,13 @@
   <namespace>SharpDX</namespace>
   <assembly>SharpDX</assembly>
 
-  <ifdef name="DIRECTX11_1">
-    <include file="objidlbase.h" namespace="SharpDX.Win32" output="Win32">
-      <attach>STATSTG</attach>
-      <attach>tagLOCKTYPE</attach>
-      <attach>LOCKTYPE</attach>
-      <attach>ISequentialStream</attach>
-      <attach>IStream</attach>
-    </include>
-  </ifdef>
-
-  <ifndef name="DIRECTX11_1">
-    <include file="objidl.h" namespace="SharpDX.Win32" output="Win32">
-      <attach>STATSTG</attach>
-      <attach>tagLOCKTYPE</attach>
-      <attach>LOCKTYPE</attach>
-      <attach>ISequentialStream</attach>
-      <attach>IStream</attach>
-    </include>
-  </ifndef>
+  <include file="objidlbase.h" namespace="SharpDX.Win32" output="Win32">
+    <attach>STATSTG</attach>
+    <attach>tagLOCKTYPE</attach>
+    <attach>LOCKTYPE</attach>
+    <attach>ISequentialStream</attach>
+    <attach>IStream</attach>
+  </include>
 
   <include file="wtypes.h" namespace="SharpDX.Win32" output="Win32">
     <attach>tagSTGC</attach>
@@ -557,9 +545,7 @@
     <bind from="D3DRECT" to="SharpDX.Mathematics.Interop.RawRectangle" />
 
     <!-- DirectX 11.2 structure -->
-    <ifdef name="DIRECTX11_2">
-      <bind from="DXGI_MATRIX_3X2_F" to="SharpDX.Mathematics.Interop.RawMatrix3x2" />
-    </ifdef>
+    <bind from="DXGI_MATRIX_3X2_F" to="SharpDX.Mathematics.Interop.RawMatrix3x2" />
 
     <!-- Win32 bindings -->
     <bind from="INT_PTR" to="System.IntPtr" />
@@ -701,13 +687,7 @@
     <map method=".*::GetGlyphIndicesW" name="GetGlyphIndices" />
 
     <!-- Map IStream -->
-    <ifdef name="DIRECTX11_1">
-      <context>objidlbase</context>
-    </ifdef>
-    <ifndef name="DIRECTX11_1">
-      <context>objidl</context>
-    </ifndef>
-
+    <context>objidlbase</context>
     <context>wtypes</context>
     <map struct="STATSTG" name="StorageStatistics" />
 

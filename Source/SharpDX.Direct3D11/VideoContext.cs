@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#if DIRECTX11_1
 namespace SharpDX.Direct3D11
 {
     using System;
@@ -59,4 +58,3 @@ namespace SharpDX.Direct3D11
         }
     }
 }
-#endif

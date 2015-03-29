@@ -18,8 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#if DIRECTX11_2
-
 using SharpDX.Direct3D;
 
 namespace SharpDX.D3DCompiler
@@ -73,5 +71,3 @@ namespace SharpDX.D3DCompiler
         }
     }
 }
-
-#endif

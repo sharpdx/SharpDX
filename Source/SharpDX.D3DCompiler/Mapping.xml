@@ -27,7 +27,11 @@
   <assembly>SharpDX.D3DCompiler</assembly>
 
   <!-- D3DCompiler includes -->
-  <include file="d3dcompiler.h" attach="true" />
+  <include file="d3dcompiler.h" attach="true">
+    <pre>
+      struct ID3D10Effect;
+    </pre>
+  </include>
   <include file="d3d11shader.h" attach="true" />
   <include file="d3dcommon.h">
     <attach>D3D_PRIMITIVE</attach>
@@ -47,9 +51,7 @@
     <attach>D3D_REGISTER_COMPONENT_TYPE</attach>
     <attach>ID3DInclude</attach>
     <attach>D3D_INCLUDE_TYPE</attach>
-    <ifdef name="WIN8METRO">
-      <attach>D3DCreateBlob</attach>
-    </ifdef>
+    <attach>D3DCreateBlob</attach>
   </include>
 
   <context-set id="d3dcompiler-all">
@@ -70,10 +72,7 @@
     <create-cpp enum="D3DCOMPILE_DISASM_FLAGS" macro="D3D_DISASM_.*" />
     <create-cpp enum="D3DCOMPILE_SECDATA_FLAGS" macro="D3DCOMPILE_SECDATA_.*"/>
 
-
-    <ifdef name="WIN8METRO">
-      <create class="D3DCommon" />
-    </ifdef>
+    <create class="D3DCommon" />
     <define enum="SharpDX.D3DCompiler.RegisterComponentMaskFlags" sizeof="4" />
     <create class="D3D" />
 
@@ -197,13 +196,8 @@
     <map function="D3D(.*)" name-tmp="$1" />
     <map function="D3D[^1].*"  dll='"#(D3DCOMPILER_DLL_A)"' group="SharpDX.D3DCompiler.D3D" />
 
-    <ifdef name="WIN8METRO">
-      <map function="D3DCreateBlob" dll='"#(D3DCOMPILER_DLL_A)"' group="SharpDX.D3DCompiler.D3DCommon" />
-    </ifdef>
-    <ifndef name="WIN8METRO">
-      <map function="D3DCreateBlob" dll='"#(D3DCOMPILER_DLL_A)"' group="SharpDX.Direct3D.D3DCommon" />
-    </ifndef>
-    <map param="D3DCreateBlob::ppBlob" attribute="out fast"/>
+    <!--<map function="D3DCreateBlob" dll='"#(D3DCOMPILER_DLL_A)"' group="SharpDX.Direct3D.D3DCommon" />-->
+    <!--<map param="D3DCreateBlob::ppBlob" attribute="out fast"/>-->
     
     <remove function="D3DDisassemble10Effect" />
     <map param="D3DCompile.*?::Flags1" type="D3DCOMPILE_SHADER_FLAGS" />

@@ -60,11 +60,7 @@ namespace SharpDX.DXGI
         /// <returns>True if the <see cref="Format"/> is valid.</returns>
         public static bool IsValid( Format format )
         {
-#if DIRECTX11_1
             return ( (int)(format) >= 1 && (int)(format) <= 115 );
-#else
-            return ((int) (format) >= 1 && (int) (format) <= 99);
-#endif
         }
 
         /// <summary>
@@ -94,7 +90,6 @@ namespace SharpDX.DXGI
         /// <returns><c>true</c> if the specified <see cref="Format"/> is video; otherwise, <c>false</c>.</returns>
         public static bool IsVideo( Format fmt )
         {
-#if DIRECTX11_1
             switch ( fmt )
             {
                 case Format.AYUV:
@@ -120,11 +115,7 @@ namespace SharpDX.DXGI
 
                 default:
                     return false;
-                }
-#else
-            // !DXGI_1_2_FORMATS
-            return false;
-#endif
+            }
         }
 
         /// <summary>
@@ -209,9 +200,7 @@ namespace SharpDX.DXGI
                 Format.R8G8_Typeless,
                 Format.R8G8_UInt,
                 Format.R8G8_UNorm,
-#if DIRECTX11_1
                 Format.B4G4R4A4_UNorm,
-#endif
             }, 16);
 
             InitFormat(new[] { 

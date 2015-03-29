@@ -17,14 +17,13 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if !WP8
 using System;
 using System.Collections.Generic;
 using System.IO;
 
 using SharpDX.Multimedia;
 
-#if WIN8METRO
+#if STORE_APP
 using Windows.Storage.Streams;
 #endif
 
@@ -83,7 +82,7 @@ namespace SharpDX.MediaFoundation
             }
         }
 
-#if WIN8METRO
+#if STORE_APP
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioDecoder" /> class.
         /// </summary>
@@ -292,4 +291,3 @@ namespace SharpDX.MediaFoundation
         }
     }
 }
-#endif

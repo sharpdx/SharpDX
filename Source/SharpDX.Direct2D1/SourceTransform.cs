@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#if DIRECTX11_1
 using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct2D1
@@ -50,4 +49,3 @@ namespace SharpDX.Direct2D1
         void Draw(SharpDX.Direct2D1.Bitmap1 target, RawRectangle drawRect, RawPoint targetOrigin);
     }
 }
-#endif

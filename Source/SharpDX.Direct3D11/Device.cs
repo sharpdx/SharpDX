@@ -108,8 +108,6 @@ namespace SharpDX.Direct3D11
             CreateDevice(adapter, DriverType.Unknown, flags, featureLevels);
         }
 
-#if !W8CORE
-
         /// <summary>
         ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.Device" /> class along with a new <see cref = "T:SharpDX.DXGI.SwapChain" /> used for rendering.
         /// </summary>
@@ -186,15 +184,14 @@ namespace SharpDX.Direct3D11
                                                  FeatureLevel[] featureLevels, SwapChainDescription swapChainDescription,
                                                  out Device device, out SwapChain swapChain)
         {
-            FeatureLevel selectedLevel;
-            DeviceContext context;
+            device = adapter == null ? new Device(driverType, flags, featureLevels) : new Device(adapter, flags, featureLevels);
 
-            D3D11.CreateDeviceAndSwapChain(adapter, driverType, IntPtr.Zero, flags, featureLevels,
-                                                           featureLevels == null ? 0 : featureLevels.Length,
-                                                           D3D11.SdkVersion,
-                                                           ref swapChainDescription, out swapChain, out device,
-                                                           out selectedLevel, out context);
+            using (var factory = new Factory1())
+            {
+                swapChain = new SwapChain(factory, device, swapChainDescription);
+            }
 
+            var context = device.ImmediateContext;
 
             if (context != null)
             {
@@ -205,7 +202,6 @@ namespace SharpDX.Direct3D11
 
             device.ImmediateContext__ = context;
         }
-#endif
 
         /// <summary>
         /// Get the type, name, units of measure, and a description of an existing counter.	
@@ -295,7 +291,6 @@ namespace SharpDX.Direct3D11
             }
         }
 
-#if DIRECTX11_1
         /// <summary>	
         /// <p>Gets information about the features <see cref="Feature.D3D11Options"/> that are supported by the current graphics driver.</p>	
         /// </summary>	
@@ -372,9 +367,7 @@ namespace SharpDX.Direct3D11
                 return support.TileBasedDeferredRenderer;
             }
         }
-#endif
 
-#if DIRECTX11_2
         public FeatureDataD3D11Options1 CheckD3D112Feature()
         {
             unsafe
@@ -385,8 +378,6 @@ namespace SharpDX.Direct3D11
                 return support;
             }
         }
-#endif
-
 
         /// <summary>
         /// Check if this device is supporting a feature.
@@ -550,7 +541,8 @@ namespace SharpDX.Direct3D11
             device.Dispose();
             return outputLevel;
         }
-#if !DIRECTX11_1
+
+#if DESKTOP_APP
         /// <summary>
         /// Gets a value indicating whether the current device is using the reference rasterizer.
         /// </summary>

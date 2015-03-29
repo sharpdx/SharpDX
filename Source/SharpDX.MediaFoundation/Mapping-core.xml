@@ -22,43 +22,30 @@
 -->
 <config id="sharpdx-mediafoundation" xmlns="urn:SharpGen.Config">
   <depends>sharpdx-core</depends>
-
-  <ifdef name="DIRECTX11_1">
-    <depends>sharpdx-dxgi</depends>
-  </ifdef>
-
-  <ifndef name="DIRECTX11_1">
-    <depends>sharpdx-direct3d9</depends>
-  </ifndef>
+  <depends>sharpdx-dxgi</depends>
 
   <namespace>SharpDX.MediaFoundation</namespace>
   <assembly>SharpDX.MediaFoundation</assembly>
 
-  <ifndef name="WP8">
-    <ifndef name="DIRECTX11_1">
-      <include file="evr9.h" attach="true"/>
-    </ifndef>
+  <include file="evr.h" attach="true">
+    <pre>
+      #define __AUDIODEFS_INCLUDED__
+    </pre>
+  </include>
+  <include file="mfmp2dlna.h" attach="true"/>
+  <include file="mfplay.h" attach="true"/>
+  <include file="uuids.h" attach="true"/>
+  <include file="wmcontainer.h" attach="true"/>
 
-    <ifndef name="WP81">
-      <include file="evr.h" attach="true">
-        <pre>
-          #define __AUDIODEFS_INCLUDED__
-        </pre>
-      </include>
-      <include file="mfmp2dlna.h" attach="true"/>
-      <include file="mfplay.h" attach="true"/>
-      <include file="uuids.h" attach="true"/>
-      <include file="wmcontainer.h" attach="true"/>
-    </ifndef>
-  </ifndef>
-
-  <include file="mfapi.h" attach="true"/>
+  <include file="mfapi.h" attach="true">
+    <pre>
+      #undef DIRECT3D_VERSION
+    </pre>
+  </include>
   <include file="mfidl.h" attach="true"/>
 
-  <ifndef name="WP8">
-    <include file="mferror.h" attach="true"/>
-    <include file="mfreadwrite.h" attach="true"/>
-  </ifndef>
+  <include file="mferror.h" attach="true"/>
+  <include file="mfreadwrite.h" attach="true"/>
 
   <include file="mfobjects.h" attach="true"/>
   <include file="mftransform.h" attach="true"/>
@@ -151,12 +138,7 @@
       <const from-guid="MF_MEDIA_ENGINE_CONTENT_PROTECTION_FLAGS" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;MediaEngineProtectionFlags&gt;" name="ContentProtectionFlags">new MediaAttributeKey&lt;MediaEngineProtectionFlags&gt;("$1", "ContentProtectionFlags")</const>
       <const from-guid="MF_MEDIA_ENGINE_CONTENT_PROTECTION_MANAGER" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;SharpDX.ComObject&gt;" name="ContentProtectionManager">new MediaAttributeKey&lt;SharpDX.ComObject&gt;("$1", "ContentProtectionManager")</const>
       <const from-guid="MF_MEDIA_ENGINE_DXGI_MANAGER" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;DXGIDeviceManager&gt;" name="DxgiManager">new MediaAttributeKey&lt;DXGIDeviceManager&gt;("$1", "DxgiManager")</const>
-      <ifdef name="WP8">
-        <const from-guid="MF_MEDIA_ENGINE_EXTENSION" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;SharpDX.ComObject&gt;" name="Extension">new MediaAttributeKey&lt;SharpDX.ComObject&gt;("$1", "Extension")</const>
-      </ifdef>
-      <ifndef name="WP8">
-        <const from-guid="MF_MEDIA_ENGINE_EXTENSION" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;MediaEngineExtension&gt;" name="Extension">new MediaAttributeKey&lt;MediaEngineExtension&gt;("$1", "Extension")</const>
-      </ifndef>
+      <const from-guid="MF_MEDIA_ENGINE_EXTENSION" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;MediaEngineExtension&gt;" name="Extension">new MediaAttributeKey&lt;MediaEngineExtension&gt;("$1", "Extension")</const>
       <const from-guid="MF_MEDIA_ENGINE_OPM_HWND" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;System.IntPtr&gt;" name="OpmHwnd">new MediaAttributeKey&lt;System.IntPtr&gt;("$1", "OpmHwnd")</const>
       <const from-guid="MF_MEDIA_ENGINE_OPM_IWINDOW" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;SharpDX.ComObject&gt;" name="OpmIwindow">new MediaAttributeKey&lt;SharpDX.ComObject&gt;("$1", "OpmIwindow")</const>
       <const from-guid="MF_MEDIA_ENGINE_PLAYBACK_HWND" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;System.IntPtr&gt;" name="PlaybackHwnd">new MediaAttributeKey&lt;System.IntPtr&gt;("$1", "PlaybackHwnd")</const>
@@ -858,19 +840,6 @@
     <remove function="MFInitMediaTypeFromMPEG2VideoInfo" />
     <remove function="MFInitAMMediaTypeFromMFMediaType" />
     <remove function="MFCreateAMMediaTypeFromMFMediaType"/>
-
-    <ifdef name="W8CORE">
-      <remove function="MFCreateAggregateSource"/>
-      <remove function="MFCreateProtectedEnvironmentAccess"/>
-      <remove function="MFGetLocalId"/>
-      <remove function="MFGetService"/>
-      <remove function="MFGetSystemId"/>
-      <remove function="MFLoadSignedLibrary"/>
-    </ifdef>
-
-    <ifdef name="WP8">
-      <remove function="MFInitAttributesFromBlob"/>
-    </ifdef>
 
     <map param="MFCreateAttributes::ppMFAttributes" attribute="out fast"/>
     <map param="MFCreateDXGIDeviceManager::ppDeviceManager" attribute="out fast"/>

@@ -8,10 +8,6 @@
     <RootNamespace>SharpDX.XInput</RootNamespace>
     <AssemblyName>SharpDX.XInput</AssemblyName>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(SharpDXWin8)' == 'false'">
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>

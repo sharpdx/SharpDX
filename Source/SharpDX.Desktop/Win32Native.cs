@@ -20,6 +20,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
+using SharpDX.IO;
 using SharpDX.Mathematics.Interop;
 using SharpDX.Win32;
 
@@ -28,8 +29,20 @@ namespace SharpDX
     /// <summary>
     /// Internal class to interact with Native Message
     /// </summary>
-    internal partial class Win32Native
+    partial class Win32Native
     {
+
+        [DllImport("kernel32.dll", EntryPoint = "CreateFile", SetLastError = true, CharSet = CharSet.Unicode)]
+        internal static extern IntPtr Create(
+            string fileName,
+            NativeFileAccess desiredAccess,
+            NativeFileShare shareMode,
+            IntPtr securityAttributes,
+            NativeFileMode mode,
+            NativeFileOptions flagsAndOptions,
+            IntPtr templateFile);
+
+
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct TextMetric
         {
@@ -54,8 +67,6 @@ namespace SharpDX
             public byte tmPitchAndFamily;
             public byte tmCharSet;
         }
-
-#if !W8CORE
 
         [DllImport("user32.dll", EntryPoint = "PeekMessage"), SuppressUnmanagedCodeSecurity]
         public static extern int PeekMessage(out NativeMessage lpMsg, IntPtr hWnd, int wMsgFilterMin,
@@ -137,6 +148,5 @@ namespace SharpDX
 
         [DllImport("kernel32.dll", EntryPoint = "GetModuleHandle", CharSet = CharSet.Unicode)]
         public static extern IntPtr GetModuleHandle(string lpModuleName);
-#endif
     }
 }

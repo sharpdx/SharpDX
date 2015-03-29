@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 // currently it is working correctly only on Desktop platform
-#if !W8CORE && !WP8
 
 using System;
 using System.Runtime.InteropServices;
@@ -176,5 +175,3 @@ namespace SharpDX.Diagnostics
         #endregion
     }
 }
-
-#endif

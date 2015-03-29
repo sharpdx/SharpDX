@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,21 +17,19 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if !W8CORE
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-
 using SharpDX.Collections;
 
-namespace SharpDX.Win32
+namespace SharpDX
 {
     /// <summary>
     /// Provides a hook to WndProc of an existing window handle using <see cref="IMessageFilter"/>.
     /// </summary>
-    public class MessageFilterHook
+    class MessageFilterHook
     {
         #region Constants and Fields
 
@@ -54,7 +52,7 @@ namespace SharpDX.Win32
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MessageFilterHook" /> class.
+        /// Initializes a new instance of the <see cref="Win32.MessageFilterHook" /> class.
         /// </summary>
         /// <param name="hwnd">The HWND.</param>
         private MessageFilterHook(IntPtr hwnd)
@@ -185,4 +183,3 @@ namespace SharpDX.Win32
         #endregion
     }
 }
-#endif

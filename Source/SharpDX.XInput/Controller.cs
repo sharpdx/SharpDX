@@ -155,7 +155,6 @@ namespace SharpDX.XInput
             }
         }
 
-#if !DIRECTX11_1
         /// <summary>
         /// Gets the sound render GUID.
         /// </summary>
@@ -183,7 +182,6 @@ namespace SharpDX.XInput
                 return captureGuid;
             }
         }
-#endif
     }
 }
 

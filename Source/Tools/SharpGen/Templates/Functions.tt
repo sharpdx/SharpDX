@@ -59,27 +59,6 @@ foreach (var sharpFunctionGroup in Namespace.Classes)
 		if (sharpFunction.UseDllImport) {
 			var interopFunction = sharpFunction.Interop;
 #>
-#if !W8CORE
-		[System.Security.SuppressUnmanagedCodeSecurityAttribute]
-#endif
-#if WP8
-        private unsafe delegate <#= interopFunction.ReturnType.TypeName #> <#= sharpFunction.CppElementName #>Delegate(<#
-		for(int i = 0; i < interopFunction.ParameterTypes.Count; i++) {
-			if (i > 0) {#>,<#}
-#><#= interopFunction.ParameterTypes[i].TypeName #> arg<#= i #><#
-		}
-#>);
-        private static <#= sharpFunction.CppElementName #>Delegate <#= sharpFunction.CppElementName #>__;
-        private unsafe static <#= sharpFunction.CppElementName #>Delegate <#= sharpFunction.CppElementName #>_
-        {
-            get
-            {
-                if (<#= sharpFunction.CppElementName #>__ == null)
-                    <#= sharpFunction.CppElementName #>__ = (<#= sharpFunction.CppElementName #>Delegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.<#= sharpFunction.CppElementName #>()), typeof (<#= sharpFunction.CppElementName #>Delegate));
-                return <#= sharpFunction.CppElementName #>__;
-            }
-        }
-#else
         [DllImport(<#= sharpFunction.DllName #>, EntryPoint = "<#= sharpFunction.CppElementName #>", CallingConvention = CallingConvention.<#= sharpFunction.CallingConvention #>)]
         private unsafe static extern <#= interopFunction.ReturnType.TypeName #> <#= sharpFunction.CppElementName #>_(<#
 		for(int i = 0; i < interopFunction.ParameterTypes.Count; i++) {
@@ -87,7 +66,6 @@ foreach (var sharpFunctionGroup in Namespace.Classes)
 #><#= interopFunction.ParameterTypes[i].TypeName #> arg<#= i #><#
 		}
 #>);
-#endif
 <#
 		}
 		else if (indexDll >= 0)

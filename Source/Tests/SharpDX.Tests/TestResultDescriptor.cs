@@ -48,7 +48,7 @@ namespace SharpDX.Tests
         public void TestDXGI()
         {
             // Force to load DXGI assembly
-            var factory = new Factory();
+            var factory = new Factory1();
             factory.Dispose();
             // Look for DXGI descriptor SharpDX.DXGI.ResultCode.DeviceRemoved
             var descriptor = ResultDescriptor.Find(0x887A0005);

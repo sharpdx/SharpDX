@@ -49,11 +49,7 @@ namespace SharpDX
             {
                 if (!typeToShadowTypes.TryGetValue(type, out slimInterfaces))
                 {
-#if W8CORE
                     var interfaces = type.GetTypeInfo().ImplementedInterfaces;
-#else
-                    var interfaces = type.GetInterfaces();
-#endif
                     slimInterfaces = new List<Type>();
                     slimInterfaces.AddRange(interfaces);
                     typeToShadowTypes.Add(type, slimInterfaces);
@@ -70,11 +66,7 @@ namespace SharpDX
                         }
 
                         // Keep only final interfaces and not intermediate.
-#if W8CORE
                         var inheritList = item.GetTypeInfo().ImplementedInterfaces;
-#else
-                        var inheritList = item.GetInterfaces();
-#endif
                         foreach (var inheritInterface in inheritList)
                         {
                             slimInterfaces.Remove(inheritInterface);
@@ -106,11 +98,7 @@ namespace SharpDX
                 guidToShadow.Add(Utilities.GetGuidFromType(item), shadow);
 
                 // Associate also inherited interface to this shadow
-#if W8CORE
                 var inheritList = item.GetTypeInfo().ImplementedInterfaces;
-#else
-                var inheritList = item.GetInterfaces();
-#endif
                 foreach (var inheritInterface in inheritList)
                 {
                     var inheritShadowAttribute = ShadowAttribute.Get(inheritInterface);
@@ -122,7 +110,6 @@ namespace SharpDX
                 }
             }
 
-#if W8CORE
             // Precalculate the list of GUID without IUnknown and IInspectable
             // Used for WinRT 
             int countGuids = 0;
@@ -149,7 +136,6 @@ namespace SharpDX
                     i++;
                 }
             }
-#endif
         }
 
         internal IntPtr Find(Type type)

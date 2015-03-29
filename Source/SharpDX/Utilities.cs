@@ -25,7 +25,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
@@ -33,31 +32,15 @@ using System.Threading;
 
 using SharpDX.Direct3D;
 using System.Reflection;
-#if W8CORE
 using System.Threading.Tasks;
 using System.Linq;
 using System.Linq.Expressions;
 using SharpDX.Text;
 
-#endif
 using SharpDX.Mathematics.Interop;
 
 namespace SharpDX
 {
-
-#if !NET35Plus
-    /// <summary>
-    /// Encapsulates a method that has no parameters and returns a value of the type specified by the TResult parameter.
-    /// </summary>
-    /// <typeparam name="TResult">The type of the return value of the method that this delegate encapsulates. This type parameter is covariant. That is, you can use either the type you specified or any type that is more derived.</typeparam>
-    /// <returns>The return value of the method that this delegate encapsulates.</returns>
-    public delegate TResult Func<out TResult>();
-    public delegate TResult Func<in T1, out TResult>(T1 paramT1);
-    public delegate TResult Func<in T1, in T2, out TResult>(T1 paramT1, T2 paramT2);
-
-    public delegate void Action();
-    public delegate void Action<T1, T2>(T1 paramT1, T2 paramT2);
-#endif
 
     /// <summary>
     /// A Delegate to get a property value from an object.
@@ -423,11 +406,7 @@ namespace SharpDX
         /// <returns>The guid associated with this type.</returns>
         public static Guid GetGuidFromType(Type type)
         {
-#if W8CORE
             return type.GetTypeInfo().GUID;
-#else
-            return type.GUID;
-#endif
         }
 
         /// <summary>
@@ -438,26 +417,22 @@ namespace SharpDX
         /// <returns><c>true</c> if [is assignable to generic type] [the specified given type]; otherwise, <c>false</c>.</returns>
         public static bool IsAssignableToGenericType(Type givenType, Type genericType)
         {
-#if W8CORE
-            throw new NotImplementedException();
-#else
             // from http://stackoverflow.com/a/1075059/1356325
-            var interfaceTypes = givenType.GetInterfaces();
+            var interfaceTypes = givenType.GetTypeInfo().ImplementedInterfaces;
 
             foreach (var it in interfaceTypes)
             {
-                if (it.IsGenericType && it.GetGenericTypeDefinition() == genericType)
+                if (it.GetTypeInfo().IsGenericType && it.GetGenericTypeDefinition() == genericType)
                     return true;
             }
 
-            if (givenType.IsGenericType && givenType.GetGenericTypeDefinition() == genericType)
+            if (givenType.GetTypeInfo().IsGenericType && givenType.GetGenericTypeDefinition() == genericType)
                 return true;
 
-            Type baseType = givenType.BaseType;
+            Type baseType = givenType.GetTypeInfo().BaseType;
             if (baseType == null) return false;
 
             return IsAssignableToGenericType(baseType, genericType);
-#endif
         }
 
         /// <summary>
@@ -527,18 +502,7 @@ namespace SharpDX
         /// <returns>The converted string.</returns>
         public static string PtrToStringAnsi(IntPtr pointer, int maxLength)
         {
-#if W8CORE
             return Marshal.PtrToStringAnsi(pointer, maxLength);
-#else
-            unsafe
-            {
-                var pStr = (byte*)pointer;
-                for (int i = 0; i < maxLength; i++) 
-                    if (*pStr++ == 0 )
-                        return new string((sbyte*)pointer);
-                return new string((sbyte*)pointer, 0, maxLength);
-            }
-#endif
         }
 
         /// <summary>
@@ -549,18 +513,7 @@ namespace SharpDX
         /// <returns>The converted string.</returns>
         public static string PtrToStringUni(IntPtr pointer, int maxLength)
         {
-#if W8CORE
             return Marshal.PtrToStringUni(pointer, maxLength);
-#else
-            unsafe
-            {
-                var pStr = (char*)pointer;
-                for (int i = 0; i < maxLength; i++)
-                    if (*pStr++ == 0)
-                        return new string((char*)pointer);
-                return new string((char*)pointer, 0, maxLength);
-            }
-#endif
         }
 
     /// <summary>
@@ -570,27 +523,7 @@ namespace SharpDX
         /// <returns>The address, in unmanaged memory, to where s was copied, or IntPtr.Zero if s is null.</returns>
         public static unsafe IntPtr StringToHGlobalAnsi(string s)
         {
-#if WP8
-            if (s == null)
-            {
-                return IntPtr.Zero;
-            }
-            int cbNativeBuffer = (s.Length + 1) * 4;
-            var ptr2 = Marshal.AllocHGlobal(cbNativeBuffer);
-            if (ptr2 == IntPtr.Zero)
-            {
-                throw new OutOfMemoryException();
-            }
-            fixed (char* chRef = s)
-            {
-                int count = ASCIIEncoding.ASCII.GetBytes(chRef, s.Length, (byte*) ptr2, cbNativeBuffer);
-                ((byte*) ptr2)[count] = 0;
-            }
-
-            return ptr2;
-#else
             return Marshal.StringToHGlobalAnsi(s);
-#endif
         }
 
         /// <summary>
@@ -600,26 +533,7 @@ namespace SharpDX
         /// <returns>The address, in unmanaged memory, to where s was copied, or IntPtr.Zero if s is null.</returns>
         public static unsafe IntPtr StringToHGlobalUni(string s)
         {
-#if WP8
-            if (s == null)
-            {
-                return IntPtr.Zero;
-            }
-            int num = (s.Length + 1) * 2;
-            if (num < s.Length)
-            {
-                throw new ArgumentOutOfRangeException("s");
-            }
-            IntPtr ptr2 = Marshal.AllocHGlobal(num);
-            if (ptr2 == IntPtr.Zero)
-            {
-                throw new OutOfMemoryException();
-            }
-            CopyStringToUnmanaged(ptr2, s);
-            return ptr2;
-#else
             return Marshal.StringToHGlobalUni(s);
-#endif
         }
 
         /// <summary>
@@ -753,14 +667,7 @@ namespace SharpDX
         {
             if (blob == null) return null;
             string output;
-#if W8CORE
             output = Marshal.PtrToStringAnsi(blob.BufferPointer);
-#else
-            unsafe
-            {
-                output = new string((sbyte*) blob.BufferPointer);
-            }
-#endif
             blob.Dispose();
             return output;
         }
@@ -912,14 +819,7 @@ namespace SharpDX
         /// <returns>The custom attribute or null if not found.</returns>
         public static T GetCustomAttribute<T>(MemberInfo memberInfo, bool inherited = false) where T : Attribute
         {
-#if W8CORE
             return memberInfo.GetCustomAttribute<T>(inherited);
-#else
-            var result = memberInfo.GetCustomAttributes(typeof(T), inherited);
-            if (result.Length == 0)
-                return default(T);
-            return (T)result[0];
-#endif
         }
 
         /// <summary>
@@ -931,16 +831,7 @@ namespace SharpDX
         /// <returns>The custom attribute or null if not found.</returns>
         public static IEnumerable<T> GetCustomAttributes<T>(MemberInfo memberInfo, bool inherited = false) where T : Attribute
         {
-#if W8CORE
             return memberInfo.GetCustomAttributes<T>(inherited);
-#else
-            var result = memberInfo.GetCustomAttributes(typeof(T), inherited);
-            if (result.Length == 0)
-                return new T[0];
-            var typedResult = new T[result.Length];
-            Array.Copy(result, typedResult, result.Length);
-            return typedResult;
-#endif
         }
 
         /// <summary>
@@ -953,11 +844,7 @@ namespace SharpDX
         /// </returns>
         public static bool IsAssignableFrom(Type toType, Type fromType)
         {
-#if W8CORE
             return toType.GetTypeInfo().IsAssignableFrom(fromType.GetTypeInfo());
-#else
-            return toType.IsAssignableFrom(fromType);
-#endif
         }
 
         /// <summary>
@@ -969,11 +856,7 @@ namespace SharpDX
         /// </returns>
         public static bool IsEnum(Type typeToTest)
         {
-#if W8CORE
             return typeToTest.GetTypeInfo().IsEnum;
-#else
-            return typeToTest.IsEnum;
-#endif
         }
 
         /// <summary>
@@ -985,16 +868,10 @@ namespace SharpDX
         /// </returns>
         public static bool IsValueType(Type typeToTest)
         {
-#if W8CORE
             return typeToTest.GetTypeInfo().IsValueType;
-#else
-            return typeToTest.IsValueType;
-#endif
         }
 
         private static MethodInfo GetMethod(Type type, string name, Type[] typeArgs) {
-#if W8CORE
-
             foreach( var method in type.GetTypeInfo().GetDeclaredMethods(name)) {
                 if ( method.GetParameters().Length == typeArgs.Length) {
                     var parameters = method.GetParameters();
@@ -1012,9 +889,6 @@ namespace SharpDX
                 }
             }
             return null;
-#else
-            return type.GetMethod(name, typeArgs);
-#endif
         }
 
         /// <summary>
@@ -1026,8 +900,6 @@ namespace SharpDX
         /// <returns>A compiled delegate.</returns>
         public static GetValueFastDelegate<T> BuildPropertyGetter<T>(Type customEffectType, PropertyInfo propertyInfo)
         {
-#if W8CORE
-
             var valueParam = Expression.Parameter(typeof(T).MakeByRefType());
             var objectParam = Expression.Parameter(typeof(object));
             var castParam = Expression.Convert(objectParam, customEffectType);
@@ -1044,58 +916,6 @@ namespace SharpDX
                 convertExpression = Expression.Convert(propertyAccessor, typeof(T));
             }
             return Expression.Lambda<GetValueFastDelegate<T>>(Expression.Assign(valueParam, convertExpression), objectParam, valueParam).Compile();
-#else
-            var typeT = typeof(T);
-            var propertyType = propertyInfo.PropertyType;
-            var method = new DynamicMethod("GetValueDelegate", typeof(void), new[] { typeof(object), typeT.MakeByRefType() });
-
-            var ilGenerator = method.GetILGenerator();
-            ilGenerator.Emit(OpCodes.Ldarg_1);
-            ilGenerator.Emit(OpCodes.Ldarg_0);
-            ilGenerator.Emit(OpCodes.Castclass, customEffectType);
-            ilGenerator.EmitCall(OpCodes.Callvirt, propertyInfo.GetGetMethod(), null);
-
-            if (typeT == typeof(byte) || typeT == typeof(sbyte))
-            {
-                ilGenerator.Emit(OpCodes.Stind_I1);
-            }
-            else if (typeT == typeof(short) || typeT == typeof(ushort))
-            {
-                ilGenerator.Emit(OpCodes.Stind_I2);
-            }
-            else if (typeT == typeof(int) || typeT == typeof(uint))
-            {
-                // If property type is bool, convert it to int first
-                if (propertyType == typeof(bool))
-                {
-                    ilGenerator.EmitCall(OpCodes.Call,  GetMethod(typeof(Convert), "ToInt32", new[] { typeof(bool) }), null);
-                }
-                ilGenerator.Emit(OpCodes.Stind_I4);
-            }
-            else if (typeT == typeof(long) || typeT == typeof(ulong))
-            {
-                ilGenerator.Emit(OpCodes.Stind_I8);
-            }
-            else if (typeT == typeof(float))
-            {
-                ilGenerator.Emit(OpCodes.Stind_R4);
-            }
-            else if (typeT == typeof(double))
-            {
-                ilGenerator.Emit(OpCodes.Stind_R8);
-            }
-            else
-            {
-                var castMethod = FindExplicitConverstion(propertyType, typeT);
-                if (castMethod != null)
-                {
-                    ilGenerator.EmitCall(OpCodes.Call, castMethod, null);
-                }
-                ilGenerator.Emit(OpCodes.Stobj, typeof(T));
-            }
-            ilGenerator.Emit(OpCodes.Ret);
-            return (GetValueFastDelegate<T>)method.CreateDelegate(typeof(GetValueFastDelegate<T>));
-#endif
         }
 
         /// <summary>
@@ -1107,7 +927,6 @@ namespace SharpDX
         /// <returns>A compiled delegate.</returns>
         public static SetValueFastDelegate<T> BuildPropertySetter<T>(Type customEffectType, PropertyInfo propertyInfo)
         {
-#if W8CORE
             var valueParam = Expression.Parameter(typeof(T).MakeByRefType());
             var objectParam = Expression.Parameter(typeof(object));
             var castParam = Expression.Convert(objectParam, customEffectType);
@@ -1124,84 +943,6 @@ namespace SharpDX
                 convertExpression = Expression.Convert(valueParam, propertyInfo.PropertyType);
             }
             return Expression.Lambda<SetValueFastDelegate<T>>(Expression.Assign(propertyAccessor, convertExpression), objectParam, valueParam).Compile();
-#else
-
-            var typeT = typeof(T);
-            var propertyType = propertyInfo.PropertyType;
-            var method = new DynamicMethod("SetValueDelegate", typeof(void), new[] { typeof(object), typeT.MakeByRefType() });
-
-            //L_0000: nop 
-            //L_0001: ldarg.0 
-            //L_0002: castclass TestEmitGetSet.MyCustomEffect
-            //L_0007: ldarg.1 
-            //L_0008: ldind.i4 
-            //L_0009: callvirt instance void TestEmitGetSet.MyCustomEffect::set_Toto(int32)
-            //L_000e: nop 
-            //L_000f: ret 
-
-            var ilGenerator = method.GetILGenerator();
-            ilGenerator.Emit(OpCodes.Ldarg_0);
-            ilGenerator.Emit(OpCodes.Castclass, customEffectType);
-            ilGenerator.Emit(OpCodes.Ldarg_1);
-
-            if (typeT == typeof(byte) || typeT == typeof(sbyte))
-            {
-                ilGenerator.Emit(OpCodes.Ldind_I1);
-            }
-            else if (typeT == typeof(short) || typeT == typeof(ushort))
-            {
-                ilGenerator.Emit(OpCodes.Ldind_I2);
-            }
-            else if (typeT == typeof(int) || typeT == typeof(uint))
-            {
-                ilGenerator.Emit(OpCodes.Ldind_I4);
-                // If property type is bool, convert it to int first
-                if (propertyType == typeof(bool))
-                {
-                    ilGenerator.EmitCall(OpCodes.Call, GetMethod(typeof(Convert),"ToBoolean", new[] { typeT }), null);
-                }
-            }
-            else if (typeT == typeof(long) || typeT == typeof(ulong))
-            {
-                ilGenerator.Emit(OpCodes.Ldind_I8);
-            }
-            else if (typeT == typeof(float))
-            {
-                ilGenerator.Emit(OpCodes.Ldind_R4);
-            }
-            else if (typeT == typeof(double))
-            {
-                ilGenerator.Emit(OpCodes.Ldind_R8);
-            }
-            else
-            {
-                ilGenerator.Emit(OpCodes.Ldobj, typeof(T));
-
-                var castMethod = FindExplicitConverstion(typeT, propertyType);
-                if (castMethod != null)
-                {
-                    ilGenerator.EmitCall(OpCodes.Call, castMethod, null);
-                }
-            }
-
-            ilGenerator.EmitCall(OpCodes.Callvirt, propertyInfo.GetSetMethod(), null);
-
-            ilGenerator.Emit(OpCodes.Ret);
-            return (SetValueFastDelegate<T>)method.CreateDelegate(typeof(SetValueFastDelegate<T>));
-#endif
-        }
-
-        /// <summary>
-        /// Suspends the current thread of a <see cref="sleepTimeInMillis"/>.
-        /// </summary>
-        /// <param name="sleepTimeInMillis">The duration to sleep in milliseconds.</param>
-        public static void Sleep(TimeSpan sleepTimeInMillis)
-        {
-#if WIN8METRO
-            Task.Delay(sleepTimeInMillis).Wait();
-#else
-            Thread.Sleep(sleepTimeInMillis);
-#endif            
         }
 
         /// <summary>
@@ -1221,25 +962,15 @@ namespace SharpDX
             var tempType = sourceType;
             while (tempType != null)
             {
-#if W8CORE
                 methods.AddRange(tempType.GetTypeInfo().DeclaredMethods); //target methods will be favored in the search
                 tempType = tempType.GetTypeInfo().BaseType;
-#else
-                methods.AddRange(tempType.GetMethods(BindingFlags.Static | BindingFlags.Public)); //target methods will be favored in the search
-                tempType = tempType.BaseType;
-#endif
             }
 
             tempType = targetType;
             while (tempType != null)
             {
-#if W8CORE
                 methods.AddRange(tempType.GetTypeInfo().DeclaredMethods); //target methods will be favored in the search
                 tempType = tempType.GetTypeInfo().BaseType;
-#else
-                methods.AddRange(tempType.GetMethods(BindingFlags.Static | BindingFlags.Public)); //target methods will be favored in the search
-                tempType = tempType.BaseType;
-#endif
             }
 
             foreach (MethodInfo mi in methods)
@@ -1279,7 +1010,7 @@ namespace SharpDX
             ClsctxAll = ClsctxServer | ClsctxInprocHandler
         }
 
-#if W8CORE
+#if STORE_APP
         [StructLayout(LayoutKind.Sequential)]
         public struct MultiQueryInterface
         {
@@ -1289,42 +1020,6 @@ namespace SharpDX
         };
 
 
-#if WP8
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate Result CoCreateInstanceFromAppDelegate([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, 
-            IntPtr pUnkOuter, 
-            CLSCTX dwClsContext, 
-            IntPtr reserved,
-            int countMultiQuery,
-            ref MultiQueryInterface query);
-
-        private static CoCreateInstanceFromAppDelegate CoCreateInstanceFromApp;
-
-        internal unsafe static void CreateComInstance(Guid clsid, CLSCTX clsctx, Guid riid, ComObject comObject)
-        {
-            if (CoCreateInstanceFromApp == null)
-            {
-                CoCreateInstanceFromApp =
-                    (CoCreateInstanceFromAppDelegate)
-                    Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.CoCreateInstanceFromApp()),
-                                                          typeof (CoCreateInstanceFromAppDelegate));
-            }
-
-            MultiQueryInterface localQuery = new MultiQueryInterface()
-            {
-                InterfaceIID = new IntPtr(&riid),
-                IUnknownPointer = IntPtr.Zero,
-                ResultCode = 0,
-            };
-
-            var result = CoCreateInstanceFromApp(clsid, IntPtr.Zero, clsctx, IntPtr.Zero, 1, ref localQuery);
-            result.CheckError();
-            localQuery.ResultCode.CheckError();
-            comObject.NativePointer = localQuery.IUnknownPointer;
-        }
-#else
-        #if W8CORE
         [DllImport("api-ms-win-core-com-l1-1-0.dll", ExactSpelling = true, EntryPoint = "CoCreateInstanceFromApp", PreserveSig = true)]
         private static extern Result CoCreateInstanceFromApp([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, 
             IntPtr pUnkOuter, 
@@ -1332,15 +1027,6 @@ namespace SharpDX
             IntPtr reserved,
             int countMultiQuery,
             ref MultiQueryInterface query);
-        #else
-        [DllImport("ole32.dll", ExactSpelling = true, EntryPoint = "CoCreateInstanceFromApp", PreserveSig = true)]
-        private static extern Result CoCreateInstanceFromApp([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, 
-            IntPtr pUnkOuter, 
-            CLSCTX dwClsContext, 
-            IntPtr reserved,
-            int countMultiQuery,
-            ref MultiQueryInterface query);
-         #endif
 
         internal unsafe static void CreateComInstance(Guid clsid, CLSCTX clsctx, Guid riid, ComObject comObject)
         {
@@ -1356,9 +1042,6 @@ namespace SharpDX
             localQuery.ResultCode.CheckError();
             comObject.NativePointer = localQuery.IUnknownPointer;
         }
-#endif
-
-
 
 #else
         [DllImport("ole32.dll", ExactSpelling = true, EntryPoint = "CoCreateInstance", PreserveSig = true)]
@@ -1397,41 +1080,12 @@ namespace SharpDX
             SpeedOverMemory = 0x8
         }
 
-#if WP8
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        internal delegate bool CloseHandleDelegate(IntPtr handle);
-        private static CloseHandleDelegate closeHandle;
-        internal static CloseHandleDelegate CloseHandle
-        {
-            get { return closeHandle ?? (closeHandle = (CloseHandleDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.CloseHandle()), typeof(CloseHandleDelegate))); }
-        }
-#else
-#if W8CORE
+#if WINDOWS_API_SET
         [DllImport("api-ms-win-core-handle-l1-1-0.dll", EntryPoint = "CloseHandle", SetLastError = true)]
         internal static extern bool CloseHandle(IntPtr handle);
 #else
         [DllImport("kernel32.dll", EntryPoint = "CloseHandle", SetLastError = true)]
         internal static extern bool CloseHandle(IntPtr handle);
-#endif
-#endif
-
-#if !W8CORE
-        /// <summary>
-        /// Loads a native library.
-        /// </summary>
-        /// <param name="dllName">Name of the DLL.</param>
-        /// <exception cref="DllNotFoundException">If DLL was not found.</exception>
-        /// <returns>Handle to the module.</returns>
-        public static IntPtr LoadLibrary(string dllName)
-        {
-            IntPtr result = LoadLibrary_(dllName);
-            if (result == IntPtr.Zero)
-                throw new DllNotFoundException(String.Format("Unable to find [{0}] in the PATH", dllName));
-            return result;
-        }
-
-        [DllImport("kernel32", EntryPoint = "LoadLibrary", SetLastError = true, CharSet = CharSet.Unicode)]
-        static extern IntPtr LoadLibrary_(string lpFileName);
 #endif
 
         /// <summary>
@@ -1449,17 +1103,7 @@ namespace SharpDX
             return result;
         }
 
-#if WP8
-        // http://msdn.microsoft.com/en-us/library/windows/desktop/ms683212%28v=vs.85%29.aspx
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate IntPtr GetProcAddressDelegate(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string procName);
-        private static GetProcAddressDelegate getProcAddress_;
-        private static GetProcAddressDelegate GetProcAddress_
-        {
-            get { return getProcAddress_ ?? (getProcAddress_ = (GetProcAddressDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.GetProcAddress()), typeof(GetProcAddressDelegate))); }
-        }
-#else
-#if W8CORE
+#if WINDOWS_API_SET
         [DllImport("api-ms-win-core-libraryloader-l1-1-1.dll", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
         static extern IntPtr GetProcAddress_(IntPtr hModule, string procName);
 #else
@@ -1467,8 +1111,6 @@ namespace SharpDX
         // http://stackoverflow.com/questions/3754264/c-sharp-getprocaddress-returns-zero
         [DllImport("kernel32", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
         static extern IntPtr GetProcAddress_(IntPtr hModule, string procName);
-#endif
-
 #endif
 
         /// <summary>
@@ -1635,11 +1277,7 @@ namespace SharpDX
                 {
                     return true;
                 }
-#if W8CORE
                 type = type.GetTypeInfo().BaseType;
-#else
-                type = type.BaseType;
-#endif
             }
 
             return false;

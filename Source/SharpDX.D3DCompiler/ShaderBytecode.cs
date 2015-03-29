@@ -49,6 +49,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 using SharpDX.Direct3D;
+using SharpDX.IO;
+using SharpDX.Text;
+using Encoding = SharpDX.Text.Encoding;
 
 namespace SharpDX.D3DCompiler
 {
@@ -124,7 +127,7 @@ namespace SharpDX.D3DCompiler
         /// </summary>
         public byte[] Data { get; private set; }
 
-#if WIN8METRO
+#if STORE_APP
         /// <summary>
         /// Compiles the provided shader or effect source.
         /// </summary>
@@ -585,11 +588,6 @@ namespace SharpDX.D3DCompiler
             {
                 throw new ArgumentNullException("profile");
             }
-            if (!File.Exists(fileName))
-            {
-                throw new FileNotFoundException("Could not open the shader or effect file.", fileName);
-            }
-
             unsafe
             {
                 var resultCode = Result.Ok;
@@ -597,7 +595,6 @@ namespace SharpDX.D3DCompiler
                 Blob blobForCode = null;
                 Blob blobForErrors = null;
 
-#if DIRECTX11_1
                 resultCode = D3D.CompileFromFile(
                     fileName,
                     PrepareMacros(defines),
@@ -622,15 +619,8 @@ namespace SharpDX.D3DCompiler
                 }
 
                 return new CompilationResult(blobForCode != null ? new ShaderBytecode(blobForCode) : null, resultCode, Utilities.BlobToString(blobForErrors));
-#else
-                return Compile(File.ReadAllText(fileName), entryPoint, profile, shaderFlags, effectFlags,
-                                PrepareMacros(defines), include, fileName);
-#endif
             }
-
-
         }
-
 
         /// <summary>
         /// Compiles the provided shader or effect source.
@@ -657,40 +647,19 @@ namespace SharpDX.D3DCompiler
                 Blob blobForCode = null;
                 Blob blobForErrors = null;
 
-#if !DIRECTX11_1
-                if ((shaderFlags & Effect10) != 0)
-                {
-                    shaderFlags ^= Effect10;
-
-                    fixed (void* pData = &shaderSource[0])
-                        resultCode = D3D.CompileEffect10FromMemory(
-                            (IntPtr)pData,
-                            shaderSource.Length,
-                            sourceFileName,
-                            PrepareMacros(defines),
-                            IncludeShadow.ToIntPtr(include),
-                            shaderFlags,
-                            effectFlags,
-                            out blobForCode,
-                            out blobForErrors);
-                }
-                else
-#endif
-                {
-                    fixed (void* pData = &shaderSource[0])
-                        resultCode = D3D.Compile(
-                            (IntPtr)pData,
-                            shaderSource.Length,
-                            sourceFileName,
-                            PrepareMacros(defines),
-                            IncludeShadow.ToIntPtr(include),
-                            entryPoint,
-                            profile,
-                            shaderFlags,
-                            effectFlags,
-                            out blobForCode,
-                            out blobForErrors);
-                }
+                fixed (void* pData = &shaderSource[0])
+                    resultCode = D3D.Compile(
+                        (IntPtr)pData,
+                        shaderSource.Length,
+                        sourceFileName,
+                        PrepareMacros(defines),
+                        IncludeShadow.ToIntPtr(include),
+                        entryPoint,
+                        profile,
+                        shaderFlags,
+                        effectFlags,
+                        out blobForCode,
+                        out blobForErrors);
 
                 if (resultCode.Failure)
                 {
@@ -707,20 +676,10 @@ namespace SharpDX.D3DCompiler
                 return new CompilationResult(blobForCode != null ? new ShaderBytecode(blobForCode) : null, resultCode, Utilities.BlobToString(blobForErrors));
             }
         }
-
-        /// <summary>
-        /// Saves to the specified file name.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        public void Save(string fileName)
-        {
-            using (var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
-                Save(stream);
-        }
 #endif
 
         // Win 8.1 SDK removed the corresponding functions from the WinRT platform
-#if !(WIN8METRO && DIRECTX11_2)
+#if DESKTOP_APP
         /// <summary>	
         /// Compresses a set of shaders into a more compact form. 	
         /// </summary>	
@@ -872,7 +831,7 @@ namespace SharpDX.D3DCompiler
             return Utilities.BlobToString(output);
         }
 
-#if WIN8METRO
+
         /// <summary>
         ///   Disassembles a region of a compiled HLSL code back into textual source.
         /// </summary>
@@ -906,7 +865,6 @@ namespace SharpDX.D3DCompiler
             fixed (void* bufferPtr = Data)
                 return D3D.GetTraceInstructionOffsets((IntPtr)bufferPtr, Data.Length, isIncludingNonExecutableCode ? 1 : 0, startInstIndex, numInsts, out totalInstsRef);
         }
-#endif
 
         /// <summary>	
         /// Retrieves a specific part from a compilation result.	
@@ -925,7 +883,6 @@ namespace SharpDX.D3DCompiler
             return new ShaderBytecode(blob);
         }
 
-#if WIN8METRO
         /// <summary>
         /// Sets information in a compilation result.
         /// </summary>
@@ -940,7 +897,6 @@ namespace SharpDX.D3DCompiler
                 D3D.SetBlobPart((IntPtr)bufferPtr, Data.Length, part, 0, partData.DataPointer, (int)partData.Length, out blob);
             return new ShaderBytecode(blob);
         }
-#endif
 
         /// <summary>
         /// Loads from the specified stream.
@@ -1086,7 +1042,6 @@ namespace SharpDX.D3DCompiler
                     Marshal.FreeHGlobal(shaderSourcePtr);
             }
         }
-#if !WIN8METRO
         /// <summary>
         ///   Preprocesses a shader or effect from a file on disk.
         /// </summary>
@@ -1099,11 +1054,7 @@ namespace SharpDX.D3DCompiler
             {
                 throw new ArgumentNullException("fileName");
             }
-            if (!File.Exists(fileName))
-            {
-                throw new FileNotFoundException("Could not open the shader or effect file.", fileName);
-            }
-            string str = File.ReadAllText(fileName);
+            string str = NativeFile.ReadAllText(fileName);
             if (string.IsNullOrEmpty(str))
             {
                 throw new ArgumentNullException("fileName");
@@ -1139,13 +1090,9 @@ namespace SharpDX.D3DCompiler
             {
                 throw new ArgumentNullException("fileName");
             }
-            if (!File.Exists(fileName))
-            {
-                throw new FileNotFoundException("Could not open the shader or effect file.", fileName);
-            }
-            return Preprocess(File.ReadAllText(fileName), defines, include, out compilationErrors);
+            return Preprocess(NativeFile.ReadAllText(fileName), defines, include, out compilationErrors);
         }
-#endif
+
         /// <summary>
         ///   Strips extraneous information from a compiled shader or effect.
         /// </summary>
@@ -1180,7 +1127,7 @@ namespace SharpDX.D3DCompiler
         {
             return new ShaderBytecode(stream);
         }
-#if !WIN8METRO
+
         /// <summary>
         ///   Read a compiled shader bytecode from a Stream and return a ShaderBytecode
         /// </summary>
@@ -1188,9 +1135,9 @@ namespace SharpDX.D3DCompiler
         /// <returns></returns>
         public static ShaderBytecode FromFile(string fileName)
         {
-            return new ShaderBytecode(File.ReadAllBytes(fileName));
+            return new ShaderBytecode(NativeFile.ReadAllBytes(fileName));
         }
-#endif
+
         internal static ShaderMacro[] PrepareMacros(ShaderMacro[] macros)
         {
             if (macros == null)

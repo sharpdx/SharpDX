@@ -20,10 +20,6 @@
 
 using System;
 using SharpDX.Mathematics.Interop;
-#if !WIN8METRO
-using System.Drawing;
-using System.Drawing.Imaging;
-#endif
 using System.Runtime.InteropServices;
 
 namespace SharpDX.WIC
@@ -149,62 +145,6 @@ namespace SharpDX.WIC
         {
             return this.Lock(new IntPtr(&rcLockRef), flags);
         }
-
-#if !WIN8METRO
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Bitmap"/> class from a <see cref="Icon"/>.
-        /// </summary>
-        /// <param name="factory">The factory.</param>
-        /// <param name="icon">The icon.</param>
-        /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromHICON([In] HICON hIcon,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>
-        public Bitmap(ImagingFactory factory, Icon icon) : base(IntPtr.Zero)
-        {
-            factory.CreateBitmapFromHICON(icon.Handle, this);
-
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Bitmap"/> class from a <see cref="System.Drawing.Bitmap"/>.
-        /// </summary>
-        /// <param name="factory">The factory.</param>
-        /// <param name="bitmap">The bitmap.</param>
-        /// <param name="options">The options.</param>
-        /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromHBITMAP([In] HBITMAP hBitmap,[In, Optional] HPALETTE hPalette,[In] WICBitmapAlphaChannelOption options,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>
-        public Bitmap(ImagingFactory factory, System.Drawing.Bitmap bitmap, SharpDX.WIC.BitmapAlphaChannelOption options) : base(IntPtr.Zero)
-        {
-            var hBitmap = bitmap.GetHbitmap();
-            var hPalette = ConvertToHPALETTE(bitmap.Palette);
-            try
-            {
-                factory.CreateBitmapFromHBITMAP(hBitmap, hPalette, options, this);
-
-            }
-            finally
-            {
-                DeleteObject(hBitmap);
-                Marshal.FreeHGlobal(hPalette);
-            }
-        }
-
-        private static IntPtr ConvertToHPALETTE(ColorPalette colorPalette)
-        {
-            // no palette is specified
-            if(colorPalette.Entries.Length == 0)
-                return IntPtr.Zero;
-
-            IntPtr ptr = Marshal.AllocHGlobal((int) (4 * (2 + colorPalette.Entries.Length)));
-            Marshal.WriteInt32(ptr, 0, colorPalette.Flags);
-            Marshal.WriteInt32((IntPtr) (((long) ptr) + 4L), 0, colorPalette.Entries.Length);
-            for (int i = 0; i < colorPalette.Entries.Length; i++)
-            {
-                Marshal.WriteInt32((IntPtr) (((long) ptr) + (4 * (i + 2))), 0, colorPalette.Entries[i].ToArgb());
-            }
-            return ptr;
-        }
-
-        [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
-        private static extern bool DeleteObject(IntPtr hObject);
-#endif
     }
 }
 

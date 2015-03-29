@@ -8,10 +8,6 @@
     <RootNamespace>SharpDX.Direct3D12</RootNamespace>
     <AssemblyName>SharpDX.Direct3D12</AssemblyName>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(SharpDXWin8Core)' == 'false'">
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
@@ -21,7 +17,6 @@
     <Compile Include="CommandQueue.cs" />
     <Compile Include="CommandQueueDescription.cs" />
     <Compile Include="GraphicsCommandList.cs" />
-    <Compile Include="Fence.cs" />
     <Compile Include="ComputePipelineStateDescription.cs" />
     <Compile Include="DepthStencilStateDescription.cs" />
     <Compile Include="Device.cs" />

@@ -19,37 +19,11 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Runtime.InteropServices;
 
 namespace SharpDX.DXGI
 {
     public partial class Factory
     {
-#if !W8CORE
-        /// <summary>
-        ///   Default Constructor for Factory
-        /// </summary>
-        public Factory() : base(IntPtr.Zero)
-        {
-            IntPtr factoryPtr;
-            DXGI.CreateDXGIFactory(Utilities.GetGuidFromType(GetType()), out factoryPtr);
-            NativePointer = factoryPtr;
-        }
-        /// <summary>	
-        /// Create an adapter interface that represents a software adapter.	
-        /// </summary>	
-        /// <remarks>	
-        /// A software adapter is a DLL that implements the entirety of a device driver interface, plus emulation, if necessary, of kernel-mode graphics components for Windows. Details on implementing a software adapter can be found in the Windows Vista Driver Development Kit. This is a very complex development task, and is not recommended for general readers. Calling this method will increment the module's reference count by one. The reference count can be decremented by calling {{FreeLibrary}}. The typical calling scenario is to call {{LoadLibrary}}, pass the handle to CreateSoftwareAdapter, then immediately call {{FreeLibrary}} on the DLL and forget the DLL's {{HMODULE}}. Since the software adapter calls FreeLibrary when it is destroyed, the lifetime of the DLL will now be owned by the adapter, and the application is free of any further consideration of its lifetime. 	
-        /// </remarks>	
-        /// <param name="module">Handle to the software adapter's DLL.</param>
-        /// <returns>A reference to an adapter (see <see cref="T:SharpDX.DXGI.Adapter" />). </returns>
-        /// <unmanaged>HRESULT IDXGIFactory::CreateSoftwareAdapter([None] void* Module,[Out] IDXGIAdapter** ppAdapter)</unmanaged>
-        public Adapter CreateSoftwareAdapter(Module module)
-        {
-            return CreateSoftwareAdapter(Marshal.GetHINSTANCE(module));
-        }
-#endif
         /// <summary>
         /// Gets both adapters (video cards) with or without outputs.
         /// </summary>

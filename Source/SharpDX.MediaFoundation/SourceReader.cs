@@ -19,11 +19,10 @@
 // THE SOFTWARE.
 
 using SharpDX.Mathematics.Interop;
-#if !WP8
 using System;
 using System.IO;
 
-#if WIN8METRO
+#if STORE_APP
 using Windows.Storage.Streams;
 #endif
 
@@ -101,7 +100,7 @@ namespace SharpDX.MediaFoundation
         {
             MediaFactory.CreateSourceReaderFromMediaSource(source, attributes, this);
         }
-#if WIN8METRO
+#if STORE_APP
         /// <summary>	
         /// Creates the source reader from a byte stream.
         /// </summary>	
@@ -120,7 +119,7 @@ namespace SharpDX.MediaFoundation
         }
 #endif
 
-#if !WIN8METRO        
+#if DESKTOP_APP
         /// <summary>	
         /// Creates the source reader from a byte stream.
         /// </summary>	
@@ -341,4 +340,3 @@ namespace SharpDX.MediaFoundation
 
     }
 }
-#endif

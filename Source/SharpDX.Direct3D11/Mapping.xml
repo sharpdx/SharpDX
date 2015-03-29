@@ -23,9 +23,7 @@
 <config id="sharpdx-direct3d11" xmlns="urn:SharpGen.Config">
   <depends>sharpdx</depends>
   <depends>sharpdx-dxgi</depends>
-  <ifndef name="WP8">
-    <depends>sharpdx-d3dcompiler</depends>
-  </ifndef>
+  <depends>sharpdx-d3dcompiler</depends>
   <depends>sharpdx-direct3d1x</depends>
 
   <namespace>SharpDX.Direct3D11</namespace>  
@@ -40,39 +38,10 @@
   
   <!-- D3D11 includes -->
   <include file="d3d11.h" attach="true"/>
-  <ifdef name="DIRECTX11_1">
-    <include file="d3d11_1.h" attach="true" />
-  </ifdef>
-  <ifdef name="DIRECTX11_2">
-    <include file="d3d11_2.h" attach="true" />
-  </ifdef>
-
-  <ifdef name="WP8">
-    <include file="DrawingSurfaceNative.h" attach="true" />
-  </ifdef>
-
+  <include file="d3d11_1.h" attach="true" />
+  <include file="d3d11_2.h" attach="true" />
   <include file="d3d11sdklayers.h" attach="true" />
 
-  <ifndef name="W8CORE">
-    <include file="d3dx11.h" attach="true">
-      <post>
-
-        #define D3DX11_ERR_CANNOT_MODIFY_INDEX_BUFFER       D3DX11_ERR_CANNOT_MODIFY_INDEX_BUFFER
-        #define D3DX11_ERR_INVALID_MESH                     D3DX11_ERR_INVALID_MESH
-        #define D3DX11_ERR_CANNOT_ATTR_SORT                 D3DX11_ERR_CANNOT_ATTR_SORT
-        #define D3DX11_ERR_SKINNING_NOT_SUPPORTED           D3DX11_ERR_SKINNING_NOT_SUPPORTED
-        #define D3DX11_ERR_TOO_MANY_INFLUENCES              D3DX11_ERR_TOO_MANY_INFLUENCES
-        #define D3DX11_ERR_INVALID_DATA                     D3DX11_ERR_INVALID_DATA
-        #define D3DX11_ERR_LOADED_MESH_HAS_NO_DATA          D3DX11_ERR_LOADED_MESH_HAS_NO_DATA
-        #define D3DX11_ERR_DUPLICATE_NAMED_FRAGMENT         D3DX11_ERR_DUPLICATE_NAMED_FRAGMENT
-        #define D3DX11_ERR_CANNOT_REMOVE_LAST_ITEM		      D3DX11_ERR_CANNOT_REMOVE_LAST_ITEM
-      </post>
-    </include>
-    <include file="d3dx11core.h" attach="true" />
-    <include file="d3dx11tex.h" attach="true" />
-    <include file="d3dx11async.h" attach="true" />
-    <include file="d3dcsx.h" attach="true" />
-  </ifndef>
   <naming />
 
   <context-set id="d3d11-all">
@@ -80,19 +49,8 @@
     <context>sharpdx-direct3d11-ext</context>
     <context>d3d11</context>
     <context>d3d11sdklayers</context>
-    <ifdef name="DIRECTX11_1">
-      <context>d3d11_1</context>
-    </ifdef>
-    <ifdef name="DIRECTX11_2">
-      <context>d3d11_2</context>
-    </ifdef>
-    <ifndef name="W8CORE">
-      <context>d3dx11</context>
-      <context>d3dx11core</context>
-      <context>d3dx11tex</context>
-      <context>d3dx11async</context>
-      <context>d3dcsx</context>
-    </ifndef>
+    <context>d3d11_1</context>
+    <context>d3d11_2</context>
   </context-set>
 
   <!-- D3D11 extensions -->
@@ -323,9 +281,7 @@
     // D3D11 Functions
     // *****************************************************************
     -->
-    <ifdef name="W8CORE">
-      <remove function="D3D11CreateDeviceAndSwapChain"/>
-    </ifdef>
+    <remove function="D3D11CreateDeviceAndSwapChain"/>
 
     <map function="D3D11(.+)" name-tmp="$1" />
     <map function="D3D11.*" dll='"d3d11.dll"' group="SharpDX.Direct3D11.D3D11" />
@@ -333,27 +289,6 @@
     <map function="D3D11CreateDevice" check="false"/>
     
     <remove function="ID3D11DeviceContext1_.*"/>
-
-    <ifndef name="W8CORE">
-      <map function="D3DX11(.+)" name-tmp="$1" />
-      <map function="D3DX11(.+)W" name-tmp="$1" />
-      <map function="D3DX11.*" dll='"#(D3DX11_DLL_A)"' group="SharpDX.Direct3D11.D3DX11" />
-      <map param="D3DX11CreateEffectFromMemory::ppEffect" attribute="out fast" />
-    </ifndef>
-
-    <!--
-    // *****************************************************************
-    // D3D11 Constants
-    // *****************************************************************
-    -->
-    <ifndef name="W8CORE">
-      <context-clear />
-      <context>d3dcsx</context>
-      <map function="D3DX11.*" dll='"#(D3DCSX_DLL_A)"' group="SharpDX.Direct3D11.D3DCSX" />
-      <map param="D3DX11CreateSegmentedScan::ppScan" attribute="out fast"/>
-      <map param="D3DX11CreateScan::ppScan" attribute="out fast"/>
-      <map param="D3DX11CreateFFT::ppFFT" attribute="out fast"/>
-    </ifndef>
 
     <context-clear />
   </mapping>

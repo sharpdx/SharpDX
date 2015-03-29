@@ -39,7 +39,6 @@ namespace SharpDX.Direct3D10
             return swapChain.GetBackBuffer<T>(index);
         }
 
-#if !WIN8METRO
         /// <summary>
         ///   Loads a texture from an image file.
         /// </summary>
@@ -223,7 +222,6 @@ namespace SharpDX.Direct3D10
         {
             D3DX10.FilterTexture(this, sourceLevel, (int) mipFilter);
         }
-#endif
 
         /// <summary>
         /// Returns a DXGI Surface for this resource.

@@ -17,20 +17,18 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if DIRECTX11_1
-#if !W8CORE
 namespace SharpDX.DXGI
 {
     public partial class OutputDuplication
     {
         /// <unmanaged>HRESULT IDXGIOutputDuplication::MapDesktopSurface([Out] DXGI_MAPPED_RECT* pLockedRect)</unmanaged>	
+#if DESKTOP_APP
         public DataRectangle MapDesktopSurface()
         {
             MappedRectangle mappedRect;
             MapDesktopSurface(out mappedRect);
             return new DataRectangle(mappedRect.PBits, mappedRect.Pitch);
         }
+#endif
     }
 }
-#endif
-#endif

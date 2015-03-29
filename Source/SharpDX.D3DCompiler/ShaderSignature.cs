@@ -104,7 +104,7 @@ namespace SharpDX.D3DCompiler
         }
 
 // Win 8.1 SDK removed the corresponding functions from the WinRT platform
-#if !(WIN8METRO && DIRECTX11_2)
+#if DESKTOP_APP
         /// <summary>
         ///   Extracts the input and output signatures from a compiled shader or effect.
         /// </summary>

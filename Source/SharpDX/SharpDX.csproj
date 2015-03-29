@@ -11,19 +11,12 @@
     Related to this issue http://connect.microsoft.com/VisualStudio/feedback/details/735718/visual-studio-2011-beta-is-incorrectly-building-solution -->
     <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(SharpDXWin8Core)' == 'false'">
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Direct3D\CompilationException.cs" />
     <Compile Include="Direct3D\CompilationResultBase.cs" />
-    <Compile Include="Direct3D\PixHelper.cs" />
     <Compile Include="Mathematics\Interop\RawBox.cs" />
     <Compile Include="Mathematics\Interop\RawMatrix5x4.cs" />
     <Compile Include="Mathematics\Interop\RawPlane.cs" />
@@ -34,7 +27,6 @@
     <Compile Include="Mathematics\Interop\RawColor3.cs" />
     <Compile Include="Mathematics\Interop\RawColor4.cs" />
     <Compile Include="Mathematics\Interop\RawColorBGRA.cs" />
-    <Compile Include="Diagnostics\VSGraphicsDebugger.cs" />
     <Compile Include="DisposeEventArgs.cs" />
     <Compile Include="Direct3D\Blob.cs" />
     <Compile Include="Mathematics\Interop\RawInt3.cs" />
@@ -67,11 +59,6 @@
     <Compile Include="IO\NativeFileOptions.cs" />
     <Compile Include="IO\NativeFileMode.cs" />
     <Compile Include="IO\NativeFileShare.cs" />
-    <Compile Include="Properties\Resources.Designer.cs" Condition=" '$(SharpDXWin8Core)' == 'false'">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="ShadowContainer.cs" />
     <Compile Include="ComBaseStreamNative.cs" />
     <Compile Include="ComObject.cs" />
@@ -121,7 +108,6 @@
     <Compile Include="Mathematics\Interop\RawVector4.cs" />
     <Compile Include="Mathematics\Interop\RawViewport.cs" />
     <Compile Include="Mathematics\Interop\RawViewportF.cs" />
-    <Compile Include="Win32Native.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="Direct3D\ShaderMacro.cs" />
@@ -134,7 +120,6 @@
     <Compile Include="Win32\ComStreamShadow.cs" />
     <Compile Include="Win32\ComStreamBaseShadow.cs" />
     <Compile Include="Win32\ErrorCode.cs" />
-    <Compile Include="Win32\MessageFilterHook.cs" />
     <Compile Include="Win32\NamespaceDoc.cs" />
     <Compile Include="Win32\NativeMessage.cs" />
     <Compile Include="Win32\PropertyBag.cs" />
@@ -162,12 +147,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="SharpDX.nuspec" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />

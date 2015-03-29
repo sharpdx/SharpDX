@@ -26,27 +26,23 @@
   <namespace>SharpDX.Multimedia</namespace>
   <assembly>SharpDX</assembly>
 
-  <ifndef name="WP8">
-    <ifndef name="WP81">
-      <include file="hidusage.h" namespace="SharpDX.Multimedia" output="Multimedia" attach="true">
-        <post>
-          // Additionnals HID_USAGE_PAGES*
-          #define HID_USAGE_PAGE_MEDICAL  0x40
-          #define HID_USAGE_PAGE_MONITOR_PAGE0 0x80
-          #define HID_USAGE_PAGE_MONITOR_PAGE1 0x81
-          #define HID_USAGE_PAGE_MONITOR_PAGE2 0x82
-          #define HID_USAGE_PAGE_MONITOR_PAGE3 0x83
-          #define HID_USAGE_PAGE_POWER_PAGE0 0x84
-          #define HID_USAGE_PAGE_POWER_PAGE1 0x85
-          #define HID_USAGE_PAGE_POWER_PAGE2 0x86
-          #define HID_USAGE_PAGE_POWER_PAGE3 0x87
-          #define HID_USAGE_PAGE_BARCODE 0x8C
-          #define HID_USAGE_PAGE_SCALE 0x8D
-          #define HID_USAGE_PAGE_MSR 0x8E
-        </post>
-      </include>
-    </ifndef>
-  </ifndef>
+  <include file="hidusage.h" namespace="SharpDX.Multimedia" output="Multimedia" attach="true">
+    <post>
+      // Additionnals HID_USAGE_PAGES*
+      #define HID_USAGE_PAGE_MEDICAL  0x40
+      #define HID_USAGE_PAGE_MONITOR_PAGE0 0x80
+      #define HID_USAGE_PAGE_MONITOR_PAGE1 0x81
+      #define HID_USAGE_PAGE_MONITOR_PAGE2 0x82
+      #define HID_USAGE_PAGE_MONITOR_PAGE3 0x83
+      #define HID_USAGE_PAGE_POWER_PAGE0 0x84
+      #define HID_USAGE_PAGE_POWER_PAGE1 0x85
+      #define HID_USAGE_PAGE_POWER_PAGE2 0x86
+      #define HID_USAGE_PAGE_POWER_PAGE3 0x87
+      #define HID_USAGE_PAGE_BARCODE 0x8C
+      #define HID_USAGE_PAGE_SCALE 0x8D
+      #define HID_USAGE_PAGE_MSR 0x8E
+    </post>
+  </include>
 
   <!-- Include mmreg.h before audiodefs.h in order to avoid redefinition problem -->
   <include file="mmreg.h" namespace="SharpDX.Multimedia" output="Multimedia">
@@ -55,10 +51,7 @@
     </pre>
   </include>
 
-  <ifdef name="DIRECTX11_1">
-    <include file="audiosessiontypes.h" attach="true" namespace="SharpDX.Multimedia" output="Multimedia"/>
-  </ifdef>
-
+  <include file="audiosessiontypes.h" attach="true" namespace="SharpDX.Multimedia" output="Multimedia"/>
   <include file="audiodefs.h" namespace="SharpDX.Multimedia" output="Multimedia"/>
 
   <!-- SharpDX global types -->

@@ -8,10 +8,6 @@
     <RootNamespace>SharpDX.Direct3D11.Effects</RootNamespace>
     <AssemblyName>SharpDX.Direct3D11.Effects</AssemblyName>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(SharpDXWin8)' == 'false'">
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
@@ -36,30 +32,30 @@
     <Compile Include="EffectVariable.cs" />
     <Compile Include="EffectVectorVariable.cs" />
     <Compile Include="Generated\Enumerations.cs" />
-    <Compile Include="Generated\Functions.cs" />
+    <Compile Include="D3DX11Effects.cs" />
     <Compile Include="Generated\Interfaces.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Structures.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_arm.dll" Condition=" '$(SharpDXWin8)' == 'false'">
+    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_arm.dll">
       <Link>sharpdx_direct3d11_1_effects_arm.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_x64.dll" Condition=" '$(SharpDXWin8)' == 'false'">
+    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_x64.dll">
       <Link>sharpdx_direct3d11_1_effects_x64.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_x86.dll" Condition=" '$(SharpDXWin8)' == 'false'">
+    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_x86.dll">
       <Link>sharpdx_direct3d11_1_effects_x86.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_effects_x64.dll" Condition=" '$(SharpDXWin8)' == 'false'">
+    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_effects_x64.dll">
       <Link>sharpdx_direct3d11_effects_x64.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_effects_x86.dll" Condition=" '$(SharpDXWin8)' == 'false'">
+    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_effects_x86.dll">
       <Link>sharpdx_direct3d11_effects_x86.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -72,7 +68,7 @@
     <None Include="SharpDX.Direct3D11.Effects.nuspec" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj" Condition=" '$(SharpDXWin8)' == 'false'">
+    <ProjectReference Include="..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj">
       <Project>{361d3f81-a48a-47f2-80df-ca4f9536cb4e}</Project>
       <Name>SharpDX.D3DCompiler</Name>
       <Private>False</Private>

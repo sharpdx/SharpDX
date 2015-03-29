@@ -17,7 +17,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if !WIN8METRO
 using System;
 using SharpDX.D3DCompiler;
 
@@ -34,7 +33,7 @@ namespace SharpDX.Direct3D11
         {
             get
             {
-                return ShaderSignature.GetInputSignature(Bytecode);
+                return new ShaderSignature(Bytecode);
             }
         }
 
@@ -51,4 +50,3 @@ namespace SharpDX.Direct3D11
         }
     }
 }
-#endif

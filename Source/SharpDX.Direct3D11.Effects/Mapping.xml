@@ -37,18 +37,14 @@
   </include-prolog>
   
   <!-- D3D11 includes -->
-  <ifndef name="WIN8METRO">
-    <include file="d3dx11effect.h" attach="true" />
-  </ifndef>
+  <include file="d3dx11effect.h" attach="true" />
 
   <naming />
 
   <context-set id="d3d11-effects-all">
     <context>sharpdx-direct3d11-effects</context>
     <context>sharpdx-direct3d11-effects-ext</context>
-    <ifndef name="WIN8METRO">
-      <context>d3dx11effect</context>
-    </ifndef>
+    <context>d3dx11effect</context>
   </context-set>
 
   <!-- D3D11 extensions -->
@@ -108,17 +104,7 @@
     // D3D11 Functions
     // *****************************************************************
     -->
-    <ifndef name="WIN8METRO">
-      <map function="D3DX11(.+)" name-tmp="$1" />
-      <map function="D3DX11(.+)W" name-tmp="$1" />
-      <map param="D3DX11CreateEffectFromMemory::ppEffect" attribute="out fast" />
-      <ifdef name="DIRECTX11_1">
-        <map function="D3DX11CreateEffectFromMemory" dllimport="false" dll='IntPtr.Size == 4?"sharpdx_direct3d11_1_effects_x86.dll":"sharpdx_direct3d11_1_effects_x64.dll"' group="SharpDX.Direct3D11.D3DX11Effects" />
-      </ifdef>
-      <ifndef name="DIRECTX11_1">
-        <map function="D3DX11CreateEffectFromMemory" dllimport="false" dll='IntPtr.Size == 4?"sharpdx_direct3d11_effects_x86.dll":"sharpdx_direct3d11_effects_x64.dll"' group="SharpDX.Direct3D11.D3DX11Effects" />
-      </ifndef>
-    </ifndef>
+    <remove function="D3DX11CreateEffectFromMemory"/>
 
     <!--
     // *****************************************************************

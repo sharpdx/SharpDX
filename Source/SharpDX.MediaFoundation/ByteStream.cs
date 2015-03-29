@@ -25,7 +25,7 @@ using SharpDX.Mathematics.Interop;
 using SharpDX.Win32;
 using SharpDX.IO;
 
-#if W8CORE
+#if STORE_APP
 using Windows.Storage.Streams;
 #endif
 
@@ -41,7 +41,6 @@ namespace SharpDX.MediaFoundation
         private ComStreamProxy streamProxy;
         private ComObject randomAccessStreamCom;
 
-#if !WP8
         /// <summary>
         /// Instantiates a new instance <see cref="ByteStream"/> from a <see cref="Stream"/>.
         /// </summary>
@@ -51,7 +50,7 @@ namespace SharpDX.MediaFoundation
         public ByteStream(Stream sourceStream)
         {
             this.sourceStream = sourceStream;
-#if WIN8METRO
+#if STORE_APP
             var randomAccessStream = sourceStream.AsRandomAccessStream();
             randomAccessStreamCom = new ComObject(Marshal.GetIUnknownForObject(randomAccessStream));
             MediaFactory.CreateMFByteStreamOnStreamEx(randomAccessStreamCom, this);
@@ -72,9 +71,8 @@ namespace SharpDX.MediaFoundation
         public ByteStream(byte[] sourceStream) : this(new MemoryStream(sourceStream))
         {
         }
-#endif
 
-#if W8CORE
+#if STORE_APP
         /// <summary>
         /// Instantiates a new instance <see cref="ByteStream"/> from a <see cref="Stream"/>.
         /// </summary>
@@ -89,7 +87,7 @@ namespace SharpDX.MediaFoundation
         }
 #endif
 
-#if !W8CORE
+#if DESKTOP_APP
         /// <summary>
         /// Instantiates a new instance <see cref="ByteStream"/> from a <see cref="Stream"/>.
         /// </summary>

@@ -8,17 +8,12 @@
     <RootNamespace>SharpDX.D3DCompiler</RootNamespace>
     <AssemblyName>SharpDX.D3DCompiler</AssemblyName>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(SharpDXWin8)' == 'false'">
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="CompilationResult.cs" />
-    <Compile Include="D3D.cs" />
     <Compile Include="FunctionLinkingGraph.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
@@ -28,7 +23,6 @@
     <Compile Include="FunctionReflection.cs" />
     <Compile Include="LibraryReflection.cs" />
     <Compile Include="Linker.cs" />
-    <Compile Include="LocalInterop.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="ModuleInstance.cs" />
     <Compile Include="NamespaceDoc.cs" />

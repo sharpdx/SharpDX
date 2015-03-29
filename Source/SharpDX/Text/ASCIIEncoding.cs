@@ -24,13 +24,11 @@ namespace SharpDX.Text
     /// </summary>
     public abstract class Encoding : System.Text.Encoding
     {
-#if W8CORE
         /// <summary>
         /// Returns an encoding for the ASCII character set. The returned encoding
         //  will be an instance of the ASCIIEncoding class.
         /// </summary>
         public static readonly ASCIIEncoding ASCII = new ASCIIEncoding();
-#endif
     }
 
     /// <summary>

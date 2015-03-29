@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,22 +18,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using SharpDX.Mathematics.Interop;
-#if !W8CORE
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Win32
 {
-	[StructLayout(LayoutKind.Sequential)]
-	public struct NativeMessage
-	{
-		public IntPtr handle;
-		public uint msg;
-		public IntPtr wParam;
-		public IntPtr lParam;
-		public uint time;
-		public RawPoint p;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    public struct NativeMessage
+    {
+        public IntPtr handle;
+        public uint msg;
+        public IntPtr wParam;
+        public IntPtr lParam;
+        public uint time;
+        public RawPoint p;
+    }
 }
-#endif

@@ -25,7 +25,6 @@
   <PropertyGroup>
     <SharpDXRepo>$(MSBuildThisFileDirectory)..</SharpDXRepo>
     <SharDXNugetPackages>$(MSBuildThisFileDirectory)Packages</SharDXNugetPackages>
-    <SharpDXSolution>$(SharpDXRepo)\SharpDX.sln</SharpDXSolution>
     <GitExe>"C:\Program Files (x86)\Git\bin\git.exe"</GitExe>
     <ExtensionTasksPath>$(SharpDXRepo)\External\MSBuildExtensionPack\</ExtensionTasksPath>
     <BuildSignedSharpDX>true</BuildSignedSharpDX>
@@ -79,25 +78,9 @@
   
   <Target Name="Build">
     <!--Build all targets / platforms-->
-
     <Exec Command="RMDIR /Q /S $(SharpDXRepo)\Bin"/>
-
-    <CallTarget Targets="BuildSigned" Condition="'$(BuildSignedSharpDX)' == 'true'"/>
-    <CallTarget Targets="DesktopNet20" />
-    <CallTarget Targets="DesktopNet40" />
-    <CallTarget Targets="MetroWin8" />
-    <CallTarget Targets="DesktopDx112" />
-    <CallTarget Targets="WP8-x86" />
-    <CallTarget Targets="WP8-ARM" />
-    <CallTarget Targets="WP81" />
-  </Target>
-
-  <Target Name="BuildSigned">
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=Net20;SharpDXSign=true"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=Net40;SharpDXSign=true"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=Win8;SharpDXSign=true"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=DIRECTX11_2;SharpDXSign=true"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=WP81;SharpDXSign=true"/>
+    <MSBuild Targets="Clean;Build" Projects="$(SharpDXRepo)\SharpDX-Desktop.sln" Properties="Configuration=Release;Platform=Any CPU;SharpDXSign=true"/>
+    <MSBuild Targets="Clean;Build" Projects="$(SharpDXRepo)\SharpDX-StoreApp.sln" Properties="Configuration=Release;Platform=Any CPU;SharpDXSign=true"/>
   </Target>
 
   <!--Custom task for checking certification result (fail or pass), the project is excluded from solution build - needs to be rebuilt manually when needed-->
@@ -147,34 +130,6 @@
     <!--Verify the certification results-->
     <VerifyCertificationResultTask File="$(SharpDXRepo)\Source\CertificationTests\Results\Test.WinRT.xml" />
     <VerifyCertificationResultTask File="$(SharpDXRepo)\Source\CertificationTests\Results\Test.WP81.xml" />
-  </Target>
-
-  <Target Name="DesktopNet20">
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=Net20"/>
-  </Target>
-
-  <Target Name="DesktopNet40">
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=Net40"/>
-  </Target>
-
-  <Target Name="MetroWin8">
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=Win8"/>
-  </Target>
-
-  <Target Name="DesktopDx112">
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=DIRECTX11_2"/>
-  </Target>
-
-  <Target Name="WP8-x86">
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=WP8-x86"/>
-  </Target>
-
-  <Target Name="WP8-ARM">
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=WP8-ARM"/>
-  </Target>
-
-  <Target Name="WP81">
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolution)" Properties="Configuration=Release;Platform=WP81"/>
   </Target>
 
   <Target Name="GitCheckout">

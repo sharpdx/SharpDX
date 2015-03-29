@@ -18,8 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#if !WP8
-
 using System;
 
 namespace SharpDX.MediaFoundation
@@ -66,5 +64,3 @@ namespace SharpDX.MediaFoundation
         void OnProcessSample(Guid guidMajorMediaType, int dwSampleFlags, long llSampleTime, long llSampleDuration, IntPtr pSampleBuffer, int dwSampleSize);
     }
 }
-
-#endif

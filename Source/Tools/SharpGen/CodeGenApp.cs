@@ -148,43 +148,16 @@ namespace SharpGen
             _isAssemblyNew = (File.GetLastWriteTime(_thisAssemblyPath) != File.GetLastWriteTime(_assemblyCheckFile));
             _generatedPath = Path.GetDirectoryName(_configRootPath);
 
-
-
             Logger.Message("Loading config files...");
 
-#if W8CORE
-            Macros.Add("W8CORE");
-#endif
-#if WIN8METRO
-            Macros.Add("WIN8METRO");
-#endif
-#if WP81
-            Macros.Add("WP81");
-#endif
-#if WP8
-            Macros.Add("WP8");
-#endif
-#if DirectX12
-            // Load configuration
-            Macros.Add("DirectX12");
-            Macros.Add("DIRECTX11_2");
+#if STORE_APP
             Macros.Add("DIRECTX11_1");
-#elif DIRECTX11_2
-            Macros.Add("DIRECTX11_2");
-#endif
-#if DIRECTX11_1
+            Macros.Add("STORE_APP");
+#else
             Macros.Add("DIRECTX11_1");
+            Macros.Add("DESKTOP_APP");
 #endif
-#if !DIRECTX11_1 && !DIRECTX11_2
-            if (GccXml.GetWindowsFramework7Version("7.0a", "7.1") == "7.0a")
-            {
-                Macros.Add("WINSDK_70a");
-            }
-            else
-            {
-                Macros.Add("WINSDK_71");
-            }
-#endif
+
             Config = ConfigFile.Load(_configRootPath, Macros.ToArray());
             var latestConfigTime = ConfigFile.GetLatestTimestamp(Config.ConfigFilesLoaded);
 

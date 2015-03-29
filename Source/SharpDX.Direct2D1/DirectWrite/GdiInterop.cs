@@ -19,9 +19,6 @@
 // THE SOFTWARE.
 using System;
 using SharpDX.Mathematics.Interop;
-#if !WIN8METRO
-using System.Drawing;
-#endif
 using System.Runtime.InteropServices;
 
 namespace SharpDX.DirectWrite
@@ -90,33 +87,5 @@ namespace SharpDX.DirectWrite
                 return isSystemFont;                
             }
         } 
-#if !WIN8METRO
-        /// <summary>	
-        /// Creates a font object that matches the properties specified by the LOGFONT structure. 	
-        /// </summary>	
-        /// <param name="font">A <see cref="System.Drawing.Font"/> description. </param>
-        /// <returns>a reference to a newly created <see cref="SharpDX.DirectWrite.Font"/>. </returns>
-        /// <unmanaged>HRESULT IDWriteGdiInterop::CreateFontFromLOGFONT([In] const LOGFONTW* logFont,[Out] IDWriteFont** font)</unmanaged>
-        public Font FromSystemDrawingFont(System.Drawing.Font font)
-        {
-            var logfontw = new LogFont();
-            font.ToLogFont(logfontw);
-            return FromLogFont(logfontw);
-        }
-
-        /// <summary>
-        /// Convert a Direct2D <see cref="Font"/> to a <see cref="System.Drawing.Font"/>.
-        /// </summary>
-        /// <param name="d2dFont">a Direct2D Font</param>
-        /// <param name="font">a <see cref="System.Drawing.Font"/></param>
-        /// <returns>true if the specified font object is part of the system font collection; otherwise, false.</returns>
-        public bool ToSystemDrawingFont(Font d2dFont, out System.Drawing.Font font)
-        {
-            var logfontw = new LogFont();
-            bool isSystemFont = ToLogFont(d2dFont, logfontw);
-            font = System.Drawing.Font.FromLogFont(logfontw);
-            return isSystemFont;
-        }
-#endif
     }
 }

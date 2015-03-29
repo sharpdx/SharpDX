@@ -23,22 +23,6 @@
 <config id="sharpdx-mediafoundation-all" xmlns="urn:SharpGen.Config">
   <depends>sharpdx-core</depends>
   <depends>sharpdx-mediafoundation</depends>
-  <ifndef name="DIRECTX11_1">
-    <depends>sharpdx-direct3d9</depends>
-  </ifndef>
 
-    <file>Mapping-core.xml</file>
-
-  <ifndef name="DIRECTX11_1">
-    <depends>sharpdx-mediafoundation-directx</depends>
-    <depends>sharpdx-mediafoundation-opm</depends>
-    <file>DirectX\Mapping.xml</file>
-    <file>OPM\Mapping.xml</file>
-  </ifndef>
-
-  <ifndef name="W8CORE">
-    <depends>sharpdx-mediafoundation-dsp</depends>
-    <file>Dsp\Mapping.xml</file>
-  </ifndef>
-
+  <file>Mapping-core.xml</file>
 </config>

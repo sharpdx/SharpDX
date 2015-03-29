@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 using SharpDX.Mathematics.Interop;
-#if !WIN8METRO
 using System;
 
 namespace SharpDX.Direct3D11
@@ -231,4 +230,3 @@ namespace SharpDX.Direct3D11
         }        
     }
 }
-#endif

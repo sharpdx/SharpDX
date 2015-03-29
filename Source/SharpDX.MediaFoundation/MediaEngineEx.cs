@@ -20,7 +20,6 @@
 using System;
 using System.Runtime.InteropServices;
 
-#if DIRECTX11_1
 namespace SharpDX.MediaFoundation
 {
     public partial class MediaEngineEx
@@ -48,4 +47,3 @@ namespace SharpDX.MediaFoundation
         }
     }
 }
-#endif

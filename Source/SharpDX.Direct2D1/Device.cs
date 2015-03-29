@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 using System;
 
-#if DIRECTX11_1
 namespace SharpDX.Direct2D1
 {
     public partial class Device
@@ -63,4 +62,3 @@ namespace SharpDX.Direct2D1
         }        
     }
 }
-#endif

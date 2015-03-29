@@ -29,14 +29,11 @@ namespace SharpDX.IO
     /// </summary>
     public static class NativeFile 
     {
-#if W8CORE
+#if WINDOWS_API_SET
         private const string KERNEL_FILE = "api-ms-win-core-file-l1-2-0.dll";
 #else
         private const string KERNEL_FILE = "kernel32.dll";
 #endif
-
-
-
 
         /// <summary>
         /// Checks if the specified file path exists.
@@ -47,13 +44,8 @@ namespace SharpDX.IO
         {
             try
             {
-#if !WIN8METRO
-                var fullPath = Path.GetFullPath(filePath);
-#else
-                var fullPath = filePath;
-#endif
                 WIN32_FILE_ATTRIBUTE_DATA data;
-                if (GetFileAttributesEx(fullPath, 0, out data))
+                if (GetFileAttributesEx(filePath, 0, out data))
                 {
                     return true;
                 }
@@ -122,7 +114,7 @@ namespace SharpDX.IO
                 }
             }
         }
-#if W8CORE
+#if WINDOWS_API_SET
         internal struct CREATEFILE2_EXTENDED_PARAMETERS
         {
             public uint dwSize;
@@ -238,52 +230,6 @@ namespace SharpDX.IO
             return new DateTime(0);
         }
 
-#if WP8
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        internal delegate bool ReadFileDelegate(IntPtr fileHandle, IntPtr buffer, int numberOfBytesToRead, out int numberOfBytesRead, IntPtr overlapped);
-        internal static readonly ReadFileDelegate ReadFile;
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        internal delegate bool FlushFileBuffersDelegate(IntPtr hFile);
-        internal static readonly FlushFileBuffersDelegate FlushFileBuffers;
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        internal delegate bool WriteFileDelegate(IntPtr fileHandle, IntPtr buffer, int numberOfBytesToRead, out int numberOfBytesRead, IntPtr overlapped);
-        internal static readonly WriteFileDelegate WriteFile;
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        internal delegate bool SetFilePointerExDelegate(IntPtr handle, long distanceToMove, out long distanceToMoveHigh, SeekOrigin seekOrigin);
-        internal static readonly SetFilePointerExDelegate SetFilePointerEx;
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        internal delegate bool SetEndOfFileDelegate(IntPtr handle);
-        internal static readonly SetEndOfFileDelegate SetEndOfFile;
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        internal delegate IntPtr CreateDelegate([MarshalAs(UnmanagedType.LPWStr)] string fileName, NativeFileAccess desiredAccess, NativeFileShare shareMode, NativeFileMode mode, IntPtr extendedParameters);
-        internal static readonly CreateDelegate Create;
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate bool GetFileInformationByHandleExDelegate(IntPtr handle, FILE_INFO_BY_HANDLE_CLASS FileInformationClass, IntPtr lpFileInformation, int dwBufferSize);
-        private static readonly GetFileInformationByHandleExDelegate GetFileInformationByHandleEx;
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        internal delegate bool GetFileAttributesExDelegate([MarshalAs(UnmanagedType.LPWStr)] string name, int fileInfoLevel, out WIN32_FILE_ATTRIBUTE_DATA lpFileInformation);
-        internal static readonly GetFileAttributesExDelegate GetFileAttributesEx;
-
-        static NativeFile()
-        {
-            // Initialize all the DllImports at once, since we are going to use all of them anyway.
-            ReadFile = (ReadFileDelegate) Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.ReadFile()), typeof (ReadFileDelegate));
-            FlushFileBuffers = (FlushFileBuffersDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.FlushFileBuffers()), typeof(FlushFileBuffersDelegate));
-            WriteFile = (WriteFileDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.WriteFile()), typeof(WriteFileDelegate));
-            SetFilePointerEx = (SetFilePointerExDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.SetFilePointerEx()), typeof(SetFilePointerExDelegate));
-            SetEndOfFile = (SetEndOfFileDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.SetEndOfFile()), typeof(SetEndOfFileDelegate));
-            Create = (CreateDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.CreateFile2()), typeof(CreateDelegate));
-            GetFileInformationByHandleEx = (GetFileInformationByHandleExDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.GetFileInformationByHandleEx()), typeof(GetFileInformationByHandleExDelegate));
-            GetFileAttributesEx = (GetFileAttributesExDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.GetFileAttributesExW()), typeof(GetFileAttributesExDelegate));
-        }
-#else
         /// <summary>
         /// Reads to a file.
         /// </summary>
@@ -338,7 +284,7 @@ namespace SharpDX.IO
         [DllImport(KERNEL_FILE, EntryPoint = "GetFileAttributesExW", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern bool GetFileAttributesEx(string name, int fileInfoLevel, out WIN32_FILE_ATTRIBUTE_DATA lpFileInformation);
 
-#if W8CORE
+#if STORE_APP
 
         /// <summary>
         /// Creates the file.
@@ -395,8 +341,5 @@ namespace SharpDX.IO
         internal static extern bool GetFileSizeEx(IntPtr handle, out long fileSize);
 
 #endif
-#endif
-        // END WP8
-
     }
 }
