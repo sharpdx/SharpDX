@@ -21,7 +21,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// Defines a frustum which can be used in frustum culling, zoom to Extents (zoom to fit) operations, 

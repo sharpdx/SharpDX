@@ -23,7 +23,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Mathematics.Interop;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// Defines the viewport dimensions using float coordinates for (X,Y,Width,Height).

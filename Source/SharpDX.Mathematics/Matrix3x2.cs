@@ -23,7 +23,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Mathematics.Interop;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// Direct2D Matrix3x2. Supports implicit cast from <see cref="Matrix"/>.

@@ -21,7 +21,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// Defines a three component vector, using half precision floating point coordinates.
@@ -46,7 +46,7 @@ namespace SharpDX.Mathematics
         public Half Z;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Mathematics.Half3" /> structure.
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half3" /> structure.
         /// </summary>
         /// <param name="x">The X component.</param>
         /// <param name="y">The Y component.</param>
@@ -59,7 +59,7 @@ namespace SharpDX.Mathematics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Mathematics.Half3" /> structure.
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half3" /> structure.
         /// </summary>
         /// <param name="x">The X component.</param>
         /// <param name="y">The Y component.</param>
@@ -72,7 +72,7 @@ namespace SharpDX.Mathematics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Mathematics.Half3" /> structure.
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half3" /> structure.
         /// </summary>
         /// <param name="x">The X component.</param>
         /// <param name="y">The Y component.</param>
@@ -85,7 +85,7 @@ namespace SharpDX.Mathematics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Mathematics.Half3" /> structure.
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half3" /> structure.
         /// </summary>
         /// <param name="value">The value to set for the X, Y, and Z components.</param>
         public Half3(Half value)

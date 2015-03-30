@@ -21,7 +21,7 @@
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// A half precision (16 bit) floating point value.
@@ -88,7 +88,7 @@ namespace SharpDX.Mathematics
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref = "T:SharpDX.Mathematics.Half" /> structure.
+        /// Initializes a new instance of the <see cref = "T:SharpDX.Half" /> structure.
         /// </summary>
         /// <param name = "value">The floating point value that should be stored in 16 bit format.</param>
         public Half(float value)
@@ -97,7 +97,7 @@ namespace SharpDX.Mathematics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref = "T:SharpDX.Mathematics.Half" /> structure.
+        /// Initializes a new instance of the <see cref = "T:SharpDX.Half" /> structure.
         /// </summary>
         /// <param name = "rawvalue">The floating point value that should be stored in 16 bit format.</param>
         public Half(ushort rawvalue)
@@ -141,7 +141,7 @@ namespace SharpDX.Mathematics
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref = "T:System.Single" /> to <see cref = "T:SharpDX.Mathematics.Half" />.
+        /// Performs an explicit conversion from <see cref = "T:System.Single" /> to <see cref = "T:SharpDX.Half" />.
         /// </summary>
         /// <param name = "value">The value to be converted.</param>
         /// <returns>The converted value.</returns>
@@ -151,7 +151,7 @@ namespace SharpDX.Mathematics
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref = "T:SharpDX.Mathematics.Half" /> to <see cref = "T:System.Single" />.
+        /// Performs an implicit conversion from <see cref = "T:SharpDX.Half" /> to <see cref = "T:System.Single" />.
         /// </summary>
         /// <param name = "value">The value to be converted.</param>
         /// <returns>The converted value.</returns>

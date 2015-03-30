@@ -47,7 +47,7 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// Represents a 3x3 Matrix ( contains only Scale and Rotation ).

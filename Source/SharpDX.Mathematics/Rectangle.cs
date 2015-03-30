@@ -23,7 +23,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Mathematics.Interop;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// Define a Rectangle. This structure is slightly different from System.Drawing.Rectangle as it is

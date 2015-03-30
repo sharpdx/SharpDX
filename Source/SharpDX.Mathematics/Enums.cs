@@ -43,7 +43,7 @@
 * THE SOFTWARE.
 */
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /*
      * The enumerations defined in this file are in alphabetical order. When

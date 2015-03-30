@@ -20,7 +20,7 @@
 
 using System;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// Random functions on commun types.

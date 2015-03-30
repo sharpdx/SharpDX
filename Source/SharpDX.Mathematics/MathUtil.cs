@@ -45,7 +45,7 @@
 
 using System;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     public static class MathUtil
     {

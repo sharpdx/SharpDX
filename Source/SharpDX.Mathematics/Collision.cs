@@ -45,7 +45,7 @@
 
 using System;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /*
      * This class is organized so that the least complex objects come first so that the least

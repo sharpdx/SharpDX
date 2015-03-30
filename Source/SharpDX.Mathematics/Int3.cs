@@ -23,7 +23,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Mathematics.Interop;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// Represents a three dimensional mathematical int vector.

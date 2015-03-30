@@ -47,7 +47,7 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// Represents a plane in three dimensional space.
@@ -90,7 +90,7 @@ namespace SharpDX.Mathematics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Mathematics.Plane" /> class.
+        /// Initializes a new instance of the <see cref="T:SharpDX.Plane" /> class.
         /// </summary>
         /// <param name="point">Any point that lies along the plane.</param>
         /// <param name="normal">The normal vector to the plane.</param>

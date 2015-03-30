@@ -47,7 +47,7 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// Represents a three dimensional line based on a point in space and a direction.

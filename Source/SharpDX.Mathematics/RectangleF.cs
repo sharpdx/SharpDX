@@ -21,8 +21,9 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using SharpDX.Mathematics.Interop;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// Define a RectangleF. This structure is slightly different from System.Drawing.RectangleF as it is
@@ -480,6 +481,28 @@ namespace SharpDX.Mathematics
         public static explicit operator Rectangle(RectangleF value)
         {
             return new Rectangle((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion to <see cref="Rectangle"/> structure.
+        /// </summary>
+        /// <remarks>Performs direct float to int conversion, any fractional data is truncated.</remarks>
+        /// <param name="value">The source <see cref="RawRectangle"/> value.</param>
+        /// <returns>A converted <see cref="Rectangle"/> structure.</returns>
+        public static implicit operator RawRectangle(RectangleF value)
+        {
+            return new RawRectangle((int)value.X, (int)value.Y, (int)value.Right, (int)value.Bottom);
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion to <see cref="RawRectangleF"/> structure.
+        /// </summary>
+        /// <remarks>Performs direct float to int conversion, any fractional data is truncated.</remarks>
+        /// <param name="value">The source <see cref="RectangleF"/> value.</param>
+        /// <returns>A converted <see cref="Rectangle"/> structure.</returns>
+        public static implicit operator RawRectangleF(RectangleF value)
+        {
+            return new RawRectangleF(value.X, value.Y, value.Right, value.Bottom);
         }
     }
 }

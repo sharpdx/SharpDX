@@ -23,7 +23,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Mathematics.Interop;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// Represents a 32-bit color (4 bytes) in the form of RGBA (in byte order: R, G, B, A).
@@ -1058,6 +1058,17 @@ namespace SharpDX.Mathematics
         public static implicit operator RawColor4(Color value)
         {
             return value.ToColor4();
+        }
+
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Color"/> to <see cref="RawColor4"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator RawColorBGRA(Color value)
+        {
+            return new RawColorBGRA(value.B, value.G, value.R, value.A);
         }
 
         /// <summary>

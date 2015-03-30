@@ -20,7 +20,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// Helper class to perform Half/Float conversion.

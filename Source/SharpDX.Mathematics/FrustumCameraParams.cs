@@ -20,7 +20,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// Frustum camera parameters.

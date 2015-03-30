@@ -47,7 +47,7 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// Represents a unit independent angle using a single-precision floating-point

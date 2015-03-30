@@ -47,7 +47,7 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// Represents an axis-aligned bounding box in three dimensional space.

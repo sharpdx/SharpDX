@@ -23,7 +23,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Mathematics.Interop;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// Defines the viewport dimensions.
@@ -315,6 +315,17 @@ namespace SharpDX.Mathematics
         public unsafe static implicit operator RawViewport(Viewport value)
         {
             return *(RawViewport*)&value;
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Viewport"/> to <see cref="RawViewport"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public unsafe static implicit operator RawViewportF(Viewport value)
+        {
+            var viewportF = (ViewportF)value;
+            return *(RawViewportF*)&viewportF;
         }
 
         /// <summary>

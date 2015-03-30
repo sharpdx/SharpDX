@@ -5,7 +5,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{49E4485F-3A2A-4C35-A159-12ECCFC00396}</ProjectGuid>
-    <RootNamespace>SharpDX.Mathematics</RootNamespace>
+    <RootNamespace>SharpDX</RootNamespace>
     <AssemblyName>SharpDX.Mathematics</AssemblyName>
   </PropertyGroup>
   <ItemGroup>

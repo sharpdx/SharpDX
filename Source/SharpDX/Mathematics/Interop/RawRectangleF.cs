@@ -31,6 +31,21 @@ namespace SharpDX.Mathematics.Interop
     public struct RawRectangleF
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="RawRectangleF"/> struct.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="top">The top.</param>
+        /// <param name="right">The right.</param>
+        /// <param name="bottom">The bottom.</param>
+        public RawRectangleF(float left, float top, float right, float bottom)
+        {
+            Left = left;
+            Top = top;
+            Right = right;
+            Bottom = bottom;
+        }
+
+        /// <summary>
         /// The left position.
         /// </summary>
         public float Left;

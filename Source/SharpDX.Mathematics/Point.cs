@@ -22,7 +22,7 @@ using System;
 using System.Runtime.InteropServices;
 using SharpDX.Mathematics.Interop;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// Structure using the same layout than <see cref="System.Drawing.Point"/>.

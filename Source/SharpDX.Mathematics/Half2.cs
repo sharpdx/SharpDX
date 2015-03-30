@@ -21,7 +21,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace SharpDX.Mathematics
+namespace SharpDX
 {
     /// <summary>
     /// Defines a two component vector, using half precision floating point coordinates.
@@ -41,7 +41,7 @@ namespace SharpDX.Mathematics
         public Half Y;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Mathematics.Half2" /> structure.
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half2" /> structure.
         /// </summary>
         /// <param name="x">The X component.</param>
         /// <param name="y">The Y component.</param>
@@ -52,7 +52,7 @@ namespace SharpDX.Mathematics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Mathematics.Half2" /> structure.
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half2" /> structure.
         /// </summary>
         /// <param name="x">The X component.</param>
         /// <param name="y">The Y component.</param>
@@ -63,7 +63,7 @@ namespace SharpDX.Mathematics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Mathematics.Half2" /> structure.
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half2" /> structure.
         /// </summary>
         /// <param name="x">The X component.</param>
         /// <param name="y">The Y component.</param>
@@ -74,7 +74,7 @@ namespace SharpDX.Mathematics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Mathematics.Half2" /> structure.
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half2" /> structure.
         /// </summary>
         /// <param name="value">The value to set for both the X and Y components.</param>
         public Half2(Half value)
@@ -84,7 +84,7 @@ namespace SharpDX.Mathematics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Mathematics.Half2" /> structure.
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half2" /> structure.
         /// </summary>
         /// <param name="value">Value to initialize X and Y components with.</param>
         public Half2(float value)
