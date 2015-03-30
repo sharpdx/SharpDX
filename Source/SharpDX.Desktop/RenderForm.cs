@@ -100,7 +100,7 @@ namespace SharpDX.Windows
             ResizeRedraw = true;
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
 
-            Icon = SharpDX.Properties.Resources.logo;
+            Icon = Desktop.Properties.Resources.logo;
 
             previousWindowState = FormWindowState.Normal;
             AllowUserResizing = true;
