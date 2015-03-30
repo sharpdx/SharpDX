@@ -234,9 +234,10 @@
 
     <map method="IDXGIKeyedMutex::AcquireSync" hresult="true"/>
 
-    <map method="IDXGIOutput1::DuplicateOutput" visibility="internal"/>
-    <map param="IDXGIOutput1::DuplicateOutput::ppOutputDuplication" type="void"/>
-
+    <ifdef name="STORE_APP">
+      <map method="IDXGIOutput1::DuplicateOutput" visibility="internal"/>
+      <map param="IDXGIOutput1::DuplicateOutput::ppOutputDuplication" type="void"/>
+    </ifdef>
     <map param="IDXGIOutput1::DuplicateOutput::ppOutputDuplication" return="true"/>
 
     <map param="ISurfaceImageSourceNative::BeginDraw::surface" return="true"/>
