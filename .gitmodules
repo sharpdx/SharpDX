@@ -1,0 +1,3 @@
+[submodule "Samples"]
+	path = Samples
+	url = git@github.com:sharpdx/SharpDX-Samples.git
