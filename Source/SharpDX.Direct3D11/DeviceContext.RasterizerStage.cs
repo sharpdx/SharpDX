@@ -179,10 +179,8 @@ namespace SharpDX.Direct3D11
         /// <msdn-id>ff476480</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::RSSetViewports([In] unsigned int NumViewports,[In, Buffer, Optional] const void* pViewports)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>	
-        public void SetViewport<T>(T viewport) where T : struct
+        public void SetViewport(RawViewportF viewport)
         {
-            if (Utilities.SizeOf<T>() != Utilities.SizeOf<RawViewportF>())
-                throw new ArgumentException("Type T must have same size and layout as RawViewPortF", "viewports");
             unsafe
             {
                 SetViewports(1, new IntPtr(Interop.Fixed(ref viewport)));
@@ -198,16 +196,24 @@ namespace SharpDX.Direct3D11
         ///   <unmanaged>void ID3D11DeviceContext::RSSetViewports([In] unsigned int NumViewports,[In, Buffer, Optional] const void* pViewports)</unmanaged>
         ///   <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>
         /// <remarks><p></p><p>All viewports must be set atomically as one operation. Any viewports not defined by the call are disabled.</p><p>Which viewport to use is determined by the SV_ViewportArrayIndex semantic output by a geometry shader; if a geometry shader does not specify the semantic, Direct3D will use the first viewport in the array.</p></remarks>
-        public void SetViewports<T>(T[] viewports, int count = 0) where T : struct
+        public unsafe void SetViewports(RawViewportF[] viewports, int count = 0)
         {
-            if (Utilities.SizeOf<T>() != Utilities.SizeOf<RawViewportF>())
-                throw new ArgumentException("Type T must have same size and layout as RawViewPortF", "viewports");
+            void* pBuffer = Interop.Fixed(viewports);
+            SetViewports(viewports == null ? 0 : count <= 0 ? viewports.Length : count, (IntPtr)pBuffer);
+        }
 
-            unsafe
-            {
-                void* pBuffer = Interop.Fixed(viewports);
-                SetViewports(viewports == null ? 0 : count <= 0 ? viewports.Length : count, (IntPtr)pBuffer);
-            }
+        /// <summary>
+        /// Binds a set of viewports to the rasterizer stage.
+        /// </summary>
+        /// <param name="viewports">The set of viewports to bind.</param>
+        /// <param name="count">The number of viewport to set.</param>
+        /// <msdn-id>ff476480</msdn-id>
+        ///   <unmanaged>void ID3D11DeviceContext::RSSetViewports([In] unsigned int NumViewports,[In, Buffer, Optional] const void* pViewports)</unmanaged>
+        ///   <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>
+        /// <remarks><p></p><p>All viewports must be set atomically as one operation. Any viewports not defined by the call are disabled.</p><p>Which viewport to use is determined by the SV_ViewportArrayIndex semantic output by a geometry shader; if a geometry shader does not specify the semantic, Direct3D will use the first viewport in the array.</p></remarks>
+        public unsafe void SetViewports(RawViewportF* viewports, int count = 0)
+        {
+            SetViewports(count, (IntPtr)viewports);
         }
     }
 }
