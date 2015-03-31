@@ -51,14 +51,6 @@
       <Link>sharpdx_direct3d11_1_effects_x86.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_effects_x64.dll">
-      <Link>sharpdx_direct3d11_effects_x64.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_effects_x86.dll">
-      <Link>sharpdx_direct3d11_effects_x86.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="Documentation\CodeComments.xml" />
     <None Include="Mapping.xml">
       <SubType>Designer</SubType>

@@ -43,8 +43,8 @@
   </metadata>
 
   <files>
-    <file src="..\dummy.txt" target="lib" />
-    <file src="..\Install.ps1" target="tools\Install.ps1" />
-    <file src="..\UnInstall.ps1" target="tools\UnInstall.ps1" />
+    <file src="..\..\Bin\Desktop\SharpDX.XACT3.dll" target="\lib\net45" />
+    <file src="..\..\Bin\Desktop\SharpDX.XACT3.xml" target="\lib\net45" />
+    <file src="**\*.cs" target="src" />
   </files>
 </package>

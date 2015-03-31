@@ -45,12 +45,16 @@
   </metadata>
 
   <files>
-    <file src="..\dummy.txt" target="lib" />
-    <file src="..\Install.ps1" target="tools\Install.ps1" />
-    <file src="..\UnInstall.ps1" target="tools\UnInstall.ps1" />
+    <file src="..\..\Bin\Desktop\SharpDX.Direct3D11.Effects.dll" target="\lib\net45" />
+    <file src="..\..\Bin\Desktop\SharpDX.Direct3D11.Effects.xml" target="\lib\net45" />
 
-    <file src="..\..\Bin\DirectX11-Signed-net20\sharpdx_direct3d11_effects_x86.dll" target="Content" />
-    <file src="..\..\Bin\DirectX11-Signed-net20\sharpdx_direct3d11_effects_x64.dll" target="Content" />
+    <file src="..\..\Bin\StoreApp\SharpDX.Direct3D11.Effects.dll" target="\lib\portable-net45+netcore45+wpa81+MonoAndroid1+MonoTouch1" />
+    <file src="..\..\Bin\StoreApp\SharpDX.Direct3D11.Effects.xml" target="\lib\portable-net45+netcore45+wpa81+MonoAndroid1+MonoTouch1" />
+
+    <file src="..\..\Bin\Desktop\sharpdx_direct3d11_1_effects_arm.dll" target="Content" />
+    <file src="..\..\Bin\Desktop\sharpdx_direct3d11_1_effects_x64.dll" target="Content" />
+    <file src="..\..\Bin\Desktop\sharpdx_direct3d11_1_effects_x86.dll" target="Content" />
+    <file src="**\*.cs" target="src" />
   </files>
   
 </package>

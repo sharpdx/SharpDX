@@ -42,8 +42,11 @@
   </metadata>
 
   <files>
-    <file src="..\dummy.txt" target="lib" />
-    <file src="..\Install.ps1" target="tools\Install.ps1" />
-    <file src="..\UnInstall.ps1" target="tools\UnInstall.ps1" />
+    <file src="..\..\Bin\Desktop\SharpDX.XInput.dll" target="\lib\net45" />
+    <file src="..\..\Bin\Desktop\SharpDX.XInput.xml" target="\lib\net45" />
+
+    <file src="..\..\Bin\StoreApp\SharpDX.XInput.dll" target="\lib\portable-net45+netcore45+wpa81+MonoAndroid1+MonoTouch1" />
+    <file src="..\..\Bin\StoreApp\SharpDX.XInput.xml" target="\lib\portable-net45+netcore45+wpa81+MonoAndroid1+MonoTouch1" />
+    <file src="**\*.cs" target="src" />
   </files>
 </package>

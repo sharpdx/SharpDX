@@ -38,7 +38,6 @@
     <None Include="Mapping.xml">
       <SubType>Designer</SubType>
     </None>
-    <None Include="SharpDX.Animation.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpDX\SharpDX.csproj">

@@ -22,18 +22,18 @@
 -->
 <package >
   <metadata>
-    <id>SharpDX.Direct3D11</id>
+    <id>SharpDX.Direct3D12</id>
     <version>$version$</version>
-    <title>SharpDX.Direct3D11</title>
+    <title>SharpDX.Direct3D12</title>
     <authors>Alexandre Mutel</authors>
     <owners>Alexandre Mutel</owners>
     <licenseUrl>http://sharpdx.org/License.txt</licenseUrl>
     <projectUrl>http://sharpdx.org</projectUrl>
     <iconUrl>http://sharpdx.org/logo_100x100.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Assembly providing DirectX - Direct3D11, Direct3D11.1 and Effects11 managed API.</description>
+    <description>Assembly providing DirectX - Direct3D12 managed API.</description>
     <copyright>Copyright (c) 2010-2013 Alexandre Mutel</copyright>
-    <tags>SharpDX DirectX Direct3D MDX 3D Direct3D11 D3D11 Effects11</tags>
+    <tags>SharpDX DirectX Direct3D MDX 3D Direct3D12 D3D12</tags>
     <!-- Release notes for this version-->
     <releaseNotes></releaseNotes>
     <dependencies>
@@ -43,9 +43,12 @@
   </metadata>
 
   <files>
-    <file src="..\dummy.txt" target="lib" />
-    <file src="..\Install.ps1" target="tools\Install.ps1" />
-    <file src="..\UnInstall.ps1" target="tools\UnInstall.ps1" />
+    <file src="..\..\Bin\Desktop\SharpDX.Direct3D12.dll" target="\lib\net45" />
+    <file src="..\..\Bin\Desktop\SharpDX.Direct3D12.xml" target="\lib\net45" />
+
+    <file src="..\..\Bin\StoreApp\SharpDX.Direct3D12.dll" target="\lib\portable-net45+netcore45+wpa81+MonoAndroid1+MonoTouch1" />
+    <file src="..\..\Bin\StoreApp\SharpDX.Direct3D12.xml" target="\lib\portable-net45+netcore45+wpa81+MonoAndroid1+MonoTouch1" />
+    <file src="**\*.cs" target="src" />
   </files>
   
 </package>
