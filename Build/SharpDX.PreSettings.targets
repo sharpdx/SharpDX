@@ -29,17 +29,24 @@
   *************************************************************************************************************
   -->
 
-  <!--.NET 4.5 - PCL or NET45 Desktop-->
-  <PropertyGroup Condition="'$(SharpDXPlatform)' == 'Desktop'">
-    <TargetFrameworkProfile Condition="'$(SharpDXDesktopOnly)' == 'false'">Profile111</TargetFrameworkProfile>
-    <TargetFrameworkVersion Condition="'$(SharpDXDesktopOnly)' == 'false'">v4.5</TargetFrameworkVersion>
-    <TargetFrameworkVersion Condition="'$(SharpDXDesktopOnly)' == 'true'">v4.5</TargetFrameworkVersion>
+  <!--.NET 4.5 - Desktop - NET45 -->
+  <PropertyGroup Condition="'$(SharpDXPlatform)|$(SharpDXDesktopOnly)' == 'Desktop|true'">
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <SharpDXCSharpTargets>$(MSBuildToolsPath)\Microsoft.CSharp.targets</SharpDXCSharpTargets>
+  </PropertyGroup>
+
+  <!--.NET 4.5 - Desktop - PCL Net45 -->
+  <PropertyGroup Condition="'$(SharpDXPlatform)|$(SharpDXDesktopOnly)' == 'Desktop|false'">
+    <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <SharpDXCSharpTargets>$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets</SharpDXCSharpTargets>
   </PropertyGroup>
 
   <!--.NET 4.5 - PCL or Win81/WP81 StoreApp -->
   <PropertyGroup Condition="'$(SharpDXPlatform)' == 'StoreApp'">
-    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile32</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <SharpDXCSharpTargets>$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets</SharpDXCSharpTargets>
   </PropertyGroup>
 
   <!--<Import Condition="'$(SharpDXWP8)' != 'false'"  Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />-->

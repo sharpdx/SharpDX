@@ -5,9 +5,8 @@
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>
 
-  <!--Import standard targets for all non-Windows(Phone) 8 platforms-->
-  <Import Condition="'$(SharpDXDesktopOnly)' == 'true'" Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Condition="'$(SharpDXDesktopOnly)' == 'false'" Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!--Import csharp targets  -->
+  <Import Project="$(SharpDXCSharpTargets)" />
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
