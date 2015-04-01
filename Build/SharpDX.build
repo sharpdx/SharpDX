@@ -30,7 +30,8 @@
     <BuildSignedSharpDX>true</BuildSignedSharpDX>
     <SharedAssemblyInfoFilePath>$(SharpDXRepo)\Source\SharedAssemblyInfo.cs</SharedAssemblyInfoFilePath>
     <SharedAssemblyInfo>$([System.IO.File]::ReadAllText($(SharedAssemblyInfoFilePath)))</SharedAssemblyInfo>
-    <SharpDXAssemblyVersion>$([System.Text.RegularExpressions.Regex]::Match($(SharedAssemblyInfo), `AssemblyVersion\("(.*)"`).Groups[1].Value)</SharpDXAssemblyVersion>
+	<SharpDXAssemblyPostFixVersion>-alpha01</SharpDXAssemblyPostFixVersion>
+    <SharpDXAssemblyVersion>$([System.Text.RegularExpressions.Regex]::Match($(SharedAssemblyInfo), `AssemblyVersion\("(.*)"`).Groups[1].Value)$(SharpDXAssemblyPostFixVersion)</SharpDXAssemblyVersion>
     <SharpDXDevZip>$(MSBuildThisFileDirectory)\SharpDX-SDK-LatestDev.exe</SharpDXDevZip>
     <SharpDXReleaseZip>$(MSBuildThisFileDirectory)\SharpDX-SDK-$(SharpDXAssemblyVersion).exe</SharpDXReleaseZip>
     <SharpDXLocalUpload>C:\inetpub\wwwroot\sharpdx\upload</SharpDXLocalUpload>
@@ -167,12 +168,12 @@
 
   <Target Name="ZipBuild">
     <Delete Files="$(SharpDXDevZip)"/>
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(SharpDXRepo)\External\7-Zip\7z.exe a -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.pri -xr!*.exp $(SharpDXDevZip) Bin\*\*.* Build\SharpDX.targets License.txt CommitLog.txt Readme.md'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(SharpDXRepo)\External\7-Zip\7z.exe a -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.pri -xr!*.exp $(SharpDXDevZip) Bin\*\*.* License.txt ReleaseNotes.md Readme.md'/>
   </Target>
 
   <Target Name="ZipRelease">
     <Delete Files="$(SharpDXReleaseZip)"/>
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(SharpDXRepo)\External\7-Zip\7z.exe a -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.pri -xr!*.exp $(SharpDXReleaseZip) Bin\*\*.* Build\SharpDX.targets License.txt ReleaseNotes.html Readme.md'/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(SharpDXRepo)\External\7-Zip\7z.exe a -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.pri -xr!*.exp $(SharpDXReleaseZip) Bin\*\*.*  License.txt ReleaseNotes.md Readme.md'/>
   </Target>
 
   <Target Name="LocalCopy">
