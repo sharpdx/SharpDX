@@ -35,11 +35,13 @@ Some scripts will be added later to simplify the setup of the samples.
 
 ### About Direct3D12
 
-This release includes a preview of the `Direct3D12` API along a simple sample `HelloTriangle` available from the [SharpDX Samples](https://github.com/sharpdx/SharpDX-Samples) repository.
+This release includes a preview of the `Direct3D12` API along a very basic sample `HelloWorld` available from the [SharpDX Samples](https://github.com/sharpdx/SharpDX-Samples) repository.
 
 Compare to previous Direct3D API in SharpDX, the API is now closer to the C++ API (e.g keep methods like `Device.CreateXXX(...)` instead of `new XXX(device, ...)`)
 
-In order to use this API, make sure that you have **Windows 10 10041 and the latest graphics drivers installed**. 
+In order to use this API, make sure that you have **Windows 10 10041 and the latest graphics drivers installed**
+
+Due to NDA, I'm not yet allowed to publish ported samples from Direct3D12 Early Access Program, sorry for that!
  
 ### Known issues
 
