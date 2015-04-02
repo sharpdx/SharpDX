@@ -184,9 +184,16 @@ namespace SharpDX.Direct3D12
         /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateComputePipelineState']/*"/>	
         /// <unmanaged>HRESULT ID3D12Device::CreateComputePipelineState([In] const D3D12_COMPUTE_PIPELINE_STATE_DESC* pDesc,[In] const GUID&amp; riid,[Out] ID3D12PipelineState** ppPipelineState)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateComputePipelineState</unmanaged-short>	
-        public SharpDX.Direct3D12.PipelineState CreateComputePipelineState(SharpDX.Direct3D12.ComputePipelineStateDescription descRef)
+        public unsafe SharpDX.Direct3D12.PipelineState CreateComputePipelineState(SharpDX.Direct3D12.ComputePipelineStateDescription descRef)
         {
-            return CreateComputePipelineState(descRef, Utilities.GetGuidFromType(typeof(PipelineState)));
+            // Use a custom marshalling routine for this class
+            var nativeDesc = new ComputePipelineStateDescription.__Native();
+            descRef.__MarshalTo(ref nativeDesc);
+            fixed (void* pComputeShader = descRef.ComputeShader.Buffer)
+            {
+                descRef.ComputeShader.UpdateNative(ref nativeDesc.ComputeShader, (IntPtr)pComputeShader);
+                return CreateComputePipelineState(new IntPtr(&nativeDesc), Utilities.GetGuidFromType(typeof(PipelineState)));
+            }       
         }
 
         public SharpDX.Direct3D12.RootSignature CreateRootSignature(DataPointer rootSignaturePointer)
