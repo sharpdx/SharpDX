@@ -265,6 +265,9 @@
     <map param="ID3D12Device::CreateVertexBufferView::pDesc" attribute="in value"/>
     <map method="ID3D12Device::CreateGraphicsPipelineState" visibility="private"/>
     <map param="ID3D12Device::CreateGraphicsPipelineState::pDesc" attribute="in" type="void"/>
+    <map method="ID3D12Device::CreateComputePipelineState" visibility="private"/>
+    <map param="ID3D12Device::CreateComputePipelineState::pDesc" attribute="in" type="void"/>
+
 
     <map method="ID3D12RootSignatureDeserializer::GetRootSignature" type="void" property="false" visibility="private"/>
 
