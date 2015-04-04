@@ -59,7 +59,7 @@ namespace SharpDX
         /// <summary>
         /// The size of the <see cref="Matrix"/> type, in bytes.
         /// </summary>
-        public static readonly int SizeInBytes = Marshal.SizeOf(typeof(Matrix));
+        public static readonly int SizeInBytes = 4 * 4 * sizeof(float);
 
         /// <summary>
         /// A <see cref="Matrix"/> with all of its components set to zero.
