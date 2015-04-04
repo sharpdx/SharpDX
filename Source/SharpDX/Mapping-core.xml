@@ -576,7 +576,7 @@
     <bind from="HRESULT" to="SharpDX.Result" />
     <bind from="FILETIME" to="System.Int64" />
     <bind from="GUID" to="System.Guid" />
-    <bind from="COLORREF" to="SharpDX.Mathematics.Interop.RawColor4" />
+    <bind from="COLORREF" to="System.Int32" />
     <bind from="__function__stdcall" to="SharpDX.FunctionCallback" />
     <bind from="SIZE" to="SharpDX.Size2" />
     <bind from="SIZE_T" to="SharpDX.PointerSize" marshal="System.IntPtr"/>

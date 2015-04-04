@@ -200,6 +200,9 @@
     <map method="IDWriteLocalFontFileLoader::GetFilePath.*" visibility="internal"/>
     <map method="IDWriteLocalFontFileLoader::GetLastWriteTimeFromKey" visibility="internal"/>
 
+    <map method="IDWriteBitmapRenderTarget::DrawGlyphRun" visibility="private"/>
+    <map param="IDWriteBitmapRenderTarget::DrawGlyphRun::textColor" type="int"/>
+
     <!--
     // *****************************************************************
     // DWrite Functions
