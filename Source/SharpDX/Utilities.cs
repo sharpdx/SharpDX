@@ -1043,6 +1043,20 @@ namespace SharpDX
             comObject.NativePointer = localQuery.IUnknownPointer;
         }
 
+        internal unsafe static bool TryCreateComInstance(Guid clsid, CLSCTX clsctx, Guid riid, ComObject comObject)
+        {
+            MultiQueryInterface localQuery = new MultiQueryInterface()
+            {
+                InterfaceIID = new IntPtr(&riid),
+                IUnknownPointer = IntPtr.Zero,
+                ResultCode = 0,
+            };
+
+            var result = CoCreateInstanceFromApp(clsid, IntPtr.Zero, clsctx, IntPtr.Zero, 1, ref localQuery);
+            comObject.NativePointer = localQuery.IUnknownPointer;
+            return result.Success && localQuery.ResultCode.Success;
+        }
+
 #else
         [DllImport("ole32.dll", ExactSpelling = true, EntryPoint = "CoCreateInstance", PreserveSig = true)]
         private static extern Result CoCreateInstance([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, IntPtr pUnkOuter, CLSCTX dwClsContext, [In, MarshalAs(UnmanagedType.LPStruct)] Guid riid, out IntPtr comObject);
@@ -1053,6 +1067,14 @@ namespace SharpDX
             var result = CoCreateInstance(clsid, IntPtr.Zero, clsctx, riid, out pointer);
             result.CheckError();
             comObject.NativePointer = pointer;
+        }
+
+        internal static bool TryCreateComInstance(Guid clsid, CLSCTX clsctx, Guid riid, ComObject comObject)
+        {
+            IntPtr pointer;
+            var result = CoCreateInstance(clsid, IntPtr.Zero, clsctx, riid, out pointer);
+            comObject.NativePointer = pointer;
+            return result.Success;
         }
 #endif
 
