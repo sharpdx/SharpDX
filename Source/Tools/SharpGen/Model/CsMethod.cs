@@ -122,6 +122,9 @@ namespace SharpGen.Model
 
             IsPersistent = tag.Persist.HasValue && tag.Persist.Value;
 
+            if(tag.CustomVtbl.HasValue)
+                CustomVtbl = tag.CustomVtbl.Value;
+
             if (tag.MethodCheckReturnType.HasValue)
                 CheckReturnType = tag.MethodCheckReturnType.Value;
 
@@ -145,6 +148,8 @@ namespace SharpGen.Model
         public bool UseDllImport { get; set; }
 
         public bool AllowProperty { get; set; }
+
+        public bool CustomVtbl { get; set; }
 
         public bool IsPersistent { get; set; }
 

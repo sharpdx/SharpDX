@@ -47,7 +47,14 @@
 				#>(void*)<#= method.CppElementName #>_<#+
 			}
 		} else {
+            if (method.CustomVtbl)
+			{
+			#>,((void**)(*(void**)_nativePointer))[<#= method.Name #>__vtbl_index]<#+
+			}
+			else
+			{
 			#>,((void**)(*(void**)_nativePointer))[<#= method.Offset #>]<#+
+			}
 		}
 		#>)<#= method.CastEnd #>;		
 <#+
@@ -89,6 +96,12 @@
 #>
         
 <#+	
+		// Output custom vtbil if specified
+		if (method.CustomVtbl)
+		{
+#>        private int <#= method.Name #>__vtbl_index = <#= method.Offset #>;
+<#+		
+		}
 		foreach (var docItem in method.DocItems) {
 #>
         /// <#= docItem #>	
