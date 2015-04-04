@@ -224,6 +224,7 @@
     // *****************************************************************
     -->
     <map interface="IXAudio2(.+)" name-tmp="$1" />
+    <map method="IXAudio2::.*" custom-vtbl="true"/>
     <map interface="IXAudio2" name="XAudio2" />
     <map method="IXAudio2::Initialize" visibility="internal" />
     <map method="IXAudio2::GetDeviceDetails" visibility="internal" />
@@ -249,6 +250,9 @@
     <map param="IXAudio2SourceVoice::Stop::Flags" type="XAUDIO2_PLAY_FLAGS" />
     <map method="IXAudio2SourceVoice::SubmitSourceBuffer" visibility="internal" />
     <map param="pBufferWMA" type="void" attribute="in"/>
+    
+    <map method="IXAudio2Voice::GetVoiceDetails" property="false"/>
+    <map method="IXAudio2MasteringVoice::GetChannelMask" property="false"/>
 
     <ifdef name="DIRECTX11_1">
       <map method="IXAudio2SourceVoice::GetState" visibility="internal" />
