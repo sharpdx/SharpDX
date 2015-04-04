@@ -264,12 +264,12 @@ namespace SharpDX
                     case 0:  return M11;
                     case 1:  return M12;
                     case 2:  return M13;
-                    case 4:  return M21;
-                    case 5:  return M22;
-                    case 6:  return M23;
-                    case 8:  return M31;
-                    case 9:  return M32;
-                    case 10: return M33;
+                    case 3:  return M21;
+                    case 4:  return M22;
+                    case 5:  return M23;
+                    case 6:  return M31;
+                    case 7:  return M32;
+                    case 8:  return M33;
                 }
 
                 throw new ArgumentOutOfRangeException("index", "Indices for Matrix3x3 run from 0 to 8, inclusive.");
@@ -282,12 +282,12 @@ namespace SharpDX
                     case 0: M11 = value; break;
                     case 1: M12 = value; break;
                     case 2: M13 = value; break;
-                    case 4: M21 = value; break;
-                    case 5: M22 = value; break;
-                    case 6: M23 = value; break;
-                    case 8: M31 = value; break;
-                    case 9: M32 = value; break;
-                    case 10: M33 = value; break;
+                    case 3: M21 = value; break;
+                    case 4: M22 = value; break;
+                    case 5: M23 = value; break;
+                    case 6: M31 = value; break;
+                    case 7: M32 = value; break;
+                    case 8: M33 = value; break;
                     default: throw new ArgumentOutOfRangeException("index", "Indices for Matrix3x3 run from 0 to 8, inclusive.");
                 }
             }
