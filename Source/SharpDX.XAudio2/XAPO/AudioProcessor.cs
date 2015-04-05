@@ -17,10 +17,23 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System.Runtime.InteropServices;
+
 namespace SharpDX.XAPO
 {
+
+    /// <summary>
+    /// AudioProcessor interface for XAudio27.
+    /// </summary>
+    [Guid("a90bc001-e897-e897-55e4-9e4700000000")]
     [Shadow(typeof(AudioProcessorShadow))]
-    public partial interface AudioProcessor
+    public interface AudioProcessor27
+    {
+    }
+
+    [Shadow(typeof(AudioProcessorShadow))]
+    public partial interface AudioProcessor : AudioProcessor27
     {
         /// <summary>	
         /// Returns the registration properties of an XAPO.	

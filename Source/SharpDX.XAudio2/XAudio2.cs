@@ -79,7 +79,7 @@ namespace SharpDX.XAudio2
 
 #if DESKTOP_APP
             Guid clsid = ((int)flags == 1) ? CLSID_XAudio27_Debug : CLSID_XAudio27;
-            if ((version == XAudio2Version.Default || version == XAudio2Version.Version27) && Utilities.TryCreateComInstance(clsid, Utilities.CLSCTX.ClsctxInprocServer, Utilities.GetGuidFromType(typeof(XAudio2)), this))
+            if ((version == XAudio2Version.Default || version == XAudio2Version.Version27) && Utilities.TryCreateComInstance(clsid, Utilities.CLSCTX.ClsctxInprocServer, IID_IXAudio2, this))
             {
                 SetupVtblFor27();
                 // Initialize XAudio2

@@ -18,29 +18,64 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Runtime.InteropServices;
+using SharpDX.XAudio2;
 
 namespace SharpDX.XAPO.Fx
 {
     internal partial class XAPOFx
     {
-#if DIRECTX11_1
+        internal static Guid CLSID_FXEcho = new Guid("5039D740-F736-449A-84D3-A56202557B87");
         internal static Guid CLSID_FXEQ = new Guid("F5E01117-D6C4-485A-A3F5-695196F3DBFA");
         internal static Guid CLSID_FXMasteringLimiter = new Guid("C4137916-2BE1-46FD-8599-441536F49856");
         internal static Guid CLSID_FXReverb = new Guid("7D9ACA56-CB68-4807-B632-B137352E8596");
-        internal static Guid CLSID_FXEcho = new Guid("5039D740-F736-449A-84D3-A56202557B87");
 
         public static void CreateFX(System.Guid clsid, SharpDX.ComObject effectRef)
         {
+#if DESKTOP_APP
+            if(XAudio2.XAudio2.Version == XAudio2Version.Version27)
+            {
+                var clsid15 = clsid;
+                if (clsid15 == CLSID_FXEcho)
+                {
+                    clsid15 = CLSID_FXEcho_15;
+                }
+                else if (clsid15 == CLSID_FXEQ)
+                {
+                    clsid15 = CLSID_FXEQ_15;
+                }
+                else if (clsid15 == CLSID_FXMasteringLimiter)
+                {
+                    clsid15 = CLSID_FXMasteringLimiter_15;
+                }
+                else if (clsid15 == CLSID_FXReverb)
+                {
+                    clsid15 = CLSID_FXReverb_15;
+                }
+
+                IntPtr nativePtr;
+                var result = (Result)CreateFX15(ref clsid15, out nativePtr);
+                if(result.Success)
+                {
+                    effectRef.NativePointer = nativePtr;
+                    return;
+                }
+            }
+#endif
             CreateFX(clsid, effectRef, IntPtr.Zero, 0);
         }
+        /// <summary>Constant None.</summary>
+        private static Guid CLSID_FXEcho_15 = new Guid("a90bc001-e897-e897-7439-435500000003");
+        /// <summary>Constant None.</summary>
+        private static Guid CLSID_FXEQ_15 = new Guid("a90bc001-e897-e897-7439-435500000000");
+        /// <summary>Constant None.</summary>
+        private static Guid CLSID_FXMasteringLimiter_15 = new Guid("a90bc001-e897-e897-7439-435500000001");
+        /// <summary>Constant None.</summary>
+        private static Guid CLSID_FXReverb_15 = new Guid("a90bc001-e897-e897-7439-435500000002");
+
+#if DESKTOP_APP
+        [DllImport("XAPOFX1_5.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateFX")]
+        private unsafe static extern int CreateFX15(ref Guid guid, out IntPtr arg1);
 #endif
-        ///// <summary>Constant None.</summary>
-        //internal static Guid CLSID_FXEcho = new Guid("a90bc001-e897-e897-7439-435500000003");
-        ///// <summary>Constant None.</summary>
-        //internal static Guid CLSID_FXEQ = new Guid("a90bc001-e897-e897-7439-435500000000");
-        ///// <summary>Constant None.</summary>
-        //internal static Guid CLSID_FXMasteringLimiter = new Guid("a90bc001-e897-e897-7439-435500000001");
-        ///// <summary>Constant None.</summary>
-        //internal static Guid CLSID_FXReverb = new Guid("a90bc001-e897-e897-7439-435500000002");
     }
 }
