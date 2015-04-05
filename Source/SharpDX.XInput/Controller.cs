@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Runtime.InteropServices;
 using SharpDX.Win32;
 
 namespace SharpDX.XInput
@@ -28,6 +29,7 @@ namespace SharpDX.XInput
     public class Controller
     {
         private readonly UserIndex userIndex;
+        private static readonly IXInput xinput;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Controller"/> class.
@@ -35,6 +37,10 @@ namespace SharpDX.XInput
         /// <param name="userIndex">Index of the user.</param>
         public Controller(UserIndex userIndex = UserIndex.Any)
         {
+            if(xinput == null)
+            {
+                throw new NotSupportedException("XInput 1.4 or 1.3 or 9.1.0 is not installed");
+            }
             this.userIndex = userIndex;
         }
 
@@ -52,8 +58,8 @@ namespace SharpDX.XInput
         /// <unmanaged>unsigned int XInputGetBatteryInformation([In] XUSER_INDEX dwUserIndex,[In] BATTERY_DEVTYPE devType,[Out] XINPUT_BATTERY_INFORMATION* pBatteryInformation)</unmanaged>	
         public BatteryInformation GetBatteryInformation(BatteryDeviceType batteryDeviceType)
         {
-            BatteryInformation temp;            
-            var result =  ErrorCodeHelper.ToResult(XInput.XInputGetBatteryInformation((int)userIndex, batteryDeviceType, out temp));
+            BatteryInformation temp;
+            var result = ErrorCodeHelper.ToResult(xinput.XInputGetBatteryInformation((int)userIndex, batteryDeviceType, out temp));
             result.CheckError();
             return temp;
         }
@@ -67,7 +73,7 @@ namespace SharpDX.XInput
         public Capabilities GetCapabilities(DeviceQueryType deviceQueryType)
         {
             Capabilities temp;
-            var result = ErrorCodeHelper.ToResult(XInput.XInputGetCapabilities((int)userIndex, deviceQueryType, out temp));
+            var result = ErrorCodeHelper.ToResult(xinput.XInputGetCapabilities((int)userIndex, deviceQueryType, out temp));
             result.CheckError();
             return temp;
         }
@@ -80,7 +86,7 @@ namespace SharpDX.XInput
         /// <returns><c>true</c> if the controller is connected, <c>false</c> otherwise.</returns>
         public bool GetCapabilities(DeviceQueryType deviceQueryType, out Capabilities capabilities)
         {
-            return XInput.XInputGetCapabilities((int)userIndex, deviceQueryType, out capabilities) == 0;
+            return xinput.XInputGetCapabilities((int)userIndex, deviceQueryType, out capabilities) == 0;
         }
 
         /// <summary>
@@ -92,7 +98,7 @@ namespace SharpDX.XInput
         /// <unmanaged>unsigned int XInputGetKeystroke([In] XUSER_INDEX dwUserIndex,[In] unsigned int dwReserved,[Out] XINPUT_KEYSTROKE* pKeystroke)</unmanaged>	
         public Result GetKeystroke(DeviceQueryType deviceQueryType, out Keystroke keystroke)
         {
-            var result = ErrorCodeHelper.ToResult(XInput.XInputGetKeystroke((int)userIndex, (int)deviceQueryType, out keystroke));
+            var result = ErrorCodeHelper.ToResult(xinput.XInputGetKeystroke((int)userIndex, (int)deviceQueryType, out keystroke));
             result.CheckError();
             return result;
         }
@@ -104,7 +110,7 @@ namespace SharpDX.XInput
         public State GetState()
         {
             State temp;
-            var result = ErrorCodeHelper.ToResult(XInput.XInputGetState((int)userIndex, out temp));
+            var result = ErrorCodeHelper.ToResult(xinput.XInputGetState((int)userIndex, out temp));
             result.CheckError();
             return temp;
         }
@@ -116,7 +122,7 @@ namespace SharpDX.XInput
         /// <returns><c>true</c> if the controller is connected, <c>false</c> otherwise.</returns>
         public bool GetState(out State state)
         {
-            return XInput.XInputGetState((int)userIndex, out state) == 0;
+            return xinput.XInputGetState((int)userIndex, out state) == 0;
         }
 
         /// <summary>
@@ -125,7 +131,10 @@ namespace SharpDX.XInput
         /// <param name="enableReporting">if set to <c>true</c> [enable reporting].</param>
         public static void SetReporting(bool enableReporting)
         {
-            XInput.XInputEnable(enableReporting);
+            if(xinput != null)
+            {
+                xinput.XInputEnable(enableReporting);
+            }
         }
 
         /// <summary>
@@ -135,7 +144,7 @@ namespace SharpDX.XInput
         /// <returns></returns>
         public Result SetVibration(Vibration vibration)
         {
-            var result = ErrorCodeHelper.ToResult(XInput.XInputSetState((int)userIndex, vibration));
+            var result = ErrorCodeHelper.ToResult(xinput.XInputSetState((int)userIndex, vibration));
             result.CheckError();
             return result;
         }
@@ -151,37 +160,34 @@ namespace SharpDX.XInput
             get
             {
                 State temp;
-                return XInput.XInputGetState((int)userIndex, out temp) == 0;
+                return xinput.XInputGetState((int)userIndex, out temp) == 0;
             }
         }
 
-        /// <summary>
-        /// Gets the sound render GUID.
-        /// </summary>
-        public Guid SoundRenderGuid
+#if DESKTOP_APP
+        static Controller()
         {
-            get
+            if(LoadLibrary("xinput1_4.dll") != IntPtr.Zero)
             {
-                Guid renderGuid;
-                Guid captureGuid;
-                XInput.XInputGetDSoundAudioDeviceGuids((int)userIndex, out renderGuid, out captureGuid);
-                return renderGuid;
+                xinput = new XInput14();
+            }
+            else if (LoadLibrary("xinput1_3.dll") != IntPtr.Zero)
+            {
+                xinput = new XInput13();
+            }
+            else if (LoadLibrary("xinput9_1_0.dll") != IntPtr.Zero)
+            {
+                xinput = new XInput13();
             }
         }
 
-        /// <summary>
-        /// Gets the sound capture GUID.
-        /// </summary>
-        public Guid SoundCaptureGuid
+        [DllImport("kernel32", CharSet = CharSet.Unicode, EntryPoint = "LoadLibrary", SetLastError = true)]
+        private static extern IntPtr LoadLibrary(string lpFileName);
+#else
+        static Controller()
         {
-            get
-            {
-                Guid renderGuid;
-                Guid captureGuid;
-                XInput.XInputGetDSoundAudioDeviceGuids((int) userIndex, out renderGuid, out captureGuid);
-                return captureGuid;
-            }
+            xinput = new XInput14();
         }
+#endif
     }
 }
-
