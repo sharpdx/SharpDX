@@ -24,6 +24,24 @@ namespace SharpDX.Direct3D12
 {
     public partial class GraphicsCommandList
     {
+        /// <summary>	
+        /// No documentation for Direct3D12	
+        /// </summary>	
+        /// <param name="depthStencilView">No documentation.</param>	
+        /// <param name="clearFlags">No documentation.</param>	
+        /// <param name="depth">No documentation.</param>	
+        /// <param name="stencil">No documentation.</param>	
+        /// <param name="rectRef">No documentation.</param>	
+        /// <param name="numRects">No documentation.</param>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12GraphicsCommandList::ClearDepthStencilView']/*"/>	
+        /// <unmanaged>void ID3D12GraphicsCommandList::ClearDepthStencilView([In] D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilView,[In] D3D12_CLEAR_FLAG ClearFlags,[In] float Depth,[In] unsigned char Stencil,[In, Buffer] const RECT* pRect,[In] unsigned int NumRects)</unmanaged>	
+        /// <unmanaged-short>ID3D12GraphicsCommandList::ClearDepthStencilView</unmanaged-short>	
+        public void ClearDepthStencilView(SharpDX.Direct3D12.CpuDescriptorHandle depthStencilView, SharpDX.Direct3D12.DepthStencilClearFlags clearFlags, float depth, byte stencil)
+        {
+            SharpDX.Mathematics.Interop.RawRectangle[] rectRef = new Mathematics.Interop.RawRectangle[0];
+            ClearDepthStencilView(depthStencilView, clearFlags, depth, stencil, rectRef, 0);
+        }
+
         /// <unmanaged>void ID3D12CommandList::ResourceBarrier([In] unsigned int Count,[In, Buffer] const D3D12_RESOURCE_BARRIER_DESC* pDesc)</unmanaged>	
         /// <unmanaged-short>ID3D12CommandList::ResourceBarrier</unmanaged-short>	
         public void ResourceBarrierTransition(Resource resource, ResourceUsage stateBefore, ResourceUsage stateAfter)
@@ -62,6 +80,42 @@ namespace SharpDX.Direct3D12
 
             fixed (void* pBarriers = barriers)
                 ResourceBarrier(barriers.Length, new IntPtr(pBarriers));
+        }
+
+        /// <summary>	
+        /// No documentation for Direct3D12	
+        /// </summary>	
+        /// <param name="startSlot">No documentation.</param>	
+        /// <param name="descRef">No documentation.</param>	
+        /// <param name="numBuffers">No documentation.</param>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12GraphicsCommandList::SetVertexBuffers']/*"/>	
+        /// <unmanaged>void ID3D12GraphicsCommandList::SetVertexBuffers([In] unsigned int StartSlot,[In, Buffer, Optional] const D3D12_VERTEX_BUFFER_VIEW* pDesc,[In] unsigned int NumBuffers)</unmanaged>	
+        /// <unmanaged-short>ID3D12GraphicsCommandList::SetVertexBuffers</unmanaged-short>	
+        public void SetVertexBuffers(int startSlot, SharpDX.Direct3D12.VertexBufferView[] descRef, int numBuffers)
+        {
+            unsafe
+            {
+                SharpDX.Direct3D12.VertexBufferView[] descRef__ = descRef;
+                fixed (void* descRef_ = descRef__)
+                    SetVertexBuffers(startSlot, descRef, numBuffers);
+            }
+        }
+
+        /// <summary>	
+        /// No documentation for Direct3D12	
+        /// </summary>	
+        /// <param name="startSlot">No documentation.</param>	
+        /// <param name="descRef">No documentation.</param>	
+        /// <param name="numBuffers">No documentation.</param>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12GraphicsCommandList::SetVertexBuffers']/*"/>	
+        /// <unmanaged>void ID3D12GraphicsCommandList::SetVertexBuffers([In] unsigned int StartSlot,[In, Buffer, Optional] const D3D12_VERTEX_BUFFER_VIEW* pDesc,[In] unsigned int NumBuffers)</unmanaged>	
+        /// <unmanaged-short>ID3D12GraphicsCommandList::SetVertexBuffers</unmanaged-short>	
+        public void SetVertexBuffer(int startSlot, SharpDX.Direct3D12.VertexBufferView descRef)
+        {
+            unsafe
+            {
+                SetVertexBuffers(startSlot, (IntPtr)(&descRef), 1);
+            }
         }
 
         /// <unmanaged>void ID3D12CommandList::RSSetViewports([In] unsigned int Count,[In, Buffer] const D3D11_VIEWPORT* pViewports)</unmanaged>	

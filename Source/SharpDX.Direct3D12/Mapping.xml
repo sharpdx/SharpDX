@@ -179,10 +179,12 @@
     <map param="ID3D12GraphicsCommandList::ClearUnorderedAccessViewFloat::Values" type="SHARPDX_VECTOR4"/>
     <map param="ID3D12GraphicsCommandList::ResourceBarrier::pDesc" type="void"/>
     <map method="ID3D12GraphicsCommandList::ResourceBarrier" visibility="private"/>
+
     
     <map method="ID3D12GraphicsCommandList::RSSetViewports" rawptr="true"/>
     <map method="ID3D12GraphicsCommandList::RSSetScissorRects" name="SetScissorRectangles" rawptr="true"/>
-
+    <map method="ID3D12GraphicsCommandList::SetVertexBuffers" visibility="private" />
+    <map param="ID3D12GraphicsCommandList::SetVertexBuffers::pDesc" attribute="in" type="void"/>
 
     <map method="ID3D12GraphicsCommandList::(.*)ToHeap" name="$1To" />
     <move method="ID3D12GraphicsCommandList::(.*)ToHeap" to="DescriptorManager" property="Descriptors" />
