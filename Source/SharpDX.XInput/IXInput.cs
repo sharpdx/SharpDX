@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace SharpDX.XACT3
+namespace SharpDX.XInput
 {
     /// <summary>
-    /// Wavebank notification parameters.
+    /// Common interface for XInput to allow using XInput 1.4, 1.3 or 9.1.0.
     /// </summary>
-    /// <unmanaged>XACT_NOTIFICATION_WAVEBANK</unmanaged>
-    public class WaveBankNotification : Notification
+    internal interface IXInput
     {
-        internal unsafe WaveBankNotification(RawNotification* rawNotification)
-            : base(rawNotification)
-        {
-            WaveBank = CppObject.FromPointer<WaveBank>(rawNotification->Data.WaveBank.WaveBankPointer);
-        }
-
-        public WaveBank WaveBank { get; set; }
+        int XInputSetState(int dwUserIndex, SharpDX.XInput.Vibration vibrationRef);
+        int XInputGetState(int dwUserIndex, out SharpDX.XInput.State stateRef);
+        int XInputGetAudioDeviceIds(int dwUserIndex,
+            System.IntPtr renderDeviceIdRef,
+            System.IntPtr renderCountRef,
+            System.IntPtr captureDeviceIdRef,
+            System.IntPtr captureCountRef);
+        void XInputEnable(SharpDX.Mathematics.Interop.RawBool enable);
+        int XInputGetBatteryInformation(int dwUserIndex, SharpDX.XInput.BatteryDeviceType devType, out SharpDX.XInput.BatteryInformation batteryInformationRef);
+        int XInputGetKeystroke(int dwUserIndex, int dwReserved, out SharpDX.XInput.Keystroke keystrokeRef);
+        int XInputGetCapabilities(int dwUserIndex, SharpDX.XInput.DeviceQueryType dwFlags, out SharpDX.XInput.Capabilities capabilitiesRef);
     }
 }

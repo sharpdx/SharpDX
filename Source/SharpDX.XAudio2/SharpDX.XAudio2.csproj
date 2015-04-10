@@ -13,6 +13,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="DeviceDetails.cs" />
     <Compile Include="EffectDescriptor.cs" />
     <Compile Include="AudioBuffer.cs" />
     <Compile Include="EngineCallback.cs" />
@@ -40,6 +41,7 @@
     <Compile Include="Generated\XAPO\Fx\Structures.cs" />
     <Compile Include="Generated\XAPO\Interfaces.cs" />
     <Compile Include="Generated\XAPO\Structures.cs" />
+    <Compile Include="LocalInterop.cs" />
     <Compile Include="MasteringVoice.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="NamespaceDoc.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VoiceSendDescriptor.cs" />
     <Compile Include="VoiceCallback.cs" />
+    <Compile Include="XAudio2Version.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Mapping.xml" />

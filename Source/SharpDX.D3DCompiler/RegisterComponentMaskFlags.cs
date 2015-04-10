@@ -26,7 +26,7 @@ namespace SharpDX.D3DCompiler
     /// </summary>	
     /// <unmanaged>D3D11_REGISTER_COMPONENT_MASK_FLAG</unmanaged>
     [Flags]
-    public enum RegisterComponentMaskFlags : int {	
+    public enum RegisterComponentMaskFlags : byte {	
         
         /// <summary>	
         /// No documentation.	

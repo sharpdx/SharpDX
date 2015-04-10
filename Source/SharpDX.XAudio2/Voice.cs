@@ -23,6 +23,32 @@ namespace SharpDX.XAudio2
 {
     public partial class Voice
     {
+        /// <summary>	
+        /// <p>Returns information about the creation flags, input channels, and sample rate of a voice.</p>	
+        /// </summary>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IXAudio2Voice::GetVoiceDetails']/*"/>	
+        /// <msdn-id>microsoft.directx_sdk.ixaudio2voice.ixaudio2voice.getvoicedetails</msdn-id>	
+        /// <unmanaged>GetVoiceDetails</unmanaged>	
+        /// <unmanaged-short>GetVoiceDetails</unmanaged-short>	
+        /// <unmanaged>void IXAudio2Voice::GetVoiceDetails([Out] XAUDIO2_VOICE_DETAILS* pVoiceDetails)</unmanaged>
+        public SharpDX.XAudio2.VoiceDetails VoiceDetails
+        {
+            get
+            {
+                SharpDX.XAudio2.VoiceDetails __output__; 
+                GetVoiceDetails(out __output__);
+
+                // Handle 2.7 version changes here
+                if (XAudio2.Version == XAudio2Version.Version27)
+                {
+                    __output__.InputSampleRate = __output__.InputChannelCount;
+                    __output__.InputChannelCount = __output__.ActiveFlags;
+                    __output__.ActiveFlags = 0;
+                }
+
+                return __output__;
+            }
+        }
 
         /// <summary>	
         /// Enables the effect at a given position in the effect chain of the voice.	

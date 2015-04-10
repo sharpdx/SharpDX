@@ -34,5 +34,7 @@ namespace SharpDX.XAudio2.Fx
         internal static Guid CLSID_AudioVolumeMeter = new Guid("cac1105f-619b-4d04-831a-44e1cbf12d57");
         /// <summary>Constant None.</summary>
         internal static Guid CLSID_AudioVolumeMeter_Debug = new Guid("2d9a0f9c-e67b-4b24-ab44-92b3e770c020");
+
+        internal static Guid CLSID_IAudioProcessor = new Guid("a90bc001-e897-e897-55e4-9e4700000000");
     }
 }

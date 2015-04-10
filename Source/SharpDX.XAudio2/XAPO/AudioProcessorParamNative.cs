@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using SharpDX.XAudio2;
 
 namespace SharpDX.XAPO
 {
@@ -28,6 +29,8 @@ namespace SharpDX.XAPO
     /// <typeparam name="T">the parameter type of this AudioProcessor</typeparam>
     public abstract partial class AudioProcessorParamNative<T> : AudioProcessorNative where T : struct
     {
+        private static readonly Guid CLSID_ParameterProvider_27 = new Guid("a90bc001-e897-e897-55e4-9e4700000001");
+
         private ParameterProviderNative _parameterProviderNative;
         private int _sizeOfParamT = Utilities.SizeOf<T>();
 
@@ -49,7 +52,10 @@ namespace SharpDX.XAPO
             if (NativePointer != IntPtr.Zero)
             {
                 IntPtr parameterProviderPtr;
-                QueryInterface(Utilities.GetGuidFromType(typeof (ParameterProvider)), out parameterProviderPtr);
+                var clsid = (XAudio2.XAudio2.Version == XAudio2Version.Version27)
+                    ? CLSID_ParameterProvider_27
+                    : Utilities.GetGuidFromType(typeof(ParameterProvider));
+                QueryInterface(clsid, out parameterProviderPtr);
                 _parameterProviderNative = new ParameterProviderNative(parameterProviderPtr);
             }
         }

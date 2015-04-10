@@ -85,6 +85,6 @@
     <file>SharpDX.RawInput\Mapping.xml</file>
   </ifdef>
 
-  <!--<file>SharpDX.XInput\Mapping.xml</file>-->
+  <file>SharpDX.XInput\Mapping.xml</file>
 
 </config>

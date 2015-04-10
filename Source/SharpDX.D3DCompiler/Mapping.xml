@@ -73,7 +73,7 @@
     <create-cpp enum="D3DCOMPILE_SECDATA_FLAGS" macro="D3DCOMPILE_SECDATA_.*"/>
 
     <create class="D3DCommon" />
-    <define enum="SharpDX.D3DCompiler.RegisterComponentMaskFlags" sizeof="4" />
+    <define enum="SharpDX.D3DCompiler.RegisterComponentMaskFlags" sizeof="1" />
     <create class="D3D" />
 
     <context-clear/>

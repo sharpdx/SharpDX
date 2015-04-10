@@ -74,6 +74,13 @@ namespace SharpGen.Config
         [XmlAttribute("property")]
         public bool _Property_ { get { return Property.Value; } set { Property = value; } } public bool ShouldSerialize_Property_() { return Property != null; }
 
+        /// <summary>
+        /// Use to output vtbl offsets for methods as private fields that can be modified
+        /// </summary>
+        [XmlIgnore]
+        public bool? CustomVtbl { get; set; }
+        [XmlAttribute("custom-vtbl")]
+        public bool _CustomVtbl_ { get { return CustomVtbl.Value; } set { CustomVtbl = value; } } public bool ShouldSerialize_CustomVtbl_() { return CustomVtbl != null; }
 
         /// <summary>
         /// Used for property zith COM Objects, in order to persist the getter

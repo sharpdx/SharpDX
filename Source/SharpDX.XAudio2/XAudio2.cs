@@ -27,13 +27,13 @@ namespace SharpDX.XAudio2
         private IntPtr engineShadowPtr;
 
         ///// <summary>Constant None.</summary>
-        //internal static Guid CLSID_XAudio2 = new Guid("5a508685-a254-4fba-9b82-9a24b00306af");
+        private static Guid CLSID_XAudio27 = new Guid("5a508685-a254-4fba-9b82-9a24b00306af");
         
         ///// <summary>Constant None.</summary>
-        //internal static Guid CLSID_XAudio2_Debug = new Guid("db05ea35-0329-4d4b-a53a-6dead03d3852");
+        private static Guid CLSID_XAudio27_Debug = new Guid("db05ea35-0329-4d4b-a53a-6dead03d3852");
 
         ///// <summary>Constant None.</summary>
-        //internal static Guid IID_IXAudio2 = new Guid("8bcf1f58-9fe7-4583-8ac6-e2adc465c8bb");
+        private static Guid IID_IXAudio2 = new Guid("8bcf1f58-9fe7-4583-8ac6-e2adc465c8bb");
 
         /// <summary>	
         /// Called by XAudio2 just before an audio processing pass begins.	
@@ -54,34 +54,50 @@ namespace SharpDX.XAudio2
         /// Initializes a new instance of the <see cref="XAudio2"/> class.
         /// </summary>
         public XAudio2()
-            : this(XAudio2Flags.None, ProcessorSpecifier.DefaultProcessor)
+            : this(XAudio2Version.Default)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XAudio2"/> class.
         /// </summary>
+        public XAudio2(XAudio2Version version)
+            : this(XAudio2Flags.None, ProcessorSpecifier.DefaultProcessor, version)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XAudio2" /> class.
+        /// </summary>
         /// <param name="flags">Specify a Debug or Normal XAudio2 instance.</param>
         /// <param name="processorSpecifier">The processor specifier.</param>
-        public XAudio2(XAudio2Flags flags, ProcessorSpecifier processorSpecifier)
+        /// <param name="version">The version to use (auto, 2.7 or 2.8).</param>
+        /// <exception cref="System.InvalidOperationException">XAudio2 version [ + version + ] is not installed</exception>
+        public XAudio2(XAudio2Flags flags, ProcessorSpecifier processorSpecifier, XAudio2Version version = XAudio2Version.Default)
             : base(IntPtr.Zero)
         {
-#if !DIRECTX11_1
-            Guid clsid = (flags == XAudio2Flags.DebugEngine) ? CLSID_XAudio2_Debug : CLSID_XAudio2;
 
-            // Initialize for multithreaded
-            //var result = Utilities.CoInitializeEx(IntPtr.Zero, Utilities.CoInit.MultiThreaded);
-            //result.CheckError();
-
-            Utilities.CreateComInstance(clsid, Utilities.CLSCTX.ClsctxInprocServer, Utilities.GetGuidFromType(typeof(XAudio2)), this);
-
-            // Initialize XAudio2
-            Initialize(0, processorSpecifier);
-#else
-
-            XAudio2Functions.XAudio2Create(this, 0, (int)processorSpecifier);
-
+#if DESKTOP_APP
+            Guid clsid = ((int)flags == 1) ? CLSID_XAudio27_Debug : CLSID_XAudio27;
+            if ((version == XAudio2Version.Default || version == XAudio2Version.Version27) && Utilities.TryCreateComInstance(clsid, Utilities.CLSCTX.ClsctxInprocServer, IID_IXAudio2, this))
+            {
+                SetupVtblFor27();
+                // Initialize XAudio2
+                Initialize(0, processorSpecifier);
+                Version = XAudio2Version.Version27;
+            }
+            else 
 #endif
+            if (version == XAudio2Version.Default || version == XAudio2Version.Version28)
+            {
+                XAudio2Functions.XAudio2Create(this, 0, (int)processorSpecifier);
+                Version = XAudio2Version.Version28;
+            }
+            else
+            {
+                throw new InvalidOperationException("XAudio2 version [" + version + "] is not installed");
+            }
+
             // Register engine callback
 
             engineCallbackImpl = new EngineCallbackImpl(this);
@@ -89,7 +105,93 @@ namespace SharpDX.XAudio2
             RegisterForCallbacks_(engineShadowPtr);
         }
 
-#if !DIRECTX11_1
+        /// <summary>
+        /// Gets the version of this XAudio2 instance, once a <see cref="XAudio2"/> device has been instanciated.
+        /// </summary>
+        /// <value>The version.</value>
+        public static XAudio2Version Version { get; private set; }
+
+        // ---------------------------------------------------------------------------------
+        // Start handling 2.7 version here
+        // ---------------------------------------------------------------------------------
+
+        /// <summary>
+        /// Setups the VTBL for XAudio 2.7. The 2.7 verions had 3 methods starting at VTBL[3]:
+        /// - GetDeviceCount
+        /// - GetDeviceDetails
+        /// - Initialize
+        /// </summary>
+        private void SetupVtblFor27()
+        {
+            RegisterForCallbacks___vtbl_index += 3;
+            UnregisterForCallbacks___vtbl_index += 3;
+            CreateSourceVoice___vtbl_index += 3;
+            CreateSubmixVoice__vtbl_index += 3;
+            CreateMasteringVoice__vtbl_index += 3;
+            StartEngine__vtbl_index += 3;
+            StopEngine__vtbl_index += 3;
+            CommitChanges__vtbl_index += 3;
+            GetPerformanceData__vtbl_index += 3;
+            SetDebugConfiguration__vtbl_index += 3;
+        }
+
+        private void CheckVersion27()
+        {
+            if (Version != XAudio2Version.Version27)
+            {
+                throw new InvalidOperationException("This method is only valid on the XAudio 2.7 version [Current is: " + Version + "]");
+            }
+        }
+
+        /// <summary>	
+        /// No documentation.	
+        /// </summary>	
+        /// <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='IXAudio2::GetDeviceCount']/*" />	
+        /// <unmanaged>GetDeviceCount</unmanaged>	
+        /// <unmanaged-short>GetDeviceCount</unmanaged-short>	
+        /// <unmanaged>HRESULT IXAudio2::GetDeviceCount([Out] unsigned int* pCount)</unmanaged>
+        public int DeviceCount
+        {
+            get
+            {
+                CheckVersion27();
+                int result;
+                this.GetDeviceCount(out result);
+                return result;
+            }
+        }
+
+        /// <summary>	
+        /// No documentation.	
+        /// </summary>	
+        /// <param name="countRef">No documentation.</param>	
+        /// <returns>No documentation.</returns>	
+        /// <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='IXAudio2::GetDeviceCount']/*" />	
+        /// <unmanaged>HRESULT IXAudio2::GetDeviceCount([Out] unsigned int* pCount)</unmanaged>	
+        /// <unmanaged-short>IXAudio2::GetDeviceCount</unmanaged-short>	
+        private unsafe void GetDeviceCount(out int countRef)
+        {
+	        Result result;
+	        fixed (void* ptr = &countRef)
+	        {
+		        result = LocalInterop.Calliint(this._nativePointer, ptr, *(*(void***)this._nativePointer + 3));
+	        }
+	        result.CheckError();
+        }
+
+        internal unsafe void CreateMasteringVoice27(MasteringVoice masteringVoiceOut, int inputChannels, int inputSampleRate, int flags, int deviceIndex, EffectChain? effectChainRef)
+        {
+	        IntPtr zero = IntPtr.Zero;
+	        EffectChain value;
+	        if (effectChainRef.HasValue)
+	        {
+		        value = effectChainRef.Value;
+	        }
+	        Result result = LocalInterop.Calliint(this._nativePointer, (void*)&zero, inputChannels, inputSampleRate, flags, deviceIndex, effectChainRef.HasValue ? ((void*)(&value)) : ((void*)IntPtr.Zero), *(*(void***)this._nativePointer + 10));
+	        masteringVoiceOut.NativePointer = zero;
+	        result.CheckError();
+        }
+
         /// <summary>	
         /// Returns information about an audio output device.	
         /// </summary>	
@@ -98,11 +200,31 @@ namespace SharpDX.XAudio2
         /// <unmanaged>HRESULT IXAudio2::GetDeviceDetails([None] UINT32 Index,[Out] XAUDIO2_DEVICE_DETAILS* pDeviceDetails)</unmanaged>
         public SharpDX.XAudio2.DeviceDetails GetDeviceDetails(int index)
         {
+            CheckVersion27();
+
             DeviceDetails details;
             GetDeviceDetails(index, out details);
             return details;
         }
-#endif
+
+        private unsafe void GetDeviceDetails(int index, out DeviceDetails deviceDetailsRef)
+        {
+	        DeviceDetails.__Native _Native = default(DeviceDetails.__Native);
+	        Result result = LocalInterop.Calliint(this._nativePointer, index, &_Native, *(*(void***)this._nativePointer + 4));
+	        deviceDetailsRef = default(DeviceDetails);
+	        deviceDetailsRef.__MarshalFrom(ref _Native);
+	        result.CheckError();
+        }
+
+        private unsafe void Initialize(int flags, ProcessorSpecifier xAudio2Processor)
+        {
+	        var result = (Result)LocalInterop.Calliint(this._nativePointer, (int)flags, (int)xAudio2Processor, *(*(void***)this._nativePointer + 5));
+            result.CheckError();
+        }
+
+        // ---------------------------------------------------------------------------------
+        // End handling 2.7 version here
+        // ---------------------------------------------------------------------------------
 
         /// <summary>
         /// Calculate a decibel from a volume.

@@ -1,5 +1,3 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
 // Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,5 +17,27 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
--->
-<comments></comments>
+
+namespace SharpDX.XAudio2
+{
+    /// <summary>
+    /// An enum to select the XAudio version to load.
+    /// </summary>
+    public enum XAudio2Version
+    {
+        /// <summary>
+        /// The default version (2.7 if it is installed, otherwise 2.8)
+        /// </summary>
+        Default,
+
+        /// <summary>
+        /// The XAudio2.7 version.
+        /// </summary>
+        Version27,
+
+        /// <summary>
+        /// The XAudio2.8 version.
+        /// </summary>
+        Version28,
+    }
+}
