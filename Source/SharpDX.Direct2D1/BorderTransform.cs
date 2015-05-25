@@ -18,8 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SharpDX.Direct2D1
 {
@@ -34,7 +32,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT ID2D1EffectContext::CreateBorderTransform([In] D2D1_EXTEND_MODE extendModeX,[In] D2D1_EXTEND_MODE extendModeY,[Out, Fast] ID2D1BorderTransform** transform)</unmanaged>	
         public BorderTransform(EffectContext context, SharpDX.Direct2D1.ExtendMode extendModeX, SharpDX.Direct2D1.ExtendMode extendModeY) : base(IntPtr.Zero)
         {
-            context.CreateBorderTransform(extendModeX, ExtendModeX, this);
+            context.CreateBorderTransform(extendModeX, extendModeY, this);
         }
     }
 }
