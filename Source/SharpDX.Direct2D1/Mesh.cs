@@ -45,9 +45,11 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT CreateMesh([Out] ID2D1Mesh** mesh)</unmanaged>
         public Mesh(RenderTarget renderTarget, SharpDX.Direct2D1.Triangle[] triangles) : this(renderTarget)
         {
-            var sink = Open();
-            sink.AddTriangles(triangles);
-            sink.Close();
+            using(var sink = Open())
+            {
+                sink.AddTriangles(triangles);
+                sink.Close();
+            }
         }
 
         /// <summary>	
