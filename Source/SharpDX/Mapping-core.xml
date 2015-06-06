@@ -459,6 +459,7 @@
     <define struct="SharpDX.PointerSize" sizeof="8" />
     <define struct="SharpDX.Mathematics.Interop.RawMatrix" sizeof="64" />
     <define struct="SharpDX.Mathematics.Interop.RawMatrix3x2" sizeof="24" />
+    <define struct="SharpDX.Mathematics.Interop.RawMatrix5x4" sizeof="80" />
     <define struct="SharpDX.Mathematics.Interop.RawVector2" sizeof="8" />
     <define struct="SharpDX.Mathematics.Interop.RawVector3" sizeof="12" />
     <define struct="SharpDX.Mathematics.Interop.RawVector4" sizeof="16" />
