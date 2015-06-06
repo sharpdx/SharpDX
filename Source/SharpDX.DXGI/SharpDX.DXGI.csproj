@@ -14,6 +14,7 @@
     </Compile>
     <Compile Include="Adapter.cs" />
     <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="Factory4.cs" />
     <Compile Include="Factory2.cs" />
     <Compile Include="Output1.cs" />
     <Compile Include="NamespaceDoc.cs" />
