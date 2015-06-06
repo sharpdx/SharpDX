@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace SharpDX
@@ -142,6 +143,7 @@ namespace SharpDX
         /// <param name="right">The second value to compare.</param>
         /// <returns>
         /// <c>true</c> if <paramref name="left" /> has the same value as <paramref name="right" />; otherwise, <c>false</c>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Half3 left, Half3 right)
         {
             return Equals(ref left, ref right);
@@ -155,6 +157,7 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if <paramref name="left" /> has a different value than <paramref name="right" />; otherwise, <c>false</c>.</returns>
         [return: MarshalAs(UnmanagedType.U1)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Half3 left, Half3 right)
         {
             return !Equals(ref left, ref right);
@@ -183,6 +186,7 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if <paramref name="value1" /> is the same instance as <paramref name="value2" /> or 
         /// if both are <c>null</c> references or if <c>value1.Equals(value2)</c> returns <c>true</c>; otherwise, <c>false</c>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Equals(ref Half3 value1, ref Half3 value2)
         {
             return (((value1.X == value2.X) && (value1.Y == value2.Y)) && (value1.Z == value2.Z));
@@ -207,14 +211,9 @@ namespace SharpDX
         /// <c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
         public override bool Equals(object obj)
         {
-            if (obj == null)
-            {
+            if (!(obj is Half3))
                 return false;
-            }
-            if (!ReferenceEquals(obj.GetType(), typeof(Half3)))
-            {
-                return false;
-            }
+
             return this.Equals((Half3)obj);
         }
     }

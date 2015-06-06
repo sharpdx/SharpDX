@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using SharpDX.Mathematics.Interop;
 
@@ -63,17 +64,33 @@ namespace SharpDX
         /// <returns>
         ///   <c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(Point other)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals(ref Point other)
         {
             return other.X == X && other.Y == Y;
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="System.Object"/> to compare with this instance.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals(Point other)
+        {
+            return Equals(ref other);
         }
 
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(Point)) return false;
-            return Equals((Point)obj);
+            if(!(obj is Point))
+                return false;
+
+            var strongValue = (Point)obj;
+            return Equals(ref strongValue);
         }
 
         /// <inheritdoc/>
@@ -93,9 +110,10 @@ namespace SharpDX
         /// <returns>
         /// The result of the operator.
         /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Point left, Point right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -106,9 +124,10 @@ namespace SharpDX
         /// <returns>
         /// The result of the operator.
         /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Point left, Point right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         public override string ToString()

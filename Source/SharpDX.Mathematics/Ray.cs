@@ -45,6 +45,7 @@
 
 using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace SharpDX
@@ -305,9 +306,10 @@ namespace SharpDX
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Ray left, Ray right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -316,9 +318,10 @@ namespace SharpDX
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Ray left, Ray right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>
@@ -392,9 +395,23 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref="Vector4"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(Ray value)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals(ref Ray value)
         {
             return Position == value.Position && Direction == value.Direction;
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="Vector4"/> is equal to this instance.
+        /// </summary>
+        /// <param name="value">The <see cref="Vector4"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="Vector4"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals(Ray value)
+        {
+            return Equals(ref value);
         }
 
         /// <summary>
@@ -406,13 +423,11 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
+            if (!(value is Ray))
                 return false;
 
-            if (!ReferenceEquals(value.GetType(), typeof(Ray)))
-                return false;
-
-            return Equals((Ray)value);
+            var strongValue = (Ray)value;
+            return Equals(ref strongValue);
         }
     }
 }

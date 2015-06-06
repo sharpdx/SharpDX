@@ -45,6 +45,7 @@
 
 using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using SharpDX.Mathematics.Interop;
 
@@ -766,9 +767,10 @@ namespace SharpDX
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Color4 left, Color4 right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -777,9 +779,10 @@ namespace SharpDX
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Color4 left, Color4 right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>
@@ -957,9 +960,23 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref="Color4"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(Color4 other)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals(ref Color4 other)
         {
             return Alpha == other.Alpha && Red == other.Red && Green == other.Green && Blue == other.Blue;
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="Color4"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="Color4"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="Color4"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals(Color4 other)
+        {
+            return Equals(ref other);
         }
 
         /// <summary>
@@ -971,13 +988,11 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
+            if (!(value is Color4))
                 return false;
 
-            if (!ReferenceEquals(value.GetType(), typeof(Color4)))
-                return false;
-
-            return Equals((Color4)value);
+            var strongValue = (Color4)value;
+            return Equals(ref strongValue);
         }
 
         /// <summary>

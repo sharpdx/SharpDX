@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace SharpDX
@@ -212,6 +213,7 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if <paramref name = "value1" /> is the same instance as <paramref name = "value2" /> or 
         /// if both are <c>null</c> references or if <c>value1.Equals(value2)</c> returns <c>true</c>; otherwise, <c>false</c>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Equals(ref Half value1, ref Half value2)
         {
             return value1.value == value2.value;
@@ -236,16 +238,10 @@ namespace SharpDX
         /// <c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
         public override bool Equals(object obj)
         {
-            if (obj == null)
-            {
+            if (!(obj is Half))
                 return false;
-            }
-            if (!ReferenceEquals(obj.GetType(), typeof(Half)))
-            {
-                return false;
-            }
-            Half half = (Half) obj;
-            return half.value == value;
+
+            return Equals((Half)obj);
         }
 
         static Half()

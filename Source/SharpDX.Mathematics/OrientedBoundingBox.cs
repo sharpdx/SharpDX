@@ -20,6 +20,7 @@
 
 using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace SharpDX
@@ -773,9 +774,23 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref="Vector4"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(OrientedBoundingBox value)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals(ref OrientedBoundingBox value)
         {
             return Extents == value.Extents && Transformation == value.Transformation;
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="Vector4"/> is equal to this instance.
+        /// </summary>
+        /// <param name="value">The <see cref="Vector4"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="Vector4"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals(OrientedBoundingBox value)
+        {
+            return Equals(ref value);
         }
 
         /// <summary>
@@ -787,13 +802,11 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
+            if (!(value is OrientedBoundingBox))
                 return false;
 
-            if (!ReferenceEquals(value.GetType(), typeof(OrientedBoundingBox)))
-                return false;
-
-            return Equals((OrientedBoundingBox)value);
+            var strongValue = (OrientedBoundingBox)value;
+            return Equals(ref strongValue);
         }
 
         /// <summary>
@@ -802,9 +815,10 @@ namespace SharpDX
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(OrientedBoundingBox left, OrientedBoundingBox right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -813,9 +827,10 @@ namespace SharpDX
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(OrientedBoundingBox left, OrientedBoundingBox right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>

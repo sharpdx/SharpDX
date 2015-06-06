@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace SharpDX
@@ -136,9 +137,23 @@ namespace SharpDX
         /// <returns>
         ///   <c>true</c> if the specified <see cref="BoundingFrustum"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(BoundingFrustum other)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals(ref BoundingFrustum other)
         {
             return this.pMatrix == other.pMatrix;
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="BoundingFrustum"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="BoundingFrustum"/> to compare with this instance.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified <see cref="BoundingFrustum"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals(BoundingFrustum other)
+        {
+            return Equals(ref other);
         }
 
         /// <summary>
@@ -150,9 +165,11 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object obj)
         {
-            if (obj != null && obj is BoundingFrustum)
-                return Equals((BoundingFrustum)obj);
-            return false;
+            if(!(obj is BoundingFrustum))
+                return false;
+
+            var strongValue = (BoundingFrustum)obj;
+            return Equals(ref strongValue);
         }
 
         /// <summary>
@@ -163,9 +180,10 @@ namespace SharpDX
         /// <returns>
         /// The result of the operator.
         /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(BoundingFrustum left, BoundingFrustum right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -176,9 +194,10 @@ namespace SharpDX
         /// <returns>
         /// The result of the operator.
         /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(BoundingFrustum left, BoundingFrustum right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>
