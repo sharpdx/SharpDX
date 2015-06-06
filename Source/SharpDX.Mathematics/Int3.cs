@@ -605,10 +605,7 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
-                return false;
-
-            if (!ReferenceEquals(value.GetType(), typeof(Int3)))
+            if (!(value is Int3))
                 return false;
 
             return Equals((Int3) value);

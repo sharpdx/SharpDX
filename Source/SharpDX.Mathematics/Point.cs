@@ -71,8 +71,9 @@ namespace SharpDX
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(Point)) return false;
+            if(!(obj is Point))
+                return false;
+
             return Equals((Point)obj);
         }
 

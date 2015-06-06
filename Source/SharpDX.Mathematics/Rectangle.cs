@@ -400,8 +400,9 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(Rectangle)) return false;
+            if(!(obj is Rectangle))
+                return false;
+
             return Equals((Rectangle)obj);
         }
 

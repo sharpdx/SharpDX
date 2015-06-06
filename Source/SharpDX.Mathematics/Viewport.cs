@@ -152,11 +152,10 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
-            {
+            if(!(obj is Viewport))
                 return false;
-            }
-            return obj is Viewport && Equals((Viewport)obj);
+
+            return Equals((Viewport)obj);
         }
 
         /// <summary>

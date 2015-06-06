@@ -787,10 +787,7 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
-                return false;
-
-            if (!ReferenceEquals(value.GetType(), typeof(OrientedBoundingBox)))
+            if (!(value is OrientedBoundingBox))
                 return false;
 
             return Equals((OrientedBoundingBox)value);

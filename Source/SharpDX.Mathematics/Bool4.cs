@@ -337,10 +337,7 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
-                return false;
-
-            if (!ReferenceEquals(value.GetType(), typeof(Bool4)))
+            if (!(value is Bool4))
                 return false;
 
             return Equals((Bool4) value);

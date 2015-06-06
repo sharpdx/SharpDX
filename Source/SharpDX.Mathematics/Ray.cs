@@ -406,10 +406,7 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
-                return false;
-
-            if (!ReferenceEquals(value.GetType(), typeof(Ray)))
+            if (!(value is Ray))
                 return false;
 
             return Equals((Ray)value);

@@ -485,10 +485,7 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
-                return false;
-
-            if (!ReferenceEquals(value.GetType(), typeof(BoundingBox)))
+            if (!(value is BoundingBox))
                 return false;
 
             return Equals((BoundingBox)value);

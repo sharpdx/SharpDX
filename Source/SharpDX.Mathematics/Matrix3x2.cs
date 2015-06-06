@@ -1111,10 +1111,7 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
-                return false;
-
-            if (!ReferenceEquals(value.GetType(), typeof(Matrix3x2)))
+            if (!(value is Matrix3x2))
                 return false;
 
             return Equals((Matrix3x2)value);

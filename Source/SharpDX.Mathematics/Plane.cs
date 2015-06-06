@@ -895,10 +895,7 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
-                return false;
-
-            if (!ReferenceEquals(value.GetType(), typeof(Plane)))
+            if (!(value is Plane))
                 return false;
 
             return Equals((Plane)value);

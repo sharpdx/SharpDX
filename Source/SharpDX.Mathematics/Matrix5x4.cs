@@ -1056,10 +1056,7 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
-                return false;
-
-            if (!ReferenceEquals(value.GetType(), typeof(Matrix5x4)))
+            if (!(value is Matrix5x4))
                 return false;
 
             return Equals((Matrix5x4)value);

@@ -499,10 +499,7 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
-                return false;
-
-            if (!ReferenceEquals(value.GetType(), typeof(BoundingSphere)))
+            if (!(value is BoundingSphere))
                 return false;
 
             return Equals((BoundingSphere)value);

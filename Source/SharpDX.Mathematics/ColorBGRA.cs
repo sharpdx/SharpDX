@@ -1123,10 +1123,7 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
-                return false;
-
-            if (!ReferenceEquals(value.GetType(), typeof(ColorBGRA)))
+            if (!(value is ColorBGRA))
                 return false;
 
             return Equals((ColorBGRA)value);
