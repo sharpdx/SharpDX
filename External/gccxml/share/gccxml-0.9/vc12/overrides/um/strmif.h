@@ -3,10 +3,9 @@
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
- /* File created by MIDL compiler version 8.00.0602 */
+ /* File created by MIDL compiler version 8.00.0611 */
 /* @@MIDL_FILE_HEADING(  ) */
 
-#pragma warning( disable: 4049 )  /* more than 64k source lines */
 
 
 /* verify that the <rpcndr.h> version is high enough to compile this file*/
@@ -24,7 +23,7 @@
 
 #ifndef __RPCNDR_H_VERSION__
 #error this stub requires an updated version of <rpcndr.h>
-#endif // __RPCNDR_H_VERSION__
+#endif /* __RPCNDR_H_VERSION__ */
 
 #ifndef COM_NO_WINDOWS_H
 #include "windows.h"
@@ -817,69 +816,6 @@ typedef interface IAMPluginControl IAMPluginControl;
 #endif 	/* __IAMPluginControl_FWD_DEFINED__ */
 
 
-#ifndef __IDvdControl_FWD_DEFINED__
-#define __IDvdControl_FWD_DEFINED__
-typedef interface IDvdControl IDvdControl;
-
-#endif 	/* __IDvdControl_FWD_DEFINED__ */
-
-
-#ifndef __IDvdInfo_FWD_DEFINED__
-#define __IDvdInfo_FWD_DEFINED__
-typedef interface IDvdInfo IDvdInfo;
-
-#endif 	/* __IDvdInfo_FWD_DEFINED__ */
-
-
-#ifndef __IDvdCmd_FWD_DEFINED__
-#define __IDvdCmd_FWD_DEFINED__
-typedef interface IDvdCmd IDvdCmd;
-
-#endif 	/* __IDvdCmd_FWD_DEFINED__ */
-
-
-#ifndef __IDvdState_FWD_DEFINED__
-#define __IDvdState_FWD_DEFINED__
-typedef interface IDvdState IDvdState;
-
-#endif 	/* __IDvdState_FWD_DEFINED__ */
-
-
-#ifndef __IDvdControl2_FWD_DEFINED__
-#define __IDvdControl2_FWD_DEFINED__
-typedef interface IDvdControl2 IDvdControl2;
-
-#endif 	/* __IDvdControl2_FWD_DEFINED__ */
-
-
-#ifndef __IDvdInfo2_FWD_DEFINED__
-#define __IDvdInfo2_FWD_DEFINED__
-typedef interface IDvdInfo2 IDvdInfo2;
-
-#endif 	/* __IDvdInfo2_FWD_DEFINED__ */
-
-
-#ifndef __IDvdGraphBuilder_FWD_DEFINED__
-#define __IDvdGraphBuilder_FWD_DEFINED__
-typedef interface IDvdGraphBuilder IDvdGraphBuilder;
-
-#endif 	/* __IDvdGraphBuilder_FWD_DEFINED__ */
-
-
-#ifndef __IDDrawExclModeVideo_FWD_DEFINED__
-#define __IDDrawExclModeVideo_FWD_DEFINED__
-typedef interface IDDrawExclModeVideo IDDrawExclModeVideo;
-
-#endif 	/* __IDDrawExclModeVideo_FWD_DEFINED__ */
-
-
-#ifndef __IDDrawExclModeVideoCallback_FWD_DEFINED__
-#define __IDDrawExclModeVideoCallback_FWD_DEFINED__
-typedef interface IDDrawExclModeVideoCallback IDDrawExclModeVideoCallback;
-
-#endif 	/* __IDDrawExclModeVideoCallback_FWD_DEFINED__ */
-
-
 #ifndef __IPinConnection_FWD_DEFINED__
 #define __IPinConnection_FWD_DEFINED__
 typedef interface IPinConnection IPinConnection;
@@ -1027,6 +963,69 @@ typedef interface IVPManager IVPManager;
 #endif 	/* __IVPManager_FWD_DEFINED__ */
 
 
+#ifndef __IDvdControl_FWD_DEFINED__
+#define __IDvdControl_FWD_DEFINED__
+typedef interface IDvdControl IDvdControl;
+
+#endif 	/* __IDvdControl_FWD_DEFINED__ */
+
+
+#ifndef __IDvdInfo_FWD_DEFINED__
+#define __IDvdInfo_FWD_DEFINED__
+typedef interface IDvdInfo IDvdInfo;
+
+#endif 	/* __IDvdInfo_FWD_DEFINED__ */
+
+
+#ifndef __IDvdCmd_FWD_DEFINED__
+#define __IDvdCmd_FWD_DEFINED__
+typedef interface IDvdCmd IDvdCmd;
+
+#endif 	/* __IDvdCmd_FWD_DEFINED__ */
+
+
+#ifndef __IDvdState_FWD_DEFINED__
+#define __IDvdState_FWD_DEFINED__
+typedef interface IDvdState IDvdState;
+
+#endif 	/* __IDvdState_FWD_DEFINED__ */
+
+
+#ifndef __IDvdControl2_FWD_DEFINED__
+#define __IDvdControl2_FWD_DEFINED__
+typedef interface IDvdControl2 IDvdControl2;
+
+#endif 	/* __IDvdControl2_FWD_DEFINED__ */
+
+
+#ifndef __IDvdInfo2_FWD_DEFINED__
+#define __IDvdInfo2_FWD_DEFINED__
+typedef interface IDvdInfo2 IDvdInfo2;
+
+#endif 	/* __IDvdInfo2_FWD_DEFINED__ */
+
+
+#ifndef __IDvdGraphBuilder_FWD_DEFINED__
+#define __IDvdGraphBuilder_FWD_DEFINED__
+typedef interface IDvdGraphBuilder IDvdGraphBuilder;
+
+#endif 	/* __IDvdGraphBuilder_FWD_DEFINED__ */
+
+
+#ifndef __IDDrawExclModeVideo_FWD_DEFINED__
+#define __IDDrawExclModeVideo_FWD_DEFINED__
+typedef interface IDDrawExclModeVideo IDDrawExclModeVideo;
+
+#endif 	/* __IDDrawExclModeVideo_FWD_DEFINED__ */
+
+
+#ifndef __IDDrawExclModeVideoCallback_FWD_DEFINED__
+#define __IDDrawExclModeVideoCallback_FWD_DEFINED__
+typedef interface IDDrawExclModeVideoCallback IDDrawExclModeVideoCallback;
+
+#endif 	/* __IDDrawExclModeVideoCallback_FWD_DEFINED__ */
+
+
 /* header files for imported files */
 #include "unknwn.h"
 #include "objidl.h"
@@ -1047,12 +1046,12 @@ extern "C"{
 //
 //--------------------------------------------------------------------------
 #include <winapifamily.h>
-#pragma region Desktop Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 // Disable /W4 compiler warning C4201: nameless struct/union
 #pragma warning(push)
 #pragma warning(disable:4201)  // Disable C4201: nameless struct/union
   
+#pragma region Desktop Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #include <winapifamily.h>
 #pragma region Desktop Family
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
@@ -10103,7 +10102,14 @@ EXTERN_C const IID IID_IAMBufferNegotiation;
 /* interface __MIDL_itf_strmif_0000_0056 */
 /* [local] */ 
 
+#pragma warning(push)
+#pragma warning(disable:4001) 
 #pragma once
+#pragma warning(push)
+#pragma warning(disable:4001) 
+#pragma once
+#pragma warning(pop)
+#pragma warning(pop)
 #pragma region Desktop Family
 #pragma region Desktop Family
 #pragma endregion
@@ -13482,10 +13488,6 @@ typedef union _timecode {
    DWORDLONG  qw;
    } TIMECODE;
 
-#endif /* TIMECODE_DEFINED */
-#endif /* 0 */
-typedef TIMECODE *PTIMECODE;
-
 typedef struct tagTIMECODE_SAMPLE
     {
     LONGLONG qwTick;
@@ -13493,6 +13495,10 @@ typedef struct tagTIMECODE_SAMPLE
     DWORD dwUser;
     DWORD dwFlags;
     } 	TIMECODE_SAMPLE;
+
+#endif /* TIMECODE_DEFINED */
+#endif /* 0 */
+typedef TIMECODE *PTIMECODE;
 
 typedef TIMECODE_SAMPLE *PTIMECODE_SAMPLE;
 
@@ -17830,6 +17836,657 @@ EXTERN_C const IID IID_IAMPluginControl;
 #include <winapifamily.h>
 #pragma region Desktop Family
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+
+
+
+
+
+
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0111_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0111_v0_0_s_ifspec;
+
+#ifndef __IPinConnection_INTERFACE_DEFINED__
+#define __IPinConnection_INTERFACE_DEFINED__
+
+/* interface IPinConnection */
+/* [unique][uuid][object][local] */ 
+
+
+EXTERN_C const IID IID_IPinConnection;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("4a9a62d3-27d4-403d-91e9-89f540e55534")
+    IPinConnection : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE DynamicQueryAccept( 
+            /* [in] */ const AM_MEDIA_TYPE *pmt) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE NotifyEndOfStream( 
+            /* [in] */ HANDLE hNotifyEvent) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE IsEndPin( void) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE DynamicDisconnect( void) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IPinConnectionVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IPinConnection * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IPinConnection * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IPinConnection * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *DynamicQueryAccept )( 
+            IPinConnection * This,
+            /* [in] */ const AM_MEDIA_TYPE *pmt);
+        
+        HRESULT ( STDMETHODCALLTYPE *NotifyEndOfStream )( 
+            IPinConnection * This,
+            /* [in] */ HANDLE hNotifyEvent);
+        
+        HRESULT ( STDMETHODCALLTYPE *IsEndPin )( 
+            IPinConnection * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *DynamicDisconnect )( 
+            IPinConnection * This);
+        
+        END_INTERFACE
+    } IPinConnectionVtbl;
+
+    interface IPinConnection
+    {
+        CONST_VTBL struct IPinConnectionVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IPinConnection_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IPinConnection_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IPinConnection_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IPinConnection_DynamicQueryAccept(This,pmt)	\
+    ( (This)->lpVtbl -> DynamicQueryAccept(This,pmt) ) 
+
+#define IPinConnection_NotifyEndOfStream(This,hNotifyEvent)	\
+    ( (This)->lpVtbl -> NotifyEndOfStream(This,hNotifyEvent) ) 
+
+#define IPinConnection_IsEndPin(This)	\
+    ( (This)->lpVtbl -> IsEndPin(This) ) 
+
+#define IPinConnection_DynamicDisconnect(This)	\
+    ( (This)->lpVtbl -> DynamicDisconnect(This) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IPinConnection_INTERFACE_DEFINED__ */
+
+
+#ifndef __IPinFlowControl_INTERFACE_DEFINED__
+#define __IPinFlowControl_INTERFACE_DEFINED__
+
+/* interface IPinFlowControl */
+/* [unique][uuid][object][local] */ 
+
+
+EXTERN_C const IID IID_IPinFlowControl;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("c56e9858-dbf3-4f6b-8119-384af2060deb")
+    IPinFlowControl : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE Block( 
+            /* [in] */ DWORD dwBlockFlags,
+            /* [in] */ HANDLE hEvent) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IPinFlowControlVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IPinFlowControl * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IPinFlowControl * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IPinFlowControl * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *Block )( 
+            IPinFlowControl * This,
+            /* [in] */ DWORD dwBlockFlags,
+            /* [in] */ HANDLE hEvent);
+        
+        END_INTERFACE
+    } IPinFlowControlVtbl;
+
+    interface IPinFlowControl
+    {
+        CONST_VTBL struct IPinFlowControlVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IPinFlowControl_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IPinFlowControl_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IPinFlowControl_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IPinFlowControl_Block(This,dwBlockFlags,hEvent)	\
+    ( (This)->lpVtbl -> Block(This,dwBlockFlags,hEvent) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IPinFlowControl_INTERFACE_DEFINED__ */
+
+
+/* interface __MIDL_itf_strmif_0000_0113 */
+/* [local] */ 
+
+
+enum _AM_PIN_FLOW_CONTROL_BLOCK_FLAGS
+    {
+        AM_PIN_FLOW_CONTROL_BLOCK	= 0x1
+    } ;
+typedef 
+enum _AM_GRAPH_CONFIG_RECONNECT_FLAGS
+    {
+        AM_GRAPH_CONFIG_RECONNECT_DIRECTCONNECT	= 0x1,
+        AM_GRAPH_CONFIG_RECONNECT_CACHE_REMOVED_FILTERS	= 0x2,
+        AM_GRAPH_CONFIG_RECONNECT_USE_ONLY_CACHED_FILTERS	= 0x4
+    } 	AM_GRAPH_CONFIG_RECONNECT_FLAGS;
+
+
+enum _REM_FILTER_FLAGS
+    {
+        REMFILTERF_LEAVECONNECTED	= 0x1
+    } ;
+typedef 
+enum _AM_FILTER_FLAGS
+    {
+        AM_FILTER_FLAGS_REMOVABLE	= 0x1
+    } 	AM_FILTER_FLAGS;
+
+
+
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0113_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0113_v0_0_s_ifspec;
+
+#ifndef __IGraphConfig_INTERFACE_DEFINED__
+#define __IGraphConfig_INTERFACE_DEFINED__
+
+/* interface IGraphConfig */
+/* [unique][uuid][object][local] */ 
+
+
+EXTERN_C const IID IID_IGraphConfig;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("03A1EB8E-32BF-4245-8502-114D08A9CB88")
+    IGraphConfig : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE Reconnect( 
+            /* [in] */ IPin *pOutputPin,
+            /* [in] */ IPin *pInputPin,
+            /* [in] */ const AM_MEDIA_TYPE *pmtFirstConnection,
+            /* [in] */ IBaseFilter *pUsingFilter,
+            /* [in] */ HANDLE hAbortEvent,
+            /* [in] */ DWORD dwFlags) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE Reconfigure( 
+            /* [in] */ IGraphConfigCallback *pCallback,
+            /* [in] */ PVOID pvContext,
+            /* [in] */ DWORD dwFlags,
+            /* [in] */ HANDLE hAbortEvent) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE AddFilterToCache( 
+            /* [in] */ IBaseFilter *pFilter) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE EnumCacheFilter( 
+            /* [out] */ IEnumFilters **pEnum) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE RemoveFilterFromCache( 
+            /* [in] */ IBaseFilter *pFilter) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetStartTime( 
+            /* [out] */ REFERENCE_TIME *prtStart) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE PushThroughData( 
+            /* [in] */ IPin *pOutputPin,
+            /* [in] */ IPinConnection *pConnection,
+            /* [in] */ HANDLE hEventAbort) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetFilterFlags( 
+            /* [in] */ IBaseFilter *pFilter,
+            /* [in] */ DWORD dwFlags) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetFilterFlags( 
+            /* [in] */ IBaseFilter *pFilter,
+            /* [out] */ DWORD *pdwFlags) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE RemoveFilterEx( 
+            /* [in] */ IBaseFilter *pFilter,
+            DWORD Flags) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IGraphConfigVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IGraphConfig * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IGraphConfig * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IGraphConfig * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *Reconnect )( 
+            IGraphConfig * This,
+            /* [in] */ IPin *pOutputPin,
+            /* [in] */ IPin *pInputPin,
+            /* [in] */ const AM_MEDIA_TYPE *pmtFirstConnection,
+            /* [in] */ IBaseFilter *pUsingFilter,
+            /* [in] */ HANDLE hAbortEvent,
+            /* [in] */ DWORD dwFlags);
+        
+        HRESULT ( STDMETHODCALLTYPE *Reconfigure )( 
+            IGraphConfig * This,
+            /* [in] */ IGraphConfigCallback *pCallback,
+            /* [in] */ PVOID pvContext,
+            /* [in] */ DWORD dwFlags,
+            /* [in] */ HANDLE hAbortEvent);
+        
+        HRESULT ( STDMETHODCALLTYPE *AddFilterToCache )( 
+            IGraphConfig * This,
+            /* [in] */ IBaseFilter *pFilter);
+        
+        HRESULT ( STDMETHODCALLTYPE *EnumCacheFilter )( 
+            IGraphConfig * This,
+            /* [out] */ IEnumFilters **pEnum);
+        
+        HRESULT ( STDMETHODCALLTYPE *RemoveFilterFromCache )( 
+            IGraphConfig * This,
+            /* [in] */ IBaseFilter *pFilter);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetStartTime )( 
+            IGraphConfig * This,
+            /* [out] */ REFERENCE_TIME *prtStart);
+        
+        HRESULT ( STDMETHODCALLTYPE *PushThroughData )( 
+            IGraphConfig * This,
+            /* [in] */ IPin *pOutputPin,
+            /* [in] */ IPinConnection *pConnection,
+            /* [in] */ HANDLE hEventAbort);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetFilterFlags )( 
+            IGraphConfig * This,
+            /* [in] */ IBaseFilter *pFilter,
+            /* [in] */ DWORD dwFlags);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetFilterFlags )( 
+            IGraphConfig * This,
+            /* [in] */ IBaseFilter *pFilter,
+            /* [out] */ DWORD *pdwFlags);
+        
+        HRESULT ( STDMETHODCALLTYPE *RemoveFilterEx )( 
+            IGraphConfig * This,
+            /* [in] */ IBaseFilter *pFilter,
+            DWORD Flags);
+        
+        END_INTERFACE
+    } IGraphConfigVtbl;
+
+    interface IGraphConfig
+    {
+        CONST_VTBL struct IGraphConfigVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IGraphConfig_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IGraphConfig_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IGraphConfig_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IGraphConfig_Reconnect(This,pOutputPin,pInputPin,pmtFirstConnection,pUsingFilter,hAbortEvent,dwFlags)	\
+    ( (This)->lpVtbl -> Reconnect(This,pOutputPin,pInputPin,pmtFirstConnection,pUsingFilter,hAbortEvent,dwFlags) ) 
+
+#define IGraphConfig_Reconfigure(This,pCallback,pvContext,dwFlags,hAbortEvent)	\
+    ( (This)->lpVtbl -> Reconfigure(This,pCallback,pvContext,dwFlags,hAbortEvent) ) 
+
+#define IGraphConfig_AddFilterToCache(This,pFilter)	\
+    ( (This)->lpVtbl -> AddFilterToCache(This,pFilter) ) 
+
+#define IGraphConfig_EnumCacheFilter(This,pEnum)	\
+    ( (This)->lpVtbl -> EnumCacheFilter(This,pEnum) ) 
+
+#define IGraphConfig_RemoveFilterFromCache(This,pFilter)	\
+    ( (This)->lpVtbl -> RemoveFilterFromCache(This,pFilter) ) 
+
+#define IGraphConfig_GetStartTime(This,prtStart)	\
+    ( (This)->lpVtbl -> GetStartTime(This,prtStart) ) 
+
+#define IGraphConfig_PushThroughData(This,pOutputPin,pConnection,hEventAbort)	\
+    ( (This)->lpVtbl -> PushThroughData(This,pOutputPin,pConnection,hEventAbort) ) 
+
+#define IGraphConfig_SetFilterFlags(This,pFilter,dwFlags)	\
+    ( (This)->lpVtbl -> SetFilterFlags(This,pFilter,dwFlags) ) 
+
+#define IGraphConfig_GetFilterFlags(This,pFilter,pdwFlags)	\
+    ( (This)->lpVtbl -> GetFilterFlags(This,pFilter,pdwFlags) ) 
+
+#define IGraphConfig_RemoveFilterEx(This,pFilter,Flags)	\
+    ( (This)->lpVtbl -> RemoveFilterEx(This,pFilter,Flags) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IGraphConfig_INTERFACE_DEFINED__ */
+
+
+#ifndef __IGraphConfigCallback_INTERFACE_DEFINED__
+#define __IGraphConfigCallback_INTERFACE_DEFINED__
+
+/* interface IGraphConfigCallback */
+/* [unique][uuid][object][local] */ 
+
+
+EXTERN_C const IID IID_IGraphConfigCallback;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("ade0fd60-d19d-11d2-abf6-00a0c905f375")
+    IGraphConfigCallback : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE Reconfigure( 
+            PVOID pvContext,
+            DWORD dwFlags) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IGraphConfigCallbackVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IGraphConfigCallback * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IGraphConfigCallback * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IGraphConfigCallback * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *Reconfigure )( 
+            IGraphConfigCallback * This,
+            PVOID pvContext,
+            DWORD dwFlags);
+        
+        END_INTERFACE
+    } IGraphConfigCallbackVtbl;
+
+    interface IGraphConfigCallback
+    {
+        CONST_VTBL struct IGraphConfigCallbackVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IGraphConfigCallback_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IGraphConfigCallback_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IGraphConfigCallback_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IGraphConfigCallback_Reconfigure(This,pvContext,dwFlags)	\
+    ( (This)->lpVtbl -> Reconfigure(This,pvContext,dwFlags) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IGraphConfigCallback_INTERFACE_DEFINED__ */
+
+
+#ifndef __IFilterChain_INTERFACE_DEFINED__
+#define __IFilterChain_INTERFACE_DEFINED__
+
+/* interface IFilterChain */
+/* [unique][uuid][object][local] */ 
+
+
+EXTERN_C const IID IID_IFilterChain;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("DCFBDCF6-0DC2-45f5-9AB2-7C330EA09C29")
+    IFilterChain : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE StartChain( 
+            /* [in] */ IBaseFilter *pStartFilter,
+            /* [in] */ IBaseFilter *pEndFilter) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE PauseChain( 
+            /* [in] */ IBaseFilter *pStartFilter,
+            /* [in] */ IBaseFilter *pEndFilter) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE StopChain( 
+            /* [in] */ IBaseFilter *pStartFilter,
+            /* [in] */ IBaseFilter *pEndFilter) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE RemoveChain( 
+            /* [in] */ IBaseFilter *pStartFilter,
+            /* [in] */ IBaseFilter *pEndFilter) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IFilterChainVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IFilterChain * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IFilterChain * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IFilterChain * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *StartChain )( 
+            IFilterChain * This,
+            /* [in] */ IBaseFilter *pStartFilter,
+            /* [in] */ IBaseFilter *pEndFilter);
+        
+        HRESULT ( STDMETHODCALLTYPE *PauseChain )( 
+            IFilterChain * This,
+            /* [in] */ IBaseFilter *pStartFilter,
+            /* [in] */ IBaseFilter *pEndFilter);
+        
+        HRESULT ( STDMETHODCALLTYPE *StopChain )( 
+            IFilterChain * This,
+            /* [in] */ IBaseFilter *pStartFilter,
+            /* [in] */ IBaseFilter *pEndFilter);
+        
+        HRESULT ( STDMETHODCALLTYPE *RemoveChain )( 
+            IFilterChain * This,
+            /* [in] */ IBaseFilter *pStartFilter,
+            /* [in] */ IBaseFilter *pEndFilter);
+        
+        END_INTERFACE
+    } IFilterChainVtbl;
+
+    interface IFilterChain
+    {
+        CONST_VTBL struct IFilterChainVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IFilterChain_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IFilterChain_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IFilterChain_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IFilterChain_StartChain(This,pStartFilter,pEndFilter)	\
+    ( (This)->lpVtbl -> StartChain(This,pStartFilter,pEndFilter) ) 
+
+#define IFilterChain_PauseChain(This,pStartFilter,pEndFilter)	\
+    ( (This)->lpVtbl -> PauseChain(This,pStartFilter,pEndFilter) ) 
+
+#define IFilterChain_StopChain(This,pStartFilter,pEndFilter)	\
+    ( (This)->lpVtbl -> StopChain(This,pStartFilter,pEndFilter) ) 
+
+#define IFilterChain_RemoveChain(This,pStartFilter,pEndFilter)	\
+    ( (This)->lpVtbl -> RemoveChain(This,pStartFilter,pEndFilter) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IFilterChain_INTERFACE_DEFINED__ */
+
+
+/* interface __MIDL_itf_strmif_0000_0116 */
+/* [local] */ 
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#pragma endregion
+#include <winapifamily.h>
+#pragma region Desktop Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#if 0
+typedef DWORD *LPDIRECTDRAW7;
+
+typedef DWORD *LPDIRECTDRAWSURFACE7;
+
+typedef DWORD *LPDDPIXELFORMAT;
+
+typedef DWORD *LPBITMAPINFOHEADER;
+
+typedef struct DDCOLORKEY
+    {
+    DWORD dw1;
+    DWORD dw2;
+    } 	DDCOLORKEY;
+
+typedef DDCOLORKEY *LPDDCOLORKEY;
+
+#endif
 #include <ddraw.h>
 
 
@@ -17840,6 +18497,2345 @@ EXTERN_C const IID IID_IAMPluginControl;
 
 
 
+
+
+
+
+
+typedef 
+enum VMRPresentationFlags
+    {
+        VMRSample_SyncPoint	= 0x1,
+        VMRSample_Preroll	= 0x2,
+        VMRSample_Discontinuity	= 0x4,
+        VMRSample_TimeValid	= 0x8,
+        VMRSample_SrcDstRectsValid	= 0x10
+    } 	VMRPresentationFlags;
+
+typedef struct tagVMRPRESENTATIONINFO
+    {
+    DWORD dwFlags;
+    LPDIRECTDRAWSURFACE7 lpSurf;
+    REFERENCE_TIME rtStart;
+    REFERENCE_TIME rtEnd;
+    SIZE szAspectRatio;
+    RECT rcSrc;
+    RECT rcDst;
+    DWORD dwTypeSpecificFlags;
+    DWORD dwInterlaceFlags;
+    } 	VMRPRESENTATIONINFO;
+
+
+
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0116_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0116_v0_0_s_ifspec;
+
+#ifndef __IVMRImagePresenter_INTERFACE_DEFINED__
+#define __IVMRImagePresenter_INTERFACE_DEFINED__
+
+/* interface IVMRImagePresenter */
+/* [unique][helpstring][uuid][local][object][local] */ 
+
+
+EXTERN_C const IID IID_IVMRImagePresenter;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("CE704FE7-E71E-41fb-BAA2-C4403E1182F5")
+    IVMRImagePresenter : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE StartPresenting( 
+            /* [in] */ DWORD_PTR dwUserID) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE StopPresenting( 
+            /* [in] */ DWORD_PTR dwUserID) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE PresentImage( 
+            /* [in] */ DWORD_PTR dwUserID,
+            /* [in] */ VMRPRESENTATIONINFO *lpPresInfo) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IVMRImagePresenterVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IVMRImagePresenter * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IVMRImagePresenter * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IVMRImagePresenter * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *StartPresenting )( 
+            IVMRImagePresenter * This,
+            /* [in] */ DWORD_PTR dwUserID);
+        
+        HRESULT ( STDMETHODCALLTYPE *StopPresenting )( 
+            IVMRImagePresenter * This,
+            /* [in] */ DWORD_PTR dwUserID);
+        
+        HRESULT ( STDMETHODCALLTYPE *PresentImage )( 
+            IVMRImagePresenter * This,
+            /* [in] */ DWORD_PTR dwUserID,
+            /* [in] */ VMRPRESENTATIONINFO *lpPresInfo);
+        
+        END_INTERFACE
+    } IVMRImagePresenterVtbl;
+
+    interface IVMRImagePresenter
+    {
+        CONST_VTBL struct IVMRImagePresenterVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IVMRImagePresenter_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IVMRImagePresenter_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IVMRImagePresenter_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IVMRImagePresenter_StartPresenting(This,dwUserID)	\
+    ( (This)->lpVtbl -> StartPresenting(This,dwUserID) ) 
+
+#define IVMRImagePresenter_StopPresenting(This,dwUserID)	\
+    ( (This)->lpVtbl -> StopPresenting(This,dwUserID) ) 
+
+#define IVMRImagePresenter_PresentImage(This,dwUserID,lpPresInfo)	\
+    ( (This)->lpVtbl -> PresentImage(This,dwUserID,lpPresInfo) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IVMRImagePresenter_INTERFACE_DEFINED__ */
+
+
+/* interface __MIDL_itf_strmif_0000_0117 */
+/* [local] */ 
+
+typedef 
+enum VMRSurfaceAllocationFlags
+    {
+        AMAP_PIXELFORMAT_VALID	= 0x1,
+        AMAP_3D_TARGET	= 0x2,
+        AMAP_ALLOW_SYSMEM	= 0x4,
+        AMAP_FORCE_SYSMEM	= 0x8,
+        AMAP_DIRECTED_FLIP	= 0x10,
+        AMAP_DXVA_TARGET	= 0x20
+    } 	VMRSurfaceAllocationFlags;
+
+typedef struct tagVMRALLOCATIONINFO
+    {
+    DWORD dwFlags;
+    LPBITMAPINFOHEADER lpHdr;
+    LPDDPIXELFORMAT lpPixFmt;
+    SIZE szAspectRatio;
+    DWORD dwMinBuffers;
+    DWORD dwMaxBuffers;
+    DWORD dwInterlaceFlags;
+    SIZE szNativeSize;
+    } 	VMRALLOCATIONINFO;
+
+
+
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0117_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0117_v0_0_s_ifspec;
+
+#ifndef __IVMRSurfaceAllocator_INTERFACE_DEFINED__
+#define __IVMRSurfaceAllocator_INTERFACE_DEFINED__
+
+/* interface IVMRSurfaceAllocator */
+/* [unique][helpstring][uuid][local][object][local] */ 
+
+
+EXTERN_C const IID IID_IVMRSurfaceAllocator;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("31ce832e-4484-458b-8cca-f4d7e3db0b52")
+    IVMRSurfaceAllocator : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE AllocateSurface( 
+            /* [in] */ DWORD_PTR dwUserID,
+            /* [in] */ VMRALLOCATIONINFO *lpAllocInfo,
+            /* [out][in] */ DWORD *lpdwActualBuffers,
+            /* [out] */ LPDIRECTDRAWSURFACE7 *lplpSurface) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE FreeSurface( 
+            /* [in] */ DWORD_PTR dwID) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE PrepareSurface( 
+            /* [in] */ DWORD_PTR dwUserID,
+            /* [in] */ LPDIRECTDRAWSURFACE7 lpSurface,
+            /* [in] */ DWORD dwSurfaceFlags) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE AdviseNotify( 
+            /* [in] */ IVMRSurfaceAllocatorNotify *lpIVMRSurfAllocNotify) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IVMRSurfaceAllocatorVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IVMRSurfaceAllocator * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IVMRSurfaceAllocator * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IVMRSurfaceAllocator * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *AllocateSurface )( 
+            IVMRSurfaceAllocator * This,
+            /* [in] */ DWORD_PTR dwUserID,
+            /* [in] */ VMRALLOCATIONINFO *lpAllocInfo,
+            /* [out][in] */ DWORD *lpdwActualBuffers,
+            /* [out] */ LPDIRECTDRAWSURFACE7 *lplpSurface);
+        
+        HRESULT ( STDMETHODCALLTYPE *FreeSurface )( 
+            IVMRSurfaceAllocator * This,
+            /* [in] */ DWORD_PTR dwID);
+        
+        HRESULT ( STDMETHODCALLTYPE *PrepareSurface )( 
+            IVMRSurfaceAllocator * This,
+            /* [in] */ DWORD_PTR dwUserID,
+            /* [in] */ LPDIRECTDRAWSURFACE7 lpSurface,
+            /* [in] */ DWORD dwSurfaceFlags);
+        
+        HRESULT ( STDMETHODCALLTYPE *AdviseNotify )( 
+            IVMRSurfaceAllocator * This,
+            /* [in] */ IVMRSurfaceAllocatorNotify *lpIVMRSurfAllocNotify);
+        
+        END_INTERFACE
+    } IVMRSurfaceAllocatorVtbl;
+
+    interface IVMRSurfaceAllocator
+    {
+        CONST_VTBL struct IVMRSurfaceAllocatorVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IVMRSurfaceAllocator_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IVMRSurfaceAllocator_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IVMRSurfaceAllocator_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IVMRSurfaceAllocator_AllocateSurface(This,dwUserID,lpAllocInfo,lpdwActualBuffers,lplpSurface)	\
+    ( (This)->lpVtbl -> AllocateSurface(This,dwUserID,lpAllocInfo,lpdwActualBuffers,lplpSurface) ) 
+
+#define IVMRSurfaceAllocator_FreeSurface(This,dwID)	\
+    ( (This)->lpVtbl -> FreeSurface(This,dwID) ) 
+
+#define IVMRSurfaceAllocator_PrepareSurface(This,dwUserID,lpSurface,dwSurfaceFlags)	\
+    ( (This)->lpVtbl -> PrepareSurface(This,dwUserID,lpSurface,dwSurfaceFlags) ) 
+
+#define IVMRSurfaceAllocator_AdviseNotify(This,lpIVMRSurfAllocNotify)	\
+    ( (This)->lpVtbl -> AdviseNotify(This,lpIVMRSurfAllocNotify) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IVMRSurfaceAllocator_INTERFACE_DEFINED__ */
+
+
+#ifndef __IVMRSurfaceAllocatorNotify_INTERFACE_DEFINED__
+#define __IVMRSurfaceAllocatorNotify_INTERFACE_DEFINED__
+
+/* interface IVMRSurfaceAllocatorNotify */
+/* [unique][helpstring][uuid][local][object][local] */ 
+
+
+EXTERN_C const IID IID_IVMRSurfaceAllocatorNotify;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("aada05a8-5a4e-4729-af0b-cea27aed51e2")
+    IVMRSurfaceAllocatorNotify : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE AdviseSurfaceAllocator( 
+            /* [in] */ DWORD_PTR dwUserID,
+            /* [in] */ IVMRSurfaceAllocator *lpIVRMSurfaceAllocator) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetDDrawDevice( 
+            /* [in] */ LPDIRECTDRAW7 lpDDrawDevice,
+            /* [in] */ HMONITOR hMonitor) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE ChangeDDrawDevice( 
+            /* [in] */ LPDIRECTDRAW7 lpDDrawDevice,
+            /* [in] */ HMONITOR hMonitor) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE RestoreDDrawSurfaces( void) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE NotifyEvent( 
+            /* [in] */ LONG EventCode,
+            /* [in] */ LONG_PTR Param1,
+            /* [in] */ LONG_PTR Param2) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetBorderColor( 
+            /* [in] */ COLORREF clrBorder) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IVMRSurfaceAllocatorNotifyVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IVMRSurfaceAllocatorNotify * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IVMRSurfaceAllocatorNotify * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IVMRSurfaceAllocatorNotify * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *AdviseSurfaceAllocator )( 
+            IVMRSurfaceAllocatorNotify * This,
+            /* [in] */ DWORD_PTR dwUserID,
+            /* [in] */ IVMRSurfaceAllocator *lpIVRMSurfaceAllocator);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetDDrawDevice )( 
+            IVMRSurfaceAllocatorNotify * This,
+            /* [in] */ LPDIRECTDRAW7 lpDDrawDevice,
+            /* [in] */ HMONITOR hMonitor);
+        
+        HRESULT ( STDMETHODCALLTYPE *ChangeDDrawDevice )( 
+            IVMRSurfaceAllocatorNotify * This,
+            /* [in] */ LPDIRECTDRAW7 lpDDrawDevice,
+            /* [in] */ HMONITOR hMonitor);
+        
+        HRESULT ( STDMETHODCALLTYPE *RestoreDDrawSurfaces )( 
+            IVMRSurfaceAllocatorNotify * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *NotifyEvent )( 
+            IVMRSurfaceAllocatorNotify * This,
+            /* [in] */ LONG EventCode,
+            /* [in] */ LONG_PTR Param1,
+            /* [in] */ LONG_PTR Param2);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetBorderColor )( 
+            IVMRSurfaceAllocatorNotify * This,
+            /* [in] */ COLORREF clrBorder);
+        
+        END_INTERFACE
+    } IVMRSurfaceAllocatorNotifyVtbl;
+
+    interface IVMRSurfaceAllocatorNotify
+    {
+        CONST_VTBL struct IVMRSurfaceAllocatorNotifyVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IVMRSurfaceAllocatorNotify_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IVMRSurfaceAllocatorNotify_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IVMRSurfaceAllocatorNotify_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IVMRSurfaceAllocatorNotify_AdviseSurfaceAllocator(This,dwUserID,lpIVRMSurfaceAllocator)	\
+    ( (This)->lpVtbl -> AdviseSurfaceAllocator(This,dwUserID,lpIVRMSurfaceAllocator) ) 
+
+#define IVMRSurfaceAllocatorNotify_SetDDrawDevice(This,lpDDrawDevice,hMonitor)	\
+    ( (This)->lpVtbl -> SetDDrawDevice(This,lpDDrawDevice,hMonitor) ) 
+
+#define IVMRSurfaceAllocatorNotify_ChangeDDrawDevice(This,lpDDrawDevice,hMonitor)	\
+    ( (This)->lpVtbl -> ChangeDDrawDevice(This,lpDDrawDevice,hMonitor) ) 
+
+#define IVMRSurfaceAllocatorNotify_RestoreDDrawSurfaces(This)	\
+    ( (This)->lpVtbl -> RestoreDDrawSurfaces(This) ) 
+
+#define IVMRSurfaceAllocatorNotify_NotifyEvent(This,EventCode,Param1,Param2)	\
+    ( (This)->lpVtbl -> NotifyEvent(This,EventCode,Param1,Param2) ) 
+
+#define IVMRSurfaceAllocatorNotify_SetBorderColor(This,clrBorder)	\
+    ( (This)->lpVtbl -> SetBorderColor(This,clrBorder) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IVMRSurfaceAllocatorNotify_INTERFACE_DEFINED__ */
+
+
+/* interface __MIDL_itf_strmif_0000_0119 */
+/* [local] */ 
+
+typedef 
+enum VMR_ASPECT_RATIO_MODE
+    {
+        VMR_ARMODE_NONE	= 0,
+        VMR_ARMODE_LETTER_BOX	= ( VMR_ARMODE_NONE + 1 ) 
+    } 	VMR_ASPECT_RATIO_MODE;
+
+
+
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0119_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0119_v0_0_s_ifspec;
+
+#ifndef __IVMRWindowlessControl_INTERFACE_DEFINED__
+#define __IVMRWindowlessControl_INTERFACE_DEFINED__
+
+/* interface IVMRWindowlessControl */
+/* [unique][helpstring][uuid][local][object][local] */ 
+
+
+EXTERN_C const IID IID_IVMRWindowlessControl;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("0eb1088c-4dcd-46f0-878f-39dae86a51b7")
+    IVMRWindowlessControl : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE GetNativeVideoSize( 
+            /* [out] */ LONG *lpWidth,
+            /* [out] */ LONG *lpHeight,
+            /* [out] */ LONG *lpARWidth,
+            /* [out] */ LONG *lpARHeight) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetMinIdealVideoSize( 
+            /* [out] */ LONG *lpWidth,
+            /* [out] */ LONG *lpHeight) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetMaxIdealVideoSize( 
+            /* [out] */ LONG *lpWidth,
+            /* [out] */ LONG *lpHeight) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetVideoPosition( 
+            /* [in] */ const LPRECT lpSRCRect,
+            /* [in] */ const LPRECT lpDSTRect) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetVideoPosition( 
+            /* [out] */ LPRECT lpSRCRect,
+            /* [out] */ LPRECT lpDSTRect) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetAspectRatioMode( 
+            /* [out] */ DWORD *lpAspectRatioMode) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetAspectRatioMode( 
+            /* [in] */ DWORD AspectRatioMode) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetVideoClippingWindow( 
+            /* [in] */ HWND hwnd) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE RepaintVideo( 
+            /* [in] */ HWND hwnd,
+            /* [in] */ HDC hdc) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE DisplayModeChanged( void) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetCurrentImage( 
+            /* [out] */ BYTE **lpDib) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetBorderColor( 
+            /* [in] */ COLORREF Clr) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetBorderColor( 
+            /* [out] */ COLORREF *lpClr) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetColorKey( 
+            /* [in] */ COLORREF Clr) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetColorKey( 
+            /* [out] */ COLORREF *lpClr) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IVMRWindowlessControlVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IVMRWindowlessControl * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IVMRWindowlessControl * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IVMRWindowlessControl * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetNativeVideoSize )( 
+            IVMRWindowlessControl * This,
+            /* [out] */ LONG *lpWidth,
+            /* [out] */ LONG *lpHeight,
+            /* [out] */ LONG *lpARWidth,
+            /* [out] */ LONG *lpARHeight);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetMinIdealVideoSize )( 
+            IVMRWindowlessControl * This,
+            /* [out] */ LONG *lpWidth,
+            /* [out] */ LONG *lpHeight);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetMaxIdealVideoSize )( 
+            IVMRWindowlessControl * This,
+            /* [out] */ LONG *lpWidth,
+            /* [out] */ LONG *lpHeight);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetVideoPosition )( 
+            IVMRWindowlessControl * This,
+            /* [in] */ const LPRECT lpSRCRect,
+            /* [in] */ const LPRECT lpDSTRect);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetVideoPosition )( 
+            IVMRWindowlessControl * This,
+            /* [out] */ LPRECT lpSRCRect,
+            /* [out] */ LPRECT lpDSTRect);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetAspectRatioMode )( 
+            IVMRWindowlessControl * This,
+            /* [out] */ DWORD *lpAspectRatioMode);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetAspectRatioMode )( 
+            IVMRWindowlessControl * This,
+            /* [in] */ DWORD AspectRatioMode);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetVideoClippingWindow )( 
+            IVMRWindowlessControl * This,
+            /* [in] */ HWND hwnd);
+        
+        HRESULT ( STDMETHODCALLTYPE *RepaintVideo )( 
+            IVMRWindowlessControl * This,
+            /* [in] */ HWND hwnd,
+            /* [in] */ HDC hdc);
+        
+        HRESULT ( STDMETHODCALLTYPE *DisplayModeChanged )( 
+            IVMRWindowlessControl * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetCurrentImage )( 
+            IVMRWindowlessControl * This,
+            /* [out] */ BYTE **lpDib);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetBorderColor )( 
+            IVMRWindowlessControl * This,
+            /* [in] */ COLORREF Clr);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetBorderColor )( 
+            IVMRWindowlessControl * This,
+            /* [out] */ COLORREF *lpClr);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetColorKey )( 
+            IVMRWindowlessControl * This,
+            /* [in] */ COLORREF Clr);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetColorKey )( 
+            IVMRWindowlessControl * This,
+            /* [out] */ COLORREF *lpClr);
+        
+        END_INTERFACE
+    } IVMRWindowlessControlVtbl;
+
+    interface IVMRWindowlessControl
+    {
+        CONST_VTBL struct IVMRWindowlessControlVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IVMRWindowlessControl_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IVMRWindowlessControl_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IVMRWindowlessControl_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IVMRWindowlessControl_GetNativeVideoSize(This,lpWidth,lpHeight,lpARWidth,lpARHeight)	\
+    ( (This)->lpVtbl -> GetNativeVideoSize(This,lpWidth,lpHeight,lpARWidth,lpARHeight) ) 
+
+#define IVMRWindowlessControl_GetMinIdealVideoSize(This,lpWidth,lpHeight)	\
+    ( (This)->lpVtbl -> GetMinIdealVideoSize(This,lpWidth,lpHeight) ) 
+
+#define IVMRWindowlessControl_GetMaxIdealVideoSize(This,lpWidth,lpHeight)	\
+    ( (This)->lpVtbl -> GetMaxIdealVideoSize(This,lpWidth,lpHeight) ) 
+
+#define IVMRWindowlessControl_SetVideoPosition(This,lpSRCRect,lpDSTRect)	\
+    ( (This)->lpVtbl -> SetVideoPosition(This,lpSRCRect,lpDSTRect) ) 
+
+#define IVMRWindowlessControl_GetVideoPosition(This,lpSRCRect,lpDSTRect)	\
+    ( (This)->lpVtbl -> GetVideoPosition(This,lpSRCRect,lpDSTRect) ) 
+
+#define IVMRWindowlessControl_GetAspectRatioMode(This,lpAspectRatioMode)	\
+    ( (This)->lpVtbl -> GetAspectRatioMode(This,lpAspectRatioMode) ) 
+
+#define IVMRWindowlessControl_SetAspectRatioMode(This,AspectRatioMode)	\
+    ( (This)->lpVtbl -> SetAspectRatioMode(This,AspectRatioMode) ) 
+
+#define IVMRWindowlessControl_SetVideoClippingWindow(This,hwnd)	\
+    ( (This)->lpVtbl -> SetVideoClippingWindow(This,hwnd) ) 
+
+#define IVMRWindowlessControl_RepaintVideo(This,hwnd,hdc)	\
+    ( (This)->lpVtbl -> RepaintVideo(This,hwnd,hdc) ) 
+
+#define IVMRWindowlessControl_DisplayModeChanged(This)	\
+    ( (This)->lpVtbl -> DisplayModeChanged(This) ) 
+
+#define IVMRWindowlessControl_GetCurrentImage(This,lpDib)	\
+    ( (This)->lpVtbl -> GetCurrentImage(This,lpDib) ) 
+
+#define IVMRWindowlessControl_SetBorderColor(This,Clr)	\
+    ( (This)->lpVtbl -> SetBorderColor(This,Clr) ) 
+
+#define IVMRWindowlessControl_GetBorderColor(This,lpClr)	\
+    ( (This)->lpVtbl -> GetBorderColor(This,lpClr) ) 
+
+#define IVMRWindowlessControl_SetColorKey(This,Clr)	\
+    ( (This)->lpVtbl -> SetColorKey(This,Clr) ) 
+
+#define IVMRWindowlessControl_GetColorKey(This,lpClr)	\
+    ( (This)->lpVtbl -> GetColorKey(This,lpClr) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IVMRWindowlessControl_INTERFACE_DEFINED__ */
+
+
+/* interface __MIDL_itf_strmif_0000_0120 */
+/* [local] */ 
+
+typedef 
+enum VMRMixerPrefs
+    {
+        MixerPref_NoDecimation	= 0x1,
+        MixerPref_DecimateOutput	= 0x2,
+        MixerPref_ARAdjustXorY	= 0x4,
+        MixerPref_DecimationReserved	= 0x8,
+        MixerPref_DecimateMask	= 0xf,
+        MixerPref_BiLinearFiltering	= 0x10,
+        MixerPref_PointFiltering	= 0x20,
+        MixerPref_FilteringMask	= 0xf0,
+        MixerPref_RenderTargetRGB	= 0x100,
+        MixerPref_RenderTargetYUV	= 0x1000,
+        MixerPref_RenderTargetYUV420	= 0x200,
+        MixerPref_RenderTargetYUV422	= 0x400,
+        MixerPref_RenderTargetYUV444	= 0x800,
+        MixerPref_RenderTargetReserved	= 0xe000,
+        MixerPref_RenderTargetMask	= 0xff00,
+        MixerPref_DynamicSwitchToBOB	= 0x10000,
+        MixerPref_DynamicDecimateBy2	= 0x20000,
+        MixerPref_DynamicReserved	= 0xc0000,
+        MixerPref_DynamicMask	= 0xf0000
+    } 	VMRMixerPrefs;
+
+typedef struct _NORMALIZEDRECT
+    {
+    float left;
+    float top;
+    float right;
+    float bottom;
+    } 	NORMALIZEDRECT;
+
+typedef struct _NORMALIZEDRECT *PNORMALIZEDRECT;
+
+
+
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0120_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0120_v0_0_s_ifspec;
+
+#ifndef __IVMRMixerControl_INTERFACE_DEFINED__
+#define __IVMRMixerControl_INTERFACE_DEFINED__
+
+/* interface IVMRMixerControl */
+/* [unique][helpstring][uuid][local][object][local] */ 
+
+
+EXTERN_C const IID IID_IVMRMixerControl;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1c1a17b0-bed0-415d-974b-dc6696131599")
+    IVMRMixerControl : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE SetAlpha( 
+            /* [in] */ DWORD dwStreamID,
+            /* [in] */ float Alpha) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetAlpha( 
+            /* [in] */ DWORD dwStreamID,
+            /* [out] */ float *pAlpha) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetZOrder( 
+            /* [in] */ DWORD dwStreamID,
+            /* [in] */ DWORD dwZ) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetZOrder( 
+            /* [in] */ DWORD dwStreamID,
+            /* [out] */ DWORD *pZ) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetOutputRect( 
+            /* [in] */ DWORD dwStreamID,
+            /* [in] */ const NORMALIZEDRECT *pRect) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetOutputRect( 
+            /* [in] */ DWORD dwStreamID,
+            /* [out] */ NORMALIZEDRECT *pRect) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetBackgroundClr( 
+            /* [in] */ COLORREF ClrBkg) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetBackgroundClr( 
+            /* [in] */ COLORREF *lpClrBkg) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetMixingPrefs( 
+            /* [in] */ DWORD dwMixerPrefs) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetMixingPrefs( 
+            /* [out] */ DWORD *pdwMixerPrefs) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IVMRMixerControlVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IVMRMixerControl * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IVMRMixerControl * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IVMRMixerControl * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetAlpha )( 
+            IVMRMixerControl * This,
+            /* [in] */ DWORD dwStreamID,
+            /* [in] */ float Alpha);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetAlpha )( 
+            IVMRMixerControl * This,
+            /* [in] */ DWORD dwStreamID,
+            /* [out] */ float *pAlpha);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetZOrder )( 
+            IVMRMixerControl * This,
+            /* [in] */ DWORD dwStreamID,
+            /* [in] */ DWORD dwZ);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetZOrder )( 
+            IVMRMixerControl * This,
+            /* [in] */ DWORD dwStreamID,
+            /* [out] */ DWORD *pZ);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetOutputRect )( 
+            IVMRMixerControl * This,
+            /* [in] */ DWORD dwStreamID,
+            /* [in] */ const NORMALIZEDRECT *pRect);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetOutputRect )( 
+            IVMRMixerControl * This,
+            /* [in] */ DWORD dwStreamID,
+            /* [out] */ NORMALIZEDRECT *pRect);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetBackgroundClr )( 
+            IVMRMixerControl * This,
+            /* [in] */ COLORREF ClrBkg);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetBackgroundClr )( 
+            IVMRMixerControl * This,
+            /* [in] */ COLORREF *lpClrBkg);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetMixingPrefs )( 
+            IVMRMixerControl * This,
+            /* [in] */ DWORD dwMixerPrefs);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetMixingPrefs )( 
+            IVMRMixerControl * This,
+            /* [out] */ DWORD *pdwMixerPrefs);
+        
+        END_INTERFACE
+    } IVMRMixerControlVtbl;
+
+    interface IVMRMixerControl
+    {
+        CONST_VTBL struct IVMRMixerControlVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IVMRMixerControl_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IVMRMixerControl_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IVMRMixerControl_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IVMRMixerControl_SetAlpha(This,dwStreamID,Alpha)	\
+    ( (This)->lpVtbl -> SetAlpha(This,dwStreamID,Alpha) ) 
+
+#define IVMRMixerControl_GetAlpha(This,dwStreamID,pAlpha)	\
+    ( (This)->lpVtbl -> GetAlpha(This,dwStreamID,pAlpha) ) 
+
+#define IVMRMixerControl_SetZOrder(This,dwStreamID,dwZ)	\
+    ( (This)->lpVtbl -> SetZOrder(This,dwStreamID,dwZ) ) 
+
+#define IVMRMixerControl_GetZOrder(This,dwStreamID,pZ)	\
+    ( (This)->lpVtbl -> GetZOrder(This,dwStreamID,pZ) ) 
+
+#define IVMRMixerControl_SetOutputRect(This,dwStreamID,pRect)	\
+    ( (This)->lpVtbl -> SetOutputRect(This,dwStreamID,pRect) ) 
+
+#define IVMRMixerControl_GetOutputRect(This,dwStreamID,pRect)	\
+    ( (This)->lpVtbl -> GetOutputRect(This,dwStreamID,pRect) ) 
+
+#define IVMRMixerControl_SetBackgroundClr(This,ClrBkg)	\
+    ( (This)->lpVtbl -> SetBackgroundClr(This,ClrBkg) ) 
+
+#define IVMRMixerControl_GetBackgroundClr(This,lpClrBkg)	\
+    ( (This)->lpVtbl -> GetBackgroundClr(This,lpClrBkg) ) 
+
+#define IVMRMixerControl_SetMixingPrefs(This,dwMixerPrefs)	\
+    ( (This)->lpVtbl -> SetMixingPrefs(This,dwMixerPrefs) ) 
+
+#define IVMRMixerControl_GetMixingPrefs(This,pdwMixerPrefs)	\
+    ( (This)->lpVtbl -> GetMixingPrefs(This,pdwMixerPrefs) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IVMRMixerControl_INTERFACE_DEFINED__ */
+
+
+/* interface __MIDL_itf_strmif_0000_0121 */
+/* [local] */ 
+
+typedef struct tagVMRGUID
+    {
+    GUID *pGUID;
+    GUID Guid;
+    } 	VMRGUID;
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1600)
+#pragma warning(push)
+#pragma warning(disable:4820) // Disable C4820: padding after data member
+#endif
+typedef struct tagVMRMONITORINFO
+    {
+    VMRGUID guid;
+    RECT rcMonitor;
+    HMONITOR hMon;
+    DWORD dwFlags;
+    wchar_t szDevice[ 32 ];
+    wchar_t szDescription[ 256 ];
+    LARGE_INTEGER liDriverVersion;
+    DWORD dwVendorId;
+    DWORD dwDeviceId;
+    DWORD dwSubSysId;
+    DWORD dwRevision;
+    } 	VMRMONITORINFO;
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1600)
+#pragma warning(pop)
+#endif
+
+
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0121_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0121_v0_0_s_ifspec;
+
+#ifndef __IVMRMonitorConfig_INTERFACE_DEFINED__
+#define __IVMRMonitorConfig_INTERFACE_DEFINED__
+
+/* interface IVMRMonitorConfig */
+/* [unique][helpstring][uuid][local][object] */ 
+
+
+EXTERN_C const IID IID_IVMRMonitorConfig;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("9cf0b1b6-fbaa-4b7f-88cf-cf1f130a0dce")
+    IVMRMonitorConfig : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE SetMonitor( 
+            /* [in] */ const VMRGUID *pGUID) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetMonitor( 
+            /* [out] */ VMRGUID *pGUID) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetDefaultMonitor( 
+            /* [in] */ const VMRGUID *pGUID) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetDefaultMonitor( 
+            /* [out] */ VMRGUID *pGUID) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetAvailableMonitors( 
+            /* [size_is][out] */ VMRMONITORINFO *pInfo,
+            /* [in] */ DWORD dwMaxInfoArraySize,
+            /* [out] */ DWORD *pdwNumDevices) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IVMRMonitorConfigVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IVMRMonitorConfig * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IVMRMonitorConfig * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IVMRMonitorConfig * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetMonitor )( 
+            IVMRMonitorConfig * This,
+            /* [in] */ const VMRGUID *pGUID);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetMonitor )( 
+            IVMRMonitorConfig * This,
+            /* [out] */ VMRGUID *pGUID);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetDefaultMonitor )( 
+            IVMRMonitorConfig * This,
+            /* [in] */ const VMRGUID *pGUID);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetDefaultMonitor )( 
+            IVMRMonitorConfig * This,
+            /* [out] */ VMRGUID *pGUID);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetAvailableMonitors )( 
+            IVMRMonitorConfig * This,
+            /* [size_is][out] */ VMRMONITORINFO *pInfo,
+            /* [in] */ DWORD dwMaxInfoArraySize,
+            /* [out] */ DWORD *pdwNumDevices);
+        
+        END_INTERFACE
+    } IVMRMonitorConfigVtbl;
+
+    interface IVMRMonitorConfig
+    {
+        CONST_VTBL struct IVMRMonitorConfigVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IVMRMonitorConfig_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IVMRMonitorConfig_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IVMRMonitorConfig_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IVMRMonitorConfig_SetMonitor(This,pGUID)	\
+    ( (This)->lpVtbl -> SetMonitor(This,pGUID) ) 
+
+#define IVMRMonitorConfig_GetMonitor(This,pGUID)	\
+    ( (This)->lpVtbl -> GetMonitor(This,pGUID) ) 
+
+#define IVMRMonitorConfig_SetDefaultMonitor(This,pGUID)	\
+    ( (This)->lpVtbl -> SetDefaultMonitor(This,pGUID) ) 
+
+#define IVMRMonitorConfig_GetDefaultMonitor(This,pGUID)	\
+    ( (This)->lpVtbl -> GetDefaultMonitor(This,pGUID) ) 
+
+#define IVMRMonitorConfig_GetAvailableMonitors(This,pInfo,dwMaxInfoArraySize,pdwNumDevices)	\
+    ( (This)->lpVtbl -> GetAvailableMonitors(This,pInfo,dwMaxInfoArraySize,pdwNumDevices) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IVMRMonitorConfig_INTERFACE_DEFINED__ */
+
+
+/* interface __MIDL_itf_strmif_0000_0122 */
+/* [local] */ 
+
+typedef 
+enum VMRRenderPrefs
+    {
+        RenderPrefs_RestrictToInitialMonitor	= 0,
+        RenderPrefs_ForceOffscreen	= 0x1,
+        RenderPrefs_ForceOverlays	= 0x2,
+        RenderPrefs_AllowOverlays	= 0,
+        RenderPrefs_AllowOffscreen	= 0,
+        RenderPrefs_DoNotRenderColorKeyAndBorder	= 0x8,
+        RenderPrefs_Reserved	= 0x10,
+        RenderPrefs_PreferAGPMemWhenMixing	= 0x20,
+        RenderPrefs_Mask	= 0x3f
+    } 	VMRRenderPrefs;
+
+typedef 
+enum VMRMode
+    {
+        VMRMode_Windowed	= 0x1,
+        VMRMode_Windowless	= 0x2,
+        VMRMode_Renderless	= 0x4,
+        VMRMode_Mask	= 0x7
+    } 	VMRMode;
+
+
+enum __MIDL___MIDL_itf_strmif_0000_0122_0001
+    {
+        MAX_NUMBER_OF_STREAMS	= 16
+    } ;
+
+
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0122_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0122_v0_0_s_ifspec;
+
+#ifndef __IVMRFilterConfig_INTERFACE_DEFINED__
+#define __IVMRFilterConfig_INTERFACE_DEFINED__
+
+/* interface IVMRFilterConfig */
+/* [unique][helpstring][uuid][local][object] */ 
+
+
+EXTERN_C const IID IID_IVMRFilterConfig;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("9e5530c5-7034-48b4-bb46-0b8a6efc8e36")
+    IVMRFilterConfig : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE SetImageCompositor( 
+            /* [in] */ IVMRImageCompositor *lpVMRImgCompositor) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetNumberOfStreams( 
+            /* [in] */ DWORD dwMaxStreams) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetNumberOfStreams( 
+            /* [out] */ DWORD *pdwMaxStreams) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetRenderingPrefs( 
+            /* [in] */ DWORD dwRenderFlags) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetRenderingPrefs( 
+            /* [out] */ DWORD *pdwRenderFlags) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetRenderingMode( 
+            /* [in] */ DWORD Mode) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetRenderingMode( 
+            /* [out] */ DWORD *pMode) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IVMRFilterConfigVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IVMRFilterConfig * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IVMRFilterConfig * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IVMRFilterConfig * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetImageCompositor )( 
+            IVMRFilterConfig * This,
+            /* [in] */ IVMRImageCompositor *lpVMRImgCompositor);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetNumberOfStreams )( 
+            IVMRFilterConfig * This,
+            /* [in] */ DWORD dwMaxStreams);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetNumberOfStreams )( 
+            IVMRFilterConfig * This,
+            /* [out] */ DWORD *pdwMaxStreams);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetRenderingPrefs )( 
+            IVMRFilterConfig * This,
+            /* [in] */ DWORD dwRenderFlags);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetRenderingPrefs )( 
+            IVMRFilterConfig * This,
+            /* [out] */ DWORD *pdwRenderFlags);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetRenderingMode )( 
+            IVMRFilterConfig * This,
+            /* [in] */ DWORD Mode);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetRenderingMode )( 
+            IVMRFilterConfig * This,
+            /* [out] */ DWORD *pMode);
+        
+        END_INTERFACE
+    } IVMRFilterConfigVtbl;
+
+    interface IVMRFilterConfig
+    {
+        CONST_VTBL struct IVMRFilterConfigVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IVMRFilterConfig_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IVMRFilterConfig_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IVMRFilterConfig_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IVMRFilterConfig_SetImageCompositor(This,lpVMRImgCompositor)	\
+    ( (This)->lpVtbl -> SetImageCompositor(This,lpVMRImgCompositor) ) 
+
+#define IVMRFilterConfig_SetNumberOfStreams(This,dwMaxStreams)	\
+    ( (This)->lpVtbl -> SetNumberOfStreams(This,dwMaxStreams) ) 
+
+#define IVMRFilterConfig_GetNumberOfStreams(This,pdwMaxStreams)	\
+    ( (This)->lpVtbl -> GetNumberOfStreams(This,pdwMaxStreams) ) 
+
+#define IVMRFilterConfig_SetRenderingPrefs(This,dwRenderFlags)	\
+    ( (This)->lpVtbl -> SetRenderingPrefs(This,dwRenderFlags) ) 
+
+#define IVMRFilterConfig_GetRenderingPrefs(This,pdwRenderFlags)	\
+    ( (This)->lpVtbl -> GetRenderingPrefs(This,pdwRenderFlags) ) 
+
+#define IVMRFilterConfig_SetRenderingMode(This,Mode)	\
+    ( (This)->lpVtbl -> SetRenderingMode(This,Mode) ) 
+
+#define IVMRFilterConfig_GetRenderingMode(This,pMode)	\
+    ( (This)->lpVtbl -> GetRenderingMode(This,pMode) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IVMRFilterConfig_INTERFACE_DEFINED__ */
+
+
+#ifndef __IVMRAspectRatioControl_INTERFACE_DEFINED__
+#define __IVMRAspectRatioControl_INTERFACE_DEFINED__
+
+/* interface IVMRAspectRatioControl */
+/* [unique][helpstring][uuid][local][object] */ 
+
+
+EXTERN_C const IID IID_IVMRAspectRatioControl;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("ede80b5c-bad6-4623-b537-65586c9f8dfd")
+    IVMRAspectRatioControl : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE GetAspectRatioMode( 
+            /* [out] */ LPDWORD lpdwARMode) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetAspectRatioMode( 
+            /* [in] */ DWORD dwARMode) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IVMRAspectRatioControlVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IVMRAspectRatioControl * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IVMRAspectRatioControl * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IVMRAspectRatioControl * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetAspectRatioMode )( 
+            IVMRAspectRatioControl * This,
+            /* [out] */ LPDWORD lpdwARMode);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetAspectRatioMode )( 
+            IVMRAspectRatioControl * This,
+            /* [in] */ DWORD dwARMode);
+        
+        END_INTERFACE
+    } IVMRAspectRatioControlVtbl;
+
+    interface IVMRAspectRatioControl
+    {
+        CONST_VTBL struct IVMRAspectRatioControlVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IVMRAspectRatioControl_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IVMRAspectRatioControl_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IVMRAspectRatioControl_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IVMRAspectRatioControl_GetAspectRatioMode(This,lpdwARMode)	\
+    ( (This)->lpVtbl -> GetAspectRatioMode(This,lpdwARMode) ) 
+
+#define IVMRAspectRatioControl_SetAspectRatioMode(This,dwARMode)	\
+    ( (This)->lpVtbl -> SetAspectRatioMode(This,dwARMode) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IVMRAspectRatioControl_INTERFACE_DEFINED__ */
+
+
+/* interface __MIDL_itf_strmif_0000_0124 */
+/* [local] */ 
+
+typedef 
+enum VMRDeinterlacePrefs
+    {
+        DeinterlacePref_NextBest	= 0x1,
+        DeinterlacePref_BOB	= 0x2,
+        DeinterlacePref_Weave	= 0x4,
+        DeinterlacePref_Mask	= 0x7
+    } 	VMRDeinterlacePrefs;
+
+typedef 
+enum VMRDeinterlaceTech
+    {
+        DeinterlaceTech_Unknown	= 0,
+        DeinterlaceTech_BOBLineReplicate	= 0x1,
+        DeinterlaceTech_BOBVerticalStretch	= 0x2,
+        DeinterlaceTech_MedianFiltering	= 0x4,
+        DeinterlaceTech_EdgeFiltering	= 0x10,
+        DeinterlaceTech_FieldAdaptive	= 0x20,
+        DeinterlaceTech_PixelAdaptive	= 0x40,
+        DeinterlaceTech_MotionVectorSteered	= 0x80
+    } 	VMRDeinterlaceTech;
+
+typedef struct _VMRFrequency
+    {
+    DWORD dwNumerator;
+    DWORD dwDenominator;
+    } 	VMRFrequency;
+
+typedef struct _VMRVideoDesc
+    {
+    DWORD dwSize;
+    DWORD dwSampleWidth;
+    DWORD dwSampleHeight;
+    BOOL SingleFieldPerSample;
+    DWORD dwFourCC;
+    VMRFrequency InputSampleFreq;
+    VMRFrequency OutputFrameFreq;
+    } 	VMRVideoDesc;
+
+typedef struct _VMRDeinterlaceCaps
+    {
+    DWORD dwSize;
+    DWORD dwNumPreviousOutputFrames;
+    DWORD dwNumForwardRefSamples;
+    DWORD dwNumBackwardRefSamples;
+    VMRDeinterlaceTech DeinterlaceTechnology;
+    } 	VMRDeinterlaceCaps;
+
+
+
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0124_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0124_v0_0_s_ifspec;
+
+#ifndef __IVMRDeinterlaceControl_INTERFACE_DEFINED__
+#define __IVMRDeinterlaceControl_INTERFACE_DEFINED__
+
+/* interface IVMRDeinterlaceControl */
+/* [unique][helpstring][uuid][local][object] */ 
+
+
+EXTERN_C const IID IID_IVMRDeinterlaceControl;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("bb057577-0db8-4e6a-87a7-1a8c9a505a0f")
+    IVMRDeinterlaceControl : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE GetNumberOfDeinterlaceModes( 
+            /* [in] */ VMRVideoDesc *lpVideoDescription,
+            /* [out][in] */ LPDWORD lpdwNumDeinterlaceModes,
+            /* [out] */ LPGUID lpDeinterlaceModes) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetDeinterlaceModeCaps( 
+            /* [in] */ LPGUID lpDeinterlaceMode,
+            /* [in] */ VMRVideoDesc *lpVideoDescription,
+            /* [out][in] */ VMRDeinterlaceCaps *lpDeinterlaceCaps) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetDeinterlaceMode( 
+            /* [in] */ DWORD dwStreamID,
+            /* [out] */ LPGUID lpDeinterlaceMode) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetDeinterlaceMode( 
+            /* [in] */ DWORD dwStreamID,
+            /* [in] */ LPGUID lpDeinterlaceMode) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetDeinterlacePrefs( 
+            /* [out] */ LPDWORD lpdwDeinterlacePrefs) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetDeinterlacePrefs( 
+            /* [in] */ DWORD dwDeinterlacePrefs) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetActualDeinterlaceMode( 
+            /* [in] */ DWORD dwStreamID,
+            /* [out] */ LPGUID lpDeinterlaceMode) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IVMRDeinterlaceControlVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IVMRDeinterlaceControl * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IVMRDeinterlaceControl * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IVMRDeinterlaceControl * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetNumberOfDeinterlaceModes )( 
+            IVMRDeinterlaceControl * This,
+            /* [in] */ VMRVideoDesc *lpVideoDescription,
+            /* [out][in] */ LPDWORD lpdwNumDeinterlaceModes,
+            /* [out] */ LPGUID lpDeinterlaceModes);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetDeinterlaceModeCaps )( 
+            IVMRDeinterlaceControl * This,
+            /* [in] */ LPGUID lpDeinterlaceMode,
+            /* [in] */ VMRVideoDesc *lpVideoDescription,
+            /* [out][in] */ VMRDeinterlaceCaps *lpDeinterlaceCaps);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetDeinterlaceMode )( 
+            IVMRDeinterlaceControl * This,
+            /* [in] */ DWORD dwStreamID,
+            /* [out] */ LPGUID lpDeinterlaceMode);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetDeinterlaceMode )( 
+            IVMRDeinterlaceControl * This,
+            /* [in] */ DWORD dwStreamID,
+            /* [in] */ LPGUID lpDeinterlaceMode);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetDeinterlacePrefs )( 
+            IVMRDeinterlaceControl * This,
+            /* [out] */ LPDWORD lpdwDeinterlacePrefs);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetDeinterlacePrefs )( 
+            IVMRDeinterlaceControl * This,
+            /* [in] */ DWORD dwDeinterlacePrefs);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetActualDeinterlaceMode )( 
+            IVMRDeinterlaceControl * This,
+            /* [in] */ DWORD dwStreamID,
+            /* [out] */ LPGUID lpDeinterlaceMode);
+        
+        END_INTERFACE
+    } IVMRDeinterlaceControlVtbl;
+
+    interface IVMRDeinterlaceControl
+    {
+        CONST_VTBL struct IVMRDeinterlaceControlVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IVMRDeinterlaceControl_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IVMRDeinterlaceControl_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IVMRDeinterlaceControl_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IVMRDeinterlaceControl_GetNumberOfDeinterlaceModes(This,lpVideoDescription,lpdwNumDeinterlaceModes,lpDeinterlaceModes)	\
+    ( (This)->lpVtbl -> GetNumberOfDeinterlaceModes(This,lpVideoDescription,lpdwNumDeinterlaceModes,lpDeinterlaceModes) ) 
+
+#define IVMRDeinterlaceControl_GetDeinterlaceModeCaps(This,lpDeinterlaceMode,lpVideoDescription,lpDeinterlaceCaps)	\
+    ( (This)->lpVtbl -> GetDeinterlaceModeCaps(This,lpDeinterlaceMode,lpVideoDescription,lpDeinterlaceCaps) ) 
+
+#define IVMRDeinterlaceControl_GetDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode)	\
+    ( (This)->lpVtbl -> GetDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode) ) 
+
+#define IVMRDeinterlaceControl_SetDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode)	\
+    ( (This)->lpVtbl -> SetDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode) ) 
+
+#define IVMRDeinterlaceControl_GetDeinterlacePrefs(This,lpdwDeinterlacePrefs)	\
+    ( (This)->lpVtbl -> GetDeinterlacePrefs(This,lpdwDeinterlacePrefs) ) 
+
+#define IVMRDeinterlaceControl_SetDeinterlacePrefs(This,dwDeinterlacePrefs)	\
+    ( (This)->lpVtbl -> SetDeinterlacePrefs(This,dwDeinterlacePrefs) ) 
+
+#define IVMRDeinterlaceControl_GetActualDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode)	\
+    ( (This)->lpVtbl -> GetActualDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IVMRDeinterlaceControl_INTERFACE_DEFINED__ */
+
+
+/* interface __MIDL_itf_strmif_0000_0125 */
+/* [local] */ 
+
+typedef struct _VMRALPHABITMAP
+    {
+    DWORD dwFlags;
+    HDC hdc;
+    LPDIRECTDRAWSURFACE7 pDDS;
+    RECT rSrc;
+    NORMALIZEDRECT rDest;
+    FLOAT fAlpha;
+    COLORREF clrSrcKey;
+    } 	VMRALPHABITMAP;
+
+typedef struct _VMRALPHABITMAP *PVMRALPHABITMAP;
+
+#define VMRBITMAP_DISABLE            0x00000001
+#define VMRBITMAP_HDC                0x00000002
+#define VMRBITMAP_ENTIREDDS          0x00000004
+#define VMRBITMAP_SRCCOLORKEY        0x00000008
+#define VMRBITMAP_SRCRECT            0x00000010
+
+
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0125_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0125_v0_0_s_ifspec;
+
+#ifndef __IVMRMixerBitmap_INTERFACE_DEFINED__
+#define __IVMRMixerBitmap_INTERFACE_DEFINED__
+
+/* interface IVMRMixerBitmap */
+/* [unique][helpstring][uuid][local][object] */ 
+
+
+EXTERN_C const IID IID_IVMRMixerBitmap;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1E673275-0257-40aa-AF20-7C608D4A0428")
+    IVMRMixerBitmap : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE SetAlphaBitmap( 
+            /* [in] */ const VMRALPHABITMAP *pBmpParms) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE UpdateAlphaBitmapParameters( 
+            /* [in] */ PVMRALPHABITMAP pBmpParms) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetAlphaBitmapParameters( 
+            /* [out] */ PVMRALPHABITMAP pBmpParms) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IVMRMixerBitmapVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IVMRMixerBitmap * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IVMRMixerBitmap * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IVMRMixerBitmap * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetAlphaBitmap )( 
+            IVMRMixerBitmap * This,
+            /* [in] */ const VMRALPHABITMAP *pBmpParms);
+        
+        HRESULT ( STDMETHODCALLTYPE *UpdateAlphaBitmapParameters )( 
+            IVMRMixerBitmap * This,
+            /* [in] */ PVMRALPHABITMAP pBmpParms);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetAlphaBitmapParameters )( 
+            IVMRMixerBitmap * This,
+            /* [out] */ PVMRALPHABITMAP pBmpParms);
+        
+        END_INTERFACE
+    } IVMRMixerBitmapVtbl;
+
+    interface IVMRMixerBitmap
+    {
+        CONST_VTBL struct IVMRMixerBitmapVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IVMRMixerBitmap_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IVMRMixerBitmap_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IVMRMixerBitmap_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IVMRMixerBitmap_SetAlphaBitmap(This,pBmpParms)	\
+    ( (This)->lpVtbl -> SetAlphaBitmap(This,pBmpParms) ) 
+
+#define IVMRMixerBitmap_UpdateAlphaBitmapParameters(This,pBmpParms)	\
+    ( (This)->lpVtbl -> UpdateAlphaBitmapParameters(This,pBmpParms) ) 
+
+#define IVMRMixerBitmap_GetAlphaBitmapParameters(This,pBmpParms)	\
+    ( (This)->lpVtbl -> GetAlphaBitmapParameters(This,pBmpParms) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IVMRMixerBitmap_INTERFACE_DEFINED__ */
+
+
+/* interface __MIDL_itf_strmif_0000_0126 */
+/* [local] */ 
+
+typedef struct _VMRVIDEOSTREAMINFO
+    {
+    LPDIRECTDRAWSURFACE7 pddsVideoSurface;
+    DWORD dwWidth;
+    DWORD dwHeight;
+    DWORD dwStrmID;
+    FLOAT fAlpha;
+    DDCOLORKEY ddClrKey;
+    NORMALIZEDRECT rNormal;
+    } 	VMRVIDEOSTREAMINFO;
+
+
+
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0126_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0126_v0_0_s_ifspec;
+
+#ifndef __IVMRImageCompositor_INTERFACE_DEFINED__
+#define __IVMRImageCompositor_INTERFACE_DEFINED__
+
+/* interface IVMRImageCompositor */
+/* [unique][helpstring][uuid][local][object][local] */ 
+
+
+EXTERN_C const IID IID_IVMRImageCompositor;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("7a4fb5af-479f-4074-bb40-ce6722e43c82")
+    IVMRImageCompositor : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE InitCompositionTarget( 
+            /* [in] */ IUnknown *pD3DDevice,
+            /* [in] */ LPDIRECTDRAWSURFACE7 pddsRenderTarget) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE TermCompositionTarget( 
+            /* [in] */ IUnknown *pD3DDevice,
+            /* [in] */ LPDIRECTDRAWSURFACE7 pddsRenderTarget) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetStreamMediaType( 
+            /* [in] */ DWORD dwStrmID,
+            /* [in] */ AM_MEDIA_TYPE *pmt,
+            /* [in] */ BOOL fTexture) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE CompositeImage( 
+            /* [in] */ IUnknown *pD3DDevice,
+            /* [in] */ LPDIRECTDRAWSURFACE7 pddsRenderTarget,
+            /* [in] */ AM_MEDIA_TYPE *pmtRenderTarget,
+            /* [in] */ REFERENCE_TIME rtStart,
+            /* [in] */ REFERENCE_TIME rtEnd,
+            /* [in] */ DWORD dwClrBkGnd,
+            /* [in] */ VMRVIDEOSTREAMINFO *pVideoStreamInfo,
+            /* [in] */ UINT cStreams) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IVMRImageCompositorVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IVMRImageCompositor * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IVMRImageCompositor * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IVMRImageCompositor * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *InitCompositionTarget )( 
+            IVMRImageCompositor * This,
+            /* [in] */ IUnknown *pD3DDevice,
+            /* [in] */ LPDIRECTDRAWSURFACE7 pddsRenderTarget);
+        
+        HRESULT ( STDMETHODCALLTYPE *TermCompositionTarget )( 
+            IVMRImageCompositor * This,
+            /* [in] */ IUnknown *pD3DDevice,
+            /* [in] */ LPDIRECTDRAWSURFACE7 pddsRenderTarget);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetStreamMediaType )( 
+            IVMRImageCompositor * This,
+            /* [in] */ DWORD dwStrmID,
+            /* [in] */ AM_MEDIA_TYPE *pmt,
+            /* [in] */ BOOL fTexture);
+        
+        HRESULT ( STDMETHODCALLTYPE *CompositeImage )( 
+            IVMRImageCompositor * This,
+            /* [in] */ IUnknown *pD3DDevice,
+            /* [in] */ LPDIRECTDRAWSURFACE7 pddsRenderTarget,
+            /* [in] */ AM_MEDIA_TYPE *pmtRenderTarget,
+            /* [in] */ REFERENCE_TIME rtStart,
+            /* [in] */ REFERENCE_TIME rtEnd,
+            /* [in] */ DWORD dwClrBkGnd,
+            /* [in] */ VMRVIDEOSTREAMINFO *pVideoStreamInfo,
+            /* [in] */ UINT cStreams);
+        
+        END_INTERFACE
+    } IVMRImageCompositorVtbl;
+
+    interface IVMRImageCompositor
+    {
+        CONST_VTBL struct IVMRImageCompositorVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IVMRImageCompositor_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IVMRImageCompositor_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IVMRImageCompositor_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IVMRImageCompositor_InitCompositionTarget(This,pD3DDevice,pddsRenderTarget)	\
+    ( (This)->lpVtbl -> InitCompositionTarget(This,pD3DDevice,pddsRenderTarget) ) 
+
+#define IVMRImageCompositor_TermCompositionTarget(This,pD3DDevice,pddsRenderTarget)	\
+    ( (This)->lpVtbl -> TermCompositionTarget(This,pD3DDevice,pddsRenderTarget) ) 
+
+#define IVMRImageCompositor_SetStreamMediaType(This,dwStrmID,pmt,fTexture)	\
+    ( (This)->lpVtbl -> SetStreamMediaType(This,dwStrmID,pmt,fTexture) ) 
+
+#define IVMRImageCompositor_CompositeImage(This,pD3DDevice,pddsRenderTarget,pmtRenderTarget,rtStart,rtEnd,dwClrBkGnd,pVideoStreamInfo,cStreams)	\
+    ( (This)->lpVtbl -> CompositeImage(This,pD3DDevice,pddsRenderTarget,pmtRenderTarget,rtStart,rtEnd,dwClrBkGnd,pVideoStreamInfo,cStreams) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IVMRImageCompositor_INTERFACE_DEFINED__ */
+
+
+#ifndef __IVMRVideoStreamControl_INTERFACE_DEFINED__
+#define __IVMRVideoStreamControl_INTERFACE_DEFINED__
+
+/* interface IVMRVideoStreamControl */
+/* [unique][helpstring][uuid][local][object] */ 
+
+
+EXTERN_C const IID IID_IVMRVideoStreamControl;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("058d1f11-2a54-4bef-bd54-df706626b727")
+    IVMRVideoStreamControl : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE SetColorKey( 
+            /* [in] */ LPDDCOLORKEY lpClrKey) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetColorKey( 
+            /* [out] */ LPDDCOLORKEY lpClrKey) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetStreamActiveState( 
+            /* [in] */ BOOL fActive) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetStreamActiveState( 
+            /* [out] */ BOOL *lpfActive) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IVMRVideoStreamControlVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IVMRVideoStreamControl * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IVMRVideoStreamControl * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IVMRVideoStreamControl * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetColorKey )( 
+            IVMRVideoStreamControl * This,
+            /* [in] */ LPDDCOLORKEY lpClrKey);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetColorKey )( 
+            IVMRVideoStreamControl * This,
+            /* [out] */ LPDDCOLORKEY lpClrKey);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetStreamActiveState )( 
+            IVMRVideoStreamControl * This,
+            /* [in] */ BOOL fActive);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetStreamActiveState )( 
+            IVMRVideoStreamControl * This,
+            /* [out] */ BOOL *lpfActive);
+        
+        END_INTERFACE
+    } IVMRVideoStreamControlVtbl;
+
+    interface IVMRVideoStreamControl
+    {
+        CONST_VTBL struct IVMRVideoStreamControlVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IVMRVideoStreamControl_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IVMRVideoStreamControl_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IVMRVideoStreamControl_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IVMRVideoStreamControl_SetColorKey(This,lpClrKey)	\
+    ( (This)->lpVtbl -> SetColorKey(This,lpClrKey) ) 
+
+#define IVMRVideoStreamControl_GetColorKey(This,lpClrKey)	\
+    ( (This)->lpVtbl -> GetColorKey(This,lpClrKey) ) 
+
+#define IVMRVideoStreamControl_SetStreamActiveState(This,fActive)	\
+    ( (This)->lpVtbl -> SetStreamActiveState(This,fActive) ) 
+
+#define IVMRVideoStreamControl_GetStreamActiveState(This,lpfActive)	\
+    ( (This)->lpVtbl -> GetStreamActiveState(This,lpfActive) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IVMRVideoStreamControl_INTERFACE_DEFINED__ */
+
+
+#ifndef __IVMRSurface_INTERFACE_DEFINED__
+#define __IVMRSurface_INTERFACE_DEFINED__
+
+/* interface IVMRSurface */
+/* [unique][helpstring][uuid][local][object][local] */ 
+
+
+EXTERN_C const IID IID_IVMRSurface;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("a9849bbe-9ec8-4263-b764-62730f0d15d0")
+    IVMRSurface : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE IsSurfaceLocked( void) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE LockSurface( 
+            /* [out] */ BYTE **lpSurface) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE UnlockSurface( void) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetSurface( 
+            /* [out] */ LPDIRECTDRAWSURFACE7 *lplpSurface) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IVMRSurfaceVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IVMRSurface * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IVMRSurface * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IVMRSurface * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *IsSurfaceLocked )( 
+            IVMRSurface * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *LockSurface )( 
+            IVMRSurface * This,
+            /* [out] */ BYTE **lpSurface);
+        
+        HRESULT ( STDMETHODCALLTYPE *UnlockSurface )( 
+            IVMRSurface * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetSurface )( 
+            IVMRSurface * This,
+            /* [out] */ LPDIRECTDRAWSURFACE7 *lplpSurface);
+        
+        END_INTERFACE
+    } IVMRSurfaceVtbl;
+
+    interface IVMRSurface
+    {
+        CONST_VTBL struct IVMRSurfaceVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IVMRSurface_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IVMRSurface_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IVMRSurface_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IVMRSurface_IsSurfaceLocked(This)	\
+    ( (This)->lpVtbl -> IsSurfaceLocked(This) ) 
+
+#define IVMRSurface_LockSurface(This,lpSurface)	\
+    ( (This)->lpVtbl -> LockSurface(This,lpSurface) ) 
+
+#define IVMRSurface_UnlockSurface(This)	\
+    ( (This)->lpVtbl -> UnlockSurface(This) ) 
+
+#define IVMRSurface_GetSurface(This,lplpSurface)	\
+    ( (This)->lpVtbl -> GetSurface(This,lplpSurface) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IVMRSurface_INTERFACE_DEFINED__ */
+
+
+#ifndef __IVMRImagePresenterConfig_INTERFACE_DEFINED__
+#define __IVMRImagePresenterConfig_INTERFACE_DEFINED__
+
+/* interface IVMRImagePresenterConfig */
+/* [unique][helpstring][uuid][local][object][local] */ 
+
+
+EXTERN_C const IID IID_IVMRImagePresenterConfig;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("9f3a1c85-8555-49ba-935f-be5b5b29d178")
+    IVMRImagePresenterConfig : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE SetRenderingPrefs( 
+            /* [in] */ DWORD dwRenderFlags) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetRenderingPrefs( 
+            /* [out] */ DWORD *dwRenderFlags) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IVMRImagePresenterConfigVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IVMRImagePresenterConfig * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IVMRImagePresenterConfig * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IVMRImagePresenterConfig * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetRenderingPrefs )( 
+            IVMRImagePresenterConfig * This,
+            /* [in] */ DWORD dwRenderFlags);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetRenderingPrefs )( 
+            IVMRImagePresenterConfig * This,
+            /* [out] */ DWORD *dwRenderFlags);
+        
+        END_INTERFACE
+    } IVMRImagePresenterConfigVtbl;
+
+    interface IVMRImagePresenterConfig
+    {
+        CONST_VTBL struct IVMRImagePresenterConfigVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IVMRImagePresenterConfig_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IVMRImagePresenterConfig_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IVMRImagePresenterConfig_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IVMRImagePresenterConfig_SetRenderingPrefs(This,dwRenderFlags)	\
+    ( (This)->lpVtbl -> SetRenderingPrefs(This,dwRenderFlags) ) 
+
+#define IVMRImagePresenterConfig_GetRenderingPrefs(This,dwRenderFlags)	\
+    ( (This)->lpVtbl -> GetRenderingPrefs(This,dwRenderFlags) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IVMRImagePresenterConfig_INTERFACE_DEFINED__ */
+
+
+#ifndef __IVMRImagePresenterExclModeConfig_INTERFACE_DEFINED__
+#define __IVMRImagePresenterExclModeConfig_INTERFACE_DEFINED__
+
+/* interface IVMRImagePresenterExclModeConfig */
+/* [unique][helpstring][uuid][local][object][local] */ 
+
+
+EXTERN_C const IID IID_IVMRImagePresenterExclModeConfig;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("e6f7ce40-4673-44f1-8f77-5499d68cb4ea")
+    IVMRImagePresenterExclModeConfig : public IVMRImagePresenterConfig
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE SetXlcModeDDObjAndPrimarySurface( 
+            /* [in] */ LPDIRECTDRAW7 lpDDObj,
+            /* [in] */ LPDIRECTDRAWSURFACE7 lpPrimarySurf) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetXlcModeDDObjAndPrimarySurface( 
+            /* [out] */ LPDIRECTDRAW7 *lpDDObj,
+            /* [out] */ LPDIRECTDRAWSURFACE7 *lpPrimarySurf) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IVMRImagePresenterExclModeConfigVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IVMRImagePresenterExclModeConfig * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IVMRImagePresenterExclModeConfig * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IVMRImagePresenterExclModeConfig * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetRenderingPrefs )( 
+            IVMRImagePresenterExclModeConfig * This,
+            /* [in] */ DWORD dwRenderFlags);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetRenderingPrefs )( 
+            IVMRImagePresenterExclModeConfig * This,
+            /* [out] */ DWORD *dwRenderFlags);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetXlcModeDDObjAndPrimarySurface )( 
+            IVMRImagePresenterExclModeConfig * This,
+            /* [in] */ LPDIRECTDRAW7 lpDDObj,
+            /* [in] */ LPDIRECTDRAWSURFACE7 lpPrimarySurf);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetXlcModeDDObjAndPrimarySurface )( 
+            IVMRImagePresenterExclModeConfig * This,
+            /* [out] */ LPDIRECTDRAW7 *lpDDObj,
+            /* [out] */ LPDIRECTDRAWSURFACE7 *lpPrimarySurf);
+        
+        END_INTERFACE
+    } IVMRImagePresenterExclModeConfigVtbl;
+
+    interface IVMRImagePresenterExclModeConfig
+    {
+        CONST_VTBL struct IVMRImagePresenterExclModeConfigVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IVMRImagePresenterExclModeConfig_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IVMRImagePresenterExclModeConfig_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IVMRImagePresenterExclModeConfig_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IVMRImagePresenterExclModeConfig_SetRenderingPrefs(This,dwRenderFlags)	\
+    ( (This)->lpVtbl -> SetRenderingPrefs(This,dwRenderFlags) ) 
+
+#define IVMRImagePresenterExclModeConfig_GetRenderingPrefs(This,dwRenderFlags)	\
+    ( (This)->lpVtbl -> GetRenderingPrefs(This,dwRenderFlags) ) 
+
+
+#define IVMRImagePresenterExclModeConfig_SetXlcModeDDObjAndPrimarySurface(This,lpDDObj,lpPrimarySurf)	\
+    ( (This)->lpVtbl -> SetXlcModeDDObjAndPrimarySurface(This,lpDDObj,lpPrimarySurf) ) 
+
+#define IVMRImagePresenterExclModeConfig_GetXlcModeDDObjAndPrimarySurface(This,lpDDObj,lpPrimarySurf)	\
+    ( (This)->lpVtbl -> GetXlcModeDDObjAndPrimarySurface(This,lpDDObj,lpPrimarySurf) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IVMRImagePresenterExclModeConfig_INTERFACE_DEFINED__ */
+
+
+#ifndef __IVPManager_INTERFACE_DEFINED__
+#define __IVPManager_INTERFACE_DEFINED__
+
+/* interface IVPManager */
+/* [unique][helpstring][uuid][local][object][local] */ 
+
+
+EXTERN_C const IID IID_IVPManager;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("aac18c18-e186-46d2-825d-a1f8dc8e395a")
+    IVPManager : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE SetVideoPortIndex( 
+            /* [in] */ DWORD dwVideoPortIndex) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE GetVideoPortIndex( 
+            /* [out] */ DWORD *pdwVideoPortIndex) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct IVPManagerVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IVPManager * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IVPManager * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IVPManager * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetVideoPortIndex )( 
+            IVPManager * This,
+            /* [in] */ DWORD dwVideoPortIndex);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetVideoPortIndex )( 
+            IVPManager * This,
+            /* [out] */ DWORD *pdwVideoPortIndex);
+        
+        END_INTERFACE
+    } IVPManagerVtbl;
+
+    interface IVPManager
+    {
+        CONST_VTBL struct IVPManagerVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IVPManager_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IVPManager_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IVPManager_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IVPManager_SetVideoPortIndex(This,dwVideoPortIndex)	\
+    ( (This)->lpVtbl -> SetVideoPortIndex(This,dwVideoPortIndex) ) 
+
+#define IVPManager_GetVideoPortIndex(This,pdwVideoPortIndex)	\
+    ( (This)->lpVtbl -> GetVideoPortIndex(This,pdwVideoPortIndex) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IVPManager_INTERFACE_DEFINED__ */
+
+
+/* interface __MIDL_itf_strmif_0000_0132 */
+/* [local] */ 
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#pragma endregion
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#pragma endregion
+#include <winapifamily.h>
+#pragma region Desktop Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#include <ddraw.h>
+
+
+
+
+
+
+
+
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#pragma endregion
+#pragma region Application Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 typedef 
 enum tagDVD_DOMAIN
     {
@@ -17962,7 +20958,7 @@ typedef struct tagDVD_PLAYBACK_LOCATION
 typedef DWORD VALID_UOP_SOMTHING_OR_OTHER;
 
 typedef /* [public] */ 
-enum __MIDL___MIDL_itf_strmif_0000_0111_0001
+enum __MIDL___MIDL_itf_strmif_0000_0132_0001
     {
         UOP_FLAG_Play_Title_Or_AtTime	= 0x1,
         UOP_FLAG_Play_Chapter	= 0x2,
@@ -17992,7 +20988,7 @@ enum __MIDL___MIDL_itf_strmif_0000_0111_0001
     } 	VALID_UOP_FLAG;
 
 typedef /* [public] */ 
-enum __MIDL___MIDL_itf_strmif_0000_0111_0002
+enum __MIDL___MIDL_itf_strmif_0000_0132_0002
     {
         DVD_CMD_FLAG_None	= 0,
         DVD_CMD_FLAG_Flush	= 0x1,
@@ -18003,7 +20999,7 @@ enum __MIDL___MIDL_itf_strmif_0000_0111_0002
     } 	DVD_CMD_FLAGS;
 
 typedef /* [public][public] */ 
-enum __MIDL___MIDL_itf_strmif_0000_0111_0003
+enum __MIDL___MIDL_itf_strmif_0000_0132_0003
     {
         DVD_ResetOnStop	= 1,
         DVD_NotifyParentalLevelChange	= 2,
@@ -18021,11 +21017,12 @@ enum __MIDL___MIDL_itf_strmif_0000_0111_0003
         DVD_DisableStillThrottle	= 14,
         DVD_EnableLoggingEvents	= 15,
         DVD_MaxReadBurstInKB	= 16,
-        DVD_ReadBurstPeriodInMS	= 17
+        DVD_ReadBurstPeriodInMS	= 17,
+        DVD_RestartDisc	= 18
     } 	DVD_OPTION_FLAG;
 
 typedef /* [public][public] */ 
-enum __MIDL___MIDL_itf_strmif_0000_0111_0004
+enum __MIDL___MIDL_itf_strmif_0000_0132_0004
     {
         DVD_Relative_Upper	= 1,
         DVD_Relative_Lower	= 2,
@@ -18287,10 +21284,14 @@ typedef struct tagDVD_MenuAttributes
     DVD_SubpictureAttributes SubpictureAttributes;
     } 	DVD_MenuAttributes;
 
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#pragma endregion
+#pragma region Desktop Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0111_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0111_v0_0_s_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0132_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0132_v0_0_s_ifspec;
 
 #ifndef __IDvdControl_INTERFACE_DEFINED__
 #define __IDvdControl_INTERFACE_DEFINED__
@@ -19276,6 +22277,18 @@ EXTERN_C const IID IID_IDvdState;
 #endif 	/* __IDvdState_INTERFACE_DEFINED__ */
 
 
+/* interface __MIDL_itf_strmif_0000_0136 */
+/* [local] */ 
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#pragma endregion
+#pragma region Application Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+
+
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0136_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0136_v0_0_s_ifspec;
+
 #ifndef __IDvdControl2_INTERFACE_DEFINED__
 #define __IDvdControl2_INTERFACE_DEFINED__
 
@@ -19876,7 +22889,7 @@ EXTERN_C const IID IID_IDvdControl2;
 #endif 	/* __IDvdControl2_INTERFACE_DEFINED__ */
 
 
-/* interface __MIDL_itf_strmif_0000_0116 */
+/* interface __MIDL_itf_strmif_0000_0137 */
 /* [local] */ 
 
 
@@ -19952,8 +22965,8 @@ typedef struct tagDVD_DECODER_CAPS
 #define DVD_AUDIO_CAPS_SDDS		0x00000010
 
 
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0116_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0116_v0_0_s_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0137_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0137_v0_0_s_ifspec;
 
 #ifndef __IDvdInfo2_INTERFACE_DEFINED__
 #define __IDvdInfo2_INTERFACE_DEFINED__
@@ -20623,9 +23636,13 @@ EXTERN_C const IID IID_IDvdInfo2;
 #endif 	/* __IDvdInfo2_INTERFACE_DEFINED__ */
 
 
-/* interface __MIDL_itf_strmif_0000_0117 */
+/* interface __MIDL_itf_strmif_0000_0138 */
 /* [local] */ 
 
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#pragma endregion
+#pragma region Desktop Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 typedef 
 enum _AM_DVD_GRAPH_FLAGS
     {
@@ -20650,7 +23667,7 @@ enum _AM_DVD_STREAM_FLAGS
         AM_DVD_STREAM_SUBPIC	= 0x4
     } 	AM_DVD_STREAM_FLAGS;
 
-typedef /* [public][public] */ struct __MIDL___MIDL_itf_strmif_0000_0117_0001
+typedef /* [public][public] */ struct __MIDL___MIDL_itf_strmif_0000_0138_0001
     {
     HRESULT hrVPEStatus;
     BOOL bDvdVolInvalid;
@@ -20664,8 +23681,8 @@ typedef /* [public][public] */ struct __MIDL___MIDL_itf_strmif_0000_0117_0001
 
 
 
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0117_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0117_v0_0_s_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0138_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0138_v0_0_s_ifspec;
 
 #ifndef __IDvdGraphBuilder_INTERFACE_DEFINED__
 #define __IDvdGraphBuilder_INTERFACE_DEFINED__
@@ -20949,7 +23966,7 @@ EXTERN_C const IID IID_IDDrawExclModeVideo;
 #endif 	/* __IDDrawExclModeVideo_INTERFACE_DEFINED__ */
 
 
-/* interface __MIDL_itf_strmif_0000_0119 */
+/* interface __MIDL_itf_strmif_0000_0140 */
 /* [local] */ 
 
 
@@ -20961,8 +23978,8 @@ enum _AM_OVERLAY_NOTIFY_FLAGS
     } ;
 
 
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0119_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0119_v0_0_s_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0140_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0140_v0_0_s_ifspec;
 
 #ifndef __IDDrawExclModeVideoCallback_INTERFACE_DEFINED__
 #define __IDDrawExclModeVideoCallback_INTERFACE_DEFINED__
@@ -21086,2990 +24103,6 @@ EXTERN_C const IID IID_IDDrawExclModeVideoCallback;
 #endif 	/* __IDDrawExclModeVideoCallback_INTERFACE_DEFINED__ */
 
 
-/* interface __MIDL_itf_strmif_0000_0120 */
-/* [local] */ 
-
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
-#pragma endregion
-#include <winapifamily.h>
-#pragma region Desktop Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
-
-
-
-
-
-
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0120_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0120_v0_0_s_ifspec;
-
-#ifndef __IPinConnection_INTERFACE_DEFINED__
-#define __IPinConnection_INTERFACE_DEFINED__
-
-/* interface IPinConnection */
-/* [unique][uuid][object][local] */ 
-
-
-EXTERN_C const IID IID_IPinConnection;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("4a9a62d3-27d4-403d-91e9-89f540e55534")
-    IPinConnection : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE DynamicQueryAccept( 
-            /* [in] */ const AM_MEDIA_TYPE *pmt) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE NotifyEndOfStream( 
-            /* [in] */ HANDLE hNotifyEvent) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE IsEndPin( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE DynamicDisconnect( void) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IPinConnectionVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IPinConnection * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IPinConnection * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IPinConnection * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *DynamicQueryAccept )( 
-            IPinConnection * This,
-            /* [in] */ const AM_MEDIA_TYPE *pmt);
-        
-        HRESULT ( STDMETHODCALLTYPE *NotifyEndOfStream )( 
-            IPinConnection * This,
-            /* [in] */ HANDLE hNotifyEvent);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsEndPin )( 
-            IPinConnection * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *DynamicDisconnect )( 
-            IPinConnection * This);
-        
-        END_INTERFACE
-    } IPinConnectionVtbl;
-
-    interface IPinConnection
-    {
-        CONST_VTBL struct IPinConnectionVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IPinConnection_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IPinConnection_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IPinConnection_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IPinConnection_DynamicQueryAccept(This,pmt)	\
-    ( (This)->lpVtbl -> DynamicQueryAccept(This,pmt) ) 
-
-#define IPinConnection_NotifyEndOfStream(This,hNotifyEvent)	\
-    ( (This)->lpVtbl -> NotifyEndOfStream(This,hNotifyEvent) ) 
-
-#define IPinConnection_IsEndPin(This)	\
-    ( (This)->lpVtbl -> IsEndPin(This) ) 
-
-#define IPinConnection_DynamicDisconnect(This)	\
-    ( (This)->lpVtbl -> DynamicDisconnect(This) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IPinConnection_INTERFACE_DEFINED__ */
-
-
-#ifndef __IPinFlowControl_INTERFACE_DEFINED__
-#define __IPinFlowControl_INTERFACE_DEFINED__
-
-/* interface IPinFlowControl */
-/* [unique][uuid][object][local] */ 
-
-
-EXTERN_C const IID IID_IPinFlowControl;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("c56e9858-dbf3-4f6b-8119-384af2060deb")
-    IPinFlowControl : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE Block( 
-            /* [in] */ DWORD dwBlockFlags,
-            /* [in] */ HANDLE hEvent) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IPinFlowControlVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IPinFlowControl * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IPinFlowControl * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IPinFlowControl * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Block )( 
-            IPinFlowControl * This,
-            /* [in] */ DWORD dwBlockFlags,
-            /* [in] */ HANDLE hEvent);
-        
-        END_INTERFACE
-    } IPinFlowControlVtbl;
-
-    interface IPinFlowControl
-    {
-        CONST_VTBL struct IPinFlowControlVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IPinFlowControl_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IPinFlowControl_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IPinFlowControl_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IPinFlowControl_Block(This,dwBlockFlags,hEvent)	\
-    ( (This)->lpVtbl -> Block(This,dwBlockFlags,hEvent) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IPinFlowControl_INTERFACE_DEFINED__ */
-
-
-/* interface __MIDL_itf_strmif_0000_0122 */
-/* [local] */ 
-
-
-enum _AM_PIN_FLOW_CONTROL_BLOCK_FLAGS
-    {
-        AM_PIN_FLOW_CONTROL_BLOCK	= 0x1
-    } ;
-typedef 
-enum _AM_GRAPH_CONFIG_RECONNECT_FLAGS
-    {
-        AM_GRAPH_CONFIG_RECONNECT_DIRECTCONNECT	= 0x1,
-        AM_GRAPH_CONFIG_RECONNECT_CACHE_REMOVED_FILTERS	= 0x2,
-        AM_GRAPH_CONFIG_RECONNECT_USE_ONLY_CACHED_FILTERS	= 0x4
-    } 	AM_GRAPH_CONFIG_RECONNECT_FLAGS;
-
-
-enum _REM_FILTER_FLAGS
-    {
-        REMFILTERF_LEAVECONNECTED	= 0x1
-    } ;
-typedef 
-enum _AM_FILTER_FLAGS
-    {
-        AM_FILTER_FLAGS_REMOVABLE	= 0x1
-    } 	AM_FILTER_FLAGS;
-
-
-
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0122_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0122_v0_0_s_ifspec;
-
-#ifndef __IGraphConfig_INTERFACE_DEFINED__
-#define __IGraphConfig_INTERFACE_DEFINED__
-
-/* interface IGraphConfig */
-/* [unique][uuid][object][local] */ 
-
-
-EXTERN_C const IID IID_IGraphConfig;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("03A1EB8E-32BF-4245-8502-114D08A9CB88")
-    IGraphConfig : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE Reconnect( 
-            /* [in] */ IPin *pOutputPin,
-            /* [in] */ IPin *pInputPin,
-            /* [in] */ const AM_MEDIA_TYPE *pmtFirstConnection,
-            /* [in] */ IBaseFilter *pUsingFilter,
-            /* [in] */ HANDLE hAbortEvent,
-            /* [in] */ DWORD dwFlags) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE Reconfigure( 
-            /* [in] */ IGraphConfigCallback *pCallback,
-            /* [in] */ PVOID pvContext,
-            /* [in] */ DWORD dwFlags,
-            /* [in] */ HANDLE hAbortEvent) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AddFilterToCache( 
-            /* [in] */ IBaseFilter *pFilter) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE EnumCacheFilter( 
-            /* [out] */ IEnumFilters **pEnum) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RemoveFilterFromCache( 
-            /* [in] */ IBaseFilter *pFilter) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetStartTime( 
-            /* [out] */ REFERENCE_TIME *prtStart) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE PushThroughData( 
-            /* [in] */ IPin *pOutputPin,
-            /* [in] */ IPinConnection *pConnection,
-            /* [in] */ HANDLE hEventAbort) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetFilterFlags( 
-            /* [in] */ IBaseFilter *pFilter,
-            /* [in] */ DWORD dwFlags) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetFilterFlags( 
-            /* [in] */ IBaseFilter *pFilter,
-            /* [out] */ DWORD *pdwFlags) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RemoveFilterEx( 
-            /* [in] */ IBaseFilter *pFilter,
-            DWORD Flags) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IGraphConfigVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IGraphConfig * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IGraphConfig * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IGraphConfig * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Reconnect )( 
-            IGraphConfig * This,
-            /* [in] */ IPin *pOutputPin,
-            /* [in] */ IPin *pInputPin,
-            /* [in] */ const AM_MEDIA_TYPE *pmtFirstConnection,
-            /* [in] */ IBaseFilter *pUsingFilter,
-            /* [in] */ HANDLE hAbortEvent,
-            /* [in] */ DWORD dwFlags);
-        
-        HRESULT ( STDMETHODCALLTYPE *Reconfigure )( 
-            IGraphConfig * This,
-            /* [in] */ IGraphConfigCallback *pCallback,
-            /* [in] */ PVOID pvContext,
-            /* [in] */ DWORD dwFlags,
-            /* [in] */ HANDLE hAbortEvent);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddFilterToCache )( 
-            IGraphConfig * This,
-            /* [in] */ IBaseFilter *pFilter);
-        
-        HRESULT ( STDMETHODCALLTYPE *EnumCacheFilter )( 
-            IGraphConfig * This,
-            /* [out] */ IEnumFilters **pEnum);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveFilterFromCache )( 
-            IGraphConfig * This,
-            /* [in] */ IBaseFilter *pFilter);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStartTime )( 
-            IGraphConfig * This,
-            /* [out] */ REFERENCE_TIME *prtStart);
-        
-        HRESULT ( STDMETHODCALLTYPE *PushThroughData )( 
-            IGraphConfig * This,
-            /* [in] */ IPin *pOutputPin,
-            /* [in] */ IPinConnection *pConnection,
-            /* [in] */ HANDLE hEventAbort);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetFilterFlags )( 
-            IGraphConfig * This,
-            /* [in] */ IBaseFilter *pFilter,
-            /* [in] */ DWORD dwFlags);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetFilterFlags )( 
-            IGraphConfig * This,
-            /* [in] */ IBaseFilter *pFilter,
-            /* [out] */ DWORD *pdwFlags);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveFilterEx )( 
-            IGraphConfig * This,
-            /* [in] */ IBaseFilter *pFilter,
-            DWORD Flags);
-        
-        END_INTERFACE
-    } IGraphConfigVtbl;
-
-    interface IGraphConfig
-    {
-        CONST_VTBL struct IGraphConfigVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IGraphConfig_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IGraphConfig_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IGraphConfig_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IGraphConfig_Reconnect(This,pOutputPin,pInputPin,pmtFirstConnection,pUsingFilter,hAbortEvent,dwFlags)	\
-    ( (This)->lpVtbl -> Reconnect(This,pOutputPin,pInputPin,pmtFirstConnection,pUsingFilter,hAbortEvent,dwFlags) ) 
-
-#define IGraphConfig_Reconfigure(This,pCallback,pvContext,dwFlags,hAbortEvent)	\
-    ( (This)->lpVtbl -> Reconfigure(This,pCallback,pvContext,dwFlags,hAbortEvent) ) 
-
-#define IGraphConfig_AddFilterToCache(This,pFilter)	\
-    ( (This)->lpVtbl -> AddFilterToCache(This,pFilter) ) 
-
-#define IGraphConfig_EnumCacheFilter(This,pEnum)	\
-    ( (This)->lpVtbl -> EnumCacheFilter(This,pEnum) ) 
-
-#define IGraphConfig_RemoveFilterFromCache(This,pFilter)	\
-    ( (This)->lpVtbl -> RemoveFilterFromCache(This,pFilter) ) 
-
-#define IGraphConfig_GetStartTime(This,prtStart)	\
-    ( (This)->lpVtbl -> GetStartTime(This,prtStart) ) 
-
-#define IGraphConfig_PushThroughData(This,pOutputPin,pConnection,hEventAbort)	\
-    ( (This)->lpVtbl -> PushThroughData(This,pOutputPin,pConnection,hEventAbort) ) 
-
-#define IGraphConfig_SetFilterFlags(This,pFilter,dwFlags)	\
-    ( (This)->lpVtbl -> SetFilterFlags(This,pFilter,dwFlags) ) 
-
-#define IGraphConfig_GetFilterFlags(This,pFilter,pdwFlags)	\
-    ( (This)->lpVtbl -> GetFilterFlags(This,pFilter,pdwFlags) ) 
-
-#define IGraphConfig_RemoveFilterEx(This,pFilter,Flags)	\
-    ( (This)->lpVtbl -> RemoveFilterEx(This,pFilter,Flags) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IGraphConfig_INTERFACE_DEFINED__ */
-
-
-#ifndef __IGraphConfigCallback_INTERFACE_DEFINED__
-#define __IGraphConfigCallback_INTERFACE_DEFINED__
-
-/* interface IGraphConfigCallback */
-/* [unique][uuid][object][local] */ 
-
-
-EXTERN_C const IID IID_IGraphConfigCallback;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("ade0fd60-d19d-11d2-abf6-00a0c905f375")
-    IGraphConfigCallback : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE Reconfigure( 
-            PVOID pvContext,
-            DWORD dwFlags) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IGraphConfigCallbackVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IGraphConfigCallback * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IGraphConfigCallback * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IGraphConfigCallback * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Reconfigure )( 
-            IGraphConfigCallback * This,
-            PVOID pvContext,
-            DWORD dwFlags);
-        
-        END_INTERFACE
-    } IGraphConfigCallbackVtbl;
-
-    interface IGraphConfigCallback
-    {
-        CONST_VTBL struct IGraphConfigCallbackVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IGraphConfigCallback_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IGraphConfigCallback_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IGraphConfigCallback_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IGraphConfigCallback_Reconfigure(This,pvContext,dwFlags)	\
-    ( (This)->lpVtbl -> Reconfigure(This,pvContext,dwFlags) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IGraphConfigCallback_INTERFACE_DEFINED__ */
-
-
-#ifndef __IFilterChain_INTERFACE_DEFINED__
-#define __IFilterChain_INTERFACE_DEFINED__
-
-/* interface IFilterChain */
-/* [unique][uuid][object][local] */ 
-
-
-EXTERN_C const IID IID_IFilterChain;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("DCFBDCF6-0DC2-45f5-9AB2-7C330EA09C29")
-    IFilterChain : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE StartChain( 
-            /* [in] */ IBaseFilter *pStartFilter,
-            /* [in] */ IBaseFilter *pEndFilter) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE PauseChain( 
-            /* [in] */ IBaseFilter *pStartFilter,
-            /* [in] */ IBaseFilter *pEndFilter) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE StopChain( 
-            /* [in] */ IBaseFilter *pStartFilter,
-            /* [in] */ IBaseFilter *pEndFilter) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RemoveChain( 
-            /* [in] */ IBaseFilter *pStartFilter,
-            /* [in] */ IBaseFilter *pEndFilter) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IFilterChainVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IFilterChain * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IFilterChain * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IFilterChain * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *StartChain )( 
-            IFilterChain * This,
-            /* [in] */ IBaseFilter *pStartFilter,
-            /* [in] */ IBaseFilter *pEndFilter);
-        
-        HRESULT ( STDMETHODCALLTYPE *PauseChain )( 
-            IFilterChain * This,
-            /* [in] */ IBaseFilter *pStartFilter,
-            /* [in] */ IBaseFilter *pEndFilter);
-        
-        HRESULT ( STDMETHODCALLTYPE *StopChain )( 
-            IFilterChain * This,
-            /* [in] */ IBaseFilter *pStartFilter,
-            /* [in] */ IBaseFilter *pEndFilter);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveChain )( 
-            IFilterChain * This,
-            /* [in] */ IBaseFilter *pStartFilter,
-            /* [in] */ IBaseFilter *pEndFilter);
-        
-        END_INTERFACE
-    } IFilterChainVtbl;
-
-    interface IFilterChain
-    {
-        CONST_VTBL struct IFilterChainVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IFilterChain_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IFilterChain_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IFilterChain_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IFilterChain_StartChain(This,pStartFilter,pEndFilter)	\
-    ( (This)->lpVtbl -> StartChain(This,pStartFilter,pEndFilter) ) 
-
-#define IFilterChain_PauseChain(This,pStartFilter,pEndFilter)	\
-    ( (This)->lpVtbl -> PauseChain(This,pStartFilter,pEndFilter) ) 
-
-#define IFilterChain_StopChain(This,pStartFilter,pEndFilter)	\
-    ( (This)->lpVtbl -> StopChain(This,pStartFilter,pEndFilter) ) 
-
-#define IFilterChain_RemoveChain(This,pStartFilter,pEndFilter)	\
-    ( (This)->lpVtbl -> RemoveChain(This,pStartFilter,pEndFilter) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IFilterChain_INTERFACE_DEFINED__ */
-
-
-/* interface __MIDL_itf_strmif_0000_0125 */
-/* [local] */ 
-
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
-#pragma endregion
-#include <winapifamily.h>
-#pragma region Desktop Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
-#if 0
-typedef DWORD *LPDIRECTDRAW7;
-
-typedef DWORD *LPDIRECTDRAWSURFACE7;
-
-typedef DWORD *LPDDPIXELFORMAT;
-
-typedef DWORD *LPBITMAPINFOHEADER;
-
-typedef struct DDCOLORKEY
-    {
-    DWORD dw1;
-    DWORD dw2;
-    } 	DDCOLORKEY;
-
-typedef DDCOLORKEY *LPDDCOLORKEY;
-
-#endif
-#include <ddraw.h>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-typedef 
-enum VMRPresentationFlags
-    {
-        VMRSample_SyncPoint	= 0x1,
-        VMRSample_Preroll	= 0x2,
-        VMRSample_Discontinuity	= 0x4,
-        VMRSample_TimeValid	= 0x8,
-        VMRSample_SrcDstRectsValid	= 0x10
-    } 	VMRPresentationFlags;
-
-typedef struct tagVMRPRESENTATIONINFO
-    {
-    DWORD dwFlags;
-    LPDIRECTDRAWSURFACE7 lpSurf;
-    REFERENCE_TIME rtStart;
-    REFERENCE_TIME rtEnd;
-    SIZE szAspectRatio;
-    RECT rcSrc;
-    RECT rcDst;
-    DWORD dwTypeSpecificFlags;
-    DWORD dwInterlaceFlags;
-    } 	VMRPRESENTATIONINFO;
-
-
-
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0125_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0125_v0_0_s_ifspec;
-
-#ifndef __IVMRImagePresenter_INTERFACE_DEFINED__
-#define __IVMRImagePresenter_INTERFACE_DEFINED__
-
-/* interface IVMRImagePresenter */
-/* [unique][helpstring][uuid][local][object][local] */ 
-
-
-EXTERN_C const IID IID_IVMRImagePresenter;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("CE704FE7-E71E-41fb-BAA2-C4403E1182F5")
-    IVMRImagePresenter : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE StartPresenting( 
-            /* [in] */ DWORD_PTR dwUserID) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE StopPresenting( 
-            /* [in] */ DWORD_PTR dwUserID) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE PresentImage( 
-            /* [in] */ DWORD_PTR dwUserID,
-            /* [in] */ VMRPRESENTATIONINFO *lpPresInfo) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IVMRImagePresenterVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IVMRImagePresenter * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IVMRImagePresenter * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IVMRImagePresenter * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *StartPresenting )( 
-            IVMRImagePresenter * This,
-            /* [in] */ DWORD_PTR dwUserID);
-        
-        HRESULT ( STDMETHODCALLTYPE *StopPresenting )( 
-            IVMRImagePresenter * This,
-            /* [in] */ DWORD_PTR dwUserID);
-        
-        HRESULT ( STDMETHODCALLTYPE *PresentImage )( 
-            IVMRImagePresenter * This,
-            /* [in] */ DWORD_PTR dwUserID,
-            /* [in] */ VMRPRESENTATIONINFO *lpPresInfo);
-        
-        END_INTERFACE
-    } IVMRImagePresenterVtbl;
-
-    interface IVMRImagePresenter
-    {
-        CONST_VTBL struct IVMRImagePresenterVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IVMRImagePresenter_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IVMRImagePresenter_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IVMRImagePresenter_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IVMRImagePresenter_StartPresenting(This,dwUserID)	\
-    ( (This)->lpVtbl -> StartPresenting(This,dwUserID) ) 
-
-#define IVMRImagePresenter_StopPresenting(This,dwUserID)	\
-    ( (This)->lpVtbl -> StopPresenting(This,dwUserID) ) 
-
-#define IVMRImagePresenter_PresentImage(This,dwUserID,lpPresInfo)	\
-    ( (This)->lpVtbl -> PresentImage(This,dwUserID,lpPresInfo) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IVMRImagePresenter_INTERFACE_DEFINED__ */
-
-
-/* interface __MIDL_itf_strmif_0000_0126 */
-/* [local] */ 
-
-typedef 
-enum VMRSurfaceAllocationFlags
-    {
-        AMAP_PIXELFORMAT_VALID	= 0x1,
-        AMAP_3D_TARGET	= 0x2,
-        AMAP_ALLOW_SYSMEM	= 0x4,
-        AMAP_FORCE_SYSMEM	= 0x8,
-        AMAP_DIRECTED_FLIP	= 0x10,
-        AMAP_DXVA_TARGET	= 0x20
-    } 	VMRSurfaceAllocationFlags;
-
-typedef struct tagVMRALLOCATIONINFO
-    {
-    DWORD dwFlags;
-    LPBITMAPINFOHEADER lpHdr;
-    LPDDPIXELFORMAT lpPixFmt;
-    SIZE szAspectRatio;
-    DWORD dwMinBuffers;
-    DWORD dwMaxBuffers;
-    DWORD dwInterlaceFlags;
-    SIZE szNativeSize;
-    } 	VMRALLOCATIONINFO;
-
-
-
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0126_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0126_v0_0_s_ifspec;
-
-#ifndef __IVMRSurfaceAllocator_INTERFACE_DEFINED__
-#define __IVMRSurfaceAllocator_INTERFACE_DEFINED__
-
-/* interface IVMRSurfaceAllocator */
-/* [unique][helpstring][uuid][local][object][local] */ 
-
-
-EXTERN_C const IID IID_IVMRSurfaceAllocator;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("31ce832e-4484-458b-8cca-f4d7e3db0b52")
-    IVMRSurfaceAllocator : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE AllocateSurface( 
-            /* [in] */ DWORD_PTR dwUserID,
-            /* [in] */ VMRALLOCATIONINFO *lpAllocInfo,
-            /* [out][in] */ DWORD *lpdwActualBuffers,
-            /* [out] */ LPDIRECTDRAWSURFACE7 *lplpSurface) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE FreeSurface( 
-            /* [in] */ DWORD_PTR dwID) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE PrepareSurface( 
-            /* [in] */ DWORD_PTR dwUserID,
-            /* [in] */ LPDIRECTDRAWSURFACE7 lpSurface,
-            /* [in] */ DWORD dwSurfaceFlags) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AdviseNotify( 
-            /* [in] */ IVMRSurfaceAllocatorNotify *lpIVMRSurfAllocNotify) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IVMRSurfaceAllocatorVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IVMRSurfaceAllocator * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IVMRSurfaceAllocator * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IVMRSurfaceAllocator * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *AllocateSurface )( 
-            IVMRSurfaceAllocator * This,
-            /* [in] */ DWORD_PTR dwUserID,
-            /* [in] */ VMRALLOCATIONINFO *lpAllocInfo,
-            /* [out][in] */ DWORD *lpdwActualBuffers,
-            /* [out] */ LPDIRECTDRAWSURFACE7 *lplpSurface);
-        
-        HRESULT ( STDMETHODCALLTYPE *FreeSurface )( 
-            IVMRSurfaceAllocator * This,
-            /* [in] */ DWORD_PTR dwID);
-        
-        HRESULT ( STDMETHODCALLTYPE *PrepareSurface )( 
-            IVMRSurfaceAllocator * This,
-            /* [in] */ DWORD_PTR dwUserID,
-            /* [in] */ LPDIRECTDRAWSURFACE7 lpSurface,
-            /* [in] */ DWORD dwSurfaceFlags);
-        
-        HRESULT ( STDMETHODCALLTYPE *AdviseNotify )( 
-            IVMRSurfaceAllocator * This,
-            /* [in] */ IVMRSurfaceAllocatorNotify *lpIVMRSurfAllocNotify);
-        
-        END_INTERFACE
-    } IVMRSurfaceAllocatorVtbl;
-
-    interface IVMRSurfaceAllocator
-    {
-        CONST_VTBL struct IVMRSurfaceAllocatorVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IVMRSurfaceAllocator_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IVMRSurfaceAllocator_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IVMRSurfaceAllocator_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IVMRSurfaceAllocator_AllocateSurface(This,dwUserID,lpAllocInfo,lpdwActualBuffers,lplpSurface)	\
-    ( (This)->lpVtbl -> AllocateSurface(This,dwUserID,lpAllocInfo,lpdwActualBuffers,lplpSurface) ) 
-
-#define IVMRSurfaceAllocator_FreeSurface(This,dwID)	\
-    ( (This)->lpVtbl -> FreeSurface(This,dwID) ) 
-
-#define IVMRSurfaceAllocator_PrepareSurface(This,dwUserID,lpSurface,dwSurfaceFlags)	\
-    ( (This)->lpVtbl -> PrepareSurface(This,dwUserID,lpSurface,dwSurfaceFlags) ) 
-
-#define IVMRSurfaceAllocator_AdviseNotify(This,lpIVMRSurfAllocNotify)	\
-    ( (This)->lpVtbl -> AdviseNotify(This,lpIVMRSurfAllocNotify) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IVMRSurfaceAllocator_INTERFACE_DEFINED__ */
-
-
-#ifndef __IVMRSurfaceAllocatorNotify_INTERFACE_DEFINED__
-#define __IVMRSurfaceAllocatorNotify_INTERFACE_DEFINED__
-
-/* interface IVMRSurfaceAllocatorNotify */
-/* [unique][helpstring][uuid][local][object][local] */ 
-
-
-EXTERN_C const IID IID_IVMRSurfaceAllocatorNotify;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("aada05a8-5a4e-4729-af0b-cea27aed51e2")
-    IVMRSurfaceAllocatorNotify : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE AdviseSurfaceAllocator( 
-            /* [in] */ DWORD_PTR dwUserID,
-            /* [in] */ IVMRSurfaceAllocator *lpIVRMSurfaceAllocator) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetDDrawDevice( 
-            /* [in] */ LPDIRECTDRAW7 lpDDrawDevice,
-            /* [in] */ HMONITOR hMonitor) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE ChangeDDrawDevice( 
-            /* [in] */ LPDIRECTDRAW7 lpDDrawDevice,
-            /* [in] */ HMONITOR hMonitor) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RestoreDDrawSurfaces( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE NotifyEvent( 
-            /* [in] */ LONG EventCode,
-            /* [in] */ LONG_PTR Param1,
-            /* [in] */ LONG_PTR Param2) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBorderColor( 
-            /* [in] */ COLORREF clrBorder) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IVMRSurfaceAllocatorNotifyVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IVMRSurfaceAllocatorNotify * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IVMRSurfaceAllocatorNotify * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IVMRSurfaceAllocatorNotify * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *AdviseSurfaceAllocator )( 
-            IVMRSurfaceAllocatorNotify * This,
-            /* [in] */ DWORD_PTR dwUserID,
-            /* [in] */ IVMRSurfaceAllocator *lpIVRMSurfaceAllocator);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetDDrawDevice )( 
-            IVMRSurfaceAllocatorNotify * This,
-            /* [in] */ LPDIRECTDRAW7 lpDDrawDevice,
-            /* [in] */ HMONITOR hMonitor);
-        
-        HRESULT ( STDMETHODCALLTYPE *ChangeDDrawDevice )( 
-            IVMRSurfaceAllocatorNotify * This,
-            /* [in] */ LPDIRECTDRAW7 lpDDrawDevice,
-            /* [in] */ HMONITOR hMonitor);
-        
-        HRESULT ( STDMETHODCALLTYPE *RestoreDDrawSurfaces )( 
-            IVMRSurfaceAllocatorNotify * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *NotifyEvent )( 
-            IVMRSurfaceAllocatorNotify * This,
-            /* [in] */ LONG EventCode,
-            /* [in] */ LONG_PTR Param1,
-            /* [in] */ LONG_PTR Param2);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBorderColor )( 
-            IVMRSurfaceAllocatorNotify * This,
-            /* [in] */ COLORREF clrBorder);
-        
-        END_INTERFACE
-    } IVMRSurfaceAllocatorNotifyVtbl;
-
-    interface IVMRSurfaceAllocatorNotify
-    {
-        CONST_VTBL struct IVMRSurfaceAllocatorNotifyVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IVMRSurfaceAllocatorNotify_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IVMRSurfaceAllocatorNotify_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IVMRSurfaceAllocatorNotify_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IVMRSurfaceAllocatorNotify_AdviseSurfaceAllocator(This,dwUserID,lpIVRMSurfaceAllocator)	\
-    ( (This)->lpVtbl -> AdviseSurfaceAllocator(This,dwUserID,lpIVRMSurfaceAllocator) ) 
-
-#define IVMRSurfaceAllocatorNotify_SetDDrawDevice(This,lpDDrawDevice,hMonitor)	\
-    ( (This)->lpVtbl -> SetDDrawDevice(This,lpDDrawDevice,hMonitor) ) 
-
-#define IVMRSurfaceAllocatorNotify_ChangeDDrawDevice(This,lpDDrawDevice,hMonitor)	\
-    ( (This)->lpVtbl -> ChangeDDrawDevice(This,lpDDrawDevice,hMonitor) ) 
-
-#define IVMRSurfaceAllocatorNotify_RestoreDDrawSurfaces(This)	\
-    ( (This)->lpVtbl -> RestoreDDrawSurfaces(This) ) 
-
-#define IVMRSurfaceAllocatorNotify_NotifyEvent(This,EventCode,Param1,Param2)	\
-    ( (This)->lpVtbl -> NotifyEvent(This,EventCode,Param1,Param2) ) 
-
-#define IVMRSurfaceAllocatorNotify_SetBorderColor(This,clrBorder)	\
-    ( (This)->lpVtbl -> SetBorderColor(This,clrBorder) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IVMRSurfaceAllocatorNotify_INTERFACE_DEFINED__ */
-
-
-/* interface __MIDL_itf_strmif_0000_0128 */
-/* [local] */ 
-
-typedef 
-enum VMR_ASPECT_RATIO_MODE
-    {
-        VMR_ARMODE_NONE	= 0,
-        VMR_ARMODE_LETTER_BOX	= ( VMR_ARMODE_NONE + 1 ) 
-    } 	VMR_ASPECT_RATIO_MODE;
-
-
-
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0128_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0128_v0_0_s_ifspec;
-
-#ifndef __IVMRWindowlessControl_INTERFACE_DEFINED__
-#define __IVMRWindowlessControl_INTERFACE_DEFINED__
-
-/* interface IVMRWindowlessControl */
-/* [unique][helpstring][uuid][local][object][local] */ 
-
-
-EXTERN_C const IID IID_IVMRWindowlessControl;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("0eb1088c-4dcd-46f0-878f-39dae86a51b7")
-    IVMRWindowlessControl : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE GetNativeVideoSize( 
-            /* [out] */ LONG *lpWidth,
-            /* [out] */ LONG *lpHeight,
-            /* [out] */ LONG *lpARWidth,
-            /* [out] */ LONG *lpARHeight) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMinIdealVideoSize( 
-            /* [out] */ LONG *lpWidth,
-            /* [out] */ LONG *lpHeight) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMaxIdealVideoSize( 
-            /* [out] */ LONG *lpWidth,
-            /* [out] */ LONG *lpHeight) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetVideoPosition( 
-            /* [in] */ const LPRECT lpSRCRect,
-            /* [in] */ const LPRECT lpDSTRect) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetVideoPosition( 
-            /* [out] */ LPRECT lpSRCRect,
-            /* [out] */ LPRECT lpDSTRect) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAspectRatioMode( 
-            /* [out] */ DWORD *lpAspectRatioMode) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetAspectRatioMode( 
-            /* [in] */ DWORD AspectRatioMode) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetVideoClippingWindow( 
-            /* [in] */ HWND hwnd) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RepaintVideo( 
-            /* [in] */ HWND hwnd,
-            /* [in] */ HDC hdc) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE DisplayModeChanged( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetCurrentImage( 
-            /* [out] */ BYTE **lpDib) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBorderColor( 
-            /* [in] */ COLORREF Clr) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBorderColor( 
-            /* [out] */ COLORREF *lpClr) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetColorKey( 
-            /* [in] */ COLORREF Clr) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetColorKey( 
-            /* [out] */ COLORREF *lpClr) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IVMRWindowlessControlVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IVMRWindowlessControl * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IVMRWindowlessControl * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IVMRWindowlessControl * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetNativeVideoSize )( 
-            IVMRWindowlessControl * This,
-            /* [out] */ LONG *lpWidth,
-            /* [out] */ LONG *lpHeight,
-            /* [out] */ LONG *lpARWidth,
-            /* [out] */ LONG *lpARHeight);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMinIdealVideoSize )( 
-            IVMRWindowlessControl * This,
-            /* [out] */ LONG *lpWidth,
-            /* [out] */ LONG *lpHeight);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaxIdealVideoSize )( 
-            IVMRWindowlessControl * This,
-            /* [out] */ LONG *lpWidth,
-            /* [out] */ LONG *lpHeight);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetVideoPosition )( 
-            IVMRWindowlessControl * This,
-            /* [in] */ const LPRECT lpSRCRect,
-            /* [in] */ const LPRECT lpDSTRect);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetVideoPosition )( 
-            IVMRWindowlessControl * This,
-            /* [out] */ LPRECT lpSRCRect,
-            /* [out] */ LPRECT lpDSTRect);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAspectRatioMode )( 
-            IVMRWindowlessControl * This,
-            /* [out] */ DWORD *lpAspectRatioMode);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAspectRatioMode )( 
-            IVMRWindowlessControl * This,
-            /* [in] */ DWORD AspectRatioMode);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetVideoClippingWindow )( 
-            IVMRWindowlessControl * This,
-            /* [in] */ HWND hwnd);
-        
-        HRESULT ( STDMETHODCALLTYPE *RepaintVideo )( 
-            IVMRWindowlessControl * This,
-            /* [in] */ HWND hwnd,
-            /* [in] */ HDC hdc);
-        
-        HRESULT ( STDMETHODCALLTYPE *DisplayModeChanged )( 
-            IVMRWindowlessControl * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCurrentImage )( 
-            IVMRWindowlessControl * This,
-            /* [out] */ BYTE **lpDib);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBorderColor )( 
-            IVMRWindowlessControl * This,
-            /* [in] */ COLORREF Clr);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBorderColor )( 
-            IVMRWindowlessControl * This,
-            /* [out] */ COLORREF *lpClr);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetColorKey )( 
-            IVMRWindowlessControl * This,
-            /* [in] */ COLORREF Clr);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetColorKey )( 
-            IVMRWindowlessControl * This,
-            /* [out] */ COLORREF *lpClr);
-        
-        END_INTERFACE
-    } IVMRWindowlessControlVtbl;
-
-    interface IVMRWindowlessControl
-    {
-        CONST_VTBL struct IVMRWindowlessControlVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IVMRWindowlessControl_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IVMRWindowlessControl_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IVMRWindowlessControl_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IVMRWindowlessControl_GetNativeVideoSize(This,lpWidth,lpHeight,lpARWidth,lpARHeight)	\
-    ( (This)->lpVtbl -> GetNativeVideoSize(This,lpWidth,lpHeight,lpARWidth,lpARHeight) ) 
-
-#define IVMRWindowlessControl_GetMinIdealVideoSize(This,lpWidth,lpHeight)	\
-    ( (This)->lpVtbl -> GetMinIdealVideoSize(This,lpWidth,lpHeight) ) 
-
-#define IVMRWindowlessControl_GetMaxIdealVideoSize(This,lpWidth,lpHeight)	\
-    ( (This)->lpVtbl -> GetMaxIdealVideoSize(This,lpWidth,lpHeight) ) 
-
-#define IVMRWindowlessControl_SetVideoPosition(This,lpSRCRect,lpDSTRect)	\
-    ( (This)->lpVtbl -> SetVideoPosition(This,lpSRCRect,lpDSTRect) ) 
-
-#define IVMRWindowlessControl_GetVideoPosition(This,lpSRCRect,lpDSTRect)	\
-    ( (This)->lpVtbl -> GetVideoPosition(This,lpSRCRect,lpDSTRect) ) 
-
-#define IVMRWindowlessControl_GetAspectRatioMode(This,lpAspectRatioMode)	\
-    ( (This)->lpVtbl -> GetAspectRatioMode(This,lpAspectRatioMode) ) 
-
-#define IVMRWindowlessControl_SetAspectRatioMode(This,AspectRatioMode)	\
-    ( (This)->lpVtbl -> SetAspectRatioMode(This,AspectRatioMode) ) 
-
-#define IVMRWindowlessControl_SetVideoClippingWindow(This,hwnd)	\
-    ( (This)->lpVtbl -> SetVideoClippingWindow(This,hwnd) ) 
-
-#define IVMRWindowlessControl_RepaintVideo(This,hwnd,hdc)	\
-    ( (This)->lpVtbl -> RepaintVideo(This,hwnd,hdc) ) 
-
-#define IVMRWindowlessControl_DisplayModeChanged(This)	\
-    ( (This)->lpVtbl -> DisplayModeChanged(This) ) 
-
-#define IVMRWindowlessControl_GetCurrentImage(This,lpDib)	\
-    ( (This)->lpVtbl -> GetCurrentImage(This,lpDib) ) 
-
-#define IVMRWindowlessControl_SetBorderColor(This,Clr)	\
-    ( (This)->lpVtbl -> SetBorderColor(This,Clr) ) 
-
-#define IVMRWindowlessControl_GetBorderColor(This,lpClr)	\
-    ( (This)->lpVtbl -> GetBorderColor(This,lpClr) ) 
-
-#define IVMRWindowlessControl_SetColorKey(This,Clr)	\
-    ( (This)->lpVtbl -> SetColorKey(This,Clr) ) 
-
-#define IVMRWindowlessControl_GetColorKey(This,lpClr)	\
-    ( (This)->lpVtbl -> GetColorKey(This,lpClr) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IVMRWindowlessControl_INTERFACE_DEFINED__ */
-
-
-/* interface __MIDL_itf_strmif_0000_0129 */
-/* [local] */ 
-
-typedef 
-enum VMRMixerPrefs
-    {
-        MixerPref_NoDecimation	= 0x1,
-        MixerPref_DecimateOutput	= 0x2,
-        MixerPref_ARAdjustXorY	= 0x4,
-        MixerPref_DecimationReserved	= 0x8,
-        MixerPref_DecimateMask	= 0xf,
-        MixerPref_BiLinearFiltering	= 0x10,
-        MixerPref_PointFiltering	= 0x20,
-        MixerPref_FilteringMask	= 0xf0,
-        MixerPref_RenderTargetRGB	= 0x100,
-        MixerPref_RenderTargetYUV	= 0x1000,
-        MixerPref_RenderTargetYUV420	= 0x200,
-        MixerPref_RenderTargetYUV422	= 0x400,
-        MixerPref_RenderTargetYUV444	= 0x800,
-        MixerPref_RenderTargetReserved	= 0xe000,
-        MixerPref_RenderTargetMask	= 0xff00,
-        MixerPref_DynamicSwitchToBOB	= 0x10000,
-        MixerPref_DynamicDecimateBy2	= 0x20000,
-        MixerPref_DynamicReserved	= 0xc0000,
-        MixerPref_DynamicMask	= 0xf0000
-    } 	VMRMixerPrefs;
-
-typedef struct _NORMALIZEDRECT
-    {
-    float left;
-    float top;
-    float right;
-    float bottom;
-    } 	NORMALIZEDRECT;
-
-typedef struct _NORMALIZEDRECT *PNORMALIZEDRECT;
-
-
-
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0129_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0129_v0_0_s_ifspec;
-
-#ifndef __IVMRMixerControl_INTERFACE_DEFINED__
-#define __IVMRMixerControl_INTERFACE_DEFINED__
-
-/* interface IVMRMixerControl */
-/* [unique][helpstring][uuid][local][object][local] */ 
-
-
-EXTERN_C const IID IID_IVMRMixerControl;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("1c1a17b0-bed0-415d-974b-dc6696131599")
-    IVMRMixerControl : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE SetAlpha( 
-            /* [in] */ DWORD dwStreamID,
-            /* [in] */ float Alpha) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAlpha( 
-            /* [in] */ DWORD dwStreamID,
-            /* [out] */ float *pAlpha) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetZOrder( 
-            /* [in] */ DWORD dwStreamID,
-            /* [in] */ DWORD dwZ) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetZOrder( 
-            /* [in] */ DWORD dwStreamID,
-            /* [out] */ DWORD *pZ) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetOutputRect( 
-            /* [in] */ DWORD dwStreamID,
-            /* [in] */ const NORMALIZEDRECT *pRect) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetOutputRect( 
-            /* [in] */ DWORD dwStreamID,
-            /* [out] */ NORMALIZEDRECT *pRect) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBackgroundClr( 
-            /* [in] */ COLORREF ClrBkg) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBackgroundClr( 
-            /* [in] */ COLORREF *lpClrBkg) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetMixingPrefs( 
-            /* [in] */ DWORD dwMixerPrefs) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMixingPrefs( 
-            /* [out] */ DWORD *pdwMixerPrefs) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IVMRMixerControlVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IVMRMixerControl * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IVMRMixerControl * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IVMRMixerControl * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAlpha )( 
-            IVMRMixerControl * This,
-            /* [in] */ DWORD dwStreamID,
-            /* [in] */ float Alpha);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAlpha )( 
-            IVMRMixerControl * This,
-            /* [in] */ DWORD dwStreamID,
-            /* [out] */ float *pAlpha);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetZOrder )( 
-            IVMRMixerControl * This,
-            /* [in] */ DWORD dwStreamID,
-            /* [in] */ DWORD dwZ);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetZOrder )( 
-            IVMRMixerControl * This,
-            /* [in] */ DWORD dwStreamID,
-            /* [out] */ DWORD *pZ);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetOutputRect )( 
-            IVMRMixerControl * This,
-            /* [in] */ DWORD dwStreamID,
-            /* [in] */ const NORMALIZEDRECT *pRect);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputRect )( 
-            IVMRMixerControl * This,
-            /* [in] */ DWORD dwStreamID,
-            /* [out] */ NORMALIZEDRECT *pRect);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBackgroundClr )( 
-            IVMRMixerControl * This,
-            /* [in] */ COLORREF ClrBkg);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBackgroundClr )( 
-            IVMRMixerControl * This,
-            /* [in] */ COLORREF *lpClrBkg);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetMixingPrefs )( 
-            IVMRMixerControl * This,
-            /* [in] */ DWORD dwMixerPrefs);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMixingPrefs )( 
-            IVMRMixerControl * This,
-            /* [out] */ DWORD *pdwMixerPrefs);
-        
-        END_INTERFACE
-    } IVMRMixerControlVtbl;
-
-    interface IVMRMixerControl
-    {
-        CONST_VTBL struct IVMRMixerControlVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IVMRMixerControl_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IVMRMixerControl_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IVMRMixerControl_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IVMRMixerControl_SetAlpha(This,dwStreamID,Alpha)	\
-    ( (This)->lpVtbl -> SetAlpha(This,dwStreamID,Alpha) ) 
-
-#define IVMRMixerControl_GetAlpha(This,dwStreamID,pAlpha)	\
-    ( (This)->lpVtbl -> GetAlpha(This,dwStreamID,pAlpha) ) 
-
-#define IVMRMixerControl_SetZOrder(This,dwStreamID,dwZ)	\
-    ( (This)->lpVtbl -> SetZOrder(This,dwStreamID,dwZ) ) 
-
-#define IVMRMixerControl_GetZOrder(This,dwStreamID,pZ)	\
-    ( (This)->lpVtbl -> GetZOrder(This,dwStreamID,pZ) ) 
-
-#define IVMRMixerControl_SetOutputRect(This,dwStreamID,pRect)	\
-    ( (This)->lpVtbl -> SetOutputRect(This,dwStreamID,pRect) ) 
-
-#define IVMRMixerControl_GetOutputRect(This,dwStreamID,pRect)	\
-    ( (This)->lpVtbl -> GetOutputRect(This,dwStreamID,pRect) ) 
-
-#define IVMRMixerControl_SetBackgroundClr(This,ClrBkg)	\
-    ( (This)->lpVtbl -> SetBackgroundClr(This,ClrBkg) ) 
-
-#define IVMRMixerControl_GetBackgroundClr(This,lpClrBkg)	\
-    ( (This)->lpVtbl -> GetBackgroundClr(This,lpClrBkg) ) 
-
-#define IVMRMixerControl_SetMixingPrefs(This,dwMixerPrefs)	\
-    ( (This)->lpVtbl -> SetMixingPrefs(This,dwMixerPrefs) ) 
-
-#define IVMRMixerControl_GetMixingPrefs(This,pdwMixerPrefs)	\
-    ( (This)->lpVtbl -> GetMixingPrefs(This,pdwMixerPrefs) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IVMRMixerControl_INTERFACE_DEFINED__ */
-
-
-/* interface __MIDL_itf_strmif_0000_0130 */
-/* [local] */ 
-
-typedef struct tagVMRGUID
-    {
-    GUID *pGUID;
-    GUID _GUID;
-    } 	VMRGUID;
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1600)
-#pragma warning(push)
-#pragma warning(disable:4820) // Disable C4820: padding after data member
-#endif
-typedef struct tagVMRMONITORINFO
-    {
-    VMRGUID guid;
-    RECT rcMonitor;
-    HMONITOR hMon;
-    DWORD dwFlags;
-    wchar_t szDevice[ 32 ];
-    wchar_t szDescription[ 256 ];
-    LARGE_INTEGER liDriverVersion;
-    DWORD dwVendorId;
-    DWORD dwDeviceId;
-    DWORD dwSubSysId;
-    DWORD dwRevision;
-    } 	VMRMONITORINFO;
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1600)
-#pragma warning(pop)
-#endif
-
-
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0130_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0130_v0_0_s_ifspec;
-
-#ifndef __IVMRMonitorConfig_INTERFACE_DEFINED__
-#define __IVMRMonitorConfig_INTERFACE_DEFINED__
-
-/* interface IVMRMonitorConfig */
-/* [unique][helpstring][uuid][local][object] */ 
-
-
-EXTERN_C const IID IID_IVMRMonitorConfig;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("9cf0b1b6-fbaa-4b7f-88cf-cf1f130a0dce")
-    IVMRMonitorConfig : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE SetMonitor( 
-            /* [in] */ const VMRGUID *pGUID) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMonitor( 
-            /* [out] */ VMRGUID *pGUID) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetDefaultMonitor( 
-            /* [in] */ const VMRGUID *pGUID) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetDefaultMonitor( 
-            /* [out] */ VMRGUID *pGUID) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAvailableMonitors( 
-            /* [size_is][out] */ VMRMONITORINFO *pInfo,
-            /* [in] */ DWORD dwMaxInfoArraySize,
-            /* [out] */ DWORD *pdwNumDevices) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IVMRMonitorConfigVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IVMRMonitorConfig * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IVMRMonitorConfig * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IVMRMonitorConfig * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetMonitor )( 
-            IVMRMonitorConfig * This,
-            /* [in] */ const VMRGUID *pGUID);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMonitor )( 
-            IVMRMonitorConfig * This,
-            /* [out] */ VMRGUID *pGUID);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetDefaultMonitor )( 
-            IVMRMonitorConfig * This,
-            /* [in] */ const VMRGUID *pGUID);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDefaultMonitor )( 
-            IVMRMonitorConfig * This,
-            /* [out] */ VMRGUID *pGUID);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAvailableMonitors )( 
-            IVMRMonitorConfig * This,
-            /* [size_is][out] */ VMRMONITORINFO *pInfo,
-            /* [in] */ DWORD dwMaxInfoArraySize,
-            /* [out] */ DWORD *pdwNumDevices);
-        
-        END_INTERFACE
-    } IVMRMonitorConfigVtbl;
-
-    interface IVMRMonitorConfig
-    {
-        CONST_VTBL struct IVMRMonitorConfigVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IVMRMonitorConfig_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IVMRMonitorConfig_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IVMRMonitorConfig_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IVMRMonitorConfig_SetMonitor(This,pGUID)	\
-    ( (This)->lpVtbl -> SetMonitor(This,pGUID) ) 
-
-#define IVMRMonitorConfig_GetMonitor(This,pGUID)	\
-    ( (This)->lpVtbl -> GetMonitor(This,pGUID) ) 
-
-#define IVMRMonitorConfig_SetDefaultMonitor(This,pGUID)	\
-    ( (This)->lpVtbl -> SetDefaultMonitor(This,pGUID) ) 
-
-#define IVMRMonitorConfig_GetDefaultMonitor(This,pGUID)	\
-    ( (This)->lpVtbl -> GetDefaultMonitor(This,pGUID) ) 
-
-#define IVMRMonitorConfig_GetAvailableMonitors(This,pInfo,dwMaxInfoArraySize,pdwNumDevices)	\
-    ( (This)->lpVtbl -> GetAvailableMonitors(This,pInfo,dwMaxInfoArraySize,pdwNumDevices) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IVMRMonitorConfig_INTERFACE_DEFINED__ */
-
-
-/* interface __MIDL_itf_strmif_0000_0131 */
-/* [local] */ 
-
-typedef 
-enum VMRRenderPrefs
-    {
-        RenderPrefs_RestrictToInitialMonitor	= 0,
-        RenderPrefs_ForceOffscreen	= 0x1,
-        RenderPrefs_ForceOverlays	= 0x2,
-        RenderPrefs_AllowOverlays	= 0,
-        RenderPrefs_AllowOffscreen	= 0,
-        RenderPrefs_DoNotRenderColorKeyAndBorder	= 0x8,
-        RenderPrefs_Reserved	= 0x10,
-        RenderPrefs_PreferAGPMemWhenMixing	= 0x20,
-        RenderPrefs_Mask	= 0x3f
-    } 	VMRRenderPrefs;
-
-typedef 
-enum VMRMode
-    {
-        VMRMode_Windowed	= 0x1,
-        VMRMode_Windowless	= 0x2,
-        VMRMode_Renderless	= 0x4,
-        VMRMode_Mask	= 0x7
-    } 	VMRMode;
-
-
-enum __MIDL___MIDL_itf_strmif_0000_0131_0001
-    {
-        MAX_NUMBER_OF_STREAMS	= 16
-    } ;
-
-
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0131_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0131_v0_0_s_ifspec;
-
-#ifndef __IVMRFilterConfig_INTERFACE_DEFINED__
-#define __IVMRFilterConfig_INTERFACE_DEFINED__
-
-/* interface IVMRFilterConfig */
-/* [unique][helpstring][uuid][local][object] */ 
-
-
-EXTERN_C const IID IID_IVMRFilterConfig;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("9e5530c5-7034-48b4-bb46-0b8a6efc8e36")
-    IVMRFilterConfig : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE SetImageCompositor( 
-            /* [in] */ IVMRImageCompositor *lpVMRImgCompositor) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetNumberOfStreams( 
-            /* [in] */ DWORD dwMaxStreams) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetNumberOfStreams( 
-            /* [out] */ DWORD *pdwMaxStreams) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetRenderingPrefs( 
-            /* [in] */ DWORD dwRenderFlags) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetRenderingPrefs( 
-            /* [out] */ DWORD *pdwRenderFlags) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetRenderingMode( 
-            /* [in] */ DWORD Mode) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetRenderingMode( 
-            /* [out] */ DWORD *pMode) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IVMRFilterConfigVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IVMRFilterConfig * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IVMRFilterConfig * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IVMRFilterConfig * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetImageCompositor )( 
-            IVMRFilterConfig * This,
-            /* [in] */ IVMRImageCompositor *lpVMRImgCompositor);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetNumberOfStreams )( 
-            IVMRFilterConfig * This,
-            /* [in] */ DWORD dwMaxStreams);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetNumberOfStreams )( 
-            IVMRFilterConfig * This,
-            /* [out] */ DWORD *pdwMaxStreams);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetRenderingPrefs )( 
-            IVMRFilterConfig * This,
-            /* [in] */ DWORD dwRenderFlags);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetRenderingPrefs )( 
-            IVMRFilterConfig * This,
-            /* [out] */ DWORD *pdwRenderFlags);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetRenderingMode )( 
-            IVMRFilterConfig * This,
-            /* [in] */ DWORD Mode);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetRenderingMode )( 
-            IVMRFilterConfig * This,
-            /* [out] */ DWORD *pMode);
-        
-        END_INTERFACE
-    } IVMRFilterConfigVtbl;
-
-    interface IVMRFilterConfig
-    {
-        CONST_VTBL struct IVMRFilterConfigVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IVMRFilterConfig_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IVMRFilterConfig_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IVMRFilterConfig_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IVMRFilterConfig_SetImageCompositor(This,lpVMRImgCompositor)	\
-    ( (This)->lpVtbl -> SetImageCompositor(This,lpVMRImgCompositor) ) 
-
-#define IVMRFilterConfig_SetNumberOfStreams(This,dwMaxStreams)	\
-    ( (This)->lpVtbl -> SetNumberOfStreams(This,dwMaxStreams) ) 
-
-#define IVMRFilterConfig_GetNumberOfStreams(This,pdwMaxStreams)	\
-    ( (This)->lpVtbl -> GetNumberOfStreams(This,pdwMaxStreams) ) 
-
-#define IVMRFilterConfig_SetRenderingPrefs(This,dwRenderFlags)	\
-    ( (This)->lpVtbl -> SetRenderingPrefs(This,dwRenderFlags) ) 
-
-#define IVMRFilterConfig_GetRenderingPrefs(This,pdwRenderFlags)	\
-    ( (This)->lpVtbl -> GetRenderingPrefs(This,pdwRenderFlags) ) 
-
-#define IVMRFilterConfig_SetRenderingMode(This,Mode)	\
-    ( (This)->lpVtbl -> SetRenderingMode(This,Mode) ) 
-
-#define IVMRFilterConfig_GetRenderingMode(This,pMode)	\
-    ( (This)->lpVtbl -> GetRenderingMode(This,pMode) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IVMRFilterConfig_INTERFACE_DEFINED__ */
-
-
-#ifndef __IVMRAspectRatioControl_INTERFACE_DEFINED__
-#define __IVMRAspectRatioControl_INTERFACE_DEFINED__
-
-/* interface IVMRAspectRatioControl */
-/* [unique][helpstring][uuid][local][object] */ 
-
-
-EXTERN_C const IID IID_IVMRAspectRatioControl;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("ede80b5c-bad6-4623-b537-65586c9f8dfd")
-    IVMRAspectRatioControl : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE GetAspectRatioMode( 
-            /* [out] */ LPDWORD lpdwARMode) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetAspectRatioMode( 
-            /* [in] */ DWORD dwARMode) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IVMRAspectRatioControlVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IVMRAspectRatioControl * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IVMRAspectRatioControl * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IVMRAspectRatioControl * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAspectRatioMode )( 
-            IVMRAspectRatioControl * This,
-            /* [out] */ LPDWORD lpdwARMode);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAspectRatioMode )( 
-            IVMRAspectRatioControl * This,
-            /* [in] */ DWORD dwARMode);
-        
-        END_INTERFACE
-    } IVMRAspectRatioControlVtbl;
-
-    interface IVMRAspectRatioControl
-    {
-        CONST_VTBL struct IVMRAspectRatioControlVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IVMRAspectRatioControl_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IVMRAspectRatioControl_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IVMRAspectRatioControl_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IVMRAspectRatioControl_GetAspectRatioMode(This,lpdwARMode)	\
-    ( (This)->lpVtbl -> GetAspectRatioMode(This,lpdwARMode) ) 
-
-#define IVMRAspectRatioControl_SetAspectRatioMode(This,dwARMode)	\
-    ( (This)->lpVtbl -> SetAspectRatioMode(This,dwARMode) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IVMRAspectRatioControl_INTERFACE_DEFINED__ */
-
-
-/* interface __MIDL_itf_strmif_0000_0133 */
-/* [local] */ 
-
-typedef 
-enum VMRDeinterlacePrefs
-    {
-        DeinterlacePref_NextBest	= 0x1,
-        DeinterlacePref_BOB	= 0x2,
-        DeinterlacePref_Weave	= 0x4,
-        DeinterlacePref_Mask	= 0x7
-    } 	VMRDeinterlacePrefs;
-
-typedef 
-enum VMRDeinterlaceTech
-    {
-        DeinterlaceTech_Unknown	= 0,
-        DeinterlaceTech_BOBLineReplicate	= 0x1,
-        DeinterlaceTech_BOBVerticalStretch	= 0x2,
-        DeinterlaceTech_MedianFiltering	= 0x4,
-        DeinterlaceTech_EdgeFiltering	= 0x10,
-        DeinterlaceTech_FieldAdaptive	= 0x20,
-        DeinterlaceTech_PixelAdaptive	= 0x40,
-        DeinterlaceTech_MotionVectorSteered	= 0x80
-    } 	VMRDeinterlaceTech;
-
-typedef struct _VMRFrequency
-    {
-    DWORD dwNumerator;
-    DWORD dwDenominator;
-    } 	VMRFrequency;
-
-typedef struct _VMRVideoDesc
-    {
-    DWORD dwSize;
-    DWORD dwSampleWidth;
-    DWORD dwSampleHeight;
-    BOOL SingleFieldPerSample;
-    DWORD dwFourCC;
-    VMRFrequency InputSampleFreq;
-    VMRFrequency OutputFrameFreq;
-    } 	VMRVideoDesc;
-
-typedef struct _VMRDeinterlaceCaps
-    {
-    DWORD dwSize;
-    DWORD dwNumPreviousOutputFrames;
-    DWORD dwNumForwardRefSamples;
-    DWORD dwNumBackwardRefSamples;
-    VMRDeinterlaceTech DeinterlaceTechnology;
-    } 	VMRDeinterlaceCaps;
-
-
-
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0133_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0133_v0_0_s_ifspec;
-
-#ifndef __IVMRDeinterlaceControl_INTERFACE_DEFINED__
-#define __IVMRDeinterlaceControl_INTERFACE_DEFINED__
-
-/* interface IVMRDeinterlaceControl */
-/* [unique][helpstring][uuid][local][object] */ 
-
-
-EXTERN_C const IID IID_IVMRDeinterlaceControl;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("bb057577-0db8-4e6a-87a7-1a8c9a505a0f")
-    IVMRDeinterlaceControl : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE GetNumberOfDeinterlaceModes( 
-            /* [in] */ VMRVideoDesc *lpVideoDescription,
-            /* [out][in] */ LPDWORD lpdwNumDeinterlaceModes,
-            /* [out] */ LPGUID lpDeinterlaceModes) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetDeinterlaceModeCaps( 
-            /* [in] */ LPGUID lpDeinterlaceMode,
-            /* [in] */ VMRVideoDesc *lpVideoDescription,
-            /* [out][in] */ VMRDeinterlaceCaps *lpDeinterlaceCaps) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetDeinterlaceMode( 
-            /* [in] */ DWORD dwStreamID,
-            /* [out] */ LPGUID lpDeinterlaceMode) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetDeinterlaceMode( 
-            /* [in] */ DWORD dwStreamID,
-            /* [in] */ LPGUID lpDeinterlaceMode) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetDeinterlacePrefs( 
-            /* [out] */ LPDWORD lpdwDeinterlacePrefs) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetDeinterlacePrefs( 
-            /* [in] */ DWORD dwDeinterlacePrefs) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetActualDeinterlaceMode( 
-            /* [in] */ DWORD dwStreamID,
-            /* [out] */ LPGUID lpDeinterlaceMode) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IVMRDeinterlaceControlVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IVMRDeinterlaceControl * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IVMRDeinterlaceControl * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IVMRDeinterlaceControl * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetNumberOfDeinterlaceModes )( 
-            IVMRDeinterlaceControl * This,
-            /* [in] */ VMRVideoDesc *lpVideoDescription,
-            /* [out][in] */ LPDWORD lpdwNumDeinterlaceModes,
-            /* [out] */ LPGUID lpDeinterlaceModes);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDeinterlaceModeCaps )( 
-            IVMRDeinterlaceControl * This,
-            /* [in] */ LPGUID lpDeinterlaceMode,
-            /* [in] */ VMRVideoDesc *lpVideoDescription,
-            /* [out][in] */ VMRDeinterlaceCaps *lpDeinterlaceCaps);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDeinterlaceMode )( 
-            IVMRDeinterlaceControl * This,
-            /* [in] */ DWORD dwStreamID,
-            /* [out] */ LPGUID lpDeinterlaceMode);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetDeinterlaceMode )( 
-            IVMRDeinterlaceControl * This,
-            /* [in] */ DWORD dwStreamID,
-            /* [in] */ LPGUID lpDeinterlaceMode);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDeinterlacePrefs )( 
-            IVMRDeinterlaceControl * This,
-            /* [out] */ LPDWORD lpdwDeinterlacePrefs);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetDeinterlacePrefs )( 
-            IVMRDeinterlaceControl * This,
-            /* [in] */ DWORD dwDeinterlacePrefs);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetActualDeinterlaceMode )( 
-            IVMRDeinterlaceControl * This,
-            /* [in] */ DWORD dwStreamID,
-            /* [out] */ LPGUID lpDeinterlaceMode);
-        
-        END_INTERFACE
-    } IVMRDeinterlaceControlVtbl;
-
-    interface IVMRDeinterlaceControl
-    {
-        CONST_VTBL struct IVMRDeinterlaceControlVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IVMRDeinterlaceControl_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IVMRDeinterlaceControl_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IVMRDeinterlaceControl_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IVMRDeinterlaceControl_GetNumberOfDeinterlaceModes(This,lpVideoDescription,lpdwNumDeinterlaceModes,lpDeinterlaceModes)	\
-    ( (This)->lpVtbl -> GetNumberOfDeinterlaceModes(This,lpVideoDescription,lpdwNumDeinterlaceModes,lpDeinterlaceModes) ) 
-
-#define IVMRDeinterlaceControl_GetDeinterlaceModeCaps(This,lpDeinterlaceMode,lpVideoDescription,lpDeinterlaceCaps)	\
-    ( (This)->lpVtbl -> GetDeinterlaceModeCaps(This,lpDeinterlaceMode,lpVideoDescription,lpDeinterlaceCaps) ) 
-
-#define IVMRDeinterlaceControl_GetDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode)	\
-    ( (This)->lpVtbl -> GetDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode) ) 
-
-#define IVMRDeinterlaceControl_SetDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode)	\
-    ( (This)->lpVtbl -> SetDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode) ) 
-
-#define IVMRDeinterlaceControl_GetDeinterlacePrefs(This,lpdwDeinterlacePrefs)	\
-    ( (This)->lpVtbl -> GetDeinterlacePrefs(This,lpdwDeinterlacePrefs) ) 
-
-#define IVMRDeinterlaceControl_SetDeinterlacePrefs(This,dwDeinterlacePrefs)	\
-    ( (This)->lpVtbl -> SetDeinterlacePrefs(This,dwDeinterlacePrefs) ) 
-
-#define IVMRDeinterlaceControl_GetActualDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode)	\
-    ( (This)->lpVtbl -> GetActualDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IVMRDeinterlaceControl_INTERFACE_DEFINED__ */
-
-
-/* interface __MIDL_itf_strmif_0000_0134 */
-/* [local] */ 
-
-typedef struct _VMRALPHABITMAP
-    {
-    DWORD dwFlags;
-    HDC hdc;
-    LPDIRECTDRAWSURFACE7 pDDS;
-    RECT rSrc;
-    NORMALIZEDRECT rDest;
-    FLOAT fAlpha;
-    COLORREF clrSrcKey;
-    } 	VMRALPHABITMAP;
-
-typedef struct _VMRALPHABITMAP *PVMRALPHABITMAP;
-
-#define VMRBITMAP_DISABLE            0x00000001
-#define VMRBITMAP_HDC                0x00000002
-#define VMRBITMAP_ENTIREDDS          0x00000004
-#define VMRBITMAP_SRCCOLORKEY        0x00000008
-#define VMRBITMAP_SRCRECT            0x00000010
-
-
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0134_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0134_v0_0_s_ifspec;
-
-#ifndef __IVMRMixerBitmap_INTERFACE_DEFINED__
-#define __IVMRMixerBitmap_INTERFACE_DEFINED__
-
-/* interface IVMRMixerBitmap */
-/* [unique][helpstring][uuid][local][object] */ 
-
-
-EXTERN_C const IID IID_IVMRMixerBitmap;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("1E673275-0257-40aa-AF20-7C608D4A0428")
-    IVMRMixerBitmap : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE SetAlphaBitmap( 
-            /* [in] */ const VMRALPHABITMAP *pBmpParms) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE UpdateAlphaBitmapParameters( 
-            /* [in] */ PVMRALPHABITMAP pBmpParms) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAlphaBitmapParameters( 
-            /* [out] */ PVMRALPHABITMAP pBmpParms) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IVMRMixerBitmapVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IVMRMixerBitmap * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IVMRMixerBitmap * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IVMRMixerBitmap * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAlphaBitmap )( 
-            IVMRMixerBitmap * This,
-            /* [in] */ const VMRALPHABITMAP *pBmpParms);
-        
-        HRESULT ( STDMETHODCALLTYPE *UpdateAlphaBitmapParameters )( 
-            IVMRMixerBitmap * This,
-            /* [in] */ PVMRALPHABITMAP pBmpParms);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAlphaBitmapParameters )( 
-            IVMRMixerBitmap * This,
-            /* [out] */ PVMRALPHABITMAP pBmpParms);
-        
-        END_INTERFACE
-    } IVMRMixerBitmapVtbl;
-
-    interface IVMRMixerBitmap
-    {
-        CONST_VTBL struct IVMRMixerBitmapVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IVMRMixerBitmap_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IVMRMixerBitmap_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IVMRMixerBitmap_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IVMRMixerBitmap_SetAlphaBitmap(This,pBmpParms)	\
-    ( (This)->lpVtbl -> SetAlphaBitmap(This,pBmpParms) ) 
-
-#define IVMRMixerBitmap_UpdateAlphaBitmapParameters(This,pBmpParms)	\
-    ( (This)->lpVtbl -> UpdateAlphaBitmapParameters(This,pBmpParms) ) 
-
-#define IVMRMixerBitmap_GetAlphaBitmapParameters(This,pBmpParms)	\
-    ( (This)->lpVtbl -> GetAlphaBitmapParameters(This,pBmpParms) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IVMRMixerBitmap_INTERFACE_DEFINED__ */
-
-
-/* interface __MIDL_itf_strmif_0000_0135 */
-/* [local] */ 
-
-typedef struct _VMRVIDEOSTREAMINFO
-    {
-    LPDIRECTDRAWSURFACE7 pddsVideoSurface;
-    DWORD dwWidth;
-    DWORD dwHeight;
-    DWORD dwStrmID;
-    FLOAT fAlpha;
-    DDCOLORKEY ddClrKey;
-    NORMALIZEDRECT rNormal;
-    } 	VMRVIDEOSTREAMINFO;
-
-
-
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0135_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0135_v0_0_s_ifspec;
-
-#ifndef __IVMRImageCompositor_INTERFACE_DEFINED__
-#define __IVMRImageCompositor_INTERFACE_DEFINED__
-
-/* interface IVMRImageCompositor */
-/* [unique][helpstring][uuid][local][object][local] */ 
-
-
-EXTERN_C const IID IID_IVMRImageCompositor;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("7a4fb5af-479f-4074-bb40-ce6722e43c82")
-    IVMRImageCompositor : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE InitCompositionTarget( 
-            /* [in] */ IUnknown *pD3DDevice,
-            /* [in] */ LPDIRECTDRAWSURFACE7 pddsRenderTarget) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE TermCompositionTarget( 
-            /* [in] */ IUnknown *pD3DDevice,
-            /* [in] */ LPDIRECTDRAWSURFACE7 pddsRenderTarget) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetStreamMediaType( 
-            /* [in] */ DWORD dwStrmID,
-            /* [in] */ AM_MEDIA_TYPE *pmt,
-            /* [in] */ BOOL fTexture) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE CompositeImage( 
-            /* [in] */ IUnknown *pD3DDevice,
-            /* [in] */ LPDIRECTDRAWSURFACE7 pddsRenderTarget,
-            /* [in] */ AM_MEDIA_TYPE *pmtRenderTarget,
-            /* [in] */ REFERENCE_TIME rtStart,
-            /* [in] */ REFERENCE_TIME rtEnd,
-            /* [in] */ DWORD dwClrBkGnd,
-            /* [in] */ VMRVIDEOSTREAMINFO *pVideoStreamInfo,
-            /* [in] */ UINT cStreams) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IVMRImageCompositorVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IVMRImageCompositor * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IVMRImageCompositor * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IVMRImageCompositor * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *InitCompositionTarget )( 
-            IVMRImageCompositor * This,
-            /* [in] */ IUnknown *pD3DDevice,
-            /* [in] */ LPDIRECTDRAWSURFACE7 pddsRenderTarget);
-        
-        HRESULT ( STDMETHODCALLTYPE *TermCompositionTarget )( 
-            IVMRImageCompositor * This,
-            /* [in] */ IUnknown *pD3DDevice,
-            /* [in] */ LPDIRECTDRAWSURFACE7 pddsRenderTarget);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetStreamMediaType )( 
-            IVMRImageCompositor * This,
-            /* [in] */ DWORD dwStrmID,
-            /* [in] */ AM_MEDIA_TYPE *pmt,
-            /* [in] */ BOOL fTexture);
-        
-        HRESULT ( STDMETHODCALLTYPE *CompositeImage )( 
-            IVMRImageCompositor * This,
-            /* [in] */ IUnknown *pD3DDevice,
-            /* [in] */ LPDIRECTDRAWSURFACE7 pddsRenderTarget,
-            /* [in] */ AM_MEDIA_TYPE *pmtRenderTarget,
-            /* [in] */ REFERENCE_TIME rtStart,
-            /* [in] */ REFERENCE_TIME rtEnd,
-            /* [in] */ DWORD dwClrBkGnd,
-            /* [in] */ VMRVIDEOSTREAMINFO *pVideoStreamInfo,
-            /* [in] */ UINT cStreams);
-        
-        END_INTERFACE
-    } IVMRImageCompositorVtbl;
-
-    interface IVMRImageCompositor
-    {
-        CONST_VTBL struct IVMRImageCompositorVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IVMRImageCompositor_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IVMRImageCompositor_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IVMRImageCompositor_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IVMRImageCompositor_InitCompositionTarget(This,pD3DDevice,pddsRenderTarget)	\
-    ( (This)->lpVtbl -> InitCompositionTarget(This,pD3DDevice,pddsRenderTarget) ) 
-
-#define IVMRImageCompositor_TermCompositionTarget(This,pD3DDevice,pddsRenderTarget)	\
-    ( (This)->lpVtbl -> TermCompositionTarget(This,pD3DDevice,pddsRenderTarget) ) 
-
-#define IVMRImageCompositor_SetStreamMediaType(This,dwStrmID,pmt,fTexture)	\
-    ( (This)->lpVtbl -> SetStreamMediaType(This,dwStrmID,pmt,fTexture) ) 
-
-#define IVMRImageCompositor_CompositeImage(This,pD3DDevice,pddsRenderTarget,pmtRenderTarget,rtStart,rtEnd,dwClrBkGnd,pVideoStreamInfo,cStreams)	\
-    ( (This)->lpVtbl -> CompositeImage(This,pD3DDevice,pddsRenderTarget,pmtRenderTarget,rtStart,rtEnd,dwClrBkGnd,pVideoStreamInfo,cStreams) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IVMRImageCompositor_INTERFACE_DEFINED__ */
-
-
-#ifndef __IVMRVideoStreamControl_INTERFACE_DEFINED__
-#define __IVMRVideoStreamControl_INTERFACE_DEFINED__
-
-/* interface IVMRVideoStreamControl */
-/* [unique][helpstring][uuid][local][object] */ 
-
-
-EXTERN_C const IID IID_IVMRVideoStreamControl;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("058d1f11-2a54-4bef-bd54-df706626b727")
-    IVMRVideoStreamControl : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE SetColorKey( 
-            /* [in] */ LPDDCOLORKEY lpClrKey) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetColorKey( 
-            /* [out] */ LPDDCOLORKEY lpClrKey) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetStreamActiveState( 
-            /* [in] */ BOOL fActive) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetStreamActiveState( 
-            /* [out] */ BOOL *lpfActive) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IVMRVideoStreamControlVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IVMRVideoStreamControl * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IVMRVideoStreamControl * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IVMRVideoStreamControl * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetColorKey )( 
-            IVMRVideoStreamControl * This,
-            /* [in] */ LPDDCOLORKEY lpClrKey);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetColorKey )( 
-            IVMRVideoStreamControl * This,
-            /* [out] */ LPDDCOLORKEY lpClrKey);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetStreamActiveState )( 
-            IVMRVideoStreamControl * This,
-            /* [in] */ BOOL fActive);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamActiveState )( 
-            IVMRVideoStreamControl * This,
-            /* [out] */ BOOL *lpfActive);
-        
-        END_INTERFACE
-    } IVMRVideoStreamControlVtbl;
-
-    interface IVMRVideoStreamControl
-    {
-        CONST_VTBL struct IVMRVideoStreamControlVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IVMRVideoStreamControl_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IVMRVideoStreamControl_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IVMRVideoStreamControl_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IVMRVideoStreamControl_SetColorKey(This,lpClrKey)	\
-    ( (This)->lpVtbl -> SetColorKey(This,lpClrKey) ) 
-
-#define IVMRVideoStreamControl_GetColorKey(This,lpClrKey)	\
-    ( (This)->lpVtbl -> GetColorKey(This,lpClrKey) ) 
-
-#define IVMRVideoStreamControl_SetStreamActiveState(This,fActive)	\
-    ( (This)->lpVtbl -> SetStreamActiveState(This,fActive) ) 
-
-#define IVMRVideoStreamControl_GetStreamActiveState(This,lpfActive)	\
-    ( (This)->lpVtbl -> GetStreamActiveState(This,lpfActive) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IVMRVideoStreamControl_INTERFACE_DEFINED__ */
-
-
-#ifndef __IVMRSurface_INTERFACE_DEFINED__
-#define __IVMRSurface_INTERFACE_DEFINED__
-
-/* interface IVMRSurface */
-/* [unique][helpstring][uuid][local][object][local] */ 
-
-
-EXTERN_C const IID IID_IVMRSurface;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("a9849bbe-9ec8-4263-b764-62730f0d15d0")
-    IVMRSurface : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE IsSurfaceLocked( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE LockSurface( 
-            /* [out] */ BYTE **lpSurface) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE UnlockSurface( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetSurface( 
-            /* [out] */ LPDIRECTDRAWSURFACE7 *lplpSurface) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IVMRSurfaceVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IVMRSurface * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IVMRSurface * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IVMRSurface * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsSurfaceLocked )( 
-            IVMRSurface * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *LockSurface )( 
-            IVMRSurface * This,
-            /* [out] */ BYTE **lpSurface);
-        
-        HRESULT ( STDMETHODCALLTYPE *UnlockSurface )( 
-            IVMRSurface * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSurface )( 
-            IVMRSurface * This,
-            /* [out] */ LPDIRECTDRAWSURFACE7 *lplpSurface);
-        
-        END_INTERFACE
-    } IVMRSurfaceVtbl;
-
-    interface IVMRSurface
-    {
-        CONST_VTBL struct IVMRSurfaceVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IVMRSurface_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IVMRSurface_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IVMRSurface_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IVMRSurface_IsSurfaceLocked(This)	\
-    ( (This)->lpVtbl -> IsSurfaceLocked(This) ) 
-
-#define IVMRSurface_LockSurface(This,lpSurface)	\
-    ( (This)->lpVtbl -> LockSurface(This,lpSurface) ) 
-
-#define IVMRSurface_UnlockSurface(This)	\
-    ( (This)->lpVtbl -> UnlockSurface(This) ) 
-
-#define IVMRSurface_GetSurface(This,lplpSurface)	\
-    ( (This)->lpVtbl -> GetSurface(This,lplpSurface) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IVMRSurface_INTERFACE_DEFINED__ */
-
-
-#ifndef __IVMRImagePresenterConfig_INTERFACE_DEFINED__
-#define __IVMRImagePresenterConfig_INTERFACE_DEFINED__
-
-/* interface IVMRImagePresenterConfig */
-/* [unique][helpstring][uuid][local][object][local] */ 
-
-
-EXTERN_C const IID IID_IVMRImagePresenterConfig;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("9f3a1c85-8555-49ba-935f-be5b5b29d178")
-    IVMRImagePresenterConfig : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE SetRenderingPrefs( 
-            /* [in] */ DWORD dwRenderFlags) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetRenderingPrefs( 
-            /* [out] */ DWORD *dwRenderFlags) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IVMRImagePresenterConfigVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IVMRImagePresenterConfig * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IVMRImagePresenterConfig * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IVMRImagePresenterConfig * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetRenderingPrefs )( 
-            IVMRImagePresenterConfig * This,
-            /* [in] */ DWORD dwRenderFlags);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetRenderingPrefs )( 
-            IVMRImagePresenterConfig * This,
-            /* [out] */ DWORD *dwRenderFlags);
-        
-        END_INTERFACE
-    } IVMRImagePresenterConfigVtbl;
-
-    interface IVMRImagePresenterConfig
-    {
-        CONST_VTBL struct IVMRImagePresenterConfigVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IVMRImagePresenterConfig_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IVMRImagePresenterConfig_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IVMRImagePresenterConfig_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IVMRImagePresenterConfig_SetRenderingPrefs(This,dwRenderFlags)	\
-    ( (This)->lpVtbl -> SetRenderingPrefs(This,dwRenderFlags) ) 
-
-#define IVMRImagePresenterConfig_GetRenderingPrefs(This,dwRenderFlags)	\
-    ( (This)->lpVtbl -> GetRenderingPrefs(This,dwRenderFlags) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IVMRImagePresenterConfig_INTERFACE_DEFINED__ */
-
-
-#ifndef __IVMRImagePresenterExclModeConfig_INTERFACE_DEFINED__
-#define __IVMRImagePresenterExclModeConfig_INTERFACE_DEFINED__
-
-/* interface IVMRImagePresenterExclModeConfig */
-/* [unique][helpstring][uuid][local][object][local] */ 
-
-
-EXTERN_C const IID IID_IVMRImagePresenterExclModeConfig;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("e6f7ce40-4673-44f1-8f77-5499d68cb4ea")
-    IVMRImagePresenterExclModeConfig : public IVMRImagePresenterConfig
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE SetXlcModeDDObjAndPrimarySurface( 
-            /* [in] */ LPDIRECTDRAW7 lpDDObj,
-            /* [in] */ LPDIRECTDRAWSURFACE7 lpPrimarySurf) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetXlcModeDDObjAndPrimarySurface( 
-            /* [out] */ LPDIRECTDRAW7 *lpDDObj,
-            /* [out] */ LPDIRECTDRAWSURFACE7 *lpPrimarySurf) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IVMRImagePresenterExclModeConfigVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IVMRImagePresenterExclModeConfig * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IVMRImagePresenterExclModeConfig * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IVMRImagePresenterExclModeConfig * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetRenderingPrefs )( 
-            IVMRImagePresenterExclModeConfig * This,
-            /* [in] */ DWORD dwRenderFlags);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetRenderingPrefs )( 
-            IVMRImagePresenterExclModeConfig * This,
-            /* [out] */ DWORD *dwRenderFlags);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetXlcModeDDObjAndPrimarySurface )( 
-            IVMRImagePresenterExclModeConfig * This,
-            /* [in] */ LPDIRECTDRAW7 lpDDObj,
-            /* [in] */ LPDIRECTDRAWSURFACE7 lpPrimarySurf);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetXlcModeDDObjAndPrimarySurface )( 
-            IVMRImagePresenterExclModeConfig * This,
-            /* [out] */ LPDIRECTDRAW7 *lpDDObj,
-            /* [out] */ LPDIRECTDRAWSURFACE7 *lpPrimarySurf);
-        
-        END_INTERFACE
-    } IVMRImagePresenterExclModeConfigVtbl;
-
-    interface IVMRImagePresenterExclModeConfig
-    {
-        CONST_VTBL struct IVMRImagePresenterExclModeConfigVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IVMRImagePresenterExclModeConfig_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IVMRImagePresenterExclModeConfig_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IVMRImagePresenterExclModeConfig_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IVMRImagePresenterExclModeConfig_SetRenderingPrefs(This,dwRenderFlags)	\
-    ( (This)->lpVtbl -> SetRenderingPrefs(This,dwRenderFlags) ) 
-
-#define IVMRImagePresenterExclModeConfig_GetRenderingPrefs(This,dwRenderFlags)	\
-    ( (This)->lpVtbl -> GetRenderingPrefs(This,dwRenderFlags) ) 
-
-
-#define IVMRImagePresenterExclModeConfig_SetXlcModeDDObjAndPrimarySurface(This,lpDDObj,lpPrimarySurf)	\
-    ( (This)->lpVtbl -> SetXlcModeDDObjAndPrimarySurface(This,lpDDObj,lpPrimarySurf) ) 
-
-#define IVMRImagePresenterExclModeConfig_GetXlcModeDDObjAndPrimarySurface(This,lpDDObj,lpPrimarySurf)	\
-    ( (This)->lpVtbl -> GetXlcModeDDObjAndPrimarySurface(This,lpDDObj,lpPrimarySurf) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IVMRImagePresenterExclModeConfig_INTERFACE_DEFINED__ */
-
-
-#ifndef __IVPManager_INTERFACE_DEFINED__
-#define __IVPManager_INTERFACE_DEFINED__
-
-/* interface IVPManager */
-/* [unique][helpstring][uuid][local][object][local] */ 
-
-
-EXTERN_C const IID IID_IVPManager;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("aac18c18-e186-46d2-825d-a1f8dc8e395a")
-    IVPManager : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE SetVideoPortIndex( 
-            /* [in] */ DWORD dwVideoPortIndex) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetVideoPortIndex( 
-            /* [out] */ DWORD *pdwVideoPortIndex) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IVPManagerVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IVPManager * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IVPManager * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IVPManager * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetVideoPortIndex )( 
-            IVPManager * This,
-            /* [in] */ DWORD dwVideoPortIndex);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetVideoPortIndex )( 
-            IVPManager * This,
-            /* [out] */ DWORD *pdwVideoPortIndex);
-        
-        END_INTERFACE
-    } IVPManagerVtbl;
-
-    interface IVPManager
-    {
-        CONST_VTBL struct IVPManagerVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IVPManager_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IVPManager_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IVPManager_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IVPManager_SetVideoPortIndex(This,dwVideoPortIndex)	\
-    ( (This)->lpVtbl -> SetVideoPortIndex(This,dwVideoPortIndex) ) 
-
-#define IVPManager_GetVideoPortIndex(This,pdwVideoPortIndex)	\
-    ( (This)->lpVtbl -> GetVideoPortIndex(This,pdwVideoPortIndex) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IVPManager_INTERFACE_DEFINED__ */
-
-
 /* interface __MIDL_itf_strmif_0000_0141 */
 /* [local] */ 
 
@@ -24077,8 +24110,6 @@ EXTERN_C const IID IID_IVPManager;
 #pragma endregion
 // Restore the previous setting for C4201 compiler warning
 #pragma warning(pop)
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
-#pragma endregion
 
 
 extern RPC_IF_HANDLE __MIDL_itf_strmif_0000_0141_v0_0_c_ifspec;

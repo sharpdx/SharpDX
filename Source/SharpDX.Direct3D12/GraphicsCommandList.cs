@@ -26,16 +26,16 @@ namespace SharpDX.Direct3D12
     {
         /// <unmanaged>void ID3D12CommandList::ResourceBarrier([In] unsigned int Count,[In, Buffer] const D3D12_RESOURCE_BARRIER_DESC* pDesc)</unmanaged>	
         /// <unmanaged-short>ID3D12CommandList::ResourceBarrier</unmanaged-short>	
-        public void ResourceBarrierTransition(Resource resource, ResourceUsage stateBefore, ResourceUsage stateAfter)
+        public void ResourceBarrierTransition(Resource resource, ResourceStates stateBefore, ResourceStates stateAfter)
         {
             ResourceBarrierTransition(resource, -1, stateBefore, stateAfter);
         }
 
         /// <unmanaged>void ID3D12CommandList::ResourceBarrier([In] unsigned int Count,[In, Buffer] const D3D12_RESOURCE_BARRIER_DESC* pDesc)</unmanaged>	
         /// <unmanaged-short>ID3D12CommandList::ResourceBarrier</unmanaged-short>	
-        public unsafe void ResourceBarrierTransition(Resource resource, int subresource, ResourceUsage stateBefore, ResourceUsage stateAfter)
+        public unsafe void ResourceBarrierTransition(Resource resource, int subresource, ResourceStates stateBefore, ResourceStates stateAfter)
         {
-            var barrier = new ResourceBarrierDescription(new ResourceTransitionBarrierDescription(resource, subresource, stateBefore, stateAfter));
+            var barrier = new ResourceBarrier(new ResourceTransitionBarrier(resource, subresource, stateBefore, stateAfter));
             ResourceBarrier(1, new IntPtr(&barrier));
         }
 
@@ -43,20 +43,20 @@ namespace SharpDX.Direct3D12
         /// <unmanaged-short>ID3D12CommandList::ResourceBarrier</unmanaged-short>	
         public unsafe void ResourceBarrierAliasing(Resource resourceBefore, Resource resourceAfter)
         {
-            var barrier = new ResourceBarrierDescription(new ResourceAliasingBarrierDescription(resourceBefore, resourceAfter));
+            var barrier = new ResourceBarrier(new ResourceAliasingBarrier(resourceBefore, resourceAfter));
             ResourceBarrier(1, new IntPtr(&barrier));
         }
 
         /// <unmanaged>void ID3D12CommandList::ResourceBarrier([In] unsigned int Count,[In, Buffer] const D3D12_RESOURCE_BARRIER_DESC* pDesc)</unmanaged>	
         /// <unmanaged-short>ID3D12CommandList::ResourceBarrier</unmanaged-short>	
-        public unsafe void ResourceBarrier(SharpDX.Direct3D12.ResourceBarrierDescription barrier)
+        public unsafe void ResourceBarrier(SharpDX.Direct3D12.ResourceBarrier barrier)
         {
             ResourceBarrier(1, new IntPtr(&barrier));
         }
 
         /// <unmanaged>void ID3D12CommandList::ResourceBarrier([In] unsigned int Count,[In, Buffer] const D3D12_RESOURCE_BARRIER_DESC* pDesc)</unmanaged>	
         /// <unmanaged-short>ID3D12CommandList::ResourceBarrier</unmanaged-short>	
-        public unsafe void ResourceBarrier(params SharpDX.Direct3D12.ResourceBarrierDescription[] barriers)
+        public unsafe void ResourceBarrier(params SharpDX.Direct3D12.ResourceBarrier[] barriers)
         {
             if(barriers == null) throw new ArgumentNullException("barriers");
 

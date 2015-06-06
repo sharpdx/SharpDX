@@ -24,7 +24,7 @@ namespace SharpDX.Direct3D12
 {
     public partial struct ResourceDescription
     {
-        public ResourceDescription(ResourceDimension dimension, long alignment, long width, int height, short depthOrArraySize, short mipLevels, Format format, int sampleCount, int sampleQuality, TextureLayout layout, ResourceOptionFlags optionFlags)
+        public ResourceDescription(ResourceDimension dimension, long alignment, long width, int height, short depthOrArraySize, short mipLevels, Format format, int sampleCount, int sampleQuality, TextureLayout layout, ResourceFlags optionFlags)
         {
             Dimension = dimension;
             Alignment = alignment;
@@ -35,16 +35,16 @@ namespace SharpDX.Direct3D12
             Format = format;
             SampleDescription = new SampleDescription(sampleCount, sampleQuality);
             Layout = layout;
-            OptionFlags = optionFlags;
+            Flags = optionFlags;
         }
 
-        public static ResourceDescription Buffer(ResourceAllocationInformation resourceAllocInfowidth, ResourceOptionFlags flags = ResourceOptionFlags.None)
+        public static ResourceDescription Buffer(ResourceAllocationInformation resourceAllocInfowidth, ResourceFlags flags = ResourceFlags.None)
         {
-            return new ResourceDescription(ResourceDimension.Buffer, resourceAllocInfowidth.Alignment, resourceAllocInfowidth.Size,
+            return new ResourceDescription(ResourceDimension.Buffer, resourceAllocInfowidth.Alignment, resourceAllocInfowidth.SizeInBytes,
                 1, 1, 1, DXGI.Format.Unknown, 1, 0, TextureLayout.RowMajor, flags);
         }
 
-        public static ResourceDescription Buffer(long width, ResourceOptionFlags flags = ResourceOptionFlags.None, long alignment = 0)
+        public static ResourceDescription Buffer(long width, ResourceFlags flags = ResourceFlags.None, long alignment = 0)
         {
             return new ResourceDescription(ResourceDimension.Buffer, alignment, width, 1, 1, 1, DXGI.Format.Unknown, 1, 0, TextureLayout.RowMajor, flags);
         }
@@ -53,7 +53,7 @@ namespace SharpDX.Direct3D12
             long width,
             short arraySize = 1,
             short mipLevels = 0,
-            ResourceOptionFlags flags = ResourceOptionFlags.None,
+            ResourceFlags flags = ResourceFlags.None,
             TextureLayout layout = TextureLayout.Unknown,
             long alignment = 0)
         {
@@ -67,7 +67,7 @@ namespace SharpDX.Direct3D12
             short mipLevels = 0,
             int sampleCount = 1,
             int sampleQuality = 0,
-            ResourceOptionFlags flags = ResourceOptionFlags.None,
+            ResourceFlags flags = ResourceFlags.None,
             TextureLayout layout = TextureLayout.Unknown,
             long alignment = 0)
         {
@@ -79,7 +79,7 @@ namespace SharpDX.Direct3D12
             int height,
             short depth,
             short mipLevels = 0,
-            ResourceOptionFlags flags = ResourceOptionFlags.None,
+            ResourceFlags flags = ResourceFlags.None,
             TextureLayout layout = TextureLayout.Unknown,
             long alignment = 0)
         {

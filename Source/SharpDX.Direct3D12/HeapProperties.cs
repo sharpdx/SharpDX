@@ -25,12 +25,12 @@ namespace SharpDX.Direct3D12
         /// Initializes a new instance of the <see cref="HeapProperties"/> struct.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <param name="cpuPageProperties">The cpu page properties.</param>
+        /// <param name="cpuPageProperty">The cpu page properties.</param>
         /// <param name="memoryPoolPreference">The memory pool preference.</param>
-        public HeapProperties(HeapType type, CpuPageProperties cpuPageProperties, MemoryPool memoryPoolPreference)
+        public HeapProperties(HeapType type, CpuPageProperty cpuPageProperty, MemoryPool memoryPoolPreference)
         {
             Type = type;
-            CPUPageProperties = cpuPageProperties;
+            CPUPageProperty = cpuPageProperty;
             MemoryPoolPreference = memoryPoolPreference;
             this.CreationNodeMask = 1;
             this.VisibleNodeMask = 1;
@@ -39,12 +39,12 @@ namespace SharpDX.Direct3D12
         /// <summary>
         /// Initializes a new instance of the <see cref="HeapProperties"/> struct with <see cref="HeapType.Custom"/>
         /// </summary>
-        /// <param name="cpuPageProperties">The cpu page properties.</param>
+        /// <param name="cpuPageProperty">The cpu page properties.</param>
         /// <param name="memoryPoolPreference">The memory pool preference.</param>
-        public HeapProperties(CpuPageProperties cpuPageProperties, MemoryPool memoryPoolPreference)
+        public HeapProperties(CpuPageProperty cpuPageProperty, MemoryPool memoryPoolPreference)
         {
             Type = HeapType.Custom;
-            CPUPageProperties = cpuPageProperties;
+            CPUPageProperty = cpuPageProperty;
             MemoryPoolPreference = memoryPoolPreference;
             this.CreationNodeMask = 1;
             this.VisibleNodeMask = 1;
@@ -57,7 +57,7 @@ namespace SharpDX.Direct3D12
         public HeapProperties(HeapType type)
         {
             Type = type;
-            CPUPageProperties = CpuPageProperties.Unknown;
+            CPUPageProperty = CpuPageProperty.Unknown;
             MemoryPoolPreference = MemoryPool.Unknown;
             this.CreationNodeMask = 1;
             this.VisibleNodeMask = 1;
@@ -72,8 +72,8 @@ namespace SharpDX.Direct3D12
             get
             {
                 return Type == HeapType.Upload || Type == HeapType.Upload || (Type == HeapType.Custom &&
-                                                                              (CPUPageProperties == CpuPageProperties.WriteCombine
-                                                                               || CPUPageProperties == CpuPageProperties.WriteBack));
+                                                                              (CPUPageProperty == CpuPageProperty.WriteCombine
+                                                                               || CPUPageProperty == CpuPageProperty.WriteBack));
             }
         }
     }

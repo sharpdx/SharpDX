@@ -38,7 +38,7 @@ namespace SharpDX.Direct3D12
         {
         }
 
-        public RootSignatureDescription(RootSignatureFlags flags, RootParameter[] parameters = null, StaticSampler[] samplers = null)
+        public RootSignatureDescription(RootSignatureFlags flags, RootParameter[] parameters = null, StaticSamplerDescription[] samplers = null)
         {
             Parameters = new RootParameterArray(parameters);
             StaticSamplers = new StaticSamplerArray(samplers);
@@ -109,7 +109,7 @@ namespace SharpDX.Direct3D12
                     native.StaticSamplerPointer = (IntPtr)pSamplers;
                 }
                 native.Flags = Flags;
-                var hresult = D3D12.SerializeRootSignature(new IntPtr(&native), RootSignatureVersion.V1, out result, out error);
+                var hresult = D3D12.SerializeRootSignature(new IntPtr(&native), RootSignatureVersion.Version1, out result, out error);
                 // TODO: check hresult or just rely on error?
                 if(error != null)
                 {
@@ -222,10 +222,10 @@ namespace SharpDX.Direct3D12
         public struct StaticSamplerArray
         {
             internal readonly IntPtr nativeParameters;
-            internal readonly StaticSampler[] managedParameters;
+            internal readonly StaticSamplerDescription[] managedParameters;
             internal readonly int count;
 
-            internal StaticSamplerArray(StaticSampler[] parameters)
+            internal StaticSamplerArray(StaticSamplerDescription[] parameters)
             {
                 count = 0;
                 nativeParameters = IntPtr.Zero;
@@ -248,7 +248,7 @@ namespace SharpDX.Direct3D12
                 get { return count; }
             }
 
-            public unsafe StaticSampler this[int index]
+            public unsafe StaticSamplerDescription this[int index]
             {
                 get
                 {
@@ -263,10 +263,10 @@ namespace SharpDX.Direct3D12
                     }
                     if (nativeParameters != IntPtr.Zero)
                     {
-                        return ((StaticSampler*)nativeParameters)[index];
+                        return ((StaticSamplerDescription*)nativeParameters)[index];
                     }
 
-                    return new StaticSampler();
+                    return new StaticSamplerDescription();
                 }
                 set
                 {
@@ -282,12 +282,12 @@ namespace SharpDX.Direct3D12
 
                     if (nativeParameters != IntPtr.Zero)
                     {
-                        ((StaticSampler*)nativeParameters)[index] = value;
+                        ((StaticSamplerDescription*)nativeParameters)[index] = value;
                     }
                 }
             }
 
-            public static implicit operator StaticSamplerArray(StaticSampler[] fromArray)
+            public static implicit operator StaticSamplerArray(StaticSamplerDescription[] fromArray)
             {
                 return new StaticSamplerArray(fromArray);
             }

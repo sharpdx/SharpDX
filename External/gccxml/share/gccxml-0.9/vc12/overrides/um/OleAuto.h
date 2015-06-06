@@ -1,5 +1,11 @@
 #include <winapifamily.h>
 
+#if _MSC_VER >= 1200
+#pragma warning(push)
+#pragma warning(disable:4001) /* nonstandard extension : single line comment */
+#pragma warning(disable:4820) // padding added after data member
+#endif
+
 //+---------------------------------------------------------------------------
 //
 //  Microsoft Windows
@@ -58,13 +64,12 @@ typedef DWORD LCID;
 /* pull in the MIDL generated header */
 #include <oaidl.h>
 
-
 /*---------------------------------------------------------------------*/
 /*                            BSTR API                                 */
 /*---------------------------------------------------------------------*/
 
-#pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma region Application Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 WINOLEAUTAPI_(BSTR) SysAllocString(_In_opt_z_ const OLECHAR * psz);
 WINOLEAUTAPI_(INT)  SysReAllocString(_Inout_ _At_(*pbstr, _Pre_z_ _Post_z_ _Post_readable_size_(_String_length_(psz)+1)) BSTR* pbstr, _In_opt_z_ const OLECHAR* psz);
@@ -79,32 +84,32 @@ WINOLEAUTAPI_(BSTR) SysAllocStringByteLen(_In_opt_z_ LPCSTR psz, _In_ UINT len);
 
 #endif /* (defined (_WIN32) || defined (_WIN64)) */
 
-#endif /*  WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /*  WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 /*---------------------------------------------------------------------*/
 /*                            Time API                                 */
 /*---------------------------------------------------------------------*/
 
-#pragma region Desktop Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#pragma region Desktop Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 WINOLEAUTAPI_(INT) DosDateTimeToVariantTime(_In_ USHORT wDosDate, _In_ USHORT wDosTime, _Out_ DOUBLE * pvtime);
 
 WINOLEAUTAPI_(INT) VariantTimeToDosDateTime(_In_ DOUBLE vtime, _Out_ USHORT * pwDosDate, _Out_ USHORT * pwDosTime);
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 #if (defined (_WIN32) || defined (_WIN64))
 
-#pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma region Application Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 WINOLEAUTAPI_(INT) SystemTimeToVariantTime(_In_ LPSYSTEMTIME lpSystemTime, _Out_ DOUBLE *pvtime);
 WINOLEAUTAPI_(INT) VariantTimeToSystemTime(_In_ DOUBLE vtime, _Out_ LPSYSTEMTIME lpSystemTime);
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 #endif /* (defined (_WIN32) || defined (_WIN64)) */
@@ -114,8 +119,8 @@ WINOLEAUTAPI_(INT) VariantTimeToSystemTime(_In_ DOUBLE vtime, _Out_ LPSYSTEMTIME
 /*                          SafeArray API                              */
 /*---------------------------------------------------------------------*/
 
-#pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma region Application Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 WINOLEAUTAPI SafeArrayAllocDescriptor(_In_ UINT cDims, _Outptr_ SAFEARRAY ** ppsaOut);
 WINOLEAUTAPI SafeArrayAllocDescriptorEx(_In_ VARTYPE vt, _In_ UINT cDims, _Outptr_ SAFEARRAY ** ppsaOut);
@@ -150,7 +155,7 @@ WINOLEAUTAPI SafeArrayGetVartype(_In_ SAFEARRAY * psa, _Out_ VARTYPE * pvt);
 WINOLEAUTAPI_(SAFEARRAY *) SafeArrayCreateVector(_In_ VARTYPE vt, _In_ LONG lLbound, _In_ ULONG cElements);
 WINOLEAUTAPI_(SAFEARRAY *) SafeArrayCreateVectorEx(_In_ VARTYPE vt, _In_ LONG lLbound, _In_ ULONG cElements, _In_ PVOID pvExtra);
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 /*---------------------------------------------------------------------*/
@@ -158,8 +163,8 @@ WINOLEAUTAPI_(SAFEARRAY *) SafeArrayCreateVectorEx(_In_ VARTYPE vt, _In_ LONG lL
 /*---------------------------------------------------------------------*/
 
 
-#pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma region Application Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 WINOLEAUTAPI_(void) VariantInit(_Out_ VARIANTARG * pvarg);
 WINOLEAUTAPI VariantClear(_Inout_ VARIANTARG * pvarg);
@@ -174,7 +179,7 @@ _Check_return_
 WINOLEAUTAPI VariantChangeTypeEx(_Inout_ VARIANTARG * pvargDest,
                _In_ const VARIANTARG * pvarSrc, _In_ LCID lcid, _In_ USHORT wFlags, _In_ VARTYPE vt);
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 // Flags for VariantChangeType/VariantChangeTypeEx
@@ -196,15 +201,15 @@ WINOLEAUTAPI VariantChangeTypeEx(_Inout_ VARIANTARG * pvargDest,
 /*                Vector <-> Bstr conversion APIs                      */
 /*---------------------------------------------------------------------*/
 
-#pragma region Desktop Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#pragma region Desktop Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 _Check_return_
 WINOLEAUTAPI VectorFromBstr (_In_ BSTR bstr, _Outptr_ SAFEARRAY ** ppsa);
 _Check_return_
 WINOLEAUTAPI BstrFromVector (_In_ SAFEARRAY *psa, _Out_ BSTR *pbstr);
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 /*---------------------------------------------------------------------*/
@@ -275,8 +280,8 @@ WINOLEAUTAPI BstrFromVector (_In_ SAFEARRAY *psa, _Out_ BSTR *pbstr);
  * They may of course still be passed a BSTR as the strIn param.
  */
 
-#pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma region Application Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 WINOLEAUTAPI VarUI1FromI2(SHORT sIn, _Out_ BYTE * pbOut);
 WINOLEAUTAPI VarUI1FromI4(LONG lIn, _Out_ BYTE * pbOut);
@@ -573,7 +578,7 @@ WINOLEAUTAPI VarUI4FromDec(_In_ const DECIMAL *pdecIn, _Out_ ULONG *pulOut);
 WINOLEAUTAPI VarUI8FromUI1(BYTE bIn, _Out_ ULONG64 FAR* pi64Out);
 WINOLEAUTAPI VarUI8FromI2(SHORT sIn, _Out_ ULONG64 FAR* pi64Out);
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 #pragma region Desktop Family
@@ -584,8 +589,8 @@ WINOLEAUTAPI VarUI8FromI4(LONG lIn, _Out_ ULONG64 FAR* pi64Out);
 #endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
 #pragma endregion
 
-#pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma region Application Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 WINOLEAUTAPI VarUI8FromI8(LONG64 ui64In, _Out_ ULONG64 FAR* pi64Out);
 WINOLEAUTAPI VarUI8FromR4(FLOAT fltIn, _Out_ ULONG64 FAR* pi64Out);
@@ -621,20 +626,20 @@ WINOLEAUTAPI VarDecFromUI2(_In_ USHORT uiIn, _Out_ DECIMAL *pdecOut);
 WINOLEAUTAPI VarDecFromUI4(_In_ ULONG ulIn, _Out_ DECIMAL *pdecOut);
 WINOLEAUTAPI VarDecFromUI8(ULONG64 ui64In, _Out_ DECIMAL *pdecOut);
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 #define VarUI4FromUI4(in, pOut) (*(pOut) = (in))
 #define VarI4FromI4(in, pOut)   (*(pOut) = (in))
 
 
-#pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma region Application Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 WINOLEAUTAPI VarI4FromI8(LONG64 i64In, _Out_ LONG *plOut);
 WINOLEAUTAPI VarI4FromUI8(ULONG64 ui64In, _Out_ LONG *plOut);
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 #define VarUI8FromUI8(in, pOut) (*(pOut) = (in))
@@ -769,26 +774,26 @@ typedef struct {
 #define VTBIT_DECIMAL   (1 << VT_DECIMAL)
 
 
-#pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma region Application Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 _Check_return_
 WINOLEAUTAPI VarParseNumFromStr(_In_ LPCOLESTR strIn, _In_ LCID lcid, _In_ ULONG dwFlags,
             _Out_ NUMPARSE * pnumprs, _Out_ BYTE * rgbDig);
 
 _Check_return_
-WINOLEAUTAPI VarNumFromParseNum(_In_ NUMPARSE * pnumprs, _In_ BYTE * rgbDig,
+WINOLEAUTAPI VarNumFromParseNum(_In_ NUMPARSE * pnumprs, _In_reads_(pnumprs->cDig) BYTE * rgbDig,
             _In_ ULONG dwVtBits, _Out_ VARIANT * pvar);
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 /*---------------------------------------------------------------------*/
 /*                     VARTYPE Math API                                */
 /*---------------------------------------------------------------------*/
 
-#pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma region Application Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 STDAPI VarAdd(_In_ LPVARIANT pvarLeft, _In_ LPVARIANT pvarRight, _Out_ LPVARIANT pvarResult);
 STDAPI VarAnd(_In_ LPVARIANT pvarLeft, _In_ LPVARIANT pvarRight, _Out_ LPVARIANT pvarResult);
@@ -815,14 +820,14 @@ STDAPI VarRound(_In_ LPVARIANT pvarIn, _In_ int cDecimals, _Out_ LPVARIANT pvarR
 // dwFlags passed to CompareString if a string compare
 STDAPI VarCmp(_In_ LPVARIANT pvarLeft, _In_ LPVARIANT pvarRight, _In_ LCID lcid, _In_ ULONG dwFlags);
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 #ifdef __cplusplus
 extern "C++" {
 
-#pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma region Application Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 // Add wrapper for old ATL headers to call
 __inline
@@ -834,7 +839,7 @@ VarCmp(LPVARIANT pvarLeft, LPVARIANT pvarRight, LCID lcid) {
     return VarCmp(pvarLeft, pvarRight, lcid, 0);
 }
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 } // extern "C++"
@@ -844,8 +849,8 @@ VarCmp(LPVARIANT pvarLeft, LPVARIANT pvarRight, LCID lcid) {
 // Decimal math
 //
 
-#pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma region Application Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 STDAPI VarDecAdd(_In_ LPDECIMAL pdecLeft, _In_ LPDECIMAL pdecRight, _Out_ LPDECIMAL pdecResult);
 STDAPI VarDecDiv(_In_ LPDECIMAL pdecLeft, _In_ LPDECIMAL pdecRight, _Out_ LPDECIMAL pdecResult);
@@ -890,7 +895,7 @@ STDAPI VarR8Pow(_In_ double dblLeft, _In_ double dblRight, _Out_ double *pdblRes
 STDAPI VarR4CmpR8(_In_ float fltLeft, _In_ double dblRight);
 STDAPI VarR8Round(_In_ double dblIn, _In_ int cDecimals, _Out_ double *pdblResult);
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 // Compare results.  These are returned as a SUCCESS HResult.  Subtracting
@@ -927,8 +932,8 @@ typedef struct {
  * control panel.
  */
 
-#pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma region Application Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 _Check_return_
 WINOLEAUTAPI VarDateFromUdate(_In_ UDATE *pudateIn, _In_ ULONG dwFlags, _Out_ DATE *pdateOut);
@@ -936,11 +941,11 @@ WINOLEAUTAPI VarDateFromUdateEx(_In_ UDATE *pudateIn, _In_ LCID lcid, _In_ ULONG
 _Check_return_
 WINOLEAUTAPI VarUdateFromDate(_In_ DATE dateIn, _In_ ULONG dwFlags, _Out_ UDATE *pudateOut);
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
-#pragma region Desktop Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#pragma region Desktop Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 /* API to retrieve the secondary(altername) month names
    Useful for Hijri, Polish and Russian alternate month names
@@ -952,11 +957,11 @@ WINOLEAUTAPI GetAltMonthNames(LCID lcid, _Outptr_result_buffer_maybenull_(13) LP
 /*                 Format                                              */
 /*---------------------------------------------------------------------*/
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
-#pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma region Application Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 WINOLEAUTAPI VarFormat(
 	_In_ LPVARIANT pvarIn,
@@ -1038,11 +1043,11 @@ WINOLEAUTAPI VarTokenizeFormatString(
 	_In_opt_ int *pcbActual
 	);
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
-#pragma region Desktop Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#pragma region Desktop Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 /*---------------------------------------------------------------------*/
 /*                 ITypeLib                                            */
@@ -1062,11 +1067,11 @@ typedef DISPID MEMBERID;
 #define MEMBERID_NIL DISPID_UNKNOWN
 #define ID_DEFAULTINST  -2
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
-#pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma region Application Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 /* Flags for IDispatch::Invoke */
 #define DISPATCH_METHOD         0x1
@@ -1074,11 +1079,11 @@ typedef DISPID MEMBERID;
 #define DISPATCH_PROPERTYPUT    0x4
 #define DISPATCH_PROPERTYPUTREF 0x8
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
-#pragma region Desktop Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#pragma region Desktop Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 typedef /* [unique] */  __RPC_unique_pointer ITypeInfo *LPTYPEINFO;
 
@@ -1244,21 +1249,21 @@ _Check_return_ WINOLEAUTAPI DispGetIDsOfNames(ITypeInfo * ptinfo, _In_reads_(cNa
  */
 _Check_return_
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
-#pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma region Application Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 WINOLEAUTAPI DispInvoke(void * _this, ITypeInfo * ptinfo, DISPID dispidMember,
             WORD wFlags, DISPPARAMS * pparams, VARIANT * pvarResult,
             EXCEPINFO * pexcepinfo, UINT * puArgErr);
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
-#pragma region Desktop Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#pragma region Desktop Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 /* Construct a TypeInfo from an interface data description
  */
@@ -1331,7 +1336,7 @@ WINOLEAUTAPI_(void) ClearCustData(LPCUSTDATA pCustData);
 WINOLEAUTAPI_(void) OaEnablePerUserTLibRegistration(void);
 #endif
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 // Declare variant access functions.
@@ -1419,3 +1424,7 @@ WINOLEAUTAPI_(void) OaEnablePerUserTLibRegistration(void);
 #endif // RC_INVOKED
 
 #endif     // __OLEAUTO_H__
+
+#if _MSC_VER >= 1200
+#pragma warning(pop)
+#endif

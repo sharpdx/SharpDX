@@ -3,10 +3,9 @@
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
- /* File created by MIDL compiler version 8.00.0602 */
+ /* File created by MIDL compiler version 8.00.0611 */
 /* @@MIDL_FILE_HEADING(  ) */
 
-#pragma warning( disable: 4049 )  /* more than 64k source lines */
 
 
 /* verify that the <rpcndr.h> version is high enough to compile this file*/
@@ -24,7 +23,7 @@
 
 #ifndef __RPCNDR_H_VERSION__
 #error this stub requires an updated version of <rpcndr.h>
-#endif // __RPCNDR_H_VERSION__
+#endif /* __RPCNDR_H_VERSION__ */
 
 #ifndef COM_NO_WINDOWS_H
 #include "windows.h"
@@ -80,7 +79,6 @@ extern "C"{
 /* interface __MIDL_itf_propidl_0000_0000 */
 /* [local] */ 
 
-#include <winapifamily.h>
 //+-------------------------------------------------------------------------
 //
 //  Microsoft Windows
@@ -90,6 +88,7 @@ extern "C"{
 #if ( _MSC_VER >= 800 )
 #if _MSC_VER >= 1200
 #pragma warning(push)
+#pragma warning(disable:4820)    /* padding added after data member */
 #endif
 #pragma warning(disable:4201)    /* Nameless struct/union */
 #pragma warning(disable:4237)    /* obsolete member named 'bool' */
@@ -97,8 +96,10 @@ extern "C"{
 #if ( _MSC_VER >= 1020 )
 #pragma once
 #endif
-#pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#include <winapifamily.h>
+#ifndef _PROPIDLBASE_
+#pragma region Application Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 
 
@@ -431,86 +432,6 @@ typedef struct tagPROPVARIANT * LPPROPVARIANT;
 
 #define	PID_MAX_READONLY	( 0xbfffffff )
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
-#pragma endregion
-#pragma region Desktop Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
-// Property IDs for the DiscardableInformation Property Set
-
-#define PIDDI_THUMBNAIL          0x00000002L // VT_BLOB
-
-// Property IDs for the SummaryInformation Property Set
-
-#define PIDSI_TITLE               0x00000002L  // VT_LPSTR
-#define PIDSI_SUBJECT             0x00000003L  // VT_LPSTR
-#define PIDSI_AUTHOR              0x00000004L  // VT_LPSTR
-#define PIDSI_KEYWORDS            0x00000005L  // VT_LPSTR
-#define PIDSI_COMMENTS            0x00000006L  // VT_LPSTR
-#define PIDSI_TEMPLATE            0x00000007L  // VT_LPSTR
-#define PIDSI_LASTAUTHOR          0x00000008L  // VT_LPSTR
-#define PIDSI_REVNUMBER           0x00000009L  // VT_LPSTR
-#define PIDSI_EDITTIME            0x0000000aL  // VT_FILETIME (UTC)
-#define PIDSI_LASTPRINTED         0x0000000bL  // VT_FILETIME (UTC)
-#define PIDSI_CREATE_DTM          0x0000000cL  // VT_FILETIME (UTC)
-#define PIDSI_LASTSAVE_DTM        0x0000000dL  // VT_FILETIME (UTC)
-#define PIDSI_PAGECOUNT           0x0000000eL  // VT_I4
-#define PIDSI_WORDCOUNT           0x0000000fL  // VT_I4
-#define PIDSI_CHARCOUNT           0x00000010L  // VT_I4
-#define PIDSI_THUMBNAIL           0x00000011L  // VT_CF
-#define PIDSI_APPNAME             0x00000012L  // VT_LPSTR
-#define PIDSI_DOC_SECURITY        0x00000013L  // VT_I4
-
-// Property IDs for the DocSummaryInformation Property Set
-
-#define PIDDSI_CATEGORY          0x00000002 // VT_LPSTR
-#define PIDDSI_PRESFORMAT        0x00000003 // VT_LPSTR
-#define PIDDSI_BYTECOUNT         0x00000004 // VT_I4
-#define PIDDSI_LINECOUNT         0x00000005 // VT_I4
-#define PIDDSI_PARCOUNT          0x00000006 // VT_I4
-#define PIDDSI_SLIDECOUNT        0x00000007 // VT_I4
-#define PIDDSI_NOTECOUNT         0x00000008 // VT_I4
-#define PIDDSI_HIDDENCOUNT       0x00000009 // VT_I4
-#define PIDDSI_MMCLIPCOUNT       0x0000000A // VT_I4
-#define PIDDSI_SCALE             0x0000000B // VT_BOOL
-#define PIDDSI_HEADINGPAIR       0x0000000C // VT_VARIANT | VT_VECTOR
-#define PIDDSI_DOCPARTS          0x0000000D // VT_LPSTR | VT_VECTOR
-#define PIDDSI_MANAGER           0x0000000E // VT_LPSTR
-#define PIDDSI_COMPANY           0x0000000F // VT_LPSTR
-#define PIDDSI_LINKSDIRTY        0x00000010 // VT_BOOL
-
-
-//  FMTID_MediaFileSummaryInfo - Property IDs
-
-#define PIDMSI_EDITOR                   0x00000002L  // VT_LPWSTR
-#define PIDMSI_SUPPLIER                 0x00000003L  // VT_LPWSTR
-#define PIDMSI_SOURCE                   0x00000004L  // VT_LPWSTR
-#define PIDMSI_SEQUENCE_NO              0x00000005L  // VT_LPWSTR
-#define PIDMSI_PROJECT                  0x00000006L  // VT_LPWSTR
-#define PIDMSI_STATUS                   0x00000007L  // VT_UI4
-#define PIDMSI_OWNER                    0x00000008L  // VT_LPWSTR
-#define PIDMSI_RATING                   0x00000009L  // VT_LPWSTR
-#define PIDMSI_PRODUCTION               0x0000000AL  // VT_FILETIME (UTC)
-#define PIDMSI_COPYRIGHT                0x0000000BL  // VT_LPWSTR
-
-//  PIDMSI_STATUS value definitions
-
-enum PIDMSI_STATUS_VALUE
-    {
-        PIDMSI_STATUS_NORMAL	= 0,
-        PIDMSI_STATUS_NEW	= ( PIDMSI_STATUS_NORMAL + 1 ) ,
-        PIDMSI_STATUS_PRELIM	= ( PIDMSI_STATUS_NEW + 1 ) ,
-        PIDMSI_STATUS_DRAFT	= ( PIDMSI_STATUS_PRELIM + 1 ) ,
-        PIDMSI_STATUS_INPROGRESS	= ( PIDMSI_STATUS_DRAFT + 1 ) ,
-        PIDMSI_STATUS_EDIT	= ( PIDMSI_STATUS_INPROGRESS + 1 ) ,
-        PIDMSI_STATUS_REVIEW	= ( PIDMSI_STATUS_EDIT + 1 ) ,
-        PIDMSI_STATUS_PROOF	= ( PIDMSI_STATUS_REVIEW + 1 ) ,
-        PIDMSI_STATUS_FINAL	= ( PIDMSI_STATUS_PROOF + 1 ) ,
-        PIDMSI_STATUS_OTHER	= 0x7fff
-    } ;
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
-#pragma endregion
-#pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #define	PRSPEC_INVALID	( 0xffffffff )
 
 #define	PRSPEC_LPWSTR	( 0 )
@@ -1163,6 +1084,90 @@ void __RPC_STUB IEnumSTATPROPSETSTG_RemoteNext_Stub(
 
 typedef /* [unique] */  __RPC_unique_pointer IPropertyStorage *LPPROPERTYSTORAGE;
 
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
+#pragma endregion
+
+#define _PROPIDLBASE_
+#endif
+#include <coml2api.h>
+#pragma region Desktop Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
+// Property IDs for the DiscardableInformation Property Set
+
+#define PIDDI_THUMBNAIL          0x00000002L // VT_BLOB
+
+// Property IDs for the SummaryInformation Property Set
+
+#define PIDSI_TITLE               0x00000002L  // VT_LPSTR
+#define PIDSI_SUBJECT             0x00000003L  // VT_LPSTR
+#define PIDSI_AUTHOR              0x00000004L  // VT_LPSTR
+#define PIDSI_KEYWORDS            0x00000005L  // VT_LPSTR
+#define PIDSI_COMMENTS            0x00000006L  // VT_LPSTR
+#define PIDSI_TEMPLATE            0x00000007L  // VT_LPSTR
+#define PIDSI_LASTAUTHOR          0x00000008L  // VT_LPSTR
+#define PIDSI_REVNUMBER           0x00000009L  // VT_LPSTR
+#define PIDSI_EDITTIME            0x0000000aL  // VT_FILETIME (UTC)
+#define PIDSI_LASTPRINTED         0x0000000bL  // VT_FILETIME (UTC)
+#define PIDSI_CREATE_DTM          0x0000000cL  // VT_FILETIME (UTC)
+#define PIDSI_LASTSAVE_DTM        0x0000000dL  // VT_FILETIME (UTC)
+#define PIDSI_PAGECOUNT           0x0000000eL  // VT_I4
+#define PIDSI_WORDCOUNT           0x0000000fL  // VT_I4
+#define PIDSI_CHARCOUNT           0x00000010L  // VT_I4
+#define PIDSI_THUMBNAIL           0x00000011L  // VT_CF
+#define PIDSI_APPNAME             0x00000012L  // VT_LPSTR
+#define PIDSI_DOC_SECURITY        0x00000013L  // VT_I4
+
+// Property IDs for the DocSummaryInformation Property Set
+
+#define PIDDSI_CATEGORY          0x00000002 // VT_LPSTR
+#define PIDDSI_PRESFORMAT        0x00000003 // VT_LPSTR
+#define PIDDSI_BYTECOUNT         0x00000004 // VT_I4
+#define PIDDSI_LINECOUNT         0x00000005 // VT_I4
+#define PIDDSI_PARCOUNT          0x00000006 // VT_I4
+#define PIDDSI_SLIDECOUNT        0x00000007 // VT_I4
+#define PIDDSI_NOTECOUNT         0x00000008 // VT_I4
+#define PIDDSI_HIDDENCOUNT       0x00000009 // VT_I4
+#define PIDDSI_MMCLIPCOUNT       0x0000000A // VT_I4
+#define PIDDSI_SCALE             0x0000000B // VT_BOOL
+#define PIDDSI_HEADINGPAIR       0x0000000C // VT_VARIANT | VT_VECTOR
+#define PIDDSI_DOCPARTS          0x0000000D // VT_LPSTR | VT_VECTOR
+#define PIDDSI_MANAGER           0x0000000E // VT_LPSTR
+#define PIDDSI_COMPANY           0x0000000F // VT_LPSTR
+#define PIDDSI_LINKSDIRTY        0x00000010 // VT_BOOL
+
+
+//  FMTID_MediaFileSummaryInfo - Property IDs
+
+#define PIDMSI_EDITOR                   0x00000002L  // VT_LPWSTR
+#define PIDMSI_SUPPLIER                 0x00000003L  // VT_LPWSTR
+#define PIDMSI_SOURCE                   0x00000004L  // VT_LPWSTR
+#define PIDMSI_SEQUENCE_NO              0x00000005L  // VT_LPWSTR
+#define PIDMSI_PROJECT                  0x00000006L  // VT_LPWSTR
+#define PIDMSI_STATUS                   0x00000007L  // VT_UI4
+#define PIDMSI_OWNER                    0x00000008L  // VT_LPWSTR
+#define PIDMSI_RATING                   0x00000009L  // VT_LPWSTR
+#define PIDMSI_PRODUCTION               0x0000000AL  // VT_FILETIME (UTC)
+#define PIDMSI_COPYRIGHT                0x0000000BL  // VT_LPWSTR
+
+//  PIDMSI_STATUS value definitions
+
+enum PIDMSI_STATUS_VALUE
+    {
+        PIDMSI_STATUS_NORMAL	= 0,
+        PIDMSI_STATUS_NEW	= ( PIDMSI_STATUS_NORMAL + 1 ) ,
+        PIDMSI_STATUS_PRELIM	= ( PIDMSI_STATUS_NEW + 1 ) ,
+        PIDMSI_STATUS_DRAFT	= ( PIDMSI_STATUS_PRELIM + 1 ) ,
+        PIDMSI_STATUS_INPROGRESS	= ( PIDMSI_STATUS_DRAFT + 1 ) ,
+        PIDMSI_STATUS_EDIT	= ( PIDMSI_STATUS_INPROGRESS + 1 ) ,
+        PIDMSI_STATUS_REVIEW	= ( PIDMSI_STATUS_EDIT + 1 ) ,
+        PIDMSI_STATUS_PROOF	= ( PIDMSI_STATUS_REVIEW + 1 ) ,
+        PIDMSI_STATUS_FINAL	= ( PIDMSI_STATUS_PROOF + 1 ) ,
+        PIDMSI_STATUS_OTHER	= 0x7fff
+    } ;
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
+#pragma endregion
+#pragma region Application Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 _Check_return_ WINOLEAPI PropVariantCopy(
             _Out_ PROPVARIANT* pvarDest,
             _In_ const PROPVARIANT * pvarSrc);
@@ -1195,39 +1200,11 @@ inline void PropVariantInit (_Out_ PROPVARIANT * pvar )
 #endif /* _MSC_EXTENSIONS */
 
 
-#ifndef _STGCREATEPROPSTG_DEFINED_
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
+#pragma endregion
 
-_Check_return_ WINOLEAPI StgCreatePropStg(
-            _In_ IUnknown* pUnk,
-            _In_ REFFMTID fmtid,
-            _In_ const CLSID* pclsid,
-            _In_ DWORD grfFlags,
-            _Reserved_ DWORD dwReserved,
-            _Outptr_ IPropertyStorage** ppPropStg);
-
-_Check_return_ WINOLEAPI StgOpenPropStg(
-            _In_ IUnknown* pUnk,
-            _In_ REFFMTID fmtid,
-            _In_ DWORD grfFlags,
-            _Reserved_ DWORD dwReserved,
-            _Outptr_ IPropertyStorage** ppPropStg);
-
-_Check_return_ WINOLEAPI StgCreatePropSetStg(
-            _In_ IStorage* pStorage,
-            _Reserved_ DWORD dwReserved,
-            _Outptr_ IPropertySetStorage** ppPropSetStg);
-
-#define CCH_MAX_PROPSTG_NAME    31
-
-_Check_return_ WINOLEAPI FmtIdToPropStgName(
-            _In_ const FMTID* pfmtid,
-            _Out_writes_(CCH_MAX_PROPSTG_NAME+1) LPOLESTR oszName);
-
-_Check_return_ WINOLEAPI PropStgNameToFmtId(
-            _In_ const LPOLESTR oszName,
-            _Out_ FMTID* pfmtid);
-
-#endif
+#pragma region Desktop Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 #ifndef _SERIALIZEDPROPERTYVALUE_DEFINED_
 #define _SERIALIZEDPROPERTYVALUE_DEFINED_
@@ -1237,12 +1214,6 @@ typedef struct tagSERIALIZEDPROPERTYVALUE
     BYTE	rgb[1];
 } SERIALIZEDPROPERTYVALUE;
 #endif
-
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
-#pragma endregion
-
-#pragma region Desktop Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 EXTERN_C
 _Success_(TRUE)  /* Raises status on failure */

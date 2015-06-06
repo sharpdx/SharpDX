@@ -96,6 +96,16 @@
     <map enum-item="D3D12_MESSAGE_ID_MAP_INVALID_SUBRESOURCE" name="MapInvalidSubResource2"/>
     <map enum-item="D3D12_MESSAGE_ID_UNMAP_INVALID_SUBRESOURCE" name="UnmapInvalidSubResource2"/>
 
+    <map enum-item="D3D12_CONSERVATIVE_RASTERIZATION_TIER(.*)" name-tmp="Tier$1"/>
+    <map enum-item="D3D12_CROSS_NODE_SHARING_TIER(.*)" name-tmp="Tier$1"/>
+    <map enum-item="D3D12_RESOURCE_HEAP_TIER(.*)" name-tmp="Tier$1"/>
+    <map enum-item="D3D12_TILED_RESOURCES_TIER(.*)" name-tmp="Tier$1"/>
+    <map enum-item="D3D12_INDEX_BUFFER_STRIP_CUT_(VALUE_0x.*)" name-tmp="$1"/>
+    <map enum-item="D3D12_MESSAGE_ID_RESOURCE_BARRIER_INVALID_FLAG" name="ResourceBarrierInvalidFlag"/>
+    <map enum-item="D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS" name="Constant32Bits"/>
+    <map enum-item="D3D_ROOT_SIGNATURE_VERSION(.*)" name-tmp="Version$1"/>
+    <map enum-item="D3D12_SHADER_MIN_PRECISION_SUPPORT_(\d*)_BIT" name-tmp="Bit$1"/>
+    
     <!--
     // *****************************************************************
     // D3D12 Struct
@@ -107,29 +117,23 @@
     <map field="D3D12_GRAPHICS_PIPELINE_STATE_DESC::RTVFormats" name="RenderTargetFormats"/>
     <map field="D3D12_GRAPHICS_PIPELINE_STATE_DESC::DSVFormat" name="DepthStencilFormat"/>
 
-    <map field="D3D12_RESOURCE_TRANSITION_BARRIER_DESC::pResource" name="ResourcePointer" visibility="private"/>
-    <map field="D3D12_RESOURCE_TRANSITION_BARRIER_DESC::StateBefore" type="D3D12_RESOURCE_USAGE"/>
-    <map field="D3D12_RESOURCE_TRANSITION_BARRIER_DESC::StateAfter" type="D3D12_RESOURCE_USAGE"/>
-
-    <map field="D3D12_RESOURCE_ALIASING_BARRIER_DESC::pResourceBefore" name="ResourceBeforePointer" visibility="private"/>
-    <map field="D3D12_RESOURCE_ALIASING_BARRIER_DESC::pResourceAfter" name="ResourceAfterPointer" visibility="private"/>
+    <map field="D3D12_RESOURCE_TRANSITION_BARRIER::pResource" name="ResourcePointer" visibility="private"/>
+    <map field="D3D12_RESOURCE_ALIASING_BARRIER::pResourceBefore" name="ResourceBeforePointer" visibility="private"/>
+    <map field="D3D12_RESOURCE_ALIASING_BARRIER::pResourceAfter" name="ResourceAfterPointer" visibility="private"/>
 
     <map field="D3D12_RESOURCE_DESC::CPUAccessFlags" name="CpuAccessFlags" />
     <map field="D3D12_RESOURCE_DESC::MiscFlags" name="OptionFlags"/>
 
     <map field="D3D12_ROOT_CONSTANTS::Num32BitValues" name="Value32BitCount"/>
-    
-    <map struct="D3D12_ROOT_SIGNATURE" name="RootSignatureDescription"/>
-    
+        
     <map field="D3D12_STREAM_OUTPUT_VIEW_DESC::pSOCurrentOffset" type="void"/>
-    <map field="D3D12_BUFFER_UAV::pUAVCounter" type="void"/>
     
     <map struct="D3D12_BLEND_DESC" marshalto="true"/>
 
     <map field="D3D12_ROOT_SIGNATURE::pParameters" name="ParametersPointer"/>
 
-    <map struct="D3D12_ROOT_SIGNATURE" struct-to-class="true"/>
-    <remove field="D3D12_ROOT_SIGNATURE::.*"/>
+    <map struct="D3D12_ROOT_SIGNATURE_DESC" struct-to-class="true"/>
+    <remove field="D3D12_ROOT_SIGNATURE_DESC::.*"/>
     
     <map struct="D3D12_INPUT_LAYOUT_DESC" struct-to-class="true" marshalto="true"/>
     <map field="D3D12_INPUT_LAYOUT_DESC::pInputElementDescs" name="InputElementsPointer" visibility="private"/>
@@ -146,11 +150,10 @@
     <map field="D3D12_CLEAR_VALUE::Color" type="SHARPDX_VECTOR4" array="" />
     
     <!--Remove all fields for D3D12_RESOURCE_BARRIER_DESC as the union with pointers cannot be mapped safely in x86/x64 with C# explicit layout-->
-    <remove field="D3D12_RESOURCE_BARRIER_DESC::.*"/>
+    <remove field="D3D12_RESOURCE_BARRIER::.*"/>
     <remove field="D3D12_ROOT_PARAMETER::.*"/>
-    
-    <!-- Remove temporary D3D11 types -->
-    <remove struct="D3D11_RESOURCE_DESC"/>
+
+    <map interface="ID3D12Debug" name="DebugInterface"/>
 
     <!--
     // *****************************************************************
@@ -177,7 +180,7 @@
     <map param="ID3D12GraphicsCommandList::ClearRenderTargetView::ColorRGBA" type="SHARPDX_COLOR4"/>
     <map param="ID3D12GraphicsCommandList::ClearUnorderedAccessViewUint::Values" type="SHARPDX_INT4"/>
     <map param="ID3D12GraphicsCommandList::ClearUnorderedAccessViewFloat::Values" type="SHARPDX_VECTOR4"/>
-    <map param="ID3D12GraphicsCommandList::ResourceBarrier::pDesc" type="void"/>
+    <map param="ID3D12GraphicsCommandList::ResourceBarrier::pBarriers" type="void"/>
     <map method="ID3D12GraphicsCommandList::ResourceBarrier" visibility="private"/>
     
     <map method="ID3D12GraphicsCommandList::RSSetViewports" rawptr="true"/>

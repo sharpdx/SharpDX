@@ -20,7 +20,10 @@ Revision History:
 
 #if _MSC_VER >= 1200
 #pragma warning(push)
+#pragma warning(disable:4668) // #if not_defined treated as #if 0
+#pragma warning(disable:4820) // padded added
 #endif
+#pragma warning(disable:4200) // nonstandard extension used : zero-sized array in struct/union
 #pragma warning(disable:4201) // named type definition in parentheses
 #pragma warning(disable:4214) // bit field types other than int
 
@@ -66,12 +69,14 @@ extern "C" {
 #define DUMMYSTRUCTNAME3 s3
 #define DUMMYSTRUCTNAME4 s4
 #define DUMMYSTRUCTNAME5 s5
+#define DUMMYSTRUCTNAME6 s6
 #else
 #define DUMMYSTRUCTNAME
 #define DUMMYSTRUCTNAME2
 #define DUMMYSTRUCTNAME3
 #define DUMMYSTRUCTNAME4
 #define DUMMYSTRUCTNAME5
+#define DUMMYSTRUCTNAME6
 #endif
 #endif // DUMMYSTRUCTNAME
 
@@ -92,7 +97,7 @@ extern "C" {
 #define RESTRICTED_POINTER
 #endif
 
-#if defined(_M_MRX000) || defined(_M_ALPHA) || defined(_M_PPC) || defined(_M_IA64) || defined(_M_AMD64) || defined(_M_ARM)
+#if defined(_M_MRX000) || defined(_M_ALPHA) || defined(_M_PPC) || defined(_M_IA64) || defined(_M_AMD64) || defined(_M_ARM) || defined(_M_ARM64)
 #define ALIGNMENT_MACHINE
 #define UNALIGNED __unaligned
 #if defined(_WIN64)
@@ -138,14 +143,14 @@ extern "C" {
 
 #if defined(_AMD64_) || defined(_X86_)
 #define PROBE_ALIGNMENT( _s ) TYPE_ALIGNMENT( DWORD )
-#elif defined(_IA64_) || defined(_ARM_)
+#elif defined(_IA64_) || defined(_ARM_) || defined(_ARM64_)
 #define PROBE_ALIGNMENT( _s ) (TYPE_ALIGNMENT( _s ) > TYPE_ALIGNMENT( DWORD ) ? \
                               TYPE_ALIGNMENT( _s ) : TYPE_ALIGNMENT( DWORD ))
 #elif !defined(RC_INVOKED)
 #error "No Target Architecture"
 #endif
 
-#if defined(_WIN64)
+#if BUILD_WOW64_ENABLED
 
 #define PROBE_ALIGNMENT32( _s ) TYPE_ALIGNMENT( DWORD )
 
@@ -169,7 +174,7 @@ extern "C" {
 #include <basetsd.h>
 
 
-#if (defined(_M_IX86) || defined(_M_IA64) || defined(_M_AMD64) || defined(_M_ARM)) && !defined(MIDL_PASS)
+#if (defined(_M_IX86) || defined(_M_IA64) || defined(_M_AMD64) || defined(_M_ARM) || defined(_M_ARM64)) && !defined(MIDL_PASS)
 #define DECLSPEC_IMPORT __declspec(dllimport)
 #else
 #define DECLSPEC_IMPORT
@@ -253,6 +258,14 @@ extern "C" {
 #endif
 #endif
 
+#ifndef DECLSPEC_SAFEBUFFERS
+#if (_MSC_VER >= 1600)
+#define DECLSPEC_SAFEBUFFERS  __declspec(safebuffers)
+#else
+#define DECLSPEC_SAFEBUFFERS
+#endif
+#endif
+
 #ifndef DECLSPEC_NOINLINE
 #if (_MSC_VER >= 1300)
 #define DECLSPEC_NOINLINE  __declspec(noinline)
@@ -271,10 +284,18 @@ extern "C" {
 
 
 #ifndef DECLSPEC_GUARDNOCF
-#if (_MSC_FULL_VER >= 170065501)
-#define DECLSPEC_GUARDNOCF  __declspec(guard(ignore))
+#if (_MSC_FULL_VER >= 170065501) || defined(_D1VERSIONLKG171_)
+#define DECLSPEC_GUARDNOCF  __declspec(guard(nocf))
 #else
 #define DECLSPEC_GUARDNOCF
+#endif
+#endif
+
+#ifndef DECLSPEC_GUARD_SUPPRESS
+#if (_MSC_FULL_VER >= 181040116) || defined(_D1VERSIONLKG171_)
+#define DECLSPEC_GUARD_SUPPRESS  __declspec(guard(suppress))
+#else
+#define DECLSPEC_GUARD_SUPPRESS
 #endif
 #endif
 
@@ -300,8 +321,6 @@ extern "C" {
 //
 
 #define STKFORCEINLINE FORCEINLINE
-
-#define ICEFORCEINLINE FORCEINLINE
 
 // end_ntoshvp
 
@@ -561,6 +580,18 @@ typedef struct _GROUP_AFFINITY {
     WORD   Reserved[3];
 } GROUP_AFFINITY, *PGROUP_AFFINITY;
 
+#if defined(_WIN64)
+
+#define MAXIMUM_PROC_PER_GROUP 64
+
+#else
+
+#define MAXIMUM_PROC_PER_GROUP 32
+
+#endif
+
+#define MAXIMUM_PROCESSORS          MAXIMUM_PROC_PER_GROUP
+
 // begin_ntoshvp
 
 //
@@ -606,9 +637,13 @@ typedef _Return_type_success_(return >= 0) long HRESULT;
 // end_ntoshvp
 
 #ifdef __cplusplus
-    #define EXTERN_C    extern "C"
+    #define EXTERN_C       extern "C"
+    #define EXTERN_C_START extern "C" {
+    #define EXTERN_C_END   }
 #else
-    #define EXTERN_C    extern
+    #define EXTERN_C       extern
+    #define EXTERN_C_START
+    #define EXTERN_C_END
 #endif
 
 #if defined(_WIN32) || defined(_MPPC_)
@@ -668,7 +703,7 @@ typedef PDWORD PLCID;
 typedef WORD   LANGID;      
 
 #ifndef __COMPARTMENT_ID_DEFINED__
-#define __COMPARTMENT_ID_DEFINED__ 
+#define __COMPARTMENT_ID_DEFINED__
 
 //
 // Compartment identifier
@@ -816,7 +851,7 @@ typedef DWORDLONG *PDWORDLONG;
 
 #if defined(MIDL_PASS) || defined(RC_INVOKED) || defined(_M_CEE_PURE) \
     || defined(_68K_) || defined(_MPPC_) \
-    || defined(_M_IA64) || defined(_M_AMD64) || defined(_M_ARM)
+    || defined(_M_IA64) || defined(_M_AMD64) || defined(_M_ARM) || defined(_M_ARM64)
 
 //
 // Midl does not understand inline assembler. Therefore, the Rtl functions
@@ -876,7 +911,7 @@ Int64ShrlMod32 (
 #pragma warning(push)
 #endif
 #pragma warning(disable:4035 4793)               // re-enable below
-
+/*
 __inline ULONGLONG
 NTAPI
 Int64ShllMod32 (
@@ -884,13 +919,13 @@ Int64ShllMod32 (
     _In_ DWORD ShiftCount
     )
 {
-    // __asm    {
-    //     mov     ecx, ShiftCount
-    //     mov     eax, dword ptr [Value]
-    //     mov     edx, dword ptr [Value+4]
-    //     shld    edx, eax, cl
-    //     shl     eax, cl
-    // }
+    __asm    {
+        mov     ecx, ShiftCount
+        mov     eax, dword ptr [Value]
+        mov     edx, dword ptr [Value+4]
+        shld    edx, eax, cl
+        shl     eax, cl
+    }
 }
 
 __inline LONGLONG
@@ -900,13 +935,13 @@ Int64ShraMod32 (
     _In_ DWORD ShiftCount
     )
 {
-    // __asm {
-    //     mov     ecx, ShiftCount
-    //     mov     eax, dword ptr [Value]
-    //     mov     edx, dword ptr [Value+4]
-    //     shrd    eax, edx, cl
-    //     sar     edx, cl
-    // }
+    __asm {
+        mov     ecx, ShiftCount
+        mov     eax, dword ptr [Value]
+        mov     edx, dword ptr [Value+4]
+        shrd    eax, edx, cl
+        sar     edx, cl
+    }
 }
 
 __inline ULONGLONG
@@ -916,15 +951,15 @@ Int64ShrlMod32 (
     _In_ DWORD ShiftCount
     )
 {
-    // __asm    {
-    //     mov     ecx, ShiftCount
-    //     mov     eax, dword ptr [Value]
-    //     mov     edx, dword ptr [Value+4]
-    //     shrd    eax, edx, cl
-    //     shr     edx, cl
-    // }
+    __asm    {
+        mov     ecx, ShiftCount
+        mov     eax, dword ptr [Value]
+        mov     edx, dword ptr [Value+4]
+        shrd    eax, edx, cl
+        shr     edx, cl
+    }
 }
-
+*/
 #if _MSC_VER >= 1200
 #pragma warning(pop)
 #else
@@ -1450,8 +1485,28 @@ typedef EXCEPTION_ROUTINE *PEXCEPTION_ROUTINE;
 #define PRODUCT_EMBEDDED_INDUSTRY_E_EVAL            0x0000006A
 #define PRODUCT_EMBEDDED_EVAL                       0x0000006B
 #define PRODUCT_EMBEDDED_E_EVAL                     0x0000006C
-#define PRODUCT_CORE_SERVER                         0x0000006D
+#define PRODUCT_NANO_SERVER                         0x0000006D
 #define PRODUCT_CLOUD_STORAGE_SERVER                0x0000006E
+#define PRODUCT_CORE_CONNECTED                      0x0000006F
+#define PRODUCT_PROFESSIONAL_STUDENT                0x00000070
+#define PRODUCT_CORE_CONNECTED_N                    0x00000071
+#define PRODUCT_PROFESSIONAL_STUDENT_N              0x00000072
+#define PRODUCT_CORE_CONNECTED_SINGLELANGUAGE       0x00000073
+#define PRODUCT_CORE_CONNECTED_COUNTRYSPECIFIC      0x00000074
+#define PRODUCT_CONNECTED_CAR                       0x00000075
+#define PRODUCT_INDUSTRY_HANDHELD                   0x00000076
+#define PRODUCT_PPI_PRO                             0x00000077
+#define PRODUCT_ARM64_SERVER                        0x00000078
+#define PRODUCT_EDUCATION                           0x00000079
+#define PRODUCT_EDUCATION_N                         0x0000007A
+#define PRODUCT_IOTUAP                              0x0000007B
+#define PRODUCT_CLOUD_HOST_INFRASTRUCTURE_SERVER    0x0000007C
+#define PRODUCT_ENTERPRISE_S                        0x0000007D
+#define PRODUCT_ENTERPRISE_S_N                      0x0000007E
+#define PRODUCT_PROFESSIONAL_S                      0x0000007F
+#define PRODUCT_PROFESSIONAL_S_N                    0x00000080
+#define PRODUCT_ENTERPRISE_S_EVALUATION             0x00000081
+#define PRODUCT_ENTERPRISE_S_N_EVALUATION           0x00000082
 
 #define PRODUCT_UNLICENSED                          0xABCDABCD
 
@@ -2034,7 +2089,7 @@ typedef EXCEPTION_ROUTINE *PEXCEPTION_ROUTINE;
 
 //
 // Transient keyboard Locale IDs (LCIDs)
-// Should only be used for keyboard layout identification 
+// Should only be used for keyboard layout identification
 //
 #define LOCALE_TRANSIENT_KEYBOARD1  0x2000
 #define LOCALE_TRANSIENT_KEYBOARD2  0x2400
@@ -2045,7 +2100,7 @@ typedef EXCEPTION_ROUTINE *PEXCEPTION_ROUTINE;
 // Locale with an unassigned LCID
 // These locales cannot be queried by LCID
 // Currently same as LOCALE_CUSTOM_UNSPECIFIED
-// 
+//
 #define LOCALE_UNASSIGNED_LCID LOCALE_CUSTOM_UNSPECIFIED
 
 // begin_ntminiport begin_ntndis begin_ntminitape
@@ -2070,9 +2125,21 @@ typedef EXCEPTION_ROUTINE *PEXCEPTION_ROUTINE;
 // begin_ntoshvp
 
 #if ! defined(lint)
+
+#ifdef _PREFAST_
+
+void _Prefast_unreferenced_parameter_impl_(const char*, ...);
+#define UNREFERENCED_PARAMETER(P)          _Prefast_unreferenced_parameter_impl_("PREfast", (P))
+#define DBG_UNREFERENCED_PARAMETER(P)      _Prefast_unreferenced_parameter_impl_("PREfast", (P))
+#define DBG_UNREFERENCED_LOCAL_VARIABLE(V) _Prefast_unreferenced_parameter_impl_("PREfast", (V))
+
+#else // _PREFAST_
+
 #define UNREFERENCED_PARAMETER(P)          (P)
 #define DBG_UNREFERENCED_PARAMETER(P)      (P)
 #define DBG_UNREFERENCED_LOCAL_VARIABLE(V) (V)
+
+#endif // _PREFAST_
 
 #else // lint
 
@@ -2130,36 +2197,77 @@ typedef EXCEPTION_ROUTINE *PEXCEPTION_ROUTINE;
 
 #ifdef __cplusplus
 
-// Define operator overloads to enable bit operations on enum values that are 
-// used to define flags. Use DEFINE_ENUM_FLAG_OPERATORS(YOUR_TYPE) to enable these 
+// Define operator overloads to enable bit operations on enum values that are
+// used to define flags. Use DEFINE_ENUM_FLAG_OPERATORS(YOUR_TYPE) to enable these
 // operators on YOUR_TYPE.
 
 // Moved here from objbase.w.
 
+// Templates are defined here in order to avoid a dependency on C++ <type_traits> header file,
+// or on compiler-specific contructs.
+extern "C++" {
+
+    template <size_t S>
+    struct _ENUM_FLAG_INTEGER_FOR_SIZE;
+
+    template <>
+    struct _ENUM_FLAG_INTEGER_FOR_SIZE<1>
+    {
+        typedef INT8 type;
+    };
+
+    template <>
+    struct _ENUM_FLAG_INTEGER_FOR_SIZE<2>
+    {
+        typedef INT16 type;
+    };
+
+    template <>
+    struct _ENUM_FLAG_INTEGER_FOR_SIZE<4>
+    {
+        typedef INT32 type;
+    };
+
+    template <>
+    struct _ENUM_FLAG_INTEGER_FOR_SIZE<8>
+    {
+        typedef INT64 type;
+    };
+
+    // used as an approximation of std::underlying_type<T>
+    template <class T>
+    struct _ENUM_FLAG_SIZED_INTEGER
+    {
+        typedef typename _ENUM_FLAG_INTEGER_FOR_SIZE<sizeof(T)>::type type;
+    };
+
+}
+
 #define DEFINE_ENUM_FLAG_OPERATORS(ENUMTYPE) \
 extern "C++" { \
-inline ENUMTYPE operator | (ENUMTYPE a, ENUMTYPE b) { return ENUMTYPE(((int)a) | ((int)b)); } \
-inline ENUMTYPE &operator |= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((int &)a) |= ((int)b)); } \
-inline ENUMTYPE operator & (ENUMTYPE a, ENUMTYPE b) { return ENUMTYPE(((int)a) & ((int)b)); } \
-inline ENUMTYPE &operator &= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((int &)a) &= ((int)b)); } \
-inline ENUMTYPE operator ~ (ENUMTYPE a) { return ENUMTYPE(~((int)a)); } \
-inline ENUMTYPE operator ^ (ENUMTYPE a, ENUMTYPE b) { return ENUMTYPE(((int)a) ^ ((int)b)); } \
-inline ENUMTYPE &operator ^= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((int &)a) ^= ((int)b)); } \
+inline ENUMTYPE operator | (ENUMTYPE a, ENUMTYPE b) throw() { return ENUMTYPE(((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)a) | ((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
+inline ENUMTYPE &operator |= (ENUMTYPE &a, ENUMTYPE b) throw() { return (ENUMTYPE &)(((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type &)a) |= ((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
+inline ENUMTYPE operator & (ENUMTYPE a, ENUMTYPE b) throw() { return ENUMTYPE(((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)a) & ((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
+inline ENUMTYPE &operator &= (ENUMTYPE &a, ENUMTYPE b) throw() { return (ENUMTYPE &)(((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type &)a) &= ((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
+inline ENUMTYPE operator ~ (ENUMTYPE a) throw() { return ENUMTYPE(~((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)a)); } \
+inline ENUMTYPE operator ^ (ENUMTYPE a, ENUMTYPE b) throw() { return ENUMTYPE(((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)a) ^ ((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
+inline ENUMTYPE &operator ^= (ENUMTYPE &a, ENUMTYPE b) throw() { return (ENUMTYPE &)(((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type &)a) ^= ((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
 }
 #else
 #define DEFINE_ENUM_FLAG_OPERATORS(ENUMTYPE) // NOP, C allows these operators.
 #endif
 
 // Compile-time macros for initializing flag values in const data.
-// 
+//
 // When using DEFINE_ENUM_FLAG_OPERATORS for enum values you should use the macros below
-// when you need to initialize global const data.  Without these macros the inline operators 
+// when you need to initialize global const data.  Without these macros the inline operators
 // from DEFINE_ENUM_FLAG_OPERATORS force a runtime initialization rather than a
 // compile time initialization.  This applies even if you have declared the data as const.
 #define COMPILETIME_OR_2FLAGS(a,b)          ((UINT)(a)|(UINT)(b))
 #define COMPILETIME_OR_3FLAGS(a,b,c)        ((UINT)(a)|(UINT)(b)|(UINT)(c))
 #define COMPILETIME_OR_4FLAGS(a,b,c,d)      ((UINT)(a)|(UINT)(b)|(UINT)(c)|(UINT)(d))
 #define COMPILETIME_OR_5FLAGS(a,b,c,d,e)    ((UINT)(a)|(UINT)(b)|(UINT)(c)|(UINT)(d)|(UINT)(e))
+#define COMPILETIME_OR_6FLAGS(a,b,c,d,e,f)  ((UINT)(a)|(UINT)(b)|(UINT)(c)|(UINT)(d)|(UINT)(e)|(UINT)(f))
 
 
 #ifndef UMDF_USING_NTSTATUS 
@@ -2174,6 +2282,7 @@ inline ENUMTYPE &operator ^= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((i
 #define DBG_CONTINUE                     ((DWORD   )0x00010002L)    
 #define STATUS_SEGMENT_NOTIFICATION      ((DWORD   )0x40000005L)    
 #define STATUS_FATAL_APP_EXIT            ((DWORD   )0x40000015L)    
+#define DBG_REPLY_LATER                  ((DWORD   )0x40010001L)    
 #define DBG_TERMINATE_THREAD             ((DWORD   )0x40010003L)    
 #define DBG_TERMINATE_PROCESS            ((DWORD   )0x40010004L)    
 #define DBG_CONTROL_C                    ((DWORD   )0x40010005L)    
@@ -2181,6 +2290,7 @@ inline ENUMTYPE &operator ^= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((i
 #define DBG_RIPEXCEPTION                 ((DWORD   )0x40010007L)    
 #define DBG_CONTROL_BREAK                ((DWORD   )0x40010008L)    
 #define DBG_COMMAND_EXCEPTION            ((DWORD   )0x40010009L)    
+#define DBG_PRINTEXCEPTION_WIDE_C        ((DWORD   )0x4001000AL)    
 #define STATUS_GUARD_PAGE_VIOLATION      ((DWORD   )0x80000001L)    
 #define STATUS_DATATYPE_MISALIGNMENT     ((DWORD   )0x80000002L)    
 #define STATUS_BREAKPOINT                ((DWORD   )0x80000003L)    
@@ -2284,7 +2394,8 @@ typedef struct DECLSPEC_ALIGN(16) _XSAVE_FORMAT {
 
 typedef struct DECLSPEC_ALIGN(8) _XSAVE_AREA_HEADER {
     DWORD64 Mask;
-    DWORD64 Reserved[7];
+    DWORD64 CompactionMask;
+    DWORD64 Reserved2[6];
 } XSAVE_AREA_HEADER, *PXSAVE_AREA_HEADER;
 
 typedef struct DECLSPEC_ALIGN(16) _XSAVE_AREA {
@@ -2531,10 +2642,10 @@ _BitScanReverse64 (
 #define InterlockedDecrementAcquire _InterlockedDecrement
 #define InterlockedDecrementRelease _InterlockedDecrement
 #define InterlockedDecrementNoFence _InterlockedDecrement
-#define InterlockedAdd _InterlockedAdd
-#define InterlockedAddAcquire _InterlockedAdd
-#define InterlockedAddRelease _InterlockedAdd
-#define InterlockedAddNoFence _InterlockedAdd
+#define InterlockedAdd _InlineInterlockedAdd
+#define InterlockedAddAcquire _InlineInterlockedAdd
+#define InterlockedAddRelease _InlineInterlockedAdd
+#define InterlockedAddNoFence _InlineInterlockedAdd
 #define InterlockedExchange _InterlockedExchange
 #define InterlockedExchangeAcquire _InterlockedExchange
 #define InterlockedExchangeNoFence _InterlockedExchange
@@ -2569,10 +2680,10 @@ _BitScanReverse64 (
 #define InterlockedDecrementAcquire64 _InterlockedDecrement64
 #define InterlockedDecrementRelease64 _InterlockedDecrement64
 #define InterlockedDecrementNoFence64 _InterlockedDecrement64
-#define InterlockedAdd64 _InterlockedAdd64
-#define InterlockedAddAcquire64 _InterlockedAdd64
-#define InterlockedAddRelease64 _InterlockedAdd64
-#define InterlockedAddNoFence64 _InterlockedAdd64
+#define InterlockedAdd64 _InlineInterlockedAdd64
+#define InterlockedAddAcquire64 _InlineInterlockedAdd64
+#define InterlockedAddRelease64 _InlineInterlockedAdd64
+#define InterlockedAddNoFence64 _InlineInterlockedAdd64
 #define InterlockedExchange64 _InterlockedExchange64
 #define InterlockedExchangeAcquire64 InterlockedExchange64
 #define InterlockedExchangeNoFence64 InterlockedExchange64
@@ -2725,7 +2836,7 @@ InterlockedExchangeAdd64 (
 
 __forceinline
 LONG64
-InterlockedAdd64 (
+_InlineInterlockedAdd64 (
     _Inout_ _Interlocked_operand_ LONG64 volatile *Addend,
     _In_ LONG64 Value
     )
@@ -2823,12 +2934,19 @@ InterlockedExchange16 (
 
 #if _MSC_FULL_VER >= 140041204
 
+#define InterlockedExchangeAdd8 _InterlockedExchangeAdd8
 #define InterlockedAnd8 _InterlockedAnd8
 #define InterlockedOr8 _InterlockedOr8
 #define InterlockedXor8 _InterlockedXor8
 #define InterlockedAnd16 _InterlockedAnd16
 #define InterlockedOr16 _InterlockedOr16
 #define InterlockedXor16 _InterlockedXor16
+
+char 
+InterlockedExchangeAdd8 (
+    _Inout_ _Interlocked_operand_ char volatile * _Addend, 
+    _In_ char _Value
+    );
 
 char
 InterlockedAnd8 (
@@ -2866,6 +2984,7 @@ InterlockedXor16(
     _In_ SHORT Value
     );
 
+#pragma intrinsic (_InterlockedExchangeAdd8)
 #pragma intrinsic (_InterlockedAnd8)
 #pragma intrinsic (_InterlockedOr8)
 #pragma intrinsic (_InterlockedXor8)
@@ -3461,6 +3580,12 @@ __addgsqword (
 
 #define CONTEXT_XSTATE          (CONTEXT_AMD64 | 0x00000040L)
 
+#if defined(XBOX_SYSTEMOS)
+
+#define CONTEXT_KERNEL_DEBUGGER     0x04000000L
+
+#endif
+
 #define CONTEXT_EXCEPTION_ACTIVE    0x08000000L
 #define CONTEXT_SERVICE_ACTIVE      0x10000000L
 #define CONTEXT_EXCEPTION_REQUEST   0x40000000L
@@ -3912,6 +4037,7 @@ YieldProcessor (
 #pragma intrinsic(_InterlockedAnd8)
 #pragma intrinsic(_InterlockedOr8)
 #pragma intrinsic(_InterlockedXor8)
+#pragma intrinsic(_InterlockedExchangeAdd8)
 
 #pragma intrinsic(_InterlockedAnd16)
 #pragma intrinsic(_InterlockedOr16)
@@ -3943,6 +4069,7 @@ YieldProcessor (
 #define InterlockedAnd8 _InterlockedAnd8
 #define InterlockedOr8 _InterlockedOr8
 #define InterlockedXor8 _InterlockedXor8
+#define InterlockedExchangeAdd8 _InterlockedExchangeAdd8
 
 #define InterlockedAnd16 _InterlockedAnd16
 #define InterlockedOr16 _InterlockedOr16
@@ -4151,6 +4278,14 @@ YieldProcessor (
 #define InterlockedCompareExchangePointerAcquire _InterlockedCompareExchangePointer_acq
 #define InterlockedCompareExchangePointerRelease _InterlockedCompareExchangePointer_rel
 #define InterlockedCompareExchangePointerNoFence _InterlockedCompareExchangePointer_nf
+
+#define InterlockedExchangeAddSizeT(a, b) InterlockedExchangeAdd((LONG *)a, b)
+#define InterlockedExchangeAddSizeTAcquire(a, b) InterlockedExchangeAddAcquire((LONG *)a, b)
+#define InterlockedExchangeAddSizeTNoFence(a, b) InterlockedExchangeAddNoFence((LONG *)a, b)
+#define InterlockedIncrementSizeT(a) InterlockedIncrement((LONG *)a)
+#define InterlockedIncrementSizeTNoFence(a) InterlockedIncrementNoFence((LONG *)a)
+#define InterlockedDecrementSizeT(a) InterlockedDecrement((LONG *)a)
+#define InterlockedDecrementSizeTNoFence(a) InterlockedDecrementNoFence((LONG *)a)
 
 //
 // Define accessors for volatile loads and stores.
@@ -4680,7 +4815,7 @@ typedef struct _DISPATCHER_CONTEXT {
     DWORD ScopeIndex;
     BOOLEAN ControlPcIsUnwound;
     PBYTE  NonVolatileRegisters;
-    DWORD VirtualVfpHead;
+    DWORD Reserved;
 } DISPATCHER_CONTEXT, *PDISPATCHER_CONTEXT;
 
 //
@@ -4760,6 +4895,1094 @@ typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
 
 #endif // _ARM_
 
+//
+// Scope table structure definition.
+//
+
+typedef struct _SCOPE_TABLE_ARM64 {
+    DWORD Count;
+    struct
+    {
+        DWORD BeginAddress;
+        DWORD EndAddress;
+        DWORD HandlerAddress;
+        DWORD JumpTarget;
+    } ScopeRecord[1];
+} SCOPE_TABLE_ARM64, *PSCOPE_TABLE_ARM64;
+
+// begin_ntoshvp
+
+#ifdef _ARM64_
+
+
+#if defined(_M_ARM64) && !defined(RC_INVOKED) && !defined(MIDL_PASS)
+
+#include <intrin.h>
+
+#if !defined(_M_CEE_PURE)
+
+#pragma intrinsic(__getReg)
+#pragma intrinsic(__getCallerReg)
+#pragma intrinsic(__getRegFp)
+#pragma intrinsic(__getCallerRegFp)
+
+#pragma intrinsic(__setReg)
+#pragma intrinsic(__setCallerReg)
+#pragma intrinsic(__setRegFp)
+#pragma intrinsic(__setCallerRegFp)
+
+#pragma intrinsic(__readx18byte)
+#pragma intrinsic(__readx18word)
+#pragma intrinsic(__readx18dword)
+#pragma intrinsic(__readx18qword)
+
+#pragma intrinsic(__writex18byte)
+#pragma intrinsic(__writex18word)
+#pragma intrinsic(__writex18dword)
+#pragma intrinsic(__writex18qword)
+
+#pragma intrinsic(__addx18byte)
+#pragma intrinsic(__addx18word)
+#pragma intrinsic(__addx18dword)
+#pragma intrinsic(__addx18qword)
+
+#pragma intrinsic(__incx18byte)
+#pragma intrinsic(__incx18word)
+#pragma intrinsic(__incx18dword)
+#pragma intrinsic(__incx18qword)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+//
+// Memory barriers and prefetch intrinsics.
+//
+
+#pragma intrinsic(__yield)
+#pragma intrinsic(__prefetch)
+
+#pragma intrinsic(__dmb)
+#pragma intrinsic(__dsb)
+#pragma intrinsic(__isb)
+
+#pragma intrinsic(_ReadWriteBarrier)
+#pragma intrinsic(_WriteBarrier)
+
+FORCEINLINE
+VOID
+YieldProcessor (
+    VOID
+    )
+{
+    __dmb(_ARM64_BARRIER_ISHST);
+    __yield();
+}
+
+#define MemoryBarrier()             __dmb(_ARM64_BARRIER_SY)
+#define PreFetchCacheLine(l,a)      __prefetch((const void *) (a))
+#define PrefetchForWrite(p)         __prefetch((const void *) (p))
+#define ReadForWriteAccess(p)       (*(p))
+
+#define _DataSynchronizationBarrier()        __dsb(_ARM64_BARRIER_SY)
+#define _InstructionSynchronizationBarrier() __isb(_ARM64_BARRIER_SY)
+
+//
+// Define bit test intrinsics.
+//
+
+#define BitTest _bittest
+#define BitTestAndComplement _bittestandcomplement
+#define BitTestAndSet _bittestandset
+#define BitTestAndReset _bittestandreset
+#define InterlockedBitTestAndSet _interlockedbittestandset
+#define InterlockedBitTestAndSetAcquire _interlockedbittestandset_acq
+#define InterlockedBitTestAndSetRelease _interlockedbittestandset_rel
+#define InterlockedBitTestAndSetNoFence _interlockedbittestandset_nf
+#define InterlockedBitTestAndReset _interlockedbittestandreset
+#define InterlockedBitTestAndResetAcquire _interlockedbittestandreset_acq
+#define InterlockedBitTestAndResetRelease _interlockedbittestandreset_rel
+#define InterlockedBitTestAndResetNoFence _interlockedbittestandreset_nf
+
+#define BitTest64 _bittest64
+#define BitTestAndComplement64 _bittestandcomplement64
+#define BitTestAndSet64 _bittestandset64
+#define BitTestAndReset64 _bittestandreset64
+#define InterlockedBitTestAndSet64 _interlockedbittestandset64
+#define InterlockedBitTestAndSet64Acquire _interlockedbittestandset64
+#define InterlockedBitTestAndSet64Release _interlockedbittestandset64
+#define InterlockedBitTestAndReset64 _interlockedbittestandreset64
+#define InterlockedBitTestAndReset64Acquire _interlockedbittestandreset64
+#define InterlockedBitTestAndReset64Release _interlockedbittestandreset64
+
+#pragma intrinsic(_bittest)
+#pragma intrinsic(_bittestandcomplement)
+#pragma intrinsic(_bittestandset)
+#pragma intrinsic(_bittestandreset)
+#pragma intrinsic(_interlockedbittestandset)
+#pragma intrinsic(_interlockedbittestandset_acq)
+#pragma intrinsic(_interlockedbittestandset_rel)
+#pragma intrinsic(_interlockedbittestandreset)
+#pragma intrinsic(_interlockedbittestandreset_acq)
+#pragma intrinsic(_interlockedbittestandreset_rel)
+
+#pragma intrinsic(_bittest64)
+#pragma intrinsic(_bittestandcomplement64)
+#pragma intrinsic(_bittestandset64)
+#pragma intrinsic(_bittestandreset64)
+
+#pragma intrinsic(_interlockedbittestandset64)
+#pragma intrinsic(_interlockedbittestandset64_acq)
+#pragma intrinsic(_interlockedbittestandset64_rel)
+#pragma intrinsic(_interlockedbittestandreset64)
+#pragma intrinsic(_interlockedbittestandreset64_acq)
+#pragma intrinsic(_interlockedbittestandreset64_rel)
+
+//
+// Define bit scan functions
+//
+
+#define BitScanForward _BitScanForward
+#define BitScanReverse _BitScanReverse
+#define BitScanForward64 _BitScanForward64
+#define BitScanReverse64 _BitScanReverse64
+
+#pragma intrinsic(_BitScanForward)
+#pragma intrinsic(_BitScanReverse)
+#pragma intrinsic(_BitScanForward64)
+#pragma intrinsic(_BitScanReverse64)
+
+//
+// Interlocked intrinsic functions.
+//
+
+#pragma intrinsic(_InterlockedAnd8)
+#pragma intrinsic(_InterlockedOr8)
+#pragma intrinsic(_InterlockedXor8)
+#pragma intrinsic(_InterlockedExchangeAdd8)
+
+#pragma intrinsic(_InterlockedAnd16)
+#pragma intrinsic(_InterlockedOr16)
+#pragma intrinsic(_InterlockedXor16)
+#pragma intrinsic(_InterlockedIncrement16)
+#pragma intrinsic(_InterlockedDecrement16)
+#pragma intrinsic(_InterlockedCompareExchange16)
+
+#pragma intrinsic(_InterlockedAnd)
+#pragma intrinsic(_InterlockedOr)
+#pragma intrinsic(_InterlockedXor)
+#pragma intrinsic(_InterlockedIncrement)
+#pragma intrinsic(_InterlockedDecrement)
+#pragma intrinsic(_InterlockedExchange)
+#pragma intrinsic(_InterlockedExchangeAdd)
+#pragma intrinsic(_InterlockedCompareExchange)
+
+#pragma intrinsic(_InterlockedAnd64)
+#pragma intrinsic(_InterlockedOr64)
+#pragma intrinsic(_InterlockedXor64)
+#pragma intrinsic(_InterlockedIncrement64)
+#pragma intrinsic(_InterlockedDecrement64)
+#pragma intrinsic(_InterlockedExchange64)
+#pragma intrinsic(_InterlockedCompareExchange64)
+
+#pragma intrinsic(_InterlockedCompareExchange128)
+#pragma intrinsic(_InterlockedExchangePointer)
+#pragma intrinsic(_InterlockedCompareExchangePointer)
+
+#define InterlockedAnd8 _InterlockedAnd8
+#define InterlockedOr8 _InterlockedOr8
+#define InterlockedXor8 _InterlockedXor8
+#define InterlockedExchangeAdd8 _InterlockedExchangeAdd8
+
+#define InterlockedAnd16 _InterlockedAnd16
+#define InterlockedOr16 _InterlockedOr16
+#define InterlockedXor16 _InterlockedXor16
+#define InterlockedIncrement16 _InterlockedIncrement16
+#define InterlockedDecrement16 _InterlockedDecrement16
+#define InterlockedCompareExchange16 _InterlockedCompareExchange16
+
+#define InterlockedAnd _InterlockedAnd
+#define InterlockedOr _InterlockedOr
+#define InterlockedXor _InterlockedXor
+#define InterlockedIncrement _InterlockedIncrement
+#define InterlockedDecrement _InterlockedDecrement
+#define InterlockedAdd _InterlockedAdd
+#define InterlockedExchange _InterlockedExchange
+#define InterlockedExchangeAdd _InterlockedExchangeAdd
+#define InterlockedCompareExchange _InterlockedCompareExchange
+
+#define InterlockedAnd64 _InterlockedAnd64
+#define InterlockedAndAffinity InterlockedAnd64
+#define InterlockedOr64 _InterlockedOr64
+#define InterlockedOrAffinity InterlockedOr64
+#define InterlockedXor64 _InterlockedXor64
+#define InterlockedIncrement64 _InterlockedIncrement64
+#define InterlockedDecrement64 _InterlockedDecrement64
+#define InterlockedAdd64 _InterlockedAdd64
+#define InterlockedExchange64 _InterlockedExchange64
+#define InterlockedExchangeAdd64 _InterlockedExchangeAdd64
+#define InterlockedCompareExchange64 _InterlockedCompareExchange64
+
+#define InterlockedExchangePointer _InterlockedExchangePointer
+#define InterlockedCompareExchangePointer _InterlockedCompareExchangePointer
+
+#pragma intrinsic(_InterlockedExchange16)
+#define InterlockedExchange16 _InterlockedExchange16
+
+#pragma intrinsic(_InterlockedAnd8_acq)
+#pragma intrinsic(_InterlockedAnd8_rel)
+#pragma intrinsic(_InterlockedAnd8_nf)
+#pragma intrinsic(_InterlockedOr8_acq)
+#pragma intrinsic(_InterlockedOr8_rel)
+#pragma intrinsic(_InterlockedOr8_nf)
+#pragma intrinsic(_InterlockedXor8_acq)
+#pragma intrinsic(_InterlockedXor8_rel)
+#pragma intrinsic(_InterlockedXor8_nf)
+
+#pragma intrinsic(_InterlockedAnd16_acq)
+#pragma intrinsic(_InterlockedAnd16_rel)
+#pragma intrinsic(_InterlockedAnd16_nf)
+#pragma intrinsic(_InterlockedOr16_acq)
+#pragma intrinsic(_InterlockedOr16_rel)
+#pragma intrinsic(_InterlockedOr16_nf)
+#pragma intrinsic(_InterlockedXor16_acq)
+#pragma intrinsic(_InterlockedXor16_rel)
+#pragma intrinsic(_InterlockedXor16_nf)
+#pragma intrinsic(_InterlockedIncrement16_acq)
+#pragma intrinsic(_InterlockedIncrement16_rel)
+#pragma intrinsic(_InterlockedIncrement16_nf)
+#pragma intrinsic(_InterlockedDecrement16_acq)
+#pragma intrinsic(_InterlockedDecrement16_rel)
+#pragma intrinsic(_InterlockedDecrement16_nf)
+#pragma intrinsic(_InterlockedExchange16_acq)
+#pragma intrinsic(_InterlockedExchange16_nf)
+#pragma intrinsic(_InterlockedCompareExchange16_acq)
+#pragma intrinsic(_InterlockedCompareExchange16_rel)
+#pragma intrinsic(_InterlockedCompareExchange16_nf)
+
+#pragma intrinsic(_InterlockedAnd_acq)
+#pragma intrinsic(_InterlockedAnd_rel)
+#pragma intrinsic(_InterlockedAnd_nf)
+#pragma intrinsic(_InterlockedOr_acq)
+#pragma intrinsic(_InterlockedOr_rel)
+#pragma intrinsic(_InterlockedOr_nf)
+#pragma intrinsic(_InterlockedXor_acq)
+#pragma intrinsic(_InterlockedXor_rel)
+#pragma intrinsic(_InterlockedXor_nf)
+#pragma intrinsic(_InterlockedIncrement_acq)
+#pragma intrinsic(_InterlockedIncrement_rel)
+#pragma intrinsic(_InterlockedIncrement_nf)
+#pragma intrinsic(_InterlockedDecrement_acq)
+#pragma intrinsic(_InterlockedDecrement_rel)
+#pragma intrinsic(_InterlockedDecrement_nf)
+#pragma intrinsic(_InterlockedExchange_acq)
+#pragma intrinsic(_InterlockedExchange_nf)
+#pragma intrinsic(_InterlockedExchangeAdd_acq)
+#pragma intrinsic(_InterlockedExchangeAdd_rel)
+#pragma intrinsic(_InterlockedExchangeAdd_nf)
+#pragma intrinsic(_InterlockedCompareExchange_rel)
+#pragma intrinsic(_InterlockedCompareExchange_nf)
+
+#pragma intrinsic(_InterlockedAnd64_acq)
+#pragma intrinsic(_InterlockedAnd64_rel)
+#pragma intrinsic(_InterlockedAnd64_nf)
+#pragma intrinsic(_InterlockedOr64_acq)
+#pragma intrinsic(_InterlockedOr64_rel)
+#pragma intrinsic(_InterlockedOr64_nf)
+#pragma intrinsic(_InterlockedXor64_acq)
+#pragma intrinsic(_InterlockedXor64_rel)
+#pragma intrinsic(_InterlockedXor64_nf)
+#pragma intrinsic(_InterlockedIncrement64_acq)
+#pragma intrinsic(_InterlockedIncrement64_rel)
+#pragma intrinsic(_InterlockedIncrement64_nf)
+#pragma intrinsic(_InterlockedDecrement64_acq)
+#pragma intrinsic(_InterlockedDecrement64_rel)
+#pragma intrinsic(_InterlockedDecrement64_nf)
+#pragma intrinsic(_InterlockedExchange64_acq)
+#pragma intrinsic(_InterlockedExchange64_nf)
+#pragma intrinsic(_InterlockedCompareExchange64_acq)
+#pragma intrinsic(_InterlockedCompareExchange64_rel)
+#pragma intrinsic(_InterlockedCompareExchange64_nf)
+
+#pragma intrinsic(_InterlockedExchangePointer_acq)
+#pragma intrinsic(_InterlockedExchangePointer_nf)
+#pragma intrinsic(_InterlockedCompareExchangePointer_acq)
+#pragma intrinsic(_InterlockedCompareExchangePointer_rel)
+#pragma intrinsic(_InterlockedCompareExchangePointer_nf)
+
+#define InterlockedAndAcquire8 _InterlockedAnd8_acq
+#define InterlockedAndRelease8 _InterlockedAnd8_rel
+#define InterlockedAndNoFence8 _InterlockedAnd8_nf
+#define InterlockedOrAcquire8 _InterlockedOr8_acq
+#define InterlockedOrRelease8 _InterlockedOr8_rel
+#define InterlockedOrNoFence8 _InterlockedOr8_nf
+#define InterlockedXorAcquire8 _InterlockedXor8_acq
+#define InterlockedXorRelease8 _InterlockedXor8_rel
+#define InterlockedXorNoFence8 _InterlockedXor8_nf
+
+#define InterlockedAndAcquire16 _InterlockedAnd16_acq
+#define InterlockedAndRelease16 _InterlockedAnd16_rel
+#define InterlockedAndNoFence16 _InterlockedAnd16_nf
+#define InterlockedOrAcquire16 _InterlockedOr16_acq
+#define InterlockedOrRelease16 _InterlockedOr16_rel
+#define InterlockedOrNoFence16 _InterlockedOr16_nf
+#define InterlockedXorAcquire16 _InterlockedXor16_acq
+#define InterlockedXorRelease16 _InterlockedXor16_rel
+#define InterlockedXorNoFence16 _InterlockedXor16_nf
+#define InterlockedIncrementAcquire16 _InterlockedIncrement16_acq
+#define InterlockedIncrementRelease16 _InterlockedIncrement16_rel
+#define InterlockedIncrementNoFence16 _InterlockedIncrement16_nf
+#define InterlockedDecrementAcquire16 _InterlockedDecrement16_acq
+#define InterlockedDecrementRelease16 _InterlockedDecrement16_rel
+#define InterlockedDecrementNoFence16 _InterlockedDecrement16_nf
+#define InterlockedExchangeAcquire16 _InterlockedExchange16_acq
+#define InterlockedExchangeNoFence16 _InterlockedExchange16_nf
+#define InterlockedCompareExchangeAcquire16 _InterlockedCompareExchange16_acq
+#define InterlockedCompareExchangeRelease16 _InterlockedCompareExchange16_rel
+#define InterlockedCompareExchangeNoFence16 _InterlockedCompareExchange16_nf
+
+#define InterlockedAndAcquire _InterlockedAnd_acq
+#define InterlockedAndRelease _InterlockedAnd_rel
+#define InterlockedAndNoFence _InterlockedAnd_nf
+#define InterlockedOrAcquire _InterlockedOr_acq
+#define InterlockedOrRelease _InterlockedOr_rel
+#define InterlockedOrNoFence _InterlockedOr_nf
+#define InterlockedXorAcquire _InterlockedXor_acq
+#define InterlockedXorRelease _InterlockedXor_rel
+#define InterlockedXorNoFence _InterlockedXor_nf
+#define InterlockedIncrementAcquire _InterlockedIncrement_acq
+#define InterlockedIncrementRelease _InterlockedIncrement_rel
+#define InterlockedIncrementNoFence _InterlockedIncrement_nf
+#define InterlockedDecrementAcquire _InterlockedDecrement_acq
+#define InterlockedDecrementRelease _InterlockedDecrement_rel
+#define InterlockedDecrementNoFence _InterlockedDecrement_nf
+#define InterlockedAddAcquire _InterlockedAdd_acq
+#define InterlockedAddRelease _InterlockedAdd_rel
+#define InterlockedAddNoFence _InterlockedAdd_nf
+#define InterlockedExchangeAcquire _InterlockedExchange_acq
+#define InterlockedExchangeNoFence _InterlockedExchange_nf
+#define InterlockedExchangeAddAcquire _InterlockedExchangeAdd_acq
+#define InterlockedExchangeAddRelease _InterlockedExchangeAdd_rel
+#define InterlockedExchangeAddNoFence _InterlockedExchangeAdd_nf
+#define InterlockedCompareExchangeAcquire _InterlockedCompareExchange_acq
+#define InterlockedCompareExchangeRelease _InterlockedCompareExchange_rel
+#define InterlockedCompareExchangeNoFence _InterlockedCompareExchange_nf
+
+#define InterlockedAndAcquire64 _InterlockedAnd64_acq
+#define InterlockedAndRelease64 _InterlockedAnd64_rel
+#define InterlockedAndNoFence64 _InterlockedAnd64_nf
+#define InterlockedOrAcquire64 _InterlockedOr64_acq
+#define InterlockedOrRelease64 _InterlockedOr64_rel
+#define InterlockedOrNoFence64 _InterlockedOr64_nf
+#define InterlockedXorAcquire64 _InterlockedXor64_acq
+#define InterlockedXorRelease64 _InterlockedXor64_rel
+#define InterlockedXorNoFence64 _InterlockedXor64_nf
+#define InterlockedIncrementAcquire64 _InterlockedIncrement64_acq
+#define InterlockedIncrementRelease64 _InterlockedIncrement64_rel
+#define InterlockedIncrementNoFence64 _InterlockedIncrement64_nf
+#define InterlockedDecrementAcquire64 _InterlockedDecrement64_acq
+#define InterlockedDecrementRelease64 _InterlockedDecrement64_rel
+#define InterlockedDecrementNoFence64 _InterlockedDecrement64_nf
+#define InterlockedAddAcquire64 _InterlockedAdd64_acq
+#define InterlockedAddRelease64 _InterlockedAdd64_rel
+#define InterlockedAddNoFence64 _InterlockedAdd64_nf
+#define InterlockedExchangeAcquire64 _InterlockedExchange64_acq
+#define InterlockedExchangeNoFence64 _InterlockedExchange64_nf
+#define InterlockedExchangeAddAcquire64 _InterlockedExchangeAdd64_acq
+#define InterlockedExchangeAddRelease64 _InterlockedExchangeAdd64_rel
+#define InterlockedExchangeAddNoFence64 _InterlockedExchangeAdd64_nf
+#define InterlockedCompareExchangeAcquire64 _InterlockedCompareExchange64_acq
+#define InterlockedCompareExchangeRelease64 _InterlockedCompareExchange64_rel
+#define InterlockedCompareExchangeNoFence64 _InterlockedCompareExchange64_nf
+#define InterlockedCompareExchange128 _InterlockedCompareExchange128
+
+// AMD64_WORKITEM : these are redundant but necessary for AMD64 compatibility
+#define InterlockedAnd64Acquire _InterlockedAnd64_acq
+#define InterlockedAnd64Release _InterlockedAnd64_rel
+#define InterlockedAnd64NoFence _InterlockedAnd64_nf
+#define InterlockedOr64Acquire _InterlockedOr64_acq
+#define InterlockedOr64Release _InterlockedOr64_rel
+#define InterlockedOr64NoFence _InterlockedOr64_nf
+#define InterlockedXor64Acquire _InterlockedXor64_acq
+#define InterlockedXor64Release _InterlockedXor64_rel
+#define InterlockedXor64NoFence _InterlockedXor64_nf
+
+#define InterlockedExchangePointerAcquire _InterlockedExchangePointer_acq
+#define InterlockedExchangePointerNoFence _InterlockedExchangePointer_nf
+#define InterlockedCompareExchangePointerAcquire _InterlockedCompareExchangePointer_acq
+#define InterlockedCompareExchangePointerRelease _InterlockedCompareExchangePointer_rel
+#define InterlockedCompareExchangePointerNoFence _InterlockedCompareExchangePointer_nf
+
+#define InterlockedExchangeAddSizeT(a, b) InterlockedExchangeAdd64((LONG64 *)a, b)
+#define InterlockedExchangeAddSizeTAcquire(a, b) InterlockedExchangeAddAcquire64((LONG64 *)a, b)
+#define InterlockedExchangeAddSizeTNoFence(a, b) InterlockedExchangeAddNoFence64((LONG64 *)a, b)
+#define InterlockedIncrementSizeT(a) InterlockedIncrement64((LONG64 *)a)
+#define InterlockedIncrementSizeTNoFence(a) InterlockedIncrementNoFence64((LONG64 *)a)
+#define InterlockedDecrementSizeT(a) InterlockedDecrement64((LONG64 *)a)
+#define InterlockedDecrementSizeTNoFence(a) InterlockedDecrementNoFence64((LONG64 *)a)
+
+//
+// Define accessors for volatile loads and stores.
+//
+
+#pragma intrinsic(__iso_volatile_load8)
+#pragma intrinsic(__iso_volatile_load16)
+#pragma intrinsic(__iso_volatile_load32)
+#pragma intrinsic(__iso_volatile_load64)
+#pragma intrinsic(__iso_volatile_store8)
+#pragma intrinsic(__iso_volatile_store16)
+#pragma intrinsic(__iso_volatile_store32)
+#pragma intrinsic(__iso_volatile_store64)
+
+// end_wdm end_ntndis end_ntosp end_ntminiport
+// end_ntoshvp
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+// begin_ntoshvp
+// begin_wdm begin_ntndis begin_ntosp begin_ntminiport
+
+FORCEINLINE
+CHAR
+ReadAcquire8 (
+    _In_ _Interlocked_operand_ CHAR const volatile *Source
+    )
+
+{
+
+    CHAR Value;
+
+    Value = __iso_volatile_load8(Source);
+    __dmb(_ARM64_BARRIER_ISH);
+    return Value;
+}
+
+FORCEINLINE
+CHAR
+ReadNoFence8 (
+    _In_ _Interlocked_operand_ CHAR const volatile *Source
+    )
+
+{
+
+    CHAR Value;
+
+    Value = __iso_volatile_load8(Source);
+    return Value;
+}
+
+FORCEINLINE
+VOID
+WriteRelease8 (
+    _Out_ _Interlocked_operand_ CHAR volatile *Destination,
+    _In_ CHAR Value
+    )
+
+{
+
+    __dmb(_ARM64_BARRIER_ISH);
+    __iso_volatile_store8(Destination, Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteNoFence8 (
+    _Out_ _Interlocked_operand_ CHAR volatile *Destination,
+    _In_ CHAR Value
+    )
+
+{
+
+    __iso_volatile_store8(Destination, Value);
+    return;
+}
+
+FORCEINLINE
+SHORT
+ReadAcquire16 (
+    _In_ _Interlocked_operand_ SHORT const volatile *Source
+    )
+
+{
+
+    SHORT Value;
+
+    Value = __iso_volatile_load16(Source);
+    __dmb(_ARM64_BARRIER_ISH);
+    return Value;
+}
+
+FORCEINLINE
+SHORT
+ReadNoFence16 (
+    _In_ _Interlocked_operand_ SHORT const volatile *Source
+    )
+
+{
+
+    SHORT Value;
+
+    Value = __iso_volatile_load16(Source);
+    return Value;
+}
+
+FORCEINLINE
+VOID
+WriteRelease16 (
+    _Out_ _Interlocked_operand_ SHORT volatile *Destination,
+    _In_ SHORT Value
+    )
+
+{
+
+    __dmb(_ARM64_BARRIER_ISH);
+    __iso_volatile_store16(Destination, Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteNoFence16 (
+    _Out_ _Interlocked_operand_ SHORT volatile *Destination,
+    _In_ SHORT Value
+    )
+
+{
+
+    __iso_volatile_store16(Destination, Value);
+    return;
+}
+
+FORCEINLINE
+LONG
+ReadAcquire (
+    _In_ _Interlocked_operand_ LONG const volatile *Source
+    )
+
+{
+
+    LONG Value;
+
+    Value = __iso_volatile_load32((int *)Source);
+    __dmb(_ARM64_BARRIER_ISH);
+    return Value;
+}
+
+FORCEINLINE
+LONG
+ReadNoFence (
+    _In_ _Interlocked_operand_ LONG const volatile *Source
+    )
+
+{
+
+    LONG Value;
+
+    Value = __iso_volatile_load32((int *)Source);
+    return Value;
+}
+
+FORCEINLINE
+VOID
+WriteRelease (
+    _Out_ _Interlocked_operand_ LONG volatile *Destination,
+    _In_ LONG Value
+    )
+
+{
+
+    __dmb(_ARM64_BARRIER_ISH);
+    __iso_volatile_store32((int *)Destination, Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteNoFence (
+    _Out_ _Interlocked_operand_ LONG volatile *Destination,
+    _In_ LONG Value
+    )
+
+{
+
+    __iso_volatile_store32((int *)Destination, Value);
+    return;
+}
+
+FORCEINLINE
+LONG64
+ReadAcquire64 (
+    _In_ _Interlocked_operand_ LONG64 const volatile *Source
+    )
+
+{
+
+    LONG64 Value;
+
+    Value = __iso_volatile_load64(Source);
+    __dmb(_ARM64_BARRIER_ISH);
+    return Value;
+}
+
+FORCEINLINE
+LONG64
+ReadNoFence64 (
+    _In_ _Interlocked_operand_ LONG64 const volatile *Source
+    )
+
+{
+
+    LONG64 Value;
+
+    Value = __iso_volatile_load64(Source);
+    return Value;
+}
+
+FORCEINLINE
+VOID
+WriteRelease64 (
+    _Out_ _Interlocked_operand_ LONG64 volatile *Destination,
+    _In_ LONG64 Value
+    )
+
+{
+
+    __dmb(_ARM64_BARRIER_ISH);
+    __iso_volatile_store64(Destination, Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteNoFence64 (
+    _Out_ _Interlocked_operand_ LONG64 volatile *Destination,
+    _In_ LONG64 Value
+    )
+
+{
+
+    __iso_volatile_store64(Destination, Value);
+    return;
+}
+
+// end_wdm end_ntndis end_ntosp end_ntminiport
+// end_ntoshvp
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+// begin_ntoshvp
+// begin_wdm begin_ntndis begin_ntosp begin_ntminiport
+
+//
+// Define coprocessor access intrinsics.  Coprocessor 15 contains
+// registers for the MMU, cache, TLB, feature bits, core
+// identification and performance counters.
+//
+
+#define ARM64_SYSREG(op0, op1, crn, crm, op2) \
+        ( ((op0 & 1) << 14) | \
+          ((op1 & 7) << 11) | \
+          ((crn & 15) << 7) | \
+          ((crm & 15) << 3) | \
+          ((op2 & 7) << 0) )
+
+#define ARM64_PMCCNTR_EL0       ARM64_SYSREG(3,3, 9,13,0)  // Cycle Count Register [CP15_PMCCNTR]
+#define ARM64_PMSELR_EL0        ARM64_SYSREG(3,3, 9,12,5)  // Event Counter Selection Register [CP15_PMSELR]
+#define ARM64_PMXEVCNTR_EL0     ARM64_SYSREG(3,3, 9,13,2)  // Event Count Register [CP15_PMXEVCNTR]
+#define ARM64_PMXEVCNTRn_EL0(n) ARM64_SYSREG(3,3,14, 8+((n)/8), (n)%8)    // Direct Event Count Register [n/a]
+#define ARM64_TPIDR_EL0         ARM64_SYSREG(3,3,13, 0,2)  // Thread ID Register, User Read/Write [CP15_TPIDRURW]
+#define ARM64_TPIDRRO_EL0       ARM64_SYSREG(3,3,13, 0,3)  // Thread ID Register, User Read Only [CP15_TPIDRURO]
+#define ARM64_TPIDR_EL1         ARM64_SYSREG(3,0,13, 0,4)  // Thread ID Register, Privileged Only [CP15_TPIDRPRW]
+
+
+
+#pragma intrinsic(_WriteStatusReg)
+#pragma intrinsic(_ReadStatusReg)
+
+//
+// PreFetchCacheLine level defines.
+//
+
+#define PF_TEMPORAL_LEVEL_1         0
+#define PF_TEMPORAL_LEVEL_2         1
+#define PF_TEMPORAL_LEVEL_3         2
+#define PF_NON_TEMPORAL_LEVEL_ALL   3
+
+//
+// Define function to read the value of the time stamp counter.
+//
+
+FORCEINLINE
+DWORD64
+ReadTimeStampCounter(
+    VOID
+    )
+{
+    return (DWORD64)_ReadStatusReg(ARM64_PMCCNTR_EL0);
+}
+
+FORCEINLINE
+DWORD64
+ReadPMC (
+    _In_ DWORD Counter
+    )
+{
+    // ARM64_WORKITEM: These can be directly accessed, but
+    // given our usage, it that any benefit? We need to know
+    // the register index at compile time, though atomicity
+    // benefits would still be good if needed, even if we
+    // went with a big switch statement.
+    _WriteStatusReg(ARM64_PMSELR_EL0, Counter);
+    return (DWORD64)_ReadStatusReg(ARM64_PMXEVCNTR_EL0);
+}
+
+//
+// Define functions to capture the high 64-bits of a 128-bit multiply.
+//
+
+#define MultiplyHigh __mulh
+#define UnsignedMultiplyHigh __umulh
+
+#pragma intrinsic(__mulh)
+#pragma intrinsic(__umulh)
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // !defined(_M_CEE_PURE)
+
+#endif // defined(_M_ARM64) && !defined(RC_INVOKED) && !defined(MIDL_PASS)
+
+#if defined(_M_CEE_PURE)
+FORCEINLINE
+VOID
+YieldProcessor (
+    VOID
+    )
+{
+}
+#endif
+
+// end_ntoshvp
+//
+// The following values specify the type of access in the first parameter
+// of the exception record whan the exception code specifies an access
+// violation.
+//
+
+#define EXCEPTION_READ_FAULT 0          // exception caused by a read
+#define EXCEPTION_WRITE_FAULT 1         // exception caused by a write
+#define EXCEPTION_EXECUTE_FAULT 8       // exception caused by an instruction fetch
+
+// begin_wx86
+//
+// The following flags control the contents of the CONTEXT structure.
+//
+
+#if !defined(RC_INVOKED)
+
+#define CONTEXT_ARM64   0x00400000L
+
+// end_wx86
+
+#define CONTEXT_CONTROL (CONTEXT_ARM64 | 0x1L)
+#define CONTEXT_INTEGER (CONTEXT_ARM64 | 0x2L)
+#define CONTEXT_FLOATING_POINT  (CONTEXT_ARM64 | 0x4L)
+#define CONTEXT_DEBUG_REGISTERS (CONTEXT_ARM64 | 0x8L)
+
+#define CONTEXT_FULL (CONTEXT_CONTROL | CONTEXT_INTEGER | CONTEXT_FLOATING_POINT)
+
+#define CONTEXT_ALL (CONTEXT_CONTROL | CONTEXT_INTEGER | CONTEXT_FLOATING_POINT | CONTEXT_DEBUG_REGISTERS)
+
+#define CONTEXT_EXCEPTION_ACTIVE 0x8000000L
+#define CONTEXT_SERVICE_ACTIVE 0x10000000L
+#define CONTEXT_EXCEPTION_REQUEST 0x40000000L
+#define CONTEXT_EXCEPTION_REPORTING 0x80000000L
+
+//
+// This flag is set by the unwinder if it has unwound to a call
+// site, and cleared whenever it unwinds through a trap frame.
+// It is used by language-specific exception handlers to help
+// differentiate exception scopes during dispatching.
+//
+
+#define CONTEXT_UNWOUND_TO_CALL 0x20000000
+
+// begin_wx86
+
+#endif // !defined(RC_INVOKED)
+
+//
+// Define initial Cpsr/Fpscr value
+//
+
+#define INITIAL_CPSR 0x10
+#define INITIAL_FPSCR 0
+
+// begin_ntoshvp
+
+//
+// Specify the number of breakpoints and watchpoints that the OS
+// will track. Architecturally, ARM64 supports up to 16. In practice,
+// however, almost no one implements more than 4 of each.
+//
+
+#define ARM64_MAX_BREAKPOINTS     8
+#define ARM64_MAX_WATCHPOINTS     2
+
+//
+// Context Frame
+//
+//  This frame has a several purposes: 1) it is used as an argument to
+//  NtContinue, 2) it is used to constuct a call frame for APC delivery,
+//  and 3) it is used in the user level thread creation routines.
+//
+//
+// The flags field within this record controls the contents of a CONTEXT
+// record.
+//
+// If the context record is used as an input parameter, then for each
+// portion of the context record controlled by a flag whose value is
+// set, it is assumed that that portion of the context record contains
+// valid context. If the context record is being used to modify a threads
+// context, then only that portion of the threads context is modified.
+//
+// If the context record is used as an output parameter to capture the
+// context of a thread, then only those portions of the thread's context
+// corresponding to set flags will be returned.
+//
+// CONTEXT_CONTROL specifies Sp, Lr, Pc, and Cpsr
+//
+// CONTEXT_INTEGER specifies R0-R12
+//
+// CONTEXT_FLOATING_POINT specifies Q0-Q15 / D0-D31 / S0-S31
+//
+// CONTEXT_DEBUG_REGISTERS specifies up to 16 of DBGBVR, DBGBCR, DBGWVR,
+//      DBGWCR.
+//
+
+typedef union _NEON128 {
+    struct {
+        ULONGLONG Low;
+        LONGLONG High;
+    } DUMMYSTRUCTNAME;
+    double D[2];
+    float S[4];
+    WORD   H[8];
+    BYTE  B[16];
+} NEON128, *PNEON128;
+
+typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
+
+    //
+    // Control flags.
+    //
+
+    /* +0x000 */ DWORD ContextFlags;
+
+    //
+    // Integer registers
+    //
+
+    /* +0x004 */ DWORD Cpsr;       // NZVF + DAIF + CurrentEL + SPSel
+    /* +0x008 */ union {
+                    struct {
+                        DWORD64 X0;
+                        DWORD64 X1;
+                        DWORD64 X2;
+                        DWORD64 X3;
+                        DWORD64 X4;
+                        DWORD64 X5;
+                        DWORD64 X6;
+                        DWORD64 X7;
+                        DWORD64 X8;
+                        DWORD64 X9;
+                        DWORD64 X10;
+                        DWORD64 X11;
+                        DWORD64 X12;
+                        DWORD64 X13;
+                        DWORD64 X14;
+                        DWORD64 X15;
+                        DWORD64 X16;
+                        DWORD64 X17;
+                        DWORD64 X18;
+                        DWORD64 X19;
+                        DWORD64 X20;
+                        DWORD64 X21;
+                        DWORD64 X22;
+                        DWORD64 X23;
+                        DWORD64 X24;
+                        DWORD64 X25;
+                        DWORD64 X26;
+                        DWORD64 X27;
+                        DWORD64 X28;
+                    } DUMMYSTRUCTNAME;
+                    DWORD64 X[29];
+                 } DUMMYUNIONNAME;
+    /* +0x0f0 */ DWORD64 Fp;
+    /* +0x0f8 */ DWORD64 Lr;
+    /* +0x100 */ DWORD64 Sp;
+    /* +0x108 */ DWORD64 Pc;
+
+    //
+    // Floating Point/NEON Registers
+    //
+
+    /* +0x110 */ NEON128 V[32];
+    /* +0x310 */ DWORD Fpcr;
+    /* +0x314 */ DWORD Fpsr;
+
+    //
+    // Debug registers
+    //
+
+    /* +0x318 */ DWORD Bcr[ARM64_MAX_BREAKPOINTS];
+    /* +0x338 */ DWORD64 Bvr[ARM64_MAX_BREAKPOINTS];
+    /* +0x378 */ DWORD Wcr[ARM64_MAX_WATCHPOINTS];
+    /* +0x380 */ DWORD64 Wvr[ARM64_MAX_WATCHPOINTS];
+    /* +0x390 */
+
+} CONTEXT, *PCONTEXT;
+
+// end_ntoshvp
+//
+// Select platform-specific definitions
+//
+
+typedef struct _IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY RUNTIME_FUNCTION, *PRUNTIME_FUNCTION;
+typedef SCOPE_TABLE_ARM64 SCOPE_TABLE, *PSCOPE_TABLE;
+
+//
+// Define unwind information flags.
+//
+
+#define UNW_FLAG_NHANDLER               0x0             /* any handler */
+#define UNW_FLAG_EHANDLER               0x1             /* filter handler */
+#define UNW_FLAG_UHANDLER               0x2             /* unwind handler */
+
+//
+// Define unwind history table structure.
+//
+
+#define UNWIND_HISTORY_TABLE_SIZE 12
+
+typedef struct _UNWIND_HISTORY_TABLE_ENTRY {
+    DWORD64 ImageBase;
+    PRUNTIME_FUNCTION FunctionEntry;
+} UNWIND_HISTORY_TABLE_ENTRY, *PUNWIND_HISTORY_TABLE_ENTRY;
+
+typedef struct _UNWIND_HISTORY_TABLE {
+    DWORD Count;
+    BYTE  LocalHint;
+    BYTE  GlobalHint;
+    BYTE  Search;
+    BYTE  Once;
+    DWORD64 LowAddress;
+    DWORD64 HighAddress;
+    UNWIND_HISTORY_TABLE_ENTRY Entry[UNWIND_HISTORY_TABLE_SIZE];
+} UNWIND_HISTORY_TABLE, *PUNWIND_HISTORY_TABLE;
+
+//
+// Define exception dispatch context structure.
+//
+
+typedef struct _DISPATCHER_CONTEXT {
+    DWORD64 ControlPc;
+    DWORD64 ImageBase;
+    PRUNTIME_FUNCTION FunctionEntry;
+    DWORD64 EstablisherFrame;
+    DWORD64 TargetPc;
+    PCONTEXT ContextRecord;
+    PEXCEPTION_ROUTINE LanguageHandler;
+    PVOID HandlerData;
+    PUNWIND_HISTORY_TABLE HistoryTable;
+    DWORD ScopeIndex;
+    BOOLEAN ControlPcIsUnwound;
+    PBYTE  NonVolatileRegisters;
+} DISPATCHER_CONTEXT, *PDISPATCHER_CONTEXT;
+
+//
+// Define exception filter and termination handler function types.
+// N.B. These functions use a custom calling convention.
+//
+
+struct _EXCEPTION_POINTERS;
+typedef
+LONG
+(*PEXCEPTION_FILTER) (
+    struct _EXCEPTION_POINTERS *ExceptionPointers,
+    DWORD64 EstablisherFrame
+    );
+
+typedef
+VOID
+(*PTERMINATION_HANDLER) (
+    BOOLEAN AbnormalTermination,
+    DWORD64 EstablisherFrame
+    );
+
+//
+// Define dynamic function table entry.
+//
+
+typedef
+_Function_class_(GET_RUNTIME_FUNCTION_CALLBACK)
+PRUNTIME_FUNCTION
+GET_RUNTIME_FUNCTION_CALLBACK (
+    _In_ DWORD64 ControlPc,
+    _In_opt_ PVOID Context
+    );
+typedef GET_RUNTIME_FUNCTION_CALLBACK *PGET_RUNTIME_FUNCTION_CALLBACK;
+
+typedef
+_Function_class_(OUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK)
+DWORD   
+OUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK (
+    _In_ HANDLE Process,
+    _In_ PVOID TableAddress,
+    _Out_ PDWORD Entries,
+    _Out_ PRUNTIME_FUNCTION* Functions
+    );
+typedef OUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK *POUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK;
+
+#define OUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK_EXPORT_NAME \
+    "OutOfProcessFunctionTableCallback"
+
+
+//
+// Nonvolatile context pointer record.
+//
+
+typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
+
+    PDWORD64 X19;
+    PDWORD64 X20;
+    PDWORD64 X21;
+    PDWORD64 X22;
+    PDWORD64 X23;
+    PDWORD64 X24;
+    PDWORD64 X25;
+    PDWORD64 X26;
+    PDWORD64 X27;
+    PDWORD64 X28;
+    PDWORD64 Fp;
+    PDWORD64 Lr;
+
+    PDWORD64 D8;
+    PDWORD64 D9;
+    PDWORD64 D10;
+    PDWORD64 D11;
+    PDWORD64 D12;
+    PDWORD64 D13;
+    PDWORD64 D14;
+    PDWORD64 D15;
+
+} KNONVOLATILE_CONTEXT_POINTERS, *PKNONVOLATILE_CONTEXT_POINTERS;
+
+// begin_ntoshvp
+
+#endif // _ARM64_
+
+// end_ntoshvp
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -4828,7 +6051,7 @@ __int2c (
 #pragma warning( disable : 4793 )
 
 #if !defined(_PREFAST_)
-
+/*
 __analysis_noreturn
 FORCEINLINE
 VOID
@@ -4837,9 +6060,9 @@ DbgRaiseAssertionFailure (
     )
 
 {
-    // __asm int 0x2c
+    __asm int 0x2c
 }
-
+*/
 #endif // !defined(_PREFAST_)
 
 #pragma warning( pop )
@@ -4870,6 +6093,25 @@ __break(
 
 #endif // defined(_M_IA64)
 
+#elif defined(_ARM64_)
+
+#if defined(_M_ARM64)
+
+void
+__break(
+    _In_ int Code
+    );
+
+#pragma intrinsic (__break)
+
+#if !defined(_PREFAST_)
+
+#define DbgRaiseAssertionFailure() __break(0xf001)
+
+#endif // !defined(_PREFAST_)
+
+#endif // defined(_M_ARM64)
+
 #elif defined(_ARM_)
 
 #if defined(_M_ARM)
@@ -4889,7 +6131,7 @@ __emit(
 
 #endif // defined(_M_ARM)
 
-#endif // _AMD64_, _X86_, _IA64_, _ARM_
+#endif // _AMD64_, _X86_, _IA64_, _ARM64_, _ARM_
 #endif // !defined(_DBGRAISEASSERTIONFAILURE_) && !defined(RC_INVOKED) && !defined(MIDL_PASS)
 
 #ifdef __cplusplus
@@ -5121,11 +6363,11 @@ InterlockedCompareExchange64 (
 #define InterlockedDecrementRelease _InterlockedDecrement
 #define InterlockedDecrementNoFence _InterlockedDecrement
 
-#define InterlockedAdd _InterlockedAdd
-#define InterlockedAddAcquire _InterlockedAdd
-#define InterlockedAddRelease _InterlockedAdd
-#define InterlockedAddNoFence _InterlockedAdd
-#define InterlockedAddNoFence64 _InterlockedAdd64
+#define InterlockedAdd _InlineInterlockedAdd
+#define InterlockedAddAcquire _InlineInterlockedAdd
+#define InterlockedAddRelease _InlineInterlockedAdd
+#define InterlockedAddNoFence _InlineInterlockedAdd
+#define InterlockedAddNoFence64 _InlineInterlockedAdd64
 
 #define InterlockedExchange _InterlockedExchange
 #define InterlockedExchangeAcquire _InterlockedExchange
@@ -5189,7 +6431,7 @@ InterlockedExchangeAdd (
 
 FORCEINLINE
 LONG
-InterlockedAdd (
+_InlineInterlockedAdd (
     _Inout_ _Interlocked_operand_ LONG volatile *Addend,
     _In_ LONG Value
     )
@@ -5290,6 +6532,7 @@ InterlockedExchange16 (
 
 #if _MSC_FULL_VER >= 140041204
 
+#define InterlockedExchangeAdd8 _InterlockedExchangeAdd8
 #define InterlockedAnd8 _InterlockedAnd8
 #define InterlockedOr8 _InterlockedOr8
 #define InterlockedXor8 _InterlockedXor8
@@ -5299,6 +6542,12 @@ InterlockedExchange16 (
 #define InterlockedCompareExchange16 _InterlockedCompareExchange16
 #define InterlockedIncrement16 _InterlockedIncrement16
 #define InterlockedDecrement16 _InterlockedDecrement16
+
+char 
+InterlockedExchangeAdd8 (
+    _Inout_ _Interlocked_operand_ char volatile * _Addend, 
+    _In_ char _Value
+    );
 
 char
 InterlockedAnd8 (
@@ -5353,6 +6602,7 @@ _InterlockedDecrement16 (
     _Inout_ _Interlocked_operand_ SHORT volatile *Destination
     );
 
+#pragma intrinsic (_InterlockedExchangeAdd8)
 #pragma intrinsic (_InterlockedAnd8)
 #pragma intrinsic (_InterlockedOr8)
 #pragma intrinsic (_InterlockedXor8)
@@ -5374,7 +6624,7 @@ _InterlockedDecrement16 (
 
 FORCEINLINE
 LONG64
-_InterlockedAnd64 (
+_InlineInterlockedAnd64 (
     _Inout_ _Interlocked_operand_ LONG64 volatile *Destination,
     _In_ LONG64 Value
     )
@@ -5390,14 +6640,14 @@ _InterlockedAnd64 (
     return Old;
 }
 
-#define InterlockedAnd64 _InterlockedAnd64
-#define InterlockedAnd64Acquire _InterlockedAnd64
-#define InterlockedAnd64Release _InterlockedAnd64
-#define InterlockedAnd64NoFence _InterlockedAnd64
+#define InterlockedAnd64 _InlineInterlockedAnd64
+#define InterlockedAnd64Acquire _InlineInterlockedAnd64
+#define InterlockedAnd64Release _InlineInterlockedAnd64
+#define InterlockedAnd64NoFence _InlineInterlockedAnd64
 
 FORCEINLINE
 LONG64
-_InterlockedAdd64 (
+_InlineInterlockedAdd64 (
     _Inout_ _Interlocked_operand_ LONG64 volatile *Addend,
     _In_ LONG64 Value
     )
@@ -5413,10 +6663,10 @@ _InterlockedAdd64 (
     return Old + Value;
 }
 
-#define InterlockedAdd64 _InterlockedAdd64
-#define InterlockedAddAcquire64 _InterlockedAdd64
-#define InterlockedAddRelease64 _InterlockedAdd64
-#define InterlockedAddNoFence64 _InterlockedAdd64
+#define InterlockedAdd64 _InlineInterlockedAdd64
+#define InterlockedAddAcquire64 _InlineInterlockedAdd64
+#define InterlockedAddRelease64 _InlineInterlockedAdd64
+#define InterlockedAddNoFence64 _InlineInterlockedAdd64
 
 
 #endif // !defined(_MANAGED)
@@ -5447,7 +6697,7 @@ _InterlockedXor (
 
 LONGLONG
 FORCEINLINE
-_InterlockedOr64 (
+_InlineInterlockedOr64 (
     _Inout_ _Interlocked_operand_ LONGLONG volatile *Destination,
     _In_ LONGLONG Value
     )
@@ -5463,11 +6713,11 @@ _InterlockedOr64 (
     return Old;
 }
 
-#define InterlockedOr64 _InterlockedOr64
+#define InterlockedOr64 _InlineInterlockedOr64
 
 FORCEINLINE
 LONG64
-_InterlockedXor64 (
+_InlineInterlockedXor64 (
     _Inout_ _Interlocked_operand_ LONG64 volatile *Destination,
     _In_ LONG64 Value
     )
@@ -5483,11 +6733,11 @@ _InterlockedXor64 (
     return Old;
 }
 
-#define InterlockedXor64 _InterlockedXor64
+#define InterlockedXor64 _InlineInterlockedXor64
 
 LONGLONG
 FORCEINLINE
-_InterlockedIncrement64 (
+_InlineInterlockedIncrement64 (
     _Inout_ _Interlocked_operand_ LONGLONG volatile *Addend
     )
 {
@@ -5502,13 +6752,13 @@ _InterlockedIncrement64 (
     return Old + 1;
 }
 
-#define InterlockedIncrement64 _InterlockedIncrement64
+#define InterlockedIncrement64 _InlineInterlockedIncrement64
 #define InterlockedIncrementAcquire64 InterlockedIncrement64
 
 
 FORCEINLINE
 LONGLONG
-_InterlockedDecrement64 (
+_InlineInterlockedDecrement64 (
     _Inout_ _Interlocked_operand_ LONGLONG volatile *Addend
     )
 {
@@ -5523,11 +6773,11 @@ _InterlockedDecrement64 (
     return Old - 1;
 }
 
-#define InterlockedDecrement64 _InterlockedDecrement64
+#define InterlockedDecrement64 _InlineInterlockedDecrement64
 
 FORCEINLINE
 LONGLONG
-_InterlockedExchange64 (
+_InlineInterlockedExchange64 (
     _Inout_ _Interlocked_operand_ LONGLONG volatile *Target,
     _In_ LONGLONG Value
     )
@@ -5543,14 +6793,14 @@ _InterlockedExchange64 (
     return Old;
 }
 
-#define InterlockedExchange64 _InterlockedExchange64
+#define InterlockedExchange64 _InlineInterlockedExchange64
 #define InterlockedExchangeAcquire64 InterlockedExchange64
-#define InterlockedExchangeNoFence64 _InterlockedExchange64
+#define InterlockedExchangeNoFence64 _InlineInterlockedExchange64
 
 
 FORCEINLINE
 LONGLONG
-_InterlockedExchangeAdd64 (
+_InlineInterlockedExchangeAdd64 (
     _Inout_ _Interlocked_operand_ LONGLONG volatile *Addend,
     _In_ LONGLONG Value
     )
@@ -5566,8 +6816,8 @@ _InterlockedExchangeAdd64 (
     return Old;
 }
 
-#define InterlockedExchangeAdd64 _InterlockedExchangeAdd64
-#define InterlockedExchangeAddNoFence64 _InterlockedExchangeAdd64
+#define InterlockedExchangeAdd64 _InlineInterlockedExchangeAdd64
+#define InterlockedExchangeAddNoFence64 _InlineInterlockedExchangeAdd64
 
 //
 // FS relative adds and increments.
@@ -6029,1867 +7279,6 @@ typedef struct _LDT_ENTRY {
 
 #endif
 
-
-#if defined(_M_IA64) && !defined(RC_INVOKED) && !defined(MIDL_PASS)
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-//
-// Define bit test intrinsics.
-//
-
-#define BitTest _bittest
-#define BitTestAndComplement _bittestandcomplement
-#define BitTestAndSet _bittestandset
-#define BitTestAndReset _bittestandreset
-
-#define BitTest64 _bittest64
-#define BitTestAndComplement64 _bittestandcomplement64
-#define BitTestAndSet64 _bittestandset64
-#define BitTestAndReset64 _bittestandreset64
-
-_Must_inspect_result_
-BOOLEAN
-_bittest (
-    _In_reads_bytes_((Offset+7)/8) LONG const *Base,
-    _In_ LONG Offset
-    );
-
-BOOLEAN
-_bittestandcomplement (
-    _Inout_updates_bytes_((Offset+7)/8) LONG *Base,
-    _In_ LONG Offset
-    );
-
-BOOLEAN
-_bittestandset (
-    _Inout_updates_bytes_((Offset+7)/8) LONG *Base,
-    _In_ LONG Offset
-    );
-
-BOOLEAN
-_bittestandreset (
-    _Inout_updates_bytes_((Offset+7)/8) LONG *Base,
-    _In_ LONG Offset
-    );
-
-_Must_inspect_result_
-BOOLEAN
-_bittest64 (
-    _In_reads_bytes_((Offset+7)/8) LONG64 const *Base,
-    _In_ LONG64 Offset
-    );
-
-BOOLEAN
-_bittestandcomplement64 (
-    _Inout_updates_bytes_((Offset+7)/8) LONG64 *Base,
-    _In_ LONG64 Offset
-    );
-
-BOOLEAN
-_bittestandset64 (
-    _Inout_updates_bytes_((Offset+7)/8) LONG64 *Base,
-    _In_ LONG64 Offset
-    );
-
-BOOLEAN
-_bittestandreset64 (
-    _Inout_updates_bytes_((Offset+7)/8) LONG64 *Base,
-    _In_ LONG64 Offset
-    );
-
-#pragma intrinsic(_bittest)
-#pragma intrinsic(_bittestandcomplement)
-#pragma intrinsic(_bittestandset)
-#pragma intrinsic(_bittestandreset)
-
-#pragma intrinsic(_bittest64)
-#pragma intrinsic(_bittestandcomplement64)
-#pragma intrinsic(_bittestandset64)
-#pragma intrinsic(_bittestandreset64)
-
-//
-// Define bit scan intrinsics.
-//
-
-#define BitScanForward _BitScanForward
-#define BitScanReverse _BitScanReverse
-#define BitScanForward64 _BitScanForward64
-#define BitScanReverse64 _BitScanReverse64
-
-_Success_(return!=0)
-BOOLEAN
-_BitScanForward (
-    _Out_ DWORD *Index,
-    _In_ DWORD Mask
-    );
-
-_Success_(return!=0)
-BOOLEAN
-_BitScanReverse (
-    _Out_ DWORD *Index,
-    _In_ DWORD Mask
-    );
-
-_Success_(return!=0)
-BOOLEAN
-_BitScanForward64 (
-    _Out_ DWORD *Index,
-    _In_ DWORD64 Mask
-    );
-
-_Success_(return!=0)
-BOOLEAN
-_BitScanReverse64 (
-    _Out_ DWORD *Index,
-    _In_ DWORD64 Mask
-    );
-
-#pragma intrinsic(_BitScanForward)
-#pragma intrinsic(_BitScanReverse)
-#pragma intrinsic(_BitScanForward64)
-#pragma intrinsic(_BitScanReverse64)
-
-//
-// Define atomic read intrinsics.
-//
-
-#define ReadAtomic128                   __load128
-#define ReadAtomicAcquire128            __load128_acq
-
-LONG64
-ReadAtomic128 (
-    void   *Source,
-    LONG64 *DestinationHigh
-    );
-
-LONG64
-ReadAtomicAcquire128 (
-    void   *Source,
-    LONG64 *DestinationHigh
-    );
-
-#pragma intrinsic(__load128)
-#pragma intrinsic(__load128_acq)
-
-//
-// Define interlocked operations intrinsics.
-//
-
-#ifdef __cplusplus
-}
-#endif
-
-#define InterlockedAdd                  _InterlockedAdd
-#define InterlockedAddAcquire           _InterlockedAdd_acq
-#define InterlockedAddRelease           _InterlockedAdd_rel
-
-#define InterlockedAdd64                _InterlockedAdd64
-#define InterlockedAddAcquire64         _InterlockedAdd64_acq
-#define InterlockedAddRelease64         _InterlockedAdd64_rel
-
-#define InterlockedIncrement            _InterlockedIncrement
-#define InterlockedIncrementAcquire     _InterlockedIncrement_acq
-#define InterlockedIncrementRelease     _InterlockedIncrement_rel
-
-#define InterlockedIncrement16          _InterlockedIncrement16
-#define InterlockedIncrementAcquire16   _InterlockedIncrement16_acq
-#define InterlockedIncrementRelease16   _InterlockedIncrement16_rel
-
-#define InterlockedIncrement64          _InterlockedIncrement64
-#define InterlockedIncrementAcquire64   _InterlockedIncrement64_acq
-#define InterlockedIncrementRelease64   _InterlockedIncrement64_rel
-
-#define InterlockedIncrementSizeT(a) InterlockedIncrement64((LONG64 *)a)
-
-#define InterlockedDecrement            _InterlockedDecrement
-#define InterlockedDecrementAcquire     _InterlockedDecrement_acq
-#define InterlockedDecrementRelease     _InterlockedDecrement_rel
-
-#define InterlockedDecrement16          _InterlockedDecrement16
-#define InterlockedDecrementAcquire16   _InterlockedDecrement16_acq
-#define InterlockedDecrementRelease16   _InterlockedDecrement16_rel
-
-#define InterlockedDecrement64          _InterlockedDecrement64
-#define InterlockedDecrementAcquire64   _InterlockedDecrement64_acq
-#define InterlockedDecrementRelease64   _InterlockedDecrement64_rel
-
-#define InterlockedDecrementSizeT(a) InterlockedDecrement64((LONG64 *)a)
-
-#define InterlockedExchange             _InterlockedExchange
-#define InterlockedExchangeAcquire      _InterlockedExchange_acq
-
-#define InterlockedExchange64           _InterlockedExchange64
-#define InterlockedExchangeAcquire64    _InterlockedExchange64_acq
-
-#define InterlockedExchangePointer          _InterlockedExchangePointer
-#define InterlockedExchangePointerAcquire   _InterlockedExchangePointer_acq
-
-#define InterlockedExchangeAdd          _InterlockedExchangeAdd
-#define InterlockedExchangeAddAcquire   _InterlockedExchangeAdd_acq
-#define InterlockedExchangeAddRelease   _InterlockedExchangeAdd_rel
-
-#define InterlockedExchangeAdd64        _InterlockedExchangeAdd64
-#define InterlockedExchangeAddAcquire64 _InterlockedExchangeAdd64_acq
-#define InterlockedExchangeAddRelease64 _InterlockedExchangeAdd64_rel
-
-#define InterlockedExchangeAddSizeT(a, b) InterlockedExchangeAdd64((LONG64 *)a, b)
-
-#define InterlockedCompareExchange          _InterlockedCompareExchange
-#define InterlockedCompareExchangeAcquire   _InterlockedCompareExchange_acq
-#define InterlockedCompareExchangeRelease   _InterlockedCompareExchange_rel
-
-#define InterlockedCompareExchange16 _InterlockedCompareExchange16
-#define InterlockedCompareExchangeAcquire16 _InterlockedCompareExchange16_acq
-#define InterlockedCompareExchangeRelease16 _InterlockedCompareExchange16_rel
-
-#define InterlockedCompareExchange64        _InterlockedCompareExchange64
-#define InterlockedCompareExchangeAcquire64 _InterlockedCompareExchange64_acq
-#define InterlockedCompareExchangeRelease64 _InterlockedCompareExchange64_rel
-
-#define InterlockedCompare64Exchange128         _InterlockedCompare64Exchange128
-#define InterlockedCompare64ExchangeAcquire128  _InterlockedCompare64Exchange128_acq
-#define InterlockedCompare64ExchangeRelease128  _InterlockedCompare64Exchange128_rel
-
-#define InterlockedCompareExchangePointer           _InterlockedCompareExchangePointer
-#define InterlockedCompareExchangePointerRelease    _InterlockedCompareExchangePointer_rel
-#define InterlockedCompareExchangePointerAcquire    _InterlockedCompareExchangePointer_acq
-
-#define InterlockedOr       _InterlockedOr
-#define InterlockedOrAcquire   _InterlockedOr_acq
-#define InterlockedOrRelease   _InterlockedOr_rel
-
-#define InterlockedOr8      _InterlockedOr8
-#define InterlockedOr8Acquire  _InterlockedOr8_acq
-#define InterlockedOr8Release  _InterlockedOr8_rel
-
-#define InterlockedOr16     _InterlockedOr16
-#define InterlockedOr16Acquire _InterlockedOr16_acq
-#define InterlockedOr16Release _InterlockedOr16_rel
-
-#define InterlockedOr64     _InterlockedOr64
-#define InterlockedOr64Acquire _InterlockedOr64_acq
-#define InterlockedOr64Release _InterlockedOr64_rel
-
-#define InterlockedXor      _InterlockedXor
-#define InterlockedXorAcquire  _InterlockedXor_acq
-#define InterlockedXorRelease  _InterlockedXor_rel
-
-#define InterlockedXor8     _InterlockedXor8
-#define InterlockedXor8Acquire _InterlockedXor8_acq
-#define InterlockedXor8Release _InterlockedXor8_rel
-
-#define InterlockedXor16    _InterlockedXor16
-#define InterlockedXor16Acquire _InterlockedXor16_acq
-#define InterlockedXor16Release _InterlockedXor16_rel
-
-#define InterlockedXor64     _InterlockedXor64
-#define InterlockedXor64Acquire _InterlockedXor64_acq
-#define InterlockedXor64Release _InterlockedXor64_rel
-
-#define InterlockedAnd       _InterlockedAnd
-#define InterlockedAndAcquire   _InterlockedAnd_acq
-#define InterlockedAndRelease   _InterlockedAnd_rel
-
-#define InterlockedAnd8      _InterlockedAnd8
-#define InterlockedAnd8Acquire  _InterlockedAnd8_acq
-#define InterlockedAnd8Release  _InterlockedAnd8_rel
-
-#define InterlockedAnd16     _InterlockedAnd16
-#define InterlockedAnd16Acquire _InterlockedAnd16_acq
-#define InterlockedAnd16Release _InterlockedAnd16_rel
-
-#define InterlockedAnd64     _InterlockedAnd64
-#define InterlockedAnd64Acquire _InterlockedAnd64_acq
-#define InterlockedAnd64Release _InterlockedAnd64_rel
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-LONG
-__cdecl
-InterlockedAdd (
-    _Inout_ _Interlocked_operand_ LONG volatile *Addend,
-    _In_ LONG Value
-    );
-
-LONG
-__cdecl
-InterlockedAddAcquire (
-    _Inout_ _Interlocked_operand_ LONG volatile *Addend,
-    _In_ LONG Value
-    );
-
-LONG
-__cdecl
-InterlockedAddRelease (
-    _Inout_ _Interlocked_operand_ LONG volatile *Addend,
-    _In_ LONG Value
-    );
-
-LONGLONG
-__cdecl
-InterlockedAdd64 (
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Addend,
-    _In_ LONGLONG Value
-    );
-
-LONGLONG
-__cdecl
-InterlockedAddAcquire64 (
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Addend,
-    _In_ LONGLONG Value
-    );
-
-LONGLONG
-__cdecl
-InterlockedAddRelease64 (
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Addend,
-    _In_ LONGLONG Value
-    );
-
-LONG
-__cdecl
-InterlockedIncrement(
-    _Inout_ _Interlocked_operand_ LONG volatile *Addend
-    );
-
-LONG
-__cdecl
-InterlockedIncrementAcquire(
-    _Inout_ _Interlocked_operand_ LONG volatile *Addend
-    );
-
-LONG
-__cdecl
-InterlockedIncrementRelease(
-    _Inout_ _Interlocked_operand_ LONG volatile *Addend
-    );
-
-SHORT
-__cdecl
-InterlockedIncrement16 (
-    _Inout_ _Interlocked_operand_ volatile SHORT *Addend
-    );
-
-SHORT
-__cdecl
-InterlockedIncrementAcquire16 (
-    _Inout_ _Interlocked_operand_ volatile SHORT *Addend
-    );
-
-SHORT
-__cdecl
-InterlockedIncrementRelease16 (
-    _Inout_ _Interlocked_operand_ volatile SHORT *Addend
-    );
-
-LONGLONG
-__cdecl
-InterlockedIncrement64(
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Addend
-    );
-
-LONGLONG
-__cdecl
-InterlockedIncrementAcquire64(
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Addend
-    );
-
-LONGLONG
-__cdecl
-InterlockedIncrementRelease64(
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Addend
-    );
-
-LONG
-__cdecl
-InterlockedDecrement(
-    _Inout_ _Interlocked_operand_ LONG volatile *Addend
-    );
-
-LONG
-__cdecl
-InterlockedDecrementAcquire(
-    _Inout_ _Interlocked_operand_ LONG volatile *Addend
-    );
-
-LONG
-__cdecl
-InterlockedDecrementRelease(
-    _Inout_ _Interlocked_operand_ LONG volatile *Addend
-    );
-
-SHORT
-__cdecl
-InterlockedDecrement16 (
-    _Inout_ _Interlocked_operand_ volatile SHORT *Addend
-    );
-
-SHORT
-__cdecl
-InterlockedDecrementAcquire16 (
-    _Inout_ _Interlocked_operand_ volatile SHORT *Addend
-    );
-
-SHORT
-__cdecl
-InterlockedDecrementRelease16 (
-    _Inout_ _Interlocked_operand_ volatile SHORT *Addend
-    );
-
-LONGLONG
-__cdecl
-InterlockedDecrement64(
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Addend
-    );
-
-LONGLONG
-__cdecl
-InterlockedDecrementAcquire64(
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Addend
-    );
-
-LONGLONG
-__cdecl
-InterlockedDecrementRelease64(
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Addend
-    );
-
-LONG
-__cdecl
-InterlockedExchange(
-    _Inout_ _Interlocked_operand_ LONG volatile *Target,
-    _In_ LONG Value
-    );
-
-LONG
-__cdecl
-InterlockedExchangeAcquire(
-    _Inout_ _Interlocked_operand_ LONG volatile *Target,
-    _In_ LONG Value
-    );
-
-LONGLONG
-__cdecl
-InterlockedExchange64(
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Target,
-    _In_ LONGLONG Value
-    );
-
-LONGLONG
-__cdecl
-InterlockedExchangeAcquire64(
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Target,
-    _In_ LONGLONG Value
-    );
-
-PVOID
-__cdecl
-InterlockedExchangePointer(
-    _Inout_ _Interlocked_operand_ PVOID volatile *Target,
-    _In_ PVOID Value
-    );
-
-PVOID
-__cdecl
-InterlockedExchangePointerAcquire(
-    _Inout_ _Interlocked_operand_ PVOID volatile *Target,
-    _In_ PVOID Value
-    );
-
-LONG
-__cdecl
-InterlockedExchangeAdd(
-    _Inout_ _Interlocked_operand_ LONG volatile *Addend,
-    _In_ LONG Value
-    );
-
-LONG
-__cdecl
-InterlockedExchangeAddAcquire(
-    _Inout_ _Interlocked_operand_ LONG volatile *Addend,
-    _In_ LONG Value
-    );
-
-LONG
-__cdecl
-InterlockedExchangeAddRelease(
-    _Inout_ _Interlocked_operand_ LONG volatile *Addend,
-    _In_ LONG Value
-    );
-
-LONGLONG
-__cdecl
-InterlockedExchangeAdd64(
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Addend,
-    _In_ LONGLONG Value
-    );
-
-LONGLONG
-__cdecl
-InterlockedExchangeAddAcquire64(
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Addend,
-    _In_ LONGLONG Value
-    );
-
-LONGLONG
-__cdecl
-InterlockedExchangeAddRelease64(
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Addend,
-    _In_ LONGLONG Value
-    );
-
-LONG
-__cdecl
-InterlockedCompareExchange (
-    _Inout_ _Interlocked_operand_ LONG volatile *Destination,
-    _In_ LONG ExChange,
-    _In_ LONG Comperand
-    );
-
-LONG
-__cdecl
-InterlockedCompareExchangeAcquire (
-    _Inout_ _Interlocked_operand_ LONG volatile *Destination,
-    _In_ LONG ExChange,
-    _In_ LONG Comperand
-    );
-
-LONG
-__cdecl
-InterlockedCompareExchangeRelease (
-    _Inout_ _Interlocked_operand_ LONG volatile *Destination,
-    _In_ LONG ExChange,
-    _In_ LONG Comperand
-    );
-
-SHORT
-__cdecl
-InterlockedCompareExchange16 (
-    _Inout_ _Interlocked_operand_ SHORT volatile *Destination,
-    _In_ SHORT ExChange,
-    _In_ SHORT Comperand
-    );
-
-SHORT
-__cdecl
-InterlockedCompareExchangeAcquire16 (
-    _Inout_ _Interlocked_operand_ SHORT volatile *Destination,
-    _In_ SHORT ExChange,
-    _In_ SHORT Comperand
-    );
-
-SHORT
-__cdecl
-InterlockedCompareExchangeRelease16 (
-    _Inout_ _Interlocked_operand_ SHORT volatile *Destination,
-    _In_ SHORT ExChange,
-    _In_ SHORT Comperand
-    );
-
-LONGLONG
-__cdecl
-InterlockedCompareExchange64 (
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Destination,
-    _In_ LONGLONG ExChange,
-    _In_ LONGLONG Comperand
-    );
-
-LONGLONG
-__cdecl
-InterlockedCompareExchangeAcquire64 (
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Destination,
-    _In_ LONGLONG ExChange,
-    _In_ LONGLONG Comperand
-    );
-
-LONGLONG
-__cdecl
-InterlockedCompareExchangeRelease64 (
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Destination,
-    _In_ LONGLONG ExChange,
-    _In_ LONGLONG Comperand
-    );
-
-LONG64
-__cdecl
-InterlockedCompare64Exchange128(
-    _Inout_updates_bytes_(16) _Interlocked_operand_ LONG64 volatile *Destination,
-    _In_ LONG64 ExchangeHigh,
-    _In_ LONG64 ExchangeLow,
-    _In_ LONG64 Comperand
-    );
-
-LONG64
-__cdecl
-InterlockedCompare64ExchangeAcquire128(
-    _Inout_updates_bytes_(16) _Interlocked_operand_ LONG64 volatile *Destination,
-    _In_ LONG64 ExchangeHigh,
-    _In_ LONG64 ExchangeLow,
-    _In_ LONG64 Comperand
-    );
-
-LONG64
-__cdecl
-InterlockedCompare64ExchangeRelease128(
-    _Inout_updates_bytes_(16) _Interlocked_operand_ LONG64 volatile *Destination,
-    _In_ LONG64 ExchangeHigh,
-    _In_ LONG64 ExchangeLow,
-    _In_ LONG64 Comperand
-    );
-
-PVOID
-__cdecl
-InterlockedCompareExchangePointer (
-    _Inout_ _Interlocked_operand_ PVOID volatile *Destination,
-    _In_ PVOID Exchange,
-    _In_ PVOID Comperand
-    );
-
-PVOID
-__cdecl
-InterlockedCompareExchangePointerAcquire (
-    _Inout_ _Interlocked_operand_ PVOID volatile *Destination,
-    _In_ PVOID Exchange,
-    _In_ PVOID Comperand
-    );
-
-PVOID
-__cdecl
-InterlockedCompareExchangePointerRelease (
-    _Inout_ _Interlocked_operand_ PVOID volatile *Destination,
-    _In_ PVOID Exchange,
-    _In_ PVOID Comperand
-    );
-
-LONG
-__cdecl
-InterlockedOr (
-    _Inout_ _Interlocked_operand_ LONG volatile *Destination,
-    _In_ LONG Value
-    );
-
-LONG
-__cdecl
-InterlockedOrAcquire (
-    _Inout_ _Interlocked_operand_ LONG volatile *Destination,
-    _In_ LONG Value
-    );
-
-LONG
-__cdecl
-InterlockedOrRelease (
-    _Inout_ _Interlocked_operand_ LONG volatile *Destination,
-    _In_ LONG Value
-    );
-
-CHAR
-__cdecl
-InterlockedOr8 (
-    _Inout_ _Interlocked_operand_ CHAR volatile *Destination,
-    _In_ CHAR Value
-    );
-
-CHAR
-__cdecl
-InterlockedOr8Acquire (
-    _Inout_ _Interlocked_operand_ CHAR volatile *Destination,
-    _In_ CHAR Value
-    );
-
-CHAR
-__cdecl
-InterlockedOr8Release (
-    _Inout_ _Interlocked_operand_ CHAR volatile *Destination,
-    _In_ CHAR Value
-    );
-
-SHORT
-__cdecl
-InterlockedOr16(
-    _Inout_ _Interlocked_operand_ SHORT volatile *Destination,
-    _In_ SHORT Value
-    );
-
-SHORT
-__cdecl
-InterlockedOr16Acquire (
-    _Inout_ _Interlocked_operand_ SHORT volatile *Destination,
-    _In_ SHORT Value
-    );
-
-SHORT
-__cdecl
-InterlockedOr16Release (
-    _Inout_ _Interlocked_operand_ SHORT volatile *Destination,
-    _In_ SHORT Value
-    );
-
-LONGLONG
-__cdecl
-InterlockedOr64 (
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Destination,
-    _In_ LONGLONG Value
-    );
-
-LONGLONG
-__cdecl
-InterlockedOr64Acquire (
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Destination,
-    _In_ LONGLONG Value
-    );
-
-LONGLONG
-__cdecl
-InterlockedOr64Release (
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Destination,
-    _In_ LONGLONG Value
-    );
-
-LONG
-__cdecl
-InterlockedXor (
-    _Inout_ _Interlocked_operand_ LONG volatile *Destination,
-    _In_ LONG Value
-    );
-
-LONG
-__cdecl
-InterlockedXorAcquire (
-    _Inout_ _Interlocked_operand_ LONG volatile *Destination,
-    _In_ LONG Value
-    );
-
-LONG
-__cdecl
-InterlockedXorRelease (
-    _Inout_ _Interlocked_operand_ LONG volatile *Destination,
-    _In_ LONG Value
-    );
-
-CHAR
-__cdecl
-InterlockedXor8 (
-    _Inout_ _Interlocked_operand_ CHAR volatile *Destination,
-    _In_ CHAR Value
-    );
-
-CHAR
-__cdecl
-InterlockedXor8Acquire (
-    _Inout_ _Interlocked_operand_ CHAR volatile *Destination,
-    _In_ CHAR Value
-    );
-
-CHAR
-__cdecl
-InterlockedXor8Release (
-    _Inout_ _Interlocked_operand_ CHAR volatile *Destination,
-    _In_ CHAR Value
-    );
-
-SHORT
-__cdecl
-InterlockedXor16(
-    _Inout_ _Interlocked_operand_ SHORT volatile *Destination,
-    _In_ SHORT Value
-    );
-
-SHORT
-__cdecl
-InterlockedXor16Acquire (
-    _Inout_ _Interlocked_operand_ SHORT volatile *Destination,
-    _In_ SHORT Value
-    );
-
-SHORT
-__cdecl
-InterlockedXor16Release (
-    _Inout_ _Interlocked_operand_ SHORT volatile *Destination,
-    _In_ SHORT Value
-    );
-
-LONGLONG
-__cdecl
-InterlockedXor64 (
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Destination,
-    _In_ LONGLONG Value
-    );
-
-LONGLONG
-__cdecl
-InterlockedXor64Acquire (
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Destination,
-    _In_ LONGLONG Value
-    );
-
-LONGLONG
-__cdecl
-InterlockedXor64Release (
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Destination,
-    _In_ LONGLONG Value
-    );
-
-LONG
-__cdecl
-InterlockedAnd (
-    _Inout_ _Interlocked_operand_ LONG volatile *Destination,
-    _In_ LONG Value
-    );
-
-LONG
-__cdecl
-InterlockedAndAcquire (
-    _Inout_ _Interlocked_operand_ LONG volatile *Destination,
-    _In_ LONG Value
-    );
-
-LONG
-__cdecl
-InterlockedAndRelease (
-    _Inout_ _Interlocked_operand_ LONG volatile *Destination,
-    _In_ LONG Value
-    );
-
-CHAR
-__cdecl
-InterlockedAnd8 (
-    _Inout_ _Interlocked_operand_ CHAR volatile *Destination,
-    _In_ CHAR Value
-    );
-
-CHAR
-__cdecl
-InterlockedAnd8Acquire (
-    _Inout_ _Interlocked_operand_ CHAR volatile *Destination,
-    _In_ CHAR Value
-    );
-
-CHAR
-__cdecl
-InterlockedAnd8Release (
-    _Inout_ _Interlocked_operand_ CHAR volatile *Destination,
-    _In_ CHAR Value
-    );
-
-SHORT
-__cdecl
-InterlockedAnd16(
-    _Inout_ _Interlocked_operand_ SHORT volatile *Destination,
-    _In_ SHORT Value
-    );
-
-SHORT
-__cdecl
-InterlockedAnd16Acquire (
-    _Inout_ _Interlocked_operand_ SHORT volatile *Destination,
-    _In_ SHORT Value
-    );
-
-SHORT
-__cdecl
-InterlockedAnd16Release (
-    _Inout_ _Interlocked_operand_ SHORT volatile *Destination,
-    _In_ SHORT Value
-    );
-
-LONGLONG
-__cdecl
-InterlockedAnd64 (
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Destination,
-    _In_ LONGLONG Value
-    );
-
-LONGLONG
-__cdecl
-InterlockedAnd64Acquire (
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Destination,
-    _In_ LONGLONG Value
-    );
-
-LONGLONG
-__cdecl
-InterlockedAnd64Release (
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Destination,
-    _In_ LONGLONG Value
-    );
-
-#pragma intrinsic(_InterlockedAdd)
-#pragma intrinsic(_InterlockedAdd_acq)
-#pragma intrinsic(_InterlockedAdd_rel)
-
-#pragma intrinsic(_InterlockedAdd64)
-#pragma intrinsic(_InterlockedAdd64_acq)
-#pragma intrinsic(_InterlockedAdd64_rel)
-
-#pragma intrinsic(_InterlockedIncrement)
-#pragma intrinsic(_InterlockedIncrement_acq)
-#pragma intrinsic(_InterlockedIncrement_rel)
-
-#pragma intrinsic(_InterlockedIncrement16)
-#pragma intrinsic(_InterlockedIncrement16_acq)
-#pragma intrinsic(_InterlockedIncrement16_rel)
-
-#pragma intrinsic(_InterlockedIncrement64)
-#pragma intrinsic(_InterlockedIncrement64_acq)
-#pragma intrinsic(_InterlockedIncrement64_rel)
-
-#pragma intrinsic(_InterlockedDecrement)
-#pragma intrinsic(_InterlockedDecrement_acq)
-#pragma intrinsic(_InterlockedDecrement_rel)
-
-#pragma intrinsic(_InterlockedDecrement16)
-#pragma intrinsic(_InterlockedDecrement16_acq)
-#pragma intrinsic(_InterlockedDecrement16_rel)
-
-#pragma intrinsic(_InterlockedDecrement64)
-#pragma intrinsic(_InterlockedDecrement64_acq)
-#pragma intrinsic(_InterlockedDecrement64_rel)
-
-#pragma intrinsic(_InterlockedExchange)
-#pragma intrinsic(_InterlockedExchange_acq)
-
-#pragma intrinsic(_InterlockedExchange64)
-#pragma intrinsic(_InterlockedExchange64_acq)
-
-#pragma intrinsic(_InterlockedExchangePointer)
-#pragma intrinsic(_InterlockedExchangePointer_acq)
-
-#pragma intrinsic(_InterlockedExchangeAdd)
-#pragma intrinsic(_InterlockedExchangeAdd_acq)
-#pragma intrinsic(_InterlockedExchangeAdd_rel)
-
-#pragma intrinsic(_InterlockedExchangeAdd64)
-#pragma intrinsic(_InterlockedExchangeAdd64_acq)
-#pragma intrinsic(_InterlockedExchangeAdd64_rel)
-
-#pragma intrinsic(_InterlockedCompareExchange)
-#pragma intrinsic(_InterlockedCompareExchange_acq)
-#pragma intrinsic(_InterlockedCompareExchange_rel)
-
-#pragma intrinsic(_InterlockedCompareExchange16)
-#pragma intrinsic(_InterlockedCompareExchange16_acq)
-#pragma intrinsic(_InterlockedCompareExchange16_rel)
-
-#pragma intrinsic(_InterlockedCompareExchange64)
-#pragma intrinsic(_InterlockedCompareExchange64_acq)
-#pragma intrinsic(_InterlockedCompareExchange64_rel)
-
-#pragma intrinsic(_InterlockedCompare64Exchange128)
-#pragma intrinsic(_InterlockedCompare64Exchange128_acq)
-#pragma intrinsic(_InterlockedCompare64Exchange128_rel)
-
-#pragma intrinsic(_InterlockedCompareExchangePointer)
-#pragma intrinsic(_InterlockedCompareExchangePointer_acq)
-#pragma intrinsic(_InterlockedCompareExchangePointer_rel)
-
-#pragma intrinsic (_InterlockedOr)
-#pragma intrinsic (_InterlockedOr_acq)
-#pragma intrinsic (_InterlockedOr_rel)
-
-#pragma intrinsic (_InterlockedOr8)
-#pragma intrinsic (_InterlockedOr8_acq)
-#pragma intrinsic (_InterlockedOr8_rel)
-
-#pragma intrinsic (_InterlockedOr16)
-#pragma intrinsic (_InterlockedOr16_acq)
-#pragma intrinsic (_InterlockedOr16_rel)
-
-#pragma intrinsic (_InterlockedOr64)
-#pragma intrinsic (_InterlockedOr64_acq)
-#pragma intrinsic (_InterlockedOr64_rel)
-
-#pragma intrinsic (_InterlockedXor)
-#pragma intrinsic (_InterlockedXor_acq)
-#pragma intrinsic (_InterlockedXor_rel)
-
-#pragma intrinsic (_InterlockedXor8)
-#pragma intrinsic (_InterlockedXor8_acq)
-#pragma intrinsic (_InterlockedXor8_rel)
-
-#pragma intrinsic (_InterlockedXor16)
-#pragma intrinsic (_InterlockedXor16_acq)
-#pragma intrinsic (_InterlockedXor16_rel)
-
-#pragma intrinsic (_InterlockedXor64)
-#pragma intrinsic (_InterlockedXor64_acq)
-#pragma intrinsic (_InterlockedXor64_rel)
-
-#pragma intrinsic (_InterlockedAnd)
-#pragma intrinsic (_InterlockedAnd_acq)
-#pragma intrinsic (_InterlockedAnd_rel)
-
-#pragma intrinsic (_InterlockedAnd8)
-#pragma intrinsic (_InterlockedAnd8_acq)
-#pragma intrinsic (_InterlockedAnd8_rel)
-
-#pragma intrinsic (_InterlockedAnd16)
-#pragma intrinsic (_InterlockedAnd16_acq)
-#pragma intrinsic (_InterlockedAnd16_rel)
-
-#pragma intrinsic (_InterlockedAnd64)
-#pragma intrinsic (_InterlockedAnd64_acq)
-#pragma intrinsic (_InterlockedAnd64_rel)
-
-#if !defined (InterlockedAnd64)
-
-#define InterlockedAnd64 InterlockedAnd64_Inline
-
-LONGLONG
-FORCEINLINE
-InterlockedAnd64_Inline (
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Destination,
-    _In_ LONGLONG Value
-    )
-{
-    LONGLONG Old;
-
-    do {
-        Old = *Destination;
-    } while (InterlockedCompareExchange64(Destination,
-                                          Old & Value,
-                                          Old) != Old);
-
-    return Old;
-}
-
-#endif
-
-#define InterlockedAndAffinity InterlockedAnd64
-
-#if !defined (InterlockedOr64)
-
-#define InterlockedOr64 InterlockedOr64_Inline
-
-LONGLONG
-FORCEINLINE
-InterlockedOr64_Inline (
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Destination,
-    _In_ LONGLONG Value
-    )
-{
-    LONGLONG Old;
-
-    do {
-        Old = *Destination;
-    } while (InterlockedCompareExchange64(Destination,
-                                          Old | Value,
-                                          Old) != Old);
-
-    return Old;
-}
-
-#endif
-
-#define InterlockedOrAffinity InterlockedOr64
-
-#if !defined (InterlockedXor64)
-
-#define InterlockedXor64 InterlockedXor64_Inline
-
-LONGLONG
-FORCEINLINE
-InterlockedXor64_Inline (
-    _Inout_ _Interlocked_operand_ LONGLONG volatile *Destination,
-    _In_ LONGLONG Value
-    )
-{
-    LONGLONG Old;
-
-    do {
-        Old = *Destination;
-    } while (InterlockedCompareExchange64(Destination,
-                                          Old ^ Value,
-                                          Old) != Old);
-
-    return Old;
-}
-
-#endif
-
-#if !defined (InterlockedBitTestAndSet)
-
-#define InterlockedBitTestAndSet InterlockedBitTestAndSet_Inline
-
-BOOLEAN
-FORCEINLINE
-InterlockedBitTestAndSet_Inline (
-    _Inout_ _Interlocked_operand_ LONG volatile *Base,
-    _In_ LONG Bit
-    )
-{
-    LONG tBit;
-
-    tBit = 1<<(Bit & (sizeof (*Base)*8-1));
-    return (BOOLEAN) ((InterlockedOr (&Base[Bit/(sizeof (*Base)*8)], tBit)&tBit) != 0);
-}
-
-#endif
-
-#if !defined (InterlockedBitTestAndReset)
-
-#define InterlockedBitTestAndReset InterlockedBitTestAndReset_Inline
-
-BOOLEAN
-FORCEINLINE
-InterlockedBitTestAndReset_Inline (
-    _Inout_ _Interlocked_operand_ LONG volatile *Base,
-    _In_ LONG Bit
-    )
-{
-    LONG tBit;
-
-    tBit = 1<<(Bit & (sizeof (*Base)*8-1));
-    return (BOOLEAN) ((InterlockedAnd (&Base[Bit/(sizeof (*Base)*8)], ~tBit)&tBit) != 0);
-}
-
-#endif
-
-#if !defined (InterlockedBitTestAndSet64)
-
-#define InterlockedBitTestAndSet64 InterlockedBitTestAndSet64_Inline
-
-BOOLEAN
-FORCEINLINE
-InterlockedBitTestAndSet64_Inline (
-    _Inout_ _Interlocked_operand_ LONG64 volatile *Base,
-    _In_ LONG64 Bit
-    )
-{
-    LONG64 tBit;
-
-    tBit = 1i64<<(Bit & (sizeof (*Base)*8-1));
-    return (BOOLEAN) ((InterlockedOr64 (&Base[Bit/(sizeof (*Base)*8)], tBit)&tBit) != 0);
-}
-
-#endif
-
-#if !defined (InterlockedBitTestAndReset64)
-
-#define InterlockedBitTestAndReset64 InterlockedBitTestAndReset64_Inline
-
-BOOLEAN
-FORCEINLINE
-InterlockedBitTestAndReset64_Inline (
-    _Inout_ _Interlocked_operand_ LONG64 volatile *Base,
-    _In_ LONG64 Bit
-    )
-{
-    LONG64 tBit;
-
-    tBit = 1i64<<(Bit & (sizeof (*Base)*8-1));
-    return (BOOLEAN) ((InterlockedAnd64 (&Base[Bit/(sizeof (*Base)*8)], ~tBit)&tBit) != 0);
-}
-
-#endif
-
-#if !defined (InterlockedBitTestAndComplement)
-
-#define InterlockedBitTestAndComplement InterlockedBitTestAndComplement_Inline
-
-BOOLEAN
-FORCEINLINE
-InterlockedBitTestAndComplement_Inline (
-    _Inout_ _Interlocked_operand_ LONG volatile *Base,
-    _In_ LONG Bit
-    )
-{
-    LONG tBit;
-
-    tBit = 1<<(Bit & (sizeof (*Base)*8-1));
-    return (BOOLEAN) ((InterlockedXor (&Base[Bit/(sizeof (*Base)*8)], tBit)&tBit) != 0);
-}
-
-#endif
-
-#if !defined (InterlockedBitTestAndComplement64)
-
-#define InterlockedBitTestAndComplement64 InterlockedBitTestAndComplement64_Inline
-
-BOOLEAN
-FORCEINLINE
-InterlockedBitTestAndComplement64_Inline (
-    _Inout_ _Interlocked_operand_ LONG64 volatile *Base,
-    _In_ LONG64 Bit
-    )
-{
-    LONG64 tBit;
-
-    tBit = 1i64<<(Bit & (sizeof (*Base)*8-1));
-    return (BOOLEAN) ((InterlockedXor64 (&Base[Bit/(sizeof (*Base)*8)], tBit)&tBit) != 0);
-}
-
-#endif
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* defined(_M_IA64) && !defined(RC_INVOKED) && !defined(MIDL_PASS) */
-
-
-#if !defined(__midl) && !defined(GENUTIL) && !defined(_GENIA64_) && defined(_IA64_)
-
-void * __cdecl _rdteb(void);
-void * __cdecl _rdtebex(void);
-#ifdef _M_IA64
-
-#pragma intrinsic(_rdteb)
-// _rdtebex() is a kernel safe version of _rdteb()
-#pragma intrinsic(_rdtebex)
-#define NtCurrentTeb() ((struct _TEB *)_rdtebex())
-
-//
-// Define functions to get the address of the current fiber and the
-// current fiber data.
-//
-
-#define GetCurrentFiber() (((PNT_TIB)NtCurrentTeb())->FiberData)
-#define GetFiberData() (*(PVOID *)(GetCurrentFiber()))
-
-
-// begin_ntddk
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-// end_ntddk
-
-// begin_ntddk
-
-void
-__yield(
-   void
-   );
-
-void
-__mf(
-    void
-    );
-
-void
-__lfetch(
-    int Level,
-    _In_ volatile VOID CONST *Address
-    );
-
-void
-__lfetchfault(
-    _In_ int Level,
-    _In_ volatile VOID CONST *Address
-    );
-
-void
-__lfetch_excl(
-    _In_ int Level,
-    _In_ volatile VOID CONST *Address
-    );
-
-void
-__lfetchfault_excl(
-    _In_ int Level,
-    _In_ volatile VOID CONST *Address
-    );
-
-//
-// __lfetch control defines.
-//
-
-#define MD_LFHINT_NONE    0x00
-#define MD_LFHINT_NT1     0x01
-#define MD_LFHINT_NT2     0x02
-#define MD_LFHINT_NTA     0x03
-
-#pragma intrinsic (__yield)
-#pragma intrinsic (__lfetch)
-#pragma intrinsic (__lfetchfault)
-#pragma intrinsic (__lfetchfault_excl)
-#pragma intrinsic (__lfetch_excl)
-#pragma intrinsic (__mf)
-
-//
-// Define function to read the value of the time stamp counter
-//
-// N.B. The register number for the time stamp counter is CV_IA64_ApITC which
-//      is 3116.
-//
-
-#define ReadTimeStampCounter() __getReg(3116)
-
-unsigned __int64
-__getReg (
-    _In_ int Number
-    );
-
-#pragma intrinsic(__getReg)
-
-#define YieldProcessor          __yield
-#define MemoryBarrier           __mf
-#define PreFetchCacheLine       __lfetch
-#define PrefetchForWrite(p)
-#define ReadForWriteAccess(p)   (__lfetch_excl(MD_LFHINT_NONE, (p)), (*(p)))
-
-
-//
-// PreFetchCacheLine level defines.
-//
-
-#define PF_TEMPORAL_LEVEL_1         MD_LFHINT_NONE
-#define PF_TEMPORAL_LEVEL_2         MD_LFHINT_NT1
-#define PF_TEMPORAL_LEVEL_3         MD_LFHINT_NT2
-#define PF_NON_TEMPORAL_LEVEL_ALL   MD_LFHINT_NTA
-
-//
-// Define functions to capture the high 64-bits of a 128-bit multiply.
-//
-
-#define UnsignedMultiplyHigh __UMULH
-
-ULONGLONG
-UnsignedMultiplyHigh (
-    _In_ ULONGLONG Multiplier,
-    _In_ ULONGLONG Multiplicand
-    );
-
-#pragma intrinsic(__UMULH)
-
-#if (_MSC_VER >= 1400)
-
-#define UnsignedMultiply128 _umul128
-
-DWORD64
-UnsignedMultiply128 (
-    _In_ unsigned __int64 Multiplier,
-    _In_ unsigned __int64 Multiplicand,
-    _Out_ _Deref_out_range_(==,Multiplier * Multiplicand) unsigned __int64 *HighProduct
-    );
-
-#pragma intrinsic(_umul128)
-
-#endif
-
-#ifdef __cplusplus
-}
-#endif
-
-// end_ntddk
-
-#else
-struct _TEB *
-NtCurrentTeb(void);
-#endif
-
-#endif  // !defined(__midl) && !defined(GENUTIL) && !defined(_GENIA64_) && defined(_M_IA64)
-
-#ifdef _IA64_
-
-// begin_ntddk
-
-//
-// The following values specify the type of failing access when the status is
-// STATUS_ACCESS_VIOLATION and the first parameter in the exception record.
-//
-
-#define EXCEPTION_READ_FAULT          0 // Access violation was caused by a read
-#define EXCEPTION_WRITE_FAULT         1 // Access violation was caused by a write
-#define EXCEPTION_EXECUTE_FAULT       2 // Access violation was caused by an instruction fetch
-
-//
-// The following flags control the contents of the CONTEXT structure.
-//
-
-#if !defined(RC_INVOKED)
-
-#define CONTEXT_IA64                    0x00080000L
-
-#define CONTEXT_CONTROL                 (CONTEXT_IA64 | 0x00000001L)
-#define CONTEXT_LOWER_FLOATING_POINT    (CONTEXT_IA64 | 0x00000002L)
-#define CONTEXT_HIGHER_FLOATING_POINT   (CONTEXT_IA64 | 0x00000004L)
-#define CONTEXT_INTEGER                 (CONTEXT_IA64 | 0x00000008L)
-#define CONTEXT_DEBUG                   (CONTEXT_IA64 | 0x00000010L)
-#define CONTEXT_IA32_CONTROL            (CONTEXT_IA64 | 0x00000020L)  // Includes StIPSR
-
-
-#define CONTEXT_FLOATING_POINT          (CONTEXT_LOWER_FLOATING_POINT | CONTEXT_HIGHER_FLOATING_POINT)
-#define CONTEXT_FULL                    (CONTEXT_CONTROL | CONTEXT_FLOATING_POINT | CONTEXT_INTEGER | CONTEXT_IA32_CONTROL)
-#define CONTEXT_ALL                     (CONTEXT_CONTROL | CONTEXT_FLOATING_POINT | CONTEXT_INTEGER | CONTEXT_DEBUG | CONTEXT_IA32_CONTROL)
-
-#define CONTEXT_EXCEPTION_ACTIVE        0x08000000L
-#define CONTEXT_SERVICE_ACTIVE          0x10000000L
-#define CONTEXT_EXCEPTION_REQUEST       0x40000000L
-#define CONTEXT_EXCEPTION_REPORTING     0x80000000L
-
-#endif // !defined(RC_INVOKED)
-
-//
-// Context Frame
-//
-//  This frame has a several purposes: 1) it is used as an argument to
-//  NtContinue, 2) it is used to construct a call frame for APC delivery,
-//  3) it is used to construct a call frame for exception dispatching
-//  in user mode, 4) it is used in the user level thread creation
-//  routines, and 5) it is used to to pass thread state to debuggers.
-//
-//  N.B. Because this record is used as a call frame, it must be EXACTLY
-//  a multiple of 16 bytes in length and aligned on a 16-byte boundary.
-//
-
-typedef struct _CONTEXT {
-
-    //
-    // The flags values within this flag control the contents of
-    // a CONTEXT record.
-    //
-    // If the context record is used as an input parameter, then
-    // for each portion of the context record controlled by a flag
-    // whose value is set, it is assumed that that portion of the
-    // context record contains valid context. If the context record
-    // is being used to modify a thread's context, then only that
-    // portion of the threads context will be modified.
-    //
-    // If the context record is used as an _Inout_ parameter to capture
-    // the context of a thread, then only those portions of the thread's
-    // context corresponding to set flags will be returned.
-    //
-    // The context record is never used as an _Out_ only parameter.
-    //
-
-    DWORD ContextFlags;
-    DWORD Fill1[3];         // for alignment of following on 16-byte boundary
-
-    //
-    // This section is specified/returned if the ContextFlags word contains
-    // the flag CONTEXT_DEBUG.
-    //
-    // N.B. CONTEXT_DEBUG is *not* part of CONTEXT_FULL.
-    //
-
-    ULONGLONG DbI0;
-    ULONGLONG DbI1;
-    ULONGLONG DbI2;
-    ULONGLONG DbI3;
-    ULONGLONG DbI4;
-    ULONGLONG DbI5;
-    ULONGLONG DbI6;
-    ULONGLONG DbI7;
-
-    ULONGLONG DbD0;
-    ULONGLONG DbD1;
-    ULONGLONG DbD2;
-    ULONGLONG DbD3;
-    ULONGLONG DbD4;
-    ULONGLONG DbD5;
-    ULONGLONG DbD6;
-    ULONGLONG DbD7;
-
-    //
-    // This section is specified/returned if the ContextFlags word contains
-    // the flag CONTEXT_LOWER_FLOATING_POINT.
-    //
-
-    FLOAT128 FltS0;
-    FLOAT128 FltS1;
-    FLOAT128 FltS2;
-    FLOAT128 FltS3;
-    FLOAT128 FltT0;
-    FLOAT128 FltT1;
-    FLOAT128 FltT2;
-    FLOAT128 FltT3;
-    FLOAT128 FltT4;
-    FLOAT128 FltT5;
-    FLOAT128 FltT6;
-    FLOAT128 FltT7;
-    FLOAT128 FltT8;
-    FLOAT128 FltT9;
-
-    //
-    // This section is specified/returned if the ContextFlags word contains
-    // the flag CONTEXT_HIGHER_FLOATING_POINT.
-    //
-
-    FLOAT128 FltS4;
-    FLOAT128 FltS5;
-    FLOAT128 FltS6;
-    FLOAT128 FltS7;
-    FLOAT128 FltS8;
-    FLOAT128 FltS9;
-    FLOAT128 FltS10;
-    FLOAT128 FltS11;
-    FLOAT128 FltS12;
-    FLOAT128 FltS13;
-    FLOAT128 FltS14;
-    FLOAT128 FltS15;
-    FLOAT128 FltS16;
-    FLOAT128 FltS17;
-    FLOAT128 FltS18;
-    FLOAT128 FltS19;
-
-    FLOAT128 FltF32;
-    FLOAT128 FltF33;
-    FLOAT128 FltF34;
-    FLOAT128 FltF35;
-    FLOAT128 FltF36;
-    FLOAT128 FltF37;
-    FLOAT128 FltF38;
-    FLOAT128 FltF39;
-
-    FLOAT128 FltF40;
-    FLOAT128 FltF41;
-    FLOAT128 FltF42;
-    FLOAT128 FltF43;
-    FLOAT128 FltF44;
-    FLOAT128 FltF45;
-    FLOAT128 FltF46;
-    FLOAT128 FltF47;
-    FLOAT128 FltF48;
-    FLOAT128 FltF49;
-
-    FLOAT128 FltF50;
-    FLOAT128 FltF51;
-    FLOAT128 FltF52;
-    FLOAT128 FltF53;
-    FLOAT128 FltF54;
-    FLOAT128 FltF55;
-    FLOAT128 FltF56;
-    FLOAT128 FltF57;
-    FLOAT128 FltF58;
-    FLOAT128 FltF59;
-
-    FLOAT128 FltF60;
-    FLOAT128 FltF61;
-    FLOAT128 FltF62;
-    FLOAT128 FltF63;
-    FLOAT128 FltF64;
-    FLOAT128 FltF65;
-    FLOAT128 FltF66;
-    FLOAT128 FltF67;
-    FLOAT128 FltF68;
-    FLOAT128 FltF69;
-
-    FLOAT128 FltF70;
-    FLOAT128 FltF71;
-    FLOAT128 FltF72;
-    FLOAT128 FltF73;
-    FLOAT128 FltF74;
-    FLOAT128 FltF75;
-    FLOAT128 FltF76;
-    FLOAT128 FltF77;
-    FLOAT128 FltF78;
-    FLOAT128 FltF79;
-
-    FLOAT128 FltF80;
-    FLOAT128 FltF81;
-    FLOAT128 FltF82;
-    FLOAT128 FltF83;
-    FLOAT128 FltF84;
-    FLOAT128 FltF85;
-    FLOAT128 FltF86;
-    FLOAT128 FltF87;
-    FLOAT128 FltF88;
-    FLOAT128 FltF89;
-
-    FLOAT128 FltF90;
-    FLOAT128 FltF91;
-    FLOAT128 FltF92;
-    FLOAT128 FltF93;
-    FLOAT128 FltF94;
-    FLOAT128 FltF95;
-    FLOAT128 FltF96;
-    FLOAT128 FltF97;
-    FLOAT128 FltF98;
-    FLOAT128 FltF99;
-
-    FLOAT128 FltF100;
-    FLOAT128 FltF101;
-    FLOAT128 FltF102;
-    FLOAT128 FltF103;
-    FLOAT128 FltF104;
-    FLOAT128 FltF105;
-    FLOAT128 FltF106;
-    FLOAT128 FltF107;
-    FLOAT128 FltF108;
-    FLOAT128 FltF109;
-
-    FLOAT128 FltF110;
-    FLOAT128 FltF111;
-    FLOAT128 FltF112;
-    FLOAT128 FltF113;
-    FLOAT128 FltF114;
-    FLOAT128 FltF115;
-    FLOAT128 FltF116;
-    FLOAT128 FltF117;
-    FLOAT128 FltF118;
-    FLOAT128 FltF119;
-
-    FLOAT128 FltF120;
-    FLOAT128 FltF121;
-    FLOAT128 FltF122;
-    FLOAT128 FltF123;
-    FLOAT128 FltF124;
-    FLOAT128 FltF125;
-    FLOAT128 FltF126;
-    FLOAT128 FltF127;
-
-    //
-    // This section is specified/returned if the ContextFlags word contains
-    // the flag CONTEXT_LOWER_FLOATING_POINT | CONTEXT_HIGHER_FLOATING_POINT | CONTEXT_CONTROL.
-    //
-
-    ULONGLONG StFPSR;       //  FP status
-
-    //
-    // This section is specified/returned if the ContextFlags word contains
-    // the flag CONTEXT_INTEGER.
-    //
-    // N.B. The registers gp, sp, rp are part of the control context
-    //
-
-    ULONGLONG IntGp;        //  r1, volatile
-    ULONGLONG IntT0;        //  r2-r3, volatile
-    ULONGLONG IntT1;        //
-    ULONGLONG IntS0;        //  r4-r7, preserved
-    ULONGLONG IntS1;
-    ULONGLONG IntS2;
-    ULONGLONG IntS3;
-    ULONGLONG IntV0;        //  r8, volatile
-    ULONGLONG IntT2;        //  r9-r11, volatile
-    ULONGLONG IntT3;
-    ULONGLONG IntT4;
-    ULONGLONG IntSp;        //  stack pointer (r12), special
-    ULONGLONG IntTeb;       //  teb (r13), special
-    ULONGLONG IntT5;        //  r14-r31, volatile
-    ULONGLONG IntT6;
-    ULONGLONG IntT7;
-    ULONGLONG IntT8;
-    ULONGLONG IntT9;
-    ULONGLONG IntT10;
-    ULONGLONG IntT11;
-    ULONGLONG IntT12;
-    ULONGLONG IntT13;
-    ULONGLONG IntT14;
-    ULONGLONG IntT15;
-    ULONGLONG IntT16;
-    ULONGLONG IntT17;
-    ULONGLONG IntT18;
-    ULONGLONG IntT19;
-    ULONGLONG IntT20;
-    ULONGLONG IntT21;
-    ULONGLONG IntT22;
-
-    ULONGLONG IntNats;      //  Nat bits for r1-r31
-                            //  r1-r31 in bits 1 thru 31.
-    ULONGLONG Preds;        //  predicates, preserved
-
-    ULONGLONG BrRp;         //  return pointer, b0, preserved
-    ULONGLONG BrS0;         //  b1-b5, preserved
-    ULONGLONG BrS1;
-    ULONGLONG BrS2;
-    ULONGLONG BrS3;
-    ULONGLONG BrS4;
-    ULONGLONG BrT0;         //  b6-b7, volatile
-    ULONGLONG BrT1;
-
-    //
-    // This section is specified/returned if the ContextFlags word contains
-    // the flag CONTEXT_CONTROL.
-    //
-
-    // Other application registers
-    ULONGLONG ApUNAT;       //  User Nat collection register, preserved
-    ULONGLONG ApLC;         //  Loop counter register, preserved
-    ULONGLONG ApEC;         //  Epilog counter register, preserved
-    ULONGLONG ApCCV;        //  CMPXCHG value register, volatile
-    ULONGLONG ApDCR;        //  Default control register (TBD)
-
-    // Register stack info
-    ULONGLONG RsPFS;        //  Previous function state, preserved
-    ULONGLONG RsBSP;        //  Backing store pointer, preserved
-    ULONGLONG RsBSPSTORE;
-    ULONGLONG RsRSC;        //  RSE configuration, volatile
-    ULONGLONG RsRNAT;       //  RSE Nat collection register, preserved
-
-    // Trap Status Information
-    ULONGLONG StIPSR;       //  Interruption Processor Status
-    ULONGLONG StIIP;        //  Interruption IP
-    ULONGLONG StIFS;        //  Interruption Function State
-
-    // iA32 related control registers
-    ULONGLONG StFCR;        //  copy of Ar21
-    ULONGLONG Eflag;        //  Eflag copy of Ar24
-    ULONGLONG SegCSD;       //  iA32 CSDescriptor (Ar25)
-    ULONGLONG SegSSD;       //  iA32 SSDescriptor (Ar26)
-    ULONGLONG Cflag;        //  Cr0+Cr4 copy of Ar27
-    ULONGLONG StFSR;        //  x86 FP status (copy of AR28)
-    ULONGLONG StFIR;        //  x86 FP status (copy of AR29)
-    ULONGLONG StFDR;        //  x86 FP status (copy of AR30)
-
-      ULONGLONG UNUSEDPACK;   //  added to pack StFDR to 16-bytes
-
-} CONTEXT, *PCONTEXT;
-
-//
-// Plabel descriptor structure definition
-//
-
-typedef struct _PLABEL_DESCRIPTOR {
-   ULONGLONG EntryPoint;
-   ULONGLONG GlobalPointer;
-} PLABEL_DESCRIPTOR, *PPLABEL_DESCRIPTOR;
-
-//
-// Function table entry structure definition.
-//
-
-typedef struct _RUNTIME_FUNCTION {
-    DWORD BeginAddress;
-    DWORD EndAddress;
-    DWORD UnwindInfoAddress;
-} RUNTIME_FUNCTION, *PRUNTIME_FUNCTION;
-
-//
-// Define unwind history table structure.
-//
-
-#define UNWIND_HISTORY_TABLE_SIZE 12
-
-typedef struct _UNWIND_HISTORY_TABLE_ENTRY {
-    DWORD64 ImageBase;
-    DWORD64 Gp;
-    PRUNTIME_FUNCTION FunctionEntry;
-} UNWIND_HISTORY_TABLE_ENTRY, *PUNWIND_HISTORY_TABLE_ENTRY;
-
-typedef struct _UNWIND_HISTORY_TABLE {
-        DWORD Count;
-        BYTE  LocalHint;
-        BYTE  GlobalHint;
-        BYTE  Search;
-        BYTE  Once;
-        DWORD64 LowAddress;
-        DWORD64 HighAddress;
-        UNWIND_HISTORY_TABLE_ENTRY Entry[UNWIND_HISTORY_TABLE_SIZE];
-} UNWIND_HISTORY_TABLE, *PUNWIND_HISTORY_TABLE;
-
-//
-// Define dynamic function table entry.
-//
-
-typedef
-_Function_class_(GET_RUNTIME_FUNCTION_CALLBACK)
-PRUNTIME_FUNCTION
-GET_RUNTIME_FUNCTION_CALLBACK (
-    _In_ DWORD64 ControlPc,
-    _In_opt_ PVOID Context
-    );
-typedef GET_RUNTIME_FUNCTION_CALLBACK *PGET_RUNTIME_FUNCTION_CALLBACK;
-
-typedef
-_Function_class_(OUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK)
-_Must_inspect_result_
-DWORD   
-OUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK (
-    _In_ HANDLE Process,
-    _In_ PVOID TableAddress,
-    _Out_ PDWORD Entries,
-    _Outptr_ PRUNTIME_FUNCTION* Functions
-    );
-typedef OUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK *POUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK;
-
-#define OUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK_EXPORT_NAME \
-    "OutOfProcessFunctionTableCallback"
-
-//
-// Nonvolatile context pointer record.
-//
-// The IA64 architecture currently doesn't have any nonvolatile kernel context
-// as we capture everything in either the trap or exception frames on
-// transition from user to kernel mode. We allocate a single bogus
-// pointer field as usually this structure is made up of pointers to
-// places in the kernel stack where the various nonvolatile items were
-// pushed on to the kernel stack.
-//
-// TBD *** Need to fill in this structure with the relevant fields
-//         when we start storing the nonvolatile information only when
-//         necessary.
-//
-
-typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
-    PFLOAT128  FltS0;
-    PFLOAT128  FltS1;
-    PFLOAT128  FltS2;
-    PFLOAT128  FltS3;
-    PFLOAT128  HighFloatingContext[10];
-    PFLOAT128  FltS4;
-    PFLOAT128  FltS5;
-    PFLOAT128  FltS6;
-    PFLOAT128  FltS7;
-    PFLOAT128  FltS8;
-    PFLOAT128  FltS9;
-    PFLOAT128  FltS10;
-    PFLOAT128  FltS11;
-    PFLOAT128  FltS12;
-    PFLOAT128  FltS13;
-    PFLOAT128  FltS14;
-    PFLOAT128  FltS15;
-    PFLOAT128  FltS16;
-    PFLOAT128  FltS17;
-    PFLOAT128  FltS18;
-    PFLOAT128  FltS19;
-
-    PULONGLONG IntS0;
-    PULONGLONG IntS1;
-    PULONGLONG IntS2;
-    PULONGLONG IntS3;
-    PULONGLONG IntSp;
-    PULONGLONG IntS0Nat;
-    PULONGLONG IntS1Nat;
-    PULONGLONG IntS2Nat;
-    PULONGLONG IntS3Nat;
-    PULONGLONG IntSpNat;
-
-    PULONGLONG Preds;
-
-    PULONGLONG BrRp;
-    PULONGLONG BrS0;
-    PULONGLONG BrS1;
-    PULONGLONG BrS2;
-    PULONGLONG BrS3;
-    PULONGLONG BrS4;
-
-    PULONGLONG ApUNAT;
-    PULONGLONG ApLC;
-    PULONGLONG ApEC;
-    PULONGLONG RsPFS;
-
-    PULONGLONG StFSR;
-    PULONGLONG StFIR;
-    PULONGLONG StFDR;
-    PULONGLONG Cflag;
-
-    PULONGLONG StFPSR;
-
-} KNONVOLATILE_CONTEXT_POINTERS, *PKNONVOLATILE_CONTEXT_POINTERS;
-
-typedef struct _FRAME_POINTERS {
-    ULONGLONG MemoryStackFp;
-    ULONGLONG BackingStoreFp;
-} FRAME_POINTERS, *PFRAME_POINTERS;
-
-NTSYSAPI
-VOID
-NTAPI
-__jump_unwind (
-    ULONGLONG TargetMsFrame,
-    ULONGLONG TargetBsFrame,
-    ULONGLONG TargetPc
-    );
-
-#endif // _IA64_
-
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 // begin_wdm begin_ntminiport
 
@@ -8262,6 +7651,28 @@ ReadUCharNoFence (
 
 FORCEINLINE
 BYTE 
+ReadBooleanAcquire (
+    _In_ _Interlocked_operand_ BOOLEAN const volatile *Source
+    )
+
+{
+
+    return (BOOLEAN)ReadAcquire8((PCHAR)Source);
+}
+
+FORCEINLINE
+BYTE 
+ReadBooleanNoFence (
+    _In_ _Interlocked_operand_ BOOLEAN const volatile *Source
+    )
+
+{
+
+    return (BOOLEAN)ReadNoFence8((PCHAR)Source);
+}
+
+FORCEINLINE
+BYTE 
 ReadUCharRaw (
     _In_ _Interlocked_operand_ BYTE  const volatile *Source
     )
@@ -8289,6 +7700,32 @@ VOID
 WriteUCharNoFence (
     _Out_ _Interlocked_operand_ BYTE  volatile *Destination,
     _In_ BYTE  Value
+    )
+
+{
+
+    WriteNoFence8((PCHAR)Destination, (CHAR)Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteBooleanRelease (
+    _Out_ _Interlocked_operand_ BOOLEAN volatile *Destination,
+    _In_ BOOLEAN Value
+    )
+
+{
+
+    WriteRelease8((PCHAR)Destination, (CHAR)Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteBooleanNoFence (
+    _Out_ _Interlocked_operand_ BOOLEAN volatile *Destination,
+    _In_ BOOLEAN Value
     )
 
 {
@@ -9050,6 +8487,7 @@ typedef DWORD ACCESS_MASK;
 typedef ACCESS_MASK *PACCESS_MASK;
 
 // end_ntoshvp
+// begin_access
 ////////////////////////////////////////////////////////////////////////
 //                                                                    //
 //                             ACCESS TYPES                           //
@@ -9195,6 +8633,19 @@ typedef struct _SID {
 #ifndef MIDL_PASS
 #define SECURITY_MAX_SID_SIZE  \
       (sizeof(SID) - sizeof(DWORD) + (SID_MAX_SUB_AUTHORITIES * sizeof(DWORD)))
+
+#define SECURITY_SID_SIZE(SubAuthorityCount_) (sizeof(SID) - sizeof(DWORD) + \
+                                                (SubAuthorityCount_) * sizeof(DWORD))
+
+//
+// Union which can hold any valid sid.
+//
+
+typedef union _SE_SID {
+    SID Sid;
+    BYTE  Buffer[SECURITY_MAX_SID_SIZE];
+} SE_SID, *PSE_SID;
+
 #endif // MIDL_PASS
 
 
@@ -9208,7 +8659,8 @@ typedef enum _SID_NAME_USE {
     SidTypeInvalid,
     SidTypeUnknown,
     SidTypeComputer,
-    SidTypeLabel
+    SidTypeLabel,
+    SidTypeLogonSession
 } SID_NAME_USE, *PSID_NAME_USE;
 
 typedef struct _SID_AND_ATTRIBUTES {
@@ -9409,6 +8861,17 @@ typedef struct _SID_AND_ATTRIBUTES_HASH {
 #define SECURITY_WINDOWSMOBILE_ID_BASE_RID (0x00000070L)
 
 //
+// Installer Capability Group Sid related. Currently Base RID is same as LOCAL DOMAIN.
+//
+#define SECURITY_INSTALLER_GROUP_CAPABILITY_BASE (0x20)
+#define SECURITY_INSTALLER_GROUP_CAPABILITY_RID_COUNT (9)
+
+// Note: This is because the App Capability Rid is S-1-15-3-1024-...
+//       whereas the service group rid is          S-1-5-32-...
+//	The number of RIDs from hash (8) are the same for both
+#define SECURITY_INSTALLER_CAPABILITY_RID_COUNT (10)
+
+//
 //Well-known group for local accounts
 //
 #define SECURITY_LOCAL_ACCOUNT_RID (0x00000071L)
@@ -9429,9 +8892,10 @@ typedef struct _SID_AND_ATTRIBUTES_HASH {
 
 // Well-known users ...
 
-#define DOMAIN_USER_RID_ADMIN          (0x000001F4L)
-#define DOMAIN_USER_RID_GUEST          (0x000001F5L)
-#define DOMAIN_USER_RID_KRBTGT         (0x000001F6L)
+#define DOMAIN_USER_RID_ADMIN                (0x000001F4L)
+#define DOMAIN_USER_RID_GUEST                (0x000001F5L)
+#define DOMAIN_USER_RID_KRBTGT               (0x000001F6L)
+#define DOMAIN_USER_RID_DEFAULT_ACCOUNT      (0x000001F7L)
 
 #define DOMAIN_USER_RID_MAX            (0x000003E7L)
 
@@ -9451,6 +8915,8 @@ typedef struct _SID_AND_ATTRIBUTES_HASH {
 #define DOMAIN_GROUP_RID_CLONEABLE_CONTROLLERS (0x0000020AL)
 #define DOMAIN_GROUP_RID_CDC_RESERVED    (0x0000020CL)
 #define DOMAIN_GROUP_RID_PROTECTED_USERS (0x0000020DL)
+#define DOMAIN_GROUP_RID_KEY_ADMINS      (0x0000020EL)
+#define DOMAIN_GROUP_RID_ENTERPRISE_KEY_ADMINS (0x0000020FL)
 
 // well-known aliases ...
 
@@ -9488,6 +8954,8 @@ typedef struct _SID_AND_ATTRIBUTES_HASH {
 #define DOMAIN_ALIAS_RID_HYPER_V_ADMINS                 (0x00000242L)
 #define DOMAIN_ALIAS_RID_ACCESS_CONTROL_ASSISTANCE_OPS  (0x00000243L)
 #define DOMAIN_ALIAS_RID_REMOTE_MANAGEMENT_USERS        (0x00000244L)
+#define DOMAIN_ALIAS_RID_DEFAULT_ACCOUNT                (0x00000245L)
+#define DOMAIN_ALIAS_RID_STORAGE_REPLICA_ADMINS         (0x00000246L)
 
 //
 // Application Package Authority.
@@ -9499,6 +8967,7 @@ typedef struct _SID_AND_ATTRIBUTES_HASH {
 #define SECURITY_BUILTIN_APP_PACKAGE_RID_COUNT      (2L)
 #define SECURITY_APP_PACKAGE_RID_COUNT              (8L)
 #define SECURITY_CAPABILITY_BASE_RID                (0x00000003L)
+#define SECURITY_CAPABILITY_APP_RID                 (0x000000400)
 #define SECURITY_BUILTIN_CAPABILITY_RID_COUNT       (2L)
 #define SECURITY_CAPABILITY_RID_COUNT               (5L)
 #define SECURITY_PARENT_PACKAGE_RID_COUNT           (SECURITY_APP_PACKAGE_RID_COUNT)
@@ -9524,6 +8993,8 @@ typedef struct _SID_AND_ATTRIBUTES_HASH {
 #define SECURITY_CAPABILITY_ENTERPRISE_AUTHENTICATION           (0x00000008L)
 #define SECURITY_CAPABILITY_SHARED_USER_CERTIFICATES            (0x00000009L)
 #define SECURITY_CAPABILITY_REMOVABLE_STORAGE                   (0x0000000AL)
+#define SECURITY_CAPABILITY_APPOINTMENTS                        (0x0000000BL)
+#define SECURITY_CAPABILITY_CONTACTS                            (0x0000000CL)
 
 #define SECURITY_CAPABILITY_INTERNET_EXPLORER                   (0x00001000L)
 
@@ -9555,10 +9026,13 @@ typedef struct _SID_AND_ATTRIBUTES_HASH {
 // Authentication Authority
 //
 
-#define SECURITY_AUTHENTICATION_AUTHORITY                  {0,0,0,0,0,18}
-#define SECURITY_AUTHENTICATION_AUTHORITY_RID_COUNT        (1L)
-#define SECURITY_AUTHENTICATION_AUTHORITY_ASSERTED_RID     (0x00000001L)
-#define SECURITY_AUTHENTICATION_SERVICE_ASSERTED_RID       (0x00000002L)
+#define SECURITY_AUTHENTICATION_AUTHORITY                        {0,0,0,0,0,18}
+#define SECURITY_AUTHENTICATION_AUTHORITY_RID_COUNT              (1L)
+#define SECURITY_AUTHENTICATION_AUTHORITY_ASSERTED_RID           (0x00000001L)
+#define SECURITY_AUTHENTICATION_SERVICE_ASSERTED_RID             (0x00000002L)
+#define SECURITY_AUTHENTICATION_KEY_TRUST_RID                    (0x00000004L)
+#define SECURITY_AUTHENTICATION_KEY_PROPERTY_MFA_RID             (0x00000005L)
+#define SECURITY_AUTHENTICATION_KEY_PROPERTY_ATTESTATION_RID     (0x00000006L)
 
 //
 // Process Trust Authority
@@ -9703,6 +9177,16 @@ typedef enum {
     WinLocalAccountSid                          = 105,
     WinLocalAccountAndAdministratorSid          = 106,
     WinAccountProtectedUsersSid                 = 107,
+    WinCapabilityAppointmentsSid                = 108,
+    WinCapabilityContactsSid                    = 109,
+    WinAccountDefaultSystemManagedSid           = 110,
+    WinBuiltinDefaultSystemManagedGroupSid      = 111,
+    WinBuiltinStorageReplicaAdminsSid           = 112,
+    WinAccountKeyAdminsSid                      = 113,
+    WinAccountEnterpriseKeyAdminsSid            = 114,
+    WinAuthenticationKeyTrustSid                = 115,
+    WinAuthenticationKeyPropertyMFASid          = 116,
+    WinAuthenticationKeyPropertyAttestationSid  = 117,
 } WELL_KNOWN_SID_TYPE;
 
 //
@@ -10601,6 +10085,14 @@ typedef struct _SE_ACCESS_REPLY
 #define SE_TIME_ZONE_NAME                 TEXT("SeTimeZonePrivilege")
 #define SE_CREATE_SYMBOLIC_LINK_NAME      TEXT("SeCreateSymbolicLinkPrivilege")
 
+//
+// List Of String Capabilities.
+//
+#define SE_ACTIVATE_AS_USER_CAPABILITY L"activateAsUser"
+#define SE_CONSTRAINED_IMPERSONATION_CAPABILITY L"constrainedImpersonation"
+#define SE_SESSION_IMPERSONATION_CAPABILITY L"sessionImpersonation"
+#define SE_MUMA_CAPABILITY L"muma"
+
 
 
 ////////////////////////////////////////////////////////////////////
@@ -10639,6 +10131,7 @@ typedef enum _SECURITY_IMPERSONATION_LEVEL {
 //                                                                //
 ////////////////////////////////////////////////////////////////////
 
+// begin_access
 
 //
 // Token Specific Access Rights.
@@ -10686,6 +10179,15 @@ typedef enum _SECURITY_IMPERSONATION_LEVEL {
                                        TOKEN_QUERY  |\
                                        TOKEN_QUERY_SOURCE )
 
+#if (NTDDI_VERSION >= NTDDI_WIN8)
+
+#define TOKEN_ACCESS_PSEUDO_HANDLE_WIN8 (TOKEN_QUERY | TOKEN_QUERY_SOURCE)
+
+#define TOKEN_ACCESS_PSEUDO_HANDLE TOKEN_ACCESS_PSEUDO_HANDLE_WIN8
+
+#endif
+//
+// end_access
 //
 //
 // Token Types
@@ -10756,6 +10258,7 @@ typedef enum _TOKEN_INFORMATION_CLASS {
     TokenSecurityAttributes,
     TokenIsRestricted,
     TokenProcessTrustLevel,
+    TokenPrivateNameSpace,
     MaxTokenInfoClass  // MaxTokenInfoClass should always be the last enum
 } TOKEN_INFORMATION_CLASS, *PTOKEN_INFORMATION_CLASS;
 
@@ -10763,10 +10266,29 @@ typedef enum _TOKEN_INFORMATION_CLASS {
 // Token information class structures
 //
 
-
 typedef struct _TOKEN_USER {
     SID_AND_ATTRIBUTES User;
 } TOKEN_USER, *PTOKEN_USER;
+
+#ifndef MIDL_PASS
+
+typedef struct _SE_TOKEN_USER {
+    union {
+        TOKEN_USER TokenUser;
+        SID_AND_ATTRIBUTES User;
+    } DUMMYUNIONNAME;
+
+    union {
+        SID Sid;
+        BYTE  Buffer[SECURITY_MAX_SID_SIZE];
+    } DUMMYUNIONNAME2;
+
+} SE_TOKEN_USER , PSE_TOKEN_USER;
+
+#define TOKEN_USER_MAX_SIZE (sizeof(TOKEN_USER) + SECURITY_MAX_SID_SIZE)
+
+#endif
+
 
 typedef struct _TOKEN_GROUPS {
     DWORD GroupCount;
@@ -10776,7 +10298,6 @@ typedef struct _TOKEN_GROUPS {
     SID_AND_ATTRIBUTES Groups[ANYSIZE_ARRAY];
 #endif // MIDL_PASS
 } TOKEN_GROUPS, *PTOKEN_GROUPS;
-
 
 typedef struct _TOKEN_PRIVILEGES {
     DWORD PrivilegeCount;
@@ -10788,6 +10309,9 @@ typedef struct _TOKEN_OWNER {
     PSID Owner;
 } TOKEN_OWNER, *PTOKEN_OWNER;
 
+#ifndef MIDL_PASS
+#define TOKEN_OWNER_MAX_SIZE (sizeof(TOKEN_OWNER) + SECURITY_MAX_SID_SIZE)
+#endif
 
 typedef struct _TOKEN_PRIMARY_GROUP {
     PSID PrimaryGroup;
@@ -10838,9 +10362,15 @@ typedef struct _TOKEN_MANDATORY_LABEL {
 #define TOKEN_MANDATORY_POLICY_VALID_MASK      (TOKEN_MANDATORY_POLICY_NO_WRITE_UP | \
                                                 TOKEN_MANDATORY_POLICY_NEW_PROCESS_MIN)
 
+#ifndef MIDL_PASS
+#define TOKEN_INTEGRITY_LEVEL_MAX_SIZE ((((DWORD)(sizeof(TOKEN_MANDATORY_LABEL)) + sizeof(PVOID) - 1) & ~(sizeof(PVOID)-1)) + SECURITY_MAX_SID_SIZE)
+#endif
+
 typedef struct _TOKEN_MANDATORY_POLICY {
     DWORD Policy;
 } TOKEN_MANDATORY_POLICY, *PTOKEN_MANDATORY_POLICY;
+
+typedef PVOID PSECURITY_ATTRIBUTES_OPAQUE;
 
 typedef struct _TOKEN_ACCESS_INFORMATION {
     PSID_AND_ATTRIBUTES_HASH SidHash;
@@ -10855,13 +10385,14 @@ typedef struct _TOKEN_ACCESS_INFORMATION {
     PSID PackageSid;
     PSID_AND_ATTRIBUTES_HASH CapabilitiesHash;
     PSID TrustLevelSid;
+    PSECURITY_ATTRIBUTES_OPAQUE SecurityAttributes;
 } TOKEN_ACCESS_INFORMATION, *PTOKEN_ACCESS_INFORMATION;
 
 //
 // Valid bits for each TOKEN_AUDIT_POLICY policy mask field.
 //
 
-#define POLICY_AUDIT_SUBCATEGORY_COUNT (56)
+#define POLICY_AUDIT_SUBCATEGORY_COUNT (58)
 
 typedef struct _TOKEN_AUDIT_POLICY {
     BYTE  PerUserPolicy[((POLICY_AUDIT_SUBCATEGORY_COUNT) >> 1) + 1];
@@ -10915,6 +10446,10 @@ typedef enum _MANDATORY_LEVEL {
 typedef struct _TOKEN_APPCONTAINER_INFORMATION {
     PSID TokenAppContainer;
 } TOKEN_APPCONTAINER_INFORMATION, *PTOKEN_APPCONTAINER_INFORMATION;
+
+#ifndef MIDL_PASS
+#define TOKEN_APPCONTAINER_SID_MAX_SIZE (sizeof(TOKEN_APPCONTAINER_INFORMATION) + SECURITY_MAX_SID_SIZE)
+#endif
 
 typedef struct _TOKEN_SID_INFORMATION {
     PSID Sid;
@@ -11243,11 +10778,17 @@ typedef enum _SE_LEARNING_MODE_DATA_TYPE {
 #define SE_LEARNING_MODE_FLAG_PERMISSIVE 0x00000001
 
 typedef struct _SECURITY_CAPABILITIES {
+#ifdef MIDL_PASS
+    PISID AppContainerSid;
+    [size_is(CapabilityCount)] PSID_AND_ATTRIBUTES Capabilities;
+#else // MIDL_PASS
     PSID AppContainerSid;
     PSID_AND_ATTRIBUTES Capabilities;
+#endif // MIDL_PASS
     DWORD CapabilityCount;
     DWORD Reserved;
 } SECURITY_CAPABILITIES, *PSECURITY_CAPABILITIES, *LPSECURITY_CAPABILITIES;
+
 
 #define PROCESS_TERMINATE                  (0x0001)  
 #define PROCESS_CREATE_THREAD              (0x0002)  
@@ -11270,18 +10811,6 @@ typedef struct _SECURITY_CAPABILITIES {
 #define PROCESS_ALL_ACCESS        (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | \
                                    0xFFF)
 #endif
-
-#if defined(_WIN64)
-
-#define MAXIMUM_PROC_PER_GROUP 64
-
-#else
-
-#define MAXIMUM_PROC_PER_GROUP 32
-
-#endif
-
-#define MAXIMUM_PROCESSORS          MAXIMUM_PROC_PER_GROUP
 
 #define THREAD_TERMINATE                 (0x0001)  
 #define THREAD_SUSPEND_RESUME            (0x0002)  
@@ -11310,6 +10839,8 @@ typedef struct _SECURITY_CAPABILITIES {
 #define JOB_OBJECT_SET_SECURITY_ATTRIBUTES  (0x0010)
 #define JOB_OBJECT_ALL_ACCESS       (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | \
                                         0x1F )
+
+// end_access
 
 typedef struct _JOB_SET_ARRAY {
     HANDLE JobHandle;   // Handle to job object to insert
@@ -11465,6 +10996,7 @@ typedef enum _PROCESS_MITIGATION_POLICY {
     ProcessExtensionPointDisablePolicy,
     ProcessReserved1Policy,
     ProcessSignaturePolicy,
+    ProcessFontDisablePolicy,
     MaxProcessMitigationPolicy
 } PROCESS_MITIGATION_POLICY, *PPROCESS_MITIGATION_POLICY;
 
@@ -11482,8 +11014,8 @@ typedef struct _PROCESS_MITIGATION_ASLR_POLICY {
             DWORD EnableHighEntropy : 1;
             DWORD DisallowStrippedImages : 1;
             DWORD ReservedFlags : 28;
-        };
-    };
+        } DUMMYSTRUCTNAME;
+    } DUMMYUNIONNAME;
 } PROCESS_MITIGATION_ASLR_POLICY, *PPROCESS_MITIGATION_ASLR_POLICY;
 
 typedef struct _PROCESS_MITIGATION_DEP_POLICY {
@@ -11493,8 +11025,8 @@ typedef struct _PROCESS_MITIGATION_DEP_POLICY {
             DWORD Enable : 1;
             DWORD DisableAtlThunkEmulation : 1;
             DWORD ReservedFlags : 30;
-        };
-    };
+        } DUMMYSTRUCTNAME;
+    } DUMMYUNIONNAME;
     BOOLEAN Permanent;
 } PROCESS_MITIGATION_DEP_POLICY, *PPROCESS_MITIGATION_DEP_POLICY;
 
@@ -11505,8 +11037,8 @@ typedef struct _PROCESS_MITIGATION_STRICT_HANDLE_CHECK_POLICY {
             DWORD RaiseExceptionOnInvalidHandleReference : 1;
             DWORD HandleExceptionsPermanentlyEnabled : 1;
             DWORD ReservedFlags : 30;
-        };
-    };
+        } DUMMYSTRUCTNAME;
+    } DUMMYUNIONNAME;
 } PROCESS_MITIGATION_STRICT_HANDLE_CHECK_POLICY, *PPROCESS_MITIGATION_STRICT_HANDLE_CHECK_POLICY;
 
 typedef struct _PROCESS_MITIGATION_SYSTEM_CALL_DISABLE_POLICY {
@@ -11515,8 +11047,8 @@ typedef struct _PROCESS_MITIGATION_SYSTEM_CALL_DISABLE_POLICY {
         struct {
             DWORD DisallowWin32kSystemCalls : 1;
             DWORD ReservedFlags : 31;
-        };
-    };
+        } DUMMYSTRUCTNAME;
+    } DUMMYUNIONNAME;
 } PROCESS_MITIGATION_SYSTEM_CALL_DISABLE_POLICY, *PPROCESS_MITIGATION_SYSTEM_CALL_DISABLE_POLICY;
 
 typedef struct _PROCESS_MITIGATION_EXTENSION_POINT_DISABLE_POLICY {
@@ -11525,8 +11057,8 @@ typedef struct _PROCESS_MITIGATION_EXTENSION_POINT_DISABLE_POLICY {
         struct {
             DWORD DisableExtensionPoints : 1;
             DWORD ReservedFlags : 31;
-        };
-    };
+        } DUMMYSTRUCTNAME;
+    } DUMMYUNIONNAME;
 } PROCESS_MITIGATION_EXTENSION_POINT_DISABLE_POLICY, *PPROCESS_MITIGATION_EXTENSION_POINT_DISABLE_POLICY;
 
 typedef struct _PROCESS_MITIGATION_DYNAMIC_CODE_POLICY {
@@ -11535,8 +11067,8 @@ typedef struct _PROCESS_MITIGATION_DYNAMIC_CODE_POLICY {
         struct {
             DWORD ProhibitDynamicCode : 1;
             DWORD ReservedFlags : 31;
-        };
-    };
+        } DUMMYSTRUCTNAME;
+    } DUMMYUNIONNAME;
 } PROCESS_MITIGATION_DYNAMIC_CODE_POLICY, *PPROCESS_MITIGATION_DYNAMIC_CODE_POLICY;
 
 
@@ -11546,9 +11078,20 @@ typedef struct _PROCESS_MITIGATION_BINARY_SIGNATURE_POLICY {
         struct {
             DWORD MicrosoftSignedOnly : 1;
             DWORD ReservedFlags : 31;
-        };
-    };
+        } DUMMYSTRUCTNAME;
+    } DUMMYUNIONNAME;
 } PROCESS_MITIGATION_BINARY_SIGNATURE_POLICY, *PPROCESS_MITIGATION_BINARY_SIGNATURE_POLICY;
+
+typedef struct _PROCESS_MITIGATION_FONT_DISABLE_POLICY {
+    union {
+        DWORD Flags;
+        struct {
+            DWORD DisableNonSystemFonts     : 1;
+            DWORD AuditNonSystemFontLoading : 1;
+            DWORD ReservedFlags             : 30;
+        } DUMMYSTRUCTNAME;
+    } DUMMYUNIONNAME;
+} PROCESS_MITIGATION_FONT_DISABLE_POLICY, *PPROCESS_MITIGATION_FONT_DISABLE_POLICY;
 
 
 typedef struct _JOBOBJECT_BASIC_ACCOUNTING_INFORMATION {
@@ -11582,6 +11125,7 @@ typedef struct _JOBOBJECT_EXTENDED_LIMIT_INFORMATION {
     SIZE_T PeakProcessMemoryUsed;
     SIZE_T PeakJobMemoryUsed;
 } JOBOBJECT_EXTENDED_LIMIT_INFORMATION, *PJOBOBJECT_EXTENDED_LIMIT_INFORMATION;
+
 
 typedef struct _JOBOBJECT_BASIC_PROCESS_ID_LIST {
     DWORD NumberOfAssignedProcesses;
@@ -11627,13 +11171,14 @@ typedef enum _JOBOBJECT_RATE_CONTROL_TOLERANCE {
     ToleranceLow = 1,
     ToleranceMedium,
     ToleranceHigh
-} JOBOBJECT_RATE_CONTROL_TOLERANCE;
+} JOBOBJECT_RATE_CONTROL_TOLERANCE, *PJOBOBJECT_RATE_CONTROL_TOLERANCE;
 
 typedef enum _JOBOBJECT_RATE_CONTROL_TOLERANCE_INTERVAL {
     ToleranceIntervalShort = 1,
     ToleranceIntervalMedium,
     ToleranceIntervalLong
-} JOBOBJECT_RATE_CONTROL_TOLERANCE_INTERVAL;
+} JOBOBJECT_RATE_CONTROL_TOLERANCE_INTERVAL,
+  *PJOBOBJECT_RATE_CONTROL_TOLERANCE_INTERVAL;
 
 typedef struct _JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION {
     DWORD64 IoReadBytesLimit;
@@ -11644,6 +11189,34 @@ typedef struct _JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION {
     JOBOBJECT_RATE_CONTROL_TOLERANCE_INTERVAL RateControlToleranceInterval;
     DWORD LimitFlags;
 } JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION, *PJOBOBJECT_NOTIFICATION_LIMIT_INFORMATION;
+
+#define JOB_OBJECT_NOTIFICATION_LIMIT_INFORMATION_VERSION_3 3
+
+typedef struct _JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION_EX {
+    WORD   Version;
+    WORD   Reserved;
+    DWORD LimitFlags;
+    DWORD64 IoReadBytesLimit;
+    DWORD64 IoWriteBytesLimit;
+    LARGE_INTEGER PerJobUserTimeLimit;
+    DWORD64 JobLowMemoryLimit;
+    DWORD64 JobHighMemoryLimit;
+    union {
+        JOBOBJECT_RATE_CONTROL_TOLERANCE RateControlTolerance;
+        JOBOBJECT_RATE_CONTROL_TOLERANCE CpuRateControlTolerance;
+    } DUMMYUNIONNAME;
+
+    union {
+        JOBOBJECT_RATE_CONTROL_TOLERANCE_INTERVAL RateControlToleranceInterval;
+        JOBOBJECT_RATE_CONTROL_TOLERANCE_INTERVAL
+            CpuRateControlToleranceInterval;
+    } DUMMYUNIONNAME2;
+
+    JOBOBJECT_RATE_CONTROL_TOLERANCE IoRateControlTolerance;
+    JOBOBJECT_RATE_CONTROL_TOLERANCE_INTERVAL IoRateControlToleranceInterval;
+    JOBOBJECT_RATE_CONTROL_TOLERANCE NetRateControlTolerance;
+    JOBOBJECT_RATE_CONTROL_TOLERANCE_INTERVAL NetRateControlToleranceInterval;
+} JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION_EX, *PJOBOBJECT_NOTIFICATION_LIMIT_INFORMATION_EX;
 
 typedef struct _JOBOBJECT_LIMIT_VIOLATION_INFORMATION {
     DWORD LimitFlags;
@@ -11657,16 +11230,80 @@ typedef struct _JOBOBJECT_LIMIT_VIOLATION_INFORMATION {
     DWORD64 JobMemory;
     DWORD64 JobMemoryLimit;
     JOBOBJECT_RATE_CONTROL_TOLERANCE RateControlTolerance;
-    JOBOBJECT_RATE_CONTROL_TOLERANCE_INTERVAL RateControlToleranceLimit;
+    JOBOBJECT_RATE_CONTROL_TOLERANCE RateControlToleranceLimit;
 } JOBOBJECT_LIMIT_VIOLATION_INFORMATION, *PJOBOBJECT_LIMIT_VIOLATION_INFORMATION;
+
+#define JOB_OBJECT_LIMIT_VIOLATION_INFORMATION_VERSION_3 3
+
+typedef struct _JOBOBJECT_LIMIT_VIOLATION_INFORMATION_EX {
+    WORD   Version;
+    WORD   Reserved;
+    DWORD LimitFlags;
+    DWORD ViolationLimitFlags;
+    DWORD64 IoReadBytes;
+    DWORD64 IoReadBytesLimit;
+    DWORD64 IoWriteBytes;
+    DWORD64 IoWriteBytesLimit;
+    LARGE_INTEGER PerJobUserTime;
+    LARGE_INTEGER PerJobUserTimeLimit;
+    DWORD64 JobMemory;
+    DWORD64 JobLowMemoryLimit;
+    DWORD64 JobHighMemoryLimit;
+    union {
+        JOBOBJECT_RATE_CONTROL_TOLERANCE RateControlTolerance;
+        JOBOBJECT_RATE_CONTROL_TOLERANCE CpuRateControlTolerance;
+    } DUMMYUNIONNAME;
+
+    union {
+        JOBOBJECT_RATE_CONTROL_TOLERANCE RateControlToleranceLimit;
+        JOBOBJECT_RATE_CONTROL_TOLERANCE CpuRateControlToleranceLimit;
+    } DUMMYUNIONNAME2;
+
+    JOBOBJECT_RATE_CONTROL_TOLERANCE IoRateControlTolerance;
+    JOBOBJECT_RATE_CONTROL_TOLERANCE IoRateControlToleranceLimit;
+    JOBOBJECT_RATE_CONTROL_TOLERANCE NetRateControlTolerance;
+    JOBOBJECT_RATE_CONTROL_TOLERANCE NetRateControlToleranceLimit;
+} JOBOBJECT_LIMIT_VIOLATION_INFORMATION_EX,
+  *PJOBOBJECT_LIMIT_VIOLATION_INFORMATION_EX;
 
 typedef struct _JOBOBJECT_CPU_RATE_CONTROL_INFORMATION {
     DWORD ControlFlags;
     union {
         DWORD CpuRate;
         DWORD Weight;
-    };
+        struct {
+            WORD   MinRate;
+            WORD   MaxRate;
+        } DUMMYSTRUCTNAME;
+    } DUMMYUNIONNAME;
 } JOBOBJECT_CPU_RATE_CONTROL_INFORMATION, *PJOBOBJECT_CPU_RATE_CONTROL_INFORMATION;
+
+#define JOB_OBJECT_NET_RATE_CONTROL_INFORMATION_VERSION_1 1
+
+typedef struct _JOBOBJECT_NET_RATE_CONTROL_INFORMATION {
+    WORD   Version;
+    BYTE  DscpTag;
+    BYTE  Reserved;
+    DWORD ControlFlags;
+    DWORD64 MaxBandwidth;
+} JOBOBJECT_NET_RATE_CONTROL_INFORMATION, *PJOBOBJECT_NET_RATE_CONTROL_INFORMATION;
+
+// begin_ntosifs
+
+#define JOB_OBJECT_IO_RATE_CONTROL_INFORMATION_VERSION_1 1
+
+typedef struct _JOBOBJECT_IO_RATE_CONTROL_INFORMATION {
+    WORD   Version;
+    WORD   VolumeNameLength;
+    DWORD ControlFlags;
+    LONG64 MaxIops;
+    LONG64 MaxBandwidth;
+    LONG64 ReservationIops;
+    PWSTR VolumeName;
+    DWORD BaseIoSize;
+} JOBOBJECT_IO_RATE_CONTROL_INFORMATION, *PJOBOBJECT_IO_RATE_CONTROL_INFORMATION;
+
+// end_ntosifs
 
 #define JOB_OBJECT_TERMINATE_AT_END_OF_JOB  0
 #define JOB_OBJECT_POST_AT_END_OF_JOB       1
@@ -11723,6 +11360,7 @@ typedef struct _JOBOBJECT_CPU_RATE_CONTROL_INFORMATION {
 #define JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE          0x00002000
 #define JOB_OBJECT_LIMIT_SUBSET_AFFINITY            0x00004000
 
+
 //
 // Notification Limits
 //
@@ -11730,22 +11368,28 @@ typedef struct _JOBOBJECT_CPU_RATE_CONTROL_INFORMATION {
 #define JOB_OBJECT_LIMIT_JOB_READ_BYTES             0x00010000
 #define JOB_OBJECT_LIMIT_JOB_WRITE_BYTES            0x00020000
 #define JOB_OBJECT_LIMIT_RATE_CONTROL               0x00040000
+#define JOB_OBJECT_LIMIT_CPU_RATE_CONTROL           JOB_OBJECT_LIMIT_RATE_CONTROL
+#define JOB_OBJECT_LIMIT_IO_RATE_CONTROL            0x00080000
+#define JOB_OBJECT_LIMIT_NET_RATE_CONTROL           0x00100000
 
-//
-// Reserved flags
-//
-
-#define JOB_OBJECT_LIMIT_RESERVED3                  0x00008000
 
 //
 // Valid Job Object Limits
 //
 
-#define JOB_OBJECT_LIMIT_VALID_FLAGS                0x0007ffff
-#define JOB_OBJECT_BASIC_LIMIT_VALID_FLAGS          0x000000ff
-#define JOB_OBJECT_EXTENDED_LIMIT_VALID_FLAGS       0x00007fff
-#define JOB_OBJECT_NOTIFICATION_LIMIT_VALID_FLAGS   0x00070204
-#define JOB_OBJECT_RESERVED_LIMIT_VALID_FLAGS       0x0007ffff
+#define JOB_OBJECT_LIMIT_VALID_FLAGS                 0x0007ffff
+#define JOB_OBJECT_BASIC_LIMIT_VALID_FLAGS           0x000000ff
+#define JOB_OBJECT_EXTENDED_LIMIT_VALID_FLAGS        0x00007fff
+#define JOB_OBJECT_NOTIFICATION_LIMIT_VALID_FLAGS \
+    (JOB_OBJECT_LIMIT_JOB_READ_BYTES | \
+     JOB_OBJECT_LIMIT_JOB_WRITE_BYTES | \
+     JOB_OBJECT_LIMIT_JOB_TIME | \
+     JOB_OBJECT_LIMIT_JOB_MEMORY_LOW | \
+     JOB_OBJECT_LIMIT_JOB_MEMORY_HIGH | \
+     JOB_OBJECT_LIMIT_CPU_RATE_CONTROL | \
+     JOB_OBJECT_LIMIT_IO_RATE_CONTROL | \
+     JOB_OBJECT_LIMIT_NET_RATE_CONTROL)
+
 
 //
 // UI restrictions for jobs
@@ -11781,7 +11425,35 @@ typedef struct _JOBOBJECT_CPU_RATE_CONTROL_INFORMATION {
 #define JOB_OBJECT_CPU_RATE_CONTROL_WEIGHT_BASED 0x2
 #define JOB_OBJECT_CPU_RATE_CONTROL_HARD_CAP 0x4
 #define JOB_OBJECT_CPU_RATE_CONTROL_NOTIFY 0x8
-#define JOB_OBJECT_CPU_RATE_CONTROL_VALID_FLAGS 0xf
+#define JOB_OBJECT_CPU_RATE_CONTROL_MIN_MAX_RATE 0x10
+#define JOB_OBJECT_CPU_RATE_CONTROL_VALID_FLAGS 0x1f
+
+//
+// Control flags for network rate control.
+//
+
+#define JOB_OBJECT_NET_RATE_CONTROL_ENABLE 0x1
+#define JOB_OBJECT_NET_RATE_CONTROL_MAX_BANDWIDTH 0x2
+#define JOB_OBJECT_NET_RATE_CONTROL_DSCP_TAG 0x4
+#define JOB_OBJECT_NET_RATE_CONTROL_VALID_FLAGS \
+    (JOB_OBJECT_NET_RATE_CONTROL_ENABLE | \
+     JOB_OBJECT_NET_RATE_CONTROL_MAX_BANDWIDTH | \
+     JOB_OBJECT_NET_RATE_CONTROL_DSCP_TAG)
+
+#define JOB_OBJECT_NET_RATE_CONTROL_MAX_DSCP_TAG 64
+
+//
+// Control flags for IO rate control.
+//
+
+// begin_ntosifs
+
+#define JOB_OBJECT_IO_RATE_CONTROL_ENABLE 0x1
+
+// end_ntosifs
+
+#define JOB_OBJECT_IO_RATE_CONTROL_VALID_FLAGS 0x1
+
 
 typedef enum _JOBOBJECTINFOCLASS {
     JobObjectBasicAccountingInformation = 1,
@@ -11810,9 +11482,68 @@ typedef enum _JOBOBJECTINFOCLASS {
     JobObjectReserved7Information,
     JobObjectReserved8Information,
     JobObjectReserved9Information,
+    JobObjectReserved10Information,
+    JobObjectReserved11Information,
+    JobObjectReserved12Information,
+    JobObjectReserved13Information,
+    JobObjectReserved14Information,
+    JobObjectVersionedInformationBaseClass,
+    JobObjectNetRateControlInformation = JobObjectVersionedInformationBaseClass,
+    JobObjectIoRateControlInformation,
+    JobObjectNotificationLimitInformationEx,
+    JobObjectLimitViolationInformationEx,
     MaxJobObjectInfoClass
 } JOBOBJECTINFOCLASS;
 
+#define SILO_OBJECT_ASSIGN_PROCESS           (0x0001)
+#define SILO_OBJECT_SET_ATTRIBUTES           (0x0002)
+#define SILO_OBJECT_QUERY                    (0x0004)
+#define SILO_OBJECT_TERMINATE                (0x0008)
+#define SILO_OBJECT_SET_SECURITY_ATTRIBUTES  (0x0010)
+#define SILO_OBJECT_ALL_ACCESS       (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | \
+                                        0x1F )
+typedef struct _SILOOBJECT_BASIC_INFORMATION {
+    HANDLE SiloIdNumber;
+    HANDLE SiloParentIdNumber;
+    DWORD NumberOfProcesses;
+    DWORD NumberOfChildSilos;
+    BOOLEAN IsInServerSilo;
+}SILOOBJECT_BASIC_INFORMATION, *PSILOOBJECT_BASIC_INFORMATION;
+
+typedef struct _SILOOBJECT_ROOT_DIRECTORY {
+    HANDLE DirectoryHandle;
+} SILOOBJECT_ROOT_DIRECTORY, *PSILOOBJECT_ROOT_DIRECTORY;
+
+
+typedef enum _SERVERSILO_STATE
+{
+    SERVERSILO_INITING = 0,
+    SERVERSILO_STARTED,
+    SERVERSILO_TERMINATING,
+    SERVERSILO_TERMINATED,
+} SERVERSILO_STATE, *PSERVERSILO_STATE;
+
+typedef struct _SERVERSILO_BASIC_INFORMATION {
+    HANDLE SiloIdNumber;
+    DWORD ServiceSessionId;
+    DWORD DefaultCompartmentId;
+    SERVERSILO_STATE State;
+} SERVERSILO_BASIC_INFORMATION, *PSERVERSILO_BASIC_INFORMATION;
+
+typedef enum _SILOOBJECTINFOCLASS
+{
+    SiloObjectBasicInformation = 1,
+    SiloObjectBasicProcessIdList,
+    SiloObjectChildSiloIdList,
+    SiloObjectRootDirectory,
+    ServerSiloBasicInformation,
+    ServerSiloServiceSessionId,
+    ServerSiloInitialize,
+    ServerSiloDefaultCompartmentId,
+    MaxSiloObjectInfoClass
+} SILOOBJECTINFOCLASS;
+
+//
 
 typedef enum _FIRMWARE_TYPE {
     FirmwareTypeUnknown,
@@ -11824,6 +11555,9 @@ typedef enum _FIRMWARE_TYPE {
 #define EVENT_MODIFY_STATE      0x0002  
 #define EVENT_ALL_ACCESS (STANDARD_RIGHTS_REQUIRED|SYNCHRONIZE|0x3) 
 
+//
+// Mutant Specific Access Rights
+//
 #define MUTANT_QUERY_STATE      0x0001
 
 #define MUTANT_ALL_ACCESS (STANDARD_RIGHTS_REQUIRED|SYNCHRONIZE|\
@@ -11895,7 +11629,8 @@ typedef struct _SYSTEM_LOGICAL_PROCESSOR_INFORMATION {
 
 typedef struct _PROCESSOR_RELATIONSHIP {
     BYTE  Flags;
-    BYTE  Reserved[21];
+    BYTE  EfficiencyClass;
+    BYTE  Reserved[20];
     WORD   GroupCount;
     _Field_size_(GroupCount) GROUP_AFFINITY GroupMask[ANYSIZE_ARRAY];
 } PROCESSOR_RELATIONSHIP, *PPROCESSOR_RELATIONSHIP;
@@ -11986,38 +11721,43 @@ typedef struct _SYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION {
 #define PROCESSOR_ARCHITECTURE_AMD64            9
 #define PROCESSOR_ARCHITECTURE_IA32_ON_WIN64    10
 #define PROCESSOR_ARCHITECTURE_NEUTRAL          11
+#define PROCESSOR_ARCHITECTURE_ARM64            12
 
 #define PROCESSOR_ARCHITECTURE_UNKNOWN 0xFFFF
 
-#define PF_FLOATING_POINT_PRECISION_ERRATA   0   
-#define PF_FLOATING_POINT_EMULATED           1   
-#define PF_COMPARE_EXCHANGE_DOUBLE           2   
-#define PF_MMX_INSTRUCTIONS_AVAILABLE        3   
-#define PF_PPC_MOVEMEM_64BIT_OK              4   
-#define PF_ALPHA_BYTE_INSTRUCTIONS           5   
-#define PF_XMMI_INSTRUCTIONS_AVAILABLE       6   
-#define PF_3DNOW_INSTRUCTIONS_AVAILABLE      7   
-#define PF_RDTSC_INSTRUCTION_AVAILABLE       8   
-#define PF_PAE_ENABLED                       9   
-#define PF_XMMI64_INSTRUCTIONS_AVAILABLE    10   
-#define PF_SSE_DAZ_MODE_AVAILABLE           11   
-#define PF_NX_ENABLED                       12   
-#define PF_SSE3_INSTRUCTIONS_AVAILABLE      13   
-#define PF_COMPARE_EXCHANGE128              14   
-#define PF_COMPARE64_EXCHANGE128            15   
-#define PF_CHANNELS_ENABLED                 16   
-#define PF_XSAVE_ENABLED                    17   
-#define PF_ARM_VFP_32_REGISTERS_AVAILABLE   18   
-#define PF_ARM_NEON_INSTRUCTIONS_AVAILABLE  19   
-#define PF_SECOND_LEVEL_ADDRESS_TRANSLATION 20   
-#define PF_VIRT_FIRMWARE_ENABLED            21   
-#define PF_RDWRFSGSBASE_AVAILABLE           22   
-#define PF_FASTFAIL_AVAILABLE               23   
-#define PF_ARM_DIVIDE_INSTRUCTION_AVAILABLE 24   
-#define PF_ARM_64BIT_LOADSTORE_ATOMIC       25   
-#define PF_ARM_EXTERNAL_CACHE_AVAILABLE     26   
-#define PF_ARM_FMAC_INSTRUCTIONS_AVAILABLE  27   
-#define PF_RDRAND_INSTRUCTION_AVAILABLE     28   
+#define PF_FLOATING_POINT_PRECISION_ERRATA       0   
+#define PF_FLOATING_POINT_EMULATED               1   
+#define PF_COMPARE_EXCHANGE_DOUBLE               2   
+#define PF_MMX_INSTRUCTIONS_AVAILABLE            3   
+#define PF_PPC_MOVEMEM_64BIT_OK                  4   
+#define PF_ALPHA_BYTE_INSTRUCTIONS               5   
+#define PF_XMMI_INSTRUCTIONS_AVAILABLE           6   
+#define PF_3DNOW_INSTRUCTIONS_AVAILABLE          7   
+#define PF_RDTSC_INSTRUCTION_AVAILABLE           8   
+#define PF_PAE_ENABLED                           9   
+#define PF_XMMI64_INSTRUCTIONS_AVAILABLE        10   
+#define PF_SSE_DAZ_MODE_AVAILABLE               11   
+#define PF_NX_ENABLED                           12   
+#define PF_SSE3_INSTRUCTIONS_AVAILABLE          13   
+#define PF_COMPARE_EXCHANGE128                  14   
+#define PF_COMPARE64_EXCHANGE128                15   
+#define PF_CHANNELS_ENABLED                     16   
+#define PF_XSAVE_ENABLED                        17   
+#define PF_ARM_VFP_32_REGISTERS_AVAILABLE       18   
+#define PF_ARM_NEON_INSTRUCTIONS_AVAILABLE      19   
+#define PF_SECOND_LEVEL_ADDRESS_TRANSLATION     20   
+#define PF_VIRT_FIRMWARE_ENABLED                21   
+#define PF_RDWRFSGSBASE_AVAILABLE               22   
+#define PF_FASTFAIL_AVAILABLE                   23   
+#define PF_ARM_DIVIDE_INSTRUCTION_AVAILABLE     24   
+#define PF_ARM_64BIT_LOADSTORE_ATOMIC           25   
+#define PF_ARM_EXTERNAL_CACHE_AVAILABLE         26   
+#define PF_ARM_FMAC_INSTRUCTIONS_AVAILABLE      27   
+#define PF_RDRAND_INSTRUCTION_AVAILABLE         28   
+#define PF_ARM_V8_INSTRUCTIONS_AVAILABLE        29   
+#define PF_ARM_V8_CRYPTO_INSTRUCTIONS_AVAILABLE 30   
+#define PF_ARM_V8_CRC32_INSTRUCTIONS_AVAILABLE  31   
+#define PF_RDTSCP_INSTRUCTION_AVAILABLE         32   
 
 //
 // Known extended CPU state feature IDs
@@ -12037,6 +11777,16 @@ typedef struct _SYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION {
 #define MAXIMUM_XSTATE_FEATURES             (64)
 
 //
+// Flags associated with compaction mask
+//
+
+#define XSTATE_COMPACTION_ENABLE            (63)
+#define XSTATE_COMPACTION_ENABLE_MASK       (1ui64 << (XSTATE_COMPACTION_ENABLE))
+
+#define XSTATE_ALIGN_BIT                    (1)
+#define XSTATE_ALIGN_MASK                   (1ui64 << (XSTATE_ALIGN_BIT))
+
+//
 // Extended processor state configuration
 //
 
@@ -12052,16 +11802,31 @@ typedef struct _XSTATE_CONFIGURATION {
     // Mask of volatile enabled features
     DWORD64 EnabledVolatileFeatures;
 
-    // Total size of the save area
+    // Total size of the save area for user states
     DWORD Size;
 
+    // Control Flags
     DWORD OptimizedSave : 1;
+    DWORD CompactionEnabled : 1;
 
-    // List of features (
+    // List of features
     XSTATE_FEATURE Features[MAXIMUM_XSTATE_FEATURES];
+
+    // Mask of all supervisor features
+    DWORD64 ThreadSupervisorFeatures;
+
+    // Mask of features that require start address to be 64 byte aligned
+    DWORD64 AlignedFeatures;
+
+    // Total size of the save area for user and supervisor states
+    DWORD AllFeatureSize;
+
+    // List which holds size of each user and supervisor state supported by CPU        
+    DWORD AllFeatures[MAXIMUM_XSTATE_FEATURES];
 
 } XSTATE_CONFIGURATION, *PXSTATE_CONFIGURATION;
 
+// begin_ntifs
 
 typedef struct _MEMORY_BASIC_INFORMATION {
     PVOID BaseAddress;
@@ -12072,6 +11837,8 @@ typedef struct _MEMORY_BASIC_INFORMATION {
     DWORD Protect;
     DWORD Type;
 } MEMORY_BASIC_INFORMATION, *PMEMORY_BASIC_INFORMATION;
+
+// end_ntifs
 
 typedef struct _MEMORY_BASIC_INFORMATION32 {
     DWORD BaseAddress;
@@ -12095,6 +11862,13 @@ typedef struct DECLSPEC_ALIGN(16) _MEMORY_BASIC_INFORMATION64 {
     DWORD     __alignment2;
 } MEMORY_BASIC_INFORMATION64, *PMEMORY_BASIC_INFORMATION64;
 
+#define CFG_CALL_TARGET_VALID (0x1) 
+
+typedef struct _CFG_CALL_TARGET_INFO {
+    ULONG_PTR Offset;
+    ULONG_PTR Flags;
+} CFG_CALL_TARGET_INFO, *PCFG_CALL_TARGET_INFO;
+
 #define SECTION_QUERY                0x0001
 #define SECTION_MAP_WRITE            0x0002
 #define SECTION_MAP_READ             0x0004
@@ -12108,6 +11882,10 @@ typedef struct DECLSPEC_ALIGN(16) _MEMORY_BASIC_INFORMATION64 {
                             SECTION_MAP_EXECUTE |    \
                             SECTION_EXTEND_SIZE)
 
+//
+// Session Specific Access Rights.
+//
+
 #define SESSION_QUERY_ACCESS  0x0001
 #define SESSION_MODIFY_ACCESS 0x0002
 
@@ -12115,22 +11893,32 @@ typedef struct DECLSPEC_ALIGN(16) _MEMORY_BASIC_INFORMATION64 {
                             SESSION_QUERY_ACCESS |             \
                             SESSION_MODIFY_ACCESS)
 
+//
+// Partition Specific Access Rights.
+//
+
+#define MEMORY_PARTITION_QUERY_ACCESS  0x0001
+#define MEMORY_PARTITION_MODIFY_ACCESS 0x0002
+
+#define MEMORY_PARTITION_ALL_ACCESS (STANDARD_RIGHTS_REQUIRED |  \
+                              MEMORY_PARTITION_QUERY_ACCESS |    \
+                              MEMORY_PARTITION_MODIFY_ACCESS)
+
+// end_access
 #define PAGE_NOACCESS          0x01     
 #define PAGE_READONLY          0x02     
 #define PAGE_READWRITE         0x04     
 #define PAGE_WRITECOPY         0x08     
-#pragma region Desktop Family           
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) 
 #define PAGE_EXECUTE           0x10     
 #define PAGE_EXECUTE_READ      0x20     
 #define PAGE_EXECUTE_READWRITE 0x40     
 #define PAGE_EXECUTE_WRITECOPY 0x80     
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */ 
-#pragma endregion                       
 #define PAGE_GUARD            0x100     
 #define PAGE_NOCACHE          0x200     
 #define PAGE_WRITECOMBINE     0x400     
 #define PAGE_REVERT_TO_FILE_MAP     0x80000000     
+#define PAGE_TARGETS_NO_UPDATE      0x40000000     
+#define PAGE_TARGETS_INVALID        0x40000000     
 #define MEM_COMMIT                  0x1000      
 #define MEM_RESERVE                 0x2000      
 #define MEM_DECOMMIT                0x4000      
@@ -12159,6 +11947,7 @@ typedef struct DECLSPEC_ALIGN(16) _MEMORY_BASIC_INFORMATION64 {
 #define MEM_IMAGE         SEC_IMAGE     
 #define WRITE_WATCH_FLAG_RESET  0x01     
 #define MEM_UNMAP_WITH_TRANSIENT_BOOST  0x01     
+// begin_access
 
 //
 // Define access rights to files and directories
@@ -12218,6 +12007,7 @@ typedef struct DECLSPEC_ALIGN(16) _MEMORY_BASIC_INFORMATION64 {
                                    FILE_EXECUTE             |\
                                    SYNCHRONIZE)
 
+// end_access
 #define FILE_SHARE_READ                 0x00000001  
 #define FILE_SHARE_WRITE                0x00000002  
 #define FILE_SHARE_DELETE               0x00000004  
@@ -12238,6 +12028,7 @@ typedef struct DECLSPEC_ALIGN(16) _MEMORY_BASIC_INFORMATION64 {
 #define FILE_ATTRIBUTE_INTEGRITY_STREAM     0x00008000  
 #define FILE_ATTRIBUTE_VIRTUAL              0x00010000  
 #define FILE_ATTRIBUTE_NO_SCRUB_DATA        0x00020000  
+#define FILE_ATTRIBUTE_EA                   0x00040000  
 #define FILE_NOTIFY_CHANGE_FILE_NAME    0x00000001   
 #define FILE_NOTIFY_CHANGE_DIR_NAME     0x00000002   
 #define FILE_NOTIFY_CHANGE_ATTRIBUTES   0x00000004   
@@ -12274,6 +12065,8 @@ typedef struct DECLSPEC_ALIGN(16) _MEMORY_BASIC_INFORMATION64 {
 #define FILE_SUPPORTS_OPEN_BY_FILE_ID       0x01000000  
 #define FILE_SUPPORTS_USN_JOURNAL           0x02000000  
 #define FILE_SUPPORTS_INTEGRITY_STREAMS     0x04000000  
+#define FILE_SUPPORTS_BLOCK_REFCOUNTING     0x08000000  
+#define FILE_SUPPORTS_SPARSE_VDL            0x10000000  
 #define FILE_INVALID_FILE_ID               ((LONGLONG)-1LL) 
 typedef struct _FILE_ID_128 {                               
     BYTE  Identifier[16];                                   
@@ -12441,6 +12234,8 @@ typedef struct _REPARSE_GUID_DATA_BUFFER {
 #define IO_REPARSE_TAG_DEDUP                    (0x80000013L)       
 #define IO_REPARSE_TAG_NFS                      (0x80000014L)       
 #define IO_REPARSE_TAG_FILE_PLACEHOLDER         (0x80000015L)       
+#define IO_REPARSE_TAG_WOF                      (0x80000017L)       
+#define IO_REPARSE_TAG_WCI                      (0x80000018L)       
 
 #if (_WIN32_WINNT >= _WIN32_WINNT_WIN8)
 
@@ -12655,18 +12450,52 @@ typedef struct _SCRUB_DATA_OUTPUT {
 
 #endif /*_WIN32_WINNT >= _WIN32_WINNT_WIN8 */
 
-// WINBLUE_abracadabra
-//
-// N.B. The following #if check needs to be against NTDDI_WINBLUE when it becomes available.
-#if (_WIN32_WINNT >= _WIN32_WINNT_WIN8)
+#if (_WIN32_WINNT >= _WIN32_WINNT_WINBLUE)
 //
 //=============== FSCTL_QUERY_SHARED_VIRTUAL_DISK_SUPPORT ====================
 //
 
 //
-// If set, indicates that the server supports shared virtual disks.
+// Whether the file system supports shared virtual disks.
 //
-#define SHARED_VIRTUAL_DISK_SUPPORTED 0x01UL
+typedef enum _SharedVirtualDiskSupportType
+{
+    //
+    // Shared virtual disks are not supported.
+    //
+    SharedVirtualDisksUnsupported = 0,
+
+    //
+    // Shared virtual disks are supported.
+    //
+    SharedVirtualDisksSupported = 1,
+
+    //
+    // The target device supports taking virtual disk
+    // snapshots.
+    //
+    SharedVirtualDiskSnapshotsSupported = 3
+} SharedVirtualDiskSupportType;
+
+typedef enum _SharedVirtualDiskHandleState
+{
+    //
+    // The file handle is not related to a shared virtual disk.
+    //
+    SharedVirtualDiskHandleStateNone = 0,
+
+    //
+    // This handle is for the same file where at least one handle is
+    // accessing the file in shared mode.
+    //
+    SharedVirtualDiskHandleStateFileShared = 1,
+
+    //
+    // This handle is currently being used to access a shared
+    // virtual disk.
+    //
+    SharedVirtualDiskHandleStateHandleShared = 3
+} SharedVirtualDiskHandleState;
 
 //
 // Response to FSCTL_QUERY_SHARED_VIRTUAL_DISK_SUPPORT that indicates the level
@@ -12674,22 +12503,27 @@ typedef struct _SCRUB_DATA_OUTPUT {
 //
 typedef struct _SHARED_VIRTUAL_DISK_SUPPORT {
     //
-    // One or more of the above SHARED_VIRTUAL_DISK_SUPPORT* flags that indicate the
-    // level of shared virtual disk support.
+    // One or more of the above SharedVirtualDiskSupportType flags that indicate the
+    // level of shared virtual disk support on this file system.
     //
-    DWORD SharedVirtualDiskSupport;
+    SharedVirtualDiskSupportType SharedVirtualDiskSupport;
 
     //
-    // Reserved for system use.
+    // The state of the current shared virtual disk handle.  This is one or more of the
+    // above SharedVirtualDiskHandleState flags.
     //
-    DWORD Reserved;
+    SharedVirtualDiskHandleState HandleState;
 } SHARED_VIRTUAL_DISK_SUPPORT, *PSHARED_VIRTUAL_DISK_SUPPORT;
-#endif // (_WIN32_WINNT >= _WIN32_WINNT_WIN8)
 
-// begin_winioctl begin_ntosifs
 //
-//=============== END FileSystem FSCTL Structure Defintions ==================
+// Determines if the provided virtual disk handle state, from FSCTL_QUERY_SHARED_VIRTUAL_DISK_SUPPORT,
+// indicates that the target virtual disk file is opened in shared mode.
 //
+#define IsVirtualDiskFileShared(HandleState) (((HandleState) & SharedVirtualDiskHandleStateFileShared) != 0)
+
+#endif // (_WIN32_WINNT >= _WIN32_WINNT_WINBLUE)
+
+// begin_access
 
 //
 // I/O Completion Specific Access Rights.
@@ -12697,6 +12531,10 @@ typedef struct _SHARED_VIRTUAL_DISK_SUPPORT {
 
 #define IO_COMPLETION_MODIFY_STATE  0x0002  
 #define IO_COMPLETION_ALL_ACCESS (STANDARD_RIGHTS_REQUIRED|SYNCHRONIZE|0x3) 
+
+#define IO_QOS_MAX_RESERVATION 1000000000ULL
+
+// begin_access
 
 //
 // Object Manager Symbolic Link Specific Access Rights.
@@ -12813,15 +12651,25 @@ DEFINE_GUID(GUID_IDLE_RESILIENCY_SUBGROUP, 0x2e601130, 0x5351, 0x4d9d, 0x8e, 0x4
 //
 // Specifies the maximum clock interrupt period (in ms)
 //
+// N.B. This power setting is DEPRECATED.
+//
 // {C42B79AA-AA3A-484b-A98F-2CF32AA90A28}
 DEFINE_GUID(GUID_IDLE_RESILIENCY_PERIOD, 0xc42b79aa, 0xaa3a, 0x484b, 0xa9, 0x8f, 0x2c, 0xf3, 0x2a, 0xa9, 0xa, 0x28);
+
+//
+// Specifies the deep sleep policy setting.
+// This is intended to override the GUID_IDLE_RESILIENCY_PERIOD
+// {d502f7ee-1dc7-4efd-a55d-f04b6f5c0545}
+DEFINE_GUID(GUID_DEEP_SLEEP_ENABLED, 0xd502f7ee, 0x1dc7, 0x4efd, 0xa5, 0x5d, 0xf0, 0x4b, 0x6f, 0x5c, 0x5, 0x45);
 
 //
 // Specifies the platform idle state index associated with idle resiliency
 // period.
 //
+// N.B. This power setting is DEPRECATED.
+//
 // {D23F2FB8-9536-4038-9C94-1CE02E5C2152}
-DEFINE_GUID(GUID_IDLE_RESILIENCY_PLATFORM_STATE, 0xd23f2fb8, 0x9536, 0x4038, 0x9c, 0x94, 0x1c, 0xe0, 0x2e, 0x5c, 0x21, 0x52);
+DEFINE_GUID(GUID_DEEP_SLEEP_PLATFORM_STATE, 0xd23f2fb8, 0x9536, 0x4038, 0x9c, 0x94, 0x1c, 0xe0, 0x2e, 0x5c, 0x21, 0x52);
 
 //
 // Specifies (in milliseconds) how long we wait after the last disk access
@@ -12881,6 +12729,11 @@ DEFINE_GUID( GUID_VIDEO_DIM_TIMEOUT, 0x17aaa29b, 0x8b43, 0x4b94, 0xaa, 0xfe, 0x3
 // previous behavior) to power down the video,
 //
 DEFINE_GUID( GUID_VIDEO_ADAPTIVE_POWERDOWN, 0x90959D22, 0xD6A1, 0x49B9, 0xAF, 0x93, 0xBC, 0xE8, 0x85, 0xAD, 0x33, 0x5B );
+
+//
+// Specifies a maximum power consumption level.
+//
+DEFINE_GUID(GUID_DISK_MAX_POWER, 0x51dea550, 0xbb38, 0x4bc4, 0x99, 0x1b, 0xea, 0xcf, 0x37, 0xbe, 0x5e, 0xc8);
 
 //
 // Specifies if the monitor is currently being powered or not.
@@ -13049,19 +12902,6 @@ DEFINE_GUID( GUID_SYSTEM_AWAYMODE, 0x98A7F580, 0x01F7, 0x48AA, 0x9C, 0x0F, 0x44,
 DEFINE_GUID( GUID_ALLOW_AWAYMODE, 0x25dfa149, 0x5dd1, 0x4736, 0xb5, 0xab, 0xe8, 0xa3, 0x7b, 0x5b, 0x81, 0x87 );
 
 //
-// Full-screen video playback GUID
-// {3D5938F0-FF20-41EF-AE9F-EEA006F422E1}
-//
-DEFINE_GUID( GUID_VIDEO_FULLSCREEN_PLAYBACK, 0x3D5938F0, 0xFF20, 0x41EF, 0xAE, 0x9F, 0xEE, 0xA0, 0x06, 0xF4, 0x22, 0xE1 );
-
-//
-// Audio playback GUID
-// {23B61359-2977-4c74-8207-37BCA1400D9D}
-//
-
-DEFINE_GUID( GUID_AUDIO_PLAYBACK, 0x23b61359, 0x2977, 0x4c74, 0x82, 0x7, 0x37, 0xbc, 0xa1, 0x40, 0xd, 0x9d );
-
-//
 // Defines a guid for enabling/disabling standby (S1-S3) states. This does not
 // affect hibernation (S4).
 //
@@ -13084,6 +12924,30 @@ DEFINE_GUID( GUID_ALLOW_RTC_WAKE, 0xBD3B718A, 0x0680, 0x4D9D, 0x8A, 0xB2, 0xE1, 
 //
 DEFINE_GUID( GUID_ALLOW_SYSTEM_REQUIRED, 0xA4B195F5, 0x8225, 0x47D8, 0x80, 0x12, 0x9D, 0x41, 0x36, 0x97, 0x86, 0xE2 );
 
+// Energy Saver settings
+// ---------------------
+//
+// Indicates if Enegry Saver is ON or OFF.
+//
+// {E00958C0-C213-4ACE-AC77-FECCED2EEEA5}
+//
+DEFINE_GUID( GUID_POWER_SAVING_STATUS, 0xe00958c0, 0xc213, 0x4ace, 0xac, 0x77, 0xfe, 0xcc, 0xed, 0x2e, 0xee, 0xa5);
+
+//
+// Specifies the subgroup which will contain all of the Energy Saver settings
+// for a single policy.
+//
+// {DE830923-A562-41AF-A086-E3A2C6BAD2DA}
+//
+DEFINE_GUID( GUID_ENERGY_SAVER_SUBGROUP, 0xDE830923, 0xA562, 0x41AF, 0xA0, 0x86, 0xE3, 0xA2, 0xC6, 0xBA, 0xD2, 0xDA );
+
+//
+// Defines a guid to engage Energy Saver at specific battery charge level
+//
+// {E69653CA-CF7F-4F05-AA73-CB833FA90AD4}
+//
+DEFINE_GUID( GUID_ENERGY_SAVER_BATTERY_THRESHOLD, 0xE69653CA, 0xCF7F, 0x4F05, 0xAA, 0x73, 0xCB, 0x83, 0x3F, 0xA9, 0x0A, 0xD4 );
+
 // System button actions
 // ---------------------
 //
@@ -13093,19 +12957,21 @@ DEFINE_GUID( GUID_ALLOW_SYSTEM_REQUIRED, 0xA4B195F5, 0x8225, 0x47D8, 0x80, 0x12,
 //
 DEFINE_GUID( GUID_SYSTEM_BUTTON_SUBGROUP, 0x4F971E89, 0xEEBD, 0x4455, 0xA8, 0xDE, 0x9E, 0x59, 0x04, 0x0E, 0x73, 0x47 );
 
-#define POWERBUTTON_ACTION_INDEX_NOTHING    0
-#define POWERBUTTON_ACTION_INDEX_SLEEP      1
-#define POWERBUTTON_ACTION_INDEX_HIBERNATE  2
-#define POWERBUTTON_ACTION_INDEX_SHUTDOWN   3
+#define POWERBUTTON_ACTION_INDEX_NOTHING                0
+#define POWERBUTTON_ACTION_INDEX_SLEEP                  1
+#define POWERBUTTON_ACTION_INDEX_HIBERNATE              2
+#define POWERBUTTON_ACTION_INDEX_SHUTDOWN               3
+#define POWERBUTTON_ACTION_INDEX_TURN_OFF_THE_DISPLAY   4
 
 //
 // System button values which contain the PowerAction* value for each action.
 //
 
-#define POWERBUTTON_ACTION_VALUE_NOTHING    0
-#define POWERBUTTON_ACTION_VALUE_SLEEP      2
-#define POWERBUTTON_ACTION_VALUE_HIBERNATE  3
-#define POWERBUTTON_ACTION_VALUE_SHUTDOWN   6
+#define POWERBUTTON_ACTION_VALUE_NOTHING                0
+#define POWERBUTTON_ACTION_VALUE_SLEEP                  2
+#define POWERBUTTON_ACTION_VALUE_HIBERNATE              3
+#define POWERBUTTON_ACTION_VALUE_SHUTDOWN               6
+#define POWERBUTTON_ACTION_VALUE_TURN_OFF_THE_DISPLAY   8
 
 // Specifies (in a POWER_ACTION_POLICY structure) the appropriate action to
 // take when the system power button is pressed.
@@ -13214,6 +13080,10 @@ DEFINE_GUID( GUID_PROCESSOR_THROTTLE_MINIMUM, 0x893DEE8E, 0x2BEF, 0x41E0, 0x89, 
 //
 DEFINE_GUID( GUID_PROCESSOR_ALLOW_THROTTLING, 0x3b04d4fd, 0x1cc7, 0x4f23, 0xab, 0x1c, 0xd1, 0x33, 0x78, 0x19, 0xc4, 0xbb );
 
+#define PROCESSOR_THROTTLE_DISABLED  0
+#define PROCESSOR_THROTTLE_ENABLED   1
+#define PROCESSOR_THROTTLE_AUTOMATIC 2
+
 //
 // Specifies processor power settings for CState policy data
 // {68F262A7-F621-4069-B9A5-4874169BE23C}
@@ -13311,6 +13181,40 @@ DEFINE_GUID(GUID_PROCESSOR_PERF_BOOST_MODE,
 #define PROCESSOR_PERF_BOOST_MODE_EFFICIENT_ENABLED 3
 #define PROCESSOR_PERF_BOOST_MODE_EFFICIENT_AGGRESSIVE 4
 #define PROCESSOR_PERF_BOOST_MODE_MAX PROCESSOR_PERF_BOOST_MODE_EFFICIENT_AGGRESSIVE
+
+//
+// Specifies whether or not a procesor should autonomously select its
+// operating performance state.
+//
+// {8BAA4A8A-14C6-4451-8E8B-14BDBD197537}
+//
+DEFINE_GUID(GUID_PROCESSOR_PERF_AUTONOMOUS_MODE,
+0x8baa4a8a, 0x14c6, 0x4451, 0x8e, 0x8b, 0x14, 0xbd, 0xbd, 0x19, 0x75, 0x37);
+
+#define PROCESSOR_PERF_AUTONOMOUS_MODE_DISABLED 0
+#define PROCESSOR_PERF_AUTONOMOUS_MODE_ENABLED 1
+
+//
+// Specifies the tradeoff between performance and energy the processor should
+// make when operating in autonomous mode.
+//
+// {36687F9E-E3A5-4dbf-B1DC-15EB381C6863}
+DEFINE_GUID(GUID_PROCESSOR_PERF_ENERGY_PERFORMANCE_PREFERENCE,
+0x36687f9e, 0xe3a5, 0x4dbf, 0xb1, 0xdc, 0x15, 0xeb, 0x38, 0x1c, 0x68, 0x63);
+
+#define PROCESSOR_PERF_PERFORMANCE_PREFERENCE 0xff
+#define PROCESSOR_PERF_ENERGY_PREFERENCE         0
+
+//
+// Specifies the window over which the processor should observe utilization when
+// operating in autonomous mode, in microseconds.
+//
+// {CFEDA3D0-7697-4566-A922-A9086CD49DFA}
+DEFINE_GUID(GUID_PROCESSOR_PERF_AUTONOMOUS_ACTIVITY_WINDOW,
+0xcfeda3d0, 0x7697, 0x4566, 0xa9, 0x22, 0xa9, 0x8, 0x6c, 0xd4, 0x9d, 0xfa);
+
+#define PROCESSOR_PERF_MINIMUM_ACTIVITY_WINDOW 0
+#define PROCESSOR_PERF_MAXIMUM_ACTIVITY_WINDOW 1270000000
 
 //
 // Specifies if idle state promotion and demotion values should be scaled based
@@ -13506,9 +13410,15 @@ DEFINE_GUID( GUID_PROCESSOR_PARKING_CONCURRENCY_THRESHOLD, 0x2430ab6f, 0xa520, 0
 DEFINE_GUID( GUID_PROCESSOR_PARKING_HEADROOM_THRESHOLD, 0xf735a673, 0x2066, 0x4f80, 0xa0, 0xc5, 0xdd, 0xee, 0x0c, 0xf1, 0xbf, 0x5d);
 
 //
-// Specifies the number of perf time check intervals to average utility over.
+// Specify the percentage utilization used to calculate the distribution concurrency.
 //
-// N.B. This power setting is deprecated.
+// {4bdaf4e9-d103-46d7-a5f0-6280121616ef}
+//
+
+DEFINE_GUID( GUID_PROCESSOR_PARKING_DISTRIBUTION_THRESHOLD, 0x4bdaf4e9, 0xd103, 0x46d7, 0xa5, 0xf0, 0x62, 0x80, 0x12, 0x16, 0x16, 0xef);
+
+//
+// Specifies the number of perf time check intervals to average utility over.
 //
 // {7d24baa7-0b84-480f-840c-1b0743c00f5f}
 //
@@ -13518,6 +13428,8 @@ DEFINE_GUID( GUID_PROCESSOR_PERF_HISTORY, 0x7d24baa7, 0x0b84, 0x480f, 0x84, 0x0c
 // Specifies the number of perf time check intervals to average utility over to
 // determine performance increase.
 //
+// N.B. This power setting is DEPRECATED.
+//
 // {99B3EF01-752F-46a1-80FB-7730011F2354}
 //
 DEFINE_GUID( GUID_PROCESSOR_PERF_INCREASE_HISTORY, 0x99b3ef01, 0x752f, 0x46a1, 0x80, 0xfb, 0x77, 0x30, 0x1, 0x1f, 0x23, 0x54);
@@ -13525,6 +13437,8 @@ DEFINE_GUID( GUID_PROCESSOR_PERF_INCREASE_HISTORY, 0x99b3ef01, 0x752f, 0x46a1, 0
 //
 // Specifies the number of perf time check intervals to average utility over to
 // determine performance decrease.
+//
+// N.B. This power setting is DEPRECATED.
 //
 // {0300F6F8-ABD6-45a9-B74F-4908691A40B5}
 //
@@ -13534,6 +13448,8 @@ DEFINE_GUID( GUID_PROCESSOR_PERF_DECREASE_HISTORY, 0x300f6f8, 0xabd6, 0x45a9, 0x
 // Specifies the number of perf time check intervals to average utility over for
 // core parking.
 //
+// N.B. This power setting is DEPRECATED.
+//
 // {77D7F282-8F1A-42cd-8537-45450A839BE8}
 //
 DEFINE_GUID( GUID_PROCESSOR_PERF_CORE_PARKING_HISTORY, 0x77d7f282, 0x8f1a, 0x42cd, 0x85, 0x37, 0x45, 0x45, 0xa, 0x83, 0x9b, 0xe8);
@@ -13542,7 +13458,7 @@ DEFINE_GUID( GUID_PROCESSOR_PERF_CORE_PARKING_HISTORY, 0x77d7f282, 0x8f1a, 0x42c
 // Specifies whether latency sensitivity hints should be taken into account by
 // the perf state engine.
 //
-// N.B. This power setting is deprecated.
+// N.B. This power setting is DEPRECATED.
 //
 // {0822df31-9c83-441c-a079-0de4cf009c7b}
 //
@@ -13554,6 +13470,15 @@ DEFINE_GUID( GUID_PROCESSOR_PERF_LATENCY_HINT, 0x0822df31, 0x9c83, 0x441c, 0xa0,
 // {619b7505-003b-4e82-b7a6-4dd29c300971}
 //
 DEFINE_GUID( GUID_PROCESSOR_PERF_LATENCY_HINT_PERF, 0x619b7505, 0x3b, 0x4e82, 0xb7, 0xa6, 0x4d, 0xd2, 0x9c, 0x30, 0x9, 0x71);
+
+//
+// Specifies the minimum number of unparked processors when a latency hint is
+// active.
+//
+// {616cdaa5-695e-4545-97ad-97dc2d1bdd88}
+//
+
+DEFINE_GUID( GUID_PROCESSOR_LATENCY_HINT_MIN_UNPARK, 0x616cdaa5, 0x695e, 0x4545, 0x97, 0xad, 0x97, 0xdc, 0x2d, 0x1b, 0xdd, 0x88);
 
 //
 // Specifies whether the core parking engine should distribute processor
@@ -13594,6 +13519,15 @@ DEFINE_GUID( GUID_DEVICE_IDLE_POLICY, 0x4faab71a, 0x92e5, 0x4726, 0xb5, 0x31, 0x
 #define POWER_DEVICE_IDLE_POLICY_PERFORMANCE  0
 #define POWER_DEVICE_IDLE_POLICY_CONSERVATIVE 1
 
+//
+// Specifies Disconnected Standby preference for WiFi devices.
+//
+// F15576E8-98B7-4186-B944-EAFA664402D9
+DEFINE_GUID( GUID_WIFI_IN_STANDBY, 0xF15576E8, 0x98B7, 0x4186, 0xB9, 0x44, 0xEA, 0xFA, 0x66, 0x44, 0x02, 0xD9 );
+
+#define POWER_WIFI_IN_STANDBY_DISABLED  0
+#define POWER_WIFI_IN_STANDBY_ENABLED   1
+
 // AC/DC power source
 // ------------------
 //
@@ -13628,7 +13562,7 @@ DEFINE_GUID( GUID_ACDC_POWER_SOURCE, 0x5D3E9A59, 0xE9D5, 0x4B00, 0xA6, 0xBD, 0xF
 
 DEFINE_GUID( GUID_LIDSWITCH_STATE_CHANGE,  0xBA3E0F4D, 0xB817, 0x4094, 0xA2, 0xD1, 0xD5, 0x63, 0x79, 0xE6, 0xA0, 0xF3 );
 
-// Battery life remaining
+// Battery status changes
 // ----------------------
 //
 
@@ -13644,6 +13578,19 @@ DEFINE_GUID( GUID_LIDSWITCH_STATE_CHANGE,  0xBA3E0F4D, 0xB817, 0x4094, 0xA2, 0xD
 //
 // { A7AD8041-B45A-4CAE-87A3-EECBB468A9E1 }
 DEFINE_GUID( GUID_BATTERY_PERCENTAGE_REMAINING, 0xA7AD8041, 0xB45A, 0x4CAE, 0x87, 0xA3, 0xEE, 0xCB, 0xB4, 0x68, 0xA9, 0xE1 );
+
+// Specifies change in number of batteries present on the system. The consumer
+// may register for notification in order to track change in number of batteries
+// available on a system.
+//
+// Once registered, the consumer can expect to be notified whenever the
+// batteries are added or removed from the system.
+//
+// The consumer will recieve a value indicating number of batteries currently
+// present on the system.
+//
+// {7D263F15-FCA4-49E5-854B-A9F2BFBD5C24}
+DEFINE_GUID( GUID_BATTERY_COUNT, 0x7d263f15, 0xfca4, 0x49e5, 0x85, 0x4b, 0xa9, 0xf2, 0xbf, 0xbd, 0x5c, 0x24 );
 
 //
 // Global notification indicating to listeners user activity/presence accross
@@ -13766,7 +13713,8 @@ typedef enum {
     PowerActionShutdown,
     PowerActionShutdownReset,
     PowerActionShutdownOff,
-    PowerActionWarmEject
+    PowerActionWarmEject,
+    PowerActionDisplayOff
 } POWER_ACTION, *PPOWER_ACTION;
 
 typedef enum _DEVICE_POWER_STATE {
@@ -13807,21 +13755,24 @@ typedef enum {
     LT_LOWEST_LATENCY
 } LATENCY_TIME;
 
-#define DIAGNOSTIC_REASON_VERSION              0
+#define DIAGNOSTIC_REASON_VERSION_V0                0
+#define DIAGNOSTIC_REASON_VERSION                   1
 
-#define DIAGNOSTIC_REASON_SIMPLE_STRING        0x00000001
-#define DIAGNOSTIC_REASON_DETAILED_STRING      0x00000002
-#define DIAGNOSTIC_REASON_NOT_SPECIFIED        0x80000000
-#define DIAGNOSTIC_REASON_INVALID_FLAGS        (~0x80000003)
+#define DIAGNOSTIC_REASON_SIMPLE_STRING             0x00000001
+#define DIAGNOSTIC_REASON_DETAILED_STRING           0x00000002
+#define DIAGNOSTIC_REASON_NOT_SPECIFIED             0x80000000
+#define DIAGNOSTIC_REASON_INVALID_FLAGS_V0          (~0x80000003)
+#define DIAGNOSTIC_REASON_INVALID_FLAGS             (~0x80000007)
+
 
 //
 // Defines for power request APIs
 //
 
-#define POWER_REQUEST_CONTEXT_VERSION          0
+#define POWER_REQUEST_CONTEXT_VERSION               DIAGNOSTIC_REASON_VERSION_V0
 
-#define POWER_REQUEST_CONTEXT_SIMPLE_STRING    0x00000001
-#define POWER_REQUEST_CONTEXT_DETAILED_STRING  0x00000002
+#define POWER_REQUEST_CONTEXT_SIMPLE_STRING         DIAGNOSTIC_REASON_SIMPLE_STRING
+#define POWER_REQUEST_CONTEXT_DETAILED_STRING       DIAGNOSTIC_REASON_DETAILED_STRING
 
 typedef enum _POWER_REQUEST_TYPE {
     PowerRequestDisplayRequired,
@@ -13950,6 +13901,11 @@ typedef enum {
     PlatformIdleVeto,
     SystemBatteryStatePrecise,
     ThermalEvent,
+    PowerRequestActionInternal,
+    BatteryDeviceState,
+    PowerInformationInternal,
+    ThermalStandby,
+    SystemHiberFileType,
     PowerInformationLevelMaximum
 } POWER_INFORMATION_LEVEL;
 
@@ -13964,7 +13920,7 @@ typedef enum {
 } POWER_USER_PRESENCE_TYPE, *PPOWER_USER_PRESENCE_TYPE;
 
 typedef struct _POWER_USER_PRESENCE {
-	POWER_USER_PRESENCE_TYPE UserPresence;
+    POWER_USER_PRESENCE_TYPE UserPresence;
 } POWER_USER_PRESENCE, *PPOWER_USER_PRESENCE;
 
 //
@@ -14025,6 +13981,14 @@ typedef enum {
     MonitorRequestReasonPolicyChange,
     MonitorRequestReasonSleepButton,
     MonitorRequestReasonLid,
+    MonitorRequestReasonBatteryCountChange,
+    MonitorRequestReasonGracePeriod,
+    MonitorRequestReasonPnP,
+    MonitorRequestReasonDP,
+    MonitorRequestReasonSxTransition,
+    MonitorRequestReasonSystemIdle,
+    MonitorRequestReasonNearProximity,
+    MonitorRequestReasonThermalStandby,
     MonitorRequestReasonMax
 } POWER_MONITOR_REQUEST_REASON;
 
@@ -14702,6 +14666,27 @@ typedef struct _ADMINISTRATOR_POWER_POLICY {
 } ADMINISTRATOR_POWER_POLICY, *PADMINISTRATOR_POWER_POLICY;
 
 
+typedef enum _HIBERFILE_BUCKET_SIZE {
+    HiberFileBucket1GB = 0,
+    HiberFileBucket2GB,
+    HiberFileBucket4GB,
+    HiberFileBucket8GB,
+    HiberFileBucket16GB,
+    HiberFileBucket32GB,
+    HiberFileBucketUnlimited,
+    HiberFileBucketMax
+} HIBERFILE_BUCKET_SIZE, *PHIBERFILE_BUCKET_SIZE;
+
+#define HIBERFILE_TYPE_NONE       0x00
+#define HIBERFILE_TYPE_REDUCED    0x01
+#define HIBERFILE_TYPE_FULL       0x02
+#define HIBERFILE_TYPE_MAX        0x03
+
+typedef struct _HIBERFILE_BUCKET {
+    DWORD64 MaxPhysicalMemory;
+    DWORD PhysicalMemoryPercent[HIBERFILE_TYPE_MAX];
+} HIBERFILE_BUCKET, *PHIBERFILE_BUCKET;
+
 typedef struct {
     // Misc supported system features
     BOOLEAN             PowerButtonPresent;
@@ -14736,7 +14721,14 @@ typedef struct {
 
     // Disk
     BOOLEAN             DiskSpinDown;
+
+#if (NTDDI_VERSION < NTDDI_WINTHRESHOLD)
     BYTE                spare3[8];
+# else
+    // HiberFile
+    BYTE                HiberFileType;
+    BYTE                spare3[7];
+#endif // (NTDDI_VERSION < NTDDI_WINTHRESHOLD)
 
     // System Battery
     BOOLEAN             SystemBatteriesPresent;
@@ -14972,6 +14964,7 @@ typedef struct _IMAGE_FILE_HEADER {
 #define IMAGE_FILE_MACHINE_EBC               0x0EBC  // EFI Byte Code
 #define IMAGE_FILE_MACHINE_AMD64             0x8664  // AMD64 (K8)
 #define IMAGE_FILE_MACHINE_M32R              0x9041  // M32R little-endian
+#define IMAGE_FILE_MACHINE_ARM64             0xAA64  // ARM64 Little-Endian
 #define IMAGE_FILE_MACHINE_CEE               0xC0EE
 
 //
@@ -15144,6 +15137,7 @@ typedef PIMAGE_NT_HEADERS32                 PIMAGE_NT_HEADERS;
 #define IMAGE_SUBSYSTEM_EFI_ROM              13
 #define IMAGE_SUBSYSTEM_XBOX                 14
 #define IMAGE_SUBSYSTEM_WINDOWS_BOOT_APPLICATION 16
+#define IMAGE_SUBSYSTEM_XBOX_CODE_CATALOG    17
 
 // DllCharacteristics Entries
 
@@ -15559,7 +15553,7 @@ typedef union _IMAGE_AUX_SYMBOL_EX {
     struct{
         IMAGE_AUX_SYMBOL_TOKEN_DEF TokenDef;
         BYTE  rgbReserved[2];
-    };
+    } DUMMYSTRUCTNAME;
     struct {
         DWORD crc;
         BYTE  rgbReserved[16];
@@ -15771,6 +15765,26 @@ typedef IMAGE_RELOCATION UNALIGNED *PIMAGE_RELOCATION;
 #define IMAGE_REL_AM_SECREL             0x0007
 #define IMAGE_REL_AM_SECTION            0x0008
 #define IMAGE_REL_AM_TOKEN              0x0009
+
+//
+// ARM64 relocations types.
+//
+
+#define IMAGE_REL_ARM64_ABSOLUTE        0x0000  // No relocation required
+#define IMAGE_REL_ARM64_ADDR32          0x0001  // 32 bit address. Review! do we need it? 
+#define IMAGE_REL_ARM64_ADDR32NB        0x0002  // 32 bit address w/o image base (RVA: for Data/PData/XData)
+#define IMAGE_REL_ARM64_BRANCH26        0x0003  // 26 bit offset << 2 & sign ext. for B & BL
+#define IMAGE_REL_ARM64_PAGEBASE_REL21  0x0004  // ADRP
+#define IMAGE_REL_ARM64_REL21           0x0005  // ADR
+#define IMAGE_REL_ARM64_PAGEOFFSET_12A  0x0006  // ADD/ADDS (immediate) with zero shift, for page offset
+#define IMAGE_REL_ARM64_PAGEOFFSET_12L  0x0007  // LDR (indexed, unsigned immediate), for page offset
+#define IMAGE_REL_ARM64_SECREL          0x0008  // Offset within section
+#define IMAGE_REL_ARM64_SECREL_LOW12A   0x0009  // ADD/ADDS (immediate) with zero shift, for bit 0:11 of section offset
+#define IMAGE_REL_ARM64_SECREL_HIGH12A  0x000A  // ADD/ADDS (immediate) with zero shift, for bit 12:23 of section offset
+#define IMAGE_REL_ARM64_SECREL_LOW12L   0x000B  // LDR (indexed, unsigned immediate), for bit 0:11 of section offset
+#define IMAGE_REL_ARM64_TOKEN           0x000C
+#define IMAGE_REL_ARM64_SECTION         0x000D  // Section table index
+#define IMAGE_REL_ARM64_ADDR64          0x000E  // 64 bit address
 
 //
 // x64 relocations
@@ -16216,7 +16230,7 @@ typedef struct _IMAGE_DELAYLOAD_DESCRIPTOR {
         struct {
             DWORD RvaBased : 1;             // Delay load version 2
             DWORD ReservedAttributes : 31;
-        };
+        } DUMMYSTRUCTNAME;
     } Attributes;
 
     DWORD DllNameRVA;                       // RVA to the name of the target library (NULL-terminate ASCII string)
@@ -16333,6 +16347,17 @@ typedef struct _IMAGE_RESOURCE_DATA_ENTRY {
 } IMAGE_RESOURCE_DATA_ENTRY, *PIMAGE_RESOURCE_DATA_ENTRY;
 
 //
+// Code Integrity in loadconfig (CI)
+//
+
+typedef struct _IMAGE_LOAD_CONFIG_CODE_INTEGRITY {
+    WORD    Flags;          // Flags to indicate if CI information is available, etc.
+    WORD    Catalog;        // 0xFFFF means not available
+    DWORD   CatalogOffset;
+    DWORD   Reserved;       // Additional bitmask to be defined later
+} IMAGE_LOAD_CONFIG_CODE_INTEGRITY, *PIMAGE_LOAD_CONFIG_CODE_INTEGRITY;
+
+//
 // Load Configuration Directory Entry
 //
 
@@ -16358,10 +16383,11 @@ typedef struct _IMAGE_LOAD_CONFIG_DIRECTORY32 {
     DWORD   SEHandlerTable;                 // VA
     DWORD   SEHandlerCount;
     DWORD   GuardCFCheckFunctionPointer;    // VA
-    DWORD   Reserved2;
+    DWORD   GuardCFDispatchFunctionPointer; // VA
     DWORD   GuardCFFunctionTable;           // VA
     DWORD   GuardCFFunctionCount;
     DWORD   GuardFlags;
+    IMAGE_LOAD_CONFIG_CODE_INTEGRITY CodeIntegrity;
 } IMAGE_LOAD_CONFIG_DIRECTORY32, *PIMAGE_LOAD_CONFIG_DIRECTORY32;
 
 typedef struct _IMAGE_LOAD_CONFIG_DIRECTORY64 {
@@ -16374,22 +16400,23 @@ typedef struct _IMAGE_LOAD_CONFIG_DIRECTORY64 {
     DWORD      CriticalSectionDefaultTimeout;
     ULONGLONG  DeCommitFreeBlockThreshold;
     ULONGLONG  DeCommitTotalFreeThreshold;
-    ULONGLONG  LockPrefixTable;             // VA
+    ULONGLONG  LockPrefixTable;                // VA
     ULONGLONG  MaximumAllocationSize;
     ULONGLONG  VirtualMemoryThreshold;
     ULONGLONG  ProcessAffinityMask;
     DWORD      ProcessHeapFlags;
     WORD       CSDVersion;
     WORD       Reserved1;
-    ULONGLONG  EditList;                    // VA
-    ULONGLONG  SecurityCookie;              // VA
-    ULONGLONG  SEHandlerTable;              // VA
+    ULONGLONG  EditList;                       // VA
+    ULONGLONG  SecurityCookie;                 // VA
+    ULONGLONG  SEHandlerTable;                 // VA
     ULONGLONG  SEHandlerCount;
-    ULONGLONG  GuardCFCheckFunctionPointer; // VA
-    ULONGLONG  Reserved2;
-    ULONGLONG  GuardCFFunctionTable;        // VA
+    ULONGLONG  GuardCFCheckFunctionPointer;    // VA
+    ULONGLONG  GuardCFDispatchFunctionPointer; // VA
+    ULONGLONG  GuardCFFunctionTable;           // VA
     ULONGLONG  GuardCFFunctionCount;
     DWORD      GuardFlags;
+    IMAGE_LOAD_CONFIG_CODE_INTEGRITY CodeIntegrity;
 } IMAGE_LOAD_CONFIG_DIRECTORY64, *PIMAGE_LOAD_CONFIG_DIRECTORY64;
 
 #ifdef _WIN64
@@ -16400,12 +16427,20 @@ typedef IMAGE_LOAD_CONFIG_DIRECTORY32     IMAGE_LOAD_CONFIG_DIRECTORY;
 typedef PIMAGE_LOAD_CONFIG_DIRECTORY32    PIMAGE_LOAD_CONFIG_DIRECTORY;
 #endif
 
-#define IMAGE_GUARD_CF_INSTRUMENTED              0x00000100 // Module performs control flow integrity checks using system-supplied support
-#define IMAGE_GUARD_CFW_INSTRUMENTED             0x00000200 // Module performs control flow and write integrity checks
-#define IMAGE_GUARD_CF_FUNCTION_TABLE_PRESENT    0x00000400 // Module contains valid control flow target metadata
-#define IMAGE_GUARD_SECURITY_COOKIE_UNUSED       0x00000800 // Module does not make use of the /GS security cookie
-#define IMAGE_GUARD_CF_FUNCTION_TABLE_SIZE_MASK  0xF0000000 // Stride of Guard CF function table encoded in these bits (additional count of bytes per element)
-#define IMAGE_GUARD_CF_FUNCTION_TABLE_SIZE_SHIFT 28         // Shift to right-justify Guard CF function table stride
+#define IMAGE_GUARD_CF_INSTRUMENTED                   0x00000100 // Module performs control flow integrity checks using system-supplied support
+#define IMAGE_GUARD_CFW_INSTRUMENTED                  0x00000200 // Module performs control flow and write integrity checks
+#define IMAGE_GUARD_CF_FUNCTION_TABLE_PRESENT         0x00000400 // Module contains valid control flow target metadata
+#define IMAGE_GUARD_SECURITY_COOKIE_UNUSED            0x00000800 // Module does not make use of the /GS security cookie
+#define IMAGE_GUARD_PROTECT_DELAYLOAD_IAT             0x00001000 // Module supports read only delay load IAT
+#define IMAGE_GUARD_DELAYLOAD_IAT_IN_ITS_OWN_SECTION  0x00002000 // Delayload import table in its own .didat section (with nothing else in it) that can be freely reprotected
+#define IMAGE_GUARD_CF_FUNCTION_TABLE_SIZE_MASK       0xF0000000 // Stride of Guard CF function table encoded in these bits (additional count of bytes per element)
+#define IMAGE_GUARD_CF_FUNCTION_TABLE_SIZE_SHIFT      28         // Shift to right-justify Guard CF function table stride
+
+//
+// GFIDS table entry flags.
+//
+
+#define IMAGE_GUARD_FLAG_FID_SUPPRESSED               0x01       // The containing GFIDS entry is suppressed
 
 //
 // WIN CE Exception table format
@@ -16441,6 +16476,22 @@ typedef struct _IMAGE_ARM_RUNTIME_FUNCTION_ENTRY {
         } DUMMYSTRUCTNAME;
     } DUMMYUNIONNAME;
 } IMAGE_ARM_RUNTIME_FUNCTION_ENTRY, * PIMAGE_ARM_RUNTIME_FUNCTION_ENTRY;
+
+typedef struct _IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY {
+    DWORD BeginAddress;
+    union {
+        DWORD UnwindData;
+        struct {
+            DWORD Flag : 2;
+            DWORD FunctionLength : 11;
+            DWORD RegF : 3;
+            DWORD RegI : 4;
+            DWORD H : 1;
+            DWORD CR : 2;
+            DWORD FrameSize : 9;
+        } DUMMYSTRUCTNAME;
+    } DUMMYUNIONNAME;
+} IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY, * PIMAGE_ARM64_RUNTIME_FUNCTION_ENTRY;
 
 typedef struct _IMAGE_ALPHA64_RUNTIME_FUNCTION_ENTRY {
     ULONGLONG BeginAddress;
@@ -16482,6 +16533,11 @@ typedef PIMAGE_ALPHA64_RUNTIME_FUNCTION_ENTRY PIMAGE_RUNTIME_FUNCTION_ENTRY;
 typedef  IMAGE_ALPHA_RUNTIME_FUNCTION_ENTRY  IMAGE_RUNTIME_FUNCTION_ENTRY;
 typedef PIMAGE_ALPHA_RUNTIME_FUNCTION_ENTRY PIMAGE_RUNTIME_FUNCTION_ENTRY;
 
+#elif defined(_ARM64_)
+
+typedef  IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY  IMAGE_RUNTIME_FUNCTION_ENTRY;
+typedef PIMAGE_ARM64_RUNTIME_FUNCTION_ENTRY PIMAGE_RUNTIME_FUNCTION_ENTRY;
+
 #elif defined(_ARM_)
 
 typedef  IMAGE_ARM_RUNTIME_FUNCTION_ENTRY  IMAGE_RUNTIME_FUNCTION_ENTRY;
@@ -16521,6 +16577,10 @@ typedef struct _IMAGE_DEBUG_DIRECTORY {
 #define IMAGE_DEBUG_TYPE_BORLAND          9
 #define IMAGE_DEBUG_TYPE_RESERVED10       10
 #define IMAGE_DEBUG_TYPE_CLSID            11
+#define IMAGE_DEBUG_TYPE_VC_FEATURE       12
+#define IMAGE_DEBUG_TYPE_POGO             13
+#define IMAGE_DEBUG_TYPE_ILTCG            14
+#define IMAGE_DEBUG_TYPE_MPX              15
 
 
 typedef struct _IMAGE_COFF_SYMBOLS_HEADER {
@@ -16623,6 +16683,8 @@ typedef struct _IMAGE_SEPARATE_DEBUG_HEADER {
     DWORD       Reserved[2];
 } IMAGE_SEPARATE_DEBUG_HEADER, *PIMAGE_SEPARATE_DEBUG_HEADER;
 
+// begin_ntoshvp
+
 typedef struct _NON_PAGED_DEBUG_INFO {
     WORD        Signature;
     WORD        Flags;
@@ -16636,6 +16698,8 @@ typedef struct _NON_PAGED_DEBUG_INFO {
     //DebugDirectorySize
     //IMAGE_DEBUG_DIRECTORY
 } NON_PAGED_DEBUG_INFO, *PNON_PAGED_DEBUG_INFO;
+
+// end_ntoshvp
 
 #ifndef _MAC
 #define IMAGE_SEPARATE_DEBUG_SIGNATURE 0x4944
@@ -16727,6 +16791,7 @@ typedef enum ReplacesCorHdrNumericDefines
     COMIMAGE_FLAGS_STRONGNAMESIGNED     =0x00000008,
     COMIMAGE_FLAGS_NATIVE_ENTRYPOINT    =0x00000010,
     COMIMAGE_FLAGS_TRACKDEBUGDATA       =0x00010000,
+    COMIMAGE_FLAGS_32BITPREFERRED       =0x00020000,
 
 // Version flags for image.
     COR_VERSION_MAJOR_V2                =2,
@@ -16807,9 +16872,9 @@ typedef struct IMAGE_COR20_HEADER
 
 // begin_ntifs
 
-#pragma region Desktop Family
+#pragma region Application or OneCore Family
 
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 
 #if (NTDDI_VERSION > NTDDI_WINXP)
@@ -16828,6 +16893,13 @@ RtlCaptureStackBackTrace(
 
 #endif
 
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
+#pragma endregion
+
+#pragma region Desktop Family or OneCore Family
+
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
+
 
 #if (NTDDI_VERSION > NTDDI_WIN2K)
 
@@ -16841,14 +16913,14 @@ RtlCaptureContext(
 
 #endif
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 // end_ntifs
 
-#pragma region Application Family
+#pragma region Application or OneCore Family
 
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 NTSYSAPI
 VOID
@@ -16861,15 +16933,15 @@ RtlUnwind(
     );
 
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 
 #if defined(_AMD64_)
 
-#pragma region Desktop Family
+#pragma region Desktop Family or OneCore Family
 
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 NTSYSAPI
 BOOLEAN
@@ -16941,12 +17013,12 @@ RtlDeleteGrowableFunctionTable(
 
 // begin_1_0
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
-#pragma region Application Family
+#pragma region Application or OneCore Family
 
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 NTSYSAPI
 PRUNTIME_FUNCTION
@@ -16958,12 +17030,12 @@ RtlLookupFunctionEntry(
     );
 
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
-#pragma region Desktop Family
+#pragma region Desktop Family or OneCore Family
 
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 NTSYSAPI
 VOID
@@ -16974,12 +17046,12 @@ RtlRestoreContext(
     );
 
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
-#pragma region Application Family
+#pragma region Application or OneCore Family
 
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 NTSYSAPI
 VOID
@@ -16994,12 +17066,12 @@ RtlUnwindEx(
     );
 
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
-#pragma region Desktop Family
+#pragma region Desktop Family or OneCore Family
 
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 NTSYSAPI
 PEXCEPTION_ROUTINE
@@ -17016,7 +17088,7 @@ RtlVirtualUnwind(
     );
 
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 #endif // _AMD64_
@@ -17025,9 +17097,9 @@ RtlVirtualUnwind(
 
 #if defined(_ARM_)
 
-#pragma region Desktop Family
+#pragma region Desktop Family or OneCore Family
 
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 NTSYSAPI
 BOOLEAN
@@ -17099,12 +17171,12 @@ RtlDeleteGrowableFunctionTable(
 
 // begin_1_0
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
-#pragma region Application Family
+#pragma region Application or OneCore Family
 
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 NTSYSAPI
 PRUNTIME_FUNCTION
@@ -17116,12 +17188,12 @@ RtlLookupFunctionEntry(
     );
 
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
-#pragma region Desktop Family
+#pragma region Desktop Family or OneCore Family
 
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 NTSYSAPI
 VOID
@@ -17132,12 +17204,12 @@ RtlRestoreContext(
     );
 
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
-#pragma region Application Family
+#pragma region Application or OneCore Family
 
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 NTSYSAPI
 VOID
@@ -17152,12 +17224,12 @@ RtlUnwindEx(
     );
 
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
-#pragma region Desktop Family
+#pragma region Desktop Family or OneCore Family
 
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 NTSYSAPI
 PEXCEPTION_ROUTINE
@@ -17174,18 +17246,176 @@ RtlVirtualUnwind(
     );
 
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 #endif // _ARM_
 
 
 
+#if defined(_ARM64_)
+
+#pragma region Desktop Family or OneCore Family
+
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
+
+NTSYSAPI
+BOOLEAN
+__cdecl
+RtlAddFunctionTable(
+    _In_reads_(EntryCount) PRUNTIME_FUNCTION FunctionTable,
+    _In_ DWORD EntryCount,
+    _In_ ULONG_PTR BaseAddress
+    );
+
+
+NTSYSAPI
+BOOLEAN
+__cdecl
+RtlDeleteFunctionTable(
+    _In_ PRUNTIME_FUNCTION FunctionTable
+    );
+
+
+NTSYSAPI
+BOOLEAN
+__cdecl
+RtlInstallFunctionTableCallback(
+    _In_ ULONG_PTR TableIdentifier,
+    _In_ ULONG_PTR BaseAddress,
+    _In_ DWORD Length,
+    _In_ PGET_RUNTIME_FUNCTION_CALLBACK Callback,
+    _In_opt_ PVOID Context,
+    _In_opt_ PCWSTR OutOfProcessCallbackDll
+    );
+
+
+// end_1_0
+
+
+#if ((NTDDI_VERSION >= NTDDI_WIN8) && !defined(_CONTRACT_GEN)) || (_APISET_RTLSUPPORT_VER > 0x0100)
+
+NTSYSAPI
+DWORD   
+NTAPI
+RtlAddGrowableFunctionTable(
+    _Out_ PVOID * DynamicTable,
+    _In_reads_(MaximumEntryCount) PRUNTIME_FUNCTION FunctionTable,
+    _In_ DWORD EntryCount,
+    _In_ DWORD MaximumEntryCount,
+    _In_ ULONG_PTR RangeBase,
+    _In_ ULONG_PTR RangeEnd
+    );
+
+
+NTSYSAPI
+VOID
+NTAPI
+RtlGrowFunctionTable(
+    _Inout_ PVOID DynamicTable,
+    _In_ DWORD NewEntryCount
+    );
+
+
+NTSYSAPI
+VOID
+NTAPI
+RtlDeleteGrowableFunctionTable(
+    _In_ PVOID DynamicTable
+    );
+
+
+#endif // ((NTDDI_VERSION >= NTDDI_WIN8) && !defined(_CONTRACT_GEN)) || (_APISET_RTLSUPPORT_VER > 0x0100)
+
+// begin_1_0
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
+#pragma endregion
+
+#pragma region Application or OneCore Family
+
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
+
+NTSYSAPI
+PRUNTIME_FUNCTION
+NTAPI
+RtlLookupFunctionEntry(
+    _In_ ULONG_PTR ControlPc,
+    _Out_ PULONG_PTR ImageBase,
+    _Inout_opt_ PUNWIND_HISTORY_TABLE HistoryTable
+    );
+
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
+#pragma endregion
+
+#pragma region Desktop Family or OneCore Family
+
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
+
+NTSYSAPI
+VOID
+__cdecl
+RtlRestoreContext(
+    _In_ PCONTEXT ContextRecord,
+    _In_opt_ struct _EXCEPTION_RECORD * ExceptionRecord
+    );
+
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
+#pragma endregion
+
+#pragma region Application or OneCore Family
+
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
+
+NTSYSAPI
+VOID
+NTAPI
+RtlUnwindEx(
+    _In_opt_ PVOID TargetFrame,
+    _In_opt_ PVOID TargetIp,
+    _In_opt_ PEXCEPTION_RECORD ExceptionRecord,
+    _In_ PVOID ReturnValue,
+    _In_ PCONTEXT ContextRecord,
+    _In_opt_ PUNWIND_HISTORY_TABLE HistoryTable
+    );
+
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
+#pragma endregion
+
+#pragma region Desktop Family or OneCore Family
+
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
+
+NTSYSAPI
+PEXCEPTION_ROUTINE
+NTAPI
+RtlVirtualUnwind(
+    _In_ DWORD HandlerType,
+    _In_ ULONG_PTR ImageBase,
+    _In_ ULONG_PTR ControlPc,
+    _In_ PRUNTIME_FUNCTION FunctionEntry,
+    _Inout_ PCONTEXT ContextRecord,
+    _Out_ PVOID * HandlerData,
+    _Out_ PULONG_PTR EstablisherFrame,
+    _Inout_opt_ PKNONVOLATILE_CONTEXT_POINTERS ContextPointers
+    );
+
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
+#pragma endregion
+
+#endif // _ARM64_
+
+
+
 #if defined(_IA64_)
 
-#pragma region Desktop Family
+#pragma region Desktop Family or OneCore Family
 
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 _IRQL_requires_max_(PASSIVE_LEVEL)
 _Success_(return!=0)
@@ -17226,12 +17456,12 @@ RtlInstallFunctionTableCallback(
     );
 
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
-#pragma region Application Family
+#pragma region Application or OneCore Family
 
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 _IRQL_requires_max_(SYNCH_LEVEL)
 _IRQL_requires_min_(PASSIVE_LEVEL)
@@ -17245,12 +17475,12 @@ RtlLookupFunctionEntry(
     );
 
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
-#pragma region Desktop Family
+#pragma region Desktop Family or OneCore Family
 
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 NTSYSAPI
 VOID
@@ -17275,7 +17505,7 @@ RtlVirtualUnwind(
     );
 
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 #endif // _IA64_
@@ -17284,9 +17514,9 @@ RtlVirtualUnwind(
 
 #if defined(_IA64_)
 
-#pragma region Application Family
+#pragma region Application or OneCore Family
 
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 NTSYSAPI
 VOID
@@ -17301,15 +17531,15 @@ RtlUnwindEx(
     );
 
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 #endif // _IA64_
 
 
-#pragma region Application Family
+#pragma region Application or OneCore Family
 
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 
 #if !(defined(_CONTRACT_GEN) && (_APISET_RTLSUPPORT_VER <= 0x0100) && defined(_X86_))
@@ -17325,13 +17555,13 @@ RtlPcToFileHeader(
 
 #endif // !(defined(_CONTRACT_GEN) && (_APISET_RTLSUPPORT_VER <= 0x0100) && defined(_X86_))
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 
-#pragma region Desktop Family
+#pragma region Desktop Family or OneCore Family
 
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 
 #if !(defined(_CONTRACT_GEN) && (_APISET_RTLSUPPORT_VER <= 0x0100) && defined(_X86_))
@@ -17353,7 +17583,7 @@ RtlCompareMemory(
 
 #endif // !(defined(_CONTRACT_GEN) && (_APISET_RTLSUPPORT_VER <= 0x0100) && defined(_X86_))
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 //
@@ -17412,6 +17642,22 @@ typedef union DECLSPEC_ALIGN(16) _SLIST_HEADER {
     } HeaderX64;
 } SLIST_HEADER, *PSLIST_HEADER;
 
+#elif defined(_ARM64_)
+
+// ARM64_WORKITEM: should this be merged with AMD64 above?
+typedef union DECLSPEC_ALIGN(16) _SLIST_HEADER {
+    struct {  // original struct
+        ULONGLONG Alignment;
+        ULONGLONG Region;
+    } DUMMYSTRUCTNAME;
+    struct {  // ARM64 16-byte header
+        ULONGLONG Depth:16;
+        ULONGLONG Sequence:48;
+        ULONGLONG Reserved:4;
+        ULONGLONG NextEntry:60; // last 4 bits are always 0's
+    } HeaderArm64;
+} SLIST_HEADER, *PSLIST_HEADER;
+
 #elif defined(_X86_)
 
 typedef union _SLIST_HEADER {
@@ -17439,8 +17685,8 @@ typedef union _SLIST_HEADER {
 #endif // _SLIST_HEADER_
 
 
-#pragma region Desktop Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#pragma region Desktop Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 NTSYSAPI
 VOID
@@ -17496,7 +17742,7 @@ RtlQueryDepthSList (
     _In_ PSLIST_HEADER ListHead
     );
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 
@@ -17539,6 +17785,9 @@ typedef struct _RTL_BARRIER {
 } RTL_BARRIER, *PRTL_BARRIER;                       
 // begin_ntoshvp
 
+// Include the more obscure SAL annotations (like __drv_aliasesMem) instead of assuming the crtdefs.h will include them.
+#include <specstrings.h>
+
 //
 // Fast fail failure codes.
 //
@@ -17547,24 +17796,36 @@ typedef struct _RTL_BARRIER {
 //       STATUS_STACK_BUFFER_OVERRUN exception status code.
 //
 
-#define FAST_FAIL_LEGACY_GS_VIOLATION         0
-#define FAST_FAIL_VTGUARD_CHECK_FAILURE       1
-#define FAST_FAIL_STACK_COOKIE_CHECK_FAILURE  2
-#define FAST_FAIL_CORRUPT_LIST_ENTRY          3
-#define FAST_FAIL_INCORRECT_STACK             4
-#define FAST_FAIL_INVALID_ARG                 5
-#define FAST_FAIL_GS_COOKIE_INIT              6
-#define FAST_FAIL_FATAL_APP_EXIT              7
-#define FAST_FAIL_RANGE_CHECK_FAILURE         8
-#define FAST_FAIL_UNSAFE_REGISTRY_ACCESS      9
-#define FAST_FAIL_GUARD_ICALL_CHECK_FAILURE   10
-#define FAST_FAIL_GUARD_WRITE_CHECK_FAILURE   11
-#define FAST_FAIL_INVALID_FIBER_SWITCH        12
-#define FAST_FAIL_INVALID_SET_OF_CONTEXT      13
-#define FAST_FAIL_INVALID_REFERENCE_COUNT     14
-#define FAST_FAIL_INVALID_JUMP_BUFFER         18
-#define FAST_FAIL_MRDATA_MODIFIED             19
-#define FAST_FAIL_INVALID_FAST_FAIL_CODE      0xFFFFFFFF
+#define FAST_FAIL_LEGACY_GS_VIOLATION          0
+#define FAST_FAIL_VTGUARD_CHECK_FAILURE        1
+#define FAST_FAIL_STACK_COOKIE_CHECK_FAILURE   2
+#define FAST_FAIL_CORRUPT_LIST_ENTRY           3
+#define FAST_FAIL_INCORRECT_STACK              4
+#define FAST_FAIL_INVALID_ARG                  5
+#define FAST_FAIL_GS_COOKIE_INIT               6
+#define FAST_FAIL_FATAL_APP_EXIT               7
+#define FAST_FAIL_RANGE_CHECK_FAILURE          8
+#define FAST_FAIL_UNSAFE_REGISTRY_ACCESS       9
+#define FAST_FAIL_GUARD_ICALL_CHECK_FAILURE    10
+#define FAST_FAIL_GUARD_WRITE_CHECK_FAILURE    11
+#define FAST_FAIL_INVALID_FIBER_SWITCH         12
+#define FAST_FAIL_INVALID_SET_OF_CONTEXT       13
+#define FAST_FAIL_INVALID_REFERENCE_COUNT      14
+#define FAST_FAIL_INVALID_JUMP_BUFFER          18
+#define FAST_FAIL_MRDATA_MODIFIED              19
+#define FAST_FAIL_CERTIFICATION_FAILURE        20
+#define FAST_FAIL_INVALID_EXCEPTION_CHAIN      21
+#define FAST_FAIL_CRYPTO_LIBRARY               22
+#define FAST_FAIL_INVALID_CALL_IN_DLL_CALLOUT  23
+#define FAST_FAIL_INVALID_IMAGE_BASE           24
+#define FAST_FAIL_DLOAD_PROTECTION_FAILURE     25
+#define FAST_FAIL_UNSAFE_EXTENSION_CALL        26
+#define FAST_FAIL_DEPRECATED_SERVICE_INVOKED   27
+#define FAST_FAIL_INVALID_BUFFER_ACCESS        28
+#define FAST_FAIL_INVALID_BALANCED_TREE        29
+#define FAST_FAIL_INVALID_NEXT_THREAD          30
+#define FAST_FAIL_GUARD_ICALL_CHECK_SUPPRESSED 31         // Telemetry, nonfatal
+#define FAST_FAIL_INVALID_FAST_FAIL_CODE       0xFFFFFFFF
 
 #if _MSC_VER >= 1610
 
@@ -17691,7 +17952,7 @@ RtlSecureZeroMemory(
 
     while (cnt) {
 
-#if !defined(_M_CEE) && defined(_M_ARM)
+#if !defined(_M_CEE) && (defined(_M_ARM) || defined(_M_ARM64))
 
         __iso_volatile_store8(vptr, 0);
 
@@ -17857,8 +18118,8 @@ typedef LPOSVERSIONINFOEXA LPOSVERSIONINFOEX;
 #define VER_PLATFORM_WIN32_WINDOWS      1
 #define VER_PLATFORM_WIN32_NT           2
 
-#pragma region Desktop Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#pragma region Desktop Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 //
 //
@@ -17889,13 +18150,13 @@ VerSetConditionMask(
 
 #endif // !defined(_WINBASE_) && !defined(MIDL_PASS)
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 //
 
-#pragma region Desktop Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#pragma region Desktop Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 // begin_ntddk
 
@@ -17916,7 +18177,7 @@ RtlGetProductInfo(
 
 // end_ntddk
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 #define RTL_UMS_VERSION  (0x0100)  
@@ -18001,8 +18262,8 @@ typedef RTL_UMS_SCHEDULER_ENTRY_POINT *PRTL_UMS_SCHEDULER_ENTRY_POINT;
 
 // end_ntosp
 
-#pragma region Desktop Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#pragma region Desktop Family or OneCore Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 // begin_ntosp
 
@@ -18030,12 +18291,38 @@ RtlCrc64(
 
 // end_ntosp
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM) */
 #pragma endregion
 
 // begin_ntosp
 
 #endif // (NTDDI_VERSION >= NTDDI_WIN8)
+
+
+#if (NTDDI_VERSION >= NTDDI_WINTHRESHOLD)
+//
+//  API to detect what type of OS Deployment this is.  Current valid values
+//  are listed below
+//
+
+//
+//  Valid OsDeployment values that can be returned
+//
+
+typedef enum _OS_DEPLOYEMENT_STATE_VALUES {
+    OS_DEPLOYMENT_STANDARD = 1,
+    OS_DEPLOYMENT_COMPACT
+} OS_DEPLOYEMENT_STATE_VALUES;
+
+NTSYSAPI
+OS_DEPLOYEMENT_STATE_VALUES
+NTAPI
+RtlOsDeploymentState(
+    _In_ DWORD Flags    /* No flags currently defined, passed 0 */
+    );
+
+
+#endif // NTDDI_VERSION >= NTDDI_WINTHRESHOLD
 
 
 typedef struct _RTL_CRITICAL_SECTION_DEBUG {
@@ -18049,9 +18336,6 @@ typedef struct _RTL_CRITICAL_SECTION_DEBUG {
     WORD   CreatorBackTraceIndexHigh;
     WORD   SpareWORD  ;
 } RTL_CRITICAL_SECTION_DEBUG, *PRTL_CRITICAL_SECTION_DEBUG, RTL_RESOURCE_DEBUG, *PRTL_RESOURCE_DEBUG;
-
-#define RTL_CRITSECT_TYPE 0
-#define RTL_RESOURCE_TYPE 1
 
 //
 // These flags define the upper byte of the critical section SpinCount field
@@ -18108,11 +18392,32 @@ typedef LONG (NTAPI *PVECTORED_EXCEPTION_HANDLER)(
 
 typedef enum _HEAP_INFORMATION_CLASS {
 
-    HeapCompatibilityInformation,
-    HeapEnableTerminationOnCorruption
+    HeapCompatibilityInformation = 0,
+    HeapEnableTerminationOnCorruption = 1
+
+
+#if ((NTDDI_VERSION > NTDDI_WINBLUE) || \
+     (NTDDI_VERSION == NTDDI_WINBLUE && defined(WINBLUE_KBSPRING14)))
+    ,
+
+    HeapOptimizeResources = 3
+
+#endif
 
 
 } HEAP_INFORMATION_CLASS;
+
+#if ((NTDDI_VERSION > NTDDI_WINBLUE) || \
+     (NTDDI_VERSION == NTDDI_WINBLUE && defined(WINBLUE_KBSPRING14)))
+
+#define HEAP_OPTIMIZE_RESOURCES_CURRENT_VERSION  1
+
+typedef struct _HEAP_OPTIMIZE_RESOURCES_INFORMATION {
+    DWORD Version;
+    DWORD Flags;
+} HEAP_OPTIMIZE_RESOURCES_INFORMATION, *PHEAP_OPTIMIZE_RESOURCES_INFORMATION;
+
+#endif
 
 
 #define WT_EXECUTEDEFAULT       0x00000000                           
@@ -18256,17 +18561,25 @@ typedef struct _COMPATIBILITY_CONTEXT_ELEMENT {
 
 typedef const struct _COMPATIBILITY_CONTEXT_ELEMENT *PCCOMPATIBILITY_CONTEXT_ELEMENT;
 
+#ifdef _MSC_EXTENSIONS
+
+#if _MSC_VER >= 1200
 #pragma warning(push)
-#pragma warning(disable:4200)
+#pragma warning(disable:4200) // zero length array
+#endif
 
 typedef struct _ACTIVATION_CONTEXT_COMPATIBILITY_INFORMATION {
     DWORD ElementCount;
     COMPATIBILITY_CONTEXT_ELEMENT Elements[];
 } ACTIVATION_CONTEXT_COMPATIBILITY_INFORMATION, * PACTIVATION_CONTEXT_COMPATIBILITY_INFORMATION;
 
+#if _MSC_VER >= 1200
 #pragma warning(pop)
+#endif
 
 typedef const struct _ACTIVATION_CONTEXT_COMPATIBILITY_INFORMATION * PCACTIVATION_CONTEXT_COMPATIBILITY_INFORMATION;
+
+#endif
 
 #define MAX_SUPPORTED_OS_NUM    (4)
 #define INVALID_OS_COUNT        (0xffff)
@@ -18319,6 +18632,78 @@ typedef struct _PERFORMANCE_DATA {
 
 #define READ_THREAD_PROFILING_FLAG_DISPATCHING        0x00000001
 #define READ_THREAD_PROFILING_FLAG_HARDWARE_COUNTERS  0x00000002
+
+#pragma region Desktop Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+
+#if (NTDDI_VERSION >= NTDDI_WINTHRESHOLD)
+
+#define DEVICEFAMILYDEVICEFORM_KEY           L"\\Registry\\Machine\\Software\\Microsoft\\Windows NT\\CurrentVersion\\OEM"
+#define DEVICEFAMILYDEVICEFORM_VALUE         L"DeviceForm"
+
+#define DEVICEFAMILYINFOENUM_UAP              0x00000000
+#define DEVICEFAMILYINFOENUM_WINDOWS_8X       0x00000001
+#define DEVICEFAMILYINFOENUM_WINDOWS_PHONE_8X 0x00000002
+#define DEVICEFAMILYINFOENUM_DESKTOP          0x00000003
+#define DEVICEFAMILYINFOENUM_MOBILE           0x00000004
+#define DEVICEFAMILYINFOENUM_XBOX             0x00000005
+#define DEVICEFAMILYINFOENUM_TEAM             0x00000006
+#define DEVICEFAMILYINFOENUM_IOT              0x00000007
+#define DEVICEFAMILYINFOENUM_IOT_HEADLESS     0x00000008
+#define DEVICEFAMILYINFOENUM_SERVER           0x00000009
+#define DEVICEFAMILYINFOENUM_HOLOGRAPHIC      0x0000000A
+#define DEVICEFAMILYINFOENUM_XBOXSRA          0x0000000B
+#define DEVICEFAMILYINFOENUM_XBOXERA          0x0000000C
+
+#define DEVICEFAMILYINFOENUM_MAX              0x0000000C
+
+#define DEVICEFAMILYDEVICEFORM_UNKNOWN        0x00000000
+#define DEVICEFAMILYDEVICEFORM_PHONE          0x00000001
+#define DEVICEFAMILYDEVICEFORM_TABLET         0x00000002
+#define DEVICEFAMILYDEVICEFORM_DESKTOP        0x00000003
+#define DEVICEFAMILYDEVICEFORM_NOTEBOOK       0x00000004
+#define DEVICEFAMILYDEVICEFORM_CONVERTIBLE    0x00000005
+#define DEVICEFAMILYDEVICEFORM_DETACHABLE     0x00000006
+#define DEVICEFAMILYDEVICEFORM_ALLINONE       0x00000007
+#define DEVICEFAMILYDEVICEFORM_STICKPC        0x00000008
+#define DEVICEFAMILYDEVICEFORM_PUCK           0x00000009
+#define DEVICEFAMILYDEVICEFORM_LARGESCREEN    0x0000000A
+#define DEVICEFAMILYDEVICEFORM_HMD            0x0000000B
+
+#define DEVICEFAMILYDEVICEFORM_MAX            0x0000000B
+
+VOID
+NTAPI
+RtlGetDeviceFamilyInfoEnum(
+    _Out_opt_ ULONGLONG *pullUAPInfo,
+    _Out_opt_ DWORD *pulDeviceFamily,
+    _Out_opt_ DWORD *pulDeviceForm
+);
+
+DWORD   
+NTAPI
+RtlConvertDeviceFamilyInfoToString(
+    _Inout_ PDWORD pulDeviceFamilyBufferSize,
+    _Inout_ PDWORD pulDeviceFormBufferSize,
+    _Out_writes_bytes_(*pulDeviceFamilyBufferSize) PWSTR DeviceFamily,
+    _Out_writes_bytes_(*pulDeviceFormBufferSize) PWSTR DeviceForm
+
+);
+
+DWORD   
+NTAPI
+RtlSwitchedVVI(
+    _In_ PRTL_OSVERSIONINFOEXW VersionInfo,
+    _In_ DWORD TypeMask,
+    _In_ ULONGLONG  ConditionMask
+    );
+
+
+#endif // (NTDDI_VERSION >= NTDDI_WINTHRESHOLD)
+
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#pragma endregion
+
 #define DLL_PROCESS_ATTACH   1    
 #define DLL_THREAD_ATTACH    2    
 #define DLL_THREAD_DETACH    3    
@@ -18435,6 +18820,8 @@ struct _PACKEDEVENTINFO
 //
 
 // begin_wdm
+// begin_access
+
 //
 // Registry Specific Access Rights.
 //
@@ -18476,6 +18863,8 @@ struct _PACKEDEVENTINFO
                                   KEY_CREATE_LINK)            \
                                   &                           \
                                  (~SYNCHRONIZE))
+
+// end_access
 
 //
 // Open/Create Options
@@ -18542,6 +18931,7 @@ struct _PACKEDEVENTINFO
 #define REG_BOOT_HIVE                   (0x00000400L)   // This hive might be used by the OS loader
 #define REG_LOAD_HIVE_OPEN_HANDLE       (0x00000800L)   // Load the hive and return a handle to its root kcb
 #define REG_FLUSH_HIVE_FILE_GROWTH      (0x00001000L)   // Flush changes to primary hive file size as part of all flushes
+#define REG_APP_HIVE_OPEN_READ_ONLY     (0x00002000L)   // Open an app hive's files in read-only mode (if the hive was not previously loaded)
 
 //
 // Unload Flags
@@ -18609,12 +18999,22 @@ struct _PACKEDEVENTINFO
 #define SERVICE_WIN32                  (SERVICE_WIN32_OWN_PROCESS | \
                                         SERVICE_WIN32_SHARE_PROCESS)
 
+#define SERVICE_USER_SERVICE           0x00000040
+#define SERVICE_USERSERVICE_INSTANCE   0x00000080
+
+#define SERVICE_USER_SHARE_PROCESS     (SERVICE_USER_SERVICE | \
+                                        SERVICE_WIN32_SHARE_PROCESS)
+#define SERVICE_USER_OWN_PROCESS       (SERVICE_USER_SERVICE | \
+                                        SERVICE_WIN32_OWN_PROCESS)
+
 #define SERVICE_INTERACTIVE_PROCESS    0x00000100
 
 #define SERVICE_TYPE_ALL               (SERVICE_WIN32  | \
                                         SERVICE_ADAPTER | \
                                         SERVICE_DRIVER  | \
-                                        SERVICE_INTERACTIVE_PROCESS)
+                                        SERVICE_INTERACTIVE_PROCESS | \
+                                        SERVICE_USER_SERVICE | \
+                                        SERVICE_USERSERVICE_INSTANCE)
 
 //
 // Start Type
@@ -18986,9 +19386,16 @@ extern "C" {
 
 #include <ktmtypes.h>
 
+#if _MSC_VER >= 1200
+#pragma warning(push)
+#pragma warning(disable:4820) // padding added after data member
+#endif
+
 //
 // Types for Nt level TM calls
 //
+
+// begin_access
 
 //
 // KTM Tm object rights
@@ -19145,6 +19552,7 @@ extern "C" {
                                         ENLISTMENT_GENERIC_WRITE       |\
                                         ENLISTMENT_GENERIC_EXECUTE)
 
+// end_access
 
 //
 // Transaction outcomes.
@@ -19361,6 +19769,10 @@ typedef struct _KTMOBJECT_CURSOR {
 } KTMOBJECT_CURSOR, *PKTMOBJECT_CURSOR;
 
 // begin_wdm
+
+#if _MSC_VER >= 1200
+#pragma warning(pop)
+#endif
 
 #ifdef __cplusplus
 }
@@ -19698,6 +20110,39 @@ GetFiberData (
 #endif // _M_ARM && !defined(__midl) && !defined(_M_CEE_PURE)
 
 
+#if defined(_M_ARM64) && !defined(__midl) && !defined(_M_CEE_PURE)
+
+__forceinline
+struct _TEB *
+NtCurrentTeb (
+    VOID
+    )
+{
+    return (struct _TEB *)__getReg(18);
+}
+
+__forceinline
+PVOID
+GetCurrentFiber (
+    VOID
+    )
+{
+    return ((PNT_TIB )__getReg(18))->FiberData;
+}
+
+__forceinline
+PVOID
+GetFiberData (
+    VOID
+    )
+
+{
+    return *(PVOID *)GetCurrentFiber();
+}
+
+#endif // _M_ARM64 && !defined(__midl) && !defined(_M_CEE_PURE)
+
+
 #if defined(_M_IX86) && !defined(MIDL_PASS)
 
 #define PcTeb 0x18
@@ -19731,8 +20176,9 @@ __inline struct _TEB * NtCurrentTeb( void ) { return (struct _TEB *) (ULONG_PTR)
 #if _MSC_VER >= 1200
 #pragma warning(pop)
 #else
-#pragma warning(default:4201)
-#pragma warning(default:4214)
+#pragma warning(default:4200) // nonstandard extension used : zero-sized array in struct/union
+#pragma warning(default:4201) // named type definition in parentheses
+#pragma warning(default:4214) // bit field types other than int
 #endif
 
 #endif /* _WINNT_ */

@@ -211,7 +211,7 @@
     <map field="D3DX(\d+)_IMAGE_LOAD_INFO::MipFilter" type="D3DX$1_FILTER_FLAG" />
     <map field="D3DX(\d+)_TEXTURE_LOAD_INFO::Filter" type="D3DX$1_FILTER_FLAG" />
     <map field="D3DX(\d+)_TEXTURE_LOAD_INFO::MipFilter" type="D3DX$1_FILTER_FLAG" />
-    <map field="D3D(\d+)_DEPTH_STENCIL_VIEW_DESC::Flags" type="D3D$1_DSV_FLAG" />
+    <map field="D3D11_DEPTH_STENCIL_VIEW_DESC::Flags" type="D3D11_DSV_FLAG" />
     <map field="D3D(\d+)_SHADER_DESC::Flags" type="D3DCOMPILE_SHADER_FLAGS" />
     <map field="D3D(\d+)_BUFFER_DESC::ByteWidth" name="SizeInBytes" />
     <map field="D3D(\d+)_BUFFER_DESC::MiscFlags" name="OptionFlags" />
@@ -227,7 +227,7 @@
     <map field="D3D(\d+)_QUERY_DESC::Query" name="Type" />
     <map field="D3D(\d+)_QUERY_DESC::MiscFlags" name="Flags" type="D3D$1_QUERY_MISC_FLAG" />
     <map field="D3D(\d+)_BUFFEREX_SRV::Flags" type="D3D$1_BUFFEREX_SRV_FLAG" />
-    <map field="D3D(\d+)_BUFFER_UAV::Flags" type="D3D$1_BUFFER_UAV_FLAG" />
+    <map field="D3D11_BUFFER_UAV::Flags" type="D3D11_BUFFER_UAV_FLAG" />
     <map field="D3D(\d+)_SHADER_VARIABLE_DESC::uFlags" name="Flags" type="D3D_SHADER_VARIABLE_FLAGS" />
     <map field="D3D(\d+)_SHADER_INPUT_BIND_DESC::uFlags" name="Flags" type="D3D_SHADER_INPUT_FLAGS" />
     <map field="D3D(\d+)_QUERY_DATA_PIPELINE_STATISTICS::(.*)s" name="$2Count" />
@@ -518,7 +518,8 @@
     <map param="ID3D(\d+).*::Map::MapFlags" type="D3D$1_MAP_FLAG" />
     <map method="ID3DX?(\d+)EffectPass::Apply" visibility="internal" />
     <map method="ID3DX(\d*)Font::GetTextMetrics.*" visibility="internal" />
-    <map interface="ID3D(\d+)Debug" name="DeviceDebug"/>
+    <map interface="ID3D10Debug" name="DeviceDebug"/>
+    <map interface="ID3D11Debug" name="DeviceDebug"/>
 
     <!--
     // *****************************************************************

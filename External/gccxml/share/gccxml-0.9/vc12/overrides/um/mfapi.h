@@ -576,6 +576,10 @@ MFCreateDXGIDeviceManager(
 #define MF_128_BYTE_ALIGNMENT     0x0000007f
 #define MF_256_BYTE_ALIGNMENT     0x000000ff
 #define MF_512_BYTE_ALIGNMENT     0x000001ff
+#define MF_1024_BYTE_ALIGNMENT    0x000003ff
+#define MF_2048_BYTE_ALIGNMENT    0x000007ff 
+#define MF_4096_BYTE_ALIGNMENT    0x00000fff
+#define MF_8192_BYTE_ALIGNMENT    0x00001fff
 
 STDAPI MFCreateAlignedMemoryBuffer(
     _In_ DWORD                      cbMaxLength,
@@ -858,6 +862,8 @@ DEFINE_GUID(MF_EVENT_STREAM_METADATA_CONTENT_KEYIDS,
 DEFINE_GUID(MF_EVENT_STREAM_METADATA_SYSTEMID, 
 0x1ea2ef64, 0xba16, 0x4a36, 0x87, 0x19, 0xfe, 0x75, 0x60, 0xba, 0x32, 0xad);
 
+
+
 #endif // (WINVER >= _WIN32_WINNT_WINBLUE)
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -878,6 +884,178 @@ STDAPI MFCreateSample( _Out_ IMFSample **ppIMFSample );
 // These are the well-known attributes that can be present on an MF Sample's
 // IMFAttributes store
 //
+
+//@@MFSampleExtension_MaxDecodeFrameSize  
+/// <summary> 
+// {D3CC654F-F9F3-4A13-889F-F04EB2B5B957} MFSampleExtension_MaxDecodeFrameSize                {UINT64 (HI32(Width),LO32(Height))}
+// specify the maxiumum resolution of compressed input bitstream, 
+// the decoder shall decode any comressed pictures below the specified maximum resolution
+// any input compressed pictures beyond the maximum resolution shall not be decoded and dropped by the decoder
+// the attribute shall be set on input sample
+/// </summary>  
+DEFINE_GUID(MFSampleExtension_MaxDecodeFrameSize,
+    0xd3cc654f, 0xf9f3, 0x4a13, 0x88, 0x9f, 0xf0, 0x4e, 0xb2, 0xb5, 0xb9, 0x57);
+
+
+//@@MFSampleExtension_AccumulatedNonRefPicPercent  
+/// <summary> 
+// {79EA74DF-A740-445B-BC98-C9ED1F260EEE} MFSampleExtension_AccumulatedNonRefPicPercent               
+// Type: UINT32 
+// specify the percentage of accumulated non-reference pictures up to this output sample in decoding order
+// The most common examples are,
+// 1. if the sequence has the GOP structure of IPPPP......,   the value will be 0
+// 2. if the sequence has the GOP structure of IPBPB......,   the percentage will be around 40%~50%. The value is 40~50.
+// 3. if the sequence has the GOP structure of IPBBPBB......, the percentage will be around 50%~66%. The value is 50~60. 
+// where B frames are not used for reference. 
+// This is some statistic to application or pipeline whether decoder alone can have graceful degradation on quality management
+// In the above example, 
+// 1. Decoder alone can't have graceful quality management. Because it can only have full frame rate or 1/15 of full frame rate when GOP size is 15 frames or 1/30 when GOP size is 30 frames
+// 2. Decoder alone can   have quality management. Because it can have full frame rate or 1/2 of full frame rate or 1/GOPSize
+// 2. Decoder alone can   have quality management. Because it can have full frame rate,  or down to 1/3 of full frame rate or 1/GOPSize
+// the attribute could be set on output sample from decoders
+/// </summary>  
+// {79EA74DF-A740-445B-BC98-C9ED1F260EEE}
+DEFINE_GUID(MFSampleExtension_AccumulatedNonRefPicPercent,
+    0x79ea74df, 0xa740, 0x445b, 0xbc, 0x98, 0xc9, 0xed, 0x1f, 0x26, 0xe, 0xee);
+
+
+// Attributes for HW-DRM support
+
+//@@MFSampleExtension_Encryption_SubSample_Mapping  
+/// <summary> 
+/// The data blob associated with this attribute should contain an array of byte  
+/// ranges as DWORDs where every two DWORDs make a set. The first DWORD in each set  
+/// is the number of clear bytes and the second DWORD of the set is the number of  
+/// encrypted bytes.  
+/// Note that a pair of 0s is not a valid set (either value can be 0, but not both).  
+/// The array of byte ranges that indicate which ranges to decrypt, including the  
+/// possibility that the entire sample should NOT be decrypted.  
+/// It must be set on an IMFSample using SetBlob  
+/// </summary>  
+DEFINE_GUID(MFSampleExtension_Encryption_SubSample_Mapping,
+    0x8444F27A, 0x69A1, 0x48DA, 0xBD, 0x08, 0x11, 0xCE, 0xF3, 0x68, 0x30, 0xD2);
+
+
+// MFSampleExtension_Encryption_ClearSliceHeaderData {5509A4F4-320D-4E6C-8D1A-94C66DD20CB0}
+/*
+The MF blob should be parsed in the way below defined in SliceHeaderSet, with proper verifications
+
+=============================================================================================================
+Note the slice header data here DO NOT have all bits for all the syntaxes.
+Some bits are removed on purpose to send out a lossy compressed slice header in order to be 100% secure 
+The partial slice header data here SHALL not include any bits for emulation prevention byte 0x03
+=============================================================================================================
+
+typedef struct SliceHeader_tag {
+WORD dSliceHeaderLen;                   // indicate the length of the following slice header in byte, it shall not be more than 1024
+BYTE SliceHeaderBytes[0];               // slice header data, the last byte might contain some bits not used, leave them random
+} SliceHeader;
+
+With dSliceHeaderLen bytes serialized after the SliceHeader struct. 
+And then use an array of these serialized consecutively,
+
+typedef struct SliceHeaderSet_tag {
+WORD dNumHeaders;                       // indicate the number of slice headers in the input sample
+SliceHeader rgstSliceheader[0];         // cNumHeaders slice header data
+} SliceHeaderSet;
+*/
+// Type: BLOB
+DEFINE_GUID(MFSampleExtension_Encryption_ClearSliceHeaderData,
+    0x5509a4f4, 0x320d, 0x4e6c, 0x8d, 0x1a, 0x94, 0xc6, 0x6d, 0xd2, 0xc, 0xb0);
+
+
+// MFSampleExtension_Encryption_HardwareProtection_KeyInfoID {8CBFCCEB-94A5-4DE1-8231-A85E47CF81E7}
+// Type: GUID
+// This attribute applies to media samples. The GUID associated with this 
+// attribute indicates an identifier (KID/LID) for the hardware protection to be
+// used for the given sample. All hardware protected samples flowing out of the 
+// MFT decryptor should have this attribute set with the proper GUID.
+DEFINE_GUID(MFSampleExtension_Encryption_HardwareProtection_KeyInfoID, 
+0x8cbfcceb, 0x94a5, 0x4de1, 0x82, 0x31, 0xa8, 0x5e, 0x47, 0xcf, 0x81, 0xe7);
+
+
+// MFSampleExtension_Encryption_HardwareProtection_KeyInfo {B2372080-455B-4DD7-9989-1A955784B754}
+// Type: BLOB
+// This attribute applies to media samples. The data blob associated with this 
+// sample has all the information relative to the slot/ID for the hardware 
+// protection to be used for the given sample. All hardware protected samples 
+// flowing out of the MFT decryptor should have this attribute set with the 
+// proper blob.
+DEFINE_GUID(MFSampleExtension_Encryption_HardwareProtection_KeyInfo, 
+0xb2372080, 0x455b, 0x4dd7, 0x99, 0x89, 0x1a, 0x95, 0x57, 0x84, 0xb7, 0x54);
+
+// MFSampleExtension_Encryption_HardwareProtection_VideoDecryptorContext {693470C8-E837-47A0-88CB-535B905E3582}
+// Data type: IUnknown * (IMFContentDecryptorContext)
+// This attribute applies to media samples. It associates a sample with a 
+// given IMFContentDecryptorContext which is needed to be able to to
+// decrypt/decode the sample properly when using hardware protection.
+DEFINE_GUID(MFSampleExtension_Encryption_HardwareProtection_VideoDecryptorContext, 
+0x693470c8, 0xe837, 0x47a0, 0x88, 0xcb, 0x53, 0x5b, 0x90, 0x5e, 0x35, 0x82);
+
+
+// MFSampleExtension_Encryption_Opaque_Data {224D77E5-1391-4FFB-9F41-B432F68C611D}
+// Data type : BLOB
+// This attribute applies to media samples.The data blob associated with this sample has some private information 
+// set by OEM secure environment to be used for the given sample.The hardware protected samples flowing out of the 
+// MFT decryptor might have this attribute set with the proper blob.
+// When present, this attribute is set by the decryptor MFT with data that originates from the OEM secure environment.
+// The host decoder may extract this and provide the data to the D3D11 device for VLD decoding through(UINT  PrivateDataSize, void* pPrivateData) 
+// of D3D11_VIDEO_DECODER_BEGIN_FRAME_CRYPTO_SESSION data structure in the DecoderBeginFrame() call, when present.
+DEFINE_GUID(MFSampleExtension_Encryption_Opaque_Data,
+    0x224d77e5, 0x1391, 0x4ffb, 0x9f, 0x41, 0xb4, 0x32, 0xf6, 0x8c, 0x61, 0x1d);
+
+
+// MFSampleExtension_NALULengthInfo. This is an alias of  MF_NALU_LENGTH_INFORMATION
+// Type: BLOB
+// Set MFSampleExtension_NALULengthInfo as a BLOB on the input sample, 
+// with one DWORD for each NALU including start code and NALU type in the sample. For example, if 
+// there are AUD (9 bytes), SPS (25 bytes), PPS (10 bytes), IDR slice1 (50 k), IDR slice 2 (60 k), 
+// then there should be 5 DWORDs with values 9, 25, 10, 50 k, 60 k in the BLOB.
+//
+DEFINE_GUID(MFSampleExtension_NALULengthInfo,
+    0x19124E7C, 0xAD4B, 0x465F, 0xBB, 0x18, 0x20, 0x18, 0x62, 0x87, 0xB6, 0xAF);
+
+
+
+// MFSampleExtension_Encryption_NALUTypes. {B0F067C7-714C-416C-8D59-5F4DDF8913B6}
+// Type: BLOB
+// The MF blob contains all the NALU type byte for different NALUs in the MF sample.One NALU type is one byte, including the syntaxes forbidden_zero_bit, nal_ref_idc, and nal_unit_type.
+DEFINE_GUID(MFSampleExtension_Encryption_NALUTypes,
+    0xb0f067c7, 0x714c, 0x416c, 0x8d, 0x59, 0x5f, 0x4d, 0xdf, 0x89, 0x13, 0xb6);
+
+
+// MFSampleExtension_Encryption_SPSPPSData {AEDE0FA2-0E0C-453C-B7F3-DE8693364D11}
+// Type : BLOB
+// When present, the MF blob contains all SPS(s) and / or PPS(s) NALUs inside the MF sample.
+// SPSs and PPSs shall be present in the same order as that in the MF sample and in the format of AvcC, 
+// which is DWORD, four - byte length inforamtion for the bytes followed, and NALU data of SPS or PPS, for each NALU.
+// For example, the layout could be 10 in DWORD, 10 bytes data for SPS, 5 in DWORD, and 5 bytes data for PPS.In total, it has 4 + 10 + 4 + 5 = 23 bytes.
+DEFINE_GUID(MFSampleExtension_Encryption_SPSPPSData,
+    0xaede0fa2, 0xe0c, 0x453c, 0xb7, 0xf3, 0xde, 0x86, 0x93, 0x36, 0x4d, 0x11);
+
+
+
+// MFSampleExtension_Encryption_SEIData {3CF0E972-4542-4687-9999-585F565FBA7D}
+// Type : BLOB
+// When present, the MF blob contains all SEI NALUs inside the MF sample. (If there are multiple SEIs in the protected MF sample, all the SEIs shall be present in the blob.)
+// SEIs shall be present in the same order as that in the MF sample and in the format of AvcC, 
+// which is DWORD, four - byte length inforamtion for the bytes followed, and NALU data of SEI.
+// For example, the layout could be 10 in DWORD, 10 bytes data for the first SEI, 5 in DWORD, and 5 bytes data for the second SEI.In total, it has 4 + 10 + 4 + 5 = 23 bytes.
+//
+// Some note about  how to process the SEI NALUs in the blob of MFSampleExtension_Encryption_SEIData
+// Decoder should verify every byte of an SEI NALU is clear, not protected, before parsing the SEI NALU
+// otherwise, decoder should treat the SEI NALU as corrupted by encryption and skip the parsing of the SEI NALU
+DEFINE_GUID(MFSampleExtension_Encryption_SEIData,
+    0x3cf0e972, 0x4542, 0x4687, 0x99, 0x99, 0x58, 0x5f, 0x56, 0x5f, 0xba, 0x7d);
+
+
+// MFSampleExtension_Encryption_HardwareProtection {9A2B2D2B-8270-43E3-8448-994F426E8886}
+// Type: UINT32
+// When present, this UINT32 attribute indicates whether the sample is hardware protected.
+// 0 = not hardware protected, nonzero = hardware protected
+DEFINE_GUID(MFSampleExtension_Encryption_HardwareProtection,
+    0x9a2b2d2b, 0x8270, 0x43e3, 0x84, 0x48, 0x99, 0x4f, 0x42, 0x6e, 0x88, 0x86);
+
 
 // MFSampleExtension_CleanPoint {9cdf01d8-a0f0-43ba-b077-eaa06cbd728a}
 // Type: UINT32
@@ -902,6 +1080,12 @@ DEFINE_GUID(MFSampleExtension_Discontinuity,
 // IMFMediaStream::RequestSample call to which this sample corresponds.
 DEFINE_GUID(MFSampleExtension_Token,
 0x8294da66, 0xf328, 0x4805, 0xb5, 0x51, 0x00, 0xde, 0xb4, 0xc5, 0x7a, 0x61);
+
+// MFSampleExtension_ClosedCaption_CEA708 {26f09068-e744-47dc-aa03-dbf20403bde6}  
+// Type: BLOB  
+// MF sample attribute contained the closed caption data in CEA-708 format.  
+DEFINE_GUID(MFSampleExtension_ClosedCaption_CEA708,  0x26f09068, 0xe744, 0x47dc, 0xaa, 0x03, 0xdb, 0xf2, 0x04, 0x03, 0xbd, 0xe6);  
+#define MFSampleExtension_ClosedCaption_CEA708_MAX_SIZE    256  
 
 // MFSampleExtension_DecodeTimestamp {73A954D4-09E2-4861-BEFC-94BD97C08E6E}
 // Type : UINT64
@@ -928,6 +1112,54 @@ DEFINE_GUID(MFSampleExtension_VideoEncodePictureType,
 // Value 1 indicates that some corruption was detected e.g, during decoding
 DEFINE_GUID(MFSampleExtension_FrameCorruption,
 0xb4dd4a8c, 0xbeb, 0x44c4, 0x8b, 0x75, 0xb0, 0x2b, 0x91, 0x3b, 0x4, 0xf0);
+
+#if (WINVER >= _WIN32_WINNT_WINTHRESHOLD)
+
+// MFSampleExtension_DirtyRects {9BA70225-B342-4E97-9126-0B566AB7EA7E}
+// Type: BLOB
+// This is a blob containing information about the dirty rectangles within
+// a frame. The blob is a struct of type DIRTYRECT_INFO containing an array
+// of NumDirtyRects number of DirtyRects elements.
+DEFINE_GUID(MFSampleExtension_DirtyRects,
+0x9ba70225, 0xb342, 0x4e97, 0x91, 0x26, 0x0b, 0x56, 0x6a, 0xb7, 0xea, 0x7e);
+
+// MFSampleExtension_MoveRegions {E2A6C693-3A8B-4B8D-95D0-F60281A12FB7}
+// Type: BLOB
+// This is a blob containing information about the moved regions within
+// a frame. The blob is a struct of type MOVEREGION_INFO containing an array
+// of NumMoveRegions number of MoveRegions elements.
+DEFINE_GUID(MFSampleExtension_MoveRegions,
+0xe2a6c693, 0x3a8b, 0x4b8d, 0x95, 0xd0, 0xf6, 0x02, 0x81, 0xa1, 0x2f, 0xb7);
+
+typedef struct _MOVE_RECT
+{
+    POINT   SourcePoint;
+    RECT    DestRect;
+} MOVE_RECT;
+
+typedef struct _DIRTYRECT_INFO
+{
+    UINT        FrameNumber;
+    UINT        NumDirtyRects;
+    RECT        DirtyRects[1];
+} DIRTYRECT_INFO;
+
+typedef struct _MOVEREGION_INFO
+{
+    UINT        FrameNumber;
+    UINT        NumMoveRegions;
+    MOVE_RECT   MoveRegions[1];
+} MOVEREGION_INFO;
+
+// (MFSampleExtension_HDCP_FrameCounter
+// Type: BLOB
+// This blob contains the PES_private_data section of a PES packet according to the
+// HDCP 2.2/2.1 specification.  This blob should contain the stream counter and
+// input counter.
+DEFINE_GUID(MFSampleExtension_HDCP_FrameCounter, 
+0x9d389c60, 0xf507, 0x4aa6, 0xa4, 0xa, 0x71, 0x2, 0x7a, 0x2, 0xf3, 0xde); 
+
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -961,7 +1193,7 @@ DEFINE_GUID(MFSampleExtension_PacketCrossOffsets,
 0x2789671d, 0x389f, 0x40bb, 0x90, 0xd9, 0xc2, 0x82, 0xf7, 0x7f, 0x9a, 0xbd);
 
 // MFSampleExtension_Encryption_SampleID {6698B84E-0AFA-4330-AEB2-1C0A98D7A44D}
-// Type: UINT64
+// Type: BLOB
 DEFINE_GUID(MFSampleExtension_Encryption_SampleID,
 0x6698b84e, 0x0afa, 0x4330, 0xae, 0xb2, 0x1c, 0x0a, 0x98, 0xd7, 0xa4, 0x4d);
 
@@ -1056,6 +1288,15 @@ DEFINE_GUID(MFSampleExtension_PhotoThumbnailMediaType,
 DEFINE_GUID(MFSampleExtension_CaptureMetadata,
 0x2EBE23A8, 0xFAF5, 0x444A, 0xA6, 0xA2, 0xEB, 0x81, 0x08, 0x80, 0xAB, 0x5D);
 
+// MFSampleExtension_MDLCacheCookie
+// Type: IUnknown (IMFAttributes)
+// This is the IMFAttributes stored in the sample if the mini driver
+// desires to cache MDL's. This is used internally by the pipeline.
+// {5F002AF9-D8F9-41A3-B6C3-A2AD43F647AD}
+
+DEFINE_GUID(MFSampleExtension_MDLCacheCookie,
+0x5F002AF9, 0xD8F9, 0x41A3, 0xB6, 0xC3, 0xA2, 0xAD, 0x43, 0xF6, 0x47, 0xAD);
+
 // Put all MF_CAPTURE_METADATA_* here.
 // {0F9DD6C6-6003-45D8-BD59-F1F53E3D04E8}   MF_CAPTURE_METADATA_PHOTO_FRAME_FLASH       {UINT32}
 // 0 - No flash triggered on this frame.
@@ -1066,6 +1307,201 @@ DEFINE_GUID(MFSampleExtension_CaptureMetadata,
 DEFINE_GUID(MF_CAPTURE_METADATA_PHOTO_FRAME_FLASH,  
 0x0F9DD6C6, 0x6003, 0x45D8, 0xBD, 0x59, 0xF1, 0xF5, 0x3E, 0x3D, 0x04, 0xE8);  
 
+// The raw IUnknown corresponding to the IMFMediaBuffer that contains the metadata
+// stream as written by the camera driver.  This may be a mix of pre-defined metadata
+// such as photo confirmation, focus notification, or custom metadata that only
+// the MFT0 can parse.
+DEFINE_GUID(MF_CAPTURE_METADATA_FRAME_RAWSTREAM, 
+0x9252077B, 0x2680, 0x49B9, 0xAE, 0x02, 0xB1, 0x90, 0x75, 0x97, 0x3B, 0x70);
+
+// {A87EE154-997F-465D-B91F-29D53B982B88}
+// TYPE: UINT32
+DEFINE_GUID(MF_CAPTURE_METADATA_FOCUSSTATE, 
+0xa87ee154, 0x997f, 0x465d, 0xb9, 0x1f, 0x29, 0xd5, 0x3b, 0x98, 0x2b, 0x88);
+
+// {BB3716D9-8A61-47A4-8197-459C7FF174D5}
+// TYPE: UINT32
+DEFINE_GUID(MF_CAPTURE_METADATA_REQUESTED_FRAME_SETTING_ID, 
+0xbb3716d9, 0x8a61, 0x47a4, 0x81, 0x97, 0x45, 0x9c, 0x7f, 0xf1, 0x74, 0xd5);
+
+// {16B9AE99-CD84-4063-879D-A28C7633729E}
+// TYPE: UINT32
+DEFINE_GUID(MF_CAPTURE_METADATA_EXPOSURE_TIME, 
+0x16b9ae99, 0xcd84, 0x4063, 0x87, 0x9d, 0xa2, 0x8c, 0x76, 0x33, 0x72, 0x9e);
+
+// {D198AA75-4B62-4345-ABF3-3C31FA12C299}
+DEFINE_GUID(MF_CAPTURE_METADATA_EXPOSURE_COMPENSATION,
+0xd198aa75, 0x4b62, 0x4345, 0xab, 0xf3, 0x3c, 0x31, 0xfa, 0x12, 0xc2, 0x99);
+
+// {E528A68F-B2E3-44FE-8B65-07BF4B5A13FF}
+// TYPE: UINT32
+DEFINE_GUID(MF_CAPTURE_METADATA_ISO_SPEED, 
+0xe528a68f, 0xb2e3, 0x44fe, 0x8b, 0x65, 0x7, 0xbf, 0x4b, 0x5a, 0x13, 0xff);
+
+// {B5FC8E86-11D1-4E70-819B-723A89FA4520}
+// TYPE: UINT32
+DEFINE_GUID(MF_CAPTURE_METADATA_LENS_POSITION, 
+0xb5fc8e86, 0x11d1, 0x4e70, 0x81, 0x9b, 0x72, 0x3a, 0x89, 0xfa, 0x45, 0x20);
+
+// {9CC3B54D-5ED3-4BAE-B388-7670AEF59E13}
+// TYPE: UINT64
+DEFINE_GUID(MF_CAPTURE_METADATA_SCENE_MODE, 
+0x9cc3b54d, 0x5ed3, 0x4bae, 0xb3, 0x88, 0x76, 0x70, 0xae, 0xf5, 0x9e, 0x13);
+
+// {4A51520B-FB36-446C-9DF2-68171B9A0389}
+// TYPE: UINT32
+DEFINE_GUID(MF_CAPTURE_METADATA_FLASH, 
+0x4a51520b, 0xfb36, 0x446c, 0x9d, 0xf2, 0x68, 0x17, 0x1b, 0x9a, 0x3, 0x89);
+
+// {9C0E0D49-0205-491A-BC9D-2D6E1F4D5684}
+// TYPE: UINT32
+DEFINE_GUID(MF_CAPTURE_METADATA_FLASH_POWER, 
+0x9c0e0d49, 0x205, 0x491a, 0xbc, 0x9d, 0x2d, 0x6e, 0x1f, 0x4d, 0x56, 0x84);
+
+// {C736FD77-0FB9-4E2E-97A2-FCD490739EE9}
+// TYPE: UINT32
+DEFINE_GUID(MF_CAPTURE_METADATA_WHITEBALANCE, 
+0xc736fd77, 0xfb9, 0x4e2e, 0x97, 0xa2, 0xfc, 0xd4, 0x90, 0x73, 0x9e, 0xe9);
+
+// {E50B0B81-E501-42C2-ABF2-857ECB13FA5C}
+// TYPE: UINT32
+DEFINE_GUID(MF_CAPTURE_METADATA_ZOOMFACTOR, 
+0xe50b0b81, 0xe501, 0x42c2, 0xab, 0xf2, 0x85, 0x7e, 0xcb, 0x13, 0xfa, 0x5c);
+
+// {864F25A6-349F-46B1-A30E-54CC22928A47}
+// TYPE: BLOB
+DEFINE_GUID(MF_CAPTURE_METADATA_FACEROIS, 
+0x864f25a6, 0x349f, 0x46b1, 0xa3, 0xe, 0x54, 0xcc, 0x22, 0x92, 0x8a, 0x47);
+
+// {E94D50CC-3DA0-44d4-BB34-83198A741868}
+// TYPE: BLOB
+DEFINE_GUID(MF_CAPTURE_METADATA_FACEROITIMESTAMPS, 
+0xe94d50cc, 0x3da0, 0x44d4, 0xbb, 0x34, 0x83, 0x19, 0x8a, 0x74, 0x18, 0x68);
+
+// {B927A1A8-18EF-46d3-B3AF-69372F94D9B2}
+// TYPE: BLOB
+DEFINE_GUID(MF_CAPTURE_METADATA_FACEROICHARACTERIZATIONS, 
+0xb927a1a8, 0x18ef, 0x46d3, 0xb3, 0xaf, 0x69, 0x37, 0x2f, 0x94, 0xd9, 0xb2);
+
+// {05802AC9-0E1D-41c7-A8C8-7E7369F84E1E}
+// TYPE: BLOB
+DEFINE_GUID(MF_CAPTURE_METADATA_ISO_GAINS, 
+0x5802ac9, 0xe1d, 0x41c7, 0xa8, 0xc8, 0x7e, 0x73, 0x69, 0xf8, 0x4e, 0x1e);
+
+// {DB51357E-9D3D-4962-B06D-07CE650D9A0A}
+// TYPE: UINT64
+DEFINE_GUID(MF_CAPTURE_METADATA_SENSORFRAMERATE, 
+0xdb51357e, 0x9d3d, 0x4962, 0xb0, 0x6d, 0x7, 0xce, 0x65, 0xd, 0x9a, 0xa);
+
+// {E7570C8F-2DCB-4c7c-AACE-22ECE7CCE647}
+// TYPE: BLOB
+DEFINE_GUID(MF_CAPTURE_METADATA_WHITEBALANCE_GAINS, 
+0xe7570c8f, 0x2dcb, 0x4c7c, 0xaa, 0xce, 0x22, 0xec, 0xe7, 0xcc, 0xe6, 0x47);
+
+// {85358432-2EF6-4ba9-A3FB-06D82974B895}
+// TYPE: BLOB
+DEFINE_GUID(MF_CAPTURE_METADATA_HISTOGRAM, 
+0x85358432, 0x2ef6, 0x4ba9, 0xa3, 0xfb, 0x6, 0xd8, 0x29, 0x74, 0xb8, 0x95);
+
+// {2e9575b8-8c31-4a02-8575-42b197b71592}
+// TYPE: BLOB
+DEFINE_GUID(MF_CAPTURE_METADATA_EXIF, 
+0x2e9575b8, 0x8c31, 0x4a02, 0x85, 0x75, 0x42, 0xb1, 0x97, 0xb7, 0x15, 0x92);
+
+typedef struct tagFaceRectInfoBlobHeader
+{
+    ULONG Size;     // Size of this header + all FaceRectInfo following
+    ULONG Count;    // Number of FaceRectInfo's in the blob
+} FaceRectInfoBlobHeader;
+
+typedef struct tagFaceRectInfo
+{
+    RECT Region;            // Relative coordinates on the frame (Q31 format)
+    LONG confidenceLevel;   // Confidence Level of the region being a face
+} FaceRectInfo;
+
+typedef struct tagFaceCharacterizationBlobHeader
+{
+    ULONG Size;  // Size of this header + all FaceCharacterization following
+    ULONG Count; // Number of FaceCharacterization's in the blob. Must match the number of FaceRectInfo's in FaceRectInfoBlobHeader
+} FaceCharacterizationBlobHeader;
+
+typedef struct tagFaceCharacterization
+{
+    ULONG BlinkScoreLeft;        // [0, 100]. 0 indicates no blink for the left eye. 100 indicates definite blink for the left eye
+    ULONG BlinkScoreRight;       // [0, 100]. 0 indicates no blink for the right eye. 100 indicates definite blink for the right eye
+    ULONG FacialExpression;      // Any one of the MF_METADATAFACIALEXPRESSION_XXX defined 
+    ULONG FacialExpressionScore; // [0, 100]. 0 indicates no such facial expression as identified. 100 indicates definite such facial expression as defined
+} FaceCharacterization;
+	
+#define MF_METADATAFACIALEXPRESSION_SMILE       0x00000001
+
+typedef struct tagCapturedMetadataExposureCompensation
+{
+    UINT64  Flags;  // KSCAMERA_EXTENDEDPROP_EVCOMP_XXX step flag
+    INT32   Value;  // EV Compensation value in units of the step  
+} CapturedMetadataExposureCompensation;
+
+
+typedef struct tagCapturedMetadataISOGains
+{
+    FLOAT    AnalogGain; 	 
+    FLOAT    DigitalGain;	  
+} CapturedMetadataISOGains;
+
+typedef struct tagCapturedMetadataWhiteBalanceGains
+{
+    FLOAT    R; 	 
+    FLOAT    G;
+    FLOAT    B; 	  
+} CapturedMetadataWhiteBalanceGains;
+
+typedef struct tagMetadataTimeStamps 
+{
+    ULONG Flags;           // Bitwise OR of MF_METADATATIMESTAMPS_XXX flags
+    LONGLONG Device;       // QPC time for the sample where the metadata is derived from (in 100ns) 
+    LONGLONG Presentation; // PTS for the sample where the metadata is derived from (in 100ns)
+} MetadataTimeStamps;
+
+#define MF_METADATATIMESTAMPS_DEVICE		0x00000001
+#define MF_METADATATIMESTAMPS_PRESENTATION	0x00000002
+
+typedef struct tagHistogramGrid
+{
+    ULONG Width;  // Width of the sensor output that histogram is collected from
+    ULONG Height; // Height of the sensor output that histogram is collected from
+
+    RECT Region;  // Absolute coordinates of the region on the sensor output that the histogram is collected for
+} HistogramGrid;
+
+typedef struct tagHistogramBlobHeader
+{
+    ULONG Size;        // Size of the entire histogram blob in bytes 
+    ULONG Histograms;  // Number of histograms in the blob. Each histogram is identified by a HistogramHeader
+} HistogramBlobHeader;
+
+typedef struct tagHistogramHeader
+{
+    ULONG Size;         // Size in bytes of this header + (HistogramDataHeader + histogram data following)*number of channels available
+    ULONG Bins;         // Number of bins in the histogram
+    ULONG FourCC;       // Color space that the histogram is collected from
+    ULONG ChannelMasks; // Masks of the color channels that the histogram is collected for
+    HistogramGrid Grid; // Grid that the histogram is collected from
+} HistogramHeader;
+
+typedef struct tagHistogramDataHeader
+{
+    ULONG Size;        // Size in bytes of this header + histogram data following
+    ULONG ChannelMask; // Mask of the color channel for the histogram data
+    ULONG Linear;      // 1, if linear; 0 nonlinear
+} HistogramDataHeader;
+
+#define MF_HISTOGRAM_CHANNEL_Y      0x00000001
+#define MF_HISTOGRAM_CHANNEL_R      0x00000002
+#define MF_HISTOGRAM_CHANNEL_G      0x00000004
+#define MF_HISTOGRAM_CHANNEL_B      0x00000008
+#define MF_HISTOGRAM_CHANNEL_Cb     0x00000010
+#define MF_HISTOGRAM_CHANNEL_Cr     0x00000020
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////  Attributes ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -1237,16 +1673,17 @@ MFTEnum(
 
 enum _MFT_ENUM_FLAG
 {
-    MFT_ENUM_FLAG_SYNCMFT                       = 0x00000001,   // Enumerates V1 MFTs. This is default.
-    MFT_ENUM_FLAG_ASYNCMFT                      = 0x00000002,   // Enumerates only software async MFTs also known as V2 MFTs
-    MFT_ENUM_FLAG_HARDWARE                      = 0x00000004,   // Enumerates V2 hardware async MFTs
-    MFT_ENUM_FLAG_FIELDOFUSE                    = 0x00000008,   // Enumerates MFTs that require unlocking
-    MFT_ENUM_FLAG_LOCALMFT                      = 0x00000010,   // Enumerates Locally (in-process) registered MFTs
-    MFT_ENUM_FLAG_TRANSCODE_ONLY                = 0x00000020,   // Enumerates decoder MFTs used by transcode only    
-    MFT_ENUM_FLAG_SORTANDFILTER                 = 0x00000040,   // Apply system local, do not use and preferred sorting and filtering
-    MFT_ENUM_FLAG_SORTANDFILTER_APPROVED_ONLY   = 0x000000C0,   // Similar to MFT_ENUM_FLAG_SORTANDFILTER, but apply a local policy of: MF_PLUGIN_CONTROL_POLICY_USE_APPROVED_PLUGINS
-    MFT_ENUM_FLAG_SORTANDFILTER_WEB_ONLY        = 0x00000140,   // Similar to MFT_ENUM_FLAG_SORTANDFILTER, but apply a local policy of: MF_PLUGIN_CONTROL_POLICY_USE_WEB_PLUGINS
-    MFT_ENUM_FLAG_ALL                           = 0x0000003F    // Enumerates all MFTs including SW and HW MFTs and applies filtering
+    MFT_ENUM_FLAG_SYNCMFT                         = 0x00000001, // Enumerates V1 MFTs. This is default.
+    MFT_ENUM_FLAG_ASYNCMFT                        = 0x00000002, // Enumerates only software async MFTs also known as V2 MFTs
+    MFT_ENUM_FLAG_HARDWARE                        = 0x00000004, // Enumerates V2 hardware async MFTs
+    MFT_ENUM_FLAG_FIELDOFUSE                      = 0x00000008, // Enumerates MFTs that require unlocking
+    MFT_ENUM_FLAG_LOCALMFT                        = 0x00000010, // Enumerates Locally (in-process) registered MFTs
+    MFT_ENUM_FLAG_TRANSCODE_ONLY                  = 0x00000020, // Enumerates decoder MFTs used by transcode only    
+    MFT_ENUM_FLAG_SORTANDFILTER                   = 0x00000040, // Apply system local, do not use and preferred sorting and filtering
+    MFT_ENUM_FLAG_SORTANDFILTER_APPROVED_ONLY     = 0x000000C0, // Similar to MFT_ENUM_FLAG_SORTANDFILTER, but apply a local policy of: MF_PLUGIN_CONTROL_POLICY_USE_APPROVED_PLUGINS
+    MFT_ENUM_FLAG_SORTANDFILTER_WEB_ONLY          = 0x00000140, // Similar to MFT_ENUM_FLAG_SORTANDFILTER, but apply a local policy of: MF_PLUGIN_CONTROL_POLICY_USE_WEB_PLUGINS
+    MFT_ENUM_FLAG_SORTANDFILTER_WEB_ONLY_EDGEMODE = 0x00000240, // Similar to MFT_ENUM_FLAG_SORTANDFILTER, but apply a local policy of: MF_PLUGIN_CONTROL_POLICY_USE_WEB_PLUGINS_EDGEMODE
+    MFT_ENUM_FLAG_ALL                             = 0x0000003F  // Enumerates all MFTs including SW and HW MFTs and applies filtering
 };
 
 //
@@ -1477,10 +1914,13 @@ DEFINE_MEDIATYPE_GUID( MFVideoFormat_DV50,      FCC('dv50') );
 DEFINE_MEDIATYPE_GUID( MFVideoFormat_DVH1,      FCC('dvh1') );
 DEFINE_MEDIATYPE_GUID( MFVideoFormat_DVC,       FCC('dvc ') );
 DEFINE_MEDIATYPE_GUID( MFVideoFormat_H264,      FCC('H264') );  // assume MFVideoFormat_H264 is frame aligned. that is, each input sample has one complete compressed frame (one frame picture, two field pictures or a single unpaired field picture)
+DEFINE_MEDIATYPE_GUID( MFVideoFormat_H265,      FCC('H265') );  
 DEFINE_MEDIATYPE_GUID( MFVideoFormat_MJPG,      FCC('MJPG') );
 DEFINE_MEDIATYPE_GUID( MFVideoFormat_420O,      FCC('420O') );
 DEFINE_MEDIATYPE_GUID( MFVideoFormat_HEVC,      FCC('HEVC') );
 DEFINE_MEDIATYPE_GUID( MFVideoFormat_HEVC_ES,   FCC('HEVS') );
+DEFINE_MEDIATYPE_GUID( MFVideoFormat_VP80,      FCC('VP80') );
+DEFINE_MEDIATYPE_GUID( MFVideoFormat_VP90,      FCC('VP90') );
 
 #if (WINVER >= _WIN32_WINNT_WIN8)
 DEFINE_MEDIATYPE_GUID( MFVideoFormat_H263,      FCC('H263') );
@@ -1542,12 +1982,45 @@ DEFINE_MEDIATYPE_GUID( MFAudioFormat_ADTS,              WAVE_FORMAT_MPEG_ADTS_AA
 //DEFINE_MEDIATYPE_GUID( MFAudioFormat_AMR_NB,            WAVE_FORMAT_AMR_NB );
 //DEFINE_MEDIATYPE_GUID( MFAudioFormat_AMR_WB,            WAVE_FORMAT_AMR_WB );
 //DEFINE_MEDIATYPE_GUID( MFAudioFormat_AMR_WP,            WAVE_FORMAT_AMR_WP );
+DEFINE_MEDIATYPE_GUID( MFAudioFormat_FLAC,              WAVE_FORMAT_FLAC);
+DEFINE_MEDIATYPE_GUID( MFAudioFormat_ALAC,              FCC('alac') );
 
 // These audio types are not derived from an existing wFormatTag 
 DEFINE_GUID(MFAudioFormat_Dolby_AC3, // == MEDIASUBTYPE_DOLBY_AC3 defined in ksuuids.h
 0xe06d802c, 0xdb46, 0x11cf, 0xb4, 0xd1, 0x00, 0x80, 0x05f, 0x6c, 0xbb, 0xea);
 DEFINE_GUID(MFAudioFormat_Dolby_DDPlus, // == MEDIASUBTYPE_DOLBY_DDPLUS defined in wmcodecdsp.h
 0xa7fb87af, 0x2d02, 0x42fb, 0xa4, 0xd4, 0x5, 0xcd, 0x93, 0x84, 0x3b, 0xdd);
+DEFINE_GUID(MFAudioFormat_Vorbis,      // {8D2FD10B-5841-4a6b-8905-588FEC1ADED9}
+0x8D2FD10B, 0x5841, 0x4a6b, 0x89, 0x05, 0x58, 0x8F, 0xEC, 0x1A, 0xDE, 0xD9);
+
+#if (WINVER >= _WIN32_WINNT_THRESHOLD)
+// LPCM audio with headers for encapsulation in an MPEG2 bitstream
+DEFINE_GUID(MFAudioFormat_LPCM, // == MEDIASUBTYPE_LPCM defined in ksmedia.h
+0xe06d8032L, 0xdb46, 0x11cf, 0xb4, 0xd1, 0x00, 0x80, 0x5f, 0x6c, 0xbb, 0xea);
+
+DEFINE_GUID(MFAudioFormat_PCM_HDCP,
+0xa5e7ff01, 0x8411, 0x4acc, 0xa8, 0x65, 0x5f, 0x49, 0x41, 0x28, 0x8d, 0x80);
+
+DEFINE_GUID(MFAudioFormat_Dolby_AC3_HDCP,
+0x97663a80, 0x8ffb, 0x4445, 0xa6, 0xba, 0x79, 0x2d, 0x90, 0x8f, 0x49, 0x7f);
+
+DEFINE_GUID(MFAudioFormat_AAC_HDCP,
+0x419bce76, 0x8b72, 0x400f, 0xad, 0xeb, 0x84, 0xb5, 0x7d, 0x63, 0x48, 0x4d);
+
+DEFINE_GUID(MFAudioFormat_ADTS_HDCP,
+0xda4963a3, 0x14d8, 0x4dcf, 0x92, 0xb7, 0x19, 0x3e, 0xb8, 0x43, 0x63, 0xdb);
+
+DEFINE_GUID(MFAudioFormat_Base_HDCP,
+0x3884b5bc, 0xe277, 0x43fd, 0x98, 0x3d, 0x03, 0x8a, 0xa8, 0xd9, 0xb6, 0x05);
+
+DEFINE_GUID(MFVideoFormat_H264_HDCP,
+0x5d0ce9dd, 0x9817, 0x49da, 0xbd, 0xfd, 0xf5, 0xf5, 0xb9, 0x8f, 0x18, 0xa6);
+
+DEFINE_GUID(MFVideoFormat_Base_HDCP,
+0xeac3b9d5, 0xbd14, 0x4237, 0x8f, 0x1f, 0xba, 0xb4, 0x28, 0xe4, 0x93, 0x12);
+
+#endif
+
 
 //
 // MPEG-4 media types
@@ -1556,6 +2029,35 @@ DEFINE_GUID(MFAudioFormat_Dolby_DDPlus, // == MEDIASUBTYPE_DOLBY_DDPLUS defined 
 // {00000000-767a-494d-b478-f29d25dc9037}       MFMPEG4Format_Base
 DEFINE_GUID(MFMPEG4Format_Base,
 0x00000000, 0x767a, 0x494d, 0xb4, 0x78, 0xf2, 0x9d, 0x25, 0xdc, 0x90, 0x37);
+
+
+//
+// Subtitle media types
+//
+
+// {73E73992-9a10-4356-9557-7194E91E3E54}      MFSubtitleFormat_TTML 
+DEFINE_GUID(MFSubtitleFormat_TTML,
+    0x73e73992, 0x9a10, 0x4356, 0x95, 0x57, 0x71, 0x94, 0xe9, 0x1e, 0x3e, 0x54);
+
+// {7FA7FAA3-FEAE-4E16-AEDF-36B9ACFBB099}      MFSubtitleFormat_ATSC 
+DEFINE_GUID(MFSubtitleFormat_ATSC,
+    0x7fa7faa3, 0xfeae, 0x4e16, 0xae, 0xdf, 0x36, 0xb9, 0xac, 0xfb, 0xb0, 0x99);
+
+// {C886D215-F485-40BB-8DB6-FADBC619A45D}      MFSubtitleFormat_WebVTT 
+DEFINE_GUID(MFSubtitleFormat_WebVTT,
+    0xc886d215, 0xf485, 0x40bb, 0x8d, 0xb6, 0xfa, 0xdb, 0xc6, 0x19, 0xa4, 0x5d);
+
+// {5E467F2E-77CA-4CA5-8391-D142ED4B76C8}      MFSubtitleFormat_SRT
+DEFINE_GUID(MFSubtitleFormat_SRT,
+    0x5e467f2e, 0x77ca, 0x4ca5, 0x83, 0x91, 0xd1, 0x42, 0xed, 0x4b, 0x76, 0xc8);
+
+// {57176A1B-1A9E-4EEA-ABEF-C61760198AC4}      MFSubtitleFormat_SSA
+DEFINE_GUID(MFSubtitleFormat_SSA,
+    0x57176a1b, 0x1a9e, 0x4eea, 0xab, 0xef, 0xc6, 0x17, 0x60, 0x19, 0x8a, 0xc4);
+
+// {1BB3D849-6614-4D80-8882-ED24AA82DA92}      MFSubtitleFormat_CustomUserData
+DEFINE_GUID(MFSubtitleFormat_CustomUserData,
+    0x1bb3d849, 0x6614, 0x4d80, 0x88, 0x82, 0xed, 0x24, 0xaa, 0x82, 0xda, 0x92);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////  Media Type Attributes GUIDs ////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -1679,6 +2181,45 @@ typedef enum _MFVideoRotationFormat {
 DEFINE_GUID(MF_MT_VIDEO_ROTATION,
 0xc380465d, 0x2271, 0x428c, 0x9b, 0x83, 0xec, 0xea, 0x3b, 0x4a, 0x85, 0xc1);
 
+#if (WINVER >= _WIN32_WINNT_WINTHRESHOLD)
+// MF_MT_SECURE     {c5acc4fd-0304-4ecf-809f-47bc97ff63bd }
+// Type: UINT32 (BOOL)
+// Description: MF_MT_SECURE attribute indicates that the content will be using
+// secure D3D surfaces.  These surfaces can only be accessed by trusted hardware.
+DEFINE_GUID(MF_MT_SECURE,
+0xc5acc4fd, 0x0304, 0x4ecf, 0x80, 0x9f, 0x47, 0xbc, 0x97, 0xff, 0x63, 0xbd);
+#endif
+
+// MF_MT_VIDEO_NO_FRAME_ORDERING {3F5B106F-6BC2-4EE3-B7ED-8902C18F5351}
+// Type: UINT32
+// Description: MF_MT_VIDEO_NO_FRAME_ORDERING set to non-zero (true) means external users/apps know 
+// that input video bitstream has no frame rerodering,
+// that is, the output and display order is the same as the input and decoding order
+// it will overwrite bitstream syntaxes even if bitstream syntaxes do not indicate 
+// that the output and display order is the same as the input and decoding order
+//
+// it is an attribute set on input media type
+//
+DEFINE_GUID(MF_MT_VIDEO_NO_FRAME_ORDERING,
+    0x3f5b106f, 0x6bc2, 0x4ee3, 0xb7, 0xed, 0x89, 0x2, 0xc1, 0x8f, 0x53, 0x51);
+
+
+// MF_MT_VIDEO_H264_NO_FMOASO {ED461CD6-EC9F-416A-A8A3-26D7D31018D7}
+// Type: UINT32
+// Description: MF_MT_VIDEO_H264_NO_FMOASO set to non-zero (true) means external users/apps know 
+// that H.264 input video bitstream has no FMO/ASO enabled,
+// that is, even if the bitstream has baseline profile and constraint_set1_flag equal to 0, 
+// the bitstream shall not have FMO/ASO
+// then H.264 decoder uses DXVA decoding and doesn't fall back to software decoding
+// it improves power consumption, memory usage, performance and user experiences 
+// (without unnecessary glitches on low end devices)
+//
+// it is an attribute set on input media type
+//
+DEFINE_GUID(MF_MT_VIDEO_H264_NO_FMOASO,
+    0xed461cd6, 0xec9f, 0x416a, 0xa8, 0xa3, 0x26, 0xd7, 0xd3, 0x10, 0x18, 0xd7);
+
+
 #endif // (WINVER >= _WIN32_WINNT_WIN8)
 
 //
@@ -1780,6 +2321,17 @@ DEFINE_GUID(MF_MT_AAC_AUDIO_PROFILE_LEVEL_INDICATION,
 0x7632f0e6, 0x9538, 0x4d61, 0xac, 0xda, 0xea, 0x29, 0xc8, 0xc1, 0x44, 0x56);
 
 #endif // (WINVER >= _WIN32_WINNT_WIN7)
+
+#if (WINVER >= _WIN32_WINNT_WIN10)
+//
+// AUDIO - FLAC extra data
+//
+
+// {8B81ADAE-4B5A-4D40-8022-F38D09CA3C5C} MF_MT_AUDIO_FLAC_MAX_BLOCK_SIZE       {UINT32}
+DEFINE_GUID(MF_MT_AUDIO_FLAC_MAX_BLOCK_SIZE,
+    0x8b81adae, 0x4b5a, 0x4d40, 0x80, 0x22, 0xf3, 0x8d, 0x9, 0xca, 0x3c, 0x5c);
+
+#endif // (WINVER >= _WIN32_WINNT_WIN10)
 
 //
 // VIDEO core data
@@ -1923,6 +2475,11 @@ DEFINE_GUID(MF_MT_MAX_KEYFRAME_SPACING,
 DEFINE_GUID(MF_MT_USER_DATA,
 0xb6bc765f, 0x4c3b, 0x40a4, 0xbd, 0x51, 0x25, 0x35, 0xb6, 0x6f, 0xe0, 0x9d);
 
+// {a505d3ac-f930-436e-8ede-93a509ce23b2} MF_MT_OUTPUT_BUFFER_NUM {UINT32}
+DEFINE_GUID(MF_MT_OUTPUT_BUFFER_NUM,
+0xa505d3ac, 0xf930, 0x436e, 0x8e, 0xde, 0x93, 0xa5, 0x09, 0xce, 0x23, 0xb2);
+
+
 //
 // VIDEO - uncompressed format data
 //
@@ -2005,6 +2562,14 @@ DEFINE_GUID(MF_MT_MPEG2_TIMECODE,
 DEFINE_GUID(MF_MT_MPEG2_CONTENT_PACKET, 
 0x825d55e4, 0x4f12, 0x4197, 0x9e, 0xb3, 0x59, 0xb6, 0xe4, 0x71, 0xf, 0x6);
 
+// {91a49eb5-1d20-4b42-ace8-804269bf95ed}   MF_MT_MPEG2_ONE_FRAME_PER_PACKET      {UINT32 (BOOL) -- 0 for default behavior of splitting large video frames into multiple PES packets, 1 for always putting a full frame inside a PES packet, even if that requires setting the PES packet size to undefined (0)}
+DEFINE_GUID(MF_MT_MPEG2_ONE_FRAME_PER_PACKET,
+0x91a49eb5, 0x1d20, 0x4b42, 0xac, 0xe8, 0x80, 0x42, 0x69, 0xbf, 0x95, 0xed);
+
+// {168f1b4a-3e91-450f-aea7-e4baeadae5ba} MF_MT_MPEG2_HDCP  {UINT32 (BOOL) -- 0 for default behavior of clear MPEG2 stream, 1 for adding the HDCP descriptor to the PMT
+DEFINE_GUID(MF_MT_MPEG2_HDCP,
+0x168f1b4a, 0x3e91, 0x450f, 0xae, 0xa7, 0xe4, 0xba, 0xea, 0xda, 0xe5, 0xba);
+
 //
 // VIDEO - H264 extra data
 //
@@ -2060,6 +2625,14 @@ DEFINE_GUID(MF_MT_H264_RATE_CONTROL_MODES,
 //{85E299B2-90E3-4FE8-B2F5-C067E0BFE57A}          {UINT64, UVC 1.5 H.264 Probe/Commit Control: bmLayoutPerStream}
 DEFINE_GUID(MF_MT_H264_LAYOUT_PER_STREAM,
 0x85e299b2, 0x90e3, 0x4fe8, 0xb2, 0xf5, 0xc0, 0x67, 0xe0, 0xbf, 0xe5, 0x7a);
+
+// According to Mpeg4 spec, SPS and PPS of H.264/HEVC codec could appear in sample data.
+// description box. Mpeg4 sink filters out the SPS and PPS NALU and do not support in band SPS and PPS NALU.
+// This attribute enables support for in band SPS and PPS to appear in the elementary stream. 
+// HEVC will have in-band parameter set by default with MP4 recording for broad support.  H.264 will have out - of - band parameter set by default for historical reason.
+// {75DA5090-910B-4A03-896C-7B898FEEA5AF}
+DEFINE_GUID(MF_MT_IN_BAND_PARAMETER_SET,
+0x75da5090, 0x910b, 0x4a03, 0x89, 0x6c, 0x7b, 0x89, 0x8f, 0xee, 0xa5, 0xaf);
 
 //
 // INTERLEAVED - DV extra data
@@ -2199,6 +2772,11 @@ DEFINE_GUID(MF_LOW_LATENCY,
 // {E3F2E203-D445-4B8C-9211-AE390D3BA017}  {UINT32} Maximum macroblocks per second that can be handled by MFT
 DEFINE_GUID(MF_VIDEO_MAX_MB_PER_SEC,
 0xe3f2e203, 0xd445, 0x4b8c, 0x92, 0x11, 0xae, 0x39, 0xd, 0x3b, 0xa0, 0x17);
+
+// {7086E16C-49C5-4201-882A-8538F38CF13A} {UINT32 (BOOL)} Enables(0, default)/disables(1) the DXVA decode status queries in decoders. When disabled decoder won't provide MFSampleExtension_FrameCorruption
+DEFINE_GUID(MF_DISABLE_FRAME_CORRUPTION_INFO,
+    0x7086e16c, 0x49c5, 0x4201, 0x88, 0x2a, 0x85, 0x38, 0xf3, 0x8c, 0xf1, 0x3a);
+
 #endif // (WINVER >= _WIN32_WINNT_WIN8)
 
 

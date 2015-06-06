@@ -29,9 +29,8 @@ namespace SharpDX.Direct3D12
         /// <summary>
         /// Initializes a new instance of the <see cref="Device"/> class.
         /// </summary>
-        /// <param name="driverType">Type of the driver.</param>
-        public Device(DriverType driverType)
-            : this(driverType, DeviceCreationFlags.None)
+        public Device()
+            : this(null, FeatureLevel.Level_9_1)
         {
         }
 
@@ -40,17 +39,7 @@ namespace SharpDX.Direct3D12
         /// </summary>
         /// <param name="adapter">The adapter.</param>
         public Device(Adapter adapter)
-            : this(adapter, DeviceCreationFlags.None)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Device"/> class.
-        /// </summary>
-        /// <param name="driverType">Type of the driver.</param>
-        /// <param name="flags">The flags.</param>
-        public Device(DriverType driverType, DeviceCreationFlags flags)
-            :this(driverType, flags, FeatureLevel.Level_9_1)
+            : this(adapter, FeatureLevel.Level_9_1)
         {
         }
 
@@ -58,33 +47,10 @@ namespace SharpDX.Direct3D12
         /// Initializes a new instance of the <see cref="Device"/> class.
         /// </summary>
         /// <param name="adapter">The adapter.</param>
-        /// <param name="flags">The flags.</param>
-        public Device(Adapter adapter, DeviceCreationFlags flags)
-            : this(adapter, flags, FeatureLevel.Level_9_1)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Device"/> class.
-        /// </summary>
-        /// <param name="driverType">Type of the driver.</param>
-        /// <param name="flags">The flags.</param>
         /// <param name="minFeatureLevel">The minimum feature level.</param>
-        public Device(DriverType driverType, DeviceCreationFlags flags, FeatureLevel minFeatureLevel)
-            : base(IntPtr.Zero)
+        public Device(Adapter adapter, FeatureLevel minFeatureLevel) : base(IntPtr.Zero)
         {
-            CreateDevice(null, driverType, flags, minFeatureLevel, this);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Device"/> class.
-        /// </summary>
-        /// <param name="adapter">The adapter.</param>
-        /// <param name="flags">The flags.</param>
-        /// <param name="minFeatureLevel">The minimum feature level.</param>
-        public Device(Adapter adapter, DeviceCreationFlags flags, FeatureLevel minFeatureLevel) : base(IntPtr.Zero)
-        {
-            CreateDevice(adapter, DriverType.Unknown, flags, minFeatureLevel, this);
+            CreateDevice(adapter, minFeatureLevel, this);
         }
 
         /// <summary>	
@@ -164,15 +130,15 @@ namespace SharpDX.Direct3D12
         /// No documentation for Direct3D12
         /// </summary>
         /// <param name="heapPropertiesRef">No documentation.</param>
-        /// <param name="heapMiscFlags">No documentation.</param>
+        /// <param name="heapFlags">No documentation.</param>
         /// <param name="resourceDescRef">No documentation.</param>
         /// <param name="initialResourceState">No documentation.</param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT ID3D12Device::CreateCommittedResource([In] const D3D12_HEAP_PROPERTIES* pHeapProperties,[In] D3D12_HEAP_MISC_FLAG HeapMiscFlags,[In, Value] const D3D12_RESOURCE_DESC* pResourceDesc,[In] D3D12_RESOURCE_USAGE InitialResourceState,[In] const GUID&amp; riidResource,[Out] ID3D12Resource** ppvResource)</unmanaged>
         ///   <unmanaged-short>ID3D12Device::CreateCommittedResource</unmanaged-short>
-        public SharpDX.Direct3D12.Resource CreateCommittedResource(SharpDX.Direct3D12.HeapProperties heapPropertiesRef, SharpDX.Direct3D12.HeapMiscFlags heapMiscFlags, SharpDX.Direct3D12.ResourceDescription resourceDescRef, SharpDX.Direct3D12.ResourceUsage initialResourceState, SharpDX.Direct3D12.ClearValue? optimizedClearValueRef = null)
+        public SharpDX.Direct3D12.Resource CreateCommittedResource(SharpDX.Direct3D12.HeapProperties heapPropertiesRef, SharpDX.Direct3D12.HeapFlags heapFlags, SharpDX.Direct3D12.ResourceDescription resourceDescRef, SharpDX.Direct3D12.ResourceStates initialResourceState, SharpDX.Direct3D12.ClearValue? optimizedClearValueRef = null)
         {
-            return CreateCommittedResource(ref heapPropertiesRef, heapMiscFlags, resourceDescRef, initialResourceState, optimizedClearValueRef, Utilities.GetGuidFromType(typeof(Resource)));
+            return CreateCommittedResource(ref heapPropertiesRef, heapFlags, resourceDescRef, initialResourceState, optimizedClearValueRef, Utilities.GetGuidFromType(typeof(Resource)));
         }
 
         /// <summary>	
@@ -239,7 +205,7 @@ namespace SharpDX.Direct3D12
         /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateFence']/*"/>	
         /// <unmanaged>HRESULT ID3D12Device::CreateFence([In] unsigned longlong InitialValue,[In] D3D12_FENCE_MISC_FLAG Flags,[In] const GUID&amp; riid,[Out] void** ppFence)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateFence</unmanaged-short>	
-        public Fence CreateFence(long initialValue, SharpDX.Direct3D12.FenceMiscFlags flags)
+        public Fence CreateFence(long initialValue, SharpDX.Direct3D12.FenceFlags flags)
         {
             return CreateFence(initialValue, flags, Utilities.GetGuidFromType(typeof(Fence)));
         }
@@ -352,7 +318,7 @@ namespace SharpDX.Direct3D12
         public SharpDX.Direct3D12.Resource CreatePlacedResource(SharpDX.Direct3D12.Heap heapRef,
             long heapOffset,
             SharpDX.Direct3D12.ResourceDescription descRef,
-            SharpDX.Direct3D12.ResourceUsage initialState,
+            SharpDX.Direct3D12.ResourceStates initialState,
             SharpDX.Direct3D12.ClearValue? optimizedClearValueRef = null)
         {
             return CreatePlacedResource(heapRef, heapOffset, ref descRef, initialState, optimizedClearValueRef, Utilities.GetGuidFromType(typeof(Resource)));
@@ -370,16 +336,15 @@ namespace SharpDX.Direct3D12
         /// <unmanaged>HRESULT ID3D12Device::CreateReservedResource([In] const D3D12_RESOURCE_DESC* pDesc,[In] D3D12_RESOURCE_USAGE InitialState,[In, Optional] const D3D12_CLEAR_VALUE* pOptimizedClearValue,[In] const GUID&amp; riid,[Out] ID3D12Resource** ppvResource)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateReservedResource</unmanaged-short>	
         public SharpDX.Direct3D12.Resource CreateReservedResource(SharpDX.Direct3D12.ResourceDescription descRef,
-            SharpDX.Direct3D12.ResourceUsage initialState,
+            SharpDX.Direct3D12.ResourceStates initialState,
             SharpDX.Direct3D12.ClearValue? optimizedClearValueRef = null)
         {
             return CreateReservedResource(ref descRef, initialState, optimizedClearValueRef, Utilities.GetGuidFromType(typeof(Resource)));
         }
 
-        private static void CreateDevice(Adapter adapter, DriverType driverType, DeviceCreationFlags flags,
-                                  FeatureLevel minFeatureLevel, Device instance)
+        private static void CreateDevice(Adapter adapter, FeatureLevel minFeatureLevel, Device instance)
         {
-            D3D12.CreateDevice(adapter, driverType, flags, minFeatureLevel, D3D12.SdkVersion, Utilities.GetGuidFromType(typeof(Device)), instance).CheckError();
+            D3D12.CreateDevice(adapter, minFeatureLevel, Utilities.GetGuidFromType(typeof(Device)), instance).CheckError();
         }
     }
 }

@@ -72,10 +72,14 @@
     <bind from="D2D_RECT_U" to="SharpDX.Mathematics.Interop.RawRectangle" />
     <bind from="D2D_RECT_F" to="SharpDX.Mathematics.Interop.RawRectangleF" />
     <bind from="D2D_POINT_2F" to="SharpDX.Mathematics.Interop.RawVector2" />
+    <bind from="D2D_VECTOR_2F" to="SharpDX.Mathematics.Interop.RawVector2" />
+    <bind from="D2D_VECTOR_3F" to="SharpDX.Mathematics.Interop.RawVector3" />
+    <bind from="D2D_VECTOR_4F" to="SharpDX.Mathematics.Interop.RawVector4" />
     <bind from="D2D_POINT_2U" to="SharpDX.Mathematics.Interop.RawPoint" />
     <bind from="D2D_COLOR_F" to="SharpDX.Mathematics.Interop.RawColor4" />
     <bind from="D2D_MATRIX_3X2_F" to="SharpDX.Mathematics.Interop.RawMatrix3x2" />
     <bind from="D2D_MATRIX_4X4_F" to="SharpDX.Mathematics.Interop.RawMatrix" />
+    <bind from="D2D_MATRIX_5X4_F" to="SharpDX.Mathematics.Interop.RawMatrix5x4" />
     <bind from="IPrintDocumentPackageTarget" to="SharpDX.ComObject" />
   </bindings>
   

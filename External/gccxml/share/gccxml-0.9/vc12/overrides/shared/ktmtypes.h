@@ -23,6 +23,10 @@ Revision History:
 extern "C" {
 #endif
 
+#if _MSC_VER >= 1200
+#pragma warning(push)
+#pragma warning(disable:4820) // padding added after data member
+#endif
 
 typedef GUID UOW;
 typedef GUID *PUOW;
@@ -201,6 +205,10 @@ typedef struct _KCRM_PROTOCOL_BLOB {
     ULONG              Unused1;        // for alignment purposes
     ULONG              Unused2;        // for alignment purposes
 } KCRM_PROTOCOL_BLOB, *PKCRM_PROTOCOL_BLOB, *RESTRICTED_POINTER PRKCRM_PROTOCOL_BLOB;
+
+#if _MSC_VER >= 1200
+#pragma warning(pop)
+#endif
 
 #ifdef __cplusplus
 }

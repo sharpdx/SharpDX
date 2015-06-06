@@ -16,6 +16,7 @@
     <Compile Include="BlendStateDescription.cs" />
     <Compile Include="CommandQueue.cs" />
     <Compile Include="CommandQueueDescription.cs" />
+    <Compile Include="DebugController.cs" />
     <Compile Include="GraphicsCommandList.cs" />
     <Compile Include="ComputePipelineStateDescription.cs" />
     <Compile Include="DepthStencilStateDescription.cs" />
@@ -32,10 +33,10 @@
     <Compile Include="InputLayoutDescription.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RasterizerStateDescription.cs" />
-    <Compile Include="ResourceAliasingBarrierDescription.cs" />
-    <Compile Include="ResourceBarrierDescription.cs" />
+    <Compile Include="ResourceAliasingBarrier.cs" />
+    <Compile Include="ResourceBarrier.cs" />
     <Compile Include="ResourceDescription.cs" />
-    <Compile Include="ResourceTransitionBarrierDescription.cs" />
+    <Compile Include="ResourceTransitionBarrier.cs" />
     <Compile Include="RootParameter.cs" />
     <Compile Include="RootSignatureDescription.cs" />
     <Compile Include="ShaderBytecode.cs" />

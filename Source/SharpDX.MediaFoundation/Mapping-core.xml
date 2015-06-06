@@ -818,6 +818,13 @@
     <map param="IMFMediaEvent::GetType::pmet" type="MEDIA_EVENT_TYPES"/>
 
     <map method="IMFSourceResolver::CreateObjectFromURL" visibility="internal"/>
+    
+    <map method="IMFHDCPStatus::Set" property="false"/>
+    
+    <map method="IMFTimedTextTrack::GetExtendedErrorCode" check="false"/>
+    
+    <!-- temp: use void* type for VARIANT* -->
+    <map param="IMFASFIndexer::GetSeekPositionForValue::pvarValue" type="void"/>
 
     <!--
     // *****************************************************************

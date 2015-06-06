@@ -22,7 +22,7 @@
 extern "C" {
 #endif  // ]
 
-#if !defined(__midl) && defined(_PREFAST_) && _MSC_VER >= 1000 && !defined(_SDV_) /*IFSTRIP=IGN*/
+#if !defined(__midl) && defined(_PREFAST_) && _MSC_VER >= 1000 && !defined(_SDV_)
 
 __ANNOTATION(SAL_guarded_by(__deferTypecheck void *));
 __ANNOTATION(SAL_write_guarded_by(__deferTypecheck void *));

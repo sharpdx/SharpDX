@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,23 @@ using System;
 
 namespace SharpDX.Direct3D12
 {
-    public partial struct ResourceAliasingBarrierDescription
+    public partial class DebugInterface
     {
+        private static DebugInterface debugInterface;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResourceAliasingBarrierDescription"/> struct.
+        /// Gets the debug interface.
         /// </summary>
-        /// <param name="resourceBefore">The resource before.</param>
-        /// <param name="resourceAfter">The resource after.</param>
-        /// <exception cref="System.ArgumentNullException">resourceBefore</exception>
-        public ResourceAliasingBarrierDescription(Resource resourceBefore, Resource resourceAfter)
+        /// <returns></returns>
+        public static DebugInterface Get()
         {
-            if(resourceBefore == null) throw new ArgumentNullException("resourceBefore");
-            ResourceBeforePointer = resourceBefore.NativePointer;
-            ResourceAfterPointer = resourceAfter != null ? resourceAfter.NativePointer : IntPtr.Zero;
+            if (debugInterface == null)
+            {
+                IntPtr debugInterfacePtr;
+                D3D12.GetDebugInterface(Utilities.GetGuidFromType(typeof(DebugInterface)), out debugInterfacePtr);
+                debugInterface = new DebugInterface(debugInterfacePtr);
+            }
+            return debugInterface;
         }
     }
 }

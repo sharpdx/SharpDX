@@ -1561,7 +1561,7 @@
 #define _SA_SPECSTRIZE( x ) #x
 #define _SAL_nop_impl_       /* nothing */
 #define __nop_impl(x)            x
-#endif
+#endif // ]
 
 
 #if _USE_ATTRIBUTES_FOR_SAL // [
@@ -2588,13 +2588,13 @@ extern "C" {
      Pre-defined control point categories include: RPC, LPC, DeviceDriver, UserToKernel, ISAPI, COM.
     
     */
-    #define __inner_control_entrypoint(category) _SA_annotes2(SAL_entrypoint, controlEntry, category)
+    #define __inner_control_entrypoint(category) _SA_annotes2(SAL_entrypoint, controlEntry, #category)
 
 
     /*
      Pre-defined data entry point categories include: Registry, File, Network.
     */
-    #define __inner_data_entrypoint(category)    _SA_annotes2(SAL_entrypoint, dataEntry, category)
+    #define __inner_data_entrypoint(category)    _SA_annotes2(SAL_entrypoint, dataEntry, #category)
 
     #define __inner_override                    _SA_annotes0(__override)
     #define __inner_callback                    _SA_annotes0(__callback)
@@ -2904,7 +2904,7 @@ of each annotation, see the advanced annotations section.
 
 #ifndef __analysis_assume // [
 #ifdef _PREFAST_ // [
-#define __analysis_assume(expr) __assume(expr)
+#define __analysis_assume(expr) __assume(!!(expr))
 #else // ][
 #define __analysis_assume(expr) 
 #endif // ]
@@ -2912,7 +2912,7 @@ of each annotation, see the advanced annotations section.
 
 #ifndef _Analysis_assume_ // [
 #ifdef _PREFAST_ // [
-#define _Analysis_assume_(expr) __assume(expr)
+#define _Analysis_assume_(expr) __assume(!!(expr))
 #else // ][
 #define _Analysis_assume_(expr) 
 #endif // ]
@@ -2922,7 +2922,7 @@ of each annotation, see the advanced annotations section.
 
 #ifdef _PREFAST_ // [
 __inline __nothrow 
-void __AnalysisAssumeNullterminated(_Post_ _Null_terminated_ void *p);
+void __AnalysisAssumeNullterminated(_Post_ _Null_terminated_ const void *p);
 
 #define _Analysis_assume_nullterminated_(x) __AnalysisAssumeNullterminated(x)
 
@@ -2983,6 +2983,10 @@ __PRIMOP(int, _In_function_class_(__In_impl_ char*);)
 
 #define _Maybe_raises_SEH_exception_   _SAL2_Source_(_Maybe_raises_SEH_exception_, (x), _Pre_ _SA_annotes1(SAL_inTry,__yes))
 #define _Raises_SEH_exception_         _SAL2_Source_(_Raises_SEH_exception_, (x), _Maybe_raises_SEH_exception_ _Analysis_noreturn_)
+
+// To flag external interfaces for certain rules
+__ANNOTATION(SAL_externalIntf(void);)
+#define _Published_ _SAL2_Source_(_Published_, (), _SA_annotes0(SAL_externalIntf))
 
 #ifdef  __cplusplus // [
 }

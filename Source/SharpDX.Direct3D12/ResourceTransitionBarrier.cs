@@ -22,37 +22,35 @@ using System;
 
 namespace SharpDX.Direct3D12
 {
-    public partial struct ResourceTransitionBarrierDescription
+    public partial struct ResourceTransitionBarrier
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResourceTransitionBarrierDescription"/> struct.
+        /// Initializes a new instance of the <see cref="ResourceTransitionBarrier"/> struct.
         /// </summary>
         /// <param name="resource">The resource.</param>
         /// <param name="stateBefore">The state before.</param>
         /// <param name="stateAfter">The state after.</param>
         /// <exception cref="System.ArgumentNullException">resource</exception>
-        public ResourceTransitionBarrierDescription(Resource resource, ResourceUsage stateBefore, ResourceUsage stateAfter, ResourceTransitionBarrierFlags flags = ResourceTransitionBarrierFlags.None)
-            : this(resource, -1, stateBefore, stateAfter, flags)
+        public ResourceTransitionBarrier(Resource resource, ResourceStates stateBefore, ResourceStates stateAfter)
+            : this(resource, -1, stateBefore, stateAfter)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResourceTransitionBarrierDescription" /> struct.
+        /// Initializes a new instance of the <see cref="ResourceTransitionBarrier" /> struct.
         /// </summary>
         /// <param name="resource">The resource.</param>
         /// <param name="subresource">The subresource.</param>
         /// <param name="stateBefore">The state before.</param>
         /// <param name="stateAfter">The state after.</param>
-        /// <param name="flags">The flags.</param>
         /// <exception cref="System.ArgumentNullException">resource</exception>
-        public ResourceTransitionBarrierDescription(Resource resource, int subresource, ResourceUsage stateBefore, ResourceUsage stateAfter, ResourceTransitionBarrierFlags flags = ResourceTransitionBarrierFlags.None)
+        public ResourceTransitionBarrier(Resource resource, int subresource, ResourceStates stateBefore, ResourceStates stateAfter)
         {
             if (resource == null) throw new ArgumentNullException("resource");
             ResourcePointer = resource.NativePointer;
             Subresource = subresource;
             StateBefore = stateBefore;
             StateAfter = stateAfter;
-            Flags = flags;
         }
     }
 }

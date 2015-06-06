@@ -21,6 +21,11 @@
 
 #include <specstrings.h>    // for _In_, etc.
 
+#if _MSC_VER >= 1200
+#pragma warning(push)
+#pragma warning(disable:4668) // #if not_defined treated as #if 0
+#endif
+
 #if !defined(_W64)
 #if !defined(__midl) && (defined(_X86_) || defined(_M_IX86) || defined(_ARM_) || defined(_M_ARM)) && (_MSC_VER >= 1300)
 #define _W64 __w64
@@ -136,7 +141,7 @@ typedef _Return_type_success_(return >= 0) long HRESULT;
 //
 #if defined(MIDL_PASS) || defined(RC_INVOKED) || defined(_M_CEE_PURE) \
     || defined(_68K_) || defined(_MPPC_) \
-    || defined(_M_IA64) || defined(_M_AMD64) || defined(_M_ARM)
+    || defined(_M_IA64) || defined(_M_AMD64) || defined(_M_ARM) || defined(_M_ARM64)
 #define UInt32x32To64(a, b) (((unsigned __int64)((unsigned int)(a))) * ((unsigned __int64)((unsigned int)(b))))
 #elif defined(_M_IX86)
 #define UInt32x32To64(a, b) ((unsigned __int64)(((unsigned __int64)((unsigned int)(a))) * ((unsigned int)(b))))
@@ -7694,6 +7699,7 @@ ULongLongMult(
     ullResultLow = UnsignedMultiply128(ullMultiplicand, ullMultiplier, &ullResultHigh);
     if (ullResultHigh == 0)
     {
+        _Analysis_assume_(ullMultiplicand * ullMultiplier == ullResultLow);
         *pullResult = ullResultLow;
         hr = S_OK;
     }
@@ -7779,6 +7785,7 @@ ULongLongMult(
     {
         *pullResult = ULONGLONG_ERROR;
     }
+#pragma warning(suppress:26071)
 #endif // _USE_INTRINSIC_MULTIPLY128
 */    
     return hr;
@@ -7815,7 +7822,7 @@ ULongLongMult(
 // For example file sizes and array indices should always be unsigned.
 // (File sizes should be 64bit integers; array indices should be size_t.)
 // Subtracting a larger positive signed number from a smaller positive
-// signed number with IntSubwill succeed, producing a negative number,
+// signed number with IntSub will succeed, producing a negative number,
 // that then must not be used as an array index (but can occasionally be
 // used as a pointer index.) Similarly for adding a larger magnitude
 // negative number to a smaller magnitude positive number.
@@ -8554,6 +8561,10 @@ SSIZETMult(
 #define HIWORD(_dw)     ((WORD)((((DWORD_PTR)(_dw)) >> 16) & 0xffff))
 #define LODWORD(_qw)    ((DWORD)(_qw))
 #define HIDWORD(_qw)    ((DWORD)(((_qw) >> 32) & 0xffffffff))
+
+#if _MSC_VER >= 1200
+#pragma warning(pop)
+#endif
 
 #endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
 #pragma endregion

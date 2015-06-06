@@ -23,6 +23,7 @@
 <config id="sharpdx-dcomp" xmlns="urn:SharpGen.Config">
   <depends>sharpdx</depends>
   <depends>sharpdx-dxgi</depends>
+  <depends>sharpdx-direct2d1-directwrite</depends>
 
   <namespace>SharpDX.DirectComposition</namespace>
   <assembly>SharpDX.DirectComposition</assembly>
@@ -63,6 +64,8 @@
     -->
     <map enum="DCOMPOSITION_(.*)" name-tmp="$1" />
 		<map enum="DCOMPOSITION_BACKFACE_VISIBILITY" name-tmp="BackFaceVisibility" />
+    <map enum-item="DCOMPOSITION_TRANSFORM_MODE_3D_TRANSFORM" name-tmp="Transform3D"/>
+    <map enum-item="DCOMPOSITION_TRANSFORM_MODE_3D_TRANSFORM_AND_VISIBILITY" name-tmp="Transform3DAndVisibility"/>
 
     <!--
     // *****************************************************************
