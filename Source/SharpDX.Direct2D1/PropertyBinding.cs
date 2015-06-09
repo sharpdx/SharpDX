@@ -52,99 +52,104 @@ namespace SharpDX.Direct2D1
             if (bindingAttr == null)
                 return null;
 
-            var binding = new PropertyBinding();
-            binding.Attribute = bindingAttr;
-
+            var binding = new PropertyBinding {Attribute = bindingAttr};
             var propType = propertyInfo.PropertyType;
+            var effectPropType = bindingAttr.BindingType;
 
-            var effectPropType = PropertyType.Unknown;
-
-            if (propType == typeof(int))
+            // Handle native types.
+            if(effectPropType == PropertyType.Unknown)
             {
-                binding.nativeGetSet = new NativeGetSetValue<int>(customEffectType, propertyInfo);
-                effectPropType = PropertyType.Int32;
-            }
-            else if (propType == typeof(float))
-            {
-                binding.nativeGetSet = new NativeGetSetValue<float>(customEffectType, propertyInfo);
-                effectPropType = PropertyType.Float;
-            }
-            else if (propType == typeof(uint))
-            {
-                binding.nativeGetSet = new NativeGetSetValue<uint>(customEffectType, propertyInfo);
-                effectPropType = PropertyType.UInt32;
-            }
-            else if (propType == typeof(bool))
-            {
-                // For bool, we are using int as a transient value 
-                binding.nativeGetSet = new NativeGetSetValue<int>(customEffectType, propertyInfo);
-                effectPropType = PropertyType.Bool;
-            }
-            else if (propType == typeof(RawVector2))
-            {
-                binding.nativeGetSet = new NativeGetSetValue<RawVector2>(customEffectType, propertyInfo);
-                effectPropType = PropertyType.Vector2;
-            }
-            else if (propType == typeof(RawVector3))
-            {
-                binding.nativeGetSet = new NativeGetSetValue<RawVector3>(customEffectType, propertyInfo);
-                effectPropType = PropertyType.Vector3;
-            }
-            else if (propType == typeof(RawRectangleF))
-            {
-                binding.nativeGetSet = new NativeGetSetValue<RawRectangleF>(customEffectType, propertyInfo);
-                effectPropType = PropertyType.Vector4;
-            }
-            else if (propType == typeof(RawVector4))
-            {
-                binding.nativeGetSet = new NativeGetSetValue<RawVector4>(customEffectType, propertyInfo);
-                effectPropType = PropertyType.Vector4;
-            }
-            else if (propType == typeof(RawColor3))
-            {
-                binding.nativeGetSet = new NativeGetSetValue<RawColor3>(customEffectType, propertyInfo);
-                effectPropType = PropertyType.Vector3;
-            }
-            else if (propType == typeof(RawColor4))
-            {
-                binding.nativeGetSet = new NativeGetSetValue<RawColor4>(customEffectType, propertyInfo);
-                effectPropType = PropertyType.Vector4;
-            }
-            else if (propType == typeof(RawMatrix))
-            {
-                binding.nativeGetSet = new NativeGetSetValue<RawMatrix>(customEffectType, propertyInfo);
-                effectPropType = PropertyType.Matrix4x4;
-            }
-            else if (propType == typeof(RawMatrix3x2))
-            {
-                binding.nativeGetSet = new NativeGetSetValue<RawMatrix3x2>(customEffectType, propertyInfo);
-                effectPropType = PropertyType.Matrix3x2;
-            }
-            else if (propType == typeof(RawMatrix5x4))
-            {
-                binding.nativeGetSet = new NativeGetSetValue<RawMatrix5x4>(customEffectType, propertyInfo);
-                effectPropType = PropertyType.Matrix5x4;
-            }
-            else if (Utilities.IsEnum(propType))
-            {
-                // For enum, we are using int as a transient value
-                binding.nativeGetSet = new NativeGetSetValue<int>(customEffectType, propertyInfo);
-                effectPropType = PropertyType.Enum;
-            }
-            else if (Utilities.IsAssignableFrom(typeof(ComObject), propType))
-            {
-                // For ComObject we are using IntPtr as a transient value
-                binding.nativeGetSet = new NativeGetSetValue<IntPtr>(customEffectType, propertyInfo);
-                effectPropType = PropertyType.IUnknown;
-            }
-            //else if (propTypeInfo.IsArray)
-            //{
-            //    // TODO handle arrays
-            //    // binding.nativeGetSet = new NativeGetSetValue<Matrix5x4>(customEffectType, propertyInfo);
-            //}
-            else
-            {
-                throw new SharpDXException(string.Format("Unsupported property type [{0}] for custom effect [{1}]", propType, customEffectType));
+                var propTypeName = propType.Name;
+                if(propType == typeof(int))
+                {
+                    binding.nativeGetSet = new NativeGetSetValue<int>(customEffectType, propertyInfo);
+                    effectPropType = PropertyType.Int32;
+                }
+                else if(propType == typeof(float))
+                {
+                    binding.nativeGetSet = new NativeGetSetValue<float>(customEffectType, propertyInfo);
+                    effectPropType = PropertyType.Float;
+                }
+                else if(propType == typeof(uint))
+                {
+                    binding.nativeGetSet = new NativeGetSetValue<uint>(customEffectType, propertyInfo);
+                    effectPropType = PropertyType.UInt32;
+                }
+                else if(propType == typeof(bool))
+                {
+                    // For bool, we are using int as a transient value 
+                    binding.nativeGetSet = new NativeGetSetValue<int>(customEffectType, propertyInfo);
+                    effectPropType = PropertyType.Bool;
+                }
+                else if (propTypeName.Contains("Vector2"))
+                {
+                    binding.nativeGetSet = new NativeGetSetValue<RawVector2>(customEffectType, propertyInfo);
+                    effectPropType = PropertyType.Vector2;
+                }
+                else if(propTypeName.Contains("Vector3"))
+                {
+                    binding.nativeGetSet = new NativeGetSetValue<RawVector3>(customEffectType, propertyInfo);
+                    effectPropType = PropertyType.Vector3;
+                }
+                else if (propTypeName.Contains("RectangleF"))
+                {
+                    binding.nativeGetSet = new NativeGetSetValue<RawRectangleF>(customEffectType, propertyInfo);
+                    effectPropType = PropertyType.Vector4;
+                }
+                else if(propTypeName.Contains("Vector4"))
+                {
+                    binding.nativeGetSet = new NativeGetSetValue<RawVector4>(customEffectType, propertyInfo);
+                    effectPropType = PropertyType.Vector4;
+                }
+                else if(propTypeName.Contains("Color3"))
+                {
+                    binding.nativeGetSet = new NativeGetSetValue<RawColor3>(customEffectType, propertyInfo);
+                    effectPropType = PropertyType.Vector3;
+                }
+                else if(propTypeName.Contains("Color4"))
+                {
+                    binding.nativeGetSet = new NativeGetSetValue<RawColor4>(customEffectType, propertyInfo);
+                    effectPropType = PropertyType.Vector4;
+                }
+                else if(propTypeName.Contains("Matrix"))
+                {
+                    binding.nativeGetSet = new NativeGetSetValue<RawMatrix>(customEffectType, propertyInfo);
+                    effectPropType = PropertyType.Matrix4x4;
+                }
+                else if(propTypeName.Contains("Matrix3x2"))
+                {
+                    binding.nativeGetSet = new NativeGetSetValue<RawMatrix3x2>(customEffectType, propertyInfo);
+                    effectPropType = PropertyType.Matrix3x2;
+                }
+                else if(propTypeName.Contains("Matrix5x4"))
+                {
+                    binding.nativeGetSet = new NativeGetSetValue<RawMatrix5x4>(customEffectType, propertyInfo);
+                    effectPropType = PropertyType.Matrix5x4;
+                }
+                else if(Utilities.IsEnum(propType))
+                {
+                    // For enum, we are using int as a transient value
+                    binding.nativeGetSet = new NativeGetSetValue<int>(customEffectType, propertyInfo);
+                    effectPropType = PropertyType.Enum;
+                }
+                else if(Utilities.IsAssignableFrom(typeof(ComObject), propType))
+                {
+                    // For ComObject we are using IntPtr as a transient value
+                    binding.nativeGetSet = new NativeGetSetValue<IntPtr>(customEffectType, propertyInfo);
+                    effectPropType = PropertyType.IUnknown;
+                }
+                //else if (propTypeInfo.IsArray)
+                //{
+                //    // TODO handle arrays
+                //    // binding.nativeGetSet = new NativeGetSetValue<Matrix5x4>(customEffectType, propertyInfo);
+                //}
+                else
+                {
+                    throw new SharpDXException(string.Format("Unsupported property type [{0}] with binding [{1}] for custom effect [{2}]",
+                        propType,
+                        effectPropType,
+                        customEffectType));
+                }
             }
 
             // Set the type
@@ -190,8 +195,14 @@ namespace SharpDX.Direct2D1
 
         public class NativeGetSetValue<T> : NativeGetSet where T : struct
         {
-            private GetValueFastDelegate<T> getter;
-            private SetValueFastDelegate<T> setter;
+            private readonly GetValueFastDelegate<T> getter;
+            private readonly SetValueFastDelegate<T> setter;
+            private static readonly int ValueSize;
+
+            static NativeGetSetValue()
+            {
+                ValueSize = Utilities.SizeOf<T>();
+            }
 
             public NativeGetSetValue(Type customEffectType, PropertyInfo propertyInfo)
                 : base(customEffectType, propertyInfo)
@@ -221,18 +232,21 @@ namespace SharpDX.Direct2D1
                 Utilities.Write<T>(destValue, ref sourceValue);
             }
 
-            protected int ValueSize
-            {
-                get
-                {
-                    return Utilities.SizeOf<T>();
-                }
-            }
-
             private int NativeSetInt(IntPtr thisPtr, IntPtr dataPtr, int dataSize)
             {
                 try
                 {
+                    if(dataPtr == IntPtr.Zero)
+                    {
+                        // TODO: Should we throw an exception
+                        return Result.Ok.Code;
+                    }
+
+                    if(dataSize != ValueSize)
+                    {
+                        return Result.InvalidArg.Code;
+                    }
+
                     // TODO: Check dataSize against <T>?
                     var shadow = CustomEffectShadow.ToShadow<CustomEffectShadow>(thisPtr);
                     var callback = (CustomEffect)shadow.Callback;
@@ -252,10 +266,17 @@ namespace SharpDX.Direct2D1
                 actualSize = ValueSize;
                 try
                 {
+                    if (dataPtr == IntPtr.Zero)
+                    {
+                        // TODO: Should we throw an exception
+                        return Result.Ok.Code;
+                    }
+
                     // TODO: Check dataSize against <T>?
                     var shadow = CustomEffectShadow.ToShadow<CustomEffectShadow>(thisPtr);
                     var callback = (CustomEffect)shadow.Callback;
                     T value;
+                    actualSize = ValueSize;
                     getter(callback, out value);
                     GetValue(dataPtr, ref value);
                 }
