@@ -30,7 +30,7 @@
     <BuildSignedSharpDX>true</BuildSignedSharpDX>
     <SharedAssemblyInfoFilePath>$(SharpDXRepo)\Source\SharedAssemblyInfo.cs</SharedAssemblyInfoFilePath>
     <SharedAssemblyInfo>$([System.IO.File]::ReadAllText($(SharedAssemblyInfoFilePath)))</SharedAssemblyInfo>
-	<SharpDXAssemblyPostFixVersion>-alpha01</SharpDXAssemblyPostFixVersion>
+	<SharpDXAssemblyPostFixVersion>-alpha02</SharpDXAssemblyPostFixVersion>
     <SharpDXAssemblyVersion>$([System.Text.RegularExpressions.Regex]::Match($(SharedAssemblyInfo), `AssemblyVersion\("(.*)"`).Groups[1].Value)$(SharpDXAssemblyPostFixVersion)</SharpDXAssemblyVersion>
     <SharpDXDevZip>$(MSBuildThisFileDirectory)\SharpDX-SDK-LatestDev.exe</SharpDXDevZip>
     <SharpDXReleaseZip>$(MSBuildThisFileDirectory)\SharpDX-SDK-$(SharpDXAssemblyVersion).exe</SharpDXReleaseZip>
