@@ -168,11 +168,12 @@ namespace SharpDX.Diagnostics
                 }
                 referenceList.Add(new ObjectReference(DateTime.Now, comObject, stacktrace));
 #else
+                // Another WTF: To get a stacktrace, we don't have other ways than throwing an exception on PCL. 
                 try
                 {
-                    throw new Exception();
+                    throw new GetStackTraceException();
                 }
-                catch(Exception ex)
+                catch (GetStackTraceException ex)
                 {
                     referenceList.Add(new ObjectReference(DateTime.Now, comObject, ex.StackTrace));
                 }
@@ -336,6 +337,10 @@ namespace SharpDX.Diagnostics
             {
                 handler(null, new ComObjectEventArgs(obj));
             }
+        }
+
+        private class GetStackTraceException : Exception
+        {
         }
    }
 }
