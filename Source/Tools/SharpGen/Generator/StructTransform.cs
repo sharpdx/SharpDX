@@ -164,6 +164,19 @@ namespace SharpGen.Generator
                         }
 
                         currentOffset += lastFieldSize;
+                        var fieldAlignment = (fieldStruct.MarshalType ?? fieldStruct.PublicType).CalculateAlignment();
+
+                        // If field alignment is < 0, then we have a pointer somewhere so we can't align
+                        if (fieldAlignment > 0)
+                        {
+                            // otherwise, align the field on the alignment requirement of the field
+                            int delta = (currentOffset % fieldAlignment);
+                            if (delta != 0)
+                            {
+                                currentOffset += fieldAlignment - delta;
+                            }
+                        }
+
                         offsetOfFields[cppField.Offset] = currentOffset;
                         // Get correct offset (for handling union)
                         fieldStruct.Offset = offsetOfFields[cppField.Offset];
