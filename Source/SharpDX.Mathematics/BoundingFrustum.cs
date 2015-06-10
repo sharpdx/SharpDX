@@ -150,7 +150,7 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object obj)
         {
-            if(!(obj is BoundingBox))
+            if(!(obj is BoundingFrustum))
                 return false;
 
             return Equals((BoundingFrustum)obj);
