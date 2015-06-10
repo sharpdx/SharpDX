@@ -186,18 +186,6 @@
     
     <map method="ID3D12GraphicsCommandList::RSSetViewports" rawptr="true"/>
     <map method="ID3D12GraphicsCommandList::RSSetScissorRects" name="SetScissorRectangles" rawptr="true"/>
-
-    <map method="ID3D12GraphicsCommandList::(.*)ToHeap" name="$1To" />
-    <move method="ID3D12GraphicsCommandList::(.*)ToHeap" to="DescriptorManager" property="Descriptors" />
-
-    <map method="ID3D12GraphicsCommandList::(.*)InHeap" name="$1" />
-    <move method="ID3D12GraphicsCommandList::(.*)InHeap" to="DescriptorManager" property="Descriptors" />
-    <map method="ID3D12GraphicsCommandList::SetDescriptorHeap" name="SetHeap" />
-    <move method="ID3D12GraphicsCommandList::SetDescriptorHeap" to="DescriptorManager" property="Descriptors" />
-    
-    <move method="ID3D12GraphicsCommandList::CopyDescriptors" to="DescriptorManager" property="Descriptors" />
-    
-    <move method="ID3D12GraphicsCommandList::(.*)Table" to="DescriptorManager" property="Descriptors" />
     <map method="ID3D12GraphicsCommandList::IASetVertexBuffers" visibility="private" />
     <map param="ID3D12GraphicsCommandList::IASetVertexBuffers::pViews" attribute="in" type="void"/>
     <map method="ID3D12GraphicsCommandList::IASetIndexBuffer" property="false"/>
@@ -274,22 +262,12 @@
     <map method="ID3D12Device::CreateComputePipelineState" visibility="private"/>
     <map param="ID3D12Device::CreateComputePipelineState::pDesc" attribute="in" type="void"/>
 
-
     <map method="ID3D12RootSignatureDeserializer::GetRootSignature" type="void" property="false" visibility="private"/>
 
     <map param="ID3D12Resource::Map::pReadRange" default="null"/>
     <map param="ID3D12Resource::Unmap::pWrittenRange" default="null"/>
     <map param="ID3D12Resource::Map::ppData" attribute="out" return="true"/>
     
-    <!-- Temporary remove d3d11 types -->
-    <!--<remove method="ID3D12GraphicsCommandList::BeginQuery"/>
-    <remove method="ID3D12GraphicsCommandList::EndQuery"/>
-    <remove method="ID3D12GraphicsCommandList::SetPredication"/>
-    <remove method="ID3D12GraphicsCommandList::SetStreamOutputBufferOffset"/>
-    <remove method="ID3D12GraphicsCommandList::SetUnorderedAccessViewCounterValue"/>
-    <remove method="ID3D12GraphicsCommandList::CopyStructureCount"/>-->
-    <!--<remove method="ID3D12Device::CreateDefaultResource"/>-->
-
     <!--
     // *****************************************************************
     // D3D12 Functions
