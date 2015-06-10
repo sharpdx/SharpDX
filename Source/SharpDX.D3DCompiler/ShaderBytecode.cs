@@ -283,6 +283,7 @@ namespace SharpDX.D3DCompiler
             {
                 throw new ArgumentNullException("shaderSource");
             }
+
             var shaderSourcePtr = Marshal.StringToHGlobalAnsi(shaderSource);
             try
             {
@@ -356,6 +357,12 @@ namespace SharpDX.D3DCompiler
         {
             unsafe
             {
+                if (string.IsNullOrWhiteSpace(profile))
+                    throw new ArgumentNullException("profile");
+
+                if (!profile.ToUpperInvariant().StartsWith("FX_") && string.IsNullOrWhiteSpace(entryPoint))
+                    throw new ArgumentNullException("entryPoint");
+
                 var resultCode = Result.Ok;
 
                 Blob blobForCode = null;
