@@ -342,6 +342,32 @@ namespace SharpDX.Direct3D12
             return CreateReservedResource(ref descRef, initialState, optimizedClearValueRef, Utilities.GetGuidFromType(typeof(Resource)));
         }
 
+        /// <summary>
+        /// Retrieves Direct3D12 Options"/>
+        /// </summary>
+        public unsafe FeatureDataD3D12Options D3D12Options
+        {
+            get
+            {
+                FeatureDataD3D12Options options = new FeatureDataD3D12Options();
+                this.CheckFeatureSupport(Feature.D3D12Options, new IntPtr(&options), Utilities.SizeOf<FeatureDataD3D12Options>());
+                return options;
+            }
+        }
+
+        /// <summary>
+        /// Retrieves Direct3D12 Architecture information
+        /// </summary>
+        public unsafe FeatureDataArchitecture Architecture
+        {
+            get
+            {
+                FeatureDataArchitecture options = new FeatureDataArchitecture();
+                this.CheckFeatureSupport(Feature.Architecture, new IntPtr(&options), Utilities.SizeOf<FeatureDataArchitecture>());
+                return options;
+            }
+        }
+
         private static void CreateDevice(Adapter adapter, FeatureLevel minFeatureLevel, Device instance)
         {
             D3D12.CreateDevice(adapter, minFeatureLevel, Utilities.GetGuidFromType(typeof(Device)), instance).CheckError();

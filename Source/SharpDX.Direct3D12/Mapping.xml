@@ -182,10 +182,10 @@
     <map param="ID3D12GraphicsCommandList::ClearUnorderedAccessViewFloat::Values" type="SHARPDX_VECTOR4"/>
     <map param="ID3D12GraphicsCommandList::ResourceBarrier::pBarriers" type="void"/>
     <map method="ID3D12GraphicsCommandList::ResourceBarrier" visibility="private"/>
+
     
     <map method="ID3D12GraphicsCommandList::RSSetViewports" rawptr="true"/>
     <map method="ID3D12GraphicsCommandList::RSSetScissorRects" name="SetScissorRectangles" rawptr="true"/>
-
 
     <map method="ID3D12GraphicsCommandList::(.*)ToHeap" name="$1To" />
     <move method="ID3D12GraphicsCommandList::(.*)ToHeap" to="DescriptorManager" property="Descriptors" />
@@ -198,6 +198,9 @@
     <move method="ID3D12GraphicsCommandList::CopyDescriptors" to="DescriptorManager" property="Descriptors" />
     
     <move method="ID3D12GraphicsCommandList::(.*)Table" to="DescriptorManager" property="Descriptors" />
+    <map method="ID3D12GraphicsCommandList::IASetVertexBuffers" visibility="private" />
+    <map param="ID3D12GraphicsCommandList::IASetVertexBuffers::pViews" attribute="in" type="void"/>
+    <map method="ID3D12GraphicsCommandList::IASetIndexBuffer" property="false"/>
 
     <map method="ID3D12Device::RegisterBudgetChangeCallback" visibility="internal"/>
 
