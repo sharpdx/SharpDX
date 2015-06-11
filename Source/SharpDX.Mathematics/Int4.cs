@@ -500,7 +500,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name = "left" /> has the same value as <paramref name = "right" />; otherwise, <c>false</c>.</returns>
         public static bool operator ==(Int4 left, Int4 right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -511,7 +511,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name = "left" /> has a different value than <paramref name = "right" />; otherwise, <c>false</c>.</returns>
         public static bool operator !=(Int4 left, Int4 right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>
@@ -629,9 +629,21 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref = "Int4" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(Int4 other)
+        public bool Equals(ref Int4 other)
         {
             return other.X == X && other.Y == Y && other.Z == Z && other.W == W;
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref = "Int4" /> is equal to this instance.
+        /// </summary>
+        /// <param name = "other">The <see cref = "Int4" /> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref = "Int4" /> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(Int4 other)
+        {
+            return Equals(ref other);
         }
 
         /// <summary>
@@ -646,7 +658,8 @@ namespace SharpDX
             if (!(value is Int4))
                 return false;
 
-            return Equals((Int4) value);
+            var strongValue = (Int4)value;
+            return Equals(ref strongValue);
         }
 
         /// <summary>

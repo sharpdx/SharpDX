@@ -673,7 +673,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator ==(Color3 left, Color3 right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -684,7 +684,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator !=(Color3 left, Color3 right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>
@@ -806,9 +806,21 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref="Color3"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(Color3 other)
+        public bool Equals(ref Color3 other)
         {
             return Red == other.Red && Green == other.Green && Blue == other.Blue;
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="Color3"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="Color3"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="Color3"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(Color3 other)
+        {
+            return Equals(ref other);
         }
 
         /// <summary>
@@ -823,7 +835,8 @@ namespace SharpDX
             if (!(value is Color3))
                 return false;
 
-            return Equals((Color3)value);
+            var strongValue = (Color3)value;
+            return Equals(ref strongValue);
         }
 
         /// <summary>
