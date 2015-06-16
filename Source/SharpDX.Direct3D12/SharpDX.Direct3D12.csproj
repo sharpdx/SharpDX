@@ -40,6 +40,7 @@
     <Compile Include="RootParameter.cs" />
     <Compile Include="RootSignatureDescription.cs" />
     <Compile Include="ShaderBytecode.cs" />
+    <Compile Include="TextureCopyLocation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />

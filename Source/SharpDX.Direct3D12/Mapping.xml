@@ -152,6 +152,7 @@
     <!--Remove all fields for D3D12_RESOURCE_BARRIER_DESC as the union with pointers cannot be mapped safely in x86/x64 with C# explicit layout-->
     <remove field="D3D12_RESOURCE_BARRIER::.*"/>
     <remove field="D3D12_ROOT_PARAMETER::.*"/>
+    <remove field="D3D12_TEXTURE_COPY_LOCATION::.*" />
 
     <map interface="ID3D12Debug" name="DebugInterface"/>
 
