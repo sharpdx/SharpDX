@@ -255,6 +255,22 @@ namespace SharpDX.Direct3D12
                     nativeDesc.InputLayout.ElementCount = elements.Length;
                 }
 
+                //Marshal stream output elements
+                var streamOutElements = desc.StreamOutput.Elements;
+                var nativeStreamOutElements = (StreamOutputElement.__Native*)0;
+                if (streamOutElements != null && streamOutElements.Length > 0)
+                {
+                    var ptr = stackalloc StreamOutputElement.__Native[streamOutElements.Length];
+                    nativeStreamOutElements = ptr;
+                    for (int i = 0; i < streamOutElements.Length; i++)
+                    {
+                        streamOutElements[i].__MarshalTo(ref nativeStreamOutElements[i]);
+                    }
+
+                    nativeDesc.StreamOutput.StreamOutputEntriesPointer = new IntPtr(nativeStreamOutElements);
+                    nativeDesc.StreamOutput.EntrieCount = streamOutElements.Length;
+                }
+
                 try
                 {
                     // Create the pipeline state
@@ -267,6 +283,14 @@ namespace SharpDX.Direct3D12
                         for (int i = 0; i < elements.Length; i++)
                         {
                             nativeElements[i].__MarshalFree();
+                        }
+                    }
+
+                    if (streamOutElements != null)
+                    {
+                        for (int i = 0; i < streamOutElements.Length; i++)
+                        {
+                            nativeStreamOutElements[i].__MarshalFree();
                         }
                     }
                 }
