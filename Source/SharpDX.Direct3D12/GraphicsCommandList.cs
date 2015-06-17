@@ -41,6 +41,19 @@ namespace SharpDX.Direct3D12
             ClearDepthStencilView(depthStencilView, clearFlags, depth, stencil, 0, null);
         }
 
+        /// <summary>	
+        /// No documentation for Direct3D12	
+        /// </summary>	
+        /// <param name="renderTargetView">No documentation.</param>	
+        /// <param name="colorRGBA">No documentation.</param>		
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12GraphicsCommandList::ClearRenderTargetView']/*"/>	
+        /// <unmanaged>void ID3D12GraphicsCommandList::ClearRenderTargetView([In] D3D12_CPU_DESCRIPTOR_HANDLE RenderTargetView,[In] const SHARPDX_COLOR4* ColorRGBA,[In] unsigned int NumRects,[In, Buffer] const RECT* pRects)</unmanaged>	
+        /// <unmanaged-short>ID3D12GraphicsCommandList::ClearRenderTargetView</unmanaged-short>	
+        public void ClearRenderTargetView(CpuDescriptorHandle renderTargetView, Mathematics.Interop.RawColor4 colorRGBA)
+        {
+            ClearRenderTargetView(renderTargetView, colorRGBA, 0, null);
+        }
+
         /// <unmanaged>void ID3D12CommandList::ResourceBarrier([In] unsigned int Count,[In, Buffer] const D3D12_RESOURCE_BARRIER_DESC* pDesc)</unmanaged>	
         /// <unmanaged-short>ID3D12CommandList::ResourceBarrier</unmanaged-short>	
         public void ResourceBarrierTransition(Resource resource, ResourceStates stateBefore, ResourceStates stateAfter)
