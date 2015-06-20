@@ -127,6 +127,7 @@
     <map field="D3D12_ROOT_CONSTANTS::Num32BitValues" name="Value32BitCount"/>
         
     <map field="D3D12_STREAM_OUTPUT_VIEW_DESC::pSOCurrentOffset" type="void"/>
+
     
     <map struct="D3D12_BLEND_DESC" marshalto="true"/>
 
@@ -138,8 +139,14 @@
     <map struct="D3D12_INPUT_LAYOUT_DESC" struct-to-class="true" marshalto="true"/>
     <map field="D3D12_INPUT_LAYOUT_DESC::pInputElementDescs" name="InputElementsPointer" visibility="private"/>
     <map field="D3D12_INPUT_LAYOUT_DESC::NumElements" visibility="private"/>
-
+    
     <map struct="D3D12_INPUT_ELEMENT_DESC" marshalto="true"/>
+    
+    <map struct="D3D12_STREAM_OUTPUT_DESC" struct-to-class="true" marshalto="true"/>
+    <map field="D3D12_STREAM_OUTPUT_DESC::pSODeclaration" name="StreamOutputEntriesPointer" visibility="private" />
+    <map field="D3D12_STREAM_OUTPUT_DESC::NumEntries" visibility="private"/>
+    
+    <map struct="D3D12_SO_DECLARATION_ENTRY" marshalto="true"/>
 
     <map struct="D3D12_SHADER_BYTECODE" native="true" marshalto="true"/>
     <map field="D3D12_SHADER_BYTECODE::pShaderBytecode" name="Pointer" visibility="private"/>
@@ -149,9 +156,19 @@
     
     <map field="D3D12_CLEAR_VALUE::Color" type="SHARPDX_VECTOR4" array="" />
     
+    <!-- Inner argument description structs have no name, so we specify it manually -->
+    <map struct="D3D12_INDIRECT_ARGUMENT_DESC_INNER_0_INNER_0" name="VertexBufferArgument"/>
+    <map struct="D3D12_INDIRECT_ARGUMENT_DESC_INNER_0_INNER_1" name="ConstantArgument"/>
+    <map struct="D3D12_INDIRECT_ARGUMENT_DESC_INNER_0_INNER_2" name="ConstantBufferArgument"/>
+    <map struct="D3D12_INDIRECT_ARGUMENT_DESC_INNER_0_INNER_3" name="ShaderResourceViewArgument"/>
+    <map struct="D3D12_INDIRECT_ARGUMENT_DESC_INNER_0_INNER_4" name="UnorderedAccessViewArgument"/>
+    <move struct="D3D12_INDIRECT_ARGUMENT_DESC_INNER_(.*)" to="D3D12_INDIRECT_ARGUMENT_DESC"/>
+    
+    
     <!--Remove all fields for D3D12_RESOURCE_BARRIER_DESC as the union with pointers cannot be mapped safely in x86/x64 with C# explicit layout-->
     <remove field="D3D12_RESOURCE_BARRIER::.*"/>
     <remove field="D3D12_ROOT_PARAMETER::.*"/>
+    <remove field="D3D12_TEXTURE_COPY_LOCATION::.*" />
 
     <map interface="ID3D12Debug" name="DebugInterface"/>
 

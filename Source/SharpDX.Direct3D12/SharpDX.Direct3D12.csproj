@@ -16,7 +16,9 @@
     <Compile Include="BlendStateDescription.cs" />
     <Compile Include="CommandQueue.cs" />
     <Compile Include="CommandQueueDescription.cs" />
+    <Compile Include="CpuDescriptorHandle.cs" />
     <Compile Include="DebugController.cs" />
+    <Compile Include="GpuDescriptorHandle.cs" />
     <Compile Include="GraphicsCommandList.cs" />
     <Compile Include="ComputePipelineStateDescription.cs" />
     <Compile Include="DepthStencilStateDescription.cs" />
@@ -28,9 +30,11 @@
     <Compile Include="Generated\Structures.cs" />
     <Compile Include="GraphicsPipelineStateDescription.cs" />
     <Compile Include="HeapProperties.cs" />
+    <Compile Include="InfoQueue.cs" />
     <Compile Include="InfoQueueFilterDescription.cs" />
     <Compile Include="InputElement.cs" />
     <Compile Include="InputLayoutDescription.cs" />
+    <Compile Include="Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RasterizerStateDescription.cs" />
     <Compile Include="ResourceAliasingBarrier.cs" />
@@ -40,6 +44,8 @@
     <Compile Include="RootParameter.cs" />
     <Compile Include="RootSignatureDescription.cs" />
     <Compile Include="ShaderBytecode.cs" />
+    <Compile Include="StreamOutputDescription.cs" />
+    <Compile Include="TextureCopyLocation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />
