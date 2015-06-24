@@ -25,6 +25,7 @@
     <Compile Include="Device2.cs" />
     <Compile Include="Device3.cs" />
     <Compile Include="DeviceContext2.cs" />
+    <Compile Include="RasterizerState2.cs" />
     <Compile Include="RasterizerStateDescription1.cs" />
     <Compile Include="DepthStencilStateDescription.cs" />
     <Compile Include="Device1.cs" />
