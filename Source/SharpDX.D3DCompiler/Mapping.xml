@@ -49,6 +49,7 @@
     <attach>D3D_SHADER_INPUT_FLAGS</attach>
     <attach>D3D_NAME</attach>
     <attach>D3D_REGISTER_COMPONENT_TYPE</attach>
+    <attach>D3D_PARAMETER_FLAGS</attach>
     <attach>ID3DInclude</attach>
     <attach>D3D_INCLUDE_TYPE</attach>
     <attach>D3DCreateBlob</attach>
@@ -90,6 +91,7 @@
   <mapping>
     <context>d3dcommon</context>
     <remove enum-item="D3D10_CBF_USERPACKED" />
+    <map enum-item="D3D_PF(.*)" name-tmp="$1" />
     <context-clear />
     
     <context id="d3dcompiler-all"/>
@@ -100,7 +102,6 @@
     -->
     <map enum="D3D(.*)" name-tmp="$1" />
     <map enum-item="D3D(.*)" name-tmp="$1" />
-    <map enum-item="D3D_PF(.*)" name-tmp="$1" />
     <map enum="D3DCOMPILE_(.+)" name-tmp="$1" />
     <map enum="D3DCOMPILER_(.+)" name-tmp="$1" />
     <map enum="D3D11(.*)" name-tmp="$1" />
