@@ -360,7 +360,7 @@ namespace SharpDX.D3DCompiler
                 if (string.IsNullOrWhiteSpace(profile))
                     throw new ArgumentNullException("profile");
 
-                if (!profile.ToUpperInvariant().StartsWith("FX_") && string.IsNullOrWhiteSpace(entryPoint))
+                if (!(profile.ToUpperInvariant().StartsWith("FX_") || profile.ToUpperInvariant().StartsWith("LIB_")) && string.IsNullOrWhiteSpace(entryPoint))
                     throw new ArgumentNullException("entryPoint");
 
                 var resultCode = Result.Ok;
