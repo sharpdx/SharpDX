@@ -40,6 +40,7 @@
   <include file="d3d11.h" attach="true"/>
   <include file="d3d11_1.h" attach="true" />
   <include file="d3d11_2.h" attach="true" />
+  <include file="d3d11_3.h" attach="true" />
   <include file="d3d11sdklayers.h" attach="true" />
 
   <naming />
@@ -51,6 +52,7 @@
     <context>d3d11sdklayers</context>
     <context>d3d11_1</context>
     <context>d3d11_2</context>
+    <context>d3d11_3</context>
   </context-set>
 
   <!-- D3D11 extensions -->
@@ -154,6 +156,9 @@
     
     <map enum-item="D3D11_VIDEO_PROCESSOR_NOMINAL_RANGE_16_235" name="Range_16_235"/>
     <map enum-item="D3D11_VIDEO_PROCESSOR_NOMINAL_RANGE_0_255" name="Range_0_255"/>
+
+    <map enum-item="D3D11_CONTEXT_TYPE_3D" name="ThreeDimensions" />
+    <map enum-item="D3D11_TEXTURE_LAYOUT_64K_STANDARD_SWIZZLE" name="StandardSwizzle64kb" />
 
     <map enum-item="D3D11_(MESSAGE_ID.*)" name-tmp="$1" />
     <map enum-item="D3D12_(MESSAGE_ID.*)" name-tmp="$1" />
