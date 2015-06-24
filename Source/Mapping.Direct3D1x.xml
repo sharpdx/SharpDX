@@ -53,6 +53,7 @@
     <context>d3d11</context>
     <context>d3d11_1</context>
     <context>d3d11_2</context>
+    <context>d3d11_3</context>
     <context>d3d12</context>
     <context>d3d12sdklayers</context>
     <context>d3d11sdklayers</context>
@@ -142,6 +143,7 @@
     <map struct="D3D(\d+)_BLEND_DESC1" name="BlendStateDescription1" />
     <map struct="D3D(\d+)_RASTERIZER_DESC" name="RasterizerStateDescription" />
     <map struct="D3D(\d+)_RASTERIZER_DESC1" name="RasterizerStateDescription1" />
+    <map struct="D3D(\d+)_RASTERIZER_DESC2" name="RasterizerStateDescription2" />
     <map struct="D3D(\d+)_SAMPLER_DESC" name="SamplerStateDescription" />
     <map field="D3D(\d+)_SAMPLER_DESC::BorderColor" type="SHARPDX_COLOR4" array="0" />
     <map field="D3D(\d+)_SAMPLER_DESC::MaxAnisotropy" name="MaximumAnisotropy" />
@@ -173,16 +175,19 @@
     <map struct="D3D(\d+)_(.*)_SRV1" name-tmp="$2_Resource1" />
     <move struct="D3D(\d+)_(.*)_SRV1" to="D3D$1_SHADER_RESOURCE_VIEW_DESC1"/>
     
-    <map struct="D3D(\d+)_(.*)_RTV" name-tmp="$2_Resource" />
+    <map struct="D3D(\d+)_(.*)_RTV1?" name-tmp="$2_Resource" />
     <move struct="D3D(\d+)_(.*)_RTV" to="D3D$1_RENDER_TARGET_VIEW_DESC"/>
+    <move struct="D3D(\d+)_(.*)_RTV1" to="D3D$1_RENDER_TARGET_VIEW_DESC1"/>
+
     <map field="D3D(\d+)_TEX3D_RTV::FirstWSlice" name="FirstDepthSlice" />
     <map field="D3D(\d+)_TEX3D_RTV::WSize" name="DepthSliceCount" />
 
     <map struct="D3D(\d+)_(.*)_DSV" name-tmp="$2_Resource" />
     <move struct="D3D(\d+)_(.*)_DSV" to="D3D$1_DEPTH_STENCIL_VIEW_DESC"/>
     
-    <map struct="D3D(\d+)_(.*)_UAV" name-tmp="$2_Resource" />
+    <map struct="D3D(\d+)_(.*)_UAV1?" name-tmp="$2_Resource" />
     <move struct="D3D(\d+)_(.*)_UAV" to="D3D$1_UNORDERED_ACCESS_VIEW_DESC"/>
+    <move struct="D3D(\d+)_(.*)_UAV1" to="D3D$1_UNORDERED_ACCESS_VIEW_DESC1"/>
 
     <map field="D3D(\d+)_.*::ViewDimension" name="Dimension" />    
     <map struct="D3DX?(\d+)_PASS_DESC" name="EffectPassDescription" />
@@ -195,12 +200,12 @@
     <map field="D3D(\d+)_TEXTURE1D_DESC::BindFlags" type="D3D$1_BIND_FLAG" />
     <map field="D3D(\d+)_TEXTURE1D_DESC::CPUAccessFlags" name="CpuAccessFlags" type="D3D$1_CPU_ACCESS_FLAG" />
     <map field="D3D(\d+)_TEXTURE1D_DESC::MiscFlags" name="OptionFlags" type="D3D$1_RESOURCE_MISC_FLAG" />
-    <map field="D3D(\d+)_TEXTURE2D_DESC::BindFlags" type="D3D$1_BIND_FLAG" />
-    <map field="D3D(\d+)_TEXTURE2D_DESC::CPUAccessFlags" name="CpuAccessFlags" type="D3D$1_CPU_ACCESS_FLAG" />
-    <map field="D3D(\d+)_TEXTURE2D_DESC::MiscFlags" name="OptionFlags" type="D3D$1_RESOURCE_MISC_FLAG" />
-    <map field="D3D(\d+)_TEXTURE3D_DESC::BindFlags" type="D3D$1_BIND_FLAG" />
-    <map field="D3D(\d+)_TEXTURE3D_DESC::CPUAccessFlags" name="CpuAccessFlags" type="D3D$1_CPU_ACCESS_FLAG" />
-    <map field="D3D(\d+)_TEXTURE3D_DESC::MiscFlags" name="OptionFlags" type="D3D$1_RESOURCE_MISC_FLAG" />
+    <map field="D3D(\d+)_TEXTURE2D_DESC1?::BindFlags" type="D3D$1_BIND_FLAG" />
+    <map field="D3D(\d+)_TEXTURE2D_DESC1?::CPUAccessFlags" name="CpuAccessFlags" type="D3D$1_CPU_ACCESS_FLAG" />
+    <map field="D3D(\d+)_TEXTURE2D_DESC1?::MiscFlags" name="OptionFlags" type="D3D$1_RESOURCE_MISC_FLAG" />
+    <map field="D3D(\d+)_TEXTURE3D_DESC1?::BindFlags" type="D3D$1_BIND_FLAG" />
+    <map field="D3D(\d+)_TEXTURE3D_DESC1?::CPUAccessFlags" name="CpuAccessFlags" type="D3D$1_CPU_ACCESS_FLAG" />
+    <map field="D3D(\d+)_TEXTURE3D_DESC1?::MiscFlags" name="OptionFlags" type="D3D$1_RESOURCE_MISC_FLAG" />
     <map field="D3D(\d+)_FEATURE_DATA_FORMAT_SUPPORT::OutFormatSupport" type="D3D$1_FORMAT_SUPPORT" />
     <map field="D3D(\d+)_FEATURE_DATA_FORMAT_SUPPORT2::OutFormatSupport2" type="D3D$1_FORMAT_SUPPORT2" />
     <map field="D3DX(\d+)_IMAGE_INFO::MiscFlags" type="D3D$1_RESOURCE_MISC_FLAG" />
@@ -255,8 +260,9 @@
     <map field="D3DX?(\d+)_EFFECT_SHADER_DESC::NumOutputSignatureEntries" name="OutputParameterCount" />
     <map field="D3D(X?\d+)_EFFECT_VARIABLE_DESC::Flags" type="D3D$1_EFFECT_VARIABLE_FLAGS" />
     <map field="D3DX?(\d+)_EFFECT_VARIABLE_DESC::Annotations" name="AnnotationCount" />
-    <map field="D3D(\d+)_RASTERIZER_DESC1?::(.*)Enable" name="Is$2Enabled" />
-    <map field="D3D(\d+)_RASTERIZER_DESC1?::FrontCounterClockwise" name="IsFrontCounterClockwise" />
+    <map field="D3D(\d+)_RASTERIZER_DESC[12]?::(.*)Enable" name="Is$2Enabled" />
+    <map field="D3D(\d+)_RASTERIZER_DESC[12]?::FrontCounterClockwise" name="IsFrontCounterClockwise" />
+    <map field="D3D(\d+)_RASTERIZER_DESC2::ConservativeRaster" name="ConservativeRasterizationMode" />
     <map field="D3D(\d+)_RENDER_TARGET_BLEND_DESC1?::BlendEnable" name="IsBlendEnabled" />
     <map field="D3D(\d+)_RENDER_TARGET_BLEND_DESC1?::SrcBlend" name="SourceBlend" />
     <map field="D3D(\d+)_RENDER_TARGET_BLEND_DESC1?::DestBlend" name="DestinationBlend" />
@@ -277,7 +283,7 @@
     // D3D1x Interfaces
     // *****************************************************************
     -->
-    <map interface="ID3D1[0-2](.+)" name-tmp="$1" />
+    <map interface="ID3D1[0-3](.+)" name-tmp="$1" />
     <map interface="ID3DX10(.+)" name-tmp="$1" />
     <map interface="ID3DX11(.+)" name-tmp="$1" />
 
@@ -310,9 +316,9 @@
     <map method="ID3D(\d+)Device::GetDeviceRemovedReason" check="false"/>
     
     <map method="ID3D(\d+)Device::CheckCounter" visibility="internal"/>
-    <map method="ID3D(\d+)Device[12]?::Create.*" visibility="internal" />
-    <map param="ID3D(\d+)Device[12]?::Create.*::pp.*" attribute="out fast" />
-    <map method="ID3D(\d+)Device[12]?::GetImmediateContext[12]?" persist="true"/>
+    <map method="ID3D(\d+)Device[123]?::Create.*" visibility="internal" />
+    <map param="ID3D(\d+)Device[123]?::Create.*::pp.*" attribute="out fast" />
+    <map method="ID3D(\d+)Device[123]?::GetImmediateContext[123]?" persist="true"/>
     <remove method="ID3D(\d+)Device::.*TextFilterSize" />
     <map method="ID3D(\d+)Device::GetPredication" visibility="internal" />
     <map method="ID3D(\d+)Device1?::OpenSharedResource1?" visibility="internal" />
