@@ -77,6 +77,10 @@
     <create class="D3D" />
 
     <context-clear/>
+
+    <context>d3d12shader</context>
+    <create-cpp enum="D3DCOMPILE_SHADER_REQUIRES_FLAGS" macro="D3D_SHADER_REQUIRES_.*" />
+    <context-clear/>
   </extension>
   
   <bindings>
@@ -171,6 +175,8 @@
     <map method="ID3D11ShaderReflectionType::GetInterfaceByIndex" name="GetInterface" />
     <map method="ID3D11ShaderReflectionType::GetMemberTypeBy.*" name="GetMemberType" />
     <map method="ID3D11ShaderReflectionType::ImplementsInterface" visibility="internal" name="ImplementsInterface_" return="true" check="false"/>
+
+    <map method="ID3D11ShaderReflection::GetRequiresFlags" type="D3DCOMPILE_SHADER_REQUIRES_FLAGS" />
     
     <map method="ID3D11ShaderReflectionType::IsEqual" visibility="internal" name="IsEqual_"  return="true" check="false"/>
     <map method="ID3D11ShaderReflectionType::IsOfType" visibility="internal" name="IsOfType_" return="true" check="false"/>
