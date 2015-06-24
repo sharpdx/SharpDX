@@ -183,6 +183,22 @@ namespace SharpDX.Direct3D12
             return CreateRootSignature(nodeMask, rootSignaturePointer.Pointer, rootSignaturePointer.Size, Utilities.GetGuidFromType(typeof(RootSignature)));
         }
 
+        /// <summary>
+        /// Returns a root signature from a byte code contained into a managed byte array
+        /// </summary>
+        /// <param name="byteCode">Root signature bytecode</param>
+        /// <returns>Native root signature</returns>
+        public unsafe SharpDX.Direct3D12.RootSignature CreateRootSignature(byte[] byteCode)
+        {
+            if (byteCode == null)
+                throw new ArgumentNullException("byteCode");
+
+            fixed (byte* ptr = &byteCode[0])
+            {
+                return CreateRootSignature(new DataPointer(new IntPtr(ptr), byteCode.Length));
+            }
+        }
+
         /// <summary>	
         /// No documentation for Direct3D12	
         /// </summary>	
@@ -364,6 +380,20 @@ namespace SharpDX.Direct3D12
             SharpDX.Direct3D12.ClearValue? optimizedClearValueRef = null)
         {
             return CreateReservedResource(ref descRef, initialState, optimizedClearValueRef, Utilities.GetGuidFromType(typeof(Resource)));
+        }
+
+        /// <summary>	
+        /// Returns Resource allocation information for a resource description
+        /// </summary>	
+        /// <param name="visibleMask">No documentation.</param>	
+        /// <param name="resourceDesc">Reource description</param>	
+        /// <returns>Resource allocation information, which can be adapter specific</returns>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::GetResourceAllocationInfo']/*"/>	
+        /// <unmanaged>D3D12_RESOURCE_ALLOCATION_INFO ID3D12Device::GetResourceAllocationInfo([In] unsigned int visibleMask,[In] unsigned int numResourceDescs,[In, Buffer] const D3D12_RESOURCE_DESC* pResourceDescs)</unmanaged>	
+        /// <unmanaged-short>ID3D12Device::GetResourceAllocationInfo</unmanaged-short>	
+        public SharpDX.Direct3D12.ResourceAllocationInformation GetResourceAllocationInfo(int visibleMask, SharpDX.Direct3D12.ResourceDescription resourceDesc)
+        {
+            return GetResourceAllocationInfo(visibleMask, 1, new ResourceDescription[] { resourceDesc });
         }
 
         /// <summary>
