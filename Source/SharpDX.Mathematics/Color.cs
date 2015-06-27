@@ -987,7 +987,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator ==(Color left, Color right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -998,7 +998,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator !=(Color left, Color right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>
@@ -1226,9 +1226,21 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref="Color"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(Color other)
+        public bool Equals(ref Color other)
         {
             return R == other.R && G == other.G && B == other.B && A == other.A;
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="Color"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="Color"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="Color"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(Color other)
+        {
+            return Equals(ref other);
         }
 
         /// <summary>
@@ -1240,13 +1252,11 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
+            if (!(value is Color))
                 return false;
 
-            if (!ReferenceEquals(value.GetType(), typeof(Color)))
-                return false;
-
-            return Equals((Color)value);
+            var strongValue = (Color)value;
+            return Equals(ref strongValue);
         }
 
         private static byte ToByte(float component)

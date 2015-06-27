@@ -898,7 +898,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator ==(Matrix5x4 left, Matrix5x4 right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -909,7 +909,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator !=(Matrix5x4 left, Matrix5x4 right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>
@@ -1023,7 +1023,7 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref="Matrix5x4"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(Matrix5x4 other)
+        public bool Equals(ref Matrix5x4 other)
         {
             return (MathUtil.NearEqual(other.M11, M11) &&
                 MathUtil.NearEqual(other.M12, M12) &&
@@ -1046,6 +1046,17 @@ namespace SharpDX
                 MathUtil.NearEqual(other.M53, M53) &&
                 MathUtil.NearEqual(other.M54, M54));
         }
+        /// <summary>
+        /// Determines whether the specified <see cref="Matrix5x4"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="Matrix5x4"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="Matrix5x4"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(Matrix5x4 other)
+        {
+            return Equals(ref other);
+        }
 
         /// <summary>
         /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
@@ -1056,13 +1067,11 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
+            if (!(value is Matrix5x4))
                 return false;
 
-            if (!ReferenceEquals(value.GetType(), typeof(Matrix5x4)))
-                return false;
-
-            return Equals((Matrix5x4)value);
+            var strongValue = (Matrix5x4)value;
+            return Equals(ref strongValue);
         }
     }
 }

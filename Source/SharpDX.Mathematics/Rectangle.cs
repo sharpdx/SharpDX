@@ -400,9 +400,23 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(Rectangle)) return false;
-            return Equals((Rectangle)obj);
+            if(!(obj is Rectangle))
+                return false;
+
+            var strongValue = (Rectangle)obj;
+            return Equals(ref strongValue);
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="Rectangle"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="Rectangle"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="Rectangle"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(ref Rectangle other)
+        {
+            return other.Left == Left && other.Top == Top && other.Right == Right && other.Bottom == Bottom;
         }
 
         /// <summary>
@@ -414,9 +428,8 @@ namespace SharpDX
         /// </returns>
         public bool Equals(Rectangle other)
         {
-            return other.Left == Left && other.Top == Top && other.Right == Right && other.Bottom == Bottom;
+            return Equals(ref other);
         }
-
         /// <summary>
         /// Returns a hash code for this instance.
         /// </summary>
@@ -443,7 +456,7 @@ namespace SharpDX
         /// <returns>The result of the operator.</returns>
         public static bool operator ==(Rectangle left, Rectangle right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -454,7 +467,7 @@ namespace SharpDX
         /// <returns>The result of the operator.</returns>
         public static bool operator !=(Rectangle left, Rectangle right)
         {
-            return !(left == right);
+            return !left.Equals(ref right);
         }
 
         ///// <summary>

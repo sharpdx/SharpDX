@@ -413,18 +413,38 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(RectangleF)) return false;
-            return Equals((RectangleF)obj);
+            if(!(obj is RectangleF))
+                return false;
+
+            var strongValue = (RectangleF)obj;
+            return Equals(ref strongValue);
         }
 
-        /// <inheritdoc/>
-        public bool Equals(RectangleF other)
+        /// <summary>
+        /// Determines whether the specified <see cref="RectangleF"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="RectangleF"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="RectangleF"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(ref RectangleF other)
         {
             return MathUtil.NearEqual(other.Left, Left) &&
                    MathUtil.NearEqual(other.Right, Right) &&
                    MathUtil.NearEqual(other.Top, Top) &&
                    MathUtil.NearEqual(other.Bottom, Bottom);
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="RectangleF"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="RectangleF"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="RectangleF"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(RectangleF other)
+        {
+            return Equals(ref other);
         }
 
         /// <summary>
@@ -458,7 +478,7 @@ namespace SharpDX
         /// <returns>The result of the operator.</returns>
         public static bool operator ==(RectangleF left, RectangleF right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -469,7 +489,7 @@ namespace SharpDX
         /// <returns>The result of the operator.</returns>
         public static bool operator !=(RectangleF left, RectangleF right)
         {
-            return !(left == right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>

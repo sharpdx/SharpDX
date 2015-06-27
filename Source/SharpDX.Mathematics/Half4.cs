@@ -239,14 +239,9 @@ namespace SharpDX
         /// <c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
         public override bool Equals(object obj)
         {
-            if (obj == null)
-            {
+            if (!(obj is Half4))
                 return false;
-            }
-            if (!ReferenceEquals(obj.GetType(), typeof(Half4)))
-            {
-                return false;
-            }
+
             return this.Equals((Half4)obj);
         }
     }

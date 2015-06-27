@@ -131,7 +131,24 @@ namespace SharpDX
             }
         }
 
-    	/// <summary>
+        /// <summary>
+        /// Determines whether the specified <see cref="ViewportF"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="ViewportF"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="ViewportF"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(ref ViewportF other)
+        {
+            return MathUtil.NearEqual(X, other.X) && 
+                MathUtil.NearEqual(Y, other.Y) && 
+                MathUtil.NearEqual(Width, other.Width) && 
+                MathUtil.NearEqual(Height, other.Height) && 
+                MathUtil.NearEqual(MinDepth, other.MinDepth) && 
+                MathUtil.NearEqual(MaxDepth, other.MaxDepth);
+        }
+
+        /// <summary>
         /// Determines whether the specified <see cref="ViewportF"/> is equal to this instance.
         /// </summary>
         /// <param name="other">The <see cref="ViewportF"/> to compare with this instance.</param>
@@ -140,8 +157,7 @@ namespace SharpDX
         /// </returns>
         public bool Equals(ViewportF other)
         {
-            return MathUtil.NearEqual(X, other.X) && MathUtil.NearEqual(Y, other.Y) && MathUtil.NearEqual(Width, other.Width) && MathUtil.NearEqual(Height, other.Height) && MathUtil.NearEqual(MinDepth, other.MinDepth)
-                   && MathUtil.NearEqual(MaxDepth, other.MaxDepth);
+            return Equals(ref other);
         }
 	
         /// <summary>
@@ -153,11 +169,11 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
-            {
+            if(!(obj is ViewportF))
                 return false;
-            }
-            return obj is ViewportF && Equals((ViewportF)obj);
+
+            var strongValue = (ViewportF)obj;
+            return Equals(ref strongValue);
         }
 	
         /// <summary>
@@ -188,7 +204,7 @@ namespace SharpDX
         /// <returns>The result of the operator.</returns>
         public static bool operator ==(ViewportF left, ViewportF right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
 	/// <summary>
@@ -199,7 +215,7 @@ namespace SharpDX
         /// <returns>The result of the operator.</returns>
         public static bool operator !=(ViewportF left, ViewportF right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>

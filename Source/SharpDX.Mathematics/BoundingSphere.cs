@@ -394,7 +394,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator ==(BoundingSphere left, BoundingSphere right)
         {
-            return left.Equals(right);
+            return left.Equals(ref right);
         }
 
         /// <summary>
@@ -405,7 +405,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
         public static bool operator !=(BoundingSphere left, BoundingSphere right)
         {
-            return !left.Equals(right);
+            return !left.Equals(ref right);
         }
 
         /// <summary>
@@ -485,9 +485,21 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref="Vector4"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(BoundingSphere value)
+        public bool Equals(ref BoundingSphere value)
         {
             return Center == value.Center && Radius == value.Radius;
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="Vector4"/> is equal to this instance.
+        /// </summary>
+        /// <param name="value">The <see cref="Vector4"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="Vector4"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(BoundingSphere value)
+        {
+            return Equals(ref value);
         }
 
         /// <summary>
@@ -499,13 +511,11 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
+            if (!(value is BoundingSphere))
                 return false;
 
-            if (!ReferenceEquals(value.GetType(), typeof(BoundingSphere)))
-                return false;
-
-            return Equals((BoundingSphere)value);
+            var strongValue = (BoundingSphere)value;
+            return Equals(ref strongValue);
         }
     }
 }
