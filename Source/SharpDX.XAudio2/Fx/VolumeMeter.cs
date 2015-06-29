@@ -50,7 +50,18 @@ namespace SharpDX.XAudio2.Fx
                 return;
             }
 #endif
-            XAudio2Functions.CreateAudioVolumeMeter(this);
+            if (XAudio2.Version == XAudio2Version.Version28)
+            {
+                XAudio28Functions.CreateAudioVolumeMeter(this);
+            }
+            else if (XAudio2.Version == XAudio2Version.Version29)
+            {
+                XAudio29Functions.CreateAudioVolumeMeter(this);
+            }
+            else
+            {
+                throw new InvalidOperationException("XAudio2 must be initialized before calling this constructor");
+            }
         }
     }
 }

@@ -49,7 +49,18 @@ namespace SharpDX.XAudio2.Fx
                 return;
             }
 #endif
-            XAudio2Functions.CreateAudioReverb(this);
+            if(XAudio2.Version == XAudio2Version.Version28)
+            {
+                XAudio28Functions.CreateAudioReverb(this);
+            }
+            else if(XAudio2.Version == XAudio2Version.Version29)
+            {
+                XAudio29Functions.CreateAudioReverb(this);
+            }
+            else
+            {
+                throw new InvalidOperationException("XAudio2 must be initialized before calling this constructor");
+            }
         }
     }
 }

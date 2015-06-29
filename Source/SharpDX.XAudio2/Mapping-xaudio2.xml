@@ -266,12 +266,9 @@
     // XAudio2 Functions
     // *****************************************************************
     -->
-    <ifdef name="DIRECTX11_1">
-      <map function="XAudio2Create" dll='"#(XAUDIO2_DLL_A)"' group="SharpDX.XAudio2.XAudio2Functions" />
-      <map function="CreateAudio.*" dll='"#(XAUDIO2_DLL_A)"' group="SharpDX.XAudio2.XAudio2Functions" />
-      <map param="XAudio2Create::ppXAudio2" attribute="out fast"/>
-      <map param="CreateAudio.*::ppApo" attribute="out fast"/>
-    </ifdef>
+    <!-- Remove these functions as they are handled manually -->
+    <remove function="XAudio2Create"/>
+    <remove function="CreateAudio.*"/>
     
     <!--<remove function="XAudio2Create.*"/>-->
     <ifndef name="DIRECTX11_1">

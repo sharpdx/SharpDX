@@ -77,6 +77,12 @@ namespace SharpDX.XAudio2
             : base(IntPtr.Zero)
         {
 
+            if(Version != XAudio2Version.Default)
+            {
+                throw new InvalidOperationException(string.Format("XAudio2 has been already initialized with the version [{0}]", Version));
+            }
+
+
 #if DESKTOP_APP
             Guid clsid = ((int)flags == 1) ? CLSID_XAudio27_Debug : CLSID_XAudio27;
             if ((version == XAudio2Version.Default || version == XAudio2Version.Version27) && Utilities.TryCreateComInstance(clsid, Utilities.CLSCTX.ClsctxInprocServer, IID_IXAudio2, this))
@@ -88,10 +94,25 @@ namespace SharpDX.XAudio2
             }
             else 
 #endif
-            if (version == XAudio2Version.Default || version == XAudio2Version.Version28)
+            if (version == XAudio2Version.Default || version > XAudio2Version.Version27)
             {
-                XAudio2Functions.XAudio2Create(this, 0, (int)processorSpecifier);
-                Version = XAudio2Version.Version28;
+                try
+                {
+                    XAudio29Functions.XAudio2Create(this, 0, (int)processorSpecifier);
+                    Version = XAudio2Version.Version29;
+                }
+                catch(Exception)
+                {
+                    try
+                    {
+                        XAudio28Functions.XAudio2Create(this, 0, (int)processorSpecifier);
+                        Version = XAudio2Version.Version28;
+                    }
+                    catch(Exception)
+                    {
+                        throw new InvalidOperationException("XAudio2 version [2.7, 2.8 or 2.9] is not installed");
+                    }
+                }
             }
             else
             {
@@ -312,6 +333,9 @@ namespace SharpDX.XAudio2
                 if (engineCallbackImpl != null)
                     engineCallbackImpl.Dispose();
             }
+
+            Version = XAudio2Version.Default;
+
             base.Dispose(disposing);
         }
 

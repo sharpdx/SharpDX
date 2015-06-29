@@ -26,7 +26,7 @@ namespace SharpDX.XAudio2
     public enum XAudio2Version
     {
         /// <summary>
-        /// The default version (2.7 if it is installed, otherwise 2.8)
+        /// The default version (2.7 if it is installed, otherwise 2.8 or 2.9)
         /// </summary>
         Default,
 
@@ -39,5 +39,10 @@ namespace SharpDX.XAudio2
         /// The XAudio2.8 version.
         /// </summary>
         Version28,
+
+        /// <summary>
+        /// The XAudio2.9 version.
+        /// </summary>
+        Version29,
     }
 }
