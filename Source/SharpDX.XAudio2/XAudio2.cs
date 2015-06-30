@@ -124,7 +124,7 @@ namespace SharpDX.XAudio2
 
             if (Version == XAudio2Version.Default)
             {
-                throw new InvalidOperationException(string.Format("Request version [{0}] is not installed", version == XAudio2Version.Default ? "2.7, 2.8 or 2.9" : version.ToString()));
+                throw new DllNotFoundException(string.Format("Unable to find XAudio2 dlls for requested versions [{0}], not installed on this machine", version == XAudio2Version.Default ? "2.7, 2.8 or 2.9" : version.ToString()));
             }
 
             // Register engine callback

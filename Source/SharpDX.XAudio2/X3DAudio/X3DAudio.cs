@@ -96,7 +96,6 @@ namespace SharpDX.X3DAudio
                             X3DAudio17.X3DAudioInitialize(speakers, speedOfSound, out handle);
                             version = X3DAudioVersion.Version17;
                             calculateDelegate = X3DAudio17.X3DAudioCalculate;
-                            return;
                         }
                         catch (DllNotFoundException) {}
                     break;
@@ -107,7 +106,6 @@ namespace SharpDX.X3DAudio
                             X3DAudio28.X3DAudioInitialize(speakers, speedOfSound, out handle);
                             version = X3DAudioVersion.Version28;
                             calculateDelegate = X3DAudio28.X3DAudioCalculate;
-                            return;
                         }
                         catch (DllNotFoundException) { }
                     break;
@@ -118,16 +116,20 @@ namespace SharpDX.X3DAudio
                             X3DAudio29.X3DAudioInitialize(speakers, speedOfSound, out handle);
                             version = X3DAudioVersion.Version29;
                             calculateDelegate = X3DAudio29.X3DAudioCalculate;
-                            return;
                         }
                         catch (DllNotFoundException) { }
+                    break;
+                }
+
+                if(version != X3DAudioVersion.Default)
+                {
                     break;
                 }
             }
 
             if(version == X3DAudioVersion.Default)
             {
-                throw new InvalidOperationException(string.Format("Unable to find X3DAudio dlls for the following requestVersion [{0}]", string.Join(",", tryVersions)));
+                throw new DllNotFoundException(string.Format("Unable to find X3DAudio dlls for the following requested version [{0}]", string.Join(",", tryVersions)));
             }
         }
 
