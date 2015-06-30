@@ -51,12 +51,15 @@
     <context>x3daudio</context>
     <map enum="X3DAUDIO(.*)" name-tmp="$1" />
     <map struct="X3DAUDIO(.*)" name-tmp="$1" />
-    <ifdef name="DIRECTX11_1">
+
+    <!-- Remove functions as they are declared manually -->
+    <remove function="X3DAudio.*"/>
+    <!--<ifdef name="DIRECTX11_1">
       <map function="X3DAudio.*" dll='"#(XAUDIO2_DLL_A)"' group="SharpDX.X3DAudio.X3DAudio" visibility="private" />
     </ifdef>
     <ifndef name="DIRECTX11_1">
       <map function="X3DAudio.*" dll='"X3DAudio1_7.dll"' group="SharpDX.X3DAudio.X3DAudio" visibility="private" />
-    </ifndef>
+    </ifndef>-->
 
     <!--
     // *****************************************************************

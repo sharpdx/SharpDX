@@ -27,6 +27,15 @@ namespace SharpDX.X3DAudio
     public partial class X3DAudio
     {
         private X3DAudioHandle handle;
+        private readonly X3DAudioVersion version;
+        private readonly X3DAudioCalculateDelegate calculateDelegate;
+
+        private delegate void X3DAudioCalculateDelegate(
+            ref SharpDX.X3DAudio.X3DAudioHandle instance,
+            SharpDX.X3DAudio.Listener listenerRef,
+            SharpDX.X3DAudio.Emitter emitterRef,
+            SharpDX.X3DAudio.CalculateFlags flags,
+            System.IntPtr dSPSettingsRef);
 
         /// <summary>
         /// Speed of sound in the air.
@@ -34,19 +43,27 @@ namespace SharpDX.X3DAudio
         public const float SpeedOfSound = 343.5f;
 
         /// <summary>
-        /// Represents the ratio of the circumference of a circle to its diameter.
-        /// </summary>
-        public const float PI = 3.141592654f;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="X3DAudio"/> class.
+        /// Initializes a new instance of the <see cref="X3DAudio" /> class.
         /// </summary>
         /// <param name="speakers">The speakers config.</param>
-        /// <msdn-id>microsoft.directx_sdk.x3daudio.x3daudioinitialize</msdn-id>	
-        /// <unmanaged>void X3DAudioInitialize([In] SPEAKER_FLAGS SpeakerChannelMask,[In] float SpeedOfSound,[Out] X3DAUDIOHANDLE* Instance)</unmanaged>	
-        /// <unmanaged-short>X3DAudioInitialize</unmanaged-short>	
+        /// <msdn-id>microsoft.directx_sdk.x3daudio.x3daudioinitialize</msdn-id>
+        /// <unmanaged>void X3DAudioInitialize([In] SPEAKER_FLAGS SpeakerChannelMask,[In] float SpeedOfSound,[Out] X3DAUDIOHANDLE* Instance)</unmanaged>
+        /// <unmanaged-short>X3DAudioInitialize</unmanaged-short>
         public X3DAudio(Speakers speakers)
-            : this(speakers, SpeedOfSound)
+            : this(speakers, X3DAudioVersion.Default)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="X3DAudio" /> class.
+        /// </summary>
+        /// <param name="speakers">The speakers config.</param>
+        /// <param name="requestVersion">The requestVersion.</param>
+        /// <msdn-id>microsoft.directx_sdk.x3daudio.x3daudioinitialize</msdn-id>
+        /// <unmanaged>void X3DAudioInitialize([In] SPEAKER_FLAGS SpeakerChannelMask,[In] float SpeedOfSound,[Out] X3DAUDIOHANDLE* Instance)</unmanaged>
+        /// <unmanaged-short>X3DAudioInitialize</unmanaged-short>
+        public X3DAudio(Speakers speakers, X3DAudioVersion requestVersion)
+            : this(speakers, SpeedOfSound, requestVersion)
         {
         }
 
@@ -55,12 +72,72 @@ namespace SharpDX.X3DAudio
         /// </summary>
         /// <param name="speakers">The speakers config.</param>
         /// <param name="speedOfSound">The speed of sound.</param>
-        /// <msdn-id>microsoft.directx_sdk.x3daudio.x3daudioinitialize</msdn-id>	
-        /// <unmanaged>void X3DAudioInitialize([In] SPEAKER_FLAGS SpeakerChannelMask,[In] float SpeedOfSound,[Out] X3DAUDIOHANDLE* Instance)</unmanaged>	
-        /// <unmanaged-short>X3DAudioInitialize</unmanaged-short>	
-        public X3DAudio(Speakers speakers, float speedOfSound)
+        /// <param name="requestVersion">The request requestVersion.</param>
+        /// 
+        /// <msdn-id>microsoft.directx_sdk.x3daudio.x3daudioinitialize</msdn-id>
+        /// 
+        /// <unmanaged>void X3DAudioInitialize([In] SPEAKER_FLAGS SpeakerChannelMask,[In] float SpeedOfSound,[Out] X3DAUDIOHANDLE* Instance)</unmanaged>
+        /// 
+        /// <unmanaged-short>X3DAudioInitialize</unmanaged-short>
+        public X3DAudio(Speakers speakers, float speedOfSound, X3DAudioVersion requestVersion = X3DAudioVersion.Default)
         {
-            X3DAudioInitialize(speakers, speedOfSound, out handle);
+            var tryVersions = requestVersion == X3DAudioVersion.Default
+                ? new [] {X3DAudioVersion.Version29, X3DAudioVersion.Version28, X3DAudioVersion.Version17}
+                : new[] {requestVersion};
+
+            foreach(var tryVersion in tryVersions)
+            {
+                switch(tryVersion)
+                {
+#if DESKTOP_APP
+                    case X3DAudioVersion.Version17:
+                        try
+                        {
+                            X3DAudio17.X3DAudioInitialize(speakers, speedOfSound, out handle);
+                            version = X3DAudioVersion.Version17;
+                            calculateDelegate = X3DAudio17.X3DAudioCalculate;
+                            return;
+                        }
+                        catch (DllNotFoundException) {}
+                    break;
+#endif
+                    case X3DAudioVersion.Version28:
+                        try
+                        {
+                            X3DAudio28.X3DAudioInitialize(speakers, speedOfSound, out handle);
+                            version = X3DAudioVersion.Version28;
+                            calculateDelegate = X3DAudio28.X3DAudioCalculate;
+                            return;
+                        }
+                        catch (DllNotFoundException) { }
+                    break;
+
+                    case X3DAudioVersion.Version29:
+                        try
+                        {
+                            X3DAudio29.X3DAudioInitialize(speakers, speedOfSound, out handle);
+                            version = X3DAudioVersion.Version29;
+                            calculateDelegate = X3DAudio29.X3DAudioCalculate;
+                            return;
+                        }
+                        catch (DllNotFoundException) { }
+                    break;
+                }
+            }
+
+            if(version == X3DAudioVersion.Default)
+            {
+                throw new InvalidOperationException(string.Format("Unable to find X3DAudio dlls for the following requestVersion [{0}]", string.Join(",", tryVersions)));
+            }
+        }
+
+        /// <summary>
+        /// Gets the requestVersion of X3DAudio used.
+        /// </summary>
+        /// <value>The requestVersion.</value>
+        public X3DAudioVersion Version
+        {
+            get { return version; }
         }
 
         /// <summary>
@@ -107,7 +184,7 @@ namespace SharpDX.X3DAudio
                 settingsNative.MatrixCoefficientsPointer = (IntPtr)pMatrix;
                 settingsNative.DelayTimesPointer = (IntPtr)pDelays;
                 
-                X3DAudioCalculate(ref handle, listener, emitter, flags, new IntPtr(&settingsNative));
+                calculateDelegate(ref handle, listener, emitter, flags, new IntPtr(&settingsNative));
             }
 
             settings.__MarshalFrom(ref settingsNative);

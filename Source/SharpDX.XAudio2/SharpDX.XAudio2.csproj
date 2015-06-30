@@ -30,7 +30,9 @@
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Structures.cs" />
     <Compile Include="Generated\X3DAudio\Enumerations.cs" />
-    <Compile Include="Generated\X3DAudio\Functions.cs" />
+    <Compile Include="X3DAudio\X3DAudio17.cs" />
+    <Compile Include="X3DAudio\X3DAudio28.cs" />
+    <Compile Include="X3DAudio\X3DAudio29.cs" />
     <Compile Include="Generated\X3DAudio\Interfaces.cs" />
     <Compile Include="Generated\X3DAudio\Structures.cs" />
     <Compile Include="Generated\XAPO\Enumerations.cs" />
@@ -41,6 +43,7 @@
     <Compile Include="Generated\XAPO\Fx\Structures.cs" />
     <Compile Include="Generated\XAPO\Interfaces.cs" />
     <Compile Include="Generated\XAPO\Structures.cs" />
+    <Compile Include="X3DAudio\X3DAudioVersion.cs" />
     <Compile Include="XAudio28Functions.cs" />
     <Compile Include="XAudio29Functions.cs" />
     <Compile Include="LocalInterop.cs" />

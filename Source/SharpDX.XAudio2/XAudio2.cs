@@ -76,47 +76,55 @@ namespace SharpDX.XAudio2
         public XAudio2(XAudio2Flags flags, ProcessorSpecifier processorSpecifier, XAudio2Version version = XAudio2Version.Default)
             : base(IntPtr.Zero)
         {
+            var tryVersions = version == XAudio2Version.Default
+                ? new[] { XAudio2Version.Version29, XAudio2Version.Version28, XAudio2Version.Version27 }
+                : new[] { version };
 
-            if(Version != XAudio2Version.Default)
+            foreach (var tryVersion in tryVersions)
             {
-                throw new InvalidOperationException(string.Format("XAudio2 has been already initialized with the version [{0}]", Version));
-            }
-
-
+                switch (tryVersion)
+                {
 #if DESKTOP_APP
-            Guid clsid = ((int)flags == 1) ? CLSID_XAudio27_Debug : CLSID_XAudio27;
-            if ((version == XAudio2Version.Default || version == XAudio2Version.Version27) && Utilities.TryCreateComInstance(clsid, Utilities.CLSCTX.ClsctxInprocServer, IID_IXAudio2, this))
-            {
-                SetupVtblFor27();
-                // Initialize XAudio2
-                Initialize(0, processorSpecifier);
-                Version = XAudio2Version.Version27;
-            }
-            else 
+                    case XAudio2Version.Version27:
+                        Guid clsid = ((int)flags == 1) ? CLSID_XAudio27_Debug : CLSID_XAudio27;
+                        if ((version == XAudio2Version.Default || version == XAudio2Version.Version27) && Utilities.TryCreateComInstance(clsid, Utilities.CLSCTX.ClsctxInprocServer, IID_IXAudio2, this))
+                        {
+                            SetupVtblFor27();
+                            // Initialize XAudio2
+                            Initialize(0, processorSpecifier);
+                            Version = XAudio2Version.Version27;
+                        }
+                        break;
 #endif
-            if (version == XAudio2Version.Default || version > XAudio2Version.Version27)
-            {
-                try
-                {
-                    XAudio29Functions.XAudio2Create(this, 0, (int)processorSpecifier);
-                    Version = XAudio2Version.Version29;
+                    case XAudio2Version.Version28:
+                        try
+                        {
+                            XAudio28Functions.XAudio2Create(this, 0, (int)processorSpecifier);
+                            Version = XAudio2Version.Version28;
+                        }
+                        catch (DllNotFoundException) { }
+                        break;
+
+                    case XAudio2Version.Version29:
+                        try
+                        {
+                            XAudio29Functions.XAudio2Create(this, 0, (int)processorSpecifier);
+                            Version = XAudio2Version.Version29;
+                        }
+                        catch (DllNotFoundException) { }
+                        break;
                 }
-                catch(Exception)
+
+                // Early exit if we found a version
+                if (Version != XAudio2Version.Default)
                 {
-                    try
-                    {
-                        XAudio28Functions.XAudio2Create(this, 0, (int)processorSpecifier);
-                        Version = XAudio2Version.Version28;
-                    }
-                    catch(Exception)
-                    {
-                        throw new InvalidOperationException("XAudio2 version [2.7, 2.8 or 2.9] is not installed");
-                    }
+                    break;
                 }
             }
-            else
+
+            if (Version == XAudio2Version.Default)
             {
-                throw new InvalidOperationException("XAudio2 version [" + version + "] is not installed");
+                throw new InvalidOperationException(string.Format("Request version [{0}] is not installed", version == XAudio2Version.Default ? "2.7, 2.8 or 2.9" : version.ToString()));
             }
 
             // Register engine callback
