@@ -66,10 +66,12 @@ namespace SharpDX.XAPO.Fx
             {
                 CreateFX28(clsid, effectRef, IntPtr.Zero, 0);
             }
+#if STORE_APP_10
             else if (device.Version == XAudio2Version.Version29)
             {
                 CreateFX29(clsid, effectRef, IntPtr.Zero, 0);
             }
+#endif
             else
             {
                 throw new NotSupportedException(string.Format("XAudio2 Version [{0}] is not supported for this effect", device.Version));

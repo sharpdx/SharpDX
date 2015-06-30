@@ -8,7 +8,7 @@ namespace SharpDX.XAPO.Fx
     /// </summary>	
     /// <include file='..\..\Documentation\CodeComments.xml' path="/comments/comment[@id='SharpDX.XAPO.Fx.XAPOFx']/*"/>	
     static partial class XAPOFx {   
-        
+#if STORE_APP_10
         /// <summary>	
         /// <p>Creates an instance of the requested XAPOFX effect.</p>	
         /// </summary>	
@@ -37,6 +37,7 @@ namespace SharpDX.XAPO.Fx
         }
         [DllImport("xaudio2_9.dll", EntryPoint = "CreateFX", CallingConvention = CallingConvention.Cdecl)]
         private unsafe static extern int CreateFX_29(void* arg0,void* arg1,void* arg2,int arg3);
+#endif
 
         public static void CreateFX28(System.Guid clsid, SharpDX.ComObject effectRef, System.IntPtr initDataRef, int initDataByteSize)
         {

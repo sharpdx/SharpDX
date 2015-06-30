@@ -109,7 +109,7 @@ namespace SharpDX.X3DAudio
                         }
                         catch (DllNotFoundException) { }
                     break;
-
+#if STORE_APP_10
                     case X3DAudioVersion.Version29:
                         try
                         {
@@ -119,6 +119,7 @@ namespace SharpDX.X3DAudio
                         }
                         catch (DllNotFoundException) { }
                     break;
+#endif
                 }
 
                 if(version != X3DAudioVersion.Default)

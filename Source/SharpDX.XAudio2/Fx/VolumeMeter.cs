@@ -58,10 +58,12 @@ namespace SharpDX.XAudio2.Fx
             {
                 XAudio28Functions.CreateAudioVolumeMeter(this);
             }
+#if STORE_APP_10
             else if (device.Version == XAudio2Version.Version29)
             {
                 XAudio29Functions.CreateAudioVolumeMeter(this);
             }
+#endif
             else
             {
                 throw new InvalidOperationException("XAudio2 must be initialized before calling this constructor");
