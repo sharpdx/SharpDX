@@ -30,6 +30,7 @@
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Structures.cs" />
     <Compile Include="Generated\X3DAudio\Enumerations.cs" />
+    <Compile Include="XAPO\Fx\XAPOFx.Interop.cs" />
     <Compile Include="X3DAudio\X3DAudio17.cs" />
     <Compile Include="X3DAudio\X3DAudio28.cs" />
     <Compile Include="X3DAudio\X3DAudio29.cs" />

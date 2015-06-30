@@ -29,9 +29,9 @@ namespace SharpDX.XAPO.Fx
         /// <summary>
         /// Initializes a new instance of the <see cref="MasteringLimiter"/> class.
         /// </summary>
-        public MasteringLimiter() : base(IntPtr.Zero)
+        public MasteringLimiter(SharpDX.XAudio2.XAudio2 device) : base(device)
         {
-            XAPOFx.CreateFX(XAPOFx.CLSID_FXMasteringLimiter, this);
+            XAPOFx.CreateFX(device, XAPOFx.CLSID_FXMasteringLimiter, this);
         }
     }
 }

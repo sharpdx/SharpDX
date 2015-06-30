@@ -23,6 +23,13 @@ namespace SharpDX.XAudio2
 {
     public partial class Voice
     {
+        protected readonly XAudio2 device;
+
+        protected Voice(XAudio2 device) : base(IntPtr.Zero)
+        {
+            this.device = device;
+        }
+
         /// <summary>	
         /// <p>Returns information about the creation flags, input channels, and sample rate of a voice.</p>	
         /// </summary>	
@@ -39,7 +46,7 @@ namespace SharpDX.XAudio2
                 GetVoiceDetails(out __output__);
 
                 // Handle 2.7 version changes here
-                if (XAudio2.Version == XAudio2Version.Version27)
+                if (device.Version == XAudio2Version.Version27)
                 {
                     __output__.InputSampleRate = __output__.InputChannelCount;
                     __output__.InputChannelCount = __output__.ActiveFlags;

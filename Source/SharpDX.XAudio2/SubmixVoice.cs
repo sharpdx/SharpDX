@@ -83,7 +83,7 @@ namespace SharpDX.XAudio2
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAudio2::CreateSubmixVoice([Out] IXAudio2SubmixVoice** ppSubmixVoice,[None] UINT32 InputChannels,[None] UINT32 InputSampleRate,[None] UINT32 Flags,[None] UINT32 ProcessingStage,[In, Optional] const XAUDIO2_VOICE_SENDS* pSendList,[In, Optional] const XAUDIO2_EFFECT_CHAIN* pEffectChain)</unmanaged>
         public SubmixVoice(XAudio2 device, int inputChannels, int inputSampleRate, SubmixVoiceFlags flags, int processingStage, EffectDescriptor[] effectDescriptors)
-            : base(IntPtr.Zero)
+            : base(device)
         {
 
             if (effectDescriptors != null)

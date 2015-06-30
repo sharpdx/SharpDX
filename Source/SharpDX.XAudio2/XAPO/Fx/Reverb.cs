@@ -29,10 +29,10 @@ namespace SharpDX.XAPO.Fx
         /// <summary>
         /// Initializes a new instance of the <see cref="Reverb"/> class.
         /// </summary>
-        public Reverb()
-            : base(IntPtr.Zero)
+        public Reverb(SharpDX.XAudio2.XAudio2 device)
+            : base(device)
         {
-            XAPOFx.CreateFX(XAPOFx.CLSID_FXReverb, this);
+            XAPOFx.CreateFX(device, XAPOFx.CLSID_FXReverb, this);
         }
     }
 }

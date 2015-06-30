@@ -29,10 +29,10 @@ namespace SharpDX.XAPO.Fx
         /// <summary>
         /// Initializes a new instance of the <see cref="Equalizer"/> class.
         /// </summary>
-        public Equalizer()
-            : base(IntPtr.Zero)
+        public Equalizer(SharpDX.XAudio2.XAudio2 device)
+            : base(device)
         {
-            XAPOFx.CreateFX(XAPOFx.CLSID_FXEQ, this);
+            XAPOFx.CreateFX(device, XAPOFx.CLSID_FXEQ, this);
         }
     }
 }

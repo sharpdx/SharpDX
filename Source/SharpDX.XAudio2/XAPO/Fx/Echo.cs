@@ -29,10 +29,10 @@ namespace SharpDX.XAPO.Fx
         /// <summary>
         /// Initializes a new instance of the <see cref="Echo"/> class.
         /// </summary>
-        public Echo()
-            : base(IntPtr.Zero)
+        public Echo(SharpDX.XAudio2.XAudio2 device)
+            : base(device)
         {
-            XAPOFx.CreateFX(XAPOFx.CLSID_FXEcho, this);
+            XAPOFx.CreateFX(device, XAPOFx.CLSID_FXEcho, this);
         }
     }
 }

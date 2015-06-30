@@ -30,10 +30,10 @@ namespace SharpDX.XAPO.Fx
         internal static Guid CLSID_FXMasteringLimiter = new Guid("C4137916-2BE1-46FD-8599-441536F49856");
         internal static Guid CLSID_FXReverb = new Guid("7D9ACA56-CB68-4807-B632-B137352E8596");
 
-        public static void CreateFX(System.Guid clsid, SharpDX.ComObject effectRef)
+        public static void CreateFX(SharpDX.XAudio2.XAudio2 device, System.Guid clsid, SharpDX.ComObject effectRef)
         {
 #if DESKTOP_APP
-            if(XAudio2.XAudio2.Version == XAudio2Version.Version27)
+            if (device.Version == XAudio2Version.Version27)
             {
                 var clsid15 = clsid;
                 if (clsid15 == CLSID_FXEcho)
@@ -62,7 +62,18 @@ namespace SharpDX.XAPO.Fx
                 }
             }
 #endif
-            CreateFX(clsid, effectRef, IntPtr.Zero, 0);
+            if(device.Version == XAudio2Version.Version28)
+            {
+                CreateFX28(clsid, effectRef, IntPtr.Zero, 0);
+            }
+            else if (device.Version == XAudio2Version.Version29)
+            {
+                CreateFX29(clsid, effectRef, IntPtr.Zero, 0);
+            }
+            else
+            {
+                throw new NotSupportedException(string.Format("XAudio2 Version [{0}] is not supported for this effect", device.Version));
+            }
         }
         /// <summary>Constant None.</summary>
         private static Guid CLSID_FXEcho_15 = new Guid("a90bc001-e897-e897-7439-435500000003");

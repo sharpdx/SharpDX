@@ -59,10 +59,11 @@ namespace SharpDX.XAudio2
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="XAudio2"/> class.
+        /// Initializes a new instance of the <see cref="XAudio2" /> class.
         /// </summary>
-        public XAudio2(XAudio2Version version)
-            : this(XAudio2Flags.None, ProcessorSpecifier.DefaultProcessor, version)
+        /// <param name="requestedVersion">The requested version.</param>
+        public XAudio2(XAudio2Version requestedVersion)
+            : this(XAudio2Flags.None, ProcessorSpecifier.DefaultProcessor, requestedVersion)
         {
         }
 
@@ -71,14 +72,14 @@ namespace SharpDX.XAudio2
         /// </summary>
         /// <param name="flags">Specify a Debug or Normal XAudio2 instance.</param>
         /// <param name="processorSpecifier">The processor specifier.</param>
-        /// <param name="version">The version to use (auto, 2.7 or 2.8).</param>
-        /// <exception cref="System.InvalidOperationException">XAudio2 version [ + version + ] is not installed</exception>
-        public XAudio2(XAudio2Flags flags, ProcessorSpecifier processorSpecifier, XAudio2Version version = XAudio2Version.Default)
+        /// <param name="requestedVersion">The requestedVersion to use (auto, 2.7 or 2.8).</param>
+        /// <exception cref="System.InvalidOperationException">XAudio2 requestedVersion [ + requestedVersion + ] is not installed</exception>
+        public XAudio2(XAudio2Flags flags, ProcessorSpecifier processorSpecifier, XAudio2Version requestedVersion = XAudio2Version.Default)
             : base(IntPtr.Zero)
         {
-            var tryVersions = version == XAudio2Version.Default
+            var tryVersions = requestedVersion == XAudio2Version.Default
                 ? new[] { XAudio2Version.Version29, XAudio2Version.Version28, XAudio2Version.Version27 }
-                : new[] { version };
+                : new[] { requestedVersion };
 
             foreach (var tryVersion in tryVersions)
             {
@@ -87,7 +88,7 @@ namespace SharpDX.XAudio2
 #if DESKTOP_APP
                     case XAudio2Version.Version27:
                         Guid clsid = ((int)flags == 1) ? CLSID_XAudio27_Debug : CLSID_XAudio27;
-                        if ((version == XAudio2Version.Default || version == XAudio2Version.Version27) && Utilities.TryCreateComInstance(clsid, Utilities.CLSCTX.ClsctxInprocServer, IID_IXAudio2, this))
+                        if ((requestedVersion == XAudio2Version.Default || requestedVersion == XAudio2Version.Version27) && Utilities.TryCreateComInstance(clsid, Utilities.CLSCTX.ClsctxInprocServer, IID_IXAudio2, this))
                         {
                             SetupVtblFor27();
                             // Initialize XAudio2
@@ -115,7 +116,7 @@ namespace SharpDX.XAudio2
                         break;
                 }
 
-                // Early exit if we found a version
+                // Early exit if we found a requestedVersion
                 if (Version != XAudio2Version.Default)
                 {
                     break;
@@ -124,7 +125,7 @@ namespace SharpDX.XAudio2
 
             if (Version == XAudio2Version.Default)
             {
-                throw new DllNotFoundException(string.Format("Unable to find XAudio2 dlls for requested versions [{0}], not installed on this machine", version == XAudio2Version.Default ? "2.7, 2.8 or 2.9" : version.ToString()));
+                throw new DllNotFoundException(string.Format("Unable to find XAudio2 dlls for requested versions [{0}], not installed on this machine", requestedVersion == XAudio2Version.Default ? "2.7, 2.8 or 2.9" : requestedVersion.ToString()));
             }
 
             // Register engine callback
@@ -135,13 +136,13 @@ namespace SharpDX.XAudio2
         }
 
         /// <summary>
-        /// Gets the version of this XAudio2 instance, once a <see cref="XAudio2"/> device has been instanciated.
+        /// Gets the requestedVersion of this XAudio2 instance, once a <see cref="XAudio2"/> device has been instanciated.
         /// </summary>
-        /// <value>The version.</value>
-        public static XAudio2Version Version { get; private set; }
+        /// <value>The requestedVersion.</value>
+        public XAudio2Version Version { get; private set; }
 
         // ---------------------------------------------------------------------------------
-        // Start handling 2.7 version here
+        // Start handling 2.7 requestedVersion here
         // ---------------------------------------------------------------------------------
 
         /// <summary>
@@ -168,7 +169,7 @@ namespace SharpDX.XAudio2
         {
             if (Version != XAudio2Version.Version27)
             {
-                throw new InvalidOperationException("This method is only valid on the XAudio 2.7 version [Current is: " + Version + "]");
+                throw new InvalidOperationException("This method is only valid on the XAudio 2.7 requestedVersion [Current is: " + Version + "]");
             }
         }
 
@@ -252,7 +253,7 @@ namespace SharpDX.XAudio2
         }
 
         // ---------------------------------------------------------------------------------
-        // End handling 2.7 version here
+        // End handling 2.7 requestedVersion here
         // ---------------------------------------------------------------------------------
 
         /// <summary>

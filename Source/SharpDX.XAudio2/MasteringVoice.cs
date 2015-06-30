@@ -34,9 +34,9 @@ namespace SharpDX.XAudio2
         /// <param name="deviceId">[in]  Index of the output device that will be sent input by the mastering voice. Specifying the default value of 0 causes XAudio2 to select the global default audio device. </param>
         /// <unmanaged>HRESULT IXAudio2::CreateMasteringVoice([Out] IXAudio2MasteringVoice** ppMasteringVoice,[None] UINT32 InputChannels,[None] UINT32 InputSampleRate,[None] UINT32 Flags,[None] UINT32 DeviceIndex,[In, Optional] const XAUDIO2_EFFECT_CHAIN* pEffectChain)</unmanaged>
         public MasteringVoice(XAudio2 device, int inputChannels = 2, int inputSampleRate = 44100)
-            : base(IntPtr.Zero)
+            : base(device)
         {
-            if(XAudio2.Version == XAudio2Version.Version27)
+            if (device.Version == XAudio2Version.Version27)
             {
                 device.CreateMasteringVoice27(this, inputChannels, inputSampleRate, 0, 0, null);
             }
@@ -55,7 +55,7 @@ namespace SharpDX.XAudio2
         /// <param name="deviceId">[in]  Index of the output device that will be sent input by the mastering voice. Specifying the default value of 0 causes XAudio2 to select the global default audio device. </param>
         /// <unmanaged>HRESULT IXAudio2::CreateMasteringVoice([Out] IXAudio2MasteringVoice** ppMasteringVoice,[None] UINT32 InputChannels,[None] UINT32 InputSampleRate,[None] UINT32 Flags,[None] UINT32 DeviceIndex,[In, Optional] const XAUDIO2_EFFECT_CHAIN* pEffectChain)</unmanaged>
         public MasteringVoice(XAudio2 device, int inputChannels, int inputSampleRate, string deviceId)
-            : base(IntPtr.Zero)
+            : base(device)
         {
 
             device.CreateMasteringVoice(this, inputChannels, inputSampleRate, 0, deviceId, null, AudioStreamCategory.GameEffects);
@@ -70,7 +70,7 @@ namespace SharpDX.XAudio2
         /// <param name="deviceIndex">Index of the device.</param>
         /// <unmanaged>HRESULT IXAudio2::CreateMasteringVoice([Out] IXAudio2MasteringVoice** ppMasteringVoice,[None] UINT32 InputChannels,[None] UINT32 InputSampleRate,[None] UINT32 Flags,[None] UINT32 DeviceIndex,[In, Optional] const XAUDIO2_EFFECT_CHAIN* pEffectChain)</unmanaged>
         public MasteringVoice(XAudio2 device, int inputChannels, int inputSampleRate, int deviceIndex)
-            : base(IntPtr.Zero)
+            : base(device)
         {
             device.CreateMasteringVoice27(this, inputChannels, inputSampleRate, 0, deviceIndex, null);
         }
@@ -90,7 +90,7 @@ namespace SharpDX.XAudio2
         {
             get
             {
-                if(XAudio2.Version == XAudio2Version.Version27)
+                if(device.Version == XAudio2Version.Version27)
                 {
                     return 0;
                 }

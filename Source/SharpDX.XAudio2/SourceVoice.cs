@@ -138,7 +138,7 @@ namespace SharpDX.XAudio2
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAudio2::CreateSourceVoice([Out] IXAudio2SourceVoice** ppSourceVoice,[In] const WAVEFORMATEX* pSourceFormat,[None] UINT32 Flags,[None] float MaxFrequencyRatio,[In, Optional] IXAudio2VoiceCallback* pCallback,[In, Optional] const XAUDIO2_VOICE_SENDS* pSendList,[In, Optional] const XAUDIO2_EFFECT_CHAIN* pEffectChain)</unmanaged>
         public SourceVoice(XAudio2 device, SharpDX.Multimedia.WaveFormat sourceFormat, SharpDX.XAudio2.VoiceFlags flags, float maxFrequencyRatio, VoiceCallback callback, EffectDescriptor[] effectDescriptors)
-            : base(IntPtr.Zero)
+            : base(device)
         {
             CreateSourceVoice(device, sourceFormat, flags, maxFrequencyRatio, callback == null ? IntPtr.Zero : VoiceShadow.ToIntPtr(callback), effectDescriptors);
         }
@@ -155,7 +155,7 @@ namespace SharpDX.XAudio2
         /// <returns>No enableCallbackEvents.</returns>
         ///   <unmanaged>HRESULT IXAudio2::CreateSourceVoice([Out] IXAudio2SourceVoice** ppSourceVoice,[In] const WAVEFORMATEX* pSourceFormat,[None] UINT32 Flags,[None] float MaxFrequencyRatio,[In, Optional] IXAudio2VoiceCallback* pCallback,[In, Optional] const XAUDIO2_VOICE_SENDS* pSendList,[In, Optional] const XAUDIO2_EFFECT_CHAIN* pEffectChain)</unmanaged>
         public SourceVoice(XAudio2 device, SharpDX.Multimedia.WaveFormat sourceFormat, SharpDX.XAudio2.VoiceFlags flags, float maxFrequencyRatio, bool enableCallbackEvents, EffectDescriptor[] effectDescriptors)
-            : base(IntPtr.Zero)
+            : base(device)
         {
             CreateSourceVoice(device, sourceFormat, flags, maxFrequencyRatio, enableCallbackEvents ? VoiceShadow.ToIntPtr(voiceCallbackImpl = new VoiceCallbackImpl(this)) : IntPtr.Zero, effectDescriptors);
         }

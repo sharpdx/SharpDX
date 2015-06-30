@@ -29,32 +29,36 @@ namespace SharpDX.XAudio2.Fx
     {
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="VolumeMeter"/> class.
+        /// Initializes a new instance of the <see cref="VolumeMeter" /> class.
         /// </summary>
-        public VolumeMeter()
-            : this(false)
+        /// <param name="device">The device.</param>
+        public VolumeMeter(XAudio2 device)
+            : this(device, false)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="VolumeMeter"/> class.
+        /// Initializes a new instance of the <see cref="VolumeMeter" /> class.
         /// </summary>
-        public VolumeMeter(bool isUsingDebug)
-            : base(IntPtr.Zero)
+        /// <param name="device">The device.</param>
+        /// <param name="isUsingDebug">if set to <c>true</c> [is using debug].</param>
+        /// <exception cref="System.InvalidOperationException">XAudio2 must be initialized before calling this constructor</exception>
+        public VolumeMeter(XAudio2 device, bool isUsingDebug)
+            : base(device)
         {
 #if DESKTOP_APP
-            if (XAudio2.Version == XAudio2Version.Version27)
+            if (device.Version == XAudio2Version.Version27)
             {
                 Guid clsid = (isUsingDebug) ? XAudio2FxContants.CLSID_AudioVolumeMeter_Debug : XAudio2FxContants.CLSID_AudioVolumeMeter;
                 Utilities.CreateComInstance(clsid, Utilities.CLSCTX.ClsctxInprocServer, XAudio2FxContants.CLSID_IAudioProcessor, this);
                 return;
             }
 #endif
-            if (XAudio2.Version == XAudio2Version.Version28)
+            if (device.Version == XAudio2Version.Version28)
             {
                 XAudio28Functions.CreateAudioVolumeMeter(this);
             }
-            else if (XAudio2.Version == XAudio2Version.Version29)
+            else if (device.Version == XAudio2Version.Version29)
             {
                 XAudio29Functions.CreateAudioVolumeMeter(this);
             }
