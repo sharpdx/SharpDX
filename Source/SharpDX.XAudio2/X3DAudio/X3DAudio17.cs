@@ -28,6 +28,7 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+#if DESKTOP_APP
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -101,3 +102,4 @@ namespace SharpDX.X3DAudio {
         private unsafe static extern int X3DAudioInitialize_(int arg0,float arg1,void* arg2);
     }
 }
+#endif

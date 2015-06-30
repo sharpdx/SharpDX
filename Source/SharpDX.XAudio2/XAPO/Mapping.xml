@@ -131,14 +131,15 @@
     // *****************************************************************
     -->
 
-    <ifdef name="DIRECTX11_1">
+    <remove function="CreateFX"/>
+    <!--<ifdef name="DIRECTX11_1">
       <map function="CreateFX" dll='"#(XAUDIO2_DLL_A)"' group="SharpDX.XAPO.Fx.XAPOFx" />
     </ifdef>
     <ifndef name="DIRECTX11_1">
       <map function="CreateFX" dll='"XAPOFX1_5.dll"' group="SharpDX.XAPO.Fx.XAPOFx" />
     </ifndef>
 
-    <map param="CreateFX::pEffect" attribute="out fast" />
+    <map param="CreateFX::pEffect" attribute="out fast" />-->
 
     <context-clear />
   </mapping>
