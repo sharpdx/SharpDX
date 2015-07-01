@@ -992,6 +992,13 @@
     <map param="IMFTransform::ProcessOutput::dwFlags" type="_MFT_PROCESS_OUTPUT_FLAGS"/>
     <map param="IMFTransform::ProcessOutput::pdwStatus" type="_MFT_PROCESS_OUTPUT_STATUS" attribute="out"/>
 
+    <ifdef name="STORE_APP">
+      <remove function="MFCheckContentProtectionDevice" />
+      <remove function="MFCreateContentDecryptorContext" />
+      <remove function="MFCreateContentProtectionDevice" />
+      <remove function="MFIsContentProtectionDeviceSupported" />
+    </ifdef>
+
     <context-clear />
   </mapping>
 </config>
