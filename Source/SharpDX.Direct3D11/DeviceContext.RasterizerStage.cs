@@ -93,7 +93,7 @@ namespace SharpDX.Direct3D11
         /// <unmanaged-short>ID3D11DeviceContext::RSGetScissorRects</unmanaged-short>	
         public unsafe void GetScissorRectangles<T>(T[] scissorRectangles) where T : struct
         {
-            if (Utilities.SizeOf<T>() != Utilities.SizeOf<RawViewportF>())
+            if (Utilities.SizeOf<T>() != Utilities.SizeOf<RawRectangle>())
                 throw new ArgumentException("Type T must have same size and layout as RawRectangle", "viewports");
 
             int numRects = scissorRectangles.Length;
@@ -140,7 +140,7 @@ namespace SharpDX.Direct3D11
 
             unsafe
             {
-                void* pBuffer = Interop.Fixed(ref scissorRectangles);
+                void* pBuffer = Interop.Fixed(scissorRectangles);
                 SetScissorRects(scissorRectangles == null ? 0 : scissorRectangles.Length, (IntPtr)pBuffer);
             }
         }
