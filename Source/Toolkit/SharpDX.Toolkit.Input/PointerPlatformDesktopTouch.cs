@@ -50,7 +50,10 @@ namespace SharpDX.Toolkit.Input
         {
             // touch is not supported for OS below Windows 7
             var osVersion = Environment.OSVersion.Version;
-            if (osVersion.Major < 6 || osVersion.Major >= 6 && osVersion.Minor < 1) return;
+
+            // Fixing Windows10 recognition
+            if (osVersion.Major < 6 || 
+                (osVersion.Major == 6 && osVersion.Minor < 1)) return;
 
             // inform OS that we can handle correctly DPI
             // TODO: check if we need this here
@@ -145,7 +148,8 @@ namespace SharpDX.Toolkit.Input
                 case User32.WM_RBUTTONDOWN:
                 case User32.WM_RBUTTONUP:
                 case User32.WM_MOUSEMOTION:
-                    if ((User32.GetMessageExtraInfo().ToInt32() & User32.MOUSEEVENTF_FROMTOUCH) == User32.MOUSEEVENTF_FROMTOUCH)
+                    // Fixing x64 message processing
+                    if ((User32.GetMessageExtraInfo().ToInt64() & User32.MOUSEEVENTF_FROMTOUCH) == User32.MOUSEEVENTF_FROMTOUCH)
                         return 1;
                     break;
             }
