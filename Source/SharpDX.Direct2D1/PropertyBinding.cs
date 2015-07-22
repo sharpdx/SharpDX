@@ -81,7 +81,7 @@ namespace SharpDX.Direct2D1
                     binding.nativeGetSet = new NativeGetSetValue<int>(customEffectType, propertyInfo);
                     effectPropType = PropertyType.Bool;
                 }
-                else if (propTypeName.Contains("Vector2"))
+                else if (propTypeName.Contains("Vector2")) // Use string property name to allow external types (Mathematics, System Numerics...etc.)
                 {
                     binding.nativeGetSet = new NativeGetSetValue<RawVector2>(customEffectType, propertyInfo);
                     effectPropType = PropertyType.Vector2;
@@ -111,11 +111,6 @@ namespace SharpDX.Direct2D1
                     binding.nativeGetSet = new NativeGetSetValue<RawColor4>(customEffectType, propertyInfo);
                     effectPropType = PropertyType.Vector4;
                 }
-                else if(propTypeName.Contains("Matrix"))
-                {
-                    binding.nativeGetSet = new NativeGetSetValue<RawMatrix>(customEffectType, propertyInfo);
-                    effectPropType = PropertyType.Matrix4x4;
-                }
                 else if(propTypeName.Contains("Matrix3x2"))
                 {
                     binding.nativeGetSet = new NativeGetSetValue<RawMatrix3x2>(customEffectType, propertyInfo);
@@ -126,7 +121,12 @@ namespace SharpDX.Direct2D1
                     binding.nativeGetSet = new NativeGetSetValue<RawMatrix5x4>(customEffectType, propertyInfo);
                     effectPropType = PropertyType.Matrix5x4;
                 }
-                else if(Utilities.IsEnum(propType))
+                else if (propTypeName.Contains("Matrix"))
+                {
+                    binding.nativeGetSet = new NativeGetSetValue<RawMatrix>(customEffectType, propertyInfo);
+                    effectPropType = PropertyType.Matrix4x4;
+                }
+                else if (Utilities.IsEnum(propType))
                 {
                     // For enum, we are using int as a transient value
                     binding.nativeGetSet = new NativeGetSetValue<int>(customEffectType, propertyInfo);
