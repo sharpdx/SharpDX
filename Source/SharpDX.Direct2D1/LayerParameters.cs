@@ -34,7 +34,7 @@ namespace SharpDX.Direct2D1
         {
             set
             {
-                GeometricMaskPointer = value.NativePointer;
+                GeometricMaskPointer = value == null ? IntPtr.Zero : value.NativePointer;
             }
         }
 
@@ -49,7 +49,7 @@ namespace SharpDX.Direct2D1
         {
             set
             {
-                OpacityBrushPointer= value.NativePointer;
+                OpacityBrushPointer = value == null ? IntPtr.Zero : value.NativePointer;
             }
         }
     }

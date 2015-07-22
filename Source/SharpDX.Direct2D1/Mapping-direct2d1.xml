@@ -200,8 +200,8 @@
     <map struct="D2D1_BITMAP_PROPERTIES1" struct-to-class="true"/>
     <map field="D2D1_BITMAP_PROPERTIES1::colorContext" name="ColorContextPointer" visibility="internal"/>
 
-    <map field="D2D1_LAYER_PARAMETERS1::geometricMask" visibility="internal" name="geometricMask_"/>
-    <map field="D2D1_LAYER_PARAMETERS1::opacityBrush" visibility="internal" name="opacityBrush_"/>
+    <map field="D2D1_LAYER_PARAMETERS1::geometricMask" visibility="internal" name="GeometricMaskPointer"/>
+    <map field="D2D1_LAYER_PARAMETERS1::opacityBrush" visibility="internal" name="OpacityBrushPointer"/>
 
     <map struct="D2D1_PROPERTY_BINDING" struct-to-class="true" visibility="internal"/>
     <map field="D2D1_PROPERTY_BINDING::[gs]etFunction" visibility="internal"/>
