@@ -169,6 +169,8 @@
     <remove field="D3D12_RESOURCE_BARRIER::.*"/>
     <remove field="D3D12_ROOT_PARAMETER::.*"/>
     <remove field="D3D12_TEXTURE_COPY_LOCATION::.*" />
+    
+    <map struct="D3D12_CACHED_PIPELINE_STATE::pCachedBlob" name="CachedBlobPointer"/>
 
     <map interface="ID3D12Debug" name="DebugInterface"/>
 
