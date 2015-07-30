@@ -5,7 +5,7 @@ Official web site: [sharpdx.org](http://sharpdx.org)
 SharpDX is an open-source project delivering the **full DirectX API for .Net on all Windows platforms**, allowing the development of high performance game, 2D and 3D graphics rendering as well as realtime sound application.
 
 > # Warning
-> After the official version [2.6.3](0ffe4dd3e93956286f89030f9fd55d0a3c8d06bd), the repository is now split between this core repository (containing only the DirectX API) and the [Toolkit](https://github.com/sharpdx/Toolkit) repository that is deprecated. This is a work in progress so  the latest version of this repository is unstable 
+> After the official version [2.6.3](https://github.com/sharpdx/SharpDX/releases/tag/2.6.3), the repository is now split between this core repository (containing only the DirectX API) and the [Toolkit](https://github.com/sharpdx/Toolkit) repository that is deprecated. This is a work in progress so  the latest version of this repository is unstable 
 
 ## Installation
 
