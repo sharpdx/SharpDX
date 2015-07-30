@@ -14,6 +14,10 @@ SharpDX is an open-source project delivering the **full DirectX API for .Net on 
 
 See the [Installation][Installation] wiki page for more information.
 
+## Build
+
+In order to compile SharpDX, you need to install the [Windows 10 SDK 10.0.240.0](https://dev.windows.com/en-us/downloads/windows-10-sdk)
+
 ## Licensing
  
 MIT
