@@ -28,8 +28,8 @@
   <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\Setup\VC\ProductDir;Include</include-dir>
   <!-- TODO: workaround. We put Windows 10 headers AFTER Windows 8 headers just to grab Direct3D12 headers. We will have to do a proper full port of the Windows 10 headers so it will require much more work -->
 
-  <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot10;Include\10.0.10069.0\shared</include-dir>
-  <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot10;Include\10.0.10069.0\um</include-dir>
+  <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot10;Include\10.0.10240.0\shared</include-dir>
+  <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot10;Include\10.0.10240.0\um</include-dir>
   <!--<include-dir>$(DXSDK_DIR)\include</include-dir>-->
 
   <var name="FILTER_PASTING_ERROR">error: pasting .*a valid preprocessing token</var>

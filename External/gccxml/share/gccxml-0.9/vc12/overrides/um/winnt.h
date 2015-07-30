@@ -150,11 +150,12 @@ extern "C" {
 #error "No Target Architecture"
 #endif
 
-#if BUILD_WOW64_ENABLED
+//
+// Define PROBE_ALIGNMENT32 to be the same as PROBE_ALIGNMENT on x86, so that
+// code hosting x86 under WoW can handle x86's maximum garanteed alignment.
+//
 
 #define PROBE_ALIGNMENT32( _s ) TYPE_ALIGNMENT( DWORD )
-
-#endif
 
 // begin_ntoshvp
 
@@ -6278,6 +6279,49 @@ _BitScanReverse (
 #pragma intrinsic(_BitScanForward)
 #pragma intrinsic(_BitScanReverse)
 
+_Success_(return != 0)
+FORCEINLINE
+BOOLEAN
+_InlineBitScanForward64 (
+    _Out_ DWORD *Index,
+    _In_ DWORD64 Mask
+    )
+{
+    if (_BitScanForward(Index, (DWORD)Mask)) {
+        return 1;
+    }
+
+    if (_BitScanForward(Index, (DWORD)(Mask >> 32))) {
+        *Index += 32;
+        return 1;
+    }
+
+    return 0;
+}
+
+#define BitScanForward64 _InlineBitScanForward64
+
+_Success_(return != 0)
+FORCEINLINE
+BOOLEAN
+_InlineBitScanReverse64 (
+    _Out_ DWORD *Index,
+    _In_ DWORD64 Mask
+    )
+{
+    if (_BitScanReverse(Index, (DWORD)(Mask >> 32))) {
+        *Index += 32;
+        return 1;
+    }
+
+    if (_BitScanReverse(Index, (DWORD)Mask)) {
+        return 1;
+    }
+
+    return 0;
+}
+
+#define BitScanReverse64 _InlineBitScanReverse64
 
 #endif // !defined(_MANAGED)
 
@@ -10766,6 +10810,46 @@ typedef DWORD SECURITY_INFORMATION, *PSECURITY_INFORMATION;
 
 
 //
+// Base signing levels.
+//
+
+typedef BYTE  SE_SIGNING_LEVEL, *PSE_SIGNING_LEVEL;
+
+#define SE_SIGNING_LEVEL_UNCHECKED         0x00000000
+#define SE_SIGNING_LEVEL_UNSIGNED          0x00000001
+#define SE_SIGNING_LEVEL_ENTERPRISE        0x00000002
+#define SE_SIGNING_LEVEL_CUSTOM_1          0x00000003
+#define SE_SIGNING_LEVEL_AUTHENTICODE      0x00000004
+#define SE_SIGNING_LEVEL_CUSTOM_2          0x00000005
+#define SE_SIGNING_LEVEL_STORE             0x00000006
+#define SE_SIGNING_LEVEL_CUSTOM_3          0x00000007
+#define SE_SIGNING_LEVEL_ANTIMALWARE       SE_SIGNING_LEVEL_CUSTOM_3
+#define SE_SIGNING_LEVEL_MICROSOFT         0x00000008
+#define SE_SIGNING_LEVEL_CUSTOM_4          0x00000009
+#define SE_SIGNING_LEVEL_CUSTOM_5          0x0000000A
+#define SE_SIGNING_LEVEL_DYNAMIC_CODEGEN   0x0000000B
+#define SE_SIGNING_LEVEL_WINDOWS           0x0000000C
+#define SE_SIGNING_LEVEL_CUSTOM_7          0x0000000D
+#define SE_SIGNING_LEVEL_WINDOWS_TCB       0x0000000E
+#define SE_SIGNING_LEVEL_CUSTOM_6          0x0000000F
+
+//
+// Image signature types.
+//
+
+typedef enum _SE_IMAGE_SIGNATURE_TYPE
+{
+    SeImageSignatureNone = 0,
+    SeImageSignatureEmbedded,
+    SeImageSignatureCache,
+    SeImageSignatureCatalogCached,
+    SeImageSignatureCatalogNotCached,
+    SeImageSignatureCatalogHint,
+    SeImageSignaturePackageCatalog,
+} SE_IMAGE_SIGNATURE_TYPE, *PSE_IMAGE_SIGNATURE_TYPE;
+
+
+//
 // Learning Mode Types.
 //
 
@@ -11190,33 +11274,34 @@ typedef struct _JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION {
     DWORD LimitFlags;
 } JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION, *PJOBOBJECT_NOTIFICATION_LIMIT_INFORMATION;
 
-#define JOB_OBJECT_NOTIFICATION_LIMIT_INFORMATION_VERSION_3 3
-
-typedef struct _JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION_EX {
-    WORD   Version;
-    WORD   Reserved;
-    DWORD LimitFlags;
+typedef struct JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION_2 {
     DWORD64 IoReadBytesLimit;
     DWORD64 IoWriteBytesLimit;
     LARGE_INTEGER PerJobUserTimeLimit;
-    DWORD64 JobLowMemoryLimit;
-    DWORD64 JobHighMemoryLimit;
+    union {
+        DWORD64 JobHighMemoryLimit;
+        DWORD64 JobMemoryLimit;
+    } DUMMYUNIONNAME;
+
     union {
         JOBOBJECT_RATE_CONTROL_TOLERANCE RateControlTolerance;
         JOBOBJECT_RATE_CONTROL_TOLERANCE CpuRateControlTolerance;
-    } DUMMYUNIONNAME;
+    } DUMMYUNIONNAME2;
 
     union {
         JOBOBJECT_RATE_CONTROL_TOLERANCE_INTERVAL RateControlToleranceInterval;
         JOBOBJECT_RATE_CONTROL_TOLERANCE_INTERVAL
             CpuRateControlToleranceInterval;
-    } DUMMYUNIONNAME2;
+    } DUMMYUNIONNAME3;
 
+    DWORD LimitFlags;
     JOBOBJECT_RATE_CONTROL_TOLERANCE IoRateControlTolerance;
+    DWORD64 JobLowMemoryLimit;
     JOBOBJECT_RATE_CONTROL_TOLERANCE_INTERVAL IoRateControlToleranceInterval;
     JOBOBJECT_RATE_CONTROL_TOLERANCE NetRateControlTolerance;
     JOBOBJECT_RATE_CONTROL_TOLERANCE_INTERVAL NetRateControlToleranceInterval;
-} JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION_EX, *PJOBOBJECT_NOTIFICATION_LIMIT_INFORMATION_EX;
+} JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION_2;
+
 
 typedef struct _JOBOBJECT_LIMIT_VIOLATION_INFORMATION {
     DWORD LimitFlags;
@@ -11233,11 +11318,7 @@ typedef struct _JOBOBJECT_LIMIT_VIOLATION_INFORMATION {
     JOBOBJECT_RATE_CONTROL_TOLERANCE RateControlToleranceLimit;
 } JOBOBJECT_LIMIT_VIOLATION_INFORMATION, *PJOBOBJECT_LIMIT_VIOLATION_INFORMATION;
 
-#define JOB_OBJECT_LIMIT_VIOLATION_INFORMATION_VERSION_3 3
-
-typedef struct _JOBOBJECT_LIMIT_VIOLATION_INFORMATION_EX {
-    WORD   Version;
-    WORD   Reserved;
+typedef struct JOBOBJECT_LIMIT_VIOLATION_INFORMATION_2 {
     DWORD LimitFlags;
     DWORD ViolationLimitFlags;
     DWORD64 IoReadBytes;
@@ -11247,24 +11328,28 @@ typedef struct _JOBOBJECT_LIMIT_VIOLATION_INFORMATION_EX {
     LARGE_INTEGER PerJobUserTime;
     LARGE_INTEGER PerJobUserTimeLimit;
     DWORD64 JobMemory;
-    DWORD64 JobLowMemoryLimit;
-    DWORD64 JobHighMemoryLimit;
+    union {
+        DWORD64 JobHighMemoryLimit;
+        DWORD64 JobMemoryLimit;
+    } DUMMYUNIONNAME;
+
     union {
         JOBOBJECT_RATE_CONTROL_TOLERANCE RateControlTolerance;
         JOBOBJECT_RATE_CONTROL_TOLERANCE CpuRateControlTolerance;
-    } DUMMYUNIONNAME;
+    } DUMMYUNIONNAME2;
 
     union {
         JOBOBJECT_RATE_CONTROL_TOLERANCE RateControlToleranceLimit;
         JOBOBJECT_RATE_CONTROL_TOLERANCE CpuRateControlToleranceLimit;
-    } DUMMYUNIONNAME2;
+    } DUMMYUNIONNAME3;
 
+    DWORD64 JobLowMemoryLimit;
     JOBOBJECT_RATE_CONTROL_TOLERANCE IoRateControlTolerance;
     JOBOBJECT_RATE_CONTROL_TOLERANCE IoRateControlToleranceLimit;
     JOBOBJECT_RATE_CONTROL_TOLERANCE NetRateControlTolerance;
     JOBOBJECT_RATE_CONTROL_TOLERANCE NetRateControlToleranceLimit;
-} JOBOBJECT_LIMIT_VIOLATION_INFORMATION_EX,
-  *PJOBOBJECT_LIMIT_VIOLATION_INFORMATION_EX;
+} JOBOBJECT_LIMIT_VIOLATION_INFORMATION_2;
+
 
 typedef struct _JOBOBJECT_CPU_RATE_CONTROL_INFORMATION {
     DWORD ControlFlags;
@@ -11278,30 +11363,64 @@ typedef struct _JOBOBJECT_CPU_RATE_CONTROL_INFORMATION {
     } DUMMYUNIONNAME;
 } JOBOBJECT_CPU_RATE_CONTROL_INFORMATION, *PJOBOBJECT_CPU_RATE_CONTROL_INFORMATION;
 
-#define JOB_OBJECT_NET_RATE_CONTROL_INFORMATION_VERSION_1 1
+//
+// Control flags for network rate control.
+//
 
-typedef struct _JOBOBJECT_NET_RATE_CONTROL_INFORMATION {
-    WORD   Version;
-    BYTE  DscpTag;
-    BYTE  Reserved;
-    DWORD ControlFlags;
+typedef enum JOB_OBJECT_NET_RATE_CONTROL_FLAGS {
+    JOB_OBJECT_NET_RATE_CONTROL_ENABLE = 0x1,
+    JOB_OBJECT_NET_RATE_CONTROL_MAX_BANDWIDTH = 0x2,
+    JOB_OBJECT_NET_RATE_CONTROL_DSCP_TAG = 0x4,
+    JOB_OBJECT_NET_RATE_CONTROL_VALID_FLAGS = 0x7
+} JOB_OBJECT_NET_RATE_CONTROL_FLAGS;
+
+#if !defined(SORTPP_PASS) && !defined(MIDL_PASS) && !defined(RC_INVOKED)
+
+DEFINE_ENUM_FLAG_OPERATORS(JOB_OBJECT_NET_RATE_CONTROL_FLAGS)
+C_ASSERT(JOB_OBJECT_NET_RATE_CONTROL_VALID_FLAGS ==
+             (JOB_OBJECT_NET_RATE_CONTROL_ENABLE +
+              JOB_OBJECT_NET_RATE_CONTROL_MAX_BANDWIDTH +
+              JOB_OBJECT_NET_RATE_CONTROL_DSCP_TAG));
+
+#endif
+
+#define JOB_OBJECT_NET_RATE_CONTROL_MAX_DSCP_TAG 64
+
+typedef struct JOBOBJECT_NET_RATE_CONTROL_INFORMATION {
     DWORD64 MaxBandwidth;
-} JOBOBJECT_NET_RATE_CONTROL_INFORMATION, *PJOBOBJECT_NET_RATE_CONTROL_INFORMATION;
+    JOB_OBJECT_NET_RATE_CONTROL_FLAGS ControlFlags;
+    BYTE  DscpTag;
+} JOBOBJECT_NET_RATE_CONTROL_INFORMATION;
+
+
+//
+// Control flags for IO rate control.
+//
 
 // begin_ntosifs
 
-#define JOB_OBJECT_IO_RATE_CONTROL_INFORMATION_VERSION_1 1
+typedef enum JOB_OBJECT_IO_RATE_CONTROL_FLAGS {
+    JOB_OBJECT_IO_RATE_CONTROL_ENABLE = 0x1,
+    JOB_OBJECT_IO_RATE_CONTROL_VALID_FLAGS = JOB_OBJECT_IO_RATE_CONTROL_ENABLE
+} JOB_OBJECT_IO_RATE_CONTROL_FLAGS;
 
-typedef struct _JOBOBJECT_IO_RATE_CONTROL_INFORMATION {
-    WORD   Version;
-    WORD   VolumeNameLength;
-    DWORD ControlFlags;
+#if !defined(SORTPP_PASS) && !defined(MIDL_PASS) && !defined(RC_INVOKED)
+
+DEFINE_ENUM_FLAG_OPERATORS(JOB_OBJECT_IO_RATE_CONTROL_FLAGS)
+C_ASSERT(JOB_OBJECT_IO_RATE_CONTROL_VALID_FLAGS ==
+             JOB_OBJECT_IO_RATE_CONTROL_ENABLE);
+
+#endif
+
+typedef struct JOBOBJECT_IO_RATE_CONTROL_INFORMATION_NATIVE {
     LONG64 MaxIops;
     LONG64 MaxBandwidth;
     LONG64 ReservationIops;
     PWSTR VolumeName;
     DWORD BaseIoSize;
-} JOBOBJECT_IO_RATE_CONTROL_INFORMATION, *PJOBOBJECT_IO_RATE_CONTROL_INFORMATION;
+    JOB_OBJECT_IO_RATE_CONTROL_FLAGS ControlFlags;
+    WORD   VolumeNameLength;
+} JOBOBJECT_IO_RATE_CONTROL_INFORMATION_NATIVE;
 
 // end_ntosifs
 
@@ -11354,12 +11473,13 @@ typedef struct _JOBOBJECT_IO_RATE_CONTROL_INFORMATION {
 //
 #define JOB_OBJECT_LIMIT_PROCESS_MEMORY             0x00000100
 #define JOB_OBJECT_LIMIT_JOB_MEMORY                 0x00000200
+#define JOB_OBJECT_LIMIT_JOB_MEMORY_HIGH            JOB_OBJECT_LIMIT_JOB_MEMORY
 #define JOB_OBJECT_LIMIT_DIE_ON_UNHANDLED_EXCEPTION 0x00000400
 #define JOB_OBJECT_LIMIT_BREAKAWAY_OK               0x00000800
 #define JOB_OBJECT_LIMIT_SILENT_BREAKAWAY_OK        0x00001000
 #define JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE          0x00002000
 #define JOB_OBJECT_LIMIT_SUBSET_AFFINITY            0x00004000
-
+#define JOB_OBJECT_LIMIT_JOB_MEMORY_LOW             0x00008000
 
 //
 // Notification Limits
@@ -11428,32 +11548,6 @@ typedef struct _JOBOBJECT_IO_RATE_CONTROL_INFORMATION {
 #define JOB_OBJECT_CPU_RATE_CONTROL_MIN_MAX_RATE 0x10
 #define JOB_OBJECT_CPU_RATE_CONTROL_VALID_FLAGS 0x1f
 
-//
-// Control flags for network rate control.
-//
-
-#define JOB_OBJECT_NET_RATE_CONTROL_ENABLE 0x1
-#define JOB_OBJECT_NET_RATE_CONTROL_MAX_BANDWIDTH 0x2
-#define JOB_OBJECT_NET_RATE_CONTROL_DSCP_TAG 0x4
-#define JOB_OBJECT_NET_RATE_CONTROL_VALID_FLAGS \
-    (JOB_OBJECT_NET_RATE_CONTROL_ENABLE | \
-     JOB_OBJECT_NET_RATE_CONTROL_MAX_BANDWIDTH | \
-     JOB_OBJECT_NET_RATE_CONTROL_DSCP_TAG)
-
-#define JOB_OBJECT_NET_RATE_CONTROL_MAX_DSCP_TAG 64
-
-//
-// Control flags for IO rate control.
-//
-
-// begin_ntosifs
-
-#define JOB_OBJECT_IO_RATE_CONTROL_ENABLE 0x1
-
-// end_ntosifs
-
-#define JOB_OBJECT_IO_RATE_CONTROL_VALID_FLAGS 0x1
-
 
 typedef enum _JOBOBJECTINFOCLASS {
     JobObjectBasicAccountingInformation = 1,
@@ -11487,11 +11581,16 @@ typedef enum _JOBOBJECTINFOCLASS {
     JobObjectReserved12Information,
     JobObjectReserved13Information,
     JobObjectReserved14Information,
-    JobObjectVersionedInformationBaseClass,
-    JobObjectNetRateControlInformation = JobObjectVersionedInformationBaseClass,
-    JobObjectIoRateControlInformation,
-    JobObjectNotificationLimitInformationEx,
-    JobObjectLimitViolationInformationEx,
+    JobObjectNetRateControlInformation,
+    JobObjectNotificationLimitInformation2,
+    JobObjectLimitViolationInformation2,
+    JobObjectCreateSilo,
+    JobObjectSiloBasicInformation,
+    JobObjectSiloRootDirectory,
+    JobObjectServerSiloBasicInformation,
+    JobObjectServerSiloServiceSessionId,
+    JobObjectServerSiloInitialize,
+    JobObjectServerSiloDefaultCompartmentId,
     MaxJobObjectInfoClass
 } JOBOBJECTINFOCLASS;
 
@@ -11532,12 +11631,8 @@ typedef struct _SERVERSILO_BASIC_INFORMATION {
 
 typedef enum _SILOOBJECTINFOCLASS
 {
-    SiloObjectBasicInformation = 1,
-    SiloObjectBasicProcessIdList,
-    SiloObjectChildSiloIdList,
-    SiloObjectRootDirectory,
+    SiloObjectRootDirectory = 1,
     ServerSiloBasicInformation,
-    ServerSiloServiceSessionId,
     ServerSiloInitialize,
     ServerSiloDefaultCompartmentId,
     MaxSiloObjectInfoClass
@@ -11678,12 +11773,51 @@ _Struct_size_bytes_(Size) struct _SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX {
 
 typedef struct _SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX, *PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX;
 
+typedef enum _CPU_SET_INFORMATION_TYPE {
+    CpuSetInformation
+} CPU_SET_INFORMATION_TYPE, *PCPU_SET_INFORMATION_TYPE;
+
+_Struct_size_bytes_(Size) struct _SYSTEM_CPU_SET_INFORMATION {
+    DWORD Size;
+    CPU_SET_INFORMATION_TYPE Type;
+    union {
+        struct {
+            DWORD Id;
+            WORD   Group;
+            BYTE  LogicalProcessorIndex;
+            BYTE  CoreIndex;
+            BYTE  LastLevelCacheIndex;
+            BYTE  NumaNodeIndex;
+            BYTE  EfficiencyClass;
+            union {
+
+#define SYSTEM_CPU_SET_INFORMATION_PARKED 0x1
+#define SYSTEM_CPU_SET_INFORMATION_ALLOCATED 0x2
+#define SYSTEM_CPU_SET_INFORMATION_ALLOCATED_TO_TARGET_PROCESS 0x4
+#define SYSTEM_CPU_SET_INFORMATION_REALTIME 0x8
+
+                BYTE  AllFlags;
+                struct {
+                    BYTE  Parked : 1;
+                    BYTE  Allocated : 1;
+                    BYTE  AllocatedToTargetProcess : 1;
+                    BYTE  RealTime : 1;
+                    BYTE  ReservedFlags : 4;
+                } DUMMYSTRUCTNAME;
+            } DUMMYUNIONNAME2;
+            DWORD Reserved;
+            DWORD64 AllocationTag;
+        } CpuSet;
+    } DUMMYUNIONNAME;
+};
+
+typedef struct _SYSTEM_CPU_SET_INFORMATION SYSTEM_CPU_SET_INFORMATION, *PSYSTEM_CPU_SET_INFORMATION;
+
 // end_wdm end_ntminiport
 
 typedef struct _SYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION {
     DWORD64 CycleTime;
 } SYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION, *PSYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION;
-
 
 #define PROCESSOR_INTEL_386     386
 #define PROCESSOR_INTEL_486     486
@@ -11760,21 +11894,62 @@ typedef struct _SYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION {
 #define PF_RDTSCP_INSTRUCTION_AVAILABLE         32   
 
 //
-// Known extended CPU state feature IDs
+// Known extended CPU state feature BITs
+//
+// 0    x87
+// 1    SSE
+// 2    AVX
+// 3    BNDREGS (B0.LB-B3.LB B0.UB-B3.UB)
+// 4    BNDCSR  (BNDCFGU + BNDSTATUS)       Persistent
+// 5    KMASK   (KMASK [63:0][0-7])
+// 6    ZMM_H   (ZMM_H[511:256][0-15])
+// 7    ZMM     (ZMM[511:0][16-31])
+//
+// 62   LWP                                 Persistent
+//
+// 63   RZ0                                 Reserved
 //
 
 #define XSTATE_LEGACY_FLOATING_POINT        (0)
 #define XSTATE_LEGACY_SSE                   (1)
 #define XSTATE_GSSE                         (2)
 #define XSTATE_AVX                          (XSTATE_GSSE)
+#define XSTATE_MPX_BNDREGS                  (3)
+#define XSTATE_MPX_BNDCSR                   (4)
+#define XSTATE_AVX512_KMASK                 (5)
+#define XSTATE_AVX512_ZMM_H                 (6)
+#define XSTATE_AVX512_ZMM                   (7)
+#define XSTATE_LWP                          (62)
+#define MAXIMUM_XSTATE_FEATURES             (64)
+
+//
+// Known extended CPU state feature MASKs
+//
 
 #define XSTATE_MASK_LEGACY_FLOATING_POINT   (1ui64 << (XSTATE_LEGACY_FLOATING_POINT))
 #define XSTATE_MASK_LEGACY_SSE              (1ui64 << (XSTATE_LEGACY_SSE))
-#define XSTATE_MASK_LEGACY                  (XSTATE_MASK_LEGACY_FLOATING_POINT | XSTATE_MASK_LEGACY_SSE)
+#define XSTATE_MASK_LEGACY                  (XSTATE_MASK_LEGACY_FLOATING_POINT | \
+                                             XSTATE_MASK_LEGACY_SSE)
+
 #define XSTATE_MASK_GSSE                    (1ui64 << (XSTATE_GSSE))
 #define XSTATE_MASK_AVX                     (XSTATE_MASK_GSSE)
+#define XSTATE_MASK_MPX                     ((1ui64 << (XSTATE_MPX_BNDREGS)) | \
+                                             (1ui64 << (XSTATE_MPX_BNDCSR)))
 
-#define MAXIMUM_XSTATE_FEATURES             (64)
+#define XSTATE_MASK_AVX512                  ((1ui64 << (XSTATE_AVX512_KMASK)) | \
+                                             (1ui64 << (XSTATE_AVX512_ZMM_H)) | \
+                                             (1ui64 << (XSTATE_AVX512_ZMM)))
+
+#define XSTATE_MASK_LWP                     (1ui64 << (XSTATE_LWP))
+
+#define XSTATE_MASK_ALLOWED                 (XSTATE_MASK_LEGACY | \
+                                             XSTATE_MASK_AVX | \
+                                             XSTATE_MASK_MPX | \
+                                             XSTATE_MASK_AVX512 | \
+                                             XSTATE_MASK_LWP)
+
+#define XSTATE_MASK_PERSISTENT              ((1ui64 << (XSTATE_MPX_BNDCSR)) | \
+                                             XSTATE_MASK_LWP)
 
 //
 // Flags associated with compaction mask
@@ -11813,7 +11988,7 @@ typedef struct _XSTATE_CONFIGURATION {
     XSTATE_FEATURE Features[MAXIMUM_XSTATE_FEATURES];
 
     // Mask of all supervisor features
-    DWORD64 ThreadSupervisorFeatures;
+    DWORD64 EnabledSupervisorFeatures;
 
     // Mask of features that require start address to be 64 byte aligned
     DWORD64 AlignedFeatures;
@@ -11862,7 +12037,23 @@ typedef struct DECLSPEC_ALIGN(16) _MEMORY_BASIC_INFORMATION64 {
     DWORD     __alignment2;
 } MEMORY_BASIC_INFORMATION64, *PMEMORY_BASIC_INFORMATION64;
 
-#define CFG_CALL_TARGET_VALID (0x1) 
+//
+// Define flags for setting process CFG valid call target entries.
+//
+
+//
+// Call target should be made valid.  If not set, the call target is made
+// invalid.  Input flag.
+//
+
+#define CFG_CALL_TARGET_VALID           (0x00000001) 
+
+//
+// Call target has been successfully processed.  Used to report to the caller
+// how much progress has been made.  Output flag.
+//
+
+#define CFG_CALL_TARGET_PROCESSED       (0x00000002)
 
 typedef struct _CFG_CALL_TARGET_INFO {
     ULONG_PTR Offset;
@@ -11900,9 +12091,10 @@ typedef struct _CFG_CALL_TARGET_INFO {
 #define MEMORY_PARTITION_QUERY_ACCESS  0x0001
 #define MEMORY_PARTITION_MODIFY_ACCESS 0x0002
 
-#define MEMORY_PARTITION_ALL_ACCESS (STANDARD_RIGHTS_REQUIRED |  \
-                              MEMORY_PARTITION_QUERY_ACCESS |    \
-                              MEMORY_PARTITION_MODIFY_ACCESS)
+#define MEMORY_PARTITION_ALL_ACCESS (STANDARD_RIGHTS_REQUIRED |         \
+                                     SYNCHRONIZE |                      \
+                                     MEMORY_PARTITION_QUERY_ACCESS |    \
+                                     MEMORY_PARTITION_MODIFY_ACCESS)
 
 // end_access
 #define PAGE_NOACCESS          0x01     
@@ -12236,6 +12428,7 @@ typedef struct _REPARSE_GUID_DATA_BUFFER {
 #define IO_REPARSE_TAG_FILE_PLACEHOLDER         (0x80000015L)       
 #define IO_REPARSE_TAG_WOF                      (0x80000017L)       
 #define IO_REPARSE_TAG_WCI                      (0x80000018L)       
+#define IO_REPARSE_TAG_GLOBAL_REPARSE           (0x80000019L)       
 
 #if (_WIN32_WINNT >= _WIN32_WINNT_WIN8)
 
@@ -12948,6 +13141,13 @@ DEFINE_GUID( GUID_ENERGY_SAVER_SUBGROUP, 0xDE830923, 0xA562, 0x41AF, 0xA0, 0x86,
 //
 DEFINE_GUID( GUID_ENERGY_SAVER_BATTERY_THRESHOLD, 0xE69653CA, 0xCF7F, 0x4F05, 0xAA, 0x73, 0xCB, 0x83, 0x3F, 0xA9, 0x0A, 0xD4 );
 
+//
+// Defines a guid to specify display brightness weight when Energy Saver is engaged
+//
+// {13D09884-F74E-474A-A852-B6BDE8AD03A8}
+//
+DEFINE_GUID( GUID_ENERGY_SAVER_BRIGHTNESS, 0x13D09884, 0xF74E, 0x474A, 0xA8, 0x52, 0xB6, 0xBD, 0xE8, 0xAD, 0x03, 0xA8 );
+
 // System button actions
 // ---------------------
 //
@@ -13040,6 +13240,8 @@ DEFINE_GUID( GUID_BATTERY_DISCHARGE_FLAGS_3, 0x73613ccf, 0xdbfa, 0x4279, 0x83, 0
 // Specifies the subgroup which will contain all of the processor
 // settings for a single policy.
 //
+// {54533251-82be-4824-96c1-47b60b740d00}
+//
 DEFINE_GUID( GUID_PROCESSOR_SETTINGS_SUBGROUP, 0x54533251, 0x82BE, 0x4824, 0x96, 0xC1, 0x47, 0xB6, 0x0B, 0x74, 0x0D, 0x00 );
 
 //
@@ -13062,7 +13264,19 @@ DEFINE_GUID( GUID_PROCESSOR_THROTTLE_POLICY, 0x57027304, 0x4AF6, 0x4104, 0x92, 0
 // the processor frequency will never be throttled above 80 percent of its
 // maximum frequency by the system.
 //
+// {bc5038f7-23e0-4960-96da-33abaf5935ec}
+//
 DEFINE_GUID( GUID_PROCESSOR_THROTTLE_MAXIMUM, 0xBC5038F7, 0x23E0, 0x4960, 0x96, 0xDA, 0x33, 0xAB, 0xAF, 0x59, 0x35, 0xEC );
+
+//
+// Specifies a percentage (between 0 and 100) that the processor frequency
+// should never go above for Processor Power Efficiency Class 1.
+// For example, if this value is set to 80, then the processor frequency will 
+// never be throttled above 80 percent of its maximum frequency by the system.
+//
+// {bc5038f7-23e0-4960-96da-33abaf5935ed}
+//
+DEFINE_GUID( GUID_PROCESSOR_THROTTLE_MAXIMUM_1, 0xBC5038F7, 0x23E0, 0x4960, 0x96, 0xDA, 0x33, 0xAB, 0xAF, 0x59, 0x35, 0xED );
 
 //
 // Specifies a percentage (between 0 and 100) that the processor frequency
@@ -13070,7 +13284,19 @@ DEFINE_GUID( GUID_PROCESSOR_THROTTLE_MAXIMUM, 0xBC5038F7, 0x23E0, 0x4960, 0x96, 
 // processor frequency will never be throttled below 50 percent of its
 // maximum frequency by the system.
 //
+// {893dee8e-2bef-41e0-89c6-b55d0929964c}
+//
 DEFINE_GUID( GUID_PROCESSOR_THROTTLE_MINIMUM, 0x893DEE8E, 0x2BEF, 0x41E0, 0x89, 0xC6, 0xB5, 0x5D, 0x09, 0x29, 0x96, 0x4C );
+
+//
+// Specifies a percentage (between 0 and 100) that the processor frequency
+// should not drop below for Processor Power Efficiency Class 1.
+// For example, if this value is set to 50, then the processor frequency will
+// never be throttled below 50 percent of its maximum frequency by the system.
+//
+// {893dee8e-2bef-41e0-89c6-b55d0929964d}
+//
+DEFINE_GUID( GUID_PROCESSOR_THROTTLE_MINIMUM_1, 0x893DEE8E, 0x2BEF, 0x41E0, 0x89, 0xC6, 0xB5, 0x5D, 0x09, 0x29, 0x96, 0x4D );
 
 //
 // Specifies whether throttle states are allowed to be used even when
@@ -13105,12 +13331,30 @@ DEFINE_GUID( GUID_PROCESSOR_PERFSTATE_POLICY, 0xBBDC3814, 0x18E9, 0x4463, 0x8A, 
 DEFINE_GUID( GUID_PROCESSOR_PERF_INCREASE_THRESHOLD, 0x06cadf0e, 0x64ed, 0x448a, 0x89, 0x27, 0xce, 0x7b, 0xf9, 0x0e, 0xb3, 0x5d );
 
 //
+// Specifies the increase busy percentage threshold that must be met before
+// increasing the processor performance state for Processor Power Efficiency
+// Class 1.
+//
+// {06cadf0e-64ed-448a-8927-ce7bf90eb35e}
+//
+DEFINE_GUID( GUID_PROCESSOR_PERF_INCREASE_THRESHOLD_1, 0x06cadf0e, 0x64ed, 0x448a, 0x89, 0x27, 0xce, 0x7b, 0xf9, 0x0e, 0xb3, 0x5e );
+
+//
 // Specifies the decrease busy percentage threshold that must be met before
 // decreasing the processor performance state.
 //
 // {12a0ab44-fe28-4fa9-b3bd-4b64f44960a6}
 //
 DEFINE_GUID( GUID_PROCESSOR_PERF_DECREASE_THRESHOLD, 0x12a0ab44, 0xfe28, 0x4fa9, 0xb3, 0xbd, 0x4b, 0x64, 0xf4, 0x49, 0x60, 0xa6 );
+
+//
+// Specifies the decrease busy percentage threshold that must be met before
+// decreasing the processor performance state for Processor Power Efficiency
+// Class 1.
+//
+// {12a0ab44-fe28-4fa9-b3bd-4b64f44960a7}
+//
+DEFINE_GUID( GUID_PROCESSOR_PERF_DECREASE_THRESHOLD_1, 0x12a0ab44, 0xfe28, 0x4fa9, 0xb3, 0xbd, 0x4b, 0x64, 0xf4, 0x49, 0x60, 0xa7 );
 
 //
 // Specifies, either as ideal, single or rocket, how aggressive performance
@@ -13122,11 +13366,29 @@ DEFINE_GUID( GUID_PROCESSOR_PERF_INCREASE_POLICY, 0x465e1f50, 0xb610, 0x473a, 0x
 
 //
 // Specifies, either as ideal, single or rocket, how aggressive performance
+// states should be selected when increasing the processor performance state
+// for Processor Power Efficiency Class 1.
+//
+// {465E1F50-B610-473a-AB58-00D1077DC419}
+//
+DEFINE_GUID( GUID_PROCESSOR_PERF_INCREASE_POLICY_1, 0x465e1f50, 0xb610, 0x473a, 0xab, 0x58, 0x0, 0xd1, 0x7, 0x7d, 0xc4, 0x19);
+
+//
+// Specifies, either as ideal, single or rocket, how aggressive performance
 // states should be selected when decreasing the processor performance state.
 //
 // {40FBEFC7-2E9D-4d25-A185-0CFD8574BAC6}
 //
 DEFINE_GUID( GUID_PROCESSOR_PERF_DECREASE_POLICY, 0x40fbefc7, 0x2e9d, 0x4d25, 0xa1, 0x85, 0xc, 0xfd, 0x85, 0x74, 0xba, 0xc6);
+
+//
+// Specifies, either as ideal, single or rocket, how aggressive performance
+// states should be selected when decreasing the processor performance state for
+// Processor Power Efficiency Class 1.
+//
+// {40FBEFC7-2E9D-4d25-A185-0CFD8574BAC7}
+//
+DEFINE_GUID( GUID_PROCESSOR_PERF_DECREASE_POLICY_1, 0x40fbefc7, 0x2e9d, 0x4d25, 0xa1, 0x85, 0xc, 0xfd, 0x85, 0x74, 0xba, 0xc7);
 
 //
 // Specifies, in milliseconds, the minimum amount of time that must elapse after
@@ -13140,11 +13402,29 @@ DEFINE_GUID( GUID_PROCESSOR_PERF_INCREASE_TIME, 0x984cf492, 0x3bed, 0x4488, 0xa8
 //
 // Specifies, in milliseconds, the minimum amount of time that must elapse after
 // the last processor performance state change before increasing the processor
+// performance state for Processor Power Efficiency Class 1.
+//
+// {984CF492-3BED-4488-A8F9-4286C97BF5AB}
+//
+DEFINE_GUID( GUID_PROCESSOR_PERF_INCREASE_TIME_1, 0x984cf492, 0x3bed, 0x4488, 0xa8, 0xf9, 0x42, 0x86, 0xc9, 0x7b, 0xf5, 0xab);
+
+//
+// Specifies, in milliseconds, the minimum amount of time that must elapse after
+// the last processor performance state change before increasing the processor
 // performance state.
 //
 // {D8EDEB9B-95CF-4f95-A73C-B061973693C8}
 //
 DEFINE_GUID( GUID_PROCESSOR_PERF_DECREASE_TIME, 0xd8edeb9b, 0x95cf, 0x4f95, 0xa7, 0x3c, 0xb0, 0x61, 0x97, 0x36, 0x93, 0xc8);
+
+//
+// Specifies, in milliseconds, the minimum amount of time that must elapse after
+// the last processor performance state change before increasing the processor
+// performance state for Processor Power Efficiency Class 1.
+//
+// {D8EDEB9B-95CF-4f95-A73C-B061973693C9}
+//
+DEFINE_GUID( GUID_PROCESSOR_PERF_DECREASE_TIME_1, 0xd8edeb9b, 0x95cf, 0x4f95, 0xa7, 0x3c, 0xb0, 0x61, 0x97, 0x36, 0x93, 0xc9);
 
 //
 // Specifies the time, in milliseconds, that must expire before considering
@@ -13215,6 +13495,16 @@ DEFINE_GUID(GUID_PROCESSOR_PERF_AUTONOMOUS_ACTIVITY_WINDOW,
 
 #define PROCESSOR_PERF_MINIMUM_ACTIVITY_WINDOW 0
 #define PROCESSOR_PERF_MAXIMUM_ACTIVITY_WINDOW 1270000000
+
+//
+// Specifies whether the processor should perform duty cycling.
+//
+// {4E4450B3-6179-4e91-B8F1-5BB9938F81A1}
+DEFINE_GUID(GUID_PROCESSOR_DUTY_CYCLING, 
+0x4e4450b3, 0x6179, 0x4e91, 0xb8, 0xf1, 0x5b, 0xb9, 0x93, 0x8f, 0x81, 0xa1);
+
+#define PROCESSOR_DUTY_CYCLING_DISABLED 0
+#define PROCESSOR_DUTY_CYCLING_ENABLED 1
 
 //
 // Specifies if idle state promotion and demotion values should be scaled based
@@ -13308,11 +13598,27 @@ DEFINE_GUID( GUID_PROCESSOR_CORE_PARKING_DECREASE_POLICY, 0x71021b41, 0xc749, 0x
 DEFINE_GUID( GUID_PROCESSOR_CORE_PARKING_MAX_CORES, 0xea062031, 0x0e34, 0x4ff1, 0x9b, 0x6d, 0xeb, 0x10, 0x59, 0x33, 0x40, 0x28);
 
 //
+// Specifies, on a per processor group basis, the maximum number of cores that 
+// can be kept unparked for Processor Power Efficiency Class 1.
+//
+// {ea062031-0e34-4ff1-9b6d-eb1059334029}
+//
+DEFINE_GUID( GUID_PROCESSOR_CORE_PARKING_MAX_CORES_1, 0xea062031, 0x0e34, 0x4ff1, 0x9b, 0x6d, 0xeb, 0x10, 0x59, 0x33, 0x40, 0x29);
+
+//
 // Specifies, on a per processor group basis, the minimum number of cores that must be kept unparked.
 //
 // {0cc5b647-c1df-4637-891a-dec35c318583}
 //
 DEFINE_GUID( GUID_PROCESSOR_CORE_PARKING_MIN_CORES, 0x0cc5b647, 0xc1df, 0x4637, 0x89, 0x1a, 0xde, 0xc3, 0x5c, 0x31, 0x85, 0x83);
+
+//
+// Specifies, on a per processor group basis, the minimum number of cores that
+// must be kept unparked in Processor Power Efficiency Class 1.
+//
+// {0cc5b647-c1df-4637-891a-dec35c318584}
+//
+DEFINE_GUID( GUID_PROCESSOR_CORE_PARKING_MIN_CORES_1, 0x0cc5b647, 0xc1df, 0x4637, 0x89, 0x1a, 0xde, 0xc3, 0x5c, 0x31, 0x85, 0x84);
 
 //
 // Specifies, in milliseconds, the minimum amount of time a core must be parked before it can be unparked.
@@ -13394,6 +13700,14 @@ DEFINE_GUID( GUID_PROCESSOR_PARKING_CORE_OVERRIDE, 0xa55612aa, 0xf624, 0x42c6, 0
 DEFINE_GUID( GUID_PROCESSOR_PARKING_PERF_STATE, 0x447235c7, 0x6a8d, 0x4cc0, 0x8e, 0x24, 0x9e, 0xaf, 0x70, 0xb9, 0x6e, 0x2b);
 
 //
+// Specifies what performance state a processor should enter when first parked
+// for Processor Power Efficiency Class 1.
+//
+// {447235c7-6a8d-4cc0-8e24-9eaf70b96e2c}
+//
+DEFINE_GUID( GUID_PROCESSOR_PARKING_PERF_STATE_1, 0x447235c7, 0x6a8d, 0x4cc0, 0x8e, 0x24, 0x9e, 0xaf, 0x70, 0xb9, 0x6e, 0x2c);
+
+//
 // Specify the busy threshold that must be met when calculating the concurrency of a node's workload.
 //
 // {2430ab6f-a520-44a2-9601-f7f23b5134b1}
@@ -13423,6 +13737,14 @@ DEFINE_GUID( GUID_PROCESSOR_PARKING_DISTRIBUTION_THRESHOLD, 0x4bdaf4e9, 0xd103, 
 // {7d24baa7-0b84-480f-840c-1b0743c00f5f}
 //
 DEFINE_GUID( GUID_PROCESSOR_PERF_HISTORY, 0x7d24baa7, 0x0b84, 0x480f, 0x84, 0x0c, 0x1b, 0x07, 0x43, 0xc0, 0x0f, 0x5f);
+
+//
+// Specifies the number of perf time check intervals to average utility over in
+// Processor Power Efficiency Class 1.
+//
+// {7d24baa7-0b84-480f-840c-1b0743c00f60}
+//
+DEFINE_GUID( GUID_PROCESSOR_PERF_HISTORY_1, 0x7d24baa7, 0x0b84, 0x480f, 0x84, 0x0c, 0x1b, 0x07, 0x43, 0xc0, 0x0f, 0x60);
 
 //
 // Specifies the number of perf time check intervals to average utility over to
@@ -13472,13 +13794,28 @@ DEFINE_GUID( GUID_PROCESSOR_PERF_LATENCY_HINT, 0x0822df31, 0x9c83, 0x441c, 0xa0,
 DEFINE_GUID( GUID_PROCESSOR_PERF_LATENCY_HINT_PERF, 0x619b7505, 0x3b, 0x4e82, 0xb7, 0xa6, 0x4d, 0xd2, 0x9c, 0x30, 0x9, 0x71);
 
 //
-// Specifies the minimum number of unparked processors when a latency hint is
-// active.
+// Specifies the processor performance state in response to latency sensitivity 
+// hints for Processor Power Efficiency Class 1.
+//
+// {619b7505-003b-4e82-b7a6-4dd29c300972}
+//
+DEFINE_GUID( GUID_PROCESSOR_PERF_LATENCY_HINT_PERF_1, 0x619b7505, 0x3b, 0x4e82, 0xb7, 0xa6, 0x4d, 0xd2, 0x9c, 0x30, 0x9, 0x72);
+
+//
+// Specifies the minimum unparked processors when a latency hint is active
+// (in a percentage).
 //
 // {616cdaa5-695e-4545-97ad-97dc2d1bdd88}
 //
-
 DEFINE_GUID( GUID_PROCESSOR_LATENCY_HINT_MIN_UNPARK, 0x616cdaa5, 0x695e, 0x4545, 0x97, 0xad, 0x97, 0xdc, 0x2d, 0x1b, 0xdd, 0x88);
+
+//
+// Specifies the minimum unparked processors when a latency hint is active
+// for Processor Power Efficiency Class 1 (in a percentage).
+//
+// {616cdaa5-695e-4545-97ad-97dc2d1bdd89}
+//
+DEFINE_GUID( GUID_PROCESSOR_LATENCY_HINT_MIN_UNPARK_1, 0x616cdaa5, 0x695e, 0x4545, 0x97, 0xad, 0x97, 0xdc, 0x2d, 0x1b, 0xdd, 0x89);
 
 //
 // Specifies whether the core parking engine should distribute processor
@@ -13487,6 +13824,69 @@ DEFINE_GUID( GUID_PROCESSOR_LATENCY_HINT_MIN_UNPARK, 0x616cdaa5, 0x695e, 0x4545,
 // {e0007330-f589-42ed-a401-5ddb10e785d3}
 //
 DEFINE_GUID( GUID_PROCESSOR_DISTRIBUTE_UTILITY, 0xe0007330, 0xf589, 0x42ed, 0xa4, 0x01, 0x5d, 0xdb, 0x10, 0xe7, 0x85, 0xd3);
+
+//
+// GUIDS to control PPM settings on computer system with more than one
+// Processor Power Efficiency Classes (heterogeneous system).
+// -----------------
+//
+// Specifies the current active heterogeneous policy.
+//
+// {7f2f5cfa-f10c-4823-b5e1-e93ae85f46b5}
+//
+DEFINE_GUID( GUID_PROCESSOR_HETEROGENEOUS_POLICY, 0x7f2f5cfa, 0xf10c, 0x4823, 0xb5, 0xe1, 0xe9, 0x3a, 0xe8, 0x5f, 0x46, 0xb5);
+
+//
+// Specifies the number of perf check cycles required to decrease the number of
+// Processor Power Efficiency Class 1 processors.
+//
+// {7f2492b6-60b1-45e5-ae55-773f8cd5caec}
+//
+DEFINE_GUID( GUID_PROCESSOR_HETERO_DECREASE_TIME, 0x7f2492b6, 0x60b1, 0x45e5, 0xae, 0x55, 0x77, 0x3f, 0x8c, 0xd5, 0xca, 0xec);
+
+//
+// Specifies the number of perf check cycles required to increase the number of
+// Processor Power Efficiency Class 1 processors.
+//
+// {4009efa7-e72d-4cba-9edf-91084ea8cbc3}
+//
+DEFINE_GUID( GUID_PROCESSOR_HETERO_INCREASE_TIME, 0x4009efa7, 0xe72d, 0x4cba, 0x9e, 0xdf, 0x91, 0x08, 0x4e, 0xa8, 0xcb, 0xc3);
+
+//
+// Specifies the performance level (in units of Processor Power Efficiency
+// Class 0 processor performance) at which the number of Processor Power
+// Efficiency Class 1 processors is decreased.
+//
+// {f8861c27-95e7-475c-865b-13c0cb3f9d6b}
+//
+DEFINE_GUID( GUID_PROCESSOR_HETERO_DECREASE_THRESHOLD, 0xf8861c27, 0x95e7, 0x475c, 0x86, 0x5b, 0x13, 0xc0, 0xcb, 0x3f, 0x9d, 0x6b);
+
+//
+// Specifies the performance level (in units of Processor Power Efficiency
+// Class 0 processor performance) at which the number of Processor Power
+// Efficiency Class 1 processors is increased.
+//
+// {b000397d-9b0b-483d-98c9-692a6060cfbf}
+//
+DEFINE_GUID( GUID_PROCESSOR_HETERO_INCREASE_THRESHOLD, 0xb000397d, 0x9b0b, 0x483d, 0x98, 0xc9, 0x69, 0x2a, 0x60, 0x60, 0xcf, 0xbf);
+
+//
+// Specifies the performance target floor of a Processor Power Efficiency
+// Class 0 processor when the system unparks Processor Power Efficiency Class 1
+// processor(s).
+//
+// {fddc842b-8364-4edc-94cf-c17f60de1c80}
+//
+DEFINE_GUID( GUID_PROCESSOR_CLASS0_FLOOR_PERF, 0xfddc842b, 0x8364, 0x4edc, 0x94, 0xcf, 0xc1, 0x7f, 0x60, 0xde, 0x1c, 0x80);
+
+//
+// Specifies the initial performance target of a Processor Power Efficiency
+// Class 1 processor when the system makes a transition up from zero Processor
+// Power Efficiency Class 1 processors.
+//
+// {1facfc65-a930-4bc5-9f38-504ec097bbc0}
+//
+DEFINE_GUID( GUID_PROCESSOR_CLASS1_INITIAL_PERF, 0x1facfc65, 0xa930, 0x4bc5, 0x9f, 0x38, 0x50, 0x4e, 0xc0, 0x97, 0xbb, 0xc0);
 
 //
 // Specifies active vs passive cooling.  Although not directly related to
@@ -13755,13 +14155,11 @@ typedef enum {
     LT_LOWEST_LATENCY
 } LATENCY_TIME;
 
-#define DIAGNOSTIC_REASON_VERSION_V0                0
-#define DIAGNOSTIC_REASON_VERSION                   1
+#define DIAGNOSTIC_REASON_VERSION    0
 
 #define DIAGNOSTIC_REASON_SIMPLE_STRING             0x00000001
 #define DIAGNOSTIC_REASON_DETAILED_STRING           0x00000002
 #define DIAGNOSTIC_REASON_NOT_SPECIFIED             0x80000000
-#define DIAGNOSTIC_REASON_INVALID_FLAGS_V0          (~0x80000003)
 #define DIAGNOSTIC_REASON_INVALID_FLAGS             (~0x80000007)
 
 
@@ -13769,7 +14167,7 @@ typedef enum {
 // Defines for power request APIs
 //
 
-#define POWER_REQUEST_CONTEXT_VERSION               DIAGNOSTIC_REASON_VERSION_V0
+#define POWER_REQUEST_CONTEXT_VERSION               DIAGNOSTIC_REASON_VERSION
 
 #define POWER_REQUEST_CONTEXT_SIMPLE_STRING         DIAGNOSTIC_REASON_SIMPLE_STRING
 #define POWER_REQUEST_CONTEXT_DETAILED_STRING       DIAGNOSTIC_REASON_DETAILED_STRING
@@ -14727,7 +15125,8 @@ typedef struct {
 # else
     // HiberFile
     BYTE                HiberFileType;
-    BYTE                spare3[7];
+    BOOLEAN             AoAcConnectivitySupported;
+    BYTE                spare3[6];
 #endif // (NTDDI_VERSION < NTDDI_WINTHRESHOLD)
 
     // System Battery
@@ -17825,6 +18224,10 @@ typedef struct _RTL_BARRIER {
 #define FAST_FAIL_INVALID_BALANCED_TREE        29
 #define FAST_FAIL_INVALID_NEXT_THREAD          30
 #define FAST_FAIL_GUARD_ICALL_CHECK_SUPPRESSED 31         // Telemetry, nonfatal
+#define FAST_FAIL_APCS_DISABLED                32
+#define FAST_FAIL_INVALID_IDLE_STATE           33
+#define FAST_FAIL_MRDATA_PROTECTION_FAILURE    34
+#define FAST_FAIL_UNEXPECTED_HEAP_EXCEPTION    35
 #define FAST_FAIL_INVALID_FAST_FAIL_CODE       0xFFFFFFFF
 
 #if _MSC_VER >= 1610
@@ -18581,13 +18984,9 @@ typedef const struct _ACTIVATION_CONTEXT_COMPATIBILITY_INFORMATION * PCACTIVATIO
 
 #endif
 
-#define MAX_SUPPORTED_OS_NUM    (4)
-#define INVALID_OS_COUNT        (0xffff)
-
 typedef struct _SUPPORTED_OS_INFO {
-    WORD   OsCount;
-    WORD   MitigationExist;
-    WORD   OsList[MAX_SUPPORTED_OS_NUM];
+    WORD   MajorVersion;
+    WORD   MinorVersion;
 } SUPPORTED_OS_INFO, *PSUPPORTED_OS_INFO;
 
 typedef struct _ACTIVATION_CONTEXT_DETAILED_INFORMATION {
@@ -18638,39 +19037,61 @@ typedef struct _PERFORMANCE_DATA {
 
 #if (NTDDI_VERSION >= NTDDI_WINTHRESHOLD)
 
-#define DEVICEFAMILYDEVICEFORM_KEY           L"\\Registry\\Machine\\Software\\Microsoft\\Windows NT\\CurrentVersion\\OEM"
-#define DEVICEFAMILYDEVICEFORM_VALUE         L"DeviceForm"
+#define UNIFIEDBUILDREVISION_KEY                        L"\\Registry\\Machine\\Software\\Microsoft\\Windows NT\\CurrentVersion"
+#define UNIFIEDBUILDREVISION_VALUE                      L"UBR"
+#define UNIFIEDBUILDREVISION_MIN                        0x00000000
+                                                        
+#define DEVICEFAMILYDEVICEFORM_KEY                      L"\\Registry\\Machine\\Software\\Microsoft\\Windows NT\\CurrentVersion\\OEM"
+#define DEVICEFAMILYDEVICEFORM_VALUE                    L"DeviceForm"
+                                                        
+#define DEVICEFAMILYINFOENUM_UAP                        0x00000000
+#define DEVICEFAMILYINFOENUM_WINDOWS_8X                 0x00000001
+#define DEVICEFAMILYINFOENUM_WINDOWS_PHONE_8X           0x00000002
+#define DEVICEFAMILYINFOENUM_DESKTOP                    0x00000003
+#define DEVICEFAMILYINFOENUM_MOBILE                     0x00000004
+#define DEVICEFAMILYINFOENUM_XBOX                       0x00000005
+#define DEVICEFAMILYINFOENUM_TEAM                       0x00000006
+#define DEVICEFAMILYINFOENUM_IOT                        0x00000007
+#define DEVICEFAMILYINFOENUM_IOT_HEADLESS               0x00000008
+#define DEVICEFAMILYINFOENUM_SERVER                     0x00000009
+#define DEVICEFAMILYINFOENUM_HOLOGRAPHIC                0x0000000A
+#define DEVICEFAMILYINFOENUM_XBOXSRA                    0x0000000B
+#define DEVICEFAMILYINFOENUM_XBOXERA                    0x0000000C
+                                                        
+#define DEVICEFAMILYINFOENUM_MAX                        0x0000000C
+                                                        
+#define DEVICEFAMILYDEVICEFORM_UNKNOWN                  0x00000000
+#define DEVICEFAMILYDEVICEFORM_PHONE                    0x00000001
+#define DEVICEFAMILYDEVICEFORM_TABLET                   0x00000002
+#define DEVICEFAMILYDEVICEFORM_DESKTOP                  0x00000003
+#define DEVICEFAMILYDEVICEFORM_NOTEBOOK                 0x00000004
+#define DEVICEFAMILYDEVICEFORM_CONVERTIBLE              0x00000005
+#define DEVICEFAMILYDEVICEFORM_DETACHABLE               0x00000006
+#define DEVICEFAMILYDEVICEFORM_ALLINONE                 0x00000007
+#define DEVICEFAMILYDEVICEFORM_STICKPC                  0x00000008
+#define DEVICEFAMILYDEVICEFORM_PUCK                     0x00000009
+#define DEVICEFAMILYDEVICEFORM_LARGESCREEN              0x0000000A
+#define DEVICEFAMILYDEVICEFORM_HMD                      0x0000000B
+#define DEVICEFAMILYDEVICEFORM_INDUSTRY_HANDHELD        0x0000000C
+#define DEVICEFAMILYDEVICEFORM_INDUSTRY_TABLET          0x0000000D
+#define DEVICEFAMILYDEVICEFORM_BANKING                  0x0000000E
+#define DEVICEFAMILYDEVICEFORM_BUILDING_AUTOMATION      0x0000000F
+#define DEVICEFAMILYDEVICEFORM_DIGITAL_SIGNAGE          0x00000010
+#define DEVICEFAMILYDEVICEFORM_GAMING                   0x00000011
+#define DEVICEFAMILYDEVICEFORM_HOME_AUTOMATION          0x00000012
+#define DEVICEFAMILYDEVICEFORM_INDUSTRIAL_AUTOMATION    0x00000013
+#define DEVICEFAMILYDEVICEFORM_KIOSK                    0x00000014
+#define DEVICEFAMILYDEVICEFORM_MAKER_BOARD              0x00000015
+#define DEVICEFAMILYDEVICEFORM_MEDICAL                  0x00000016
+#define DEVICEFAMILYDEVICEFORM_NETWORKING               0x00000017
+#define DEVICEFAMILYDEVICEFORM_POINT_OF_SERVICE         0x00000018
+#define DEVICEFAMILYDEVICEFORM_PRINTING                 0x00000019
+#define DEVICEFAMILYDEVICEFORM_THIN_CLIENT              0x0000001A
+#define DEVICEFAMILYDEVICEFORM_TOY                      0x0000001B
+#define DEVICEFAMILYDEVICEFORM_VENDING                  0x0000001C
+#define DEVICEFAMILYDEVICEFORM_INDUSTRY_OTHER           0x0000001D
 
-#define DEVICEFAMILYINFOENUM_UAP              0x00000000
-#define DEVICEFAMILYINFOENUM_WINDOWS_8X       0x00000001
-#define DEVICEFAMILYINFOENUM_WINDOWS_PHONE_8X 0x00000002
-#define DEVICEFAMILYINFOENUM_DESKTOP          0x00000003
-#define DEVICEFAMILYINFOENUM_MOBILE           0x00000004
-#define DEVICEFAMILYINFOENUM_XBOX             0x00000005
-#define DEVICEFAMILYINFOENUM_TEAM             0x00000006
-#define DEVICEFAMILYINFOENUM_IOT              0x00000007
-#define DEVICEFAMILYINFOENUM_IOT_HEADLESS     0x00000008
-#define DEVICEFAMILYINFOENUM_SERVER           0x00000009
-#define DEVICEFAMILYINFOENUM_HOLOGRAPHIC      0x0000000A
-#define DEVICEFAMILYINFOENUM_XBOXSRA          0x0000000B
-#define DEVICEFAMILYINFOENUM_XBOXERA          0x0000000C
-
-#define DEVICEFAMILYINFOENUM_MAX              0x0000000C
-
-#define DEVICEFAMILYDEVICEFORM_UNKNOWN        0x00000000
-#define DEVICEFAMILYDEVICEFORM_PHONE          0x00000001
-#define DEVICEFAMILYDEVICEFORM_TABLET         0x00000002
-#define DEVICEFAMILYDEVICEFORM_DESKTOP        0x00000003
-#define DEVICEFAMILYDEVICEFORM_NOTEBOOK       0x00000004
-#define DEVICEFAMILYDEVICEFORM_CONVERTIBLE    0x00000005
-#define DEVICEFAMILYDEVICEFORM_DETACHABLE     0x00000006
-#define DEVICEFAMILYDEVICEFORM_ALLINONE       0x00000007
-#define DEVICEFAMILYDEVICEFORM_STICKPC        0x00000008
-#define DEVICEFAMILYDEVICEFORM_PUCK           0x00000009
-#define DEVICEFAMILYDEVICEFORM_LARGESCREEN    0x0000000A
-#define DEVICEFAMILYDEVICEFORM_HMD            0x0000000B
-
-#define DEVICEFAMILYDEVICEFORM_MAX            0x0000000B
+#define DEVICEFAMILYDEVICEFORM_MAX                      0x0000001D
 
 VOID
 NTAPI
