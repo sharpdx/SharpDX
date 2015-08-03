@@ -24,6 +24,8 @@
     <Compile Include="CommandSink1.cs" />
     <Compile Include="CommandSink1Native.cs" />
     <Compile Include="CommandSink1Shadow.cs" />
+    <Compile Include="CommandSink2.cs" />
+    <Compile Include="CommandSink2Native.cs" />
     <Compile Include="ComputeInformation.cs" />
     <Compile Include="AnalysisTransform.cs" />
     <Compile Include="CommandSink.cs" />
@@ -34,6 +36,8 @@
     <Compile Include="ComputeTransformShadow.cs" />
     <Compile Include="D2D1.cs" />
     <Compile Include="Device1.cs" />
+    <Compile Include="Device2.cs" />
+    <Compile Include="DeviceContext2.cs" />
     <Compile Include="DeviceContext1.cs" />
     <Compile Include="DirectWrite\Factory1.cs" />
     <Compile Include="DirectWrite\LocalFontFileLoader.cs" />
