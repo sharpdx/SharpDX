@@ -40,6 +40,9 @@
   <include file="d2d1effectauthor.h" attach="true" />
   <include file="d2d1_2.h" attach="true" />
   <include file="d2d1effects_1.h" attach="true" />
+  <include file="d2d1effectauthor_1.h" attach="true" />
+  <include file="d2d1_3.h" attach="true" />
+  <include file="d2d1effects_2.h" attach="true" />
 
   <naming />
   
@@ -50,9 +53,12 @@
     <context>d2derr</context>
     <context>d2d1_1</context>
     <context>d2d1_2</context>
+    <context>d2d1_3</context>
     <context>d2d1effects</context>
     <context>d2d1effects_1</context>
+    <context>d2d1effects_2</context>
     <context>d2d1effectauthor</context>
+    <context>d2d1effectauthor_1</context>
     
     <const from-guid="CLSID_D2D1([A-Z].*)" class="SharpDX.Direct2D1.Effect" type="System.Guid" name="$1">new System.Guid("$1")</const>
     <const from-guid="CLSID_D2D12DAffineTransform" class="SharpDX.Direct2D1.Effect" type="System.Guid" name="AffineTransform2D">new System.Guid("$1")</const>
@@ -90,9 +96,12 @@
     <context>d2d1</context>
     <context>d2d1_1</context>
     <context>d2d1_2</context>
+    <context>d2d1_3</context>
     <context>d2d1effects</context>
     <context>d2d1effects_1</context>
+    <context>d2d1effects_2</context>
     <context>d2d1effectauthor</context>
+    <context>d2d1effectauthor_1</context>
 
     <!--
     // *****************************************************************
@@ -190,6 +199,27 @@
 
     <map enum="D2D1_YCBCR_INTERPOLATION_MODE" name="YcbcrInterpolationMode" />
 
+    <!-- Added in Direct2D1.3 -->
+    <map enum="D2D1_CHROMAKEY_PROP" name="ChromakeyProperty" />
+    <map enum="D2D1_CONTRAST_PROP" name="ContrastProperty" />
+    <map enum="D2D1_EDGEDETECTION_MODE" name="EdgeDetectionMode" />
+    <map enum="D2D1_EDGEDETECTION_PROP" name="EdgeDetectionProperty" />
+    <map enum="D2D1_EMBOSS_PROP" name="EmbossProperty" />
+    <map enum="D2D1_EXPOSURE_PROP" name="ExposureProperty" />
+    <map enum="D2D1_HIGHLIGHTSANDSHADOWS_INPUT_GAMMA" name="HighlightSandShadowsInputGamma" />
+    <map enum="D2D1_HIGHLIGHTSANDSHADOWS_PROP" name="HighlightSandShadowsProperty" />
+    <map enum="D2D1_HUETORGB_INPUT_COLOR_SPACE" name="HueToRgbInputColorSpace" />
+    <map enum="D2D1_HUETORGB_PROP" name="HueToRgbProperty" />
+    <map enum="D2D1_LOOKUPTABLE3D_PROP" name="LookupTable3DProperty" />
+    <map enum="D2D1_POSTERIZE_PROP" name="PosterizeProperty" />
+    <map enum="D2D1_RGBTOHUE_OUTPUT_COLOR_SPACE" name="RgbToHueOutputColorSpace" />
+    <map enum="D2D1_RGBTOHUE_PROP" name="RgbToHueProperty" />
+    <map enum="D2D1_SEPIA_PROP" name="SepiaProperty" />
+    <map enum="D2D1_SHARPEN_PROP" name="SharpenProperty" />
+    <map enum="D2D1_STRAIGHTEN_PROP" name="StraightenProperty" />
+    <map enum="D2D1_TEMPERATUREANDTINT_PROP" name="TemperatureAndTintProperty" />
+    <map enum="D2D1_VIGNETTE_PROP" name="VignetteProperty" />
+      
     <!--
     // *****************************************************************
     // D2D1 Structures
@@ -254,7 +284,7 @@
     <map method="ID2D1Factory::GetDesktopDpi" visibility="internal" />
     <map method="ID2D(\d+)Factory\d?::Create.*" visibility="internal" />
 
-    <map param="ID2D1Factory[12]::CreateDevice::d2dDevice1?" attribute="out fast"/>
+    <map param="ID2D1Factory[123]::CreateDevice::d2dDevice[123]?" attribute="out fast"/>
     <map param="ID2D1Factory1::CreateStrokeStyle::strokeStyle" attribute="out fast"/>
     <map param="ID2D1Factory1::CreatePathGeometry::pathGeometry" attribute="out fast"/>
     <map param="ID2D1Factory1::CreateDrawingStateBlock::drawingStateBlock" attribute="out fast"/>
@@ -277,7 +307,7 @@
     <map param="ID2D(\d+)Factory::CreateWicBitmapRenderTarget::renderTarget" attribute="out fast"/>
 
     <map method="ID2D\dDevice1?::Create.*" visibility="internal"/>
-    <map param="ID2D\dDevice1?::CreateDeviceContext::deviceContext1?" attribute="out fast"/>
+    <map param="ID2D\dDevice[12]?::CreateDeviceContext::deviceContext[12]?" attribute="out fast"/>
     <map param="ID2D\dDevice::CreatePrintControl::printControl" attribute="out fast"/>
 
     <map method="ID2D\dDeviceContext1?::Create.*" visibility="internal"/>
@@ -333,6 +363,7 @@
     <map method="ID2D1RenderTarget::(.*)Dpi" visibility="internal" />
     <map method="ID2D(\d+)Mesh::Open" visibility="internal" name="Open_" />
     <map interface="ID2D(\d+).*Sink1?" callback="true" callback-dual="true" />
+    <map interface="ID2D(\d+).*Sink2?" callback="true" callback-dual="true" />
 
     <!--<map param="ID2D1DeviceContext::CreateColorContextFromWicColorContext::wicColorContext" type="IUnknown"/>
     <map param="ID2D1DeviceContext::CreateColorContextFromWicColorContext::colorContext" type="IUnknown"/>-->
