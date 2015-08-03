@@ -105,7 +105,7 @@
     <map enum-item="D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS" name="Constant32Bits"/>
     <map enum-item="D3D_ROOT_SIGNATURE_VERSION(.*)" name-tmp="Version$1"/>
     <map enum-item="D3D12_SHADER_MIN_PRECISION_SUPPORT_(\d*)_BIT" name-tmp="Bit$1"/>
-    
+    <map enum-item="D3D12_DSV_FLAG(.*)" name-tmp="$1"/>
     <!--
     // *****************************************************************
     // D3D12 Struct
