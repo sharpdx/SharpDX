@@ -71,7 +71,7 @@ namespace SharpDX.Direct3D12
             TextureLayout layout = TextureLayout.Unknown,
             long alignment = 0)
         {
-            return new ResourceDescription(ResourceDimension.Texture1D, alignment, width, height, arraySize, mipLevels, format, sampleCount, sampleQuality, layout, flags);
+            return new ResourceDescription(ResourceDimension.Texture2D, alignment, width, height, arraySize, mipLevels, format, sampleCount, sampleQuality, layout, flags);
         }
 
         public static ResourceDescription Texture3D(DXGI.Format format,
@@ -83,7 +83,7 @@ namespace SharpDX.Direct3D12
             TextureLayout layout = TextureLayout.Unknown,
             long alignment = 0)
         {
-            return new ResourceDescription(ResourceDimension.Texture1D, alignment, width, height, depth, mipLevels, format, 1, 0, layout, flags);
+            return new ResourceDescription(ResourceDimension.Texture3D, alignment, width, height, depth, mipLevels, format, 1, 0, layout, flags);
         }
     }
 }
