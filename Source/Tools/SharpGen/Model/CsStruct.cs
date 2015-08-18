@@ -43,21 +43,18 @@ namespace SharpGen.Model
             IsIn = true;
             IsOut = false; 
             CppElement = cppStruct;
-            // Align was not overloaded by MappingRule tag, then we can take the default value
-            if (cppStruct != null &&  Align == 0) 
-                Align = cppStruct.Align;
         }
 
         protected override void UpdateFromTag(MappingRule tag)
         {
             base.UpdateFromTag(tag);
-            Align = tag.StructPack != null ? tag.StructPack.Value : Align;
-            HasMarshalType = tag.StructHasNativeValueType != null ? tag.StructHasNativeValueType.Value : false;
-            GenerateAsClass = tag.StructToClass != null ? tag.StructToClass.Value : false;
-            HasCustomMarshal = tag.StructCustomMarshal != null ? tag.StructCustomMarshal.Value : false;
-            IsStaticMarshal = tag.IsStaticMarshal != null ? tag.IsStaticMarshal.Value : false;
-            HasCustomNew = tag.StructCustomNew != null ? tag.StructCustomNew.Value : false;
-            IsOut = tag.StructForceMarshalToToBeGenerated != null ? tag.StructForceMarshalToToBeGenerated.Value : false;
+            Align = tag.StructPack ?? 0;
+            HasMarshalType = tag.StructHasNativeValueType ?? false;
+            GenerateAsClass = tag.StructToClass ?? false;
+            HasCustomMarshal = tag.StructCustomMarshal ?? false;
+            IsStaticMarshal = tag.IsStaticMarshal ?? false;
+            HasCustomNew = tag.StructCustomNew ?? false;
+            IsOut = tag.StructForceMarshalToToBeGenerated ?? false;
 
             // Force a marshalling if a struct need to be treated as a class)
             if (GenerateAsClass)
