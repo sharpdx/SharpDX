@@ -111,8 +111,16 @@
     // D3D12 Struct
     // *****************************************************************
     -->
+    
+    <map field="D3D12_.*::p([A-Z].*)" name="$1Pointer" visibility="public"/>
 
+    <map field="D3D12_MESSAGE::pDescription" name="Description" visibility="public"/>
+    
     <map struct="D3D12_.*_PIPELINE_STATE_DESC" struct-to-class="true" marshalto="true"/>
+    <map struct="D3D12_COMMAND_SIGNATURE_DESC" struct-to-class="true" marshalto="true"/>
+    <map field="D3D12_COMMAND_SIGNATURE_DESC::NumArgumentDescs" visibility="internal"/>
+    <map field="D3D12_COMMAND_SIGNATURE_DESC::pArgumentDescs" visibility="internal"/>
+
     <map field="D3D12_.*_PIPELINE_STATE_DESC::p([A-Z].*)" name="$1Pointer" visibility="private"/>
     <map field="D3D12_GRAPHICS_PIPELINE_STATE_DESC::RTVFormats" name="RenderTargetFormats"/>
     <map field="D3D12_GRAPHICS_PIPELINE_STATE_DESC::DSVFormat" name="DepthStencilFormat"/>
@@ -173,6 +181,7 @@
     <map struct="D3D12_CACHED_PIPELINE_STATE::pCachedBlob" name="CachedBlobPointer"/>
 
     <map interface="ID3D12Debug" name="DebugInterface"/>
+    <remove struct="D3D12_MEMCPY_DEST"/>
 
     <!--
     // *****************************************************************
@@ -250,6 +259,7 @@
     
     <map method="ID3D12Device::CreateCommandSignature" visibility="private"/>
     <map param="ID3D12Device::CreateCommandSignature::ppvCommandSignature" attribute="out" type="ID3D12CommandSignature" return="true"/>
+    <map param="ID3D12Device::CreateCommandSignature::pDesc" type="void"/>
     
     <map method="ID3D12Device::CreateHeap" visibility="private"/>
     <map param="ID3D12Device::CreateHeap::ppvHeap" attribute="out" type="ID3D12Heap" return="true"/>
@@ -286,7 +296,7 @@
     <map param="ID3D12Resource::Map::pReadRange" default="null"/>
     <map param="ID3D12Resource::Unmap::pWrittenRange" default="null"/>
     <map param="ID3D12Resource::Map::ppData" attribute="out" return="true"/>
-    
+        
     <!--
     // *****************************************************************
     // D3D12 Functions

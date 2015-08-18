@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharpDX.Direct3D12
 {
@@ -13,11 +9,11 @@ namespace SharpDX.Direct3D12
         [StructLayout(LayoutKind.Sequential, Pack = 0)]
         internal partial struct __Native
         {
-            public SharpDX.Direct3D12.MessageCategory Category;
-            public SharpDX.Direct3D12.MessageSeverity Severity;
-            public SharpDX.Direct3D12.MessageId Id;
-            public System.IntPtr PDescription;
-            public SharpDX.PointerSize DescriptionByteLength;
+            public MessageCategory Category;
+            public MessageSeverity Severity;
+            public MessageId Id;
+            public IntPtr PDescription;
+            public PointerSize DescriptionByteLength;
         }
 
         // Method to marshal from native to managed struct

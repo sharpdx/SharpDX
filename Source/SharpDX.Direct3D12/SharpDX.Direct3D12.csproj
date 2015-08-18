@@ -16,6 +16,7 @@
     <Compile Include="BlendStateDescription.cs" />
     <Compile Include="CommandQueue.cs" />
     <Compile Include="CommandQueueDescription.cs" />
+    <Compile Include="CommandSignatureDescription.cs" />
     <Compile Include="CpuDescriptorHandle.cs" />
     <Compile Include="DebugController.cs" />
     <Compile Include="GpuDescriptorHandle.cs" />

@@ -19,6 +19,8 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using SharpDX.Direct3D;
 
 namespace SharpDX.Direct3D12
@@ -34,38 +36,40 @@ namespace SharpDX.Direct3D12
         //    public int Flags;
         //}
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RootSignatureDescription"/> class.
+        /// </summary>
         public RootSignatureDescription() : this(RootSignatureFlags.None)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RootSignatureDescription"/> class.
+        /// </summary>
+        /// <param name="flags">The flags.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <param name="samplers">The samplers.</param>
         public RootSignatureDescription(RootSignatureFlags flags, RootParameter[] parameters = null, StaticSamplerDescription[] samplers = null)
         {
-            Parameters = new RootParameterArray(parameters);
-            StaticSamplers = new StaticSamplerArray(samplers);
-            Flags = flags;
-        }
-
-        private RootSignatureDescription(int parameterCount, IntPtr nativeParameters, int samplerCount, IntPtr nativeSamplers, RootSignatureFlags flags)
-        {
-            Parameters = new RootParameterArray(parameterCount, nativeParameters);
-            StaticSamplers = new StaticSamplerArray(samplerCount, nativeSamplers);
+            Parameters = parameters;
+            StaticSamplers = samplers;
             Flags = flags;
         }
 
         /// <summary>
         /// The parameters
         /// </summary>
-        public RootParameterArray Parameters;
+        public RootParameter[] Parameters { get; set; }
 
         /// <summary>
         /// The static samplers.
         /// </summary>
-        public StaticSamplerArray StaticSamplers;
+        public StaticSamplerDescription[] StaticSamplers { get; set; }
 
         /// <summary>
         /// The flags
         /// </summary>
-        public RootSignatureFlags Flags;
+        public RootSignatureFlags Flags { get; set; }
 
         /// <summary>
         /// Serializes this description to a blob.
@@ -92,39 +96,60 @@ namespace SharpDX.Direct3D12
         {
             Blob error;
             errorText = null;
-            fixed(void* pParameters = Parameters.managedParameters)
-            fixed(void *pSamplers = StaticSamplers.managedParameters)
-            {
-                __Native native;
-                native.ParameterCount = Parameters.Count;
-                native.ParametersPointer = Parameters.nativeParameters;
-                if(Parameters.managedParameters != null)
-                {
-                    native.ParametersPointer = (IntPtr)pParameters;
-                }
-                native.StaticSamplerCount = StaticSamplers.Count;
-                native.StaticSamplerPointer = StaticSamplers.nativeParameters;
-                if(StaticSamplers.managedParameters != null)
-                {
-                    native.StaticSamplerPointer = (IntPtr)pSamplers;
-                }
-                native.Flags = Flags;
-                var hresult = D3D12.SerializeRootSignature(new IntPtr(&native), RootSignatureVersion.Version1, out result, out error);
-                // TODO: check hresult or just rely on error?
-                if(error != null)
-                {
-                    errorText = Utilities.BlobToString(error);
-                }
-                return hresult;
-            }
-        }
 
-        internal static RootSignatureDescription FromPointer(IntPtr nativePtr)
-        {
-            unsafe
+            int length = 0;
+            var rootParameters = (RootParameter.__Native* )0;
+            var pinnedTables = new List<GCHandle>();
+            try
             {
-                var pNative = (__Native*)nativePtr;
-                return new RootSignatureDescription(pNative->ParameterCount, pNative->ParametersPointer, pNative->StaticSamplerCount, pNative->StaticSamplerPointer, pNative->Flags);
+                if(Parameters != null)
+                {
+                    length = Parameters.Length;
+                    rootParameters = (RootParameter.__Native*)Utilities.AllocateMemory(length * Utilities.SizeOf<RootParameter.__Native>());
+                    for (int i = 0; i < length; i++)
+                    {
+                        rootParameters[i] = Parameters[i].native;
+                        if(rootParameters[i].ParameterType == RootParameterType.DescriptorTable && Parameters[i].DescriptorTable != null)
+                        {
+                            var handle = GCHandle.Alloc(Parameters[i].DescriptorTable, GCHandleType.Pinned);
+                            pinnedTables.Add(handle);
+                            rootParameters[i].Union.DescriptorTable.DescriptorRangeCount = Parameters[i].DescriptorTable.Length;
+                            rootParameters[i].Union.DescriptorTable.DescriptorRangesPointer = handle.AddrOfPinnedObject();
+                        }
+                    }
+                }
+
+                fixed (void* pSamplers = StaticSamplers)
+                {
+                    __Native native;
+                    native.ParameterCount = length;
+                    native.ParametersPointer = new IntPtr(rootParameters);
+                    if(StaticSamplers != null)
+                    {
+                        native.StaticSamplerCount = StaticSamplers.Length;
+                        native.StaticSamplerPointer = new IntPtr(pSamplers);
+                    }
+                    native.Flags = Flags;
+
+                    var hresult = D3D12.SerializeRootSignature(new IntPtr(&native), RootSignatureVersion.Version1, out result, out error);
+                    // TODO: check hresult or just rely on error?
+                    if(error != null)
+                    {
+                        errorText = Utilities.BlobToString(error);
+                    }
+                    return hresult;
+                }
+            }
+            finally
+            {
+                if(new IntPtr(rootParameters) != IntPtr.Zero)
+                {
+                    Utilities.FreeMemory(new IntPtr(rootParameters));
+                }
+                foreach(var handle in pinnedTables)
+                {
+                    handle.Free();
+                }
             }
         }
 
@@ -142,155 +167,6 @@ namespace SharpDX.Direct3D12
 
             /// <unmanaged-short>unsigned int Flags</unmanaged-short>	
             public RootSignatureFlags Flags;
-        }
-
-
-        public struct RootParameterArray
-        {
-            internal readonly IntPtr nativeParameters;
-            internal readonly RootParameter[] managedParameters;
-            internal readonly int count;
-
-            internal RootParameterArray(RootParameter[] parameters)
-            {
-                count = 0;
-                nativeParameters = IntPtr.Zero;
-                managedParameters = parameters;
-                if (parameters != null)
-                {
-                    count = parameters.Length;
-                }
-            }
-
-            internal RootParameterArray(int count, IntPtr nativeParameters)
-                : this()
-            {
-                this.count = count;
-                this.nativeParameters = nativeParameters;
-            }
-
-            public int Count
-            {
-                get { return count; }
-            }
-
-            public unsafe RootParameter this[int index]
-            {
-                get
-                {
-                    if (index < 0 || index >= Count)
-                    {
-                        throw new ArgumentOutOfRangeException("index");
-                    }
-
-                    if (managedParameters != null)
-                    {
-                        return managedParameters[index];
-                    }
-                    if (nativeParameters != IntPtr.Zero)
-                    {
-                        return ((RootParameter*)nativeParameters)[index];
-                    }
-
-                    return new RootParameter();
-                }
-                set
-                {
-                    if (index < 0 || index >= Count)
-                    {
-                        throw new ArgumentOutOfRangeException("index");
-                    }
-
-                    if (managedParameters != null)
-                    {
-                        managedParameters[index] = value;
-                    }
-
-                    if (nativeParameters != IntPtr.Zero)
-                    {
-                        ((RootParameter*)nativeParameters)[index] = value;
-                    }
-                }
-            }
-
-            public static implicit operator RootParameterArray(RootParameter[] fromArray)
-            {
-                return new RootParameterArray(fromArray);
-            }
-        }
-
-        public struct StaticSamplerArray
-        {
-            internal readonly IntPtr nativeParameters;
-            internal readonly StaticSamplerDescription[] managedParameters;
-            internal readonly int count;
-
-            internal StaticSamplerArray(StaticSamplerDescription[] parameters)
-            {
-                count = 0;
-                nativeParameters = IntPtr.Zero;
-                managedParameters = parameters;
-                if (parameters != null)
-                {
-                    count = parameters.Length;
-                }
-            }
-
-            internal StaticSamplerArray(int count, IntPtr nativeParameters)
-                : this()
-            {
-                this.count = count;
-                this.nativeParameters = nativeParameters;
-            }
-
-            public int Count
-            {
-                get { return count; }
-            }
-
-            public unsafe StaticSamplerDescription this[int index]
-            {
-                get
-                {
-                    if (index < 0 || index >= Count)
-                    {
-                        throw new ArgumentOutOfRangeException("index");
-                    }
-
-                    if (managedParameters != null)
-                    {
-                        return managedParameters[index];
-                    }
-                    if (nativeParameters != IntPtr.Zero)
-                    {
-                        return ((StaticSamplerDescription*)nativeParameters)[index];
-                    }
-
-                    return new StaticSamplerDescription();
-                }
-                set
-                {
-                    if (index < 0 || index >= Count)
-                    {
-                        throw new ArgumentOutOfRangeException("index");
-                    }
-
-                    if (managedParameters != null)
-                    {
-                        managedParameters[index] = value;
-                    }
-
-                    if (nativeParameters != IntPtr.Zero)
-                    {
-                        ((StaticSamplerDescription*)nativeParameters)[index] = value;
-                    }
-                }
-            }
-
-            public static implicit operator StaticSamplerArray(StaticSamplerDescription[] fromArray)
-            {
-                return new StaticSamplerArray(fromArray);
-            }
         }
     }
 }

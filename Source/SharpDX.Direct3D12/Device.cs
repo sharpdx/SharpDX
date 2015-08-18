@@ -120,11 +120,21 @@ namespace SharpDX.Direct3D12
         /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommandSignature']/*"/>	
         /// <unmanaged>HRESULT ID3D12Device::CreateCommandSignature([In] const D3D12_COMMAND_SIGNATURE* pDesc,[In, Optional] ID3D12RootSignature* pRootSignature,[In] const GUID&amp; riid,[Out] ID3D12CommandSignature** ppvCommandSignature)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateCommandSignature</unmanaged-short>	
-        public CommandSignature CreateCommandSignature(SharpDX.Direct3D12.CommandSignatureDescription descRef, SharpDX.Direct3D12.RootSignature rootSignatureRef)
+        public unsafe CommandSignature CreateCommandSignature(SharpDX.Direct3D12.CommandSignatureDescription descRef, SharpDX.Direct3D12.RootSignature rootSignatureRef)
         {
-            return CreateCommandSignature(descRef, rootSignatureRef, Utilities.GetGuidFromType(typeof(CommandSignature)));
-        }
+            var nativeDesc = new CommandSignatureDescription.__Native();
+            descRef.__MarshalTo(ref nativeDesc);
+            fixed(void* pIndirectArguments = descRef.IndirectArguments)
+            {
+                if(descRef.IndirectArguments != null)
+                {
+                    nativeDesc.ArgumentDescCount = descRef.IndirectArguments.Length;
+                    nativeDesc.ArgumentDescsPointer = new IntPtr(pIndirectArguments);
+                }
 
+                return CreateCommandSignature(new IntPtr(&nativeDesc), rootSignatureRef, Utilities.GetGuidFromType(typeof(CommandSignature)));
+            }
+        }
 
         /// <summary>
         /// No documentation for Direct3D12
