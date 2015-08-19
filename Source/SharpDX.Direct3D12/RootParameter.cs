@@ -28,18 +28,37 @@ namespace SharpDX.Direct3D12
         internal __Native native;
         private DescriptorRange[] descriptorTable;
 
-        public RootParameter(DescriptorRange[] descriptorTable) : this()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RootParameter"/> struct.
+        /// </summary>
+        /// <param name="descriptorTable">The descriptor table.</param>
+        /// <param name="visibility">The shader visibility.</param>
+        public RootParameter(ShaderVisibility visibility, params DescriptorRange[] descriptorTable) : this()
         {
             DescriptorTable = descriptorTable;
+            ShaderVisibility = visibility;
         }
 
-        public RootParameter(RootConstants rootConstants)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RootParameter"/> struct.
+        /// </summary>
+        /// <param name="rootConstants">The root constants.</param>
+        /// <param name="visibility">The shader visibility.</param>
+        public RootParameter(ShaderVisibility visibility, RootConstants rootConstants)
             : this()
         {
             Constants = rootConstants;
+            ShaderVisibility = visibility;
         }
 
-        public RootParameter(RootDescriptor rootDescriptor, RootParameterType type)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RootParameter"/> struct.
+        /// </summary>
+        /// <param name="rootDescriptor">The root descriptor.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="visibility">The visibility.</param>
+        /// <exception cref="System.ArgumentException">type</exception>
+        public RootParameter(ShaderVisibility visibility, RootDescriptor rootDescriptor, RootParameterType type)
             : this()
         {
             if(type == RootParameterType.Constant32Bits || type == RootParameterType.DescriptorTable)
@@ -49,18 +68,22 @@ namespace SharpDX.Direct3D12
 
             native.ParameterType = type;
             Descriptor = rootDescriptor;
+            ShaderVisibility = visibility;
         }
 
-        public static implicit operator RootParameter(DescriptorRange[] descriptorTable)
+        /// <summary>
+        /// Gets the type of the parameter.
+        /// </summary>
+        /// <value>The type of the parameter.</value>
+        public RootParameterType ParameterType
         {
-            return new RootParameter(descriptorTable);
+            get { return native.ParameterType; }
         }
 
-        public static implicit operator RootParameter(RootConstants rootConstants)
-        {
-            return new RootParameter(rootConstants);
-        }
-
+        /// <summary>
+        /// Gets the descriptor table.
+        /// </summary>
+        /// <value>The descriptor table.</value>
         public DescriptorRange[] DescriptorTable
         {
             get { return descriptorTable; }
@@ -71,6 +94,10 @@ namespace SharpDX.Direct3D12
             }
         }
 
+        /// <summary>
+        /// Gets the constants.
+        /// </summary>
+        /// <value>The constants.</value>
         public RootConstants Constants
         {
             get { return native.Union.Constants; }
@@ -81,6 +108,10 @@ namespace SharpDX.Direct3D12
             }
         }
 
+        /// <summary>
+        /// Gets the descriptor.
+        /// </summary>
+        /// <value>The descriptor.</value>
         public RootDescriptor Descriptor
         {
             get { return native.Union.Descriptor; }
@@ -90,6 +121,10 @@ namespace SharpDX.Direct3D12
             }
         }
 
+        /// <summary>
+        /// Gets or sets the shader visibility.
+        /// </summary>
+        /// <value>The shader visibility.</value>
         public ShaderVisibility ShaderVisibility
         {
             get { return native.ShaderVisibility; }
@@ -110,7 +145,7 @@ namespace SharpDX.Direct3D12
         /// Because this union contains pointers, it is aligned on 8 bytes boundary, making the field ResourceBarrierDescription.Type 
         /// to be aligned on 8 bytes instead of 4 bytes, so we can't use directly Explicit layout on ResourceBarrierDescription
         /// </summary>
-        [StructLayout(LayoutKind.Explicit, Pack = 0)]
+        [StructLayout(LayoutKind.Explicit)]
         internal partial struct __Union
         {
             [FieldOffset(0)]
@@ -122,6 +157,5 @@ namespace SharpDX.Direct3D12
             [FieldOffset(0)]
             public RootDescriptor Descriptor;
         }
-
     }
 }
