@@ -45,6 +45,7 @@
     <Compile Include="RootParameter.cs" />
     <Compile Include="RootSignatureDescription.cs" />
     <Compile Include="ShaderBytecode.cs" />
+    <Compile Include="StaticSamplerDescription.cs" />
     <Compile Include="StreamOutputDescription.cs" />
     <Compile Include="TextureCopyLocation.cs" />
   </ItemGroup>
