@@ -8,10 +8,6 @@
     <RootNamespace>SharpDX.MediaFoundation</RootNamespace>
     <AssemblyName>SharpDX.MediaFoundation</AssemblyName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(SharpDXPlatform)' == 'StoreApp'">
-    <TargetFrameworkProfile>Profile32</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-  </PropertyGroup>
   <ItemGroup Condition="'$(SharpDXPlatform)' == 'StoreApp'">
     <TargetPlatform Include="Windows, Version=8.1" />
     <TargetPlatform Include="WindowsPhoneApp, Version=8.1" />
