@@ -1250,7 +1250,9 @@ namespace SharpGen.Parser
                             cppElement = ParseEnum(xElement);
                             break;
                         case GccXml.TagFunction:
-                            if (xElement.AttributeValue("extern") != null)
+                            // TODO: Find btter criteria for exclusion. In CastXML extern="1" only indicates an explicit external storage modifier.
+                            // For now, exlude inline functions instead; may not be sensible since by default all functions have external linkage.
+                            if (xElement.AttributeValue("inline") == null)
                                 cppElement = ParseFunction(xElement);
                             break;
                         case GccXml.TagStruct:
