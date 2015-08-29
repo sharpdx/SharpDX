@@ -175,13 +175,10 @@ namespace SharpGen.Parser
                                 WorkingDirectory = Environment.CurrentDirectory
                             };
 
-                        File.WriteAllText(GccXmlGccOptionsFile, "-dDI -E");
+                        var arguments = "";
+                        arguments += " --castxml-gccxml";
+                        arguments += " -x c++ -std=c++11 -E -dD";
 
-                        var arguments = ""; // "--gccxml-gcc-options " + GccXmlGccOptionsFile;
-                        // Overrides settings for gccxml for compiling Win8 version
-                        arguments += " --gccxml-config \"" + Path.Combine(Path.GetDirectoryName(ExecutablePath), @"..\share\gccxml-0.9\vc" + vsVersion + @"\gccxml_config") + "\"";
-                        
-                        arguments += " -E --gccxml-gcc-options " + GccXmlGccOptionsFile;
                         foreach (var directory in GetIncludePaths())
                             arguments += " " + directory;
 
@@ -260,7 +257,7 @@ namespace SharpGen.Parser
 
                 if (directory.IsOverride)
                 {
-                    paths.Add("-iwrapper\"" + path.TrimEnd('\\') + "\"");
+                    paths.Add("-I\"" + path.TrimEnd('\\') + "\"");
                 }
                 else
                 {
@@ -371,12 +368,11 @@ namespace SharpGen.Parser
                     // Delete any previously generated xml file
                     File.Delete(xmlFile);
 
-                    var arguments = ""; // "--gccxml-gcc-options " + GccXmlGccOptionsFile;
+                    var arguments = "";
+                    arguments += " --castxml-gccxml";
+                    arguments += " -x c++ -std=c++11 -fmsc-version=1800 -fms-extensions -fms-compatibility -Wno-microsoft-enum-value -Wno-macro-redefined";
+                    arguments += " -o " + xmlFile;
 
-                    // Overrides settings for gccxml for compiling Win8 version
-                    arguments += " --gccxml-config \"" + Path.Combine(Path.GetDirectoryName(ExecutablePath), @"..\share\gccxml-0.9\vc" + vsVersion + @"\gccxml_config") + "\"";
-
-                    arguments += " -fxml=" + xmlFile;
                     foreach (var directory in GetIncludePaths())
                         arguments += " " + directory;
 
