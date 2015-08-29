@@ -876,7 +876,9 @@ namespace SharpGen.Parser
 
             // Calculate offset method using inheritance
             int offsetMethod = 0;
-            string[] bases = xElement.AttributeValue("bases").Split(' ');
+
+            var basesValue = xElement.AttributeValue("bases");
+            var bases = basesValue != null ? basesValue.Split(' ') : Enumerable.Empty<string>();
             foreach (var xElementBaseId in bases)
             {
                 if (string.IsNullOrEmpty(xElementBaseId))
