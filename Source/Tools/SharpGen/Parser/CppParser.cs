@@ -1359,20 +1359,9 @@ namespace SharpGen.Parser
                         type.Pointer = (type.Pointer ?? "") + "*";
                         break;
                     case GccXml.TagArrayType:
-                        int arrayDim = int.Parse(xType.AttributeValue("size"));
                         type.IsArray = true;
-
-                        // If size = "0", then arrayDim = 0, else get dimension
-                        // from max value
-                        if (arrayDim == 0)
-                        {
-                            arrayDim = 0;
-                        } 
-                        else
-                        {
-                            string maxArrayIndex = xType.AttributeValue("max");
-                            arrayDim = int.Parse(maxArrayIndex.TrimEnd('u')) + 1;
-                        }
+                        var maxArrayIndex = xType.AttributeValue("max");
+                        var arrayDim = int.Parse(maxArrayIndex.TrimEnd('u')) + 1;
                         if (type.ArrayDimension == null)
                             type.ArrayDimension = "" + arrayDim;
                         else
