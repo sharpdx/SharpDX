@@ -54,7 +54,7 @@
     #define SORTPP_PASS
     
     // Wrap all declspec with gccxml
-    #define __declspec(x) __attribute__((gccxml(#x)))
+    #define __declspec(x) __attribute__((annotate(#x)))
     
     // For XAudio2 patch
     #define __unaligned __attribute((__unaligned))
