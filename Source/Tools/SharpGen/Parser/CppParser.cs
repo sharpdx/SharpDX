@@ -702,7 +702,7 @@ namespace SharpGen.Parser
             if (string.IsNullOrWhiteSpace(attributes))
                 return;
 
-            // Strip whitespaces inside gccxml("...")
+            // Strip whitespaces inside annotate("...")
             var stripSpaces = new StringBuilder();
             int doubleQuoteCount = 0;
             for(int i  = 0; i < attributes.Length; i++)
@@ -736,7 +736,7 @@ namespace SharpGen.Parser
             string guid = null;
 
             // Parse attributes
-            const string gccXmlAttribute = "gccxml(";
+            const string gccXmlAttribute = "annotate(";
             // none == 0
             // pre == 1
             // post == 2
