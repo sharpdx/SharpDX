@@ -1433,6 +1433,7 @@ namespace SharpGen.Parser
                     case "short":
                         shortCount++;
                         break;
+                    case "bool":
                     case "void":
                     case "char":
                     case "double":
