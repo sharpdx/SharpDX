@@ -26,7 +26,7 @@ namespace SharpDX.Text
     {
         /// <summary>
         /// Returns an encoding for the ASCII character set. The returned encoding
-        //  will be an instance of the ASCIIEncoding class.
+        ///  will be an instance of the ASCIIEncoding class.
         /// </summary>
         public static readonly ASCIIEncoding ASCII = new ASCIIEncoding();
     }
