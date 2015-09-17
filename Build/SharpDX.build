@@ -30,7 +30,7 @@
     <BuildSignedSharpDX>true</BuildSignedSharpDX>
     <SharedAssemblyInfoFilePath>$(SharpDXRepo)\Source\SharedAssemblyInfo.cs</SharedAssemblyInfoFilePath>
     <SharedAssemblyInfo>$([System.IO.File]::ReadAllText($(SharedAssemblyInfoFilePath)))</SharedAssemblyInfo>
-	<SharpDXAssemblyPostFixVersion>-alpha02</SharpDXAssemblyPostFixVersion>
+	<SharpDXAssemblyPostFixVersion>-beta01</SharpDXAssemblyPostFixVersion>
     <SharpDXAssemblyVersion>$([System.Text.RegularExpressions.Regex]::Match($(SharedAssemblyInfo), `AssemblyVersion\("(.*)"`).Groups[1].Value)$(SharpDXAssemblyPostFixVersion)</SharpDXAssemblyVersion>
     <SharpDXDevZip>$(MSBuildThisFileDirectory)\SharpDX-SDK-LatestDev.exe</SharpDXDevZip>
     <SharpDXReleaseZip>$(MSBuildThisFileDirectory)\SharpDX-SDK-$(SharpDXAssemblyVersion).exe</SharpDXReleaseZip>
@@ -74,7 +74,7 @@
     <ItemGroup>
       <SharpDXNupkg Include="$(SharDXNugetPackages)\*.nupkg"/>
     </ItemGroup>
-    <Exec Command="nuget.exe push %(SharpDXNupkg.Identity)"/>
+    <Exec Command="nuget.exe push %(SharpDXNupkg.Identity)" IgnoreExitCode="true"/>
   </Target>  
   
   <Target Name="Build">
