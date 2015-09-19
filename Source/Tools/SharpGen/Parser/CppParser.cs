@@ -744,7 +744,9 @@ namespace SharpGen.Parser
             bool isPost = false;
             bool hasWritable = false;
 
-            foreach (var item in attributes.Split(' '))
+            // Clang outputs attributes in reverse order
+            // TODO: Check if applies to all declarations
+            foreach (var item in attributes.Split(' ').Reverse())
             {
                 string newItem = item;
                 if (newItem.StartsWith(gccXmlAttribute))
@@ -774,7 +776,7 @@ namespace SharpGen.Parser
                 {
                     if (newItem.StartsWith("SAL_writableTo"))
                     {
-                        if (isPost) paramAttribute |= ParamAttribute.Out;
+                        if (isPre) paramAttribute |= ParamAttribute.Out;
                         hasWritable = true;
                     }
 
