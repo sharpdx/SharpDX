@@ -23,6 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using SharpGen;
 using SharpGen.Logging;
@@ -1187,7 +1188,9 @@ namespace SharpGen.Parser
             guidInitText = guidInitText.Replace("{", "");
             guidInitText = guidInitText.TrimEnd('}');
             guidInitText = guidInitText.Replace("u", "");
+            guidInitText = guidInitText.Replace("U", "");
             guidInitText = guidInitText.Replace("l", "");
+            guidInitText = guidInitText.Replace("L", "");
             guidInitText = guidInitText.Replace(" ", "");
 
             string[] guidElements = guidInitText.Split(',');
@@ -1199,8 +1202,11 @@ namespace SharpGen.Parser
             for (int i = 0; i < guidElements.Length; i++)
             {
                 var guidElement = guidElements[i];
-                if (!int.TryParse(guidElement, out values[i]))
+                long value;
+                if (!long.TryParse(guidElement, out value))
                     return null;
+
+                values[i] = unchecked((int)value);
             }
 
             return new Guid(values[0], (short)values[1], (short)values[2], (byte)values[3], (byte)values[4], (byte)values[5], (byte)values[6], (byte)values[7],
