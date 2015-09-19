@@ -1160,6 +1160,13 @@ namespace SharpGen.Parser
                 return new CppGuid { Name = name, Guid = guid.Value };
             }
 
+            // CastXML outputs initialization expressions. Cast to proper type.
+            var match = Regex.Match(value, @"\((?:\(.+\))?(.+)\)");
+            if (match.Success)
+            {
+                value = $"unchecked(({cppType.TypeName}){match.Groups[1].Value})";
+            }
+
             // Handle C++ floating point literals
             value = value.Replace(".F", ".0F");
 
