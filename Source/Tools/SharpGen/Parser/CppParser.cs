@@ -1160,6 +1160,9 @@ namespace SharpGen.Parser
                 return new CppGuid { Name = name, Guid = guid.Value };
             }
 
+            // Handle C++ floating point literals
+            value = value.Replace(".F", ".0F");
+
             return new CppConstant() { Name = name, Value = value };
         }
 
