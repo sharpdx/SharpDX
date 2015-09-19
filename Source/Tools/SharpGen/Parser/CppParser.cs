@@ -620,7 +620,7 @@ namespace SharpGen.Parser
                             //if (structName.Length > 4 && structName.StartsWith("tag") && Char.IsUpper(structName[3]))
                             //    structName = structName.Substring(3);
 
-                            if (structName.StartsWith("tag") || structName.StartsWith("_"))
+                            if (structName.StartsWith("tag") || structName.StartsWith("_") || string.IsNullOrEmpty(structName))
                             {
                                 var typeName = xTypedef.AttributeValue("name");
                                 xStruct.SetAttributeValue("name", typeName);
@@ -1111,7 +1111,7 @@ namespace SharpGen.Parser
             var cppEnum = new CppEnum() { Name = xElement.AttributeValue("name") };
 
             // Doh! Anonymous Enum, need to handle them!
-            if (cppEnum.Name.StartsWith("$"))
+            if (cppEnum.Name.StartsWith("$") || string.IsNullOrEmpty(cppEnum.Name))
             {
                 var includeFrom = GetIncludeIdFromFileId(xElement.AttributeValue("file"));
 
