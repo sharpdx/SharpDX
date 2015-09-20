@@ -23,6 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using SharpGen;
 using SharpGen.Logging;
@@ -620,7 +621,7 @@ namespace SharpGen.Parser
                             //if (structName.Length > 4 && structName.StartsWith("tag") && Char.IsUpper(structName[3]))
                             //    structName = structName.Substring(3);
 
-                            if (structName.StartsWith("tag") || structName.StartsWith("_"))
+                            if (structName.StartsWith("tag") || structName.StartsWith("_") || string.IsNullOrEmpty(structName))
                             {
                                 var typeName = xTypedef.AttributeValue("name");
                                 xStruct.SetAttributeValue("name", typeName);
@@ -702,7 +703,7 @@ namespace SharpGen.Parser
             if (string.IsNullOrWhiteSpace(attributes))
                 return;
 
-            // Strip whitespaces inside gccxml("...")
+            // Strip whitespaces inside annotate("...")
             var stripSpaces = new StringBuilder();
             int doubleQuoteCount = 0;
             for(int i  = 0; i < attributes.Length; i++)
@@ -736,7 +737,7 @@ namespace SharpGen.Parser
             string guid = null;
 
             // Parse attributes
-            const string gccXmlAttribute = "gccxml(";
+            const string gccXmlAttribute = "annotate(";
             // none == 0
             // pre == 1
             // post == 2
@@ -744,7 +745,9 @@ namespace SharpGen.Parser
             bool isPost = false;
             bool hasWritable = false;
 
-            foreach (var item in attributes.Split(' '))
+            // Clang outputs attributes in reverse order
+            // TODO: Check if applies to all declarations
+            foreach (var item in attributes.Split(' ').Reverse())
             {
                 string newItem = item;
                 if (newItem.StartsWith(gccXmlAttribute))
@@ -774,7 +777,7 @@ namespace SharpGen.Parser
                 {
                     if (newItem.StartsWith("SAL_writableTo"))
                     {
-                        if (isPost) paramAttribute |= ParamAttribute.Out;
+                        if (isPre) paramAttribute |= ParamAttribute.Out;
                         hasWritable = true;
                     }
 
@@ -876,7 +879,9 @@ namespace SharpGen.Parser
 
             // Calculate offset method using inheritance
             int offsetMethod = 0;
-            string[] bases = xElement.AttributeValue("bases").Split(' ');
+
+            var basesValue = xElement.AttributeValue("bases");
+            var bases = basesValue != null ? basesValue.Split(' ') : Enumerable.Empty<string>();
             foreach (var xElementBaseId in bases)
             {
                 if (string.IsNullOrEmpty(xElementBaseId))
@@ -1107,7 +1112,7 @@ namespace SharpGen.Parser
             var cppEnum = new CppEnum() { Name = xElement.AttributeValue("name") };
 
             // Doh! Anonymous Enum, need to handle them!
-            if (cppEnum.Name.StartsWith("$"))
+            if (cppEnum.Name.StartsWith("$") || string.IsNullOrEmpty(cppEnum.Name))
             {
                 var includeFrom = GetIncludeIdFromFileId(xElement.AttributeValue("file"));
 
@@ -1156,6 +1161,16 @@ namespace SharpGen.Parser
                 return new CppGuid { Name = name, Guid = guid.Value };
             }
 
+            // CastXML outputs initialization expressions. Cast to proper type.
+            var match = Regex.Match(value, @"\((?:\(.+\))?(.+)\)");
+            if (match.Success)
+            {
+                value = $"unchecked(({cppType.TypeName}){match.Groups[1].Value})";
+            }
+
+            // Handle C++ floating point literals
+            value = value.Replace(".F", ".0F");
+
             return new CppConstant() { Name = name, Value = value };
         }
 
@@ -1173,7 +1188,9 @@ namespace SharpGen.Parser
             guidInitText = guidInitText.Replace("{", "");
             guidInitText = guidInitText.TrimEnd('}');
             guidInitText = guidInitText.Replace("u", "");
+            guidInitText = guidInitText.Replace("U", "");
             guidInitText = guidInitText.Replace("l", "");
+            guidInitText = guidInitText.Replace("L", "");
             guidInitText = guidInitText.Replace(" ", "");
 
             string[] guidElements = guidInitText.Split(',');
@@ -1185,8 +1202,11 @@ namespace SharpGen.Parser
             for (int i = 0; i < guidElements.Length; i++)
             {
                 var guidElement = guidElements[i];
-                if (!int.TryParse(guidElement, out values[i]))
+                long value;
+                if (!long.TryParse(guidElement, out value))
                     return null;
+
+                values[i] = unchecked((int)value);
             }
 
             return new Guid(values[0], (short)values[1], (short)values[2], (byte)values[3], (byte)values[4], (byte)values[5], (byte)values[6], (byte)values[7],
@@ -1248,7 +1268,9 @@ namespace SharpGen.Parser
                             cppElement = ParseEnum(xElement);
                             break;
                         case GccXml.TagFunction:
-                            if (xElement.AttributeValue("extern") != null)
+                            // TODO: Find btter criteria for exclusion. In CastXML extern="1" only indicates an explicit external storage modifier.
+                            // For now, exlude inline functions instead; may not be sensible since by default all functions have external linkage.
+                            if (xElement.AttributeValue("inline") == null)
                                 cppElement = ParseFunction(xElement);
                             break;
                         case GccXml.TagStruct:
@@ -1357,20 +1379,9 @@ namespace SharpGen.Parser
                         type.Pointer = (type.Pointer ?? "") + "*";
                         break;
                     case GccXml.TagArrayType:
-                        int arrayDim = int.Parse(xType.AttributeValue("size"));
                         type.IsArray = true;
-
-                        // If size = "0", then arrayDim = 0, else get dimension
-                        // from max value
-                        if (arrayDim == 0)
-                        {
-                            arrayDim = 0;
-                        } 
-                        else
-                        {
-                            string maxArrayIndex = xType.AttributeValue("max");
-                            arrayDim = int.Parse(maxArrayIndex.TrimEnd('u')) + 1;
-                        }
+                        var maxArrayIndex = xType.AttributeValue("max");
+                        var arrayDim = int.Parse(maxArrayIndex.TrimEnd('u')) + 1;
                         if (type.ArrayDimension == null)
                             type.ArrayDimension = "" + arrayDim;
                         else
@@ -1442,6 +1453,7 @@ namespace SharpGen.Parser
                     case "short":
                         shortCount++;
                         break;
+                    case "bool":
                     case "void":
                     case "char":
                     case "double":
