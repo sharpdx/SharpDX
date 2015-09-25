@@ -20,6 +20,7 @@
 
 using System;
 using System.Globalization;
+using System.Reflection;
 using SharpDX.Mathematics.Interop;
 using System.Reflection;
 
