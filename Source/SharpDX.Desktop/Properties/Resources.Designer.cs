@@ -10,6 +10,7 @@
 
 namespace SharpDX.Desktop.Properties {
     using System;
+    using System.Reflection;
     
     
     /// <summary>
@@ -39,7 +40,7 @@ namespace SharpDX.Desktop.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SharpDX.Desktop.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SharpDX.Desktop.Properties.Resources", typeof(Resources).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,6 +61,7 @@ namespace SharpDX.Desktop.Properties {
             }
         }
         
+#if !CORECLR
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
@@ -69,5 +71,6 @@ namespace SharpDX.Desktop.Properties {
                 return ((System.Drawing.Icon)(obj));
             }
         }
+#endif
     }
 }
