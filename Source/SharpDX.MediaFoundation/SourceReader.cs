@@ -22,7 +22,7 @@ using SharpDX.Mathematics.Interop;
 using System;
 using System.IO;
 
-#if STORE_APP
+#if STORE_APP && !CORECLR
 using Windows.Storage.Streams;
 #endif
 
@@ -100,7 +100,7 @@ namespace SharpDX.MediaFoundation
         {
             MediaFactory.CreateSourceReaderFromMediaSource(source, attributes, this);
         }
-#if STORE_APP
+#if STORE_APP && !CORECLR
         /// <summary>	
         /// Creates the source reader from a byte stream.
         /// </summary>	

@@ -23,7 +23,7 @@ using System.IO;
 
 using SharpDX.Multimedia;
 
-#if STORE_APP
+#if STORE_APP && !CORECLR
 using Windows.Storage.Streams;
 #endif
 
@@ -82,7 +82,7 @@ namespace SharpDX.MediaFoundation
             }
         }
 
-#if STORE_APP
+#if STORE_APP && !CORECLR
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioDecoder" /> class.
         /// </summary>
