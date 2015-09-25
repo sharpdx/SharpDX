@@ -629,7 +629,7 @@ namespace SharpDX.Direct3D9
         }
 
 
-        /// <summary>
+#if !CORECLR
         /// Presents the contents of the next buffer in the sequence of back buffers to the screen.
         /// </summary>
         /// <param name="sourceRectangle">The area of the back buffer that should be presented.</param>
@@ -648,6 +648,7 @@ namespace SharpDX.Direct3D9
                 Present(new IntPtr(&sourceRectangle), new IntPtr(&destinationRectangle), windowOverride, regionPtr);
             }
         }
+#endif
 
         /// <summary>
         /// Resets the stream source frequency by setting the frequency to 1.

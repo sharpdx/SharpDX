@@ -21,7 +21,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+#if !CORECLR
 using System.Windows.Forms;
+#else
+using SharpDX.RawInput;
+#endif
 using SharpDX.Collections;
 
 namespace SharpDX

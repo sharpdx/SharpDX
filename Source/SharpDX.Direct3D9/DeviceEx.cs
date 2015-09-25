@@ -18,7 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+#if !CORECLR
 using System.Drawing;
+#endif
 using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D9
@@ -200,7 +202,7 @@ namespace SharpDX.Direct3D9
             }
         }
 
-        /// <summary>
+#if !CORECLR
         /// Swap the swapchain's next buffer with the front buffer.
         /// </summary>
         /// <param name="flags">The flags.</param>
@@ -222,6 +224,7 @@ namespace SharpDX.Direct3D9
                 PresentEx(new IntPtr(&sourceRectangle), new IntPtr(&destinationRectangle), windowOverride, regionPtr, (int)flags);
             }            
         }
+#endif
 
         /// <summary>
         /// Resets the type, size, and format of the swap chain with all other surfaces persistent.

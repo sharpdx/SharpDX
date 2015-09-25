@@ -30,10 +30,10 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="RenderControl.cs">
+    <Compile Condition="'$(SharpDXRuntime)' != 'CoreCLR'" Include="RenderControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="RenderForm.cs">
+    <Compile Condition="'$(SharpDXRuntime)' != 'CoreCLR'" Include="RenderForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="RenderLoop.cs" />
@@ -46,6 +46,10 @@
     <None Include="Documentation\CodeComments.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SharpDX.RawInput\SharpDX.RawInput.csproj">
+      <Project>{05d17a7b-f200-48c0-b8f9-b7211665a17f}</Project>
+      <Name>SharpDX.RawInput</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharpDX\SharpDX.csproj">
       <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
       <Name>SharpDX</Name>

@@ -20,13 +20,47 @@
 
 using System;
 using System.Globalization;
+#if !CORECLR
 using System.Windows.Forms;
+#else
+using SharpDX.RawInput;
+#endif
 using System.Runtime.InteropServices;
 
 using SharpDX.Win32;
 
 namespace SharpDX.Windows
 {
+
+#if CORECLR
+	/// <summary>
+	/// Interface to mimic the System.Windows.Forms.Control class to minimize the amount
+	/// of code to change when not using System.Windows.Forms.
+	/// </summary>
+    public interface Control
+    {
+		/// <summary>
+		/// Access to the underlying Win32 HWND handle.
+		/// </summary>
+        IntPtr Handle { get; }
+
+		/// <summary>
+		/// Indicates whether the control has been disposed.
+		/// </summary>
+		bool IsDisposed { get; }
+
+		/// <summary>
+		/// Show form.
+		/// </summary>
+		void Show();
+
+		/// <summary>
+		/// Adds a event handler to listen to the Disposed event on the component.
+		/// </summary>
+		event EventHandler Disposed;
+	}
+#endif
+
     /// <summary>
     /// RenderLoop provides a rendering loop infrastructure. See remarks for usage. 
     /// </summary>
@@ -130,7 +164,9 @@ namespace SharpDX.Windows
                     // Revert back to Application.DoEvents in order to support Application.AddMessageFilter
                     // Seems that DoEvents is compatible with Mono unlike Application.Run that was not running
                     // correctly.
+#if !CORECLR
                     Application.DoEvents();
+#endif
                 }
                 else
                 {
@@ -155,7 +191,9 @@ namespace SharpDX.Windows
                             }
 
                             var message = new Message() { HWnd = msg.handle, LParam = msg.lParam, Msg = (int)msg.msg, WParam = msg.wParam };
+#if !CORECLR
                             if (!Application.FilterMessage(ref message))
+#endif
                             {
                                 Win32Native.TranslateMessage(ref msg);
                                 Win32Native.DispatchMessage(ref msg);
@@ -186,6 +224,7 @@ namespace SharpDX.Windows
         /// </summary>
         public delegate void RenderCallback();
 
+#if !CORECLR
         /// <summary>
         /// Runs the specified main loop in the specified context.
         /// </summary>
@@ -193,6 +232,7 @@ namespace SharpDX.Windows
         {
             Run(context.MainForm, renderCallback);
         }
+#endif
 
         /// <summary>
         /// Runs the specified main loop for the specified windows form.
