@@ -37,8 +37,11 @@
     <Compile Include="Generated\Structures.cs" />
     <Compile Include="HidInfo.cs" />
     <Compile Include="HidInputEventArgs.cs" />
+    <Compile Condition="'$(SharpDXRuntime)' == 'CoreCLR'" Include="IMessageFilter.cs" />
     <Compile Include="KeyboardInfo.cs" />
     <Compile Include="KeyboardInputEventArgs.cs" />
+    <Compile Condition="'$(SharpDXRuntime)' == 'CoreCLR'" Include="Keys.cs" />
+    <Compile Condition="'$(SharpDXRuntime)' == 'CoreCLR'" Include="Message.cs" />
     <Compile Include="MouseInfo.cs" />
     <Compile Include="MouseInputEventArgs.cs" />
     <Compile Include="NamespaceDoc.cs" />
