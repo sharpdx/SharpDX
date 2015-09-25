@@ -273,7 +273,11 @@ namespace SharpDX.DirectInput
         /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
         public void SetNotification(WaitHandle eventHandle)
         {
+#if !CORECLR
             SetEventNotification(eventHandle!=null?eventHandle.SafeWaitHandle.DangerousGetHandle():IntPtr.Zero);            
+#else
+            SetEventNotification(eventHandle!=null?eventHandle.GetSafeWaitHandle().DangerousGetHandle():IntPtr.Zero);
+#endif
         }
 
         /// <summary>
