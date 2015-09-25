@@ -177,7 +177,12 @@ namespace SharpDX
 
         private static IntPtr GetSafeWindowHandle(IntPtr hwnd)
         {
+#if !CORECLR
             return hwnd == IntPtr.Zero ? Process.GetCurrentProcess().MainWindowHandle : hwnd;
+#else
+				// We assume in CoreCLR that `hwnd' is indeed a valid HWND handle.
+            return hwnd;
+#endif
         }
 
         #endregion
