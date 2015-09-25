@@ -483,7 +483,7 @@ namespace SharpDX.Direct3D11
                 for (int i = 0; i < renderTargetViews.Length; i++)
                     renderTargetViewsPtr[i] = (renderTargetViews[i] == null) ? IntPtr.Zero : renderTargetViews[i].NativePointer;
             }
-            SetRenderTargetsAndKeepUAV(count, new IntPtr(&renderTargetViewsPtr), depthStencilView);
+            SetRenderTargetsAndKeepUAV(count, new IntPtr(renderTargetViewsPtr), depthStencilView);
         }
 
         /// <summary>	
