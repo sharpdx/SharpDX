@@ -12,6 +12,7 @@
     <SharpDXSign Condition=" '$(SharpDXSign)' == '' ">false</SharpDXSign>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == ''">Desktop</SharpDXPlatform>
+	<SharpDXRuntime Condition="'$(SharpDXRuntime)' == ''">CoreCLR</SharpDXRuntime>
     
     <!--Set defaults for all win8/directx11.1 features-->
     <SharpDXDesktopOnly Condition="'$(SharpDXDesktopOnly)' == ''">false</SharpDXDesktopOnly>
@@ -37,9 +38,14 @@
 
   <!--.NET 4.5 - Desktop - PCL Net45 -->
   <PropertyGroup Condition="'$(SharpDXPlatform)|$(SharpDXDesktopOnly)' == 'Desktop|false'">
+<!-- This part is for compiling against the PCL for .NET 4.5.
     <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <SharpDXCSharpTargets>$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets</SharpDXCSharpTargets>
+-->
+    <TargetFrameworkRootPath>$(SolutionDir)\deps\CoreFX</TargetFrameworkRootPath>
+    <FrameworkPathOverride>$(SolutionDir)\deps\CoreFX\CoreCLR\v5.0</FrameworkPathOverride>
+    <SharpDXCSharpTargets>$(SolutionDir)\deps\CoreFX\configs\CoreCLR.CSharp.targets</SharpDXCSharpTargets>
   </PropertyGroup>
 
   <!--.NET 4.5 - PCL or Win81/WP81 StoreApp -->
@@ -47,6 +53,11 @@
     <TargetFrameworkProfile>Profile32</TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <SharpDXCSharpTargets>$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets</SharpDXCSharpTargets>
+<!-- This part is for compiling against CoreCLR.
+    <TargetFrameworkRootPath>$(SolutionDir)\deps\CoreFX</TargetFrameworkRootPath>
+    <FrameworkPathOverride>$(SolutionDir)\deps\CoreFX\CoreCLR\v5.0</FrameworkPathOverride>
+    <SharpDXCSharpTargets>$(SolutionDir)\deps\CoreFX\configs\CoreCLR.CSharp.targets</SharpDXCSharpTargets>
+-->
   </PropertyGroup>
 
   <!--<Import Condition="'$(SharpDXWP8)' != 'false'"  Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />-->
@@ -89,6 +100,10 @@
 
   <PropertyGroup Condition="'$(SharpDXPlatform)' == 'Desktop'">
     <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(SharpDXRuntime)' == 'CoreCLR'">
+    <DefineConstants>$(DefineConstants);CORECLR</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(SharpDXPlatform)' == 'StoreApp'">
