@@ -30,7 +30,7 @@ namespace SharpDX.Direct3D12
         /// Initializes a new instance of the <see cref="Device"/> class.
         /// </summary>
         public Device()
-            : this(null, FeatureLevel.Level_9_1)
+            : this(null, FeatureLevel.Level_11_0)
         {
         }
 
@@ -39,7 +39,7 @@ namespace SharpDX.Direct3D12
         /// </summary>
         /// <param name="adapter">The adapter.</param>
         public Device(Adapter adapter)
-            : this(adapter, FeatureLevel.Level_9_1)
+            : this(adapter, FeatureLevel.Level_11_0)
         {
         }
 
