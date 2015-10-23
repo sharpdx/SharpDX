@@ -450,7 +450,7 @@ namespace SharpDX
             var memPtr = Marshal.AllocHGlobal(sizeInBytes + mask + IntPtr.Size);
             var ptr = (long)((byte*)memPtr + sizeof(void*) + mask) & ~mask;
             ((IntPtr*)ptr)[-1] = memPtr;
-            return new IntPtr(ptr);
+            return new IntPtr((void*)ptr);
         }
 
         /// <summary>
