@@ -21,7 +21,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+#if !CORECLR
 using System.Windows.Forms;
+#else
+using SharpDX.RawInput;
+#endif
 using SharpDX.Collections;
 
 namespace SharpDX
@@ -61,14 +65,14 @@ namespace SharpDX
             this.hwnd = hwnd;
 
             // Retrieve the previous WndProc associated with this window handle
-            defaultWndProc = Win32Native.GetWindowLong(new HandleRef(this, hwnd), Win32Native.WindowLongType.WndProc);
+            defaultWndProc = Win32Native.GetWindowLong(hwnd, Win32Native.WindowLongType.WndProc);
 
             // Create a pointer to the new WndProc
             newWndProc = WndProc;
             newWndProcPtr = Marshal.GetFunctionPointerForDelegate(newWndProc);
 
             // Set our own private wndproc in order to catch NCDestroy message
-            Win32Native.SetWindowLong(new HandleRef(this, hwnd), Win32Native.WindowLongType.WndProc, newWndProcPtr);
+            Win32Native.SetWindowLong(hwnd, Win32Native.WindowLongType.WndProc, newWndProcPtr);
         }
 
         #endregion
@@ -149,11 +153,11 @@ namespace SharpDX
 
         private void RestoreWndProc()
         {
-            var currentProc = Win32Native.GetWindowLong(new HandleRef(this, hwnd), Win32Native.WindowLongType.WndProc);
+            var currentProc = Win32Native.GetWindowLong(hwnd, Win32Native.WindowLongType.WndProc);
             if (currentProc == newWndProcPtr)
             {
                 // Restore back default WndProc only if the previous callback is owned by this message filter hook
-                Win32Native.SetWindowLong(new HandleRef(this, hwnd), Win32Native.WindowLongType.WndProc, defaultWndProc);
+                Win32Native.SetWindowLong(hwnd, Win32Native.WindowLongType.WndProc, defaultWndProc);
             }
         }
 
@@ -177,7 +181,12 @@ namespace SharpDX
 
         private static IntPtr GetSafeWindowHandle(IntPtr hwnd)
         {
+#if !CORECLR
             return hwnd == IntPtr.Zero ? Process.GetCurrentProcess().MainWindowHandle : hwnd;
+#else
+				// We assume in CoreCLR that `hwnd' is indeed a valid HWND handle.
+            return hwnd;
+#endif
         }
 
         #endregion

@@ -20,7 +20,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+#if !CORECLR
 using System.Windows.Forms;
+#endif
 
 namespace SharpDX.DirectInput
 {
@@ -226,10 +228,17 @@ namespace SharpDX.DirectInput
         /// </summary>
         /// <param name="parent">The parent control.</param>
         /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
+#if !CORECLR
         public void RunControlPanel(Control parent)
         {
             RunControlPanel(parent.Handle, 0);
         }
+#else
+        public void RunControlPanel(IntPtr hwnd)
+        {
+            RunControlPanel(hwnd, 0);
+        }
+#endif
 
 
         // Disabled as it seems to be not used anymore
@@ -261,11 +270,12 @@ namespace SharpDX.DirectInput
         ///  <para>Applications must call this method before acquiring the device by using the <see cref="SharpDX.DirectInput.Device"/> method.</para>	
         /// </remarks>	
         /// <unmanaged>HRESULT IDirectInputDevice8W::SetCooperativeLevel([In] HWND arg0,[In] DISCL arg1)</unmanaged>	
+#if !CORECLR
         public void SetCooperativeLevel(Control control, CooperativeLevel level)
         {
             SetCooperativeLevel(control.Handle, level);
         }
-
+#endif
         /// <summary>
         /// Specifies an event that is to be set when the device state changes. It is also used to turn off event notification.
         /// </summary>
@@ -273,7 +283,11 @@ namespace SharpDX.DirectInput
         /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
         public void SetNotification(WaitHandle eventHandle)
         {
+#if !CORECLR
             SetEventNotification(eventHandle!=null?eventHandle.SafeWaitHandle.DangerousGetHandle():IntPtr.Zero);            
+#else
+            SetEventNotification(eventHandle!=null?eventHandle.GetSafeWaitHandle().DangerousGetHandle():IntPtr.Zero);
+#endif
         }
 
         /// <summary>

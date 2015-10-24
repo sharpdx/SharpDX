@@ -779,12 +779,18 @@ namespace SharpCli
             if(targetFrameworkAttr != null && targetFrameworkAttr.ConstructorArguments.Count > 0 &&
                 targetFrameworkAttr.ConstructorArguments[0].Value != null)
             {
+                string netcoreAssemblyPath;
+#if !CORECLR
                 var targetFramework = new FrameworkName(targetFrameworkAttr.ConstructorArguments[0].Value.ToString());
 
-                var netcoreAssemblyPath = string.Format(@"Reference Assemblies\Microsoft\Framework\{0}\v{1}",
+                netcoreAssemblyPath = string.Format(@"Reference Assemblies\Microsoft\Framework\{0}\v{1}",
                     targetFramework.Identifier,
                     targetFramework.Version);
                 netcoreAssemblyPath = Path.Combine(ProgramFilesx86(), netcoreAssemblyPath);
+#else
+                    // For the time being that path might need to be updated.
+                netcoreAssemblyPath = ".\\deps\\CoreFX\\CoreCLR\\v5.0\\";
+#endif
                 if(Directory.Exists(netcoreAssemblyPath))
                 {
                     resolver.AddSearchDirectory(netcoreAssemblyPath);

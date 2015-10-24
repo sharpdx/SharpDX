@@ -93,7 +93,7 @@ namespace SharpDX.Direct3D9
             }
         }
 
-
+#if !CORECLR
         /// <summary>
         /// Presents the contents of the next buffer in the sequence of back buffers to the screen.
         /// </summary>
@@ -122,6 +122,7 @@ namespace SharpDX.Direct3D9
                 Present(srcPtr, destPtr, windowOverride, regionPtr, (int)flags);
             }
         }
+#endif
 
     }
 }

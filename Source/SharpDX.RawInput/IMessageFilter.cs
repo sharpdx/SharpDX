@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2015 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,30 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#if !CORECLR
-using System.Windows.Forms;
-#endif
+#if CORECLR
 
 namespace SharpDX.RawInput
 {
-    /// <summary>
-    /// Options used when using <see cref="Device.RegisterDevice(SharpDX.Multimedia.UsagePage,SharpDX.Multimedia.UsageId,SharpDX.RawInput.DeviceFlags)"/>
-    /// </summary>
-    public enum RegisterDeviceOptions
+	/// <summary>
+	/// Facade class to get most of the SharpDX code compile even if compiled against CoreCLR which does not provide Winforms.
+	/// </summary>
+    public interface IMessageFilter
     {
-        /// <summary>
-        /// Default register using <see cref="Application.AddMessageFilter"/> for RawInput message filtering.
-        /// </summary>
-        Default = 0,
-
-        /// <summary>
-        /// To disable message filtering
-        /// </summary>
-        NoFiltering = 1,
-
-        /// <summary>
-        /// Use custom message filtering instead of <see cref="Application.AddMessageFilter"/>
-        /// </summary>
-        CustomFiltering = 2,
+        bool PreFilterMessage(ref Message m);
     }
 }
+
+#endif

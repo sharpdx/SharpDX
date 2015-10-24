@@ -20,6 +20,7 @@
 
 using System;
 using System.Globalization;
+using System.Reflection;
 using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D9
@@ -628,7 +629,7 @@ namespace SharpDX.Direct3D9
         }
 
 
-        /// <summary>
+#if !CORECLR
         /// Presents the contents of the next buffer in the sequence of back buffers to the screen.
         /// </summary>
         /// <param name="sourceRectangle">The area of the back buffer that should be presented.</param>
@@ -647,6 +648,7 @@ namespace SharpDX.Direct3D9
                 Present(new IntPtr(&sourceRectangle), new IntPtr(&destinationRectangle), windowOverride, regionPtr);
             }
         }
+#endif
 
         /// <summary>
         /// Resets the stream source frequency by setting the frequency to 1.
@@ -944,7 +946,7 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT IDirect3DDevice9::SetRenderState([In] D3DRENDERSTATETYPE State,[In] unsigned int Value)</unmanaged>
         public void SetRenderState<T>(RenderState renderState, T value) where T : struct, IConvertible
         {
-            if (!typeof(T).IsEnum)
+            if (!typeof(T).GetTypeInfo().IsEnum)
                 throw new ArgumentException("T must be an enum type", "value");
 
             SetRenderState(renderState, value.ToInt32(CultureInfo.InvariantCulture));

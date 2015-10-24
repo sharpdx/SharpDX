@@ -43,6 +43,7 @@
 * THE SOFTWARE.
 */
 
+#if !CORECLR
 using System.Diagnostics;
 using SharpDX.Mathematics.Interop;
 using System;
@@ -449,3 +450,4 @@ namespace SharpDX.Windows
         }
     }
 }
+#endif

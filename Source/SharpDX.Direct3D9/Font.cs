@@ -36,6 +36,7 @@ namespace SharpDX.Direct3D9
             D3DX9.CreateFontIndirect(device, ref fontDescription, this);
         }
 
+#if !CORECLR
         /// <summary>
         /// Initializes a new instance of the <see cref="Font"/> class from a <see cref="System.Drawing.Font"/>
         /// </summary>
@@ -45,6 +46,7 @@ namespace SharpDX.Direct3D9
         {
             D3DX9.CreateFont(device, font.Height, 0, (int)(font.Bold ? FontWeight.Bold : FontWeight.Normal), 0, font.Italic, (int)FontCharacterSet.Default, (int)FontPrecision.Default, (int)FontQuality.Default, (int)FontPitchAndFamily.Default, font.Name, this);
         }
+#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Font"/> class.

@@ -25,7 +25,7 @@ using SharpDX.Mathematics.Interop;
 using SharpDX.Win32;
 using SharpDX.IO;
 
-#if STORE_APP
+#if STORE_APP && !CORECLR
 using Windows.Storage.Streams;
 #endif
 
@@ -72,7 +72,7 @@ namespace SharpDX.MediaFoundation
         {
         }
 
-#if STORE_APP
+#if STORE_APP && !CORECLR
         /// <summary>
         /// Instantiates a new instance <see cref="ByteStream"/> from a <see cref="Stream"/>.
         /// </summary>

@@ -1,3 +1,6 @@
 [submodule "Samples"]
 	path = Samples
 	url = git@github.com:sharpdx/SharpDX-Samples.git
+[submodule "deps/CoreFX"]
+	path = deps/CoreFX
+	url = git@github.com:manu-silicon/corefxref.git

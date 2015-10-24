@@ -21,7 +21,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+#if !CORECLR
 using System.Windows.Forms;
+#endif
 using SharpDX.Multimedia;
 using SharpDX.Win32;
 
@@ -126,6 +128,7 @@ namespace SharpDX.RawInput
             if (options != RegisterDeviceOptions.NoFiltering && rawInputMessageFilter == null)
             {
                 rawInputMessageFilter = new RawInputMessageFilter();
+#if !CORECLR
                 if (options == RegisterDeviceOptions.Default)
                 {
                     Application.AddMessageFilter(rawInputMessageFilter);
@@ -134,6 +137,9 @@ namespace SharpDX.RawInput
                 {
                     MessageFilterHook.AddMessageFilter(target, rawInputMessageFilter);
                 }
+#else
+                MessageFilterHook.AddMessageFilter(target, rawInputMessageFilter);
+#endif
             }
         }
 
