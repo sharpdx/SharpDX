@@ -19,6 +19,7 @@
     <Compile Include="CommandSignatureDescription.cs" />
     <Compile Include="CpuDescriptorHandle.cs" />
     <Compile Include="DebugController.cs" />
+    <Compile Include="DescriptorRange.cs" />
     <Compile Include="GpuDescriptorHandle.cs" />
     <Compile Include="GraphicsCommandList.cs" />
     <Compile Include="ComputePipelineStateDescription.cs" />
