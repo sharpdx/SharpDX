@@ -207,19 +207,16 @@ namespace SharpDX.Direct3D9
         /// <param name="sourceRectangle">The source rectangle.</param>
         /// <param name="destinationRectangle">The destination rectangle.</param>
         /// <param name="windowOverride">The window override.</param>
-        /// <param name="region">The region.</param>
+        /// <param name="dirtyRegionRGNData">The region.</param>
         /// <returns>
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9Ex::PresentEx([In] const void* pSourceRect,[In] const void* pDestRect,[In] HWND hDestWindowOverride,[In] const RGNDATA* pDirtyRegion,[In] unsigned int dwFlags)</unmanaged>
-        public void PresentEx(Present flags, RawRectangle sourceRectangle, RawRectangle destinationRectangle, IntPtr windowOverride, Region region)
+        public void PresentEx(Present flags, RawRectangle sourceRectangle, RawRectangle destinationRectangle, IntPtr windowOverride, IntPtr dirtyRegionRGNData)
         {
             unsafe
             {
-                var graphics = Graphics.FromHwnd(windowOverride);
-                var regionPtr = region.GetHrgn(graphics);
-                graphics.Dispose();
-                PresentEx(new IntPtr(&sourceRectangle), new IntPtr(&destinationRectangle), windowOverride, regionPtr, (int)flags);
+                PresentEx(new IntPtr(&sourceRectangle), new IntPtr(&destinationRectangle), windowOverride, dirtyRegionRGNData, (int)flags);
             }            
         }
 

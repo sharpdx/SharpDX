@@ -637,14 +637,11 @@ namespace SharpDX.Direct3D9
         /// <param name="region">Specifies a region on the back buffer that contains the minimal amount of pixels that need to be updated.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>IDirect3DDevice9::Present</unmanaged>
-        public void Present(RawRectangle sourceRectangle, RawRectangle destinationRectangle, IntPtr windowOverride, System.Drawing.Region region)
+        public void Present(RawRectangle sourceRectangle, RawRectangle destinationRectangle, IntPtr windowOverride, IntPtr dirtyRegionRGNData)
         {
             unsafe
             {
-                var graphics = System.Drawing.Graphics.FromHwnd(windowOverride);
-                IntPtr regionPtr = region.GetHrgn(graphics);
-                graphics.Dispose();
-                Present(new IntPtr(&sourceRectangle), new IntPtr(&destinationRectangle), windowOverride, regionPtr);
+                Present(new IntPtr(&sourceRectangle), new IntPtr(&destinationRectangle), windowOverride, dirtyRegionRGNData);
             }
         }
 

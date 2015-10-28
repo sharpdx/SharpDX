@@ -101,16 +101,12 @@ namespace SharpDX.Direct3D9
         /// <param name="sourceRectangle">The area of the back buffer that should be presented.</param>
         /// <param name="destinationRectangle">The area of the front buffer that should receive the result of the presentation.</param>
         /// <param name="windowOverride">The destination window whose client area is taken as the target for this presentation.</param>
-        /// <param name="region">Specifies a region on the back buffer that contains the minimal amount of pixels that need to be updated.</param>
+        /// <param name="dirtyRegionRGNData">Specifies a region on the back buffer that contains the minimal amount of pixels that need to be updated.</param>
         /// <unmanaged>HRESULT IDirect3DSwapChain9::Present([In, Optional] const void* pSourceRect,[InOut, Optional] const void* pDestRect,[In] HWND hDestWindowOverride,[In] const RGNDATA* pDirtyRegion,[In] unsigned int dwFlags)</unmanaged>
-        public void Present(Present flags, RawRectangle sourceRectangle, RawRectangle destinationRectangle, IntPtr windowOverride, System.Drawing.Region region)
+        public void Present(Present flags, RawRectangle sourceRectangle, RawRectangle destinationRectangle, IntPtr windowOverride, IntPtr dirtyRegionRGNData)
         {
             unsafe
             {
-                var graphics = System.Drawing.Graphics.FromHwnd(windowOverride);
-                var regionPtr = region.GetHrgn(graphics);
-                graphics.Dispose();
-
                 var srcPtr = IntPtr.Zero;
                 if (!sourceRectangle.IsEmpty)
                     srcPtr = new IntPtr(&sourceRectangle);
@@ -119,9 +115,8 @@ namespace SharpDX.Direct3D9
                 if (!destinationRectangle.IsEmpty)
                     destPtr = new IntPtr(&destinationRectangle);
 
-                Present(srcPtr, destPtr, windowOverride, regionPtr, (int)flags);
+                Present(srcPtr, destPtr, windowOverride, dirtyRegionRGNData, (int)flags);
             }
         }
-
     }
 }
