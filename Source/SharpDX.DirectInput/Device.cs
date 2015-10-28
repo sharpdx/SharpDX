@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Windows.Forms;
 
 namespace SharpDX.DirectInput
 {
@@ -224,13 +223,12 @@ namespace SharpDX.DirectInput
         /// <summary>
         /// Runs the DirectInput control panel associated with this device. If the device does not have a control panel associated with it, the default device control panel is launched.
         /// </summary>
-        /// <param name="parent">The parent control.</param>
+        /// <param name="parentHwnd">The parent control.</param>
         /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
-        public void RunControlPanel(Control parent)
+        public void RunControlPanel(IntPtr parentHwnd)
         {
-            RunControlPanel(parent.Handle, 0);
+            RunControlPanel(parentHwnd, 0);
         }
-
 
         // Disabled as it seems to be not used anymore
         ///// <summary>
@@ -247,24 +245,6 @@ namespace SharpDX.DirectInput
         //        return SendDeviceData(sizeof (ObjectData), data, ref count, overlay ? 1 : 0);
         //    }
         //}
-
-        /// <summary>	
-        /// Requests the cooperative level for this instance of the input device. The cooperative level determines how this instance of the device interacts with other instances of the device and the rest of the system.	
-        /// </summary>	
-        /// <param name="control">Window control to be associated with the device. This parameter must be a valid top-level window handle that belongs to the process. The window associated with the device must not be destroyed while it is still active in a DirectInput device.</param>	
-        /// <param name="level">Flags that specify the cooperative level to associate with the input device.</param>	
-        /// <returns>If the method succeeds, the return value is <see cref="SharpDX.DirectInput.ResultCode.Ok"/>. If the method fails, a <see cref="SharpDXException"/> is raised with the following error code values: <see cref="SharpDX.DirectInput.ResultCode.InvalidParam"/>, <see cref="SharpDX.DirectInput.ResultCode.NotInitialized"/>, <see cref="Result.Handle"/>.</returns>	
-        /// <remarks>	
-        /// <para>Applications cannot specify <see cref="SharpDX.DirectInput.CooperativeLevel.Foreground"/> and <see cref="SharpDX.DirectInput.CooperativeLevel.Background"/> at the same time. This apply as well to <see cref="SharpDX.DirectInput.CooperativeLevel.Exclusive"/> and <see cref="SharpDX.DirectInput.CooperativeLevel.NonExclusive"/>.</para>
-        ///  <para>When the mouse is acquired with exclusive access, the mouse pointer is removed from the screen until the device is unacquired.</para>	
-        ///  <para>Applications that select the background exclusive mode cooperative level are not guaranteed to retain access to the device if another application requests exclusive access. When a background exclusive mode application loses access, calls to DirectInput device methods will fail and return <see cref="SharpDX.DirectInput.ResultCode.NotAcquired"/>. The application can regain access to the device by manually unacquiring the device and reacquiring it.</para>	
-        ///  <para>Applications must call this method before acquiring the device by using the <see cref="SharpDX.DirectInput.Device"/> method.</para>	
-        /// </remarks>	
-        /// <unmanaged>HRESULT IDirectInputDevice8W::SetCooperativeLevel([In] HWND arg0,[In] DISCL arg1)</unmanaged>	
-        public void SetCooperativeLevel(Control control, CooperativeLevel level)
-        {
-            SetCooperativeLevel(control.Handle, level);
-        }
 
         /// <summary>
         /// Specifies an event that is to be set when the device state changes. It is also used to turn off event notification.
