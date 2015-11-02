@@ -24,6 +24,8 @@
     <Compile Include="AsyncCallbackShadow.cs" />
     <Compile Include="ClockStateSink.cs" />
     <Compile Include="ClockStateSinkShadow.cs" />
+    <Compile Include="MediaTypeHandler.cs" />
+    <Compile Include="PresentationDescriptor.cs" />
     <Compile Include="SampleGrabberSinkCallbackShadow2.cs" />
     <Compile Include="SampleGrabberSinkCallback2.cs" />
     <Compile Include="DXGIDeviceManager.cs" />
@@ -57,6 +59,7 @@
     <Compile Include="SourceReader.cs" />
     <Compile Include="SourceResolver.cs" />
     <Compile Include="Transform.cs" />
+    <Compile Include="VideoFormatGuids.cs" />
     <Compile Include="VideoPresenter.cs" />
     <Compile Include="VideoPresenterShadow.cs" />
     <Compile Include="WorkQueueId.cs" />
