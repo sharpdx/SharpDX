@@ -212,7 +212,7 @@ namespace SharpDX.Direct3D9
             if (stream is DataStream)
             {
                 var compiler = new EffectCompiler(IntPtr.Zero);
-                CreateEffectCompiler(((DataStream)stream).PositionPointer, (int)(stream.Length - stream.Length), defines, includeFile, flags, compiler);
+                CreateEffectCompiler(((DataStream)stream).PositionPointer, (int)(stream.Length - stream.Position), defines, includeFile, flags, compiler);
                 return compiler;
             } 
             return FromMemory(Utilities.ReadStream(stream), defines, includeFile, flags);

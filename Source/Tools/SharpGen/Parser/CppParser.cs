@@ -306,7 +306,7 @@ namespace SharpGen.Parser
                 // Small optim: just write the header file when the file is updated or new
                 if (configFile.IsConfigUpdated)
                 {
-                    if (configFile.IsConfigUpdated && !ForceParsing)
+                    if (!ForceParsing)
                         Logger.Message("Config file changed for C++ headers [{0}]/[{1}]", configFile.Id, configFile.FilePath);
 
                     _isConfigUpdated = true;

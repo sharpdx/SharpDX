@@ -301,8 +301,8 @@ namespace SharpDX.Diagnostics
                         {
                             countPerType[targetType] = 0;
                         }
-
-                        countPerType[targetType] = typeCount + 1;
+                        else
+                            countPerType[targetType] = typeCount + 1;
                     }
                 }
                 count++;

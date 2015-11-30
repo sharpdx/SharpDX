@@ -71,9 +71,9 @@ namespace SharpDX.Direct3D12
         {
             get
             {
-                return Type == HeapType.Upload || Type == HeapType.Upload || (Type == HeapType.Custom &&
-                                                                              (CPUPageProperty == CpuPageProperty.WriteCombine
-                                                                               || CPUPageProperty == CpuPageProperty.WriteBack));
+                return Type == HeapType.Upload || (Type == HeapType.Custom &&
+                                                   (CPUPageProperty == CpuPageProperty.WriteCombine
+                                                    || CPUPageProperty == CpuPageProperty.WriteBack));
             }
         }
     }
