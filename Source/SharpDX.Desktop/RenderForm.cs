@@ -394,8 +394,8 @@ namespace SharpDX.Windows
                                     isSizeChangedWithoutResizeBegin = true;
                                 }
                             }
-
-                            previousWindowState = FormWindowState.Normal;
+                            else
+                                previousWindowState = FormWindowState.Normal;
                         }
                     }
                     break;
