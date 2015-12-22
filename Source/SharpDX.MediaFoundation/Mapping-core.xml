@@ -663,6 +663,8 @@
     <map enum-item="MFT_ENUM_FLAG_(.*)" name-tmp="$1"/>
     <map enum="_MFT_PROCESS_OUTPUT_FLAGS" name="TransformProcessOutputFlags"/>
     <map enum="_MFT_PROCESS_OUTPUT_STATUS" name="TransformProcessOutputStatus"/>
+    
+    <map enum="MF_MEDIAKEY_STATUS" name="MediaKeyStatusState"/>
 
     <!--
     // *****************************************************************
