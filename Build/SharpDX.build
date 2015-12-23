@@ -46,11 +46,15 @@
   <Target Name="Package">
     <Message Importance="High" Text="Building SharpDX $(SharpDXAssemblyVersion)"/>
     <CallTarget Targets="Build"/>
-    <CallTarget Targets="Nuget"/>
     <CallTarget Targets="ZipBuild"/>
-    <CallTarget Condition="'$(SharpDXNugetPush)' == 'true'" Targets="NugetPush"/>
+    <CallTarget Condition="'$(SharpDXNugetPush)' == 'true'" Targets="NugetAndPush"/>
   </Target>
- 
+
+  <Target Name="NugetAndPush">
+    <CallTarget Targets="Nuget"/>
+    <CallTarget Targets="NugetPush"/>
+  </Target>
+
   <Target Name="Build">
     <!--Build all targets / platforms-->
     <Exec Command="RMDIR /Q /S $(SharpDXRepo)\Bin"/>
