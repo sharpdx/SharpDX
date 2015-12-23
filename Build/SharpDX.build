@@ -20,21 +20,19 @@
 // THE SOFTWARE.
 -->
 <!-- Common Settings used by SharpDX projects -->
-<Project DefaultTargets="PackageDev" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
+<Project DefaultTargets="Package" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <SharpDXRepo>$(MSBuildThisFileDirectory)..</SharpDXRepo>
-    <SharDXNugetPackages>$(MSBuildThisFileDirectory)Packages</SharDXNugetPackages>
-    <GitExe>"C:\Program Files (x86)\Git\bin\git.exe"</GitExe>
+    <SharpDXNugetPackageDir>$(MSBuildThisFileDirectory)Packages</SharpDXNugetPackageDir>
     <ExtensionTasksPath>$(SharpDXRepo)\External\MSBuildExtensionPack\</ExtensionTasksPath>
     <BuildSignedSharpDX>true</BuildSignedSharpDX>
     <SharedAssemblyInfoFilePath>$(SharpDXRepo)\Source\SharedAssemblyInfo.cs</SharedAssemblyInfoFilePath>
     <SharedAssemblyInfo>$([System.IO.File]::ReadAllText($(SharedAssemblyInfoFilePath)))</SharedAssemblyInfo>
-	<SharpDXAssemblyPostFixVersion>-beta01</SharpDXAssemblyPostFixVersion>
+    <SharpDXPackagingDevName Condition="'$(SharpDXPackagingDevName)' == ''">alpha</SharpDXPackagingDevName>
+    <SharpDXBuildNumber Condition="'$(SharpDXBuildNumber)' == ''">1</SharpDXBuildNumber>
+    <SharpDXAssemblyPostFixVersion Condition="'$(SharpDXPackagingDev)' == 'true'">-$(SharpDXPackagingDevName)$([System.String]::Format('{0:000}', $([MSBuild]::Add($(SharpDXBuildNumber), 0))))</SharpDXAssemblyPostFixVersion>
     <SharpDXAssemblyVersion>$([System.Text.RegularExpressions.Regex]::Match($(SharedAssemblyInfo), `AssemblyVersion\("(.*)"`).Groups[1].Value)$(SharpDXAssemblyPostFixVersion)</SharpDXAssemblyVersion>
-    <SharpDXDevZip>$(MSBuildThisFileDirectory)\SharpDX-SDK-LatestDev.exe</SharpDXDevZip>
-    <SharpDXReleaseZip>$(MSBuildThisFileDirectory)\SharpDX-SDK-$(SharpDXAssemblyVersion).exe</SharpDXReleaseZip>
-    <SharpDXLocalUpload>C:\inetpub\wwwroot\sharpdx\upload</SharpDXLocalUpload>
+    <SharpDXZipName>$(MSBuildThisFileDirectory)\SharpDX-SDK-$(SharpDXAssemblyVersion).exe</SharpDXZipName>
   </PropertyGroup>
 
   <Import Project="$(ExtensionTasksPath)MSBuild.ExtensionPack.tasks"/>
@@ -45,33 +43,41 @@
     <Message Importance="high" Text="Use parameter /t:Pre-Build;Build to build SharpDX assemblies for non WP8 platforms. And /t:BuildForVS2012 for WP8"/>
   </Target>
 
-  <Target Name="PackageDev">
-	<CallTarget Targets="Build"/>
+  <Target Name="Package">
+    <Message Importance="High" Text="Building SharpDX $(SharpDXAssemblyVersion)"/>
+    <CallTarget Targets="Build"/>
     <CallTarget Targets="Nuget"/>
     <CallTarget Targets="ZipBuild"/>
+    <CallTarget Condition="'$(SharpDXNugetPush)' == 'true'" Targets="NugetPush"/>
   </Target>
-
-  <Target Name="Nuget">
-    <Exec Command="RMDIR /Q /S $(SharDXNugetPackages)"/>
-    <MakeDir Directories="$(SharDXNugetPackages)"/>
-    <ItemGroup>
-      <SharpDXNuspecs Include="$(SharpDXRepo)\Source\**\*.nuspec"/>
-    </ItemGroup>
-    <Exec Command="nuget.exe pack -OutputDirectory $(SharDXNugetPackages) -Properties version=$(SharpDXAssemblyVersion) -Symbols %(SharpDXNuspecs.Identity)"/>
-  </Target>
-
-  <Target Name="NugetPush">
-    <ItemGroup>
-      <SharpDXNupkg Include="$(SharDXNugetPackages)\*.nupkg"/>
-    </ItemGroup>
-    <Exec Command="nuget.exe push %(SharpDXNupkg.Identity)" IgnoreExitCode="true"/>
-  </Target>  
-  
+ 
   <Target Name="Build">
     <!--Build all targets / platforms-->
     <Exec Command="RMDIR /Q /S $(SharpDXRepo)\Bin"/>
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXRepo)\SharpDX-Desktop.sln" Properties="Configuration=Release;Platform=Any CPU;SharpDXSign=true"/>
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXRepo)\SharpDX-StoreApp.sln" Properties="Configuration=Release;Platform=Any CPU;SharpDXSign=true"/>
+  </Target>
+
+  <Target Name="Nuget">
+    <Exec Command="RMDIR /Q /S $(SharpDXNugetPackageDir)"/>
+    <MakeDir Directories="$(SharpDXNugetPackageDir)"/>
+    <ItemGroup>
+      <SharpDXNuspecs Include="$(SharpDXRepo)\Source\**\*.nuspec"/>
+    </ItemGroup>
+    <Exec Command="nuget.exe pack -OutputDirectory $(SharpDXNugetPackageDir) -Properties version=$(SharpDXAssemblyVersion) -Symbols %(SharpDXNuspecs.Identity)"/>
+  </Target>
+
+  <Target Name="NugetPush">
+    <ItemGroup>
+      <SharpDXNupkg Include="$(SharpDXNugetPackageDir)\*.nupkg"/>
+    </ItemGroup>
+    <Error Condition="'$(SharpDXNugetApiKey)' == ''" Text="SharpDXNugetApiKey env variable is required when pushing nuget package"/>
+    <Exec Command="nuget.exe push -ApiKey $(SharpDXNugetApiKey) %(SharpDXNupkg.Identity)" IgnoreExitCode="true"/>
+  </Target>
+
+  <Target Name="ZipBuild">
+    <Delete Files="$(SharpDXZipName)"/>
+    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(SharpDXRepo)\External\7-Zip\7z.exe a -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.pri -xr!*.exp $(SharpDXZipName) Bin\*\*.* License.txt ReleaseNotes.md Readme.md'/>
   </Target>
 
   <!--Custom task for checking certification result (fail or pass), the project is excluded from solution build - needs to be rebuilt manually when needed-->
@@ -122,15 +128,4 @@
     <VerifyCertificationResultTask File="$(SharpDXRepo)\Source\CertificationTests\Results\Test.WinRT.xml" />
     <VerifyCertificationResultTask File="$(SharpDXRepo)\Source\CertificationTests\Results\Test.WP81.xml" />
   </Target>
-
-  <Target Name="ZipBuild">
-    <Delete Files="$(SharpDXDevZip)"/>
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(SharpDXRepo)\External\7-Zip\7z.exe a -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.pri -xr!*.exp $(SharpDXDevZip) Bin\*\*.* License.txt ReleaseNotes.md Readme.md'/>
-  </Target>
-
-  <Target Name="ZipRelease">
-    <Delete Files="$(SharpDXReleaseZip)"/>
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(SharpDXRepo)\External\7-Zip\7z.exe a -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.pri -xr!*.exp $(SharpDXReleaseZip) Bin\*\*.*  License.txt ReleaseNotes.md Readme.md'/>
-  </Target>
-
 </Project>
