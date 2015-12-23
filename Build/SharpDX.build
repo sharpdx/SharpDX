@@ -76,7 +76,7 @@
       <SharpDXNupkg Include="$(SharpDXNugetPackageDir)\*.nupkg"/>
     </ItemGroup>
     <Error Condition="'$(SharpDXNugetApiKey)' == ''" Text="SharpDXNugetApiKey env variable is required when pushing nuget package"/>
-    <Exec Command="nuget.exe push -ApiKey $(SharpDXNugetApiKey) %(SharpDXNupkg.Identity)" IgnoreExitCode="true"/>
+    <Exec Command="nuget.exe push -ApiKey $(SharpDXNugetApiKey) %(SharpDXNupkg.Identity)"/>
   </Target>
 
   <Target Name="ZipBuild">
