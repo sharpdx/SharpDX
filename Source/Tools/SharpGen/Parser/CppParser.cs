@@ -624,7 +624,7 @@ namespace SharpGen.Parser
                             {
                                 var typeName = xTypedef.AttributeValue("name");
                                 xStruct.SetAttributeValue("name", typeName);
-                                Logger.Message("Use typedef to rename [{0}] to [{1}]", structName, typeName);
+                                //Logger.Message("Use typedef to rename [{0}] to [{1}]", structName, typeName);
                             }
                             break;
                     }
@@ -1527,10 +1527,12 @@ namespace SharpGen.Parser
 
                     if (cppEnum.IsEmpty)
                         continue;
-                    
-                    if (cppEnum.Items.Count != docItem.Items.Count)
-                        Logger.Warning("Warning Invalid number enum items in documentation for Enum {0}",
-                                          cppEnum.Name);
+
+                    if(cppEnum.Items.Count != docItem.Items.Count)
+                    {
+                        //Logger.Warning("Warning Invalid number enum items in documentation for Enum {0}",
+                        //    cppEnum.Name);
+                    }
                     int count = Math.Min(cppEnum.Items.Count, docItem.Items.Count);
                     int i = 0;
                     foreach (CppEnumItem cppEnumItem in cppEnum.EnumItems)
@@ -1563,9 +1565,11 @@ namespace SharpGen.Parser
 
                     if (cppStruct.IsEmpty)
                         continue;
-                    
-                    if (cppStruct.Items.Count != docItem.Items.Count)
-                        Logger.Warning("Invalid number of fields in documentation for Struct {0}", cppStruct.Name);
+
+                    if(cppStruct.Items.Count != docItem.Items.Count)
+                    {
+                        //Logger.Warning("Invalid number of fields in documentation for Struct {0}", cppStruct.Name);
+                    }
                     int count = Math.Min(cppStruct.Items.Count, docItem.Items.Count);
                     int i = 0;
                     foreach (CppField cppField in cppStruct.Fields)
@@ -1610,10 +1614,12 @@ namespace SharpGen.Parser
 
                         if (cppMethod.IsEmpty)
                             continue;
-                        
-                        if (cppMethod.Items.Count != methodDocItem.Items.Count)
-                            Logger.Warning("Invalid number of documentation for Parameters for method {0}",
-                                              methodName);
+
+                        if(cppMethod.Items.Count != methodDocItem.Items.Count)
+                        {
+                            //Logger.Warning("Invalid number of documentation for Parameters for method {0}",
+                            //    methodName);
+                        }
                         int count = Math.Min(cppMethod.Items.Count, methodDocItem.Items.Count);
                         int i = 0;
                         foreach (CppParameter cppParameter in cppMethod.Parameters)
@@ -1649,9 +1655,11 @@ namespace SharpGen.Parser
                     if (cppFunction.IsEmpty)
                         continue;
 
-                    if (cppFunction.Items.Count != docItem.Items.Count)
-                        Logger.Warning("Invalid number of documentation for Parameters for Function {0}",
-                                          cppFunction.Name);
+                    if(cppFunction.Items.Count != docItem.Items.Count)
+                    {
+                        //Logger.Warning("Invalid number of documentation for Parameters for Function {0}",
+                        //    cppFunction.Name);
+                    }
                     int count = Math.Min(cppFunction.Items.Count, docItem.Items.Count);
                     int i = 0;
                     foreach (CppParameter cppParameter in cppFunction.Parameters)
