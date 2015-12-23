@@ -20,7 +20,7 @@
 // THE SOFTWARE.
 -->
 <!-- Common Settings used by SharpDX projects -->
-<Project DefaultTarget="Help" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTarget="PackageDev" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
     <SharpDXRepo>$(MSBuildThisFileDirectory)..</SharpDXRepo>
@@ -45,20 +45,10 @@
     <Message Importance="high" Text="Use parameter /t:Pre-Build;Build to build SharpDX assemblies for non WP8 platforms. And /t:BuildForVS2012 for WP8"/>
   </Target>
 
-  <Target Name="Pre-Build">
-    <CallTarget Targets="GitCheckout"/>
-  </Target>
-
   <Target Name="PackageDev">
-    <CallTarget Targets="GitUpdate"/>
-    <CallTarget Targets="ZipBuild"/>
-    <CallTarget Targets="LocalCopy"/>
-  </Target>
-
-  <Target Name="PackageRelease">
+	<CallTarget Targets="Build"/>
     <CallTarget Targets="Nuget"/>
-    <CallTarget Targets="ZipRelease"/>
-    <CallTarget Targets="FtpReleaseZip"/>
+    <CallTarget Targets="ZipBuild"/>
   </Target>
 
   <Target Name="Nuget">
@@ -133,39 +123,6 @@
     <VerifyCertificationResultTask File="$(SharpDXRepo)\Source\CertificationTests\Results\Test.WP81.xml" />
   </Target>
 
-  <Target Name="GitCheckout">
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) checkout --merge "master_integration"'/>
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) pull --rebase origin'/>
-  </Target>
-
-  <Target Name="GitUpdate">
-    <!-- Update master -->
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) checkout --merge "master"'/>
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) pull --rebase origin'/>
-
-    <!-- Merge master into master_integration -->
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) checkout --merge "master_integration"'/>
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) pull --rebase origin'/>
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) merge "master"'/>
-
-    <!-- Merge master_integration into master -->
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) checkout --merge "master"'/>
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) merge "master_integration"'/>
-
-    <!-- Push master to origin -->
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) push "origin" master:master'/>
-
-    <!-- Get logs from latest tags and push tags -->
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) log latest_build.. > CommitLog.txt'/>
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) tag -f latest_build'/>
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) push -f "origin" tag latest_build'/>
-
-    <!-- Push master_integration to origin -->
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) checkout --merge "master_integration"'/>
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) pull --rebase origin'/>
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) push "origin" master_integration:master_integration'/>
-  </Target>
-
   <Target Name="ZipBuild">
     <Delete Files="$(SharpDXDevZip)"/>
     <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(SharpDXRepo)\External\7-Zip\7z.exe a -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.pri -xr!*.exp $(SharpDXDevZip) Bin\*\*.* License.txt ReleaseNotes.md Readme.md'/>
@@ -174,32 +131,6 @@
   <Target Name="ZipRelease">
     <Delete Files="$(SharpDXReleaseZip)"/>
     <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(SharpDXRepo)\External\7-Zip\7z.exe a -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.pri -xr!*.exp $(SharpDXReleaseZip) Bin\*\*.*  License.txt ReleaseNotes.md Readme.md'/>
-  </Target>
-
-  <Target Name="LocalCopy">
-    <!-- Get Last commit log from git  -->
-    <PropertyGroup>
-      <LastCommitPath>$(SharpDXRepo)\last_commit.txt</LastCommitPath>
-    </PropertyGroup>
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(GitExe) log --format=%%H -1 > $(LastCommitPath)'/>
-
-    <ItemGroup>
-      <FilesToUpload Include="$(SharpDXDevZip)" />
-      <FilesToUpload Include="$(LastCommitPath)" />
-    </ItemGroup>
-
-    <!-- Upload Zip -->
-    <Copy SourceFiles="@(FilesToUpload)" DestinationFolder="$(SharpDXLocalUpload)"/>
-  </Target>
-
-  <Target Name="FtpReleaseZip">
-    <!-- Get Last commit log from git  -->
-    <ItemGroup>
-      <FilesToUpload Include="$(SharpDXReleaseZip)" />
-    </ItemGroup>
-
-    <!-- Upload Zip -->
-    <MSBuild.ExtensionPack.Communication.Ftp TaskAction="UploadFiles" Host="sharpdx.org" RemoteDirectoryName="/sharpdx/upload" FileNames="@(FilesToUpload)" UserName="$(SharpDXFtpUser)" UserPassword="$(SharpDXFtpPassword)" />
   </Target>
 
 </Project>
