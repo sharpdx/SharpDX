@@ -20,7 +20,7 @@
 // THE SOFTWARE.
 -->
 <!-- Common Settings used by SharpDX projects -->
-<Project DefaultTarget="PackageDev" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="PackageDev" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
     <SharpDXRepo>$(MSBuildThisFileDirectory)..</SharpDXRepo>
