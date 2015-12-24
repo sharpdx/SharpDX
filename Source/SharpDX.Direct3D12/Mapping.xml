@@ -296,6 +296,9 @@
     <map param="ID3D12Resource::Map::pReadRange" default="null"/>
     <map param="ID3D12Resource::Unmap::pWrittenRange" default="null"/>
     <map param="ID3D12Resource::Map::ppData" attribute="out" return="true"/>
+
+    <map method="ID3D12GraphicsCommandList::OMSetRenderTargets" visibility="private"/>
+    <map param="ID3D12GraphicsCommandList::OMSetRenderTargets::pRenderTargetDescriptors" type="void"/>
         
     <!--
     // *****************************************************************

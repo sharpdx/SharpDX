@@ -94,6 +94,51 @@ namespace SharpDX.Direct3D12
                 ResourceBarrier(barriers.Length, new IntPtr(pBarriers));
         }
 
+        /// <summary>
+        /// Sets CPU descriptor handles for the render targets and depth stencil. 
+        /// </summary>
+        /// <param name="numRenderTargetDescriptors">The number of entries in the continous render target descriptor array.</param>
+        /// <param name="renderTargetDescriptors">A single cpu handle bound to a numRenderTargetDescriptors descriptors</param>
+        /// <param name="depthStencilDescriptorRef">A handle to the depthStencil</param>
+        /// <unmanaged>void ID3D12GraphicsCommandList::OMSetRenderTargets([In] unsigned int NumRenderTargetDescriptors,[In, Optional] const void* pRenderTargetDescriptors,[In] BOOL RTsSingleHandleToDescriptorRange,[In, Optional] const D3D12_CPU_DESCRIPTOR_HANDLE* pDepthStencilDescriptor)</unmanaged>	
+        /// <unmanaged-short>ID3D12GraphicsCommandList::OMSetRenderTargets</unmanaged-short>	
+        public unsafe void SetRenderTargets(int numRenderTargetDescriptors,
+            CpuDescriptorHandle renderTargetDescriptors,
+            SharpDX.Direct3D12.CpuDescriptorHandle? depthStencilDescriptorRef)
+        {
+            SetRenderTargets(numRenderTargetDescriptors, new IntPtr(&renderTargetDescriptors), true, depthStencilDescriptorRef);
+        }
+
+        /// <summary>
+        /// Sets CPU descriptor handles for the render targets and depth stencil. 
+        /// </summary>
+        /// <param name="depthStencilDescriptorRef">A handle to the depthStencil</param>
+        /// <param name="renderTargetDescriptors">An array of cpu handle render target descriptors</param>
+        /// <unmanaged>void ID3D12GraphicsCommandList::OMSetRenderTargets([In] unsigned int NumRenderTargetDescriptors,[In, Optional] const void* pRenderTargetDescriptors,[In] BOOL RTsSingleHandleToDescriptorRange,[In, Optional] const D3D12_CPU_DESCRIPTOR_HANDLE* pDepthStencilDescriptor)</unmanaged>	
+        /// <unmanaged-short>ID3D12GraphicsCommandList::OMSetRenderTargets</unmanaged-short>	
+        public unsafe void SetRenderTargets(CpuDescriptorHandle[] renderTargetDescriptors, SharpDX.Direct3D12.CpuDescriptorHandle? depthStencilDescriptorRef)
+        {
+            fixed (void* pRT = renderTargetDescriptors)
+                SetRenderTargets(renderTargetDescriptors != null ? renderTargetDescriptors.Length : 0, new IntPtr(pRT), false, depthStencilDescriptorRef);
+        }
+
+        /// <summary>
+        /// Sets CPU descriptor handles for the render targets and depth stencil. 
+        /// </summary>
+        /// <param name="renderTargetDescriptor">An single cpu handle to a render target descriptor/param>
+        /// <param name="depthStencilDescriptorRef">A handle to the depthStencil</param>
+        /// <unmanaged>void ID3D12GraphicsCommandList::OMSetRenderTargets([In] unsigned int NumRenderTargetDescriptors,[In, Optional] const void* pRenderTargetDescriptors,[In] BOOL RTsSingleHandleToDescriptorRange,[In, Optional] const D3D12_CPU_DESCRIPTOR_HANDLE* pDepthStencilDescriptor)</unmanaged>	
+        /// <unmanaged-short>ID3D12GraphicsCommandList::OMSetRenderTargets</unmanaged-short>	
+        public unsafe void SetRenderTargets(CpuDescriptorHandle? renderTargetDescriptor, SharpDX.Direct3D12.CpuDescriptorHandle? depthStencilDescriptorRef)
+        {
+            var renderTargetDesc = new CpuDescriptorHandle();
+            if(renderTargetDescriptor.HasValue)
+            {
+                renderTargetDesc = renderTargetDescriptor.Value;
+            }
+            SetRenderTargets(renderTargetDesc.Ptr != PointerSize.Zero ? 1 : 0, renderTargetDescriptor.HasValue ? new IntPtr(&renderTargetDesc) : IntPtr.Zero, false, depthStencilDescriptorRef);
+        }
+
         /// <summary>	
         /// No documentation for Direct3D12	
         /// </summary>	
