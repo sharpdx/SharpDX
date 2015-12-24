@@ -106,6 +106,10 @@
     <map enum-item="D3D_ROOT_SIGNATURE_VERSION(.*)" name-tmp="Version$1"/>
     <map enum-item="D3D12_SHADER_MIN_PRECISION_SUPPORT_(\d*)_BIT" name-tmp="Bit$1"/>
     <map enum-item="D3D12_DSV_FLAG(.*)" name-tmp="$1"/>
+    
+    <map enum="D3D12_FORMAT_SUPPORT1" flags="true"/>
+    <map enum="D3D12_FORMAT_SUPPORT2" flags="true"/>
+
     <!--
     // *****************************************************************
     // D3D12 Struct
@@ -300,6 +304,8 @@
     <map method="ID3D12GraphicsCommandList::OMSetRenderTargets" visibility="private"/>
     <map param="ID3D12GraphicsCommandList::OMSetRenderTargets::pRenderTargetDescriptors" type="void"/>
         
+    <map method="ID3D12Device::CheckFeatureSupport" check="false" visibility="private"/>
+    
     <!--
     // *****************************************************************
     // D3D12 Functions

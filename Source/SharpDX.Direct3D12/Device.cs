@@ -56,6 +56,23 @@ namespace SharpDX.Direct3D12
         /// <summary>	
         /// No documentation for Direct3D12	
         /// </summary>	
+        /// <param name="feature">No documentation.</param>	
+        /// <param name="featureSupportData">No documentation.</param>	
+        /// <returns>No documentation.</returns>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CheckFeatureSupport']/*"/>	
+        /// <unmanaged>HRESULT ID3D12Device::CheckFeatureSupport([In] D3D12_FEATURE Feature,[Out, Buffer] void* pFeatureSupportData,[In] unsigned int FeatureSupportDataSize)</unmanaged>	
+        /// <unmanaged-short>ID3D12Device::CheckFeatureSupport</unmanaged-short>	
+        public bool CheckFeatureSupport<T>(SharpDX.Direct3D12.Feature feature, ref T featureSupportData) where T : struct
+        {
+            unsafe
+            {
+                return CheckFeatureSupport(feature, new IntPtr(Interop.Fixed(ref featureSupportData)), Utilities.SizeOf<T>()).Success;
+            }
+        }
+
+        /// <summary>	
+        /// No documentation for Direct3D12	
+        /// </summary>	
         /// <param name="descRef">No documentation.</param>	
         /// <param name="riid">No documentation.</param>	
         /// <returns>No documentation.</returns>	
