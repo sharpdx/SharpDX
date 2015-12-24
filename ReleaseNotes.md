@@ -1,14 +1,15 @@
-## SharpDX 3.0.0 (alpha01)
+## SharpDX 3.0.0
 
-This is the first alpha release of the 3.0.0 branch bringing some major new features and changes:
+This is the final release for the 3.0.0 version bringing some major new features and changes:
 
 - Add support for **Direct3D12** to get the best of your graphics card (only compatible with Windows 10 10041)
 - Thanks to the work from the [diet branch](https://github.com/sharpdx/SharpDX/issues/398), SharpDX main assembly is a bit more lightweight. 
 - We have simplified the distribution and packaging by supporting only 2 platforms and .NET versions:
 	- **Desktop** with `.NET 4.5`
 	- **StoreApp** with `PCL .NET 4.5` valid for Windows 8.1+ and Windows Phone 8.1+ development
-- All Mathematics (`Vector3`, `Vector4`...) have been moved to a dedicated assembly. The reason behind this change is to put SharpDX on a diet, where higher level API (like Paradox, MonoGame...) are no longer forced to include this API. In order to support this, all SharpDX assemblies are now using interop types (`RawVector3`, `RawVector4` from         `SharpDX.Mathematics.Interop` namespace) 
+- All Mathematics (`Vector3`, `Vector4`...) have been moved to a dedicated assembly. The reason behind this change is to put SharpDX on a diet, where higher level API (like Xenko, MonoGame...) are no longer forced to include this API. In order to support this, all SharpDX assemblies are now using interop types (`RawVector3`, `RawVector4` from         `SharpDX.Mathematics.Interop` namespace) 
 - A new assembly `SharpDX.Desktop` that contains `RenderForm`, `RenderLoop` previously in `SharpDX` assembly
+- XInput and XAudio are now providing a backward compatible interface between the various versions. For Desktop, it means that the runtime will try to detect the correct versions for XInput (9.10, 1.3, 1.4) or XAudio (2.7 or 2.8). For Store Apps, the latest one will be used.   
 
 Assemblies are both available from a **zip** and from **NuGet**. 
 Note that distribution from NuGet should be now more stable and usable than previous versions due to the diet work.
@@ -32,21 +33,6 @@ The [samples](https://github.com/sharpdx/SharpDX-Samples) are now part of a subm
 - `Samples\Desktop\...`... etc.
 
 Some scripts will be added later to simplify the setup of the samples.
-
-### About Direct3D12
-
-This release includes a preview of the `Direct3D12` API along a very basic sample `HelloWorld` available from the [SharpDX Samples](https://github.com/sharpdx/SharpDX-Samples) repository.
-
-Compare to previous Direct3D API in SharpDX, the API is now closer to the C++ API (e.g keep methods like `Device.CreateXXX(...)` instead of `new XXX(device, ...)`)
-
-In order to use this API, make sure that you have **Windows 10 10041 and the latest graphics drivers installed**
-
-Due to NDA, I'm not yet allowed to publish ported samples from Direct3D12 Early Access Program, sorry for that!
- 
-### Known issues
-
-- The `Direct3D12` API is still a work in progress. Some structures are not yet usable or not correctly marshalled. Most of the work done so far was to get the `HelloTriangle` working, which is using a very small part of the `Direct3D12` API.
-- `XInput` 1.4 and `XAudio2` 2.8 are only generated for the Windows 8 versions (for both desktop and stores). We will restore previous versions in a later alpha release (`XInput 9.1.0`, `XAudio 2.7`)  
 
 ### Feedback
 
