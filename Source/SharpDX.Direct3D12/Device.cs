@@ -266,7 +266,7 @@ namespace SharpDX.Direct3D12
                 desc.PixelShader.UpdateNative(ref nativeDesc.PixelShader, (IntPtr)pPixelShader);
 
                 // Marshal input elements
-                var elements = desc.InputLayout.Elements;
+                var elements = desc.InputLayout?.Elements;
                 var nativeElements = (InputElement.__Native*)0;
                 if (elements != null && elements.Length > 0)
                 {
@@ -282,13 +282,13 @@ namespace SharpDX.Direct3D12
                 }
 
                 //Marshal stream output elements
-                var streamOutElements = desc.StreamOutput.Elements;
+                var streamOutElements = desc.StreamOutput?.Elements;
                 var nativeStreamOutElements = (StreamOutputElement.__Native*)0;
                 if (streamOutElements != null && streamOutElements.Length > 0)
                 {
                     var ptr = stackalloc StreamOutputElement.__Native[streamOutElements.Length];
                     nativeStreamOutElements = ptr;
-                    for (int i = 0; i < streamOutElements.Length; i++)
+                    for(int i = 0; i < streamOutElements.Length; i++)
                     {
                         streamOutElements[i].__MarshalTo(ref nativeStreamOutElements[i]);
                     }
