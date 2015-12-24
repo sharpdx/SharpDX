@@ -99,7 +99,6 @@ namespace SharpDX.XInput
         public Result GetKeystroke(DeviceQueryType deviceQueryType, out Keystroke keystroke)
         {
             var result = ErrorCodeHelper.ToResult(xinput.XInputGetKeystroke((int)userIndex, (int)deviceQueryType, out keystroke));
-            result.CheckError();
             return result;
         }
 
