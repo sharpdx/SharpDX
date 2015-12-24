@@ -79,7 +79,7 @@ namespace SharpDX
         public string NativeApiCode { get; private set; }
 
         /// <summary>
-        /// Gets the API code (ex: DemiceRemoved ...)
+        /// Gets the API code (ex: DeviceRemoved ...)
         /// </summary>
         public string ApiCode { get; private set; }
 
