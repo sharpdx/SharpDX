@@ -344,7 +344,11 @@ namespace SharpDX.DirectInput
                     PointOfViewControllers[3] = __from[3];
                 }
 
-                fixed (void* __to = &this.Buttons[0]) fixed (void* __from = value.Buttons) SharpDX.Utilities.CopyMemory((IntPtr)__to, (IntPtr)__from, 128 * sizeof(byte));
+                fixed(void* __from = value.Buttons)
+                {
+                    for(int i = 0; i < 128; i++)
+                        Buttons[i] = (((byte*)__from)[i] & 0x80) != 0;
+                }
 
                 this.VelocityX = value.VelocityX;
                 this.VelocityY = value.VelocityY;
