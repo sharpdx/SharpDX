@@ -28,7 +28,7 @@ namespace SharpDX
     ///   Equivalent to Windows type SIZE_T.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct PointerSize
+    public struct PointerSize : IEquatable<PointerSize>
     {
         private IntPtr _size;
 
@@ -107,7 +107,7 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return _size.ToInt32();
+            return _size.GetHashCode();
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace SharpDX
         /// </returns>
         public bool Equals(PointerSize other)
         {
-            return _size == other._size;
+            return _size.Equals(other._size);
         }
 
         /// <summary>
@@ -131,13 +131,8 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object value)
         {
-            if (value == null)
-                return false;
-
-            if (!ReferenceEquals(value.GetType(), typeof(PointerSize)))
-                return false;
-
-            return Equals((PointerSize) value);
+            if(ReferenceEquals(null, value)) return false;
+            return value is PointerSize && Equals((PointerSize)value);
         }
 
         /// <summary>
