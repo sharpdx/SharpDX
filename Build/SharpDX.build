@@ -47,12 +47,7 @@
     <Message Importance="High" Text="Building SharpDX $(SharpDXAssemblyVersion)"/>
     <CallTarget Targets="Build"/>
     <CallTarget Targets="ZipBuild"/>
-    <CallTarget Condition="'$(SharpDXNugetPush)' == 'true'" Targets="NugetAndPush"/>
-  </Target>
-
-  <Target Name="NugetAndPush">
-    <CallTarget Targets="Nuget"/>
-    <CallTarget Targets="NugetPush"/>
+    <CallTarget Condition="'$(SharpDXNugetPush)' == 'true'" Targets="Nuget"/>
   </Target>
 
   <Target Name="Build">
@@ -69,14 +64,6 @@
       <SharpDXNuspecs Include="$(SharpDXRepo)\Source\**\*.nuspec"/>
     </ItemGroup>
     <Exec Command="nuget.exe pack -OutputDirectory $(SharpDXNugetPackageDir) -Properties version=$(SharpDXAssemblyVersion) -Symbols %(SharpDXNuspecs.Identity)"/>
-  </Target>
-
-  <Target Name="NugetPush">
-    <ItemGroup>
-      <SharpDXNupkg Include="$(SharpDXNugetPackageDir)\*.nupkg"/>
-    </ItemGroup>
-    <Error Condition="'$(SharpDXNugetApiKey)' == ''" Text="SharpDXNugetApiKey env variable is required when pushing nuget package"/>
-    <Exec Command="nuget.exe push -ApiKey $(SharpDXNugetApiKey) %(SharpDXNupkg.Identity)"/>
   </Target>
 
   <Target Name="ZipBuild">
