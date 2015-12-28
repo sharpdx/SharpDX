@@ -99,6 +99,9 @@ namespace SharpDX.Diagnostics
             }
         }
 
+        /// <summary>
+        /// Gets default stack trace.
+        /// </summary>
         public static string GetStackTrace()
         {
 #if STORE_APP
