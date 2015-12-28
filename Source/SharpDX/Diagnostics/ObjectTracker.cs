@@ -101,7 +101,6 @@ namespace SharpDX.Diagnostics
 
         public static string GetStackTrace()
         {
-            // What about Windows Desktop?
 #if STORE_APP
             var stacktrace = "Stacktrace is not available on this platform";
 
