@@ -31,7 +31,7 @@ namespace SharpDX.Diagnostics
     /// <summary>
     /// Event args for <see cref="ComObject"/> used by <see cref="ObjectTracker"/>.
     /// </summary>
-    public class ComObjectEventArgs : EventArgs
+    public struct ComObjectEventArgs
     {
         /// <summary>
         /// The object being tracked/untracked.
