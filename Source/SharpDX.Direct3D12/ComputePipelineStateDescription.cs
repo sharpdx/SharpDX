@@ -26,6 +26,13 @@ namespace SharpDX.Direct3D12
     {
         private RootSignature rootSignature;
 
+        /// <summary>	
+        /// <dd> <p> A reference to the <strong><see cref="SharpDX.Direct3D12.RootSignature"/></strong> object. </p> </dd>	
+        /// </summary>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='D3D12_COMPUTE_PIPELINE_STATE_DESC::pRootSignature']/*"/>	
+        /// <msdn-id>dn770350</msdn-id>	
+        /// <unmanaged>ID3D12RootSignature* pRootSignature</unmanaged>	
+        /// <unmanaged-short>ID3D12RootSignature pRootSignature</unmanaged-short>	
         public RootSignature RootSignature
         {
             get { return rootSignature; }

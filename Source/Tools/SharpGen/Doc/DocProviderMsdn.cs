@@ -212,14 +212,14 @@ namespace SharpGen.Doc
                 }
                 else
                 {
-                    return null;
-
                     // Begin update if zip is not updated
                     if (!isZipUpdated)
                     {
                         _zipFile.BeginUpdate();
                         isZipUpdated = true;
                     }
+
+                    Logger.Progress(20 + (counter/50) % 10, "Fetching C++ documentation ([{0}]) from MSDN", name);
 
                     doc = GetDocumentationFromMsdn(name);
                     
@@ -239,6 +239,8 @@ namespace SharpGen.Doc
 
                 if (!File.Exists(fileName))
                 {
+                    Logger.Progress(20 + (counter / 50) % 10, "Fetching C++ documentation ([{0}]) from MSDN", name);
+
                     doc = GetDocumentationFromMsdn(name);
                     File.WriteAllText(fileName, doc);
                 }

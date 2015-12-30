@@ -76,6 +76,9 @@ namespace SharpDX.Direct3D12
         /// </summary>
         /// <returns>A serialized version of this description.</returns>
         /// <exception cref="SharpDXException">If an error occured while serializing the description</exception>
+        /// <msdn-id>dn859363</msdn-id>
+        /// <unmanaged>HRESULT D3D12SerializeRootSignature([In] const void* pRootSignature,[In] D3D_ROOT_SIGNATURE_VERSION Version,[Out] ID3D10Blob** ppBlob,[Out, Optional] ID3D10Blob** ppErrorBlob)</unmanaged>	
+        /// <unmanaged-short>D3D12SerializeRootSignature</unmanaged-short>	
         public Blob Serialize()
         {
             string errorText;
@@ -92,6 +95,9 @@ namespace SharpDX.Direct3D12
         /// Serializes this description to a blob.
         /// </summary>
         /// <returns>A serialized version of this description.</returns>
+        /// <msdn-id>dn859363</msdn-id>
+        /// <unmanaged>HRESULT D3D12SerializeRootSignature([In] const void* pRootSignature,[In] D3D_ROOT_SIGNATURE_VERSION Version,[Out] ID3D10Blob** ppBlob,[Out, Optional] ID3D10Blob** ppErrorBlob)</unmanaged>	
+        /// <unmanaged-short>D3D12SerializeRootSignature</unmanaged-short>	
         private unsafe Result Serialize(out Blob result, out string errorText)
         {
             Blob error;

@@ -35,6 +35,13 @@ namespace SharpDX.Direct3D12
             Elements = elements;
         }
 
+        /// <summary>	
+        /// <dd> <p> An array of <strong><see cref="SharpDX.Direct3D12.StreamOutputElement"/></strong> structures. Can't be <strong><c>null</c></strong> if <strong>NumEntries</strong> &gt; 0. </p> </dd>	
+        /// </summary>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='D3D12_STREAM_OUTPUT_DESC::pSODeclaration']/*"/>	
+        /// <msdn-id>dn770410</msdn-id>	
+        /// <unmanaged>const D3D12_SO_DECLARATION_ENTRY* pSODeclaration</unmanaged>	
+        /// <unmanaged-short>D3D12_SO_DECLARATION_ENTRY pSODeclaration</unmanaged-short>	
         public StreamOutputElement[] Elements { get; set; }
 
         public int[] Strides { get; set; }

@@ -22,10 +22,14 @@ using System;
 
 namespace SharpDX.Direct3D12
 {
+    /// <msdn-id>dn770370</msdn-id>
     public partial class GraphicsPipelineStateDescription
     {
         private RootSignature rootSignature;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public RootSignature RootSignature
         {
             get { return rootSignature; }

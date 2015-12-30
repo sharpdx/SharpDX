@@ -8,9 +8,13 @@ using System.Threading.Tasks;
 namespace SharpDX.Direct3D12
 {
     /// <summary>	
-    /// No documentation for Direct3D12	
+    /// <p>Describes a portion of a texture for the purpose of texture copies. </p>	
     /// </summary>	
+    /// <remarks>	
+    /// <p> Use this structure with <strong>CopyTextureRegion</strong>. </p>	
+    /// </remarks>	
     /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='D3D12_TEXTURE_COPY_LOCATION']/*"/>	
+    /// <msdn-id>dn903818</msdn-id>	
     /// <unmanaged>D3D12_TEXTURE_COPY_LOCATION</unmanaged>	
     /// <unmanaged-short>D3D12_TEXTURE_COPY_LOCATION</unmanaged-short>	
     public partial struct TextureCopyLocation

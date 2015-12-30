@@ -28,6 +28,13 @@ namespace SharpDX.Direct3D12
             Elements = elements;
         }
 
+        /// <summary>	
+        /// <dd> <p> An array of <strong><see cref="SharpDX.Direct3D12.InputElement"/></strong> structures that describe the data types of the input-assembler stage. </p> </dd>	
+        /// </summary>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='D3D12_INPUT_LAYOUT_DESC::pInputElementDescs']/*"/>	
+        /// <msdn-id>dn770378</msdn-id>	
+        /// <unmanaged>const D3D12_INPUT_ELEMENT_DESC* pInputElementDescs</unmanaged>	
+        /// <unmanaged-short>D3D12_INPUT_ELEMENT_DESC pInputElementDescs</unmanaged-short>	
         public InputElement[] Elements { get; set; }
 
         public static implicit operator InputLayoutDescription(InputElement[] elements)

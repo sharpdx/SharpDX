@@ -21,6 +21,13 @@ namespace SharpDX.Direct3D12
 {
     public partial class CommandSignatureDescription
     {
+        /// <summary>	
+        /// <dd> <p> An array of <strong><see cref="SharpDX.Direct3D12.IndirectArgumentDescription"/></strong> structures, containing details of the arguments, including whether the argument is a vertex buffer, constant, constant buffer view, shader resource view, or unordered access view. </p> </dd>	
+        /// </summary>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='D3D12_COMMAND_SIGNATURE_DESC::pArgumentDescs']/*"/>	
+        /// <msdn-id>dn986724</msdn-id>	
+        /// <unmanaged>const D3D12_INDIRECT_ARGUMENT_DESC* pArgumentDescs</unmanaged>	
+        /// <unmanaged-short>D3D12_INDIRECT_ARGUMENT_DESC pArgumentDescs</unmanaged-short>	
         public IndirectArgumentDescription[] IndirectArguments { get; set; }
     }
 }
