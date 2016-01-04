@@ -31,6 +31,19 @@ namespace SharpDX.Mathematics.Interop
     public struct RawInt3
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="RawInt3"/> struct.
+        /// </summary>
+        /// <param name="x">The X.</param>
+        /// <param name="y">The y.</param>
+        /// <param name="z">The z.</param>
+        public RawInt3(int x, int y, int z)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+        }
+
+        /// <summary>
         /// The X component of the vector.
         /// </summary>
         public int X;

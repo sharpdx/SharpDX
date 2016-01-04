@@ -31,6 +31,17 @@ namespace SharpDX.Mathematics.Interop
     public struct RawVector2
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="RawVector2"/> struct.
+        /// </summary>
+        /// <param name="x">The X.</param>
+        /// <param name="y">The y.</param>
+        public RawVector2(float x, float y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        /// <summary>
         /// The X component of the vector.
         /// </summary>
         public float X;

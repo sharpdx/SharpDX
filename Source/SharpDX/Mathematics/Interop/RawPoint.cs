@@ -31,6 +31,17 @@ namespace SharpDX.Mathematics.Interop
     public struct RawPoint
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="RawPoint"/> struct.
+        /// </summary>
+        /// <param name="x">The X.</param>
+        /// <param name="y">The y.</param>
+        public RawPoint(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        /// <summary>
         /// Left coordinate.
         /// </summary>
         public int X;
