@@ -6,7 +6,7 @@ SharpDX is an open-source project delivering the **full DirectX API for .Net on 
 
 ## Wiki Documentation
 
-You can find more documentation on the [Wiki][http://sharpdx.org/wiki]
+You can find more documentation on the [Wiki](http://sharpdx.org/wiki)
 
 ## Build
 
