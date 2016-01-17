@@ -44,9 +44,7 @@
   <files>
     <file src="..\..\Bin\Desktop\SharpDX.Animation.dll" target="\lib\net45" />
     <file src="..\..\Bin\Desktop\SharpDX.Animation.xml" target="\lib\net45" />
-
-    <file src="..\..\Bin\StoreApp\SharpDX.Animation.dll" target="\lib\portable-net45+netcore45+wpa81+MonoAndroid1+MonoTouch1" />
-    <file src="..\..\Bin\StoreApp\SharpDX.Animation.xml" target="\lib\portable-net45+netcore45+wpa81+MonoAndroid1+MonoTouch1" />
+	
     <file src="**\*.cs" target="src" />
   </files>
   
