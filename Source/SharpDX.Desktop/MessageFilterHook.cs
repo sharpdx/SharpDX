@@ -29,7 +29,7 @@ namespace SharpDX
     /// <summary>
     /// Provides a hook to WndProc of an existing window handle using <see cref="IMessageFilter"/>.
     /// </summary>
-    class MessageFilterHook
+    public class MessageFilterHook
     {
         #region Constants and Fields
 
