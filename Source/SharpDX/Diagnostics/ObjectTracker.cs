@@ -69,6 +69,11 @@ namespace SharpDX.Diagnostics
         /// </summary>
         public static event EventHandler<ComObjectEventArgs> UnTracked;
 
+        /// <summary>
+        /// Function which provides stack trace for object tracking.
+        /// </summary>
+        public static Func<string> StackTraceProvider = GetStackTrace;
+
         private static Dictionary<IntPtr, List<ObjectReference>> ObjectReferences
         {
             get
@@ -93,7 +98,80 @@ namespace SharpDX.Diagnostics
                 return objectReferences;
             }
         }
-        
+
+        /// <summary>
+        /// Gets default stack trace.
+        /// </summary>
+        public static string GetStackTrace()
+        {
+#if STORE_APP
+            var stacktrace = "Stacktrace is not available on this platform";
+
+            // This code is a workaround to be able to get a full stacktrace on Windows Store App. 
+            // This is an unsafe code, that should not run on production. Only at dev time!
+            // Make sure we are on a 32bit process
+            if (IntPtr.Size == 4)
+            {
+                // Get an access to a restricted method
+                try
+                {
+                    var stackTraceGetMethod = typeof(Environment).GetRuntimeProperty("StackTrace").GetMethod;
+                    try
+                    {
+                        // First try to get the stacktrace
+                        stacktrace = (string)stackTraceGetMethod.Invoke(null, null);
+                    }
+                    catch (Exception ex)
+                    {
+                        // If we have an exception, it means that the access to the method is not possible
+                        // so we are going to patch the field RuntimeMethodInfo.m_invocationFlags that should contain
+                        // 0x41 (initialized + security), and replace it by 0x1 (initialized)
+                        // and then callback again the method
+                        unsafe
+                        {
+                            // unsafe code, the RuntimeMethodInfo could be relocated (is it a real managed GC object?), 
+                            // but we don't have much choice
+                            var addr = *(int**)Interop.Fixed(ref stackTraceGetMethod);
+                            // offset to RuntimeMethodInfo.m_invocationFlags
+                            addr += 13;
+                            // Check if we have the expecting value
+                            if (*addr == 0x41)
+                            {
+                                // if yes, change it to 0x1
+                                *addr = 0x1;
+                                try
+                                {
+                                    // And try to callit again a second time
+                                    // if it succeeds, first Invoke() should run on next call
+                                    stacktrace = (string)stackTraceGetMethod.Invoke(null, null);
+                                }
+                                catch (Exception ex2)
+                                {
+                                    // if it is still failing, we can't do anything
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // can't do anything
+                }
+            }
+            return stacktrace;
+#else
+            // Another WTF: To get a stacktrace, we don't have other ways than throwing an exception on PCL. 
+            try
+            {
+                throw new GetStackTraceException();
+            }
+            catch (GetStackTraceException ex)
+            {
+                return ex.StackTrace;
+            }
+#endif
+        }
+
         /// <summary>
         /// Tracks the specified COM object.
         /// </summary>
@@ -112,72 +190,8 @@ namespace SharpDX.Diagnostics
                     ObjectReferences.Add(comObject.NativePointer, referenceList);
                 }
 
-#if STORE_APP
-                var stacktrace = "Stacktrace is not available on this platform";
+                referenceList.Add(new ObjectReference(DateTime.Now, comObject, StackTraceProvider != null ? StackTraceProvider() : String.Empty));
 
-                // This code is a workaround to be able to get a full stacktrace on Windows Store App. 
-                // This is an unsafe code, that should not run on production. Only at dev time!
-                // Make sure we are on a 32bit process
-                if(IntPtr.Size == 4)
-                {
-                    // Get an access to a restricted method
-                    try
-                    {
-                        var stackTraceGetMethod = typeof(Environment).GetRuntimeProperty("StackTrace").GetMethod;
-                        try
-                        {
-                            // First try to get the stacktrace
-                            stacktrace = (string)stackTraceGetMethod.Invoke(null, null);
-                        }
-                        catch(Exception ex)
-                        {
-                            // If we have an exception, it means that the access to the method is not possible
-                            // so we are going to patch the field RuntimeMethodInfo.m_invocationFlags that should contain
-                            // 0x41 (initialized + security), and replace it by 0x1 (initialized)
-                            // and then callback again the method
-                            unsafe
-                            {
-                                // unsafe code, the RuntimeMethodInfo could be relocated (is it a real managed GC object?), 
-                                // but we don't have much choice
-                                var addr = *(int**)Interop.Fixed(ref stackTraceGetMethod);
-                                // offset to RuntimeMethodInfo.m_invocationFlags
-                                addr += 13;
-                                // Check if we have the expecting value
-                                if(*addr == 0x41)
-                                {
-                                    // if yes, change it to 0x1
-                                    *addr = 0x1;
-                                    try
-                                    {
-                                        // And try to callit again a second time
-                                        // if it succeeds, first Invoke() should run on next call
-                                        stacktrace = (string)stackTraceGetMethod.Invoke(null, null);
-                                    }
-                                    catch(Exception ex2)
-                                    {
-                                        // if it is still failing, we can't do anything
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    catch(Exception ex)
-                    {
-                        // can't do anything
-                    }
-                }
-                referenceList.Add(new ObjectReference(DateTime.Now, comObject, stacktrace));
-#else
-                // Another WTF: To get a stacktrace, we don't have other ways than throwing an exception on PCL. 
-                try
-                {
-                    throw new GetStackTraceException();
-                }
-                catch (GetStackTraceException ex)
-                {
-                    referenceList.Add(new ObjectReference(DateTime.Now, comObject, ex.StackTrace));
-                }
-#endif
                 // Fire Tracked event.
                 OnTracked(comObject);
             }
