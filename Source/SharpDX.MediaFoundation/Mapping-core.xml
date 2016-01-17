@@ -981,6 +981,8 @@
     <map function="CopyPropertyStore" dll='"mf.dll"'/>
     <map function="ConvertPropVariant" dll='"mf.dll"'/>
     <map function="AppendPropVariant" dll='"mf.dll"'/>
+      
+    <map function="MFPCreateMediaPlayer" dll='"mfplay.dll"'/>
 
     <map function="MFTEnumEx" visibility="internal"/>
     <map param="MFTEnumEx::pppMFTActivate" type="void" attribute="out"/>
