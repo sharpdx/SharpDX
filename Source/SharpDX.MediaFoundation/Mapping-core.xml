@@ -189,6 +189,10 @@
 
     <create visibility="public static" class="MediaTypeGuids" />
     <const from-guid="MFMediaType_(.*)" class="SharpDX.MediaFoundation.MediaTypeGuids" type="System.Guid" name="$1">new Guid("$1")</const>
+
+    <create visibility="public static" class="TranscodeContainerTypeGuids" />
+    <const from-guid="MFTranscodeContainerType_([A-Z].*)" class="SharpDX.MediaFoundation.TranscodeContainerTypeGuids" type="System.Guid" name="$1">new Guid("$1")</const>
+    <const from-guid="MFTranscodeContainerType_3GP" class="SharpDX.MediaFoundation.TranscodeContainerTypeGuids" type="System.Guid" name="Mobile3gp">new Guid("$1")</const>
 	
     <const from-guid="EVRConfig_AllowBatching" class="SharpDX.MediaFoundation.EVRConfigAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="AllowBatching">new MediaAttributeKey&lt;int&gt;("$1", "AllowBatching")</const>
     <const from-guid="EVRConfig_AllowDropToBob" class="SharpDX.MediaFoundation.EVRConfigAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="AllowDropToBob">new MediaAttributeKey&lt;int&gt;("$1", "AllowDropToBob")</const>
