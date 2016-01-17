@@ -29,6 +29,25 @@ namespace SharpDX.Mathematics.Interop
     public struct RawMatrix3x2
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="RawMatrix3x2"/> struct.
+        /// </summary>
+        /// <param name="m11">The m11 value.</param>
+        /// <param name="m12">The m12 value.</param>
+        /// <param name="m21">The m21 value.</param>
+        /// <param name="m22">The m22 value.</param>
+        /// <param name="m31">The m31 value.</param>
+        /// <param name="m32">The m32 value.</param>
+        public RawMatrix3x2(float m11, float m12, float m21, float m22, float m31, float m32)
+        {
+            M11 = m11;
+            M12 = m12;
+            M21 = m21;
+            M22 = m22;
+            M31 = m31;
+            M32 = m32;
+        }
+
+        /// <summary>
         /// Element (1,1)
         /// </summary>
         public float M11;

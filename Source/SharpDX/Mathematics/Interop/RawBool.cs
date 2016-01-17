@@ -29,7 +29,7 @@ namespace SharpDX.Mathematics.Interop
     [StructLayout(LayoutKind.Sequential, Size = 4)]
     public struct RawBool : IEquatable<RawBool>
     {
-        private int boolValue;
+        private readonly int boolValue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RawBool" /> class.

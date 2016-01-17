@@ -31,6 +31,17 @@ namespace SharpDX.Mathematics.Interop
     public struct RawPlane
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="RawPlane"/> struct.
+        /// </summary>
+        /// <param name="normal">The plane normal.</param>
+        /// <param name="d">The plance distance.</param>
+        public RawPlane(RawVector3 normal, float d)
+        {
+            Normal = normal;
+            D = d;
+        }
+
+        /// <summary>
         /// The normal vector of the plane.
         /// </summary>
         public RawVector3 Normal;
