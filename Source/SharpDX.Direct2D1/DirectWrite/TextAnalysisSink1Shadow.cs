@@ -29,7 +29,7 @@ namespace SharpDX.DirectWrite
     /// </summary>
     internal class TextAnalysisSink1Shadow : TextAnalysisSinkShadow
     {
-        private static readonly TextAnalysisSinkVtbl Vtbl = new TextAnalysisSinkVtbl();
+        private static readonly TextAnalysisSink1Vtbl Vtbl = new TextAnalysisSink1Vtbl();
 
         /// <summary>
         /// Return a pointer to the unmanaged version of this callback.
