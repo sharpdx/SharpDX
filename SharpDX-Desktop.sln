@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31010.0
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sources", "Sources", "{CC8DB471-0644-430D-9D4B-808A2475BEC0}"
 	ProjectSection(SolutionItems) = preProject
@@ -87,6 +87,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDX.Direct3D12", "Source\SharpDX.Direct3D12\SharpDX.Direct3D12.csproj", "{E5BB5D1C-6C07-495B-923B-FB80B79C535E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDX.Desktop", "Source\SharpDX.Desktop\SharpDX.Desktop.csproj", "{5F8DB9E8-FFAE-475F-AC2E-FE2DC5B15A1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDX.Direct3D11On12", "Source\SharpDX.Direct3D11On12\SharpDX.Direct3D11On12.csproj", "{FE519FDF-CFBE-46E8-B58A-577129E68621}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -193,6 +195,10 @@ Global
 		{5F8DB9E8-FFAE-475F-AC2E-FE2DC5B15A1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F8DB9E8-FFAE-475F-AC2E-FE2DC5B15A1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F8DB9E8-FFAE-475F-AC2E-FE2DC5B15A1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE519FDF-CFBE-46E8-B58A-577129E68621}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE519FDF-CFBE-46E8-B58A-577129E68621}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE519FDF-CFBE-46E8-B58A-577129E68621}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE519FDF-CFBE-46E8-B58A-577129E68621}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -223,5 +229,6 @@ Global
 		{49E4485F-3A2A-4C35-A159-12ECCFC00396} = {CC8DB471-0644-430D-9D4B-808A2475BEC0}
 		{E5BB5D1C-6C07-495B-923B-FB80B79C535E} = {CC8DB471-0644-430D-9D4B-808A2475BEC0}
 		{5F8DB9E8-FFAE-475F-AC2E-FE2DC5B15A1B} = {CC8DB471-0644-430D-9D4B-808A2475BEC0}
+		{FE519FDF-CFBE-46E8-B58A-577129E68621} = {CC8DB471-0644-430D-9D4B-808A2475BEC0}
 	EndGlobalSection
 EndGlobal
