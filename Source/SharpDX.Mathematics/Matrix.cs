@@ -2291,13 +2291,15 @@ namespace SharpDX
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
         public static void PerspectiveFovLH(float fov, float aspect, float znear, float zfar, out Matrix result)
         {
-            float yScale = (float)(1.0 / Math.Tan(fov * 0.5f));
-            float xScale = yScale / aspect;
-
-            float halfWidth = znear / xScale;
-            float halfHeight = znear / yScale;
-
-            PerspectiveOffCenterLH(-halfWidth, halfWidth, -halfHeight, halfHeight, znear, zfar, out result);
+            float cotTheta = (float)(1f / Math.Tan(fov * 0.5f));
+            float q = zfar / (zfar - znear);
+            
+            result = new Matrix();
+            result.M11 = cotTheta / aspect;
+            result.M22 = cotTheta;
+            result.M33 = q;
+            result.M34 = 1f;
+            result.M44 = -q * znear;
         }
 
         /// <summary>
@@ -2325,13 +2327,15 @@ namespace SharpDX
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
         public static void PerspectiveFovRH(float fov, float aspect, float znear, float zfar, out Matrix result)
         {
-            float yScale = (float)(1.0 / Math.Tan(fov * 0.5f));
-            float xScale = yScale / aspect;
-
-            float halfWidth = znear / xScale;
-            float halfHeight = znear / yScale;
-
-            PerspectiveOffCenterRH(-halfWidth, halfWidth, -halfHeight, halfHeight, znear, zfar, out result);
+            float cotTheta = (float)(1f / Math.Tan(fov * 0.5f));
+            float q = zfar / (zfar - znear);
+            
+            result = new Matrix();
+            result.M11 = cotTheta / aspect;
+            result.M22 = cotTheta;
+            result.M33 = q;
+            result.M34 = -1f;
+            result.M44 = q * znear;
         }
 
         /// <summary>
