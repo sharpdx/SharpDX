@@ -217,6 +217,7 @@
     <map field="XAUDIO2FX_VOLUMEMETER_LEVELS::pRMSLevels" name="RmsLevelsPointer" />
     <map field="XAUDIO2FX_VOLUMEMETER_LEVELS::pRMSLevels" visibility="internal" />
     <map struct="XAUDIO2_EFFECT_DESCRIPTOR" native="true" struct-to-class="true" marshal="false" new="false" marshalto="true" />
+    <map struct="XAUDIO2_.*" pack="4" />
 
     <!--
     // *****************************************************************
