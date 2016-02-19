@@ -42,6 +42,7 @@
   <include file="d3d11_2.h" attach="true" />
   <include file="d3d11_3.h" attach="true" />
   <include file="d3d11sdklayers.h" attach="true" />
+  <include file="d3d11on12.h" attach="true" />
 
   <naming />
 
@@ -49,6 +50,7 @@
     <context>sharpdx-direct3d11</context>
     <context>sharpdx-direct3d11-ext</context>
     <context>d3d11</context>
+    <context>d3d11on12</context>
     <context>d3d11sdklayers</context>
     <context>d3d11_1</context>
     <context>d3d11_2</context>
@@ -280,6 +282,10 @@
     
     <map param="ID3D11DeviceContext2::.*Tile.*::Flags" type="D3D11_TILE_MAPPING_FLAG" />
     <map param="ID3D11DeviceContext2::UpdateTileMappings::pRangeFlags" type="D3D11_TILE_RANGE_FLAG" />
+    
+    <map param="ID3D11On12Device::CreateWrappedResource::InState" type="int" />
+    <map param="ID3D11On12Device::CreateWrappedResource::OutState" type="int" />
+    <map param="ID3D11On12Device::CreateWrappedResource::ppResource11" type="ID3D11Resource" />
 
     <!--
     // *****************************************************************
@@ -292,6 +298,9 @@
     <map function="D3D11.*" dll='"d3d11.dll"' group="SharpDX.Direct3D11.D3D11" />
     <map param="D3D11CreateDevice::ppDevice" attribute="out fast" />
     <map function="D3D11CreateDevice" check="false"/>
+    <map function="D3D11On12CreateDevice" dll='"d3d11.dll"' group="SharpDX.Direct3D11.D3D11"/>
+    <map param="D3D11On12CreateDevice::Flags" type ="D3D11_CREATE_DEVICE_FLAG"/>
+    <map param="D3D11On12CreateDevice::ppDevice" type="ID3D11Device" attribute="out" />
     
     <remove function="ID3D11DeviceContext1_.*"/>
 

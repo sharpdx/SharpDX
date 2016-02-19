@@ -666,5 +666,14 @@ namespace SharpDX.Direct3D11
                 ImmediateContext__.Device__ = this;
             }
         }
+
+        public static Device CreateFromDirect3D12(ComObject d3d12Device, Direct3D11.DeviceCreationFlags flags, Direct3D.FeatureLevel[] featureLevels, DXGI.Adapter adapter, params ComObject[] commandQueues)
+        {
+            Device devOut;
+            DeviceContext contextOut;
+            Direct3D.FeatureLevel featurelevelOut;
+            D3D11.On12CreateDevice(d3d12Device, flags, featureLevels, featureLevels == null ? 0 : featureLevels.Length, commandQueues, commandQueues.Length, 0, out devOut, out contextOut, out featurelevelOut);
+            return devOut;
+        }
     }
 }
