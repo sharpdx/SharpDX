@@ -667,12 +667,28 @@ namespace SharpDX.Direct3D11
             }
         }
 
-        public static Device CreateFromDirect3D12(ComObject d3d12Device, Direct3D11.DeviceCreationFlags flags, Direct3D.FeatureLevel[] featureLevels, DXGI.Adapter adapter, params ComObject[] commandQueues)
+        /// <summary>	
+        /// <p> Creates a device that uses Direct3D 11 functionality in Direct3D 12, specifying a pre-existing D3D12 device to use for D3D11 interop. </p>	
+        /// </summary>	
+        /// <param name="d3D12Device"><dd>  <p> Specifies a pre-existing D3D12 device to use for D3D11 interop. May not be <c>null</c>. </p> </dd></param>	
+        /// <param name="flags"><dd>  <p> Any of those documented for <strong>D3D11CreateDeviceAndSwapChain</strong>. Specifies which runtime layers to enable (see the <strong><see cref="SharpDX.Direct3D11.DeviceCreationFlags"/></strong> enumeration); values can be bitwise OR'd together. <em>Flags</em> must be compatible with device flags, and its <em>NodeMask</em> must be a subset of the <em>NodeMask</em> provided to the present API. </p> </dd></param>	
+        /// <param name="featureLevels"><dd>  <p> An array of any of the following: </p> <ul> <li><see cref="SharpDX.Direct3D.FeatureLevel.Level_12_1"/></li> <li><see cref="SharpDX.Direct3D.FeatureLevel.Level_12_0"/></li> <li><see cref="SharpDX.Direct3D.FeatureLevel.Level_11_1"/></li> <li><see cref="SharpDX.Direct3D.FeatureLevel.Level_11_0"/></li> <li><see cref="SharpDX.Direct3D.FeatureLevel.Level_10_1"/></li> <li><see cref="SharpDX.Direct3D.FeatureLevel.Level_10_0"/></li> <li><see cref="SharpDX.Direct3D.FeatureLevel.Level_9_3"/></li> <li><see cref="SharpDX.Direct3D.FeatureLevel.Level_9_2"/></li> <li><see cref="SharpDX.Direct3D.FeatureLevel.Level_9_1"/></li> </ul> <p> The first feature level which is less than or equal to the D3D12 device's feature level will be used to perform D3D11 validation. Creation will fail if no acceptable feature levels are provided. Providing <c>null</c> will default to the D3D12 device's feature level. </p> </dd></param>	
+        /// <param name="commandQueues"><dd>  <p> An array of unique queues for D3D11On12 to use. Valid queue types: 3D command queue. </p> </dd></param>	
+        /// <returns>The Direct3D11 device created around the specified Direct3D12 device</returns>	
+        /// <remarks>	
+        /// <p> The function signature PFN_D3D11ON12_CREATE_DEVICE is provided as a typedef, so that you can use dynamic linking techniques (GetProcAddress) instead of statically linking. </p>	
+        /// </remarks>	
+        /// <msdn-id>dn933209</msdn-id>	
+        /// <unmanaged>HRESULT D3D11On12CreateDevice([In] IUnknown* pDevice,[In] D3D11_CREATE_DEVICE_FLAG Flags,[In, Buffer, Optional] const D3D_FEATURE_LEVEL* pFeatureLevels,[In] unsigned int FeatureLevels,[In, Buffer, Optional] const IUnknown** ppCommandQueues,[In] unsigned int NumQueues,[In] unsigned int NodeMask,[Out] ID3D11Device** ppDevice,[Out, Optional] ID3D11DeviceContext** ppImmediateContext,[Out, Optional] D3D_FEATURE_LEVEL* pChosenFeatureLevel)</unmanaged>	
+        /// <unmanaged-short>D3D11On12CreateDevice</unmanaged-short>	
+        public static Device CreateFromDirect3D12(ComObject d3D12Device, Direct3D11.DeviceCreationFlags flags, Direct3D.FeatureLevel[] featureLevels, DXGI.Adapter adapter, params ComObject[] commandQueues)
         {
+            if(d3D12Device == null) throw new ArgumentNullException(nameof(d3D12Device));
             Device devOut;
             DeviceContext contextOut;
-            Direct3D.FeatureLevel featurelevelOut;
-            D3D11.On12CreateDevice(d3d12Device, flags, featureLevels, featureLevels == null ? 0 : featureLevels.Length, commandQueues, commandQueues.Length, 0, out devOut, out contextOut, out featurelevelOut);
+            FeatureLevel featurelevelOut;
+            D3D11.On12CreateDevice(d3D12Device, flags, featureLevels, featureLevels == null ? 0 : featureLevels.Length, commandQueues, commandQueues.Length, 0, out devOut, out contextOut, out featurelevelOut);
+            contextOut.Dispose();
             return devOut;
         }
     }
