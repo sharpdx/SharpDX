@@ -67,7 +67,7 @@ namespace SharpDX.XAudio2
             {
                 var shadow = ToShadow<EngineShadow>(thisObject);
                 var callback = (EngineCallback)shadow.Callback;
-                callback.OnProcessingPassStart();
+                callback.OnProcessingPassEnd();
             }
 
             /// <summary>	
