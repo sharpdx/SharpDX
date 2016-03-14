@@ -106,6 +106,11 @@ namespace SharpDX.DirectInput
         {
             return GetObjectInfo(GetFromName(name).Offset, PropertyHowType.Byoffset);
         }
+        
+        public DeviceObjectInstance GetObjectInfoByOffset(int offset)
+        {
+            return GetObjectInfo(offset, PropertyHowType.Byoffset);
+        }
 
         public ObjectProperties GetObjectPropertiesByName(string name)
         {
