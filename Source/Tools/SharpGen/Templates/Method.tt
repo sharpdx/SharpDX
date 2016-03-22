@@ -225,13 +225,9 @@
 							}
 						}
 					// Handle Input String 
-					} else if (param.IsString) {
-						if (param.IsWideChar) {#>
-                IntPtr <#= param.TempName #> = Utilities.StringToHGlobalUni(<#= param.Name #>);
-<#+						} else {#>
+					} else if (param.IsString && !param.IsWideChar) {#>
                 IntPtr <#= param.TempName #> = Utilities.StringToHGlobalAnsi(<#= param.Name #>);
-<#+						}						
-					} else if ( param.IsRefIn && param.IsValueType && param.IsOptionnal) {#>
+<#+					} else if ( param.IsRefIn && param.IsValueType && param.IsOptionnal) {#>
                 <#= param.PublicType.QualifiedName #> <#= param.TempName #>;
                 if (<#= param.Name #>.HasValue)
                     <#= param.TempName #> = <#= param.Name #>.Value;				
@@ -272,7 +268,11 @@
 					} else if (param.IsFixed && param.IsValueType && !param.HasNativeValueType && !param.IsUsedAsReturnType) {#>
                 fixed (void* <#= param.TempName #> = &<#= param.Name #>)
 <#+						PushIndent("    ");
-					} 
+					// Handle Input String 
+					} else if (param.IsString && param.IsWideChar) {#>
+                fixed (char* <#= param.TempName #> = <#= param.Name #>)
+<#+						PushIndent("    ");
+					}						
 				}
 
 									
@@ -335,7 +335,7 @@
                 <#= param.Name #> = <#= param.TempName #> != 0;
 <#+						}						
 					// Handle Input String 
-					} else if (param.IsString) {#>
+					} else if (param.IsString && !param.IsWideChar) {#>
                 Marshal.FreeHGlobal(<#= param.TempName #> );
 <#+						
 					} else if (param.HasNativeValueType) {
