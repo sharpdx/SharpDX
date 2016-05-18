@@ -195,8 +195,6 @@ namespace SharpDX.Direct3D11
 
             if (context != null)
             {
-                // Add a reference when setting the device on the context
-                ((IUnknown)device).AddReference();
                 context.Device__ = device;
             }
 
