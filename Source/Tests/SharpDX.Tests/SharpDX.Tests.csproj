@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MathCollisionTest.cs" />
     <Compile Include="MathUtilNearEqualTests.cs" />
     <Compile Include="MathUtilWrapTests.cs" />
     <Compile Include="RayTests.cs" />
