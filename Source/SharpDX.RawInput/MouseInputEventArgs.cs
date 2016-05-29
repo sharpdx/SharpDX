@@ -17,6 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
+
 namespace SharpDX.RawInput
 {
     /// <summary>
@@ -35,8 +38,9 @@ namespace SharpDX.RawInput
         /// Initializes a new instance of the <see cref="MouseInputEventArgs"/> class.
         /// </summary>
         /// <param name="rawInput">The raw input.</param>
-        internal MouseInputEventArgs(ref RawInput rawInput)
-            : base(ref rawInput)
+        /// <param name="hwnd">The handle of the window that received the RawInput mesage.</param>
+        internal MouseInputEventArgs(ref RawInput rawInput, IntPtr hwnd)
+            : base(ref rawInput, hwnd)
         {
             Mode = (MouseMode) rawInput.Data.Mouse.Flags;
             ButtonFlags = (MouseButtonFlags)rawInput.Data.Mouse.ButtonsData.ButtonFlags;
