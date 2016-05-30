@@ -79,7 +79,7 @@ namespace SharpDX.DXGI
         /// </remarks>	
         /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IDXGISwapChain1::Present1']/*"/>	
         /// <unmanaged>HRESULT IDXGISwapChain1::Present1([In] unsigned int SyncInterval,[In] unsigned int PresentFlags,[In] const void* pPresentParameters)</unmanaged>	
-        public unsafe void Present(int syncInterval, PresentFlags presentFlags, PresentParameters presentParameters)
+        public unsafe Result Present(int syncInterval, PresentFlags presentFlags, PresentParameters presentParameters)
         {
             bool hasScrollRectangle = presentParameters.ScrollRectangle.HasValue;
             bool hasScrollOffset = presentParameters.ScrollOffset.HasValue;
@@ -95,7 +95,7 @@ namespace SharpDX.DXGI
                 native.PScrollRect = hasScrollRectangle ? new IntPtr(&scrollRectangle) : IntPtr.Zero;
                 native.PScrollOffset = hasScrollOffset ? new IntPtr(&scrollOffset) : IntPtr.Zero;
 
-                Present1(syncInterval, presentFlags, new IntPtr(&native));
+                return Present1(syncInterval, presentFlags, new IntPtr(&native));
             }
         }
     }

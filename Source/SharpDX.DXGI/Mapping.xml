@@ -227,7 +227,8 @@
     <map param="IVirtualSurfaceImageSourceNative::GetUpdateRectCount::count" return="true"/>
     <map method="IVirtualSurfaceImageSourceNative::GetUpdateRects" visibility="internal"/>
 
-    <map method="IDXGISwapChain1::Present1" visibility="internal"/>
+    <map method="IDXGISwapChain::Present" hresult="true"/>
+    <map method="IDXGISwapChain1::Present1" visibility="internal" hresult="true"/>
     <map param="IDXGISwapChain1::Present1::pPresentParameters" type="void"/>
     <map param="IDXGISwapChain1::Present1::PresentFlags" type="DXGI_PRESENT_FLAGS" />
 
