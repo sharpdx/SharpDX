@@ -38,7 +38,8 @@ namespace SharpDX.RawInput
         /// Initializes a new instance of the <see cref="HidInputEventArgs"/> class.
         /// </summary>
         /// <param name="rawInput">The raw input.</param>
-        internal HidInputEventArgs(ref RawInput rawInput) : base(ref rawInput)
+        /// <param name="hwnd">The handle of the window that received the RawInput mesage.</param>
+        internal HidInputEventArgs(ref RawInput rawInput, IntPtr hwnd) : base(ref rawInput, hwnd)
         {
             Count = rawInput.Data.Hid.Count;
             DataSize = rawInput.Data.Hid.SizeHid;

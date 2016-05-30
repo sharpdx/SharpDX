@@ -17,6 +17,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
 using System.Windows.Forms;
 
 namespace SharpDX.RawInput
@@ -37,8 +39,9 @@ namespace SharpDX.RawInput
         /// Initializes a new instance of the <see cref="KeyboardInputEventArgs"/> class.
         /// </summary>
         /// <param name="rawInput">The raw input.</param>
-        internal KeyboardInputEventArgs(ref RawInput rawInput)
-            : base(ref rawInput)
+        /// <param name="hwnd">The handle of the window that received the RawInput mesage.</param>
+        internal KeyboardInputEventArgs(ref RawInput rawInput, IntPtr hwnd)
+            : base(ref rawInput, hwnd)
         {
             Key = (Keys) rawInput.Data.Keyboard.VKey;
             MakeCode = rawInput.Data.Keyboard.MakeCode;

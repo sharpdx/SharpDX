@@ -141,10 +141,11 @@ namespace SharpDX.RawInput
         /// Handles a RawInput message manually.
         /// </summary>
         /// <param name="rawInputMessagePointer">A pointer to a RawInput message.</param>
+        /// <param name="hwnd">The handle of the window that received the RawInput message.</param>
         /// <remarks>
         /// This method can be used directly when handling RawInput messages from non-WinForms application.
         /// </remarks>
-        public static void HandleMessage(IntPtr rawInputMessagePointer)
+        public static void HandleMessage(IntPtr rawInputMessagePointer, IntPtr hwnd)
         {
             unsafe
             {
@@ -165,15 +166,15 @@ namespace SharpDX.RawInput
                 {
                     case DeviceType.HumanInputDevice:
                         if (RawInput != null)
-                            RawInput(null, new HidInputEventArgs(ref *rawInput));
+                            RawInput(null, new HidInputEventArgs(ref *rawInput, hwnd));
                         break;
                     case DeviceType.Keyboard:
                         if (KeyboardInput != null)
-                            KeyboardInput(null, new KeyboardInputEventArgs(ref *rawInput));
+                            KeyboardInput(null, new KeyboardInputEventArgs(ref *rawInput, hwnd));
                         break;
                     case DeviceType.Mouse:
                         if (MouseInput != null)
-                            MouseInput(null, new MouseInputEventArgs(ref *rawInput));
+                            MouseInput(null, new MouseInputEventArgs(ref *rawInput, hwnd));
                         break;
                 }
             }
@@ -193,7 +194,7 @@ namespace SharpDX.RawInput
             {
                 // Handle only WM_INPUT messages
                 if (m.Msg == WmInput)
-                    HandleMessage(m.LParam);
+                    HandleMessage(m.LParam, m.HWnd);
                 return false;
             }
         }

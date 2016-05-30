@@ -30,9 +30,10 @@ namespace SharpDX.RawInput
         {
         }
 
-        internal RawInputEventArgs(ref RawInput rawInput)
+        internal RawInputEventArgs(ref RawInput rawInput, IntPtr hwnd)
         {
             Device = rawInput.Header.Device;
+	        WindowHandle = hwnd;
         }
 
         /// <summary>
@@ -42,5 +43,13 @@ namespace SharpDX.RawInput
         /// The device.
         /// </value>
         public IntPtr Device { get; set; }
+
+        /// <summary>
+        /// Gets or sets the handle of the window that received the RawInput mesage.
+        /// </summary>
+        /// <value>
+        /// The window handle.
+        /// </value>
+        public IntPtr WindowHandle { get; set; }
     }
 }
