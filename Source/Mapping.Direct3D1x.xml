@@ -329,6 +329,7 @@
     <map method="ID3D(\d+)DeviceContext::SetTargets" visibility="internal" />
     <map method="ID3D(\d+)DeviceContext::SetRenderTargetsAndUnorderedAccessViews" visibility="internal" />
     <map param="ID3D(\d+)DeviceContext::ClearRenderTargetView::ColorRGBA" type="SHARPDX_COLOR4" pointer="*" array="0" />
+    <map param="ID3D(\d+)DeviceContext1::ClearView::Color" type="SHARPDX_COLOR4" pointer="*" array="0"/>
     <map method="ID3D\d+DeviceContext::IA(.*)" name="$1" />
     <map method="ID3D\d+DeviceContext::VS(.*)" name="$1" />
     <map method="ID3D\d+DeviceContext::PS(.*)" name="$1" />
