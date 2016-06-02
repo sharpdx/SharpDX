@@ -41,6 +41,7 @@
   <include file="d3d11_1.h" attach="true" />
   <include file="d3d11_2.h" attach="true" />
   <include file="d3d11_3.h" attach="true" />
+  <include file="d3d11_4.h" attach="true" />
   <include file="d3d11sdklayers.h" attach="true" />
   <include file="d3d11on12.h" attach="true" />
 
@@ -55,6 +56,7 @@
     <context>d3d11_1</context>
     <context>d3d11_2</context>
     <context>d3d11_3</context>
+    <context>d3d11_4</context>
   </context-set>
 
   <!-- D3D11 extensions -->
@@ -286,6 +288,8 @@
     <map param="ID3D11On12Device::CreateWrappedResource::InState" type="int" />
     <map param="ID3D11On12Device::CreateWrappedResource::OutState" type="int" />
     <map param="ID3D11On12Device::CreateWrappedResource::ppResource11" type="ID3D11Resource" />
+
+    <map param="ID3D11Device4::RegisterDeviceRemovedEvent::pdwCookie" return="true" />
 
     <!--
     // *****************************************************************

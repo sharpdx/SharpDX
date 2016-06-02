@@ -32,6 +32,8 @@
   <include file="d3d11.h" />
   <include file="d3d11_1.h" />
   <include file="d3d11_2.h" />
+  <include file="d3d11_3.h" />
+  <include file="d3d11_4.h" />
   <include file="d3d12.h" />
 
   <include file="d3d12sdklayers.h" />
@@ -54,6 +56,7 @@
     <context>d3d11_1</context>
     <context>d3d11_2</context>
     <context>d3d11_3</context>
+    <context>d3d11_4</context>
     <context>d3d12</context>
     <context>d3d12sdklayers</context>
     <context>d3d11sdklayers</context>
