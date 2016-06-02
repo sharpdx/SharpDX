@@ -31,7 +31,7 @@
     <Compile Include="Device1.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="RasterizerStateDescription.cs" />
-    <Compile Include="RaterizerState1.cs" />
+    <Compile Include="RasterizerState1.cs" />
     <Compile Include="DeviceContext1.cs" />
     <Compile Include="Counter.cs" />
     <Compile Include="CounterMetadata.cs" />
@@ -65,7 +65,7 @@
     <Compile Include="Predicate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query.cs" />
-    <Compile Include="RaterizerState.cs" />
+    <Compile Include="RasterizerState.cs" />
     <Compile Include="RenderTargetBlendDescription.cs" />
     <Compile Include="RenderTargetView.cs" />
     <Compile Include="Resource.cs" />
