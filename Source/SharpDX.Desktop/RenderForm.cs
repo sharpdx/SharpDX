@@ -71,6 +71,7 @@ namespace SharpDX.Windows
         private const uint PBT_APMQUERYSUSPEND = 0;
         private const int SC_MONITORPOWER = 0xF170;
         private const int SC_SCREENSAVE = 0xF140;
+        private const int WM_DISPLAYCHANGE = 0x007E;
         private const int MNC_CLOSE = 1;
         private System.Drawing.Size cachedSize;
         private FormWindowState previousWindowState;
@@ -434,6 +435,9 @@ namespace SharpDX.Windows
                             return;
                         }
                     }
+                    break;
+                case WM_DISPLAYCHANGE:
+                    OnMonitorChanged(EventArgs.Empty);
                     break;
             }
 
