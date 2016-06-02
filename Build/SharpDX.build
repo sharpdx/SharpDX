@@ -53,8 +53,8 @@
   <Target Name="Build">
     <!--Build all targets / platforms-->
     <Exec Command="RMDIR /Q /S $(SharpDXRepo)\Bin"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXRepo)\SharpDX-Desktop.sln" Properties="Configuration=Release;Platform=Any CPU;SharpDXSign=true"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXRepo)\SharpDX-StoreApp.sln" Properties="Configuration=Release;Platform=Any CPU;SharpDXSign=true"/>
+    <MSBuild Targets="Clean;Build" Projects="$(SharpDXRepo)\SharpDX-Desktop.sln" Properties="Configuration=Release;Platform=Any CPU"/>
+    <MSBuild Targets="Clean;Build" Projects="$(SharpDXRepo)\SharpDX-StoreApp.sln" Properties="Configuration=Release;Platform=Any CPU"/>
   </Target>
 
   <Target Name="Nuget">
