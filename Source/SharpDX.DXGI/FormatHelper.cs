@@ -37,7 +37,7 @@ namespace SharpDX.DXGI
         /// </summary>
         /// <param name="format">The DXGI format.</param>
         /// <returns>size of in bytes</returns>
-        public static int SizeOfInBytes(Format format)
+        public static int SizeOfInBytes(this Format format)
         {
             var sizeInBits = SizeOfInBits(format);
             return sizeInBits >> 3;
@@ -48,7 +48,7 @@ namespace SharpDX.DXGI
         /// </summary>
         /// <param name="format">The DXGI format.</param>
         /// <returns>size of in bits</returns>
-        public static int SizeOfInBits(Format format)
+        public static int SizeOfInBits(this Format format)
         {
             return sizeOfInBits[(int) format];
         }
@@ -58,7 +58,7 @@ namespace SharpDX.DXGI
         /// </summary>
         /// <param name="format">A format to validate</param>
         /// <returns>True if the <see cref="Format"/> is valid.</returns>
-        public static bool IsValid( Format format )
+        public static bool IsValid(this Format format)
         {
             return ( (int)(format) >= 1 && (int)(format) <= 115 );
         }
@@ -66,31 +66,31 @@ namespace SharpDX.DXGI
         /// <summary>
         /// Returns true if the <see cref="Format"/> is a compressed format.
         /// </summary>
-        /// <param name="fmt">The format to check for compressed.</param>
+        /// <param name="format">The format to check for compressed.</param>
         /// <returns>True if the <see cref="Format"/> is a compressed format</returns>
-        public static bool IsCompressed(Format fmt)
+        public static bool IsCompressed(this Format format)
         {
-            return compressedFormats[(int) fmt];
+            return compressedFormats[(int) format];
         }
 
         /// <summary>
         /// Determines whether the specified <see cref="Format"/> is packed.
         /// </summary>
-        /// <param name="fmt">The DXGI Format.</param>
+        /// <param name="format">The DXGI Format.</param>
         /// <returns><c>true</c> if the specified <see cref="Format"/> is packed; otherwise, <c>false</c>.</returns>
-        public static bool IsPacked( Format fmt )
+        public static bool IsPacked(this Format format )
         {
-            return ((fmt == Format.R8G8_B8G8_UNorm) || (fmt == Format.G8R8_G8B8_UNorm));
+            return ((format == Format.R8G8_B8G8_UNorm) || (format == Format.G8R8_G8B8_UNorm));
         }
 
         /// <summary>
         /// Determines whether the specified <see cref="Format"/> is video.
         /// </summary>
-        /// <param name="fmt">The <see cref="Format"/>.</param>
+        /// <param name="format">The <see cref="Format"/>.</param>
         /// <returns><c>true</c> if the specified <see cref="Format"/> is video; otherwise, <c>false</c>.</returns>
-        public static bool IsVideo( Format fmt )
+        public static bool IsVideo(this Format format )
         {
-            switch ( fmt )
+            switch ( format )
             {
                 case Format.AYUV:
                 case Format.Y410:
@@ -121,32 +121,32 @@ namespace SharpDX.DXGI
         /// <summary>
         /// Determines whether the specified <see cref="Format"/> is a SRGB format.
         /// </summary>
-        /// <param name="fmt">The <see cref="Format"/>.</param>
+        /// <param name="format">The <see cref="Format"/>.</param>
         /// <returns><c>true</c> if the specified <see cref="Format"/> is a SRGB format; otherwise, <c>false</c>.</returns>
-        public static bool IsSRgb( Format fmt )
+        public static bool IsSRgb(this Format format )
         {
-            return srgbFormats[(int) fmt];
+            return srgbFormats[(int) format];
         }
 
         /// <summary>
         /// Determines whether the specified <see cref="Format"/> is typeless.
         /// </summary>
-        /// <param name="fmt">The <see cref="Format"/>.</param>
+        /// <param name="format">The <see cref="Format"/>.</param>
         /// <returns><c>true</c> if the specified <see cref="Format"/> is typeless; otherwise, <c>false</c>.</returns>
-        public static bool IsTypeless( Format fmt )
+        public static bool IsTypeless(this Format format )
         {
-            return typelessFormats[(int) fmt];
+            return typelessFormats[(int) format];
         }
 
         /// <summary>
         /// Computes the scanline count (number of scanlines).
         /// </summary>
-        /// <param name="fmt">The <see cref="Format"/>.</param>
+        /// <param name="format">The <see cref="Format"/>.</param>
         /// <param name="height">The height.</param>
         /// <returns>The scanline count.</returns>
-        public static int ComputeScanlineCount(Format fmt, int height)
+        public static int ComputeScanlineCount(this Format format, int height)
         {
-            switch (fmt)
+            switch (format)
             {
                 case Format.BC1_Typeless:
                 case Format.BC1_UNorm:
