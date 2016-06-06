@@ -43,5 +43,16 @@ namespace SharpDX.DXGI
             EnumWarpAdapter(Utilities.GetGuidFromType(typeof(Adapter)), out adapterPtr);
             return new Adapter(adapterPtr);
         }
+        /// <summary>
+        /// Gets the adapter for the specified LUID.
+        /// </summary>
+        /// <param name="adapterLuid">A unique value that identifies the adapter.</param>
+        /// <returns>The adapter.</returns>
+        public Adapter GetAdapterByLuid(long adapterLuid)
+        {
+            IntPtr adapterPtr;
+            EnumAdapterByLuid(adapterLuid, Utilities.GetGuidFromType(typeof(Adapter)), out adapterPtr);
+            return new Adapter(adapterPtr);
+        }
     }
 }
