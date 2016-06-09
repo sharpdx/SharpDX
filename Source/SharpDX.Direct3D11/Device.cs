@@ -681,7 +681,7 @@ namespace SharpDX.Direct3D11
         /// <unmanaged-short>D3D11On12CreateDevice</unmanaged-short>	
         public static Device CreateFromDirect3D12(ComObject d3D12Device, Direct3D11.DeviceCreationFlags flags, Direct3D.FeatureLevel[] featureLevels, DXGI.Adapter adapter, params ComObject[] commandQueues)
         {
-            if(d3D12Device == null) throw new ArgumentNullException(nameof(d3D12Device));
+            if(d3D12Device == null) throw new ArgumentNullException("d3D12Device");
             Device devOut;
             DeviceContext contextOut;
             FeatureLevel featurelevelOut;
