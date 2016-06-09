@@ -113,6 +113,7 @@
     <map enum="DXGI_ENUM_MODES_FLAGS" name="DisplayModeEnumerationFlags" flags="true" none="false"/>
     <map enum="DXGI_MAP_FLAGS" flags="true" none="false" />
     <map enum="DXGI_MWA_FLAGS" name="WindowAssociationFlags" />
+    <map enum="DXGI_OVERLAY_SUPPORT_FLAG" name="OverlaySupportFlags" flags="true" none="false"/>
     <map enum-item="DXGI_MWA_NO_WINDOW_CHANGES" name="IgnoreAll" />
     <map enum-item="DXGI_MWA_NO_ALT_ENTER" name="IgnoreAltEnter" />
     <map enum-item="DXGI_MWA_NO_PRINT_SCREEN" name="IgnorePrintScreen" />
