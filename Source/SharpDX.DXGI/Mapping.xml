@@ -218,20 +218,24 @@
 
     <map method="IDXGIKeyedMutex::AcquireSync" hresult="true"/>
 
+    <map param="IDXGIOutput4::CheckOverlayColorSpaceSupport::pFlags" type="DXGI_OVERLAY_COLOR_SPACE_SUPPORT_FLAG"/>
+    <map param="IDXGIOutput3::CheckOverlaySupport::pFlags" type="DXGI_OVERLAY_SUPPORT_FLAG"/>
+
     <ifdef name="STORE_APP">
       <map method="IDXGIOutput1::DuplicateOutput" visibility="internal"/>
       <map method="IDXGIOutput5::DuplicateOutput1" visibility="internal"/>
+      <map method="IDXGIOutput3::CheckOverlaySupport" visibility="internal"/>
+      <map method="IIDXGIOutput4::CheckOverlayColorSpaceSupport" visibility="internal"/>
       <map param="IDXGIOutput1::DuplicateOutput::ppOutputDuplication" type="void"/>
       <map param="IDXGIOutput5::DuplicateOutput1::ppOutputDuplication" type="void"/>
+      <map param="IDXGIOutput4::CheckOverlayColorSpaceSupport::pFlags" type="void"/>
+      <map param="IDXGIOutput3::CheckOverlaySupport::pFlags" type="void"/>
     </ifdef>
+
     <map param="IDXGIOutput1::DuplicateOutput::ppOutputDuplication" return="true"/>
     <map param="IDXGIOutput5::DuplicateOutput1::ppOutputDuplication" return="true"/>
-      
-    <map param="IDXGIOutput3::CheckOverlaySupport::pFlags" type="DXGI_OVERLAY_SUPPORT_FLAG"/>
-    <map param="IDXGIOutput3::CheckOverlaySupport::pFlags" return="true"/>
-
-    <map param="IDXGIOutput4::CheckOverlayColorSpaceSupport::pFlags" type="DXGI_OVERLAY_COLOR_SPACE_SUPPORT_FLAG"/>
     <map param="IDXGIOutput4::CheckOverlayColorSpaceSupport::pFlags" return="true"/>
+    <map param="IDXGIOutput3::CheckOverlaySupport::pFlags" return="true"/>
 
     <map param="ISurfaceImageSourceNative::BeginDraw::surface" return="true"/>
 
