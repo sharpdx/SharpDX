@@ -35,6 +35,7 @@
   <include id="windows.ui.xaml.media.dxinterop" file="windows.ui.xaml.media.dxinterop.h" attach="true" />
   <include id="dxgi1_3" file="dxgi1_3.h" attach="true" />
   <include id="dxgi1_4" file="dxgi1_4.h" attach="true" />
+  <include id="dxgi1_5" file="dxgi1_5.h" attach="true" />
 
   <context-set id="dxgi-all">
     <context>sharpdx-dxgi</context>
@@ -45,6 +46,7 @@
     <context>dxgi1_2</context>
     <context>dxgi1_3</context>
     <context>dxgi1_4</context>
+    <context>dxgi1_5</context>
     <context>winerror</context>
     <context>windows.ui.xaml.media.dxinterop</context>
   </context-set>
@@ -111,6 +113,7 @@
     <map enum="DXGI_ENUM_MODES_FLAGS" name="DisplayModeEnumerationFlags" flags="true" none="false"/>
     <map enum="DXGI_MAP_FLAGS" flags="true" none="false" />
     <map enum="DXGI_MWA_FLAGS" name="WindowAssociationFlags" />
+    <map enum="DXGI_OVERLAY_SUPPORT_FLAG" name="OverlaySupportFlags" flags="true" none="false"/>
     <map enum-item="DXGI_MWA_NO_WINDOW_CHANGES" name="IgnoreAll" />
     <map enum-item="DXGI_MWA_NO_ALT_ENTER" name="IgnoreAltEnter" />
     <map enum-item="DXGI_MWA_NO_PRINT_SCREEN" name="IgnorePrintScreen" />
@@ -200,6 +203,10 @@
     <map param="IDXGISwapChain::Present::Flags" type="DXGI_PRESENT_FLAGS" />
     <map param="IDXGISwapChain::ResizeBuffers::SwapChainFlags" type="DXGI_SWAP_CHAIN_FLAG" />
 
+    <map param="IDXGISwapChain3::CheckColorSpaceSupport::pColorSpaceSupport" type="DXGI_SWAP_CHAIN_COLOR_SPACE_SUPPORT_FLAG" />
+    <map param="IDXGISwapChain3::CheckColorSpaceSupport::pColorSpaceSupport" return="true" />
+    <map param="IDXGISwapChain3::ResizeBuffers1::SwapChainFlags" type="DXGI_SWAP_CHAIN_FLAG" />
+
     <map method="IDXGIOutputDuplication::MapDesktopSurface" visibility="internal"/>
 
     <map method="IDXGIResource1::CreateSubresourceSurface" visibility="internal"/>
@@ -211,11 +218,24 @@
 
     <map method="IDXGIKeyedMutex::AcquireSync" hresult="true"/>
 
+    <map param="IDXGIOutput4::CheckOverlayColorSpaceSupport::pFlags" type="DXGI_OVERLAY_COLOR_SPACE_SUPPORT_FLAG"/>
+    <map param="IDXGIOutput3::CheckOverlaySupport::pFlags" type="DXGI_OVERLAY_SUPPORT_FLAG"/>
+
     <ifdef name="STORE_APP">
       <map method="IDXGIOutput1::DuplicateOutput" visibility="internal"/>
+      <map method="IDXGIOutput5::DuplicateOutput1" visibility="internal"/>
+      <map method="IDXGIOutput3::CheckOverlaySupport" visibility="internal"/>
+      <map method="IIDXGIOutput4::CheckOverlayColorSpaceSupport" visibility="internal"/>
       <map param="IDXGIOutput1::DuplicateOutput::ppOutputDuplication" type="void"/>
+      <map param="IDXGIOutput5::DuplicateOutput1::ppOutputDuplication" type="void"/>
+      <map param="IDXGIOutput4::CheckOverlayColorSpaceSupport::pFlags" type="void"/>
+      <map param="IDXGIOutput3::CheckOverlaySupport::pFlags" type="void"/>
     </ifdef>
+
     <map param="IDXGIOutput1::DuplicateOutput::ppOutputDuplication" return="true"/>
+    <map param="IDXGIOutput5::DuplicateOutput1::ppOutputDuplication" return="true"/>
+    <map param="IDXGIOutput4::CheckOverlayColorSpaceSupport::pFlags" return="true"/>
+    <map param="IDXGIOutput3::CheckOverlaySupport::pFlags" return="true"/>
 
     <map param="ISurfaceImageSourceNative::BeginDraw::surface" return="true"/>
 
@@ -237,8 +257,14 @@
     <map method="IDXGISwapChain2::[GS]etSourceSize" visibility="internal" />
     
     <map method="IDXGIFactory4::EnumWarpAdapter" visibility="private"/>
+    <map method="IDXGIFactory4::EnumAdapterByLuid" visibility="private"/>
 
-    <!--
+    <map param="IDXGIAdapter3::RegisterHardwareContentProtectionTeardownStatusEvent::pdwCookie" return="true"/>
+    <map param="IDXGIAdapter3::QueryVideoMemoryInfo::pVideoMemoryInfo" return="true"/>
+    <map param="IDXGIAdapter3::RegisterVideoMemoryBudgetChangeNotificationEvent::pdwCookie" return="true"/>
+
+
+      <!--
     // *****************************************************************
     // DXGI Functions
     // *****************************************************************
