@@ -140,7 +140,7 @@ namespace SharpDX.Direct3D11
 
             unsafe
             {
-                void* pBuffer = Interop.Fixed(scissorRectangles);
+                void* pBuffer = scissorRectangles == null ? (void*) null : Interop.Fixed(scissorRectangles);
                 SetScissorRects(scissorRectangles == null ? 0 : scissorRectangles.Length, (IntPtr)pBuffer);
             }
         }
@@ -198,7 +198,7 @@ namespace SharpDX.Direct3D11
         /// <remarks><p></p><p>All viewports must be set atomically as one operation. Any viewports not defined by the call are disabled.</p><p>Which viewport to use is determined by the SV_ViewportArrayIndex semantic output by a geometry shader; if a geometry shader does not specify the semantic, Direct3D will use the first viewport in the array.</p></remarks>
         public unsafe void SetViewports(RawViewportF[] viewports, int count = 0)
         {
-            void* pBuffer = Interop.Fixed(viewports);
+            void* pBuffer = viewports == null ? (void*) null : Interop.Fixed(viewports);
             SetViewports(viewports == null ? 0 : count <= 0 ? viewports.Length : count, (IntPtr)pBuffer);
         }
 
