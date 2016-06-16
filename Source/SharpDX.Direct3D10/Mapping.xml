@@ -35,21 +35,20 @@
 
   <!-- D3D10 includes -->
   <!-- d3d10_1.h must be included before d3d10.h -->
-  <include id="d3d10_1" file="d3d10_1.h" attach="true" />
-  <include id="d3d10" file="d3d10.h" attach="true" />
-  <include id="d3d10_1shader" file="d3d10_1shader.h" attach="true" />
-  <include id="d3d10misc" file="d3d10misc.h" attach="true" />
-  <include id="d3d10sdklayers" file="d3d10sdklayers.h" attach="true" />
-  <include id="d3d10shader" file="d3d10shader.h" attach="true" />
-
-  <ifndef name="DIRECTX11_1">
-    <include id="d3dx10" file="d3dx10.h" attach="true" />
-    <include id="d3dx10core" file="d3dx10core.h" attach="true" />
-    <include id="d3dx10tex" file="d3dx10tex.h" attach="true" />
-    <include id="d3dx10mesh" file="d3dx10mesh.h" attach="true" />
-    <include id="d3dx10async" file="d3dx10async.h" attach="true" />
-  </ifndef>
-
+  <include file="d3d10_1.h" attach="true" />
+  <include file="d3d10.h" attach="true" />
+  <include file="d3d10_1shader.h" attach="true" />
+  <include file="d3d10misc.h" attach="true" />
+  <include file="d3d10sdklayers.h" attach="true" />
+  <include file="d3d10shader.h" attach="true" />
+  <include file="d3d10effect.h" attach="true" />
+    
+  <include file="d3dx10.h" attach="true" />
+  <include file="d3dx10core.h" attach="true" />
+  <include file="d3dx10tex.h" attach="true" />
+  <include file="d3dx10mesh.h" attach="true" />
+  <include file="d3dx10async.h" attach="true" />
+    
   <context-set id="d3d10-all">
     <context>sharpdx-direct3d10-ext</context>
     <context>d3d10</context>
@@ -58,13 +57,13 @@
     <context>d3d10misc</context>
     <context>d3d10sdklayers</context>
     <context>d3d10shader</context>
-    <ifndef name="DIRECTX11_1">
-      <context>d3dx10</context>
-      <context>d3dx10core</context>
-      <context>d3dx10tex</context>
-      <context>d3dx10mesh</context>
-      <context>d3dx10async</context>
-    </ifndef>
+    <context>d3d10effect</context>
+      
+    <context>d3dx10</context>
+    <context>d3dx10core</context>
+    <context>d3dx10tex</context>
+    <context>d3dx10mesh</context>
+    <context>d3dx10async</context>
   </context-set>
   
   <naming />
@@ -372,6 +371,7 @@
     <remove function="D3D10GetShaderDebugInfo" />
     <remove function="D3D10DisassembleEffect" />
     <remove function="D3D10StateBlockMask.*"/>
+    <remove function="D3DX10CreateFontIndirectA"/>
 
     <!-- Warning, D3D10CompileEffectFromMemory code is copied to D3D compiler dll  -->
     <map function="D3D10CompileEffectFromMemory" name="CompileEffect10FromMemory" />
@@ -381,10 +381,9 @@
 
     <map function="D3D10.*" dll='"d3d10.dll"' group="SharpDX.Direct3D10.D3D10" />
     <map function="D3D10.*1" dll='"d3d10_1.dll"' group="SharpDX.Direct3D10.D3D10" />
-    <ifndef name="DIRECTX11_1">
-      <map function="D3DX10.*" dll='"#(D3DX10_DLL_A)"' group="SharpDX.Direct3D10.D3DX10" />
-    </ifndef>
-       
-    <context-clear />
+      
+    <map function="D3DX10.*" dll='"#(D3DX10_DLL_A)"' group="SharpDX.Direct3D10.D3DX10" />
+
+  <context-clear />
   </mapping>
 </config>

@@ -64,6 +64,7 @@
   <file>SharpDX.DXGI\Mapping.xml</file>
   <file>SharpDX.D3DCompiler\Mapping.xml</file>
   <file>Mapping.Direct3D1x.xml</file>
+  <file>SharpDX.Direct3D10\Mapping.xml</file>
   <file>SharpDX.Direct3D11\Mapping.xml</file>
   <file>SharpDX.Direct3D12\Mapping.xml</file>
   <file>SharpDX.Direct3D11.Effects\Mapping.xml</file>

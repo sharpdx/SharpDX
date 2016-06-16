@@ -37,16 +37,6 @@ namespace SharpDX.Direct3D10
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Font"/> class from a <see cref="System.Drawing.Font"/>
-        /// </summary>
-        /// <param name="device">The device.</param>
-        /// <param name="font">The font.</param>
-        public Font(Device device, System.Drawing.Font font)
-        {
-            D3DX10.CreateFont(device, font.Height, 0, (int)(font.Bold ? FontWeight.Bold : FontWeight.Normal), 0, font.Italic, (int)FontCharacterSet.Default, (int)FontPrecision.Default, (int)FontQuality.Default, (int)FontPitchAndFamily.Default, font.Name, this);
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Font"/> class.
         /// </summary>
         /// <param name="device">The device.</param>

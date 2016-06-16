@@ -17,6 +17,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
 using System.Diagnostics;
 using SharpDX.Mathematics.Interop;
 
@@ -75,7 +77,8 @@ namespace SharpDX.Direct3D10
         /// <unmanaged>HRESULT ID3D10EffectMatrixVariable::SetMatrix([In] float* pData)</unmanaged>
         public unsafe void SetMatrix<T>(ref T matrix) where T : struct
         {
-            Trace.Assert(Utilities.SizeOf<T>() == 64, MatrixInvalidSize);
+            if (Utilities.SizeOf<T>() != 64)
+                throw new ArgumentException(MatrixInvalidSize, "matrix");
             SetMatrix(ref *(RawMatrix*)Interop.Fixed(ref matrix));
         }
 
@@ -99,7 +102,8 @@ namespace SharpDX.Direct3D10
         /// <unmanaged>HRESULT ID3D10EffectMatrixVariable::SetMatrixArray([In, Buffer] float* pData,[None] int Offset,[None] int Count)</unmanaged>
         public void SetMatrix<T>(T[] matrixArray, int offset) where T : struct
         {
-            Trace.Assert(Utilities.SizeOf<T>() == 64, MatrixInvalidSize);
+            if (Utilities.SizeOf<T>() != 64)
+                throw new ArgumentException(MatrixInvalidSize, "matrixArray");
             SetMatrixArray(Interop.CastArray<RawMatrix, T>(matrixArray), offset, matrixArray.Length);
         }
 
@@ -153,7 +157,8 @@ namespace SharpDX.Direct3D10
         /// <unmanaged>HRESULT ID3D10EffectMatrixVariable::SetMatrixTranspose([In] float* pData)</unmanaged>
         public unsafe void SetMatrixTranspose<T>(ref T matrix) where T : struct
         {
-            Trace.Assert(Utilities.SizeOf<T>() == 64, MatrixInvalidSize);
+            if (Utilities.SizeOf<T>() != 64)
+                throw new ArgumentException(MatrixInvalidSize, "matrix");
             SetMatrixTranspose(ref *(RawMatrix*)Interop.Cast(ref matrix));
         }
 

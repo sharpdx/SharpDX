@@ -109,7 +109,8 @@ namespace SharpDX.Direct3D10
         /// <unmanaged>HRESULT ID3D10EffectVectorVariable::SetFloatVectorArray([In, Buffer] float* pData,[None] int Offset,[None] int Count)</unmanaged>
         public void Set<T>(T[] array) where T : struct
         {
-            Trace.Assert(Utilities.SizeOf<T>() == 16, VectorInvalidSize);
+            if (Utilities.SizeOf<T>() != 16)
+                throw new ArgumentException(VectorInvalidSize, "array");
             Set(Interop.CastArray<RawVector4, T>(array), 0, array.Length);
         }
 
@@ -132,7 +133,8 @@ namespace SharpDX.Direct3D10
         /// <unmanaged>HRESULT ID3D10EffectVectorVariable::SetFloatVector([In] float* pData)</unmanaged>
         public unsafe void Set<T>(ref T value) where T : struct
         {
-            Trace.Assert(Utilities.SizeOf<T>() <= 16, VectorInvalidSize);
+            if (Utilities.SizeOf<T>() != 16)
+                throw new ArgumentException(VectorInvalidSize, "value");
             SetRawValue(new IntPtr(Interop.Fixed(ref value)), 0, Utilities.SizeOf<T>());
         }
 

@@ -18,12 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 
 using SharpDX.Direct3D;
 using SharpDX.DXGI;
-using SharpDX;
 using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Direct3D10
@@ -135,9 +133,9 @@ namespace SharpDX.Direct3D10
                 CheckCounter(counterDescription, out type, out hardwareCounterCount, IntPtr.Zero, new IntPtr(&nameLength), IntPtr.Zero, new IntPtr(&unitsLength),
                              IntPtr.Zero, new IntPtr(&descriptionLength));
 
-                sbyte* name = stackalloc sbyte[nameLength];
-                sbyte* units = stackalloc sbyte[unitsLength];
-                sbyte* description = stackalloc sbyte[descriptionLength];
+                char* name = stackalloc char[nameLength];
+                char* units = stackalloc char[unitsLength];
+                char* description = stackalloc char[descriptionLength];
 
                 // Get strings
                 CheckCounter(counterDescription, out type, out hardwareCounterCount, new IntPtr(name), new IntPtr(&nameLength), new IntPtr(units), new IntPtr(&unitsLength),
