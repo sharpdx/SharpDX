@@ -46,9 +46,6 @@
   <files>
       <file src="..\..\Bin\Desktop\SharpDX.Direct3D10.dll" target="\lib\net45" />
       <file src="..\..\Bin\Desktop\SharpDX.Direct3D10.xml" target="\lib\net45" />
-
-      <file src="..\..\Bin\StoreApp\SharpDX.Direct3D10.dll" target="\lib\portable-net45+netcore45+wpa81+MonoAndroid1+MonoTouch1" />
-      <file src="..\..\Bin\StoreApp\SharpDX.Direct3D10.xml" target="\lib\portable-net45+netcore45+wpa81+MonoAndroid1+MonoTouch1" />
       <file src="**\*.cs" target="src" />
   </files>
 
