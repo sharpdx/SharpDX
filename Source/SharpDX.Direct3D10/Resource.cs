@@ -47,9 +47,6 @@ namespace SharpDX.Direct3D10
         /// <returns>The loaded texture object.</returns>
         public static T FromFile<T>(Device device, string fileName) where T : Resource
         {
-            System.Diagnostics.Debug.Assert(typeof(T) == typeof(Texture1D) || typeof(T) == typeof(Texture2D) ||
-                         typeof (T) == typeof (Texture3D));
-
             IntPtr temp;
             Result resultOut;
             D3DX10.CreateTextureFromFile(device, fileName, null, IntPtr.Zero, out temp, out resultOut);
@@ -66,9 +63,6 @@ namespace SharpDX.Direct3D10
         /// <returns>The loaded texture object.</returns>
         public static T FromFile<T>(Device device, string fileName, ImageLoadInformation loadInfo) where T : Resource
         {
-            System.Diagnostics.Debug.Assert(typeof (T) == typeof (Texture1D) || typeof (T) == typeof (Texture2D) ||
-                         typeof (T) == typeof (Texture3D));
-
             IntPtr temp;
             Result resultOut;
             D3DX10.CreateTextureFromFile(device, fileName, loadInfo, IntPtr.Zero, out temp, out resultOut);
@@ -84,13 +78,8 @@ namespace SharpDX.Direct3D10
         /// <returns>The loaded texture object.</returns>
         public static T FromMemory<T>(Device device, byte[] memory) where T : Resource
         {
-            System.Diagnostics.Debug.Assert(typeof (T) == typeof (Texture1D) || typeof (T) == typeof (Texture2D) ||
-                         typeof (T) == typeof (Texture3D));
-
             unsafe
             {
-                System.Diagnostics.Debug.Assert(memory != null);
-                System.Diagnostics.Debug.Assert(memory.Length > 0);
                 IntPtr temp;
                 Result resultOut;
                 fixed (void* pBuffer = &memory[0])
@@ -110,13 +99,8 @@ namespace SharpDX.Direct3D10
         /// <returns>The loaded texture object.</returns>
         public static T FromMemory<T>(Device device, byte[] memory, ImageLoadInformation loadInfo) where T : Resource
         {
-            System.Diagnostics.Debug.Assert(typeof (T) == typeof (Texture1D) || typeof (T) == typeof (Texture2D) ||
-                         typeof (T) == typeof (Texture3D));
-
             unsafe
             {
-                System.Diagnostics.Debug.Assert(memory != null);
-                System.Diagnostics.Debug.Assert(memory.Length > 0);
                 IntPtr temp;
                 Result resultOut;
                 fixed (void* pBuffer = &memory[0])
@@ -165,9 +149,6 @@ namespace SharpDX.Direct3D10
         public static void ToFile<T>(T texture, ImageFileFormat format, string fileName)
             where T : Resource
         {
-            System.Diagnostics.Debug.Assert(typeof (T) == typeof (Texture1D) || typeof (T) == typeof (Texture2D) ||
-                         typeof (T) == typeof (Texture3D));
-
             D3DX10.SaveTextureToFile(texture, format, fileName);
         }
 
@@ -181,9 +162,6 @@ namespace SharpDX.Direct3D10
         public static void ToStream<T>(T texture, ImageFileFormat format, Stream stream)
             where T : Resource
         {
-            System.Diagnostics.Debug.Assert(typeof (T) == typeof (Texture1D) || typeof (T) == typeof (Texture2D) ||
-                         typeof (T) == typeof (Texture3D));
-
             Blob blob;
             D3DX10.SaveTextureToMemory(texture, format, out blob, 0);
 
