@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-direct3d10" xmlns="urn:SharpGen.Config">  
+  <depends>sharpdx</depends>
+  <depends>sharpdx-dxgi</depends>
+  <depends>sharpdx-d3dcompiler</depends>
+  <depends>sharpdx-direct3d1x</depends>
+
+  <namespace>SharpDX.Direct3D10</namespace>
+  <assembly>SharpDX.Direct3D10</assembly>
+
+  <include-prolog>
+    #define D3D10_NO_HELPERS
+  </include-prolog>
+
+  <!-- D3D10 includes -->
+  <!-- d3d10_1.h must be included before d3d10.h -->
+  <include file="d3d10_1.h" attach="true" />
+  <include file="d3d10.h" attach="true" />
+  <include file="d3d10_1shader.h" attach="true" />
+  <include file="d3d10misc.h" attach="true" />
+  <include file="d3d10sdklayers.h" attach="true" />
+  <include file="d3d10shader.h" attach="true" />
+  <include file="d3d10effect.h" attach="true" />
+    
+  <include file="d3dx10.h" attach="true" />
+  <include file="d3dx10core.h" attach="true" />
+  <include file="d3dx10tex.h" attach="true" />
+  <include file="d3dx10mesh.h" attach="true" />
+  <include file="d3dx10async.h" attach="true" />
+    
+  <context-set id="d3d10-all">
+    <context>sharpdx-direct3d10-ext</context>
+    <context>d3d10</context>
+    <context>d3d10_1</context>
+    <context>d3d10_1shader</context>
+    <context>d3d10misc</context>
+    <context>d3d10sdklayers</context>
+    <context>d3d10shader</context>
+    <context>d3d10effect</context>
+      
+    <context>d3dx10</context>
+    <context>d3dx10core</context>
+    <context>d3dx10tex</context>
+    <context>d3dx10mesh</context>
+    <context>d3dx10async</context>
+  </context-set>
+  
+  <naming />
+
+  <!-- D3D10 extensions -->
+  <extension>
+    <context id="d3d10-all"/>
+
+    <create-cpp enum="D3D10_EFFECT_VARIABLE_FLAGS" macro="D3D10_EFFECT_VARIABLE_(.*)" />
+    <create-cpp enum="D3D10_DEBUG_FEATURE_FLAGS" macro="D3D10_DEBUG_FEATURE_(.*)" />
+
+    <const from-macro="D3D10_REQ_MIP_LEVELS" class="SharpDX.Direct3D10.Resource" type="int" name="MaximumMipLevels" />
+    <const from-macro="D3D10_REQ_RESOURCE_SIZE_IN_MEGABYTES" class="SharpDX.Direct3D10.Resource" type="int" name="ResourceSizeInMegabytes" />
+    <const from-macro="D3D10_REQ_TEXTURE1D_ARRAY_AXIS_DIMENSION" class="SharpDX.Direct3D10.Resource" type="int" name="MaximumTexture1DArraySize" />
+    <const from-macro="D3D10_REQ_TEXTURE2D_ARRAY_AXIS_DIMENSION" class="SharpDX.Direct3D10.Resource" type="int" name="MaximumTexture2DArraySize" />
+    <const from-macro="D3D10_REQ_TEXTURE1D_U_DIMENSION" class="SharpDX.Direct3D10.Resource" type="int" name="MaximumTexture1DSize" />
+    <const from-macro="D3D10_REQ_TEXTURE2D_U_OR_V_DIMENSION" class="SharpDX.Direct3D10.Resource" type="int" name="MaximumTexture2DSize" />
+    <const from-macro="D3D10_REQ_TEXTURE3D_U_V_OR_W_DIMENSION" class="SharpDX.Direct3D10.Resource" type="int" name="MaximumTexture3DSize" />
+    <const from-macro="D3D10_REQ_TEXTURECUBE_DIMENSION" class="SharpDX.Direct3D10.Resource" type="int" name="MaximumTextureCubeSize" />
+
+    <!-- const from-macro="D3D10_SO_(.*)" class="SharpDX.Direct3D10.Device.StreamOutputStage" type="int" name="$1">unchecked((int)$1) -->
+
+    <const from-macro="D3D10_SO_(.*)" class="SharpDX.Direct3D10.Device.StreamOutputStage" type="int" name="$1">$1</const>
+
+    <const from-macro="D3D10_SDK_VERSION" class="SharpDX.Direct3D10.D3D10" type="int" name="SdkVersion" />
+    <const from-macro="D3D10_1_SDK_VERSION" class="SharpDX.Direct3D10.D3D10" type="int" name="SdkVersion1" />
+
+    <define enum="SharpDX.Direct3D10.FontWeight" sizeof="4" />
+    <define enum="SharpDX.Direct3D10.FontQuality" sizeof="1" />
+    <define enum="SharpDX.Direct3D10.FontPrecision" sizeof="1" />
+    <define enum="SharpDX.Direct3D10.FontCharacterSet" sizeof="1" />
+    <define enum="SharpDX.Direct3D10.FontPitchAndFamily" sizeof="1" />
+
+    <create class="D3D10" />
+    <create class="D3DX10" />
+
+    <context-clear />
+  </extension>
+
+  <!-- D3D10 bindings -->
+  <bindings>
+    <bind from="D3DX10_FONT_WEIGHT" to="SharpDX.Direct3D10.FontWeight" />
+    <bind from="D3DX10_FONT_QUALITY" to="SharpDX.Direct3D10.FontQuality" />
+    <bind from="D3DX10_FONT_PRECISION" to="SharpDX.Direct3D10.FontPrecision" />
+    <bind from="D3DX10_FONT_CHARSET" to="SharpDX.Direct3D10.FontCharacterSet" />
+    <bind from="D3DX10_FONT_PITCHFAMILY" to="SharpDX.Direct3D10.FontPitchAndFamily" />
+    <bind from="D3D10_SUBRESOURCE_DATA" to="SharpDX.DataBox"/>
+    <bind from="D3D10_MAPPED_TEXTURE2D" to="SharpDX.DataRectangle"/>
+    <bind from="D3D10_MAPPED_TEXTURE3D" to="SharpDX.DataBox"/>
+    <bind from="ID3DX10ThreadPump" to="System.IntPtr" />
+    <bind from="D3D10_VIEWPORT" to="SharpDX.Mathematics.Interop.RawViewport"/>
+  </bindings>
+
+  <!-- D3D10 mapping -->
+  <mapping>
+    <context id="d3d10-all"/>
+
+    <!--
+    // *****************************************************************
+    // D3D10 Enumerations
+    // *****************************************************************
+    -->
+    <map enum="D3D10_DEBUG_FEATURE_FLAGS" name="DebugFeatureFlags" />
+    <map enum-item="D3D10_DEBUG_FEATURE_(.*)_OP" name-tmp="$1" />
+    <map enum="D3D10_DEBUG_FEATURE_FLAGS" flags="true" none="false" />
+    <map enum="D3D10_EFFECT_VARIABLE_FLAGS" name="EffectVariableFlags" />
+    <map enum="D3D10_FEATURE_LEVEL1" name="FeatureLevel" />
+    <map enum-item="D3D10_FEATURE_LEVEL_(.*)" name="Level_$1" />
+    <remove enum="_D3DX10_ERR" />
+    <!--<remove enum="D3D10_MESSAGE_.*" />-->
+    <map enum="D3DX10_NORMALMAP_FLAG" flags="true" none="false" />
+    <map enum="D3DX10_NORMALMAP_INVERTSIGN" name="InvertSign" />
+    <map enum="_D3DX10_MESH" name="MeshFlags" />
+    <map enum="_D3DX10_MESH" flags="true" none="true" />
+    <map enum-item="D3DX10_MESH_32_BIT" name="Has32BitIndices" />
+    <map enum-item="D3DX10_MESH_GS_ADJACENCY" name="HasAdjacency" />
+    <map enum="_D3DX10_MESHOPT" name="MeshOptimizeFlags" />
+    <map enum="_D3DX10_MESHOPT" flags="true" none="false" />
+    <map enum-item="D3DX10_MESHOPT_(.*)" name-tmp="$1" />
+    <map enum-item="D3DX10_MESHOPT_ATTR_SORT" name="AttributeSort" />
+    <map enum-item="D3DX10_MESHOPT_IGNORE_VERTS" name="IgnoreVertices" />
+    <map enum-item="D3D10_FILTER_TEXT_1BIT" name="Texture1Bit" />
+    <map enum-item="D3DX10_MESH_DISCARD_POINTREPS" name="PointRepresentation" />
+    <map enum="D3DX10_MESH_DISCARD_FLAGS" flags="true" none="false" />
+    <remove enum="D3D10_SHADER_DEBUG_REGTYPE" />
+    <remove enum="D3D10_SHADER_DEBUG_SCOPETYPE" />
+    <remove enum="D3D10_SHADER_DEBUG_VARTYPE" />
+    <remove enum="D3D10_DEVICE_STATE_TYPES" />
+    <remove struct="D3D10_SHADER_DESC" />
+    <remove struct="D3D10_SHADER_INPUT_BIND_DESC" />
+    <remove struct="D3D10_SHADER_TYPE_DESC" />
+    <remove struct="D3D10_SHADER_VARIABLE_DESC" />
+    <map enum-item="D3DX10_SPRITE_ADDREF_TEXTURES" name="IncreaseTextureReferenceCount" />
+    <map enum-item="D3DX10_SPRITE_SORT_DEPTH_BACK_TO_FRONT" name="SortBackToFront" />
+    <map enum-item="D3DX10_SPRITE_SORT_DEPTH_FRONT_TO_BACK" name="SortFrontToBack" />
+    <map enum-item="D3DX10_SPRITE_SORT_TEXTURE" name="GroupByTexture" />
+
+    <!--
+    // *****************************************************************
+    // D3D10 Structures
+    // *****************************************************************
+    -->
+    <map struct="D3D10_SIGNATURE_PARAMETER_DESC" name="ShaderParameterDescription" />
+    <remove struct="D3D10_SHADER_DEBUG_SCOPE_INFO" />
+    <remove struct="D3D10_SHADER_DEBUG_SCOPEVAR_INFO" />
+    <remove struct="D3D10_SHADER_DEBUG_INPUT_INFO" />
+    <remove struct="D3D10_SHADER_DEBUG_VAR_INFO" />
+    <remove struct="D3D10_SHADER_DEBUG_TOKEN_INFO" />
+    <remove struct="D3D10_SHADER_DEBUG_OUTPUTVAR" />
+    <remove struct="D3D10_SHADER_DEBUG_OUTPUTREG_INFO" />
+    <remove struct="D3D10_SHADER_DEBUG_INST_INFO" />
+    <remove struct="D3D10_SHADER_DEBUG_FILE_INFO" />
+    <remove struct="D3D10_SHADER_DEBUG_INFO" />
+    <remove struct="D3DX10_INTERSECT_INFO" />
+    <!--<remove struct="D3D10_MESSAGE" />-->
+    <remove struct="D3DX10_WELD_EPSILONS" />
+    <map struct="D3D10_BLEND_DESC1" name="BlendStateDescription1" />
+    <map field="D3D10_BLEND_DESC1?::BlendEnable" name="IsBlendEnabled" />
+    <map field="D3D10_BLEND_DESC1?::AlphaToCoverageEnable" name="IsAlphaToCoverageEnabled" />
+    <map field="D3D10_BLEND_DESC1?::SrcBlend" name="SourceBlend" />
+    <map field="D3D10_BLEND_DESC1?::DestBlend" name="DestinationBlend" />
+    <map field="D3D10_BLEND_DESC1?::BlendOp" name="BlendOperation" />
+    <map field="D3D10_BLEND_DESC1?::SrcBlendAlpha" name="SourceAlphaBlend" />
+    <map field="D3D10_BLEND_DESC1?::DestBlendAlpha" name="DestinationAlphaBlend" />
+    <map field="D3D10_BLEND_DESC1?::BlendOpAlpha" name="AlphaBlendOperation" />
+    <map field="D3D10_BLEND_DESC::RenderTargetWriteMask" type="D3D10_COLOR_WRITE_ENABLE" />
+    <map struct="D3DX10_ATTRIBUTE_RANGE" name="MeshAttributeRange" />
+    <map field="D3DX10_ATTRIBUTE_RANGE::AttribId" name="Id" />
+    <map struct="D3DX10_ATTRIBUTE_WEIGHTS" name="MeshAttributeWeights" />
+    <remove struct="D3DX10_FONT_DESCA" />
+    <map struct="D3DX10_FONT_DESCW" name="FontDescription" />
+    <map field="D3DX10_FONT_DESCW::Weight" type="D3DX10_FONT_WEIGHT" />
+    <map field="D3DX10_FONT_DESCW::Quality" type="D3DX10_FONT_QUALITY" />
+    <map field="D3DX10_FONT_DESCW::OutputPrecision" type="D3DX10_FONT_PRECISION" />
+    <map field="D3DX10_FONT_DESCW::CharSet" name="CharacterSet" type="D3DX10_FONT_CHARSET" />
+    <map field="D3DX10_FONT_DESCW::PitchAndFamily" type="D3DX10_FONT_PITCHFAMILY" />
+    <map struct="D3DX10_SPRITE" name="SpriteInstance" />
+    <map field="D3DX10_SPRITE::matWorld" name="Transform" />
+    <map field="D3DX10_SPRITE::TexCoord" name="TextureCoordinates" />
+    <map field="D3DX10_SPRITE::TexSize" name="TextureDimensions" />
+    <map field="D3DX10_SPRITE::ColorModulate" name="Color" />
+    <map field="D3DX10_SPRITE::pTexture" visibility="internal" name="ShaderResourceViewPointer" />
+    <map field="D3D10_STATE_BLOCK_MASK::.*" type="bool" />
+    <map struct="D3D10_MAPPED_TEXTURE\dD" visibility="internal" />
+    <map field="D3DX10_SKINNING_CHANNEL::SrcOffset" name="SourceOffset" />
+    <map field="D3DX10_SKINNING_CHANNEL::DestOffset" name="DestinationOffset" />
+
+    <!--
+    // *****************************************************************
+    // D3D10 Interfaces
+    // *****************************************************************
+    -->
+    <remove interface="ID3D10ShaderReflection.*" />
+    <remove interface="ID3D10ShaderReflection.*" />
+    <map method="ID3D10Asynchronous::Get.*" visibility="internal" property="false" check="false" />
+    <map method="ID3D10Debug::(.*)FeatureMask" visibility="internal" property="false" name="$1FeatureFlags" />
+    <map method="ID3D10Buffer::Map.*" visibility="internal" />
+    <map method="ID3D10Device::IA(.*)" name="$1" />
+    <map method="ID3D10Device::VS(.*)" name="$1" />
+    <map method="ID3D10Device::PS(.*)" name="$1" />
+    <map method="ID3D10Device::GS(.*)" name="$1" />
+    <map method="ID3D10Device::SO(.*)" name="$1" />
+    <map method="ID3D10Device::RS(.*)" name="$1" />
+    <map method="ID3D10Device::OM(.*)" name="$1" />
+
+    <move  method="ID3D10Device::IA(.*)" to="InputAssemblerStage" property="InputAssembler" />
+    <move  method="ID3D10Device::VS(.*)" to="VertexShaderStage" property="VertexShader" base="CommonShaderStage&lt;VertexShader&gt;"/>
+    <move  method="ID3D10Device::PS(.*)" to="PixelShaderStage" property="PixelShader" base="CommonShaderStage&lt;PixelShader&gt;" />
+    <move  method="ID3D10Device::GS(.*)" to="GeometryShaderStage" property="GeometryShader" base="CommonShaderStage&lt;GeometryShader&gt;"/>
+    <move  method="ID3D10Device::SO(.*)" to="StreamOutputStage" property="StreamOutput"/>
+    <move  method="ID3D10Device::RS(.*)" to="RasterizerStage" property="Rasterizer"/>
+    <move  method="ID3D10Device::OM(.*)" to="OutputMergerStage" property="OutputMerger"/>
+    
+    <map param="ID3D10Device::ClearDepthStencilView::ClearFlags" type="D3D10_CLEAR_FLAG" attribute="in" />
+    <map param="ID3D10Device::ClearRenderTargetView::ColorRGBA" type="SHARPDX_COLOR4" pointer="*" array="0" attribute="in" />
+    <map method="ID3D10Device::IA.*" property="false" />
+    <map method="ID3D10Device::IA[GS]etInputLayout" property="true" />
+    <map method="ID3D10Device::IA[GS]etPrimitiveTopology" property="true" />
+    <map method="ID3D10Device::GetCreationFlags" visibility="internal" property="false" />
+    <map method="ID3D10Device::SetViewports" visibility="internal" />
+    <map method="ID3D10Device::SetScissorRects" visibility="internal" />
+    <map method="ID3D10Device::IASetVertexBuffers" visibility="internal" />
+    <map method="ID3D10Device::[A-Z][A-Z]SetShader" property="false" name="Set" />
+    <map method="ID3D10Device::[A-Z][A-Z]SetShaderResources" visibility="public override" />
+    <map method="ID3D10Device::[A-Z][A-Z]SetSamplers" visibility="public override" />
+    <map method="ID3D10Device::[A-Z][A-Z]GetShader" property="false" name="Get" />
+    <map method="ID3D10Device::[A-Z][A-Z]SetConstantBuffers" visibility="public override" />
+    <map method="ID3D10Device::[A-Z][A-Z]GetShaderResources" visibility="internal override" />
+    <map method="ID3D10Device::[A-Z][A-Z]GetSamplers" visibility="internal override" />
+    <map method="ID3D10Device::[A-Z][A-Z]GetConstantBuffers" visibility="internal override" />
+    <map param="ID3D10Device::OMGetBlendState::BlendFactor" type="SHARPDX_COLOR4" pointer="*" array="0" />
+    <map param="ID3D10Device::OMSetBlendState::BlendFactor" type="SHARPDX_COLOR4" pointer="*" array="0" />
+    <map method="ID3D10Device::OMGet.*" visibility="internal" />
+    <map method="ID3D10Device::SO.*" visibility="internal" />
+    <map method="ID3D10Device::RSGetScissorRects" visibility="internal" />
+    <map method="ID3D10Device::RSSetScissorRects" visibility="internal" />
+    <map method="ID3D10Device::RSGetViewports" visibility="internal" />
+    <map method="ID3D10Device::RSSetViewports" visibility="internal" />
+    <map method="ID3D10Texture1D::Map" visibility="internal" />
+    <map method="ID3D10Texture2D::Map" visibility="internal" />
+    <map method="ID3D10Texture3D::Map" visibility="internal" />
+    <map method="ID3D10Device::CopyResource" visibility="internal" name="CopyResource_" />
+    <map method="ID3D10Device::CopySubresourceRegion" visibility="internal" name="CopySubresourceRegion_" />
+    <map method="ID3D10Device::ResolveSubresource" visibility="internal" name="ResolveSubresource_" />
+    <remove method="ID3DX10Font::.*A" />
+    <map method="ID3DX10Font::GetTextMetricsW" name="GetTextMetrics" />
+    <map method="ID3DX10Font::PreloadTextW" name="PreloadText" />
+    <map method="ID3DX10Font::DrawTextW" name="DrawText" />
+    <map method="ID3DX10Font::GetDC" name="GetDeviceContext" />
+    <map method="ID3DX10Font::DrawTextW" visibility="internal" />
+    <map method="ID3DX10Font::PreloadTextW" visibility="internal" />
+    <map param="ID3DX10Font::GetDevice::ppDevice" attribute="out" />
+    <map param="ID3DX10Font::GetDescA::pDesc" attribute="out" />
+    <map param="ID3DX10Font::GetDescW::pDesc" attribute="out" />
+    <map param="ID3DX10Font::GetTextMetricsA::pTextMetrics" type="void" attribute="in" />
+    <map param="ID3DX10Font::GetTextMetricsW::pTextMetrics" type="void" attribute="in" />
+    <map param="ID3DX10Font::GetGlyphData::ppTexture" attribute="out" />
+    <map param="ID3DX10Font::GetGlyphData::pBlackBox" attribute="out" />
+    <map param="ID3DX10Font::GetGlyphData::pCellInc" attribute="out" />
+    <map param="ID3DX10Font::DrawTextW::pRect" type="void" />    
+    <map param="ID3DX10Sprite::GetViewTransform::pViewTransform" attribute="out" />
+    <map param="ID3DX10Sprite::GetProjectionTransform::pProjectionTransform" attribute="out" />
+    <map param="ID3DX10Sprite::GetDevice::ppDevice" attribute="out" />
+    <map method="ID3DX10Sprite::DrawSprites.*" visibility="internal" />
+    <map param="ID3DX10Sprite::DrawSpritesBuffered::pSprites" attribute="in buffer" />
+    <map param="ID3DX10Sprite::DrawSpritesImmediate::pSprites" attribute="in buffer" />
+    <map method="ID3DX10Mesh::CloneMesh" visibility="internal" />
+    <map param="flags" type="D3DX10_MESH_FLAGS" attribute="in" />
+    <map param="pDesc" attribute="in buffer" />
+    <map method="ID3DX10Mesh::CommitToDevice" name="Commit" />
+    <map method="ID3DX10Mesh::GenerateAdjacencyAndPointReps" name="GenerateAdjacencyAndPointRepresentation" />
+    <map method="ID3DX10Mesh::GenerateGSAdjacency" name="GenerateGeometryShaderAdjacency" />
+    <map method="ID3DX10Mesh::GetAdjacencyBuffer" visibility="public" property="false" />
+    <map param="ppAdjacency" return="true" />
+    <map method="ID3DX10Mesh::GetAttributeBuffer" visibility="public" property="false" />
+    <map param="ppAttribute" return="true" />
+    <map method="ID3DX10Mesh::GetDeviceIndexBuffer" visibility="public" property="false" />
+    <map param="ppIndexBuffer" return="true" />
+    <map method="ID3DX10Mesh::GetDeviceVertexBuffer" visibility="public" property="false" />
+    <map param="ppVertexBuffer" return="true" />
+    <map method="ID3DX10Mesh::GetFlags" visibility="internal" property="false" />
+    <map method="ID3DX10Mesh::GetIndexBuffer" visibility="public" property="false" />
+    <map param="ppIndexBuffer" return="true" />
+    <map method="ID3DX10Mesh::GetVertexBuffer" visibility="public" property="false" />
+    <map param="ppVertexBuffer" return="true" />
+    <map method="ID3DX10Mesh::GetAttributeTable" visibility="internal" property="false" />
+    <map param="pAttribTable" attribute="out buffer optional" />
+    <map param="pAttribTableSize" attribute="inout" />
+    <map method="ID3DX10Mesh::GetPointRepBuffer" visibility="internal" property="false" />
+    <map param="ID3DX10Mesh::SetPointRepData::pPointReps" type="void" attribute="in" />
+    <map method="ID3DX10Mesh::GetVertexDescription" visibility="internal" property="false" />
+    <map param="ppDesc" attribute="out buffer" />
+    <map method="ID3DX10Mesh::Optimize" visibility="internal" property="false" />
+    <map param="pFaceRemap" attribute="out buffer optional" />
+    <map param="ppVertexRemap" type="void" attribute="in" />
+    <map method="ID3DX10Mesh::SetAdjacencyData" visibility="internal" property="false" />
+    <map param="pAdjacency" type="void" attribute="in" />
+    <map method="ID3DX10Mesh::SetAttributeData" visibility="internal" property="false" />
+    <map param="pData" type="void" attribute="in" />
+    <map method="ID3DX10Mesh::SetAttributeTable" visibility="internal" property="false" />
+    <map param="pAttribTable" attribute="in buffer" />
+    <map method="ID3DX10Mesh::SetPointRepData" visibility="internal" property="false" />
+    <map method="ID3DX10Mesh::SetIndexData" visibility="internal" property="false" />
+    <map method="ID3DX10Mesh::SetVertexData" visibility="internal" property="false" />
+    <map method="ID3DX10MeshBuffer::Map" visibility="internal" />
+    <map param=".*" attribute="out" />
+    <map method="ID3DX10MeshBuffer::GetSize" name="GetSizeInBytes" />
+    <map param="ID3DX10SkinInfo::AddBoneInfluences::pIndices" attribute="in buffer" />
+    <map param="ID3DX10SkinInfo::AddBoneInfluences::pWeights" attribute="in buffer" />
+    <map param="ID3DX10SkinInfo::DoSoftwareSkinning::pInverseTransposeBoneMatrices" attribute="in optional" />
+    <map method="ID3DX10SkinInfo::GetBoneInfluences" visibility="internal" />
+    <map param="pDestIndices" attribute="out buffer" />
+    <map param="pDestWeights" attribute="out buffer" />
+    <map param="ID3DX10SkinInfo::RemapBones::pBoneRemap" attribute="in buffer" />
+    <map param="ID3DX10SkinInfo::RemapVertices::pVertexRemap" attribute="in buffer" />
+    
+    <!--
+    // *****************************************************************
+    // D3D10 Functions
+    // *****************************************************************
+    -->
+    <map function="D3D10(.+)" name-tmp="$1" />
+    <map function="D3DX10(.+)" name-tmp="$1" />
+    <map function="D3DX10(.+)W" name-tmp="$1" />
+    <map param="D3D10CreateDevice1?::ppDevice" attribute="out fast" />
+    <map param="D3D10CreateDeviceAndSwapChain1?::ppDevice" attribute="out" />
+    <map param="D3D10CreateDeviceAndSwapChain1?::pSwapChainDesc" attribute="in" />
+    <map param="D3D10CreateDeviceAndSwapChain1?::ppSwapChain" attribute="out" />
+    <map param="D3D10CreateEffectFromMemory::ppEffect" attribute="out fast" />
+    <map param="D3DX10CreateMesh::pDeclaration" attribute="in buffer" />
+    <map param="D3D10CreateStateBlock::ppStateBlock" attribute="out fast"/>
+    <map param="D3D10CreateEffectPoolFromMemory::ppEffectPool" attribute="out fast"/>
+    <map param="D3DX10CreateFont.*::ppFont" attribute="out fast"/>
+    <map param="D3DX10CreateSprite::ppSprite" attribute="out fast"/>
+    <map param="D3DX10CreateMesh::ppMesh" attribute="out fast"/>
+    
+    <remove function="D3D10CreateBlob" />
+    <remove function="D3D10CompileShader" />
+    <remove function="D3D10DisassembleShader" />
+    <remove function="D3D10ReflectShader" />
+    <remove function="D3D10PreprocessShader" />
+    <remove function="D3D10GetInputSignatureBlob" />
+    <remove function="D3D10GetOutputSignatureBlob" />
+    <remove function="D3D10GetInputAndOutputSignatureBlob" />
+    <remove function="D3D10GetShaderDebugInfo" />
+    <remove function="D3D10DisassembleEffect" />
+    <remove function="D3D10StateBlockMask.*"/>
+    <remove function="D3DX10CreateFontIndirectA"/>
+
+    <!-- Warning, D3D10CompileEffectFromMemory code is copied to D3D compiler dll  -->
+    <map function="D3D10CompileEffectFromMemory" name="CompileEffect10FromMemory" />
+    <map param="D3D10CompileEffectFromMemory::HLSLFlags" type="D3DCOMPILE_SHADER_FLAGS" />
+    <map param="D3D10CompileEffectFromMemory::FXFlags" type="D3DCOMPILE_EFFECT_FLAGS" />
+    <map param="D3D10CompileEffectFromMemory::pDefines" attribute="in buffer optional" />
+
+    <map function="D3D10.*" dll='"d3d10.dll"' group="SharpDX.Direct3D10.D3D10" />
+    <map function="D3D10.*1" dll='"d3d10_1.dll"' group="SharpDX.Direct3D10.D3D10" />
+      
+    <map function="D3DX10.*" dll='"#(D3DX10_DLL_A)"' group="SharpDX.Direct3D10.D3DX10" />
+
+  <context-clear />
+  </mapping>
+</config>
