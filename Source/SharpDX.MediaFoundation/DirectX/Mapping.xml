@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-mediafoundation-directx" xmlns="urn:SharpGen.Config">
+  <dependency>sharpdx-core</dependency>
+  <dependency>sharpdx-direct3d9</dependency>
+  
+  <namespace>SharpDX.MediaFoundation.DirectX</namespace>
+  <assembly>SharpDX.MediaFoundation</assembly>
+
+  <include file="dxva2api.h" attach="true" output="DirectX">
+  <pre>
+  #define __AUDIODEFS_INCLUDED__
+  </pre>
+  </include>
+  <include file="dxvahd.h" attach="true" output="DirectX"/>
+
+  <context-set id="mediafoundation-directx-all">
+    <context>sharpdx-mediafoundation-directx</context>
+    <context>sharpdx-mediafoundation-directx-ext</context>
+    <context>dxva2api</context>
+    <context>dxvahd</context>
+  </context-set>
+
+  <extension>
+    <context id="mediafoundation-directx-all"/>
+    
+    <create class="DXVAFactory" />
+    <context-clear />
+  </extension>
+
+  <mapping>
+    <context id="mediafoundation-directx-all"/>
+    <!--
+    // *****************************************************************
+    // MediaFoundation-DirectX Enumerations
+    // *****************************************************************
+    -->
+    <map enum="DXVA2(.*)" name-tmp="$1"/>
+    <map enum="DXVAHD(.*)" name-tmp="$1"/>
+
+    <remove enum-item=".*_Mask"/>
+
+    <!--Use special character # to reference parent of an enum-item, when an enum is anonymous -->
+    <map enum="#DXVA2_DeinterlaceTech_Unknown" name="DeinterlaceTechnology"/>
+    <map enum-item="DXVA2_DeinterlaceTech_(.*)" name-tmp="$1"/>
+
+    <map enum="#DXVA2_NoiseFilterLumaLevel" name="NoiseDetailFilter"/>
+    <map enum-item="DXVA2_NoiseFilter(.*)" name-tmp="Noise_$1"/>
+    <map enum-item="DXVA2_DetailFilter(.*)" name-tmp="Detail_$1"/>
+
+    <map enum="#DXVA2_NoiseFilterTech_Unsupported" name="NoiseFilterTechnology"/>
+    <map enum-item="DXVA2_NoiseFilterTech_(.*)" name-tmp="$1"/>
+
+    <map enum="#DXVA2_DetailFilterTech_Unsupported" name="DetailFilterTechnology"/>
+    <map enum-item="DXVA2_NoiseFilterTech_(.*)" name-tmp="$1"/>
+
+    <map enum="#DXVA2_ProcAmp_None" name="VideoProcessorSettings"/>
+    <map enum-item="DXVA2_ProcAmp_(.*)" name-tmp="$1"/>
+
+    <map enum="#DXVA2_VideoProcess_None" name="VideoProcessorOperations"/>
+    <map enum-item="DXVA2_VideoProcess_(.*)" name-tmp="$1"/>
+
+    <map enum="#DXVA2_VPDev_HardwareDevice" name="VideoDeviceCapabilities"/>
+    <map enum-item="DXVA2_VPDev_(.*)" name-tmp="$1"/>
+
+    <map enum="#DXVA2_SampleData_RFF" name="SampleData"/>
+    <map enum-item="DXVA2_SampleData_RFF" name="RepeatFirstFieldBit"/>
+    <map enum-item="DXVA2_SampleData_TFF" name="TopFieldFirstBit"/>
+    <map enum-item="DXVA2_SampleData_RFF_TFF_Present" name="Both"/>
+
+    <!--Remove unused -->
+    <remove enum="#DXVA2_DestData_RFF"/>
+
+    <map enum="#DXVA2_PictureParametersBufferType" name="CompressedBufferType"/>
+    <map enum-item="DXVA2_(.*)BufferType" name="$1"/>
+
+    <map enum="#DXVA2_VideoDecoderRenderTarget" name="RenderTargetType"/>
+    <map enum-item="DXVA2_(.*)RenderTarget" name="$1"/>
+
+    <map enum-item="DXVA2_NominalRange_0_255" name="Range0_255"/>
+    <map enum-item="DXVA2_NominalRange_16_235" name="Range16_235"/>
+    <map enum-item="DXVA2_NominalRange_48_208" name="Range48_208"/>
+    <map enum-item="DXVAHD_ITELECINE_CAPS_(.*)" name="Reverse$1"/>
+
+    <map enum="DXVAHD_SURFACE_TYPE" name="SurfaceTypeHD" />
+    
+    <!--
+    // *****************************************************************
+    // MediaFoundation-DirectX Structures
+    // *****************************************************************
+    -->
+    <map struct="DXVA2(.*)" name-tmp="$1"/>
+    <map struct="DXVAHD(.*)" name-tmp="$1"/>
+    <map field="DXVAHD_STREAM_STATE_PALETTE_DATA::pEntries" type="void"/>
+   
+    <!--
+    // *****************************************************************
+    // MediaFoundation-DirectX Interfaces
+    // *****************************************************************
+    -->
+    <map interface="IDirectX(.*)" name="$1"/>
+    <map interface="IDXVAHD_(.*)" name="HD$1"/>
+    <map interface="IDirect3DDeviceManager9" name="Direct3DDeviceManager"/>
+
+    <!--
+    // *****************************************************************
+    // MediaFoundation-DirectX Functions
+    // *****************************************************************
+    -->
+    <map function="DXVA2(.*)" name-tmp="$1"  dll='"Dxva2.dll"' group="SharpDX.MediaFoundation.DirectX.DXVAFactory"/>
+    <map function="DXVAHD(.*)" name-tmp="$1"  dll='"Dxva2.dll"' group="SharpDX.MediaFoundation.DirectX.DXVAFactory"/>
+    <map param="DXVA2CreateDirect3DDeviceManager9::ppDeviceManager" attribute="out fast" />
+    <map param="DXVAHD_CreateDevice::ppDevice" attribute="out fast" />
+
+    <context-clear />
+  </mapping>
+</config>
