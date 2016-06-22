@@ -24,17 +24,6 @@
     <Compile Include="AsyncCallbackShadow.cs" />
     <Compile Include="ClockStateSink.cs" />
     <Compile Include="ClockStateSinkShadow.cs" />
-    <Compile Include="DirectX\Direct3DDeviceManager.cs" />
-    <Compile Include="DirectX\Hand.Generated\Enumerations.cs" />
-    <Compile Include="DirectX\Hand.Generated\Functions.cs" />
-    <Compile Include="DirectX\Hand.Generated\Interfaces.cs" />
-    <Compile Include="DirectX\Hand.Generated\LocalInterop.cs" />
-    <Compile Include="DirectX\Hand.Generated\Structures.cs" />
-    <Compile Include="DirectX\HDDevice.cs" />
-    <Compile Include="DirectX\NamespaceDoc.cs" />
-    <Compile Include="DirectX\VideoAccelerationService.cs" />
-    <Compile Include="DirectX\VideoDecoderService.cs" />
-    <Compile Include="DirectX\VideoProcessorService.cs" />
     <Compile Include="MediaTypeHandler.cs" />
     <Compile Include="PresentationDescriptor.cs" />
     <Compile Include="SampleGrabberSinkCallbackShadow2.cs" />
@@ -75,6 +64,19 @@
     <Compile Include="VideoPresenterShadow.cs" />
     <Compile Include="WorkQueueId.cs" />
   </ItemGroup>
+  <ItemGroup Condition="'$(SharpDXPlatform)' == 'Desktop'">
+    <Compile Include="DirectX\Direct3DDeviceManager.cs" />
+    <Compile Include="DirectX\Hand.Generated\Enumerations.cs" />
+    <Compile Include="DirectX\Hand.Generated\Functions.cs" />
+    <Compile Include="DirectX\Hand.Generated\Interfaces.cs" />
+    <Compile Include="DirectX\Hand.Generated\LocalInterop.cs" />
+    <Compile Include="DirectX\Hand.Generated\Structures.cs" />
+    <Compile Include="DirectX\HDDevice.cs" />
+    <Compile Include="DirectX\NamespaceDoc.cs" />
+    <Compile Include="DirectX\VideoAccelerationService.cs" />
+    <Compile Include="DirectX\VideoDecoderService.cs" />
+    <Compile Include="DirectX\VideoProcessorService.cs" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />
     <None Include="Mapping.xml">
@@ -84,19 +86,21 @@
   <ItemGroup>
     <None Include="SharpDX.MediaFoundation.nuspec" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(SharpDXPlatform)' == 'Desktop'">
     <ProjectReference Include="..\SharpDX.Direct3D9\SharpDX.Direct3D9.csproj">
       <Project>{b4d984df-85b8-4bbf-8c3b-5cef905f40d9}</Project>
       <Name>SharpDX.Direct3D9</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SharpDX.Mathematics\SharpDX.Mathematics.csproj">
+      <Project>{49e4485f-3a2a-4c35-a159-12eccfc00396}</Project>
+      <Name>SharpDX.Mathematics</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj">
       <Project>{3FC6DE77-B412-4101-9E64-6B9AA831179B}</Project>
       <Name>SharpDX.DXGI</Name>
       <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpDX.Mathematics\SharpDX.Mathematics.csproj">
-      <Project>{49e4485f-3a2a-4c35-a159-12eccfc00396}</Project>
-      <Name>SharpDX.Mathematics</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpDX\SharpDX.csproj">
       <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
@@ -109,6 +113,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
