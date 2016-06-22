@@ -51,6 +51,14 @@
     <context>d3d10misc</context>
     <context>d3d10sdklayers</context>
     <context>d3d10shader</context>
+    <context>d3d10effect</context>
+
+    <context>d3dx10</context>
+    <context>d3dx10core</context>
+    <context>d3dx10tex</context>
+    <context>d3dx10mesh</context>
+    <context>d3dx10async</context>
+      
     
     <context>d3d11</context>
     <context>d3d11_1</context>
@@ -287,8 +295,7 @@
     // *****************************************************************
     -->
     <map interface="ID3D1[0-3](.+)" name-tmp="$1" />
-    <map interface="ID3DX10(.+)" name-tmp="$1" />
-    <map interface="ID3DX11(.+)" name-tmp="$1" />
+    <map interface="ID3DX1[0-3](.+)" name-tmp="$1" />
 
     <map method=".*::GetPrivateData" check="false"/>
 
