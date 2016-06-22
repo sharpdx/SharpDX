@@ -87,6 +87,7 @@
     <bind from="D2D_MATRIX_4X4_F" to="SharpDX.Mathematics.Interop.RawMatrix" />
     <bind from="D2D_MATRIX_5X4_F" to="SharpDX.Mathematics.Interop.RawMatrix5x4" />
     <bind from="IPrintDocumentPackageTarget" to="SharpDX.ComObject" />
+    <bind from="FONTSIGNATURE" to="SharpDX.DirectWrite.GdiInterop.FontSignature" />
   </bindings>
   
   <mapping>
