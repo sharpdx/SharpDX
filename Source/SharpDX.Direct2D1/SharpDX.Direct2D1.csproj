@@ -26,6 +26,8 @@
     <Compile Include="CommandSink1Shadow.cs" />
     <Compile Include="CommandSink2.cs" />
     <Compile Include="CommandSink2Native.cs" />
+    <Compile Include="CommandSink3.cs" />
+    <Compile Include="CommandSink3Native.cs" />
     <Compile Include="ComputeInformation.cs" />
     <Compile Include="AnalysisTransform.cs" />
     <Compile Include="CommandSink.cs" />
@@ -36,7 +38,9 @@
     <Compile Include="ComputeTransformShadow.cs" />
     <Compile Include="D2D1.cs" />
     <Compile Include="Device1.cs" />
+    <Compile Include="Device3.cs" />
     <Compile Include="Device2.cs" />
+    <Compile Include="DeviceContext3.cs" />
     <Compile Include="DeviceContext2.cs" />
     <Compile Include="DeviceContext1.cs" />
     <Compile Include="DirectWrite\Factory1.cs" />
@@ -51,6 +55,14 @@
     <Compile Include="Effects\OpacityMetadata.cs" />
     <Compile Include="Effects\PerspectiveTransform3D.cs" />
     <Compile Include="Effects\YCbCr.cs" />
+    <Compile Include="GradientMesh.cs" />
+    <Compile Include="ImageSourceFromWic.cs" />
+    <Compile Include="ImageSource.cs" />
+    <Compile Include="SpriteBatch.cs" />
+    <Compile Include="TransformedImageSource.cs" />
+    <Compile Include="LookupTable3D.cs" />
+    <Compile Include="InkStyle.cs" />
+    <Compile Include="Ink.cs" />
     <Compile Include="Factory2.cs" />
     <Compile Include="GeometryRealization.cs" />
     <Compile Include="NamespaceDoc.cs" />

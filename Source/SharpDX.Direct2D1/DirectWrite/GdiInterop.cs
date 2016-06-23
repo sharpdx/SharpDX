@@ -46,6 +46,17 @@ namespace SharpDX.DirectWrite
             public string lfFaceName;
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        public struct FontSignature
+        {
+            public int fsUsb1;
+            public int fsUsb2;
+            public int fsUsb3;
+            public int fsUsb4;
+            public int fsCsb1;
+            public int fsCsb2;
+        }
+
         /// <summary>	
         /// Creates a font object that matches the properties specified by the LOGFONT structure. 	
         /// </summary>	

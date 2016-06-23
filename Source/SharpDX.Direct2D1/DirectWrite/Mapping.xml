@@ -29,6 +29,8 @@
   
   <include file="dwrite.h" attach="true" output="DirectWrite"/>
   <include file="dwrite_1.h" attach="true" output="DirectWrite"/>
+  <include file="dwrite_2.h" attach="true" output="DirectWrite"/>
+  <include file="dwrite_3.h" attach="true" output="DirectWrite"/>
 
   <naming />
   
@@ -43,6 +45,8 @@
   <mapping>
     <context>dwrite</context>
     <context>dwrite_1</context>
+    <context>dwrite_2</context>
+    <context>dwrite_3</context>
 
     <!--
     // *****************************************************************
@@ -143,10 +147,18 @@
     <map interface="IDWriteFontFileEnumerator" callback="true" callback-dual="false" />
     <map interface="IDWritePixelSnapping" callback="true" callback-dual="false" />
     <map interface="IDWriteTextRenderer" callback="true" callback-dual="false" />
+    <map interface="IDWriteTextRenderer1" callback="true" callback-dual="false" />
     <map method="IDWriteGdiInterop::.*?LOGFONT" visibility="internal" />
     <map param="logFont" type="void" attribute="in" />
     <map param="IDWriteGdiInterop::CreateBitmapRenderTarget::renderTarget" return="true" />
     <map param="IDWriteGdiInterop::CreateFontFaceFromHdc::fontFace" return="true" />
+      
+    <map method="IDWriteGdiInterop1::.*?LOGFONT" visibility="internal" />
+    <map param="logFont" type="void" attribute="in" />
+    <map param="IDWriteGdiInterop1::CreateBitmapRenderTarget::renderTarget" return="true" />
+    <map param="IDWriteGdiInterop1::CreateFontFaceFromHdc::fontFace" return="true" />
+    <map param="IDWriteGdiInterop1::GetFontSignature::fontSignature" return="true" />
+    <map param="IDWriteGdiInterop1::CreateFontFromLOGFONT::font" return="true" />
 
     <map param="IDWriteGlyphRunAnalysis::GetAlphaTextureBounds::textureBounds" return="true" />
     <map param="IDWriteLocalFontFileLoader::GetFilePathLengthFromKey::filePathLength" return="true" />
