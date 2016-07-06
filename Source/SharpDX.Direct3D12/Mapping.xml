@@ -314,7 +314,7 @@
    
     <remove function=".*_Stub"/>
     <remove function=".*_Proxy"/>
-    <remove method="ID3D12RootSignatureDeserializer::GetRootSignatureDesc"/>
+    <map method="ID3D12RootSignatureDeserializer::GetRootSignatureDesc" type="void" property="false" visibility="private"/>
     <map function="D3D12(.+)" name-tmp="$1" />
     <map function="D3D12.*" dll='"d3d12.dll"' group="SharpDX.Direct3D12.D3D12" />
     <map param="D3D12CreateDevice::ppDevice" type="ID3D12Device" attribute="out fast" />

@@ -17,13 +17,7 @@ namespace SharpDX.Direct3D12
         /// <unmanaged>GetRootSignatureDesc</unmanaged>	
         /// <unmanaged-short>GetRootSignatureDesc</unmanaged-short>	
         /// <unmanaged>const D3D12_ROOT_SIGNATURE_DESC* ID3D12RootSignatureDeserializer::GetRootSignatureDesc()</unmanaged>
-        public SharpDX.Direct3D12.RootSignatureDescription RootSignatureDescription
-        {
-            get { return GetRootSignatureDescription(); }
-        }
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        internal delegate IntPtr GetRootSignatureDescDelegate(IntPtr pThis);
+        public SharpDX.Direct3D12.RootSignatureDescription RootSignatureDescription => GetRootSignatureDescription2();
 
         /// <summary>	
         /// <p> Gets the layout of the root signature. </p>	
@@ -33,15 +27,10 @@ namespace SharpDX.Direct3D12
         /// <msdn-id>dn986887</msdn-id>	
         /// <unmanaged>const D3D12_ROOT_SIGNATURE_DESC* ID3D12RootSignatureDeserializer::GetRootSignatureDesc()</unmanaged>	
         /// <unmanaged-short>ID3D12RootSignatureDeserializer::GetRootSignatureDesc</unmanaged-short>	
-        internal SharpDX.Direct3D12.RootSignatureDescription GetRootSignatureDescription()
+        internal SharpDX.Direct3D12.RootSignatureDescription GetRootSignatureDescription2()
         {
-            unsafe
-            {               
-                void* target = ((void**)(*(void**)_nativePointer))[3];
-                GetRootSignatureDescDelegate getRootSignatureDescMethod = Marshal.GetDelegateForFunctionPointer<GetRootSignatureDescDelegate>(new IntPtr(target));
-                IntPtr pDesc = getRootSignatureDescMethod(new IntPtr(_nativePointer));
-                return new RootSignatureDescription(pDesc);
-            }
+            var pDesc = this.GetRootSignatureDescription();
+            return new RootSignatureDescription(pDesc);
         }
     }
 }

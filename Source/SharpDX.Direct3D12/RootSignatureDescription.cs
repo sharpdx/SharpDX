@@ -166,6 +166,11 @@ namespace SharpDX.Direct3D12
 
         private unsafe void Deserialize(IntPtr pNativePtr)
         {
+            if(pNativePtr == IntPtr.Zero)
+            {
+                return;
+            }
+
             __Native* pNative = (__Native*)pNativePtr;
 
             if (pNative->ParameterCount > 0)
@@ -184,19 +189,7 @@ namespace SharpDX.Direct3D12
                         if (rangeCount > 0)
                         {
                             ranges = new DescriptorRange[rangeCount];
-                            fixed (DescriptorRange* pCurRange = ranges)
-                            {
-                                DescriptorRange* pSourceDescRange = (DescriptorRange*)rpn[i].Union.DescriptorTable.DescriptorRangesPointer;
-                                DescriptorRange* pSourceDescRangeEnd = pSourceDescRange + rpn[i].Union.DescriptorTable.DescriptorRangeCount;
-                                DescriptorRange* pTargetDescRange = pCurRange;
-                                while (pTargetDescRange < pSourceDescRangeEnd)
-                                {
-                                    *pTargetDescRange = *pSourceDescRange;
-                                    pTargetDescRange++;
-                                    pSourceDescRange++;
-                                }
-
-                            }
+                            Utilities.Read(rpn[i].Union.DescriptorTable.DescriptorRangesPointer, ranges, 0, ranges.Length);
                         }
 
                         Parameters[i] = new RootParameter(rpn[i].ShaderVisibility, ranges);
@@ -204,8 +197,7 @@ namespace SharpDX.Direct3D12
                     else
                     {
                         // No need to marshal them when RootParameter don't contain DescriptorTable - simple copy as-is
-                        Parameters[i] = new RootParameter();
-                        Parameters[i].native = *rpn;
+                        Parameters[i] = new RootParameter {native = *rpn};
                     }
                 }
             }
@@ -213,18 +205,7 @@ namespace SharpDX.Direct3D12
             if (pNative->StaticSamplerCount > 0)
             {
                 StaticSamplers = new StaticSamplerDescription[pNative->StaticSamplerCount];
-                fixed (StaticSamplerDescription *pSamplerDesc = StaticSamplers)
-                {
-                    StaticSamplerDescription* pTargetSamplerDesc = pSamplerDesc;
-                    StaticSamplerDescription* pSourceSamplerDesc = (StaticSamplerDescription*) pNative->StaticSamplerPointer;
-                    StaticSamplerDescription* pSourceSamplerDescEnd = pSourceSamplerDesc + pNative->StaticSamplerCount;
-                    while (pSamplerDesc < pSourceSamplerDescEnd)
-                    {
-                        *pTargetSamplerDesc = *pSourceSamplerDesc;
-                        pTargetSamplerDesc++;
-                        pSourceSamplerDesc++;
-                    }
-                }
+                Utilities.Read(pNative->StaticSamplerPointer, StaticSamplers, 0, StaticSamplers.Length);
             }
         }
 
