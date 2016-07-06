@@ -48,18 +48,18 @@
   </context-set>
 
   <!-- D3D12 extensions -->
-  <extension>
+  <extension>     
     <context id="d3d12-all"/>
 
     <const from-macro="D3D12_SDK_VERSION" class="SharpDX.Direct3D12.D3D12" type="int" name="SdkVersion" />
     <create class="D3D12" />
-    
+
     <context-clear />
   </extension>
 
   <!-- D3D12 bindings -->
-  <bindings> 
-    
+  <bindings>
+  
   </bindings>
 
   <!-- D3D12 mapping -->
@@ -145,9 +145,9 @@
 
     <map field="D3D12_ROOT_SIGNATURE::pParameters" name="ParametersPointer"/>
 
-    <map struct="D3D12_ROOT_SIGNATURE_DESC" struct-to-class="true"/>
+    <map struct="D3D12_ROOT_SIGNATURE_DESC" struct-to-class="true" marshal="true"/>
     <remove field="D3D12_ROOT_SIGNATURE_DESC::.*"/>
-    
+      
     <map struct="D3D12_INPUT_LAYOUT_DESC" struct-to-class="true" marshalto="true"/>
     <map field="D3D12_INPUT_LAYOUT_DESC::pInputElementDescs" name="InputElementsPointer" visibility="private"/>
     <map field="D3D12_INPUT_LAYOUT_DESC::NumElements" visibility="private"/>
@@ -296,7 +296,6 @@
     <map param="ID3D12Device::CreateComputePipelineState::pDesc" attribute="in" type="void"/>
 
     <map method="ID3D12RootSignatureDeserializer::GetRootSignature" type="void" property="false" visibility="private"/>
-
     <map param="ID3D12Resource::Map::pReadRange" default="null"/>
     <map param="ID3D12Resource::Unmap::pWrittenRange" default="null"/>
     <map param="ID3D12Resource::Map::ppData" attribute="out" return="true"/>
@@ -315,6 +314,7 @@
    
     <remove function=".*_Stub"/>
     <remove function=".*_Proxy"/>
+    <map method="ID3D12RootSignatureDeserializer::GetRootSignatureDesc" type="void" property="false" visibility="private"/>
     <map function="D3D12(.+)" name-tmp="$1" />
     <map function="D3D12.*" dll='"d3d12.dll"' group="SharpDX.Direct3D12.D3D12" />
     <map param="D3D12CreateDevice::ppDevice" type="ID3D12Device" attribute="out fast" />

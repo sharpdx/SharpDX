@@ -44,6 +44,7 @@
     <Compile Include="ResourceDescription.cs" />
     <Compile Include="ResourceTransitionBarrier.cs" />
     <Compile Include="RootConstants.cs" />
+    <Compile Include="RootSignatureDeserializer.cs" />
     <Compile Include="RootDescriptor.cs" />
     <Compile Include="RootParameter.cs" />
     <Compile Include="RootSignatureDescription.cs" />

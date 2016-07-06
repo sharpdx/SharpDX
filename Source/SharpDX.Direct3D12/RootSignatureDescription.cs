@@ -56,6 +56,11 @@ namespace SharpDX.Direct3D12
             Flags = flags;
         }
 
+        public RootSignatureDescription(IntPtr pNativePtr)
+        {
+            Deserialize(pNativePtr);
+        }
+
         /// <summary>
         /// The parameters
         /// </summary>
@@ -159,6 +164,51 @@ namespace SharpDX.Direct3D12
             }
         }
 
+        private unsafe void Deserialize(IntPtr pNativePtr)
+        {
+            if(pNativePtr == IntPtr.Zero)
+            {
+                return;
+            }
+
+            __Native* pNative = (__Native*)pNativePtr;
+
+            if (pNative->ParameterCount > 0)
+            {
+                Parameters = new RootParameter[pNative->ParameterCount];
+                RootParameter.__Native* rpn = (RootParameter.__Native * ) pNative->ParametersPointer;
+                for (int i = 0; i < Parameters.Length; ++i)
+                {
+                    Parameters[i] = new RootParameter();
+                    if (rpn[i].ParameterType == RootParameterType.DescriptorTable)
+                    {
+                        // Marshal descriptor table
+                        DescriptorRange[] ranges = null;
+
+                        int rangeCount = rpn[i].Union.DescriptorTable.DescriptorRangeCount;
+                        if (rangeCount > 0)
+                        {
+                            ranges = new DescriptorRange[rangeCount];
+                            Utilities.Read(rpn[i].Union.DescriptorTable.DescriptorRangesPointer, ranges, 0, ranges.Length);
+                        }
+
+                        Parameters[i] = new RootParameter(rpn[i].ShaderVisibility, ranges);
+                    }
+                    else
+                    {
+                        // No need to marshal them when RootParameter don't contain DescriptorTable - simple copy as-is
+                        Parameters[i] = new RootParameter {native = *rpn};
+                    }
+                }
+            }
+             
+            if (pNative->StaticSamplerCount > 0)
+            {
+                StaticSamplers = new StaticSamplerDescription[pNative->StaticSamplerCount];
+                Utilities.Read(pNative->StaticSamplerPointer, StaticSamplers, 0, StaticSamplers.Length);
+            }
+        }
+
         internal partial struct __Native
         {
             /// <unmanaged-short>unsigned int NumParameters</unmanaged-short>	
@@ -174,5 +224,5 @@ namespace SharpDX.Direct3D12
             /// <unmanaged-short>unsigned int Flags</unmanaged-short>	
             public RootSignatureFlags Flags;
         }
-    }
+    } 
 }
