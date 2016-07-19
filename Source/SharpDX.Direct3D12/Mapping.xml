@@ -109,7 +109,8 @@
     
     <map enum="D3D12_FORMAT_SUPPORT1" flags="true"/>
     <map enum="D3D12_FORMAT_SUPPORT2" flags="true"/>
-
+    <map enum="D3D12_RESOURCE_STATES" flags="true"/>
+    
     <!--
     // *****************************************************************
     // D3D12 Struct
