@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Runtime.InteropServices;
 
 namespace SharpDX.Direct3D12
 {
@@ -142,7 +143,7 @@ namespace SharpDX.Direct3D12
         /// <unmanaged-short>ID3D12GraphicsCommandList::ResourceBarrier</unmanaged-short>	
         public unsafe void ResourceBarrier(params SharpDX.Direct3D12.ResourceBarrier[] barriers)
         {
-            if(barriers == null) throw new ArgumentNullException("barriers");
+            if (barriers == null) throw new ArgumentNullException("barriers");
 
             fixed (void* pBarriers = barriers)
                 ResourceBarrier(barriers.Length, new IntPtr(pBarriers));
@@ -197,7 +198,7 @@ namespace SharpDX.Direct3D12
         public unsafe void SetRenderTargets(CpuDescriptorHandle? renderTargetDescriptor, SharpDX.Direct3D12.CpuDescriptorHandle? depthStencilDescriptorRef)
         {
             var renderTargetDesc = new CpuDescriptorHandle();
-            if(renderTargetDescriptor.HasValue)
+            if (renderTargetDescriptor.HasValue)
             {
                 renderTargetDesc = renderTargetDescriptor.Value;
             }
@@ -208,17 +209,16 @@ namespace SharpDX.Direct3D12
         /// <p>Sets a CPU descriptor handle for the vertex buffers.</p>	
         /// </summary>	
         /// <param name="startSlot"><dd>  <p> Index into the device's zero-based array to begin setting vertex buffers. </p> </dd></param>	
-        /// <param name="numViews"><dd>  <p> The number of views in the <em>pViews</em> array. </p> </dd></param>	
-        /// <param name="viewsRef"><dd>  <p> Specifies the vertex buffer views in an array of <strong><see cref="SharpDX.Direct3D12.VertexBufferView"/></strong> structures. </p> </dd></param>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12GraphicsCommandList::IASetVertexBuffers']/*"/>	
+        /// <param name="vertexBufferViews"><dd>  <p> Specifies the vertex buffer views in an array of <strong><see cref="SharpDX.Direct3D12.VertexBufferView"/></strong> structures. </p> </dd></param>	
+        /// <param name="numBuffers"><dd>  <p> The number of views in the <em>pViews</em> array. </p> </dd></param>	
         /// <msdn-id>dn986883</msdn-id>	
         /// <unmanaged>void ID3D12GraphicsCommandList::IASetVertexBuffers([In] unsigned int StartSlot,[In] unsigned int NumViews,[In] const void* pViews)</unmanaged>	
         /// <unmanaged-short>ID3D12GraphicsCommandList::IASetVertexBuffers</unmanaged-short>	
-        public void SetVertexBuffers(int startSlot, SharpDX.Direct3D12.VertexBufferView[] descRef, int numBuffers)
+        public void SetVertexBuffers(int startSlot, SharpDX.Direct3D12.VertexBufferView[] vertexBufferViews, int numBuffers)
         {
             unsafe
             {
-                fixed (void* descPtr = descRef)
+                fixed (void* descPtr = vertexBufferViews)
                     SetVertexBuffers(startSlot, numBuffers, new IntPtr(descPtr));
             }
         }
@@ -227,35 +227,31 @@ namespace SharpDX.Direct3D12
         /// <p>Sets a CPU descriptor handle for the vertex buffers.</p>	
         /// </summary>	
         /// <param name="startSlot"><dd>  <p> Index into the device's zero-based array to begin setting vertex buffers. </p> </dd></param>	
-        /// <param name="numViews"><dd>  <p> The number of views in the <em>pViews</em> array. </p> </dd></param>	
-        /// <param name="viewsRef"><dd>  <p> Specifies the vertex buffer views in an array of <strong><see cref="SharpDX.Direct3D12.VertexBufferView"/></strong> structures. </p> </dd></param>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12GraphicsCommandList::IASetVertexBuffers']/*"/>	
+        /// <param name="vertexBufferView"><dd>  <p> Specifies the vertex buffer view of <strong><see cref="SharpDX.Direct3D12.VertexBufferView"/></strong> structures. </p> </dd></param>	
         /// <msdn-id>dn986883</msdn-id>	
         /// <unmanaged>void ID3D12GraphicsCommandList::IASetVertexBuffers([In] unsigned int StartSlot,[In] unsigned int NumViews,[In] const void* pViews)</unmanaged>	
         /// <unmanaged-short>ID3D12GraphicsCommandList::IASetVertexBuffers</unmanaged-short>	
-        public void SetVertexBuffer(int startSlot, SharpDX.Direct3D12.VertexBufferView descRef)
+        public void SetVertexBuffer(int startSlot, SharpDX.Direct3D12.VertexBufferView vertexBufferView)
         {
             unsafe
             {
-                SetVertexBuffers(startSlot, 1, (IntPtr)(&descRef));
+                SetVertexBuffers(startSlot, 1, (IntPtr)(&vertexBufferView));
             }
         }
 
         /// <summary>	
         /// <p> Bind an array of viewports to the rasterizer stage of the pipeline. </p>	
         /// </summary>	
-        /// <param name="numViewports"><dd>  <p> Number of viewports to bind. The range of valid values is (0, D3D12_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE). </p> </dd></param>	
-        /// <param name="viewportsRef"><dd>  <p> An array of <strong><see cref="SharpDX.Direct3D12.Viewport"/></strong> structures to bind to the device. </p> </dd></param>	
+        /// <param name="viewports"><dd>  <p> Number of viewports to bind. The range of valid values is (0, D3D12_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE). </p> </dd></param>	
         /// <remarks>	
         /// <p> All viewports must be set atomically as one operation. Any viewports not defined by the call are disabled. </p><p> Which viewport to use is determined by the SV_ViewportArrayIndex semantic output by a geometry shader; if a geometry shader does not specify the semantic, Direct3D will use the first viewport in the array. </p><strong>Note</strong> Even though you specify float values to the members of the <strong><see cref="SharpDX.Direct3D12.Viewport"/></strong> structure for the <em>pViewports</em> array in a call to  <strong>RSSetViewports</strong> for feature levels 9_x, <strong>RSSetViewports</strong> uses DWORDs internally. Because of this behavior, when you use a negative top left corner for the viewport, the call to  <strong>RSSetViewports</strong> for feature levels 9_x fails. This failure occurs because <strong>RSSetViewports</strong> for 9_x casts the floating point values into unsigned integers without validation, which results in integer overflow.	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12GraphicsCommandList::RSSetViewports']/*"/>	
         /// <msdn-id>dn903900</msdn-id>	
         /// <unmanaged>void ID3D12GraphicsCommandList::RSSetViewports([In] unsigned int NumViewports,[In, Buffer] const D3D12_VIEWPORT* pViewports)</unmanaged>	
         /// <unmanaged-short>ID3D12GraphicsCommandList::RSSetViewports</unmanaged-short>	
         public void SetViewports(params SharpDX.Mathematics.Interop.RawViewportF[] viewports)
         {
-            if(viewports == null) throw new ArgumentNullException("viewports");
+            if (viewports == null) throw new ArgumentNullException("viewports");
             unsafe
             {
                 fixed (void* pViewPorts = viewports)
@@ -266,12 +262,10 @@ namespace SharpDX.Direct3D12
         /// <summary>	
         /// <p> Bind an array of viewports to the rasterizer stage of the pipeline. </p>	
         /// </summary>	
-        /// <param name="numViewports"><dd>  <p> Number of viewports to bind. The range of valid values is (0, D3D12_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE). </p> </dd></param>	
-        /// <param name="viewportsRef"><dd>  <p> An array of <strong><see cref="SharpDX.Direct3D12.Viewport"/></strong> structures to bind to the device. </p> </dd></param>	
+        /// <param name="viewport"><dd>  <p> Number of viewports to bind. The range of valid values is (0, D3D12_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE). </p> </dd></param>	
         /// <remarks>	
         /// <p> All viewports must be set atomically as one operation. Any viewports not defined by the call are disabled. </p><p> Which viewport to use is determined by the SV_ViewportArrayIndex semantic output by a geometry shader; if a geometry shader does not specify the semantic, Direct3D will use the first viewport in the array. </p><strong>Note</strong> Even though you specify float values to the members of the <strong><see cref="SharpDX.Direct3D12.Viewport"/></strong> structure for the <em>pViewports</em> array in a call to  <strong>RSSetViewports</strong> for feature levels 9_x, <strong>RSSetViewports</strong> uses DWORDs internally. Because of this behavior, when you use a negative top left corner for the viewport, the call to  <strong>RSSetViewports</strong> for feature levels 9_x fails. This failure occurs because <strong>RSSetViewports</strong> for 9_x casts the floating point values into unsigned integers without validation, which results in integer overflow.	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12GraphicsCommandList::RSSetViewports']/*"/>	
         /// <msdn-id>dn903900</msdn-id>	
         /// <unmanaged>void ID3D12GraphicsCommandList::RSSetViewports([In] unsigned int NumViewports,[In, Buffer] const D3D12_VIEWPORT* pViewports)</unmanaged>	
         /// <unmanaged-short>ID3D12GraphicsCommandList::RSSetViewports</unmanaged-short>	
@@ -283,9 +277,7 @@ namespace SharpDX.Direct3D12
         /// <summary>	
         /// Binds an array of scissor rectangles to the rasterizer stage. 
         /// </summary>	
-        /// <param name="numRects">No documentation.</param>	
-        /// <param name="rectsRef">No documentation.</param>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12GraphicsCommandList::RSSetScissorRects']/*"/>	
+        /// <param name="rectangles">No documentation.</param>	
         /// <msdn-id>dn903899</msdn-id>	
         /// <unmanaged>void ID3D12GraphicsCommandList::RSSetScissorRects([In] unsigned int NumRects,[In, Buffer] const RECT* pRects)</unmanaged>	
         /// <unmanaged-short>ID3D12GraphicsCommandList::RSSetScissorRects</unmanaged-short>	
@@ -298,15 +290,67 @@ namespace SharpDX.Direct3D12
         /// <summary>	
         /// Binds an array of scissor rectangles to the rasterizer stage. 
         /// </summary>	
-        /// <param name="numRects">No documentation.</param>	
-        /// <param name="rectsRef">No documentation.</param>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12GraphicsCommandList::RSSetScissorRects']/*"/>	
+        /// <param name="rectangle">No documentation.</param>	
         /// <msdn-id>dn903899</msdn-id>	
         /// <unmanaged>void ID3D12GraphicsCommandList::RSSetScissorRects([In] unsigned int NumRects,[In, Buffer] const RECT* pRects)</unmanaged>	
         /// <unmanaged-short>ID3D12GraphicsCommandList::RSSetScissorRects</unmanaged-short>	
         public unsafe void SetScissorRectangles(SharpDX.Mathematics.Interop.RawRectangle rectangle)
         {
             SetScissorRectangles(1, new IntPtr(&rectangle));
+        }
+
+        /// <summary>	
+        /// <p> For internal use only. </p>	
+        /// </summary>	
+        /// <param name="name"><dd>  <p> Internal. </p> </dd></param>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12GraphicsCommandList::BeginEvent']/*"/>	
+        /// <msdn-id>dn986879</msdn-id>	
+        /// <unmanaged>void ID3D12GraphicsCommandList::BeginEvent([In] unsigned int Metadata,[In, Buffer, Optional] const void* pData,[In] unsigned int Size)</unmanaged>	
+        /// <unmanaged-short>ID3D12GraphicsCommandList::BeginEvent</unmanaged-short>	
+        public void BeginEvent(string name)
+        {
+            if (name == null) throw new ArgumentNullException("name");
+            IntPtr hMessage = IntPtr.Zero;
+            try
+            {
+                hMessage = Marshal.StringToHGlobalUni(name);
+                BeginEvent(1, hMessage, name.Length);
+            }
+            finally
+            {
+                if (hMessage != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(hMessage);
+                    hMessage = IntPtr.Zero;
+                }
+            }
+        }
+
+        /// <summary>	
+        /// <p> For internal use only.</p>	
+        /// </summary>	
+        /// <param name="name"><dd>  <p> Internal. </p> </dd></param>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12GraphicsCommandList::SetMarker']/*"/>	
+        /// <msdn-id>dn986885</msdn-id>	
+        /// <unmanaged>void ID3D12GraphicsCommandList::SetMarker([In] unsigned int Metadata,[In, Buffer, Optional] const void* pData,[In] unsigned int Size)</unmanaged>	
+        /// <unmanaged-short>ID3D12GraphicsCommandList::SetMarker</unmanaged-short>
+        public void SetMarker(string name)
+        {
+            if (name == null) throw new ArgumentNullException("name");
+            IntPtr hMessage = IntPtr.Zero;
+            try
+            {
+                hMessage = Marshal.StringToHGlobalUni(name);
+                SetMarker(1, hMessage, name.Length);
+            }
+            finally
+            {
+                if (hMessage != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(hMessage);
+                    hMessage = IntPtr.Zero;
+                }
+            }
         }
     }
 }
