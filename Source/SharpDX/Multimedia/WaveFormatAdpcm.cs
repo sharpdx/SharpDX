@@ -46,24 +46,23 @@ namespace SharpDX.Multimedia
         /// <param name="blockAlign">The block align. If 0, then 256 for [0, 11KHz], 512 for ]11KHz, 22Khz], 1024 for ]22Khz, +inf]</param>
         public WaveFormatAdpcm(int rate, int channels, int blockAlign = 0) : base(rate, 4, channels)
         {
-            waveFormatTag = WaveFormatEncoding.Adpcm;
-            this.blockAlign = (short)blockAlign;
-
             if (blockAlign == 0)
             {
                 if (rate <= 11025)
-                {
                     blockAlign = 256;
-                }
                 else if (rate <= 22050)
-                {
                     blockAlign = 512;
-                }
                 else
-                {
                     blockAlign = 1024;
-                }
             }
+
+            if (rate <= 0) throw new ArgumentOutOfRangeException("rate", "Must be > 0");
+            if (channels <= 0) throw new ArgumentOutOfRangeException("channels", "Must be > 0");
+            if (blockAlign <= 0) throw new ArgumentOutOfRangeException("blockAlign", "Must be > 0");
+            if (blockAlign > Int16.MaxValue) throw new ArgumentOutOfRangeException("blockAlign", "Must be < 32767");
+
+            waveFormatTag = WaveFormatEncoding.Adpcm;
+            this.blockAlign = (short)blockAlign;
 
             SamplesPerBlock = (ushort)(blockAlign * 2 / channels - 12);
             averageBytesPerSecond = (SampleRate * blockAlign) / SamplesPerBlock;
