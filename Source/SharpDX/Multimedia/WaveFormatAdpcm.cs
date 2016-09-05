@@ -56,6 +56,11 @@ namespace SharpDX.Multimedia
                     blockAlign = 1024;
             }
 
+            if (rate <= 0) throw new ArgumentOutOfRangeException("rate", "Must be > 0");
+            if (channels <= 0) throw new ArgumentOutOfRangeException("channels", "Must be > 0");
+            if (blockAlign <= 0) throw new ArgumentOutOfRangeException("blockAlign", "Must be > 0");
+            if (blockAlign > Int16.MaxValue) throw new ArgumentOutOfRangeException("blockAlign", "Must be < 32767");
+
             waveFormatTag = WaveFormatEncoding.Adpcm;
             this.blockAlign = (short)blockAlign;
 
