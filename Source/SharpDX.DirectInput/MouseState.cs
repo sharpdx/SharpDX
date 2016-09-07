@@ -52,7 +52,11 @@ namespace SharpDX.DirectInput
                 Z = value.Z;
 
                 // Copy buttons states
-                fixed (void* __to = &Buttons[0]) fixed (void* __from = &value.Buttons0) SharpDX.Utilities.CopyMemory((IntPtr)__to, (IntPtr)__from, Buttons.Length);
+                fixed(void* __from = &value.Buttons0) {
+                    for(int i = 0; i < 8; i++) {
+                        Buttons[i] = (((byte*)__from)[i] & 0x80) != 0;
+                    }
+                }
             }
         }
 
