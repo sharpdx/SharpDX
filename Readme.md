@@ -10,8 +10,11 @@ You can find more documentation on the [Wiki](http://sharpdx.org/wiki)
 
 ## Build
 
-In order to compile SharpDX, you need to install the [Windows 10 SDK 10.0.10586.0](https://dev.windows.com/en-us/downloads/windows-10-sdk)
-You need also to install Visual Studio 2015 with the checked option "Tools for Windows 8.1"
+In order to compile SharpDX, you need to install **Visual Studio 2015 Update 3** and check the following components:
+
+- [x] Programming Languages / Visual C++ / Common Tools for VS 2015
+- [x] Windows and Web Development / Universal Windows App Development Tools (ensure that Windows 10 SDK (10.0.10586) is selected)
+- [x] Windows 8.1 and Windows Phone 8.0/8.1 Tools
 
 ## Samples
 
