@@ -75,8 +75,9 @@ namespace SharpDX
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(Size2F)) return false;
+            if (!(obj is Size2F))
+                return false;
+
             return Equals((Size2F)obj);
         }
 
