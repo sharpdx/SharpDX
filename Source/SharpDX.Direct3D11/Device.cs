@@ -190,15 +190,6 @@ namespace SharpDX.Direct3D11
             {
                 swapChain = new SwapChain(factory, device, swapChainDescription);
             }
-
-            var context = device.ImmediateContext;
-
-            if (context != null)
-            {
-                context.Device__ = device;
-            }
-
-            device.ImmediateContext__ = context;
         }
 
         /// <summary>
