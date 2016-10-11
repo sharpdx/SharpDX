@@ -26,9 +26,11 @@ namespace SharpDX.DirectComposition
 		/// <param name="hwnd">The window to which the composition object will be bound. This cannot be null.</param>
 		/// <param name="topmost">TRUE if the visual tree should be displayed on top of the children of the window specified by the hwnd parameter; otherwise, the visual tree is displayed behind the children.</param>
 		/// <returns></returns>
-		public static Target FromHwnd(Device device, IntPtr hwnd, bool topmost)
-		{
-			return device.CreateTargetForHwnd(hwnd, topmost);
-		}
+      public static Target FromHwnd(Device device, IntPtr hwnd, bool topmost)
+      {
+         Target target;
+         device.CreateTargetForHwnd(hwnd, topmost, out target);
+         return target;
+      }
 	}
 }
