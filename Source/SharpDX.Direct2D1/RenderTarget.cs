@@ -335,6 +335,26 @@ namespace SharpDX.Direct2D1
         }
 
         /// <summary>	
+        /// <p>Ends drawing operations  on the render target and indicates the current error state and associated tags. </p>	
+        /// </summary>	
+        /// <param name="tag1"><dd>  <p>When this method returns, contains the tag for drawing operations that caused errors or 0 if there were no errors. This parameter is passed uninitialized.</p> </dd></param>	
+        /// <param name="tag2"><dd>  <p>When this method returns, contains the tag for drawing operations that caused errors or 0 if there were no errors. This parameter is passed uninitialized.</p> </dd></param>	
+        /// <returns><p>If the method succeeds, it returns <strong><see cref="SharpDX.Result.Ok"/></strong>. Otherwise, it returns an <strong><see cref="SharpDX.Result"/></strong> error code and sets <em>tag1</em> and <em>tag2</em> to the tags that were active when the error occurred. </p></returns>	
+        /// <remarks>	
+        /// <p>Drawing operations can only be issued between a <strong>BeginDraw</strong> and <strong>EndDraw</strong> call.</p><p> <strong>BeginDraw</strong> and <strong>EndDraw</strong> are use to indicate that a render target is in use by the Direct2D system. Different implementations of <strong><see cref="SharpDX.Direct2D1.RenderTarget"/></strong> might behave differently when <strong>BeginDraw</strong> is called. An <strong><see cref="SharpDX.Direct2D1.BitmapRenderTarget"/></strong> may be locked between <strong>BeginDraw</strong>/<strong>EndDraw</strong> calls, a DXGI surface render target might be acquired on <strong>BeginDraw</strong> and released on <strong>EndDraw</strong>, while an <strong><see cref="SharpDX.Direct2D1.WindowRenderTarget"/></strong> may begin batching at <strong>BeginDraw</strong> and may present on <strong>EndDraw</strong>, for example.</p><p> The <strong>BeginDraw</strong> method must be called before rendering operations can be called, though state-setting and state-retrieval operations can be performed even outside of <strong>BeginDraw</strong>/<strong>EndDraw</strong>. </p><p>After <strong>BeginDraw</strong> is called, a render target will normally build up a batch of rendering commands, but defer processing of these commands until either an internal buffer is full, the <strong>Flush</strong> method is called, or until <strong>EndDraw</strong> is called. The <strong>EndDraw</strong> method causes any batched drawing operations to complete, and then returns an <strong><see cref="SharpDX.Result"/></strong> indicating the success of the operations and, optionally, the tag state of the render target at the time the error occurred. The <strong>EndDraw</strong> method always succeeds: it should not be called twice even if a previous <strong>EndDraw</strong> resulted in a failing <strong><see cref="SharpDX.Result"/></strong>. </p><p>If <strong>EndDraw</strong> is called without a matched call to <strong>BeginDraw</strong>, it returns an error indicating that <strong>BeginDraw</strong> must be called before <strong>EndDraw</strong>. Calling <strong>BeginDraw</strong> twice on a render target puts the target into an error state where nothing further is drawn, and returns an appropriate <strong><see cref="SharpDX.Result"/></strong> and error information when <strong>EndDraw</strong> is called.	
+        /// </p>	
+        /// </remarks>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID2D1RenderTarget::EndDraw']/*"/>	
+        /// <msdn-id>dd371924</msdn-id>	
+        /// <unmanaged>HRESULT ID2D1RenderTarget::EndDraw([Out, Optional] unsigned longlong* tag1,[Out, Optional] unsigned longlong* tag2)</unmanaged>	
+        /// <unmanaged-short>ID2D1RenderTarget::EndDraw</unmanaged-short>	
+        public void EndDraw(out long tag1, out long tag2)
+        {
+            SharpDX.Result result = TryEndDraw(out tag1, out tag2);
+            result.CheckError();
+        }
+
+        /// <summary>	
         /// Ends drawing operations  on the render target and indicates the current error state and associated tags. 	
         /// </summary>	
         /// <remarks>	
