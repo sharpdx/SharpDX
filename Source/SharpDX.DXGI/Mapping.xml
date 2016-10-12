@@ -248,6 +248,8 @@
     <map param="IVirtualSurfaceImageSourceNative::GetUpdateRectCount::count" return="true"/>
     <map method="IVirtualSurfaceImageSourceNative::GetUpdateRects" visibility="internal"/>
 
+    <map method="IDXGISwapChain::GetFrameStatistics" hresult="true" check="false" visibility="public" name="TryGetFrameStatistics"/>
+    
     <map method="IDXGISwapChain::Present" hresult="true" check="false" visibility="public" name="TryPresent"/>
     <map method="IDXGISwapChain1::Present1" visibility="internal" hresult="true"/>
     <map param="IDXGISwapChain1::Present1::pPresentParameters" type="void"/>

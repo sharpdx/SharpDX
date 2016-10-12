@@ -61,6 +61,28 @@ namespace SharpDX.DXGI
             return FromPointer<T>(temp);
         }
 
+        /// <summary>	
+        /// <p>Gets performance statistics about the last render frame.</p>	
+        /// </summary>	
+        /// <remarks>	
+        /// <p>You cannot use <strong>GetFrameStatistics</strong> for swap chains that both use the bit-block transfer (bitblt) presentation model and draw in windowed mode.</p><p>You can only use <strong>GetFrameStatistics</strong> for swap chains that either use the flip presentation model or draw in full-screen mode. You set the <strong><see cref="SharpDX.DXGI.SwapEffect.FlipSequential"/></strong> value in the <strong>SwapEffect</strong> member of the <strong><see cref="SharpDX.DXGI.SwapChainDescription1"/></strong> structure to specify that the swap chain uses the flip presentation model.</p>	
+        /// </remarks>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IDXGISwapChain::GetFrameStatistics']/*"/>	
+        /// <msdn-id>bb174573</msdn-id>	
+        /// <unmanaged>GetFrameStatistics</unmanaged>	
+        /// <unmanaged-short>GetFrameStatistics</unmanaged-short>	
+        /// <unmanaged>HRESULT IDXGISwapChain::GetFrameStatistics([Out] DXGI_FRAME_STATISTICS* pStats)</unmanaged>
+        public SharpDX.DXGI.FrameStatistics FrameStatistics
+        {
+            get
+            {
+                SharpDX.DXGI.FrameStatistics output;
+                SharpDX.Result result = TryGetFrameStatistics(out output);
+                result.CheckError();
+                return output;
+            }
+        }
+
         /// <summary>
         /// Gets or sets a value indicating whether the swapchain is in fullscreen.
         /// </summary>
