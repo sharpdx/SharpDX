@@ -203,6 +203,7 @@
     <map param="IDXGISwapChain::Present::Flags" type="DXGI_PRESENT_FLAGS" />
     <map param="IDXGISwapChain::ResizeBuffers::SwapChainFlags" type="DXGI_SWAP_CHAIN_FLAG" />
 
+
     <map param="IDXGISwapChain3::CheckColorSpaceSupport::pColorSpaceSupport" type="DXGI_SWAP_CHAIN_COLOR_SPACE_SUPPORT_FLAG" />
     <map param="IDXGISwapChain3::CheckColorSpaceSupport::pColorSpaceSupport" return="true" />
     <map param="IDXGISwapChain3::ResizeBuffers1::SwapChainFlags" type="DXGI_SWAP_CHAIN_FLAG" />
@@ -247,7 +248,7 @@
     <map param="IVirtualSurfaceImageSourceNative::GetUpdateRectCount::count" return="true"/>
     <map method="IVirtualSurfaceImageSourceNative::GetUpdateRects" visibility="internal"/>
 
-    <map method="IDXGISwapChain::Present" hresult="true"/>
+    <map method="IDXGISwapChain::Present" hresult="true" check="false" visibility="public" name="TryPresent"/>
     <map method="IDXGISwapChain1::Present1" visibility="internal" hresult="true"/>
     <map param="IDXGISwapChain1::Present1::pPresentParameters" type="void"/>
     <map param="IDXGISwapChain1::Present1::PresentFlags" type="DXGI_PRESENT_FLAGS" />
