@@ -59,16 +59,17 @@ namespace SharpDX
                 DataBuffer buffer;
 
                 var sizeOfBuffer = Utilities.SizeOf(userBuffer);
+                var indexOffset = index * Utilities.SizeOf<T>();
 
                 if (pinBuffer)
                 {
                     var handle = GCHandle.Alloc(userBuffer, GCHandleType.Pinned);
-                    var indexOffset = index * Utilities.SizeOf<T>();
                     buffer = new DataBuffer(indexOffset + (byte*)handle.AddrOfPinnedObject(), sizeOfBuffer - indexOffset, handle);
                 }
                 else
                 {
-                    buffer = new DataBuffer(Interop.Fixed(userBuffer), sizeOfBuffer, true);
+                    // The .NET Native compiler crashes if '(IntPtr)' is removed.
+                    buffer = new DataBuffer(indexOffset + (byte *)(IntPtr)Interop.Fixed(userBuffer), sizeOfBuffer - indexOffset, true);
                 }
 
                 return buffer;
