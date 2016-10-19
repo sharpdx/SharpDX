@@ -57,7 +57,7 @@ namespace SharpGitLog
             gitInfo.CreateNoWindow = true;
             gitInfo.RedirectStandardOutput = true;
             gitInfo.UseShellExecute = false;
-            gitInfo.FileName = @"C:\Program Files (x86)\Git\bin\git.exe";
+            gitInfo.FileName = @"C:\Program Files\Git\bin\git.exe";
 
             Process gitProcess = new Process();
             gitInfo.Arguments = string.Format(@"log {0}.. --format=""%H %s""", Label);
@@ -253,13 +253,12 @@ namespace SharpGitLog
             keys.Sort();
             foreach (var key in keys)
             {
-                writer.WriteLine("<h4>{0}</h4>", key);
+                writer.WriteLine("## {0}", key);
 
                 var values = commits[key];
                 values.Sort((left, right) => left.Item2.CompareTo(right.Item2));
-                writer.WriteLine("<ul>");
-
                 var groupedValues = values.GroupBy(x => x.Item2);
+                writer.WriteLine();
 
                 foreach (var groupedValue in groupedValues)
                 {
@@ -280,17 +279,17 @@ namespace SharpGitLog
 
                         var issueUrl = issueNumber > 133 ? issueUrlGoogleCode : issueUrlGithub;
 
-                        message = regexIssue.Replace(message, "<a href='" + issueUrl + "' target='_blank'>$0</a>");
+                        message = regexIssue.Replace(message, $"[$0]({issueUrl})");
                     }
 
-                    writer.Write("  <li>{0} (", message);
+                    writer.Write($"  - {message} (");
 
                     //const string changesetUrl = "http://code.google.com/p/sharpdx/source/detail?r={0}";
-                    const string changesetUrl = "https://github.com/sharpdx/SharpDX/commit/{0}";
+                    const string changesetUrl = "https://github.com/sharpdx/SharpDX/commit/";
 
                     if (changesets.Count == 1)
                     {
-                        writer.Write("<a href='" + changesetUrl + "' target='_blank'>changes</a>", changesets[0]);
+                        writer.Write($"[changes]({changesetUrl}{changesets[0]})");
                     }
                     else
                     {
@@ -300,14 +299,14 @@ namespace SharpGitLog
                             if (i != 0)
                                 writer.Write(", ");
 
-                            writer.Write("<a href='" + changesetUrl + "' target='_blank'>{1}</a>", changesets[i], i + 1);
+                            writer.Write($"[{changesets[i]}]({changesetUrl}{changesets[i]})");
                         }
                     }
 
-                    writer.WriteLine(")</li>");
+                    writer.WriteLine(")");
                 }
 
-                writer.WriteLine("</ul>");
+                writer.WriteLine();
             }
 
             writer.Flush();
