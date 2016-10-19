@@ -115,7 +115,8 @@ namespace SharpDX
                 }
                 else
                 {
-                    stream = new DataStream(indexOffset + (byte*)Interop.Fixed(userBuffer), sizeOfBuffer - indexOffset, canRead, canWrite, true);
+                    // The .NET Native compiler crashes if '(IntPtr)' is removed.
+                    stream = new DataStream(indexOffset + (byte*)(IntPtr)Interop.Fixed(userBuffer), sizeOfBuffer - indexOffset, canRead, canWrite, true);
                 }
 
                 return stream;
