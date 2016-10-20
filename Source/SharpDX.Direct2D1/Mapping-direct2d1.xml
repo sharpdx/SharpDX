@@ -367,6 +367,8 @@
     <map param="ID2D(\d+)RenderTarget::CreateLayer::layer" attribute="out fast"/>
     <map param="ID2D(\d+)RenderTarget::CreateMesh::mesh" attribute="out fast"/>
 
+    <map method="ID2D(\d+)RenderTarget::EndDraw" hresult="true" check="false" visibility="public" name="TryEndDraw"/>
+
     <map param="ID2D(\d+)RenderTarget::CreateSharedBitmap::data" attribute="in" />
     <map method="ID2D1RenderTarget::DrawTextA" visibility="internal" name="DrawText" />
     <map method="ID2D1RenderTarget::(.*)Dpi" visibility="internal" />
