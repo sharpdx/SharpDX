@@ -110,6 +110,10 @@
     <map enum="D3D12_FORMAT_SUPPORT1" flags="true"/>
     <map enum="D3D12_FORMAT_SUPPORT2" flags="true"/>
     <map enum="D3D12_RESOURCE_STATES" flags="true"/>
+
+    <map enum="D3D_SHADER_MODEL" name="ShaderModel"/>
+    <map enum-item="D3D_SHADER_MODEL_5_1" name="Model51"/>
+    <map enum-item="D3D_SHADER_MODEL_6_0" name="Model60"/>
     
     <!--
     // *****************************************************************
@@ -148,6 +152,12 @@
 
     <map struct="D3D12_ROOT_SIGNATURE_DESC" struct-to-class="true" marshal="true"/>
     <remove field="D3D12_ROOT_SIGNATURE_DESC::.*"/>
+
+    <map struct="D3D12_ROOT_SIGNATURE_DESC1" struct-to-class="true" marshal="true"/>
+    <remove field="D3D12_ROOT_SIGNATURE_DESC1::.*"/>
+
+    <map struct="D3D12_VERSIONED_ROOT_SIGNATURE_DESC" struct-to-class="true" marshal="true"/>
+    <remove field="D3D12_VERSIONED_ROOT_SIGNATURE_DESC::.*"/>
       
     <map struct="D3D12_INPUT_LAYOUT_DESC" struct-to-class="true" marshalto="true"/>
     <map field="D3D12_INPUT_LAYOUT_DESC::pInputElementDescs" name="InputElementsPointer" visibility="private"/>
@@ -182,6 +192,9 @@
     <remove field="D3D12_RESOURCE_BARRIER::.*"/>
     <remove field="D3D12_ROOT_PARAMETER::.*"/>
     <remove field="D3D12_TEXTURE_COPY_LOCATION::.*" />
+
+    <!--Remove all fields for D3D12_ROOT_PARAMETER1 as the union with pointers cannot be mapped safely in x86/x64 with C# explicit layout-->
+    <remove field="D3D12_ROOT_PARAMETER1::.*" />
     
     <map struct="D3D12_CACHED_PIPELINE_STATE::pCachedBlob" name="CachedBlobPointer"/>
 

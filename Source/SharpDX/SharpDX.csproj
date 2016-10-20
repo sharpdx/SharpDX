@@ -18,6 +18,7 @@
     <Compile Include="Direct3D\CompilationException.cs" />
     <Compile Include="Direct3D\CompilationResultBase.cs" />
     <Compile Include="Mathematics\Interop\RawBox.cs" />
+    <Compile Include="Mathematics\Interop\RawMatrix4x3.cs" />
     <Compile Include="Mathematics\Interop\RawMatrix5x4.cs" />
     <Compile Include="Mathematics\Interop\RawPlane.cs" />
     <Compile Include="Mathematics\Interop\RawBool.cs" />
