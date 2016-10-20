@@ -79,13 +79,13 @@ namespace SharpDX.WIC
 
         protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
+
             if (streamProxy != null)
             {
                 streamProxy.Dispose();
                 streamProxy = null;
             }
-
-            base.Dispose(disposing);
         }
     }
 }
