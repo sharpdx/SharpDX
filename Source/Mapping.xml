@@ -50,6 +50,9 @@
     // To force GUID to be declared
     #define INITGUID
     
+    // Values for CERT_KEY_CLASSIFICATION_PROP_ID in wincrypt.h
+    #define SORTPP_PASS
+    
     // Wrap all declspec with gccxml
     #define __declspec(x) __attribute__((gccxml(#x)))
     
