@@ -1,3 +1,12 @@
+Changelog between 3.1.0 and 3.1.1 version
+
+## DirectWrite
+
+  - Make TextLayout.SetDrawingEffect public ([issue #813](http://code.google.com/p/sharpdx/issues/detail?id=813))
+  
+## Direct3D12
+  - Update to Windows 10 Anniversary Update - October 2016 Update (10.0.14393.0)
+
 Changelog between 3.0.2 and 3.1.0 version
 
 ## Build
