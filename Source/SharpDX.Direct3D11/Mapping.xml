@@ -182,7 +182,7 @@
     <map struct="D3D11_FEATURE_DATA_.*" visibility="internal" />
     
     <map struct="D3D11_FEATURE_DATA_D3D11_OPTIONS" visibility="public" />
-    <map struct="D3D11_FEATURE_DATA_D3D11_OPTIONS[123]" visibility="public" />
+    <map struct="D3D11_FEATURE_DATA_D3D11_OPTIONS[1234]" visibility="public" />
     <map struct="D3D11_FEATURE_DATA_SHADER_MIN_PRECISION_SUPPORT" visibility="public" />
 
     <map field="D3DX11_IMAGE_INFO::pSrcInfo" visibility="internal" />
@@ -259,6 +259,7 @@
     <map interface="ID3DUserDefinedAnnotation" name="UserDefinedAnnotation"/>
     <map method="ID3DUserDefinedAnnotation::SetMarker" property="false" />
     <map interface="ID3D11On12Device" name="Device11On12"/>
+    <map interface="ID3D11Multithread" name="Multithread"/>
     
     <map param="ID3D11Device1::CreateDeviceContextState::Flags" type="D3D11_1_CREATE_DEVICE_CONTEXT_STATE_FLAG"/>
 

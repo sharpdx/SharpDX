@@ -187,7 +187,7 @@ namespace SharpDX.Direct3D12
         /// <unmanaged-short>ID3D12Device::CreateCommittedResource</unmanaged-short>	
         public SharpDX.Direct3D12.Resource CreateCommittedResource(SharpDX.Direct3D12.HeapProperties heapPropertiesRef, SharpDX.Direct3D12.HeapFlags heapFlags, SharpDX.Direct3D12.ResourceDescription resourceDescRef, SharpDX.Direct3D12.ResourceStates initialResourceState, SharpDX.Direct3D12.ClearValue? optimizedClearValueRef = null)
         {
-            return CreateCommittedResource(ref heapPropertiesRef, heapFlags, resourceDescRef, initialResourceState, optimizedClearValueRef, Utilities.GetGuidFromType(typeof(Resource)));
+            return CreateCommittedResource(ref heapPropertiesRef, heapFlags, ref resourceDescRef, initialResourceState, optimizedClearValueRef, Utilities.GetGuidFromType(typeof(Resource)));
         }
 
         /// <summary>	

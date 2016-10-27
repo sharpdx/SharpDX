@@ -140,7 +140,7 @@ namespace SharpDX.MediaFoundation
         public static unsafe int Calliint(void* thisObject, int arg0, float arg1, float arg2, void* arg3, void* arg4, void* methodPtr) { throw new NotImplementedException(); }
       //  public static unsafe int Calliint(void* thisObject, int arg0, void* arg1, void* arg2, void* arg3, void* arg4, void* methodPtr) { throw new NotImplementedException(); }
         public static unsafe int Calliint(void* thisObject, System.Guid arg0, void* arg1, int arg2, void* arg3, void* arg4, void* methodPtr) { throw new NotImplementedException(); }
-        public static unsafe int Calliint(void* thisObject, System.Guid arg0, void* methodPtr) { throw new NotImplementedException(); }
+        //public static unsafe int Calliint(void* thisObject, System.Guid arg0, void* methodPtr) { throw new NotImplementedException(); }
         public static unsafe int Calliint(void* thisObject, int arg0, int arg1, int arg2, int arg3, void* methodPtr) { throw new NotImplementedException(); }
         public static unsafe int Calliint(void* thisObject, int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7, void* methodPtr) { throw new NotImplementedException(); }
         public static unsafe int Calliint(void* thisObject, void* arg0, void* arg1, void* arg2, void* arg3, void* arg4, void* arg5, void* arg6, void* arg7, void* methodPtr) { throw new NotImplementedException(); }
