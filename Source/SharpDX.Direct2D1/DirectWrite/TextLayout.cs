@@ -156,7 +156,7 @@ namespace SharpDX.DirectWrite
         public void SetDrawingEffect(SharpDX.ComObject drawingEffect, SharpDX.DirectWrite.TextRange textRange)
         {
             var drawingEffectPtr = Utilities.GetIUnknownForObject(drawingEffect);
-            SetDrawingEffect_(drawingEffectPtr, textRange);
+            SetDrawingEffect(drawingEffectPtr, textRange);
             if (drawingEffectPtr != IntPtr.Zero)
                 Marshal.Release(drawingEffectPtr);
         }
