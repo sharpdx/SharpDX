@@ -155,10 +155,8 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteTextLayout::SetDrawingEffect([None] IUnknown* drawingEffect,[None] DWRITE_TEXT_RANGE textRange)</unmanaged>
         public void SetDrawingEffect(SharpDX.ComObject drawingEffect, SharpDX.DirectWrite.TextRange textRange)
         {
-            var drawingEffectPtr = Utilities.GetIUnknownForObject(drawingEffect);
+            var drawingEffectPtr = drawingEffect != null ? drawingEffect.NativePointer : IntPtr.Zero;
             SetDrawingEffect_(drawingEffectPtr, textRange);
-            if (drawingEffectPtr != IntPtr.Zero)
-                Marshal.Release(drawingEffectPtr);
         }
 
         /// <summary>	
@@ -182,7 +180,43 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteTextLayout::GetDrawingEffect([None] int currentPosition,[Out] IUnknown** drawingEffect,[Out, Optional] DWRITE_TEXT_RANGE* textRange)</unmanaged>
         public ComObject GetDrawingEffect(int currentPosition, out TextRange textRange)
         {
-            return (ComObject)Utilities.GetObjectForIUnknown(GetDrawingEffect_(currentPosition, out textRange));
+            return new ComObject(GetDrawingEffect_(currentPosition, out textRange));
+        }
+
+        /// <summary>	
+        /// Gets the application-defined drawing effect at the specified text position. 	
+        /// </summary>	
+        /// <param name="currentPosition">The position of the text whose drawing effect is to be retrieved. </param>
+        /// <typeparam name="T">Expected return type, QueryInterface is called to perform cast</typeparam>
+        /// <returns>a reference to  the current application-defined drawing effect. Usually this effect is a foreground brush that  is used in glyph drawing. </returns>
+        /// <unmanaged>HRESULT IDWriteTextLayout::GetDrawingEffect([None] int currentPosition,[Out] IUnknown** drawingEffect,[Out, Optional] DWRITE_TEXT_RANGE* textRange)</unmanaged>
+        public T GetDrawingEffect<T>(int currentPosition) where T : SharpDX.ComObject
+        {
+            TextRange temp;
+            return GetDrawingEffect<T>(currentPosition, out temp);
+        }
+
+        /// <summary>	
+        /// Gets the application-defined drawing effect at the specified text position. 	
+        /// </summary>	
+        /// <param name="currentPosition">The position of the text whose drawing effect is to be retrieved. </param>
+        /// <param name="textRange">Contains the range of text that has the same  formatting as the text at the position specified by currentPosition.  This means the run has the exact  formatting as the position specified, including but not limited to the drawing effect. </param>
+        /// <typeparam name="T">Expected return type, QueryInterface is called to perform cast</typeparam>
+        /// <returns>a reference to  the current application-defined drawing effect. Usually this effect is a foreground brush that  is used in glyph drawing. </returns>
+        /// <unmanaged>HRESULT IDWriteTextLayout::GetDrawingEffect([None] int currentPosition,[Out] IUnknown** drawingEffect,[Out, Optional] DWRITE_TEXT_RANGE* textRange)</unmanaged>
+        public T GetDrawingEffect<T>(int currentPosition, out TextRange textRange) where T : SharpDX.ComObject
+        {
+            ComObject obj = GetDrawingEffect(currentPosition, out textRange);
+            if (obj.NativePointer != IntPtr.Zero)
+            {
+                T instance = obj.QueryInterface<T>();
+                Marshal.Release(obj.NativePointer);
+                return instance;
+            }
+            else
+            {
+                return default(T);
+            }
         }
 
         /// <summary>	
