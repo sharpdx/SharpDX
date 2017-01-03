@@ -762,8 +762,8 @@
     <map param="IMFMediaEngineClassFactory::CreateInstance::dwFlags" type="MF_MEDIA_ENGINE_CREATEFLAGS" name="flags"/>
 
     <map interface="IMFMediaEngineNotify" callback="true" visibility="internal"/>
+    
     <map interface="IMFCaptureEngineOnEventCallback" callback="true" visibility="internal" />
-
     <map interface="IMFClockStateSink" callback="true"/>
     <map interface="IMFSampleGrabberSinkCallback" callback="true"/>
     <map interface="IMFSampleGrabberSinkCallback2" callback="true"/>
@@ -841,6 +841,9 @@
     <map param="IMFASFIndexer::GetSeekPositionForValue::pvarValue" type="void"/>
 
     <map method="IMFCapturePhotoConfirmation::SetPhotoConfirmationCallback" visibility="internal" property="false"/>
+    <map method="IMFCapture[PR].*Sink::SetSampleCallback" visibility="internal" property="false" />
+    <map method="IMFCapture[PR].*Sink::SetOutputByteStream" visibility="internal" property="false" />
+    <map param="IMFCaptureSink::GetService::ppUnknown" return="true" />
 
     <!--
     // *****************************************************************
