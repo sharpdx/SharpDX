@@ -584,6 +584,8 @@
     <const from-macro="MF_VERSION" class="SharpDX.MediaFoundation.MediaFactory" type="int" name="Version" />
 
     <const from-guid="CLSID_MFMediaEngineClassFactory" visibility="internal" class="SharpDX.MediaFoundation.MediaEngineClassFactory" type="System.Guid" name="CLSID_MFMediaEngineClassFactory">new System.Guid("$1")</const>
+    <const from-guid="CLSID_MFCaptureEngineClassFactory" visibility="internal" class="SharpDX.MediaFoundation.CaptureEngineClassFactory" type="System.Guid" name="CLSID_MFCaptureEngineClassFactory">new System.Guid("$1")</const>
+    <const from-guid="CLSID_MFCaptureEngine" visibility="internal" class="SharpDX.MediaFoundation.CaptureEngine" type="System.Guid" name="CLSID_MFCaptureEngine">new System.Guid("$1")</const>
 
     <const from-guid="MFSampleExtension_DescrambleData" class="SharpDX.MediaFoundation.SampleAttributeKeys" type="MediaAttributeKey&lt;long&gt;" name="DescrambleData">new MediaAttributeKey&lt;long&gt;("$1", "DescrambleData")</const>
     <const from-guid="MFSampleExtension_SampleKeyID" class="SharpDX.MediaFoundation.SampleAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="SampleKeyID">new MediaAttributeKey&lt;int&gt;("$1", "SampleKeyID")</const>
@@ -755,6 +757,7 @@
 
     <map method="IMFMediaEngineClassFactory::Create.*" visibility="internal"/>
     <map param="IMFMediaEngineClassFactory::Create.*::pp.*" attribute="fast out"/>
+    <map method="IMFCaptureEngineClassFactory::Create.*" visibility="internal"/>
 
     <map param="IMFMediaEngineClassFactory::CreateInstance::dwFlags" type="MF_MEDIA_ENGINE_CREATEFLAGS" name="flags"/>
 
