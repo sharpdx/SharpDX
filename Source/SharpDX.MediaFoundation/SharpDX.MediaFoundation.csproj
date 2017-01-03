@@ -30,6 +30,7 @@
     <Compile Include="CaptureEngineOnSampleCallback2.cs" />
     <Compile Include="CaptureEngineOnSampleCallback2Shadow.cs" />
     <Compile Include="CaptureEngineOnSampleCallbackShadow.cs" />
+    <Compile Include="CapturePhotoConfirmation.cs" />
     <Compile Include="ClockStateSink.cs" />
     <Compile Include="ClockStateSinkShadow.cs" />
     <Compile Include="MediaTypeHandler.cs" />

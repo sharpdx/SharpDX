@@ -840,6 +840,8 @@
     <!-- temp: use void* type for VARIANT* -->
     <map param="IMFASFIndexer::GetSeekPositionForValue::pvarValue" type="void"/>
 
+    <map method="IMFCapturePhotoConfirmation::SetPhotoConfirmationCallback" visibility="internal" property="false"/>
+
     <!--
     // *****************************************************************
     // MediaFoundation Functions
