@@ -52,6 +52,7 @@
   <include file="mediaobj.h" attach="true"/>
   <ifdef name="DIRECTX11_1">
     <include file="mfmediaengine.h" attach="true"/>
+    <include file="mfcaptureengine.h" attach="true"/>
   </ifdef>
 
   <context-set id="mediafoundation-all">
@@ -67,6 +68,7 @@
     <context>mfreadwrite</context>
     <context>mftransform</context>
     <context>mfmediaengine</context>
+    <context>mfcaptureengine</context>
     <context>wmcontainer</context>
     <context>uuids</context>
     <context>mferror</context>
