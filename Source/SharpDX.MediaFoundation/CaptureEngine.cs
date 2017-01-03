@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if DESKTOP_APP
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -78,3 +79,5 @@ namespace SharpDX.MediaFoundation
         }
     }
 }
+
+#endif
