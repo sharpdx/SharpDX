@@ -759,11 +759,14 @@
     <map param="IMFMediaEngineClassFactory::CreateInstance::dwFlags" type="MF_MEDIA_ENGINE_CREATEFLAGS" name="flags"/>
 
     <map interface="IMFMediaEngineNotify" callback="true" visibility="internal"/>
+    <map interface="IMFCaptureEngineOnEventCallback" callback="true" visibility="internal" />
 
     <map interface="IMFClockStateSink" callback="true"/>
     <map interface="IMFSampleGrabberSinkCallback" callback="true"/>
     <map interface="IMFSampleGrabberSinkCallback2" callback="true"/>
     <map interface="IMFVideoPresenter" callback="true"/>
+    <map interface="IMFCaptureEngineOnSampleCallback" callback="true"/>
+    <map interface="IMFCaptureEngineOnSampleCallback2" callback="true"/>
 
     <map method="IMFDXGIDeviceManager::ResetDevice" visibility="internal"/>
     <map param="IMFDXGIDeviceManager::OpenDeviceHandle::phDevice" return="true"/>
