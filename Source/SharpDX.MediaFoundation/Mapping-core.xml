@@ -52,6 +52,7 @@
   <include file="mediaobj.h" attach="true"/>
   <ifdef name="DIRECTX11_1">
     <include file="mfmediaengine.h" attach="true"/>
+    <include file="mfcaptureengine.h" attach="true"/>
   </ifdef>
 
   <context-set id="mediafoundation-all">
@@ -67,6 +68,7 @@
     <context>mfreadwrite</context>
     <context>mftransform</context>
     <context>mfmediaengine</context>
+    <context>mfcaptureengine</context>
     <context>wmcontainer</context>
     <context>uuids</context>
     <context>mferror</context>
@@ -102,7 +104,7 @@
       <create visibility="public static" class="NaluAttributeKeys" />
       <create visibility="public static" class="ProtectionAttributeKeys" />
 
-      <const from-guid="MF_CAPTURE_ENGINE_D3D_MANAGER" class="SharpDX.MediaFoundation.CaptureEngineAttributeKeys" type="MediaAttributeKey&lt;SharpDX.ComObject&gt;" name="D3DManager">new MediaAttributeKey&lt;SharpDX.ComObject&gt;("$1", "D3DManager")</const>
+      <const from-guid="MF_CAPTURE_ENGINE_D3D_MANAGER" class="SharpDX.MediaFoundation.CaptureEngineAttributeKeys" type="MediaAttributeKey&lt;SharpDX.MediaFoundation.DXGIDeviceManager&gt;" name="D3DManager">new MediaAttributeKey&lt;SharpDX.MediaFoundation.DXGIDeviceManager&gt;("$1", "D3DManager")</const>
       <const from-guid="MF_CAPTURE_ENGINE_DECODER_MFT_FIELDOFUSE_UNLOCK_Attribute" class="SharpDX.MediaFoundation.CaptureEngineAttributeKeys" type="MediaAttributeKey&lt;SharpDX.ComObject&gt;" name="DecoderTransformFieldOfUseUnlockAttribute">new MediaAttributeKey&lt;SharpDX.ComObject&gt;("$1", "DecoderTransformFieldOfUseUnlockAttribute")</const>
       <const from-guid="MF_CAPTURE_ENGINE_DISABLE_DXVA" class="SharpDX.MediaFoundation.CaptureEngineAttributeKeys" type="MediaAttributeKey&lt;bool&gt;" name="DisableDXVA">new MediaAttributeKey&lt;bool&gt;("$1", "DisableDXVA")</const>
       <const from-guid="MF_CAPTURE_ENGINE_DISABLE_HARDWARE_TRANSFORMS" class="SharpDX.MediaFoundation.CaptureEngineAttributeKeys" type="MediaAttributeKey&lt;bool&gt;" name="DisableHardwareTransforms">new MediaAttributeKey&lt;bool&gt;("$1", "DisableHardwareTransforms")</const>
@@ -115,8 +117,8 @@
       <const from-guid="MF_CAPTURE_ENGINE_RECORD_SINK_AUDIO_MAX_UNPROCESSED_SAMPLES" class="SharpDX.MediaFoundation.CaptureEngineAttributeKeys" type="MediaAttributeKey&lt;long&gt;" name="RecordSinkAudioMaxUnprocessedSamples">new MediaAttributeKey&lt;long&gt;("$1", "RecordSinkAudioMaxUnprocessedSamples")</const>
       <const from-guid="MF_CAPTURE_ENGINE_RECORD_SINK_VIDEO_MAX_PROCESSED_SAMPLES" class="SharpDX.MediaFoundation.CaptureEngineAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="RecordSinkVideoMaxProcessedSamples">new MediaAttributeKey&lt;int&gt;("$1", "RecordSinkVideoMaxProcessedSamples")</const>
       <const from-guid="MF_CAPTURE_ENGINE_RECORD_SINK_VIDEO_MAX_UNPROCESSED_SAMPLES" class="SharpDX.MediaFoundation.CaptureEngineAttributeKeys" type="MediaAttributeKey&lt;long&gt;" name="RecordSinkVideoMaxUnprocessedSamples">new MediaAttributeKey&lt;long&gt;("$1", "RecordSinkVideoMaxUnprocessedSamples")</const>
-      <const from-guid="MF_CAPTURE_ENGINE_USE_AUDIO_DEVICE_ONLY" class="SharpDX.MediaFoundation.CaptureEngineAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="UseAudioDeviceOnly">new MediaAttributeKey&lt;int&gt;("$1", "UseAudioDeviceOnly")</const>
-      <const from-guid="MF_CAPTURE_ENGINE_USE_VIDEO_DEVICE_ONLY" class="SharpDX.MediaFoundation.CaptureEngineAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="UseVideoDeviceOnly">new MediaAttributeKey&lt;int&gt;("$1", "UseVideoDeviceOnly")</const>
+      <const from-guid="MF_CAPTURE_ENGINE_USE_AUDIO_DEVICE_ONLY" class="SharpDX.MediaFoundation.CaptureEngineAttributeKeys" type="MediaAttributeKey&lt;bool&gt;" name="UseAudioDeviceOnly">new MediaAttributeKey&lt;bool&gt;("$1", "UseAudioDeviceOnly")</const>
+      <const from-guid="MF_CAPTURE_ENGINE_USE_VIDEO_DEVICE_ONLY" class="SharpDX.MediaFoundation.CaptureEngineAttributeKeys" type="MediaAttributeKey&lt;bool&gt;" name="UseVideoDeviceOnly">new MediaAttributeKey&lt;bool&gt;("$1", "UseVideoDeviceOnly")</const>
       <const from-guid="MF_DEVICESTREAM_EXTENSION_PLUGIN_CLSID" class="SharpDX.MediaFoundation.DeviceStreamAttributeKeys" type="MediaAttributeKey&lt;System.Guid&gt;" name="ExtensionPluginClsid">new MediaAttributeKey&lt;System.Guid&gt;("$1", "ExtensionPluginClsid")</const>
       <const from-guid="MF_DEVICESTREAM_EXTENSION_PLUGIN_CONNECTION_POINT" class="SharpDX.MediaFoundation.DeviceStreamAttributeKeys" type="MediaAttributeKey&lt;SharpDX.ComObject&gt;" name="ExtensionPluginConnectionPoint">new MediaAttributeKey&lt;SharpDX.ComObject&gt;("$1", "ExtensionPluginConnectionPoint")</const>
       <const from-guid="MF_DEVICESTREAM_IMAGE_STREAM" class="SharpDX.MediaFoundation.DeviceStreamAttributeKeys" type="MediaAttributeKey&lt;bool&gt;" name="ImageStream">new MediaAttributeKey&lt;bool&gt;("$1", "ImageStream")</const>
@@ -582,6 +584,8 @@
     <const from-macro="MF_VERSION" class="SharpDX.MediaFoundation.MediaFactory" type="int" name="Version" />
 
     <const from-guid="CLSID_MFMediaEngineClassFactory" visibility="internal" class="SharpDX.MediaFoundation.MediaEngineClassFactory" type="System.Guid" name="CLSID_MFMediaEngineClassFactory">new System.Guid("$1")</const>
+    <const from-guid="CLSID_MFCaptureEngineClassFactory" visibility="internal" class="SharpDX.MediaFoundation.CaptureEngineClassFactory" type="System.Guid" name="CLSID_MFCaptureEngineClassFactory">new System.Guid("$1")</const>
+    <const from-guid="CLSID_MFCaptureEngine" visibility="internal" class="SharpDX.MediaFoundation.CaptureEngine" type="System.Guid" name="CLSID_MFCaptureEngine">new System.Guid("$1")</const>
 
     <const from-guid="MFSampleExtension_DescrambleData" class="SharpDX.MediaFoundation.SampleAttributeKeys" type="MediaAttributeKey&lt;long&gt;" name="DescrambleData">new MediaAttributeKey&lt;long&gt;("$1", "DescrambleData")</const>
     <const from-guid="MFSampleExtension_SampleKeyID" class="SharpDX.MediaFoundation.SampleAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="SampleKeyID">new MediaAttributeKey&lt;int&gt;("$1", "SampleKeyID")</const>
@@ -753,15 +757,19 @@
 
     <map method="IMFMediaEngineClassFactory::Create.*" visibility="internal"/>
     <map param="IMFMediaEngineClassFactory::Create.*::pp.*" attribute="fast out"/>
+    <map method="IMFCaptureEngineClassFactory::Create.*" visibility="internal"/>
 
     <map param="IMFMediaEngineClassFactory::CreateInstance::dwFlags" type="MF_MEDIA_ENGINE_CREATEFLAGS" name="flags"/>
 
     <map interface="IMFMediaEngineNotify" callback="true" visibility="internal"/>
-
+    
+    <map interface="IMFCaptureEngineOnEventCallback" callback="true" visibility="internal" />
     <map interface="IMFClockStateSink" callback="true"/>
     <map interface="IMFSampleGrabberSinkCallback" callback="true"/>
     <map interface="IMFSampleGrabberSinkCallback2" callback="true"/>
     <map interface="IMFVideoPresenter" callback="true"/>
+    <map interface="IMFCaptureEngineOnSampleCallback" callback="true"/>
+    <map interface="IMFCaptureEngineOnSampleCallback2" callback="true"/>
 
     <map method="IMFDXGIDeviceManager::ResetDevice" visibility="internal"/>
     <map param="IMFDXGIDeviceManager::OpenDeviceHandle::phDevice" return="true"/>
@@ -831,6 +839,11 @@
     
     <!-- temp: use void* type for VARIANT* -->
     <map param="IMFASFIndexer::GetSeekPositionForValue::pvarValue" type="void"/>
+
+    <map method="IMFCapturePhotoConfirmation::SetPhotoConfirmationCallback" visibility="internal" property="false"/>
+    <map method="IMFCapture[PR].*Sink::SetSampleCallback" visibility="internal" property="false" />
+    <map method="IMFCapture[PR].*Sink::SetOutputByteStream" visibility="internal" property="false" />
+    <map param="IMFCaptureSink::GetService::ppUnknown" return="true" />
 
     <!--
     // *****************************************************************
