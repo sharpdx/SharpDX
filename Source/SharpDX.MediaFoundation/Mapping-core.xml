@@ -673,6 +673,9 @@
     <map enum="_MFT_PROCESS_OUTPUT_STATUS" name="TransformProcessOutputStatus"/>
     
     <map enum="MF_MEDIAKEY_STATUS" name="MediaKeyStatusState"/>
+    
+    <map enum="#MF_CAPTURE_ENGINE_MEDIASOURCE" name="PreferredMediaStream" />
+    <map enum-item="MF_CAPTURE_ENGINE_PREFERRED_SOURCE_STREAM_FOR_(.*)" name="$1" />
 
     <!--
     // *****************************************************************
@@ -844,6 +847,8 @@
     <map method="IMFCapture[PR].*Sink::SetSampleCallback" visibility="internal" property="false" />
     <map method="IMFCapture[PR].*Sink::SetOutputByteStream" visibility="internal" property="false" />
     <map param="IMFCaptureSink::GetService::ppUnknown" return="true" />
+    
+    <map param="IMFCaptureSource::GetStreamIndexFromFriendlyName::uifriendlyName" type="#MF_CAPTURE_ENGINE_MEDIASOURCE" />
 
     <!--
     // *****************************************************************
