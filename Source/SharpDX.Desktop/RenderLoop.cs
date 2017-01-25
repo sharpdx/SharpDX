@@ -47,10 +47,10 @@ namespace SharpDX.Windows
     /// </remarks>
     public class RenderLoop : IDisposable
     {
-        private IntPtr controlHandle;
-        private Control control;
-        private bool isControlAlive;
-        private bool switchControl;
+        private static IntPtr controlHandle;
+        private static Control control;
+        private static bool isControlAlive;
+        private static bool switchControl;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RenderLoop"/> class.
@@ -80,13 +80,7 @@ namespace SharpDX.Windows
             {
                 if(control == value) return;
 
-                // Remove any previous control
-                if(control != null && !switchControl)
-                {
-                    isControlAlive = false;
-                    control.Disposed -= ControlDisposed;
-                    controlHandle = IntPtr.Zero;
-                }
+        
 
                 if (value != null && value.IsDisposed)
                 {
@@ -168,7 +162,7 @@ namespace SharpDX.Windows
             return isControlAlive || switchControl;
         }
 
-        private void ControlDisposed(object sender, EventArgs e)
+        private static void ControlDisposed(object sender, EventArgs e)
         {
             isControlAlive = false;
         }
@@ -205,7 +199,16 @@ namespace SharpDX.Windows
         /// renderCallback</exception>
         public static void Run(Control form, RenderCallback renderCallback, bool useApplicationDoEvents = false)
         {
-            if(form == null) throw new ArgumentNullException("form");
+            // Remove any previous control
+            if (control != null && !switchControl)
+            {
+                isControlAlive = false;
+                control.Disposed -= ControlDisposed;
+                controlHandle = IntPtr.Zero;
+            }
+
+
+            if (form == null) throw new ArgumentNullException("form");
             if(renderCallback == null) throw new ArgumentNullException("renderCallback");
 
             form.Show();
