@@ -191,7 +191,7 @@
     <map param="IDWriteTextLayout::GetTypography::typography" return="true" />
     <map method="IDWriteTextLayout::GetUnderline" name="HasUnderline" />
     <map param="hasUnderline" return="true" />
-    <map method="IDWriteTextLayout::([GS]etDrawingEffect)" visibility="internal" name="$1_" />
+    <map method="IDWriteTextLayout::GetDrawingEffect" visibility="internal" name="GetDrawingEffect_" />
     <map param="IDWriteTextLayout::[GS]etDrawingEffect::drawingEffect" type="void" />
     <map method="IDWriteTextFormat::GetFontFamilyName" visibility="internal" />
     <map method="IDWriteTextFormat::GetLocaleName" visibility="internal" />

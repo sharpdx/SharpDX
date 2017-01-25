@@ -288,12 +288,12 @@ namespace SharpDX.Direct3D9
         {
             unsafe
             {
-                var faces = new int[faceCount];
+                var vertices = new int[vertexCount];
                 Result result;
                 fixed (void* pIndices = indices)
-                    result = D3DX9.OptimizeVertices((IntPtr)pIndices, faceCount, indices.Length, false, faces);
+                    result = D3DX9.OptimizeVertices((IntPtr)pIndices, faceCount, indices.Length, false, vertices);
                 if (result.Failure) return null;
-                return faces;
+                return vertices;
             }
         }
 
@@ -309,12 +309,12 @@ namespace SharpDX.Direct3D9
         {
             unsafe
             {
-                var faces = new int[faceCount];
+                var vertices = new int[vertexCount];
                 Result result;
                 fixed (void* pIndices = indices)
-                    result = D3DX9.OptimizeVertices((IntPtr)pIndices, faceCount, indices.Length, true, faces);
+                    result = D3DX9.OptimizeVertices((IntPtr)pIndices, faceCount, indices.Length, true, vertices);
                 if (result.Failure) return null;
-                return faces;
+                return vertices;
             }
         }
     }

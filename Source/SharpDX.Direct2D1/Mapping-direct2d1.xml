@@ -84,6 +84,7 @@
     <bind from="D2D_POINT_2U" to="SharpDX.Mathematics.Interop.RawPoint" />
     <bind from="D2D_COLOR_F" to="SharpDX.Mathematics.Interop.RawColor4" />
     <bind from="D2D_MATRIX_3X2_F" to="SharpDX.Mathematics.Interop.RawMatrix3x2" />
+    <bind from="D2D_MATRIX_4X3_F" to="SharpDX.Mathematics.Interop.RawMatrix4x3" />
     <bind from="D2D_MATRIX_4X4_F" to="SharpDX.Mathematics.Interop.RawMatrix" />
     <bind from="D2D_MATRIX_5X4_F" to="SharpDX.Mathematics.Interop.RawMatrix5x4" />
     <bind from="IPrintDocumentPackageTarget" to="SharpDX.ComObject" />

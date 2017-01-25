@@ -502,7 +502,11 @@ namespace SharpDX
         /// <returns>The converted string.</returns>
         public static string PtrToStringAnsi(IntPtr pointer, int maxLength)
         {
-            return Marshal.PtrToStringAnsi(pointer, maxLength);
+            string managedString = Marshal.PtrToStringAnsi(pointer); // copy null-terminating unmanaged text from pointer to a managed string
+            if (managedString != null && managedString.Length > maxLength)
+                managedString = managedString.Substring(0, maxLength);
+
+            return managedString;
         }
 
         /// <summary>
@@ -513,10 +517,14 @@ namespace SharpDX
         /// <returns>The converted string.</returns>
         public static string PtrToStringUni(IntPtr pointer, int maxLength)
         {
-            return Marshal.PtrToStringUni(pointer, maxLength);
+            string managedString = Marshal.PtrToStringUni(pointer); // copy null-terminating unmanaged text from pointer to a managed string
+            if (managedString != null && managedString.Length > maxLength)
+                managedString = managedString.Substring(0, maxLength);
+
+            return managedString;
         }
 
-    /// <summary>
+        /// <summary>
         /// Copies the contents of a managed String into unmanaged memory, converting into ANSI format as it copies.
         /// </summary>
         /// <param name="s">A managed string to be copied.</param> 
