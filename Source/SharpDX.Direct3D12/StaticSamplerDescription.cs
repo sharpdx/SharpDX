@@ -42,7 +42,32 @@ namespace SharpDX.Direct3D12
             MipLODBias = 0.0f;
             MaxAnisotropy = 16;
             ComparisonFunc = Comparison.Never;
+            
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StaticSamplerDescription"/> struct.
+        /// </summary>
+        /// <param name="samplerStateDescription">Sampler state description</param>
+        /// <param name="shaderVisibility">The shader visibility.</param>
+        /// <param name="shaderRegister">The shader register.</param>
+        /// <param name="registerSpace">The register space.</param>
+        public StaticSamplerDescription(SamplerStateDescription samplerStateDescription, ShaderVisibility shaderVisibility, int shaderRegister, int registerSpace) : this()
+        {
+            ShaderVisibility = shaderVisibility;
+            ShaderRegister = shaderRegister;
+            RegisterSpace = registerSpace;
             BorderColor = StaticBorderColor.TransparentBlack;
+
+            Filter = samplerStateDescription.Filter;
+            AddressU = samplerStateDescription.AddressU;
+            AddressV = samplerStateDescription.AddressV;
+            AddressW = samplerStateDescription.AddressW;
+            MinLOD = samplerStateDescription.MinimumLod;
+            MaxLOD = samplerStateDescription.MaximumLod;
+            MipLODBias = samplerStateDescription.MipLodBias;
+            MaxAnisotropy = samplerStateDescription.MaximumAnisotropy;
+            ComparisonFunc = samplerStateDescription.ComparisonFunction;
         }
 
         /// <summary>
