@@ -28,7 +28,7 @@
     <BuildSignedSharpDX>true</BuildSignedSharpDX>
     <SharedAssemblyInfoFilePath>$(SharpDXRepo)\Source\SharedAssemblyInfo.cs</SharedAssemblyInfoFilePath>
     <SharedAssemblyInfo>$([System.IO.File]::ReadAllText($(SharedAssemblyInfoFilePath)))</SharedAssemblyInfo>
-    <SharpDXPackagingDevName Condition="'$(SharpDXPackagingDevName)' == ''">alpha</SharpDXPackagingDevName>
+    <SharpDXPackagingDevName Condition="'$(SharpDXPackagingDevName)' == ''">beta</SharpDXPackagingDevName>
     <SharpDXBuildNumber Condition="'$(SharpDXBuildNumber)' == ''">1</SharpDXBuildNumber>
     <SharpDXAssemblyPostFixVersion Condition="'$(SharpDXPackagingDev)' == 'true'">-$(SharpDXPackagingDevName)$([System.String]::Format('{0:000}', $([MSBuild]::Add($(SharpDXBuildNumber), 0))))</SharpDXAssemblyPostFixVersion>
     <SharpDXAssemblyVersion>$([System.Text.RegularExpressions.Regex]::Match($(SharedAssemblyInfo), `AssemblyVersion\("(.*)"`).Groups[1].Value)$(SharpDXAssemblyPostFixVersion)</SharpDXAssemblyVersion>
@@ -47,7 +47,7 @@
     <Message Importance="High" Text="Building SharpDX $(SharpDXAssemblyVersion)"/>
     <CallTarget Targets="Build"/>
     <CallTarget Targets="ZipBuild"/>
-    <CallTarget Condition="'$(SharpDXNugetPush)' == 'true'" Targets="Nuget"/>
+    <CallTarget Condition="'$(SharpDXNugetBuild)' == 'true'" Targets="Nuget"/>
   </Target>
 
   <Target Name="Build">
