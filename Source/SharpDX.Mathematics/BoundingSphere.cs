@@ -67,7 +67,7 @@ namespace SharpDX
         public float Radius;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BoundingBox"/> struct.
+        /// Initializes a new instance of the <see cref="BoundingSphere"/> struct.
         /// </summary>
         /// <param name="center">The center of the sphere in three dimensional space.</param>
         /// <param name="radius">The radius of the sphere.</param>
