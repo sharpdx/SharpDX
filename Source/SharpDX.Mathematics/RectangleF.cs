@@ -276,7 +276,7 @@ namespace SharpDX
         /// <param name="result">[OutAttribute] true if the specified Point is contained within this rectangle; false otherwise.</param>
         public void Contains(ref Vector2 value, out bool result)
         {
-            result = (X <= value.X) && (value.X < Right) && (Y <= value.Y) && (value.Y < Bottom);
+            result = (value.X >= Left && value.X <= Right && value.Y >= Top && value.Y <= Bottom);
         }
 
         /// <summary>Determines whether this rectangle entirely contains a specified rectangle.</summary>
