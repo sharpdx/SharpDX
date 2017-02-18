@@ -150,6 +150,22 @@ namespace SharpDX.Direct3D12
         }
 
         /// <summary>	
+        /// <p> Changes the currently bound descriptor heaps that are associated with a command list. </p>	
+        /// </summary>	
+        /// <param name="descriptorHeaps"><dd>  <p> A reference to an array of <strong><see cref="SharpDX.Direct3D12.DescriptorHeap"/></strong> objects for the heaps to set on the command list. </p> </dd></param>	
+        /// <remarks>	
+        /// <p><strong>SetDescriptorHeaps</strong> can be called on a bundle, but the bundle descriptor heaps must match the calling command list descriptor heap. For more information on bundle restrictions, refer to Creating and Recording Command Lists and Bundles.</p>	
+        /// </remarks>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12GraphicsCommandList::SetDescriptorHeaps']/*"/>	
+        /// <msdn-id>Dn903908</msdn-id>	
+        /// <unmanaged>void ID3D12GraphicsCommandList::SetDescriptorHeaps([In] unsigned int NumDescriptorHeaps,[In, Buffer] const ID3D12DescriptorHeap** ppDescriptorHeaps)</unmanaged>	
+        /// <unmanaged-short>ID3D12GraphicsCommandList::SetDescriptorHeaps</unmanaged-short>	
+        public void SetDescriptorHeaps(params SharpDX.Direct3D12.DescriptorHeap[] descriptorHeaps)
+        {
+            SetDescriptorHeaps(descriptorHeaps.Length, descriptorHeaps);
+        }
+
+        /// <summary>	
         /// <p> Sets CPU descriptor handles for the render targets and depth stencil. </p>	
         /// </summary>	
         /// <param name="numRenderTargetDescriptors"><dd>  <p> The number of entries in the <em>pRenderTargetDescriptors</em> array. </p> </dd></param>	
@@ -222,6 +238,22 @@ namespace SharpDX.Direct3D12
                     SetVertexBuffers(startSlot, numBuffers, new IntPtr(descPtr));
             }
         }
+
+        /// <summary>	
+        /// <p>Sets a CPU descriptor handle for the vertex buffers.</p>	
+        /// </summary>	
+        /// <param name="startSlot"><dd>  <p> Index into the device's zero-based array to begin setting vertex buffers. </p> </dd></param>	
+        /// <param name="vertexBufferViews"><dd>  <p> Specifies the vertex buffer views in an array of <strong><see cref="SharpDX.Direct3D12.VertexBufferView"/></strong> structures. </p> </dd></param>	
+        /// <param name="numBuffers"><dd>  <p> The number of views in the <em>pViews</em> array. </p> </dd></param>	
+        /// <msdn-id>dn986883</msdn-id>	
+        /// <unmanaged>void ID3D12GraphicsCommandList::IASetVertexBuffers([In] unsigned int StartSlot,[In] unsigned int NumViews,[In] const void* pViews)</unmanaged>	
+        /// <unmanaged-short>ID3D12GraphicsCommandList::IASetVertexBuffers</unmanaged-short>	
+        public void SetVertexBuffers(int startSlot, params SharpDX.Direct3D12.VertexBufferView[] vertexBufferViews)
+        {
+            SetVertexBuffers(startSlot, vertexBufferViews, vertexBufferViews.Length);
+        }
+
+
 
         /// <summary>	
         /// <p>Sets a CPU descriptor handle for the vertex buffers.</p>	
