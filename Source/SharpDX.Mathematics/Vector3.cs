@@ -1824,5 +1824,27 @@ namespace SharpDX
         {
             return *(Vector3*)&value;
         }
+
+        /// <summary>
+        /// Converts a <see cref="ValueTuple"/> into a <see cref="Vector3"/>
+        /// </summary>
+        /// <param name="tuple">The tuple to convert</param>
+        public static implicit operator Vector3((float x, float y, float z) tuple)
+        {
+            return new Vector3(tuple.x, tuple.y, tuple.z);
+        }
+
+        /// <summary>
+        /// Deconstructs a <see cref="Vector3"/>. Allows for assignment to a <see cref="ValueTuple"/>
+        /// </summary>
+        /// <param name="x">X component of Vector</param>
+        /// <param name="y">Y component of Vector</param>
+        /// <param name="z">Z component of Vector</param>
+        public void Deconstruct(out float x, out float y, out float z)
+        {
+            x = X;
+            y = Y;
+            z = Z;
+        }
     }
 }
