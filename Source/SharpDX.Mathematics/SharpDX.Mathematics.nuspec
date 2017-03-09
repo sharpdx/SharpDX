@@ -38,6 +38,7 @@
     <releaseNotes></releaseNotes>
     <dependencies>
       <dependency id="SharpDX" version="$version$"/>
+      <dependency id="System.ValueType" version="4.3"/>
     </dependencies>
   </metadata>
 
