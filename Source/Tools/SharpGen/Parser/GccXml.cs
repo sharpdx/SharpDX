@@ -157,7 +157,7 @@ namespace SharpGen.Parser
         {
             Logger.RunInContext("gccxml", () =>
                     {
-                        string vsVersion = GetVisualStudioVersion();
+                        //string vsVersion = GetVisualStudioVersion();
 
                         if (!File.Exists(ExecutablePath))
                             Logger.Fatal("gccxml.exe not found from path: [{0}]", ExecutablePath);
@@ -175,9 +175,8 @@ namespace SharpGen.Parser
                                 WorkingDirectory = Environment.CurrentDirectory
                             };
 
-                        var arguments = "";
-                        arguments += " --castxml-gccxml";
-                        arguments += " -x c++ -std=c++11 -E -dD";
+                        var arguments = GetCastXmlArgs();
+                        arguments += " -E -dD";
 
                         foreach (var directory in GetIncludePaths())
                             arguments += " " + directory;
@@ -261,7 +260,7 @@ namespace SharpGen.Parser
                 }
                 else
                 {
-                    paths.Add("-I\"" + path.TrimEnd('\\') + "\"");
+                    paths.Add("-isystem\"" + path.TrimEnd('\\') + "\"");
                 }
             }
 
@@ -344,63 +343,71 @@ namespace SharpGen.Parser
             StreamReader result = null;
 
             Logger.RunInContext("gccxml", () =>
-                    {
+            {
 
-                    string vsVersion = GetVisualStudioVersion();
+                //string vsVersion = GetVisualStudioVersion();
 
-                    ExecutablePath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, ExecutablePath));
+                ExecutablePath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, ExecutablePath));
 
-                    if (!File.Exists(ExecutablePath)) Logger.Fatal("gccxml.exe not found from path: [{0}]", ExecutablePath);
+                if (!File.Exists(ExecutablePath)) Logger.Fatal("gccxml.exe not found from path: [{0}]", ExecutablePath);
 
-                    if (!File.Exists(headerFile)) Logger.Fatal("C++ Header file [{0}] not found", headerFile);
+                if (!File.Exists(headerFile)) Logger.Fatal("C++ Header file [{0}] not found", headerFile);
 
-                    var currentProcess = new Process();
-                    var startInfo = new ProcessStartInfo(ExecutablePath)
-                        {
-                            RedirectStandardOutput = true,
-                            RedirectStandardError = true,
-                            UseShellExecute = false,
-                            CreateNoWindow = true,
-                            WorkingDirectory = Environment.CurrentDirectory
-                        };
-                    var xmlFile = Path.ChangeExtension(headerFile, "xml");
+                var currentProcess = new Process();
+                var startInfo = new ProcessStartInfo(ExecutablePath)
+                {
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WorkingDirectory = Environment.CurrentDirectory
+                };
+                var xmlFile = Path.ChangeExtension(headerFile, "xml");
 
-                    // Delete any previously generated xml file
-                    File.Delete(xmlFile);
+                // Delete any previously generated xml file
+                File.Delete(xmlFile);
 
-                    var arguments = "";
-                    arguments += " --castxml-gccxml";
-                    arguments += " -x c++ -std=c++11 -fmsc-version=1800 -fms-extensions -fms-compatibility -Wno-microsoft-enum-value -Wno-macro-redefined";
-                    arguments += " -o " + xmlFile;
+                string arguments = GetCastXmlArgs();
+                arguments += " -o " + xmlFile;
 
-                    foreach (var directory in GetIncludePaths())
-                        arguments += " " + directory;
+                foreach (var directory in GetIncludePaths())
+                    arguments += " " + directory;
 
-                    startInfo.Arguments = arguments + " " + headerFile;
+                startInfo.Arguments = arguments + " " + headerFile;
 
-                    Console.WriteLine(startInfo.Arguments);
-                    currentProcess.StartInfo = startInfo;
-                    currentProcess.ErrorDataReceived += ProcessErrorFromHeaderFile;
-                    currentProcess.OutputDataReceived += ProcessOutputFromHeaderFile;
-                    currentProcess.Start();
-                    currentProcess.BeginOutputReadLine();
-                    currentProcess.BeginErrorReadLine();
+                Console.WriteLine(startInfo.Arguments);
+                currentProcess.StartInfo = startInfo;
+                currentProcess.ErrorDataReceived += ProcessErrorFromHeaderFile;
+                currentProcess.OutputDataReceived += ProcessOutputFromHeaderFile;
+                currentProcess.Start();
+                currentProcess.BeginOutputReadLine();
+                currentProcess.BeginErrorReadLine();
 
-                    currentProcess.WaitForExit();
+                currentProcess.WaitForExit();
 
-                    currentProcess.Close();
+                currentProcess.Close();
 
-                    if (!File.Exists(xmlFile) || Logger.HasErrors)
-                    {
-                        Logger.Error("Unable to generate XML file with gccxml [{0}]. Check previous errors.", xmlFile);
-                    }
-                    else
-                    {
-                        result = new StreamReader(xmlFile);
-                    }
-                });
+                if (!File.Exists(xmlFile) || Logger.HasErrors)
+                {
+                    Logger.Error("Unable to generate XML file with gccxml [{0}]. Check previous errors.", xmlFile);
+                }
+                else
+                {
+                    result = new StreamReader(xmlFile);
+                }
+            });
 
             return result;
+        }
+
+        private static string GetCastXmlArgs()
+        {
+            var clPath = @"""C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\cl.exe""";
+            var arguments = "";
+            arguments += " --castxml-gccxml --castxml-cc-msvc " + clPath;
+            arguments += " -x c++ -std=c++11 -fmsc-version=1900 -fms-extensions -fms-compatibility";
+            arguments += " -Wno-microsoft-enum-value -Wmacro-redefined -Wno-invalid-token-paste -Wno-ignored-attributes";
+            return arguments;
         }
 
         // E:/Code/Microsoft DirectX SDK (June 2010)//include/xaudio2fx.h:68:1: error:
