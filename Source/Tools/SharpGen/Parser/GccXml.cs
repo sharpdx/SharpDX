@@ -157,8 +157,6 @@ namespace SharpGen.Parser
         {
             Logger.RunInContext("gccxml", () =>
                     {
-                        //string vsVersion = GetVisualStudioVersion();
-
                         if (!File.Exists(ExecutablePath))
                             Logger.Fatal("gccxml.exe not found from path: [{0}]", ExecutablePath);
 
@@ -272,67 +270,6 @@ namespace SharpGen.Parser
             return paths;
         }
 
-        private static bool CheckVisualStudioVersion(string vsVersion)
-        {
-            var key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
-            var subKey = key.OpenSubKey(@"SOFTWARE\Microsoft\VisualStudio\" + vsVersion + @".0\Setup\VC");
-            return subKey != null;
-        }
-
-        public static string ResolveVisualStudioVersion(params string[] versions)
-        {
-            foreach (var version in versions)
-            {
-                if (CheckVisualStudioVersion(version))
-                    return version;
-            }
-            Logger.Exit("Visual Studio [{0}] with C++ not found. SharpDX requires this version to generate code from C++", string.Join("/", versions));
-            return null;
-        }
-
-        public static string GetVisualStudioVersion()
-        {
-            string vsVersion = ResolveVisualStudioVersion("12");
-            return vsVersion;
-        }
-
-        public static string GetWindowsFramework7Version(params string[] versions)
-        {
-            var key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
-            foreach (var version in versions)
-            {
-                var subKey = key.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v" + version);
-                if (subKey != null)
-                {
-                    // Check that the include directory actually exist
-                    object directory = subKey.GetValue("InstallationFolder");
-                    if (directory != null)
-                    {
-                        var includeDirectory = Path.Combine(directory.ToString(), "include");
-                        if(Directory.Exists(includeDirectory))
-                        {
-                            // Check that we have enough files in the directory (case where the directory is there but
-                            // completely empty)
-                            if(Directory.EnumerateFiles(includeDirectory, "*.*", SearchOption.TopDirectoryOnly).Count() > 70)
-                            {
-                                return version;
-                            }
-                            else
-                            {
-                                Logger.Error("VS{0} Include directory from [{0}] is missing SDK C++ include files. Check your install",
-                                    version,
-                                    includeDirectory);
-                            }
-                        }
-                    }
-
-                }
-            }
-
-            Logger.Exit("Missing Windows SDK [{0}]. Please, download and install the SDK from Microsoft website (Check for a full install that includes Framework headers and C++ compiler).", string.Join("/", versions));
-            return null;
-        }
-
         /// <summary>
         /// Processes the specified header headerFile.
         /// </summary>
@@ -344,9 +281,6 @@ namespace SharpGen.Parser
 
             Logger.RunInContext("gccxml", () =>
             {
-
-                //string vsVersion = GetVisualStudioVersion();
-
                 ExecutablePath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, ExecutablePath));
 
                 if (!File.Exists(ExecutablePath)) Logger.Fatal("gccxml.exe not found from path: [{0}]", ExecutablePath);
