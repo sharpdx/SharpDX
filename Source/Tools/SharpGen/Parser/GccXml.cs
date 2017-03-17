@@ -336,9 +336,8 @@ namespace SharpGen.Parser
 
         private static string GetCastXmlArgs()
         {
-            var clPath = @"""C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\cl.exe""";
             var arguments = "";
-            arguments += " --castxml-gccxml --castxml-cc-msvc " + clPath;
+            arguments += " --castxml-gccxml"; 
             arguments += " -x c++ -std=c++11 -fmsc-version=1900 -fms-extensions -fms-compatibility";
             arguments += " -Wno-microsoft-enum-value -Wmacro-redefined -Wno-invalid-token-paste -Wno-ignored-attributes";
             return arguments;

@@ -64,6 +64,11 @@ namespace SharpGen
         public string GccXmlExecutablePath { get; set; }
 
         /// <summary>
+        /// Gets or sets the path to the Visual C++ toolset
+        /// </summary>
+        public string VcToolsPath { get; set; }
+
+        /// <summary>
         /// Gets or sets the macros.
         /// </summary>
         /// <value>
@@ -112,6 +117,7 @@ namespace SharpGen
                                   {"g|gccxml=", "Specify the path to gccxml.exe", opt => GccXmlExecutablePath = opt},
                                   {"d|doc", "Specify to generate the documentation [default: false]", opt => IsGeneratingDoc = true},
                                   {"p|docpath=", "Specify the path to the assembly doc provider [default: null]", opt => DocProviderAssemblyPath = opt},
+                                  {"c|vctools=", "Specify the path to the Visual C++ Toolset", opt => VcToolsPath = opt },
                                   "",
                                   {"h|help", "Show this message and exit", opt => showHelp = opt != null},
                                   // default
@@ -158,7 +164,7 @@ namespace SharpGen
             Macros.Add("DESKTOP_APP");
 #endif
 
-            Config = ConfigFile.Load(_configRootPath, Macros.ToArray());
+            Config = ConfigFile.Load(_configRootPath, Macros.ToArray(), new KeyValue("VC_TOOLS_PATH", VcToolsPath));
             var latestConfigTime = ConfigFile.GetLatestTimestamp(Config.ConfigFilesLoaded);
 
             _allConfigCheck = Config.Id + "-CodeGen.check";

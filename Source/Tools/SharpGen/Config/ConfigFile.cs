@@ -427,12 +427,13 @@ namespace SharpGen.Config
             return result;
         }
 
-        private void PostLoad(ConfigFile parent, string file, string[] macros = null)
+        private void PostLoad(ConfigFile parent, string file, string[] macros, IEnumerable<KeyValue> variables)
         {
             FilePath = file;
             Parent = parent;
 
             Variables.Add(new KeyValue("THIS_CONFIG_PATH", Path.GetDirectoryName(AbsoluteFilePath)));
+            Variables.AddRange(variables);
 
             // Load all dependencies
             foreach (var dependFile in Files)
@@ -441,7 +442,7 @@ namespace SharpGen.Config
                 if (!Path.IsPathRooted(dependFilePath))
                     dependFilePath = Path.Combine(Path.GetDirectoryName(AbsoluteFilePath), dependFilePath);
                 
-                var subMapping = Load(this, dependFilePath, macros);
+                var subMapping = Load(this, dependFilePath, macros, variables);
                 if (subMapping != null)
                 {
                     subMapping.FilePath = dependFile;
@@ -485,7 +486,7 @@ namespace SharpGen.Config
         /// <param name="parent">The parent.</param>
         /// <param name="file">The file.</param>
         /// <returns>The loaded config</returns>
-        private static ConfigFile Load(ConfigFile parent, string file, string[] macros = null)
+        private static ConfigFile Load(ConfigFile parent, string file, string[] macros, IEnumerable<KeyValue> variables)
         {
             var deserializer = new XmlSerializer(typeof(ConfigFile));
             ConfigFile config = null;
@@ -495,7 +496,7 @@ namespace SharpGen.Config
                 config = (ConfigFile)deserializer.Deserialize(new StringReader(Preprocessor.Preprocess(File.ReadAllText(file), macros)));
 
                 if (config != null)
-                    config.PostLoad(parent, file, macros);
+                    config.PostLoad(parent, file, macros, variables);
             }
             catch (Exception ex)
             {
@@ -549,9 +550,9 @@ namespace SharpGen.Config
         /// </summary>
         /// <param name="file">The MappingFile.</param>
         /// <returns>The MappingFile loaded</returns>
-        public static ConfigFile Load(string file, string[] macros = null)
+        public static ConfigFile Load(string file, string[] macros, params KeyValue[] variables)
         {
-            var root =  Load(null, file, macros);
+            var root =  Load(null, file, macros, variables);
             root.Verify();
             root.ExpandVariables(false);
             return root;
