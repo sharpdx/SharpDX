@@ -33,12 +33,11 @@ using SharpGen.Config;
 namespace SharpGen.Parser
 {
     /// <summary>
-    /// GccXml front end for command line.
-    /// see http://www.gccxml.org/HTML/Index.html
+    /// CastXML front end for command line.
+    /// see https://github.com/CastXML/CastXML
     /// </summary>
-    public class GccXml
+    public class CastXml
     {
-        private const string GccXmlGccOptionsFile = "gccxml_preprocess_sharpdx_options.txt";
         private static readonly Regex MatchError = new Regex("error:");
 
         /// <summary>
@@ -129,9 +128,9 @@ namespace SharpGen.Parser
         private readonly List<Regex> _filterErrors;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GccXml"/> class.
+        /// Initializes a new instance of the <see cref="CastXml"/> class.
         /// </summary>
-        public GccXml()
+        public CastXml()
         {
             IncludeDirectoryList = new List<IncludeDirRule>();
             _filterErrors = new List<Regex>();
@@ -155,10 +154,10 @@ namespace SharpGen.Parser
         /// <param name="handler">The handler.</param>
         public void Preprocess(string headerFile, DataReceivedEventHandler handler)
         {
-            Logger.RunInContext("gccxml", () =>
+            Logger.RunInContext("castxml", () =>
                     {
                         if (!File.Exists(ExecutablePath))
-                            Logger.Fatal("gccxml.exe not found from path: [{0}]", ExecutablePath);
+                            Logger.Fatal("castxml.exe not found from path: [{0}]", ExecutablePath);
 
                         if (!File.Exists(headerFile))
                             Logger.Fatal("C++ Header file [{0}] not found", headerFile);
@@ -264,7 +263,7 @@ namespace SharpGen.Parser
 
             foreach (var path in paths)
             {
-                Logger.Message("Path used for gccxml [{0}]", path);
+                Logger.Message("Path used for castxml [{0}]", path);
             }
 
             return paths;
@@ -279,11 +278,11 @@ namespace SharpGen.Parser
         {
             StreamReader result = null;
 
-            Logger.RunInContext("gccxml", () =>
+            Logger.RunInContext("castxml", () =>
             {
                 ExecutablePath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, ExecutablePath));
 
-                if (!File.Exists(ExecutablePath)) Logger.Fatal("gccxml.exe not found from path: [{0}]", ExecutablePath);
+                if (!File.Exists(ExecutablePath)) Logger.Fatal("castxml.exe not found from path: [{0}]", ExecutablePath);
 
                 if (!File.Exists(headerFile)) Logger.Fatal("C++ Header file [{0}] not found", headerFile);
 
@@ -323,7 +322,7 @@ namespace SharpGen.Parser
 
                 if (!File.Exists(xmlFile) || Logger.HasErrors)
                 {
-                    Logger.Error("Unable to generate XML file with gccxml [{0}]. Check previous errors.", xmlFile);
+                    Logger.Error("Unable to generate XML file with castxml [{0}]. Check previous errors.", xmlFile);
                 }
                 else
                 {

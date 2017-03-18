@@ -58,10 +58,10 @@ namespace SharpGen
         public string DocProviderAssemblyPath { get; set; }
 
         /// <summary>
-        /// Gets or sets the GCC XML executable path.
+        /// Gets or sets the CastXML executable path.
         /// </summary>
-        /// <value>The GCC XML executable path.</value>
-        public string GccXmlExecutablePath { get; set; }
+        /// <value>The CastXML executable path.</value>
+        public string CastXmlExecutablePath { get; set; }
 
         /// <summary>
         /// Gets or sets the path to the Visual C++ toolset
@@ -114,10 +114,10 @@ namespace SharpGen
                                   "Usage: SharpGen [options] config_file.xml",
                                   "Code generator from C++ to C# for .Net languages",
                                   "",
-                                  {"g|gccxml=", "Specify the path to gccxml.exe", opt => GccXmlExecutablePath = opt},
+                                  {"c|castxml=", "Specify the path to castxml.exe", opt => CastXmlExecutablePath = opt},
                                   {"d|doc", "Specify to generate the documentation [default: false]", opt => IsGeneratingDoc = true},
                                   {"p|docpath=", "Specify the path to the assembly doc provider [default: null]", opt => DocProviderAssemblyPath = opt},
-                                  {"c|vctools=", "Specify the path to the Visual C++ Toolset", opt => VcToolsPath = opt },
+                                  {"v|vctools=", "Specify the path to the Visual C++ Toolset", opt => VcToolsPath = opt },
                                   "",
                                   {"h|help", "Show this message and exit", opt => showHelp = opt != null},
                                   // default
@@ -199,7 +199,7 @@ namespace SharpGen
                                      DocProviderAssembly = DocProviderAssemblyPath,
                                      // @"..\..\..\DocProviderFromMsdn\bin\debug\DocProviderFromMsdn.exe",
                                      ForceParsing = _isAssemblyNew,
-                                     GccXmlExecutablePath = GccXmlExecutablePath
+                                     CastXmlExecutablePath = CastXmlExecutablePath
                                  };
 
                 // Init the parser
