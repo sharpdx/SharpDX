@@ -66,7 +66,14 @@ namespace SharpGen
         /// <summary>
         /// Gets or sets the path to the Visual C++ toolset
         /// </summary>
+        /// <value>The Visual C++ toolset path</value>
         public string VcToolsPath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the app configuration.
+        /// </summary>
+        /// <value>The application configuration</value>
+        public string AppType { get; set; }
 
         /// <summary>
         /// Gets or sets the macros.
@@ -85,6 +92,7 @@ namespace SharpGen
         private string _generatedPath;
         private string _allConfigCheck;
         private string _configRootPath;
+        private bool _appConfigChanged;
 
         /// <summary>
         /// Print usages the error.
@@ -118,6 +126,7 @@ namespace SharpGen
                                   {"d|doc", "Specify to generate the documentation [default: false]", opt => IsGeneratingDoc = true},
                                   {"p|docpath=", "Specify the path to the assembly doc provider [default: null]", opt => DocProviderAssemblyPath = opt},
                                   {"v|vctools=", "Specify the path to the Visual C++ Toolset", opt => VcToolsPath = opt },
+                                  {"a|apptype=", "Specify what app type to generate code for (i.e. DESKTOP_APP or STORE_APP)", opt => AppType = opt },
                                   "",
                                   {"h|help", "Show this message and exit", opt => showHelp = opt != null},
                                   // default
@@ -156,13 +165,8 @@ namespace SharpGen
 
             Logger.Message("Loading config files...");
 
-#if STORE_APP
             Macros.Add("DIRECTX11_1");
-            Macros.Add("STORE_APP");
-#else
-            Macros.Add("DIRECTX11_1");
-            Macros.Add("DESKTOP_APP");
-#endif
+            Macros.Add(AppType);
 
             Config = ConfigFile.Load(_configRootPath, Macros.ToArray(), new KeyValue("VC_TOOLS_PATH", VcToolsPath));
             var latestConfigTime = ConfigFile.GetLatestTimestamp(Config.ConfigFilesLoaded);
@@ -170,6 +174,8 @@ namespace SharpGen
             _allConfigCheck = Config.Id + "-CodeGen.check";
 
             var isConfigFileChanged = !File.Exists(_allConfigCheck) || latestConfigTime > File.GetLastWriteTime(_allConfigCheck);
+            _appConfigChanged = File.Exists(_allConfigCheck) && File.ReadAllText(_allConfigCheck) != AppType;
+
             if(_isAssemblyNew)
             {
                 Logger.Message("Assembly [{0}] changed. All files will be generated", _thisAssemblyPath);
@@ -178,9 +184,13 @@ namespace SharpGen
             {
                 Logger.Message("Config files [{0}] changed", string.Join(",", Config.ConfigFilesLoaded.Select(file => Path.GetFileName(file.AbsoluteFilePath))));
             }
+            else if(_appConfigChanged)
+            {
+                Logger.Message("App type changed to [{0}]. All files will be generated", AppType);
+            }
 
             // Return true if a config file changed or the assembly changed
-            return isConfigFileChanged || _isAssemblyNew;
+            return isConfigFileChanged || _isAssemblyNew || _appConfigChanged;
         }
 
         /// <summary>
@@ -215,7 +225,7 @@ namespace SharpGen
                     Logger.Fatal("C++ compiler failed to parse header files");
 
                 // Run the main mapping process
-                var transformer = new TransformManager { GeneratedPath = _generatedPath, ForceGenerator = _isAssemblyNew };
+                var transformer = new TransformManager { GeneratedPath = _generatedPath, ForceGenerator = _isAssemblyNew || _appConfigChanged };
                 transformer.Init(group, Config);
 
                 if (Logger.HasErrors)
@@ -241,7 +251,7 @@ namespace SharpGen
                 File.SetLastWriteTime(_assemblyCheckFile, _assemblyDatetime);
 
                 // Update Checkfile for all config files
-                File.WriteAllText(_allConfigCheck, "");
+                File.WriteAllText(_allConfigCheck, AppType);
                 File.SetLastWriteTime(_allConfigCheck, DateTime.Now);
             }
             finally
