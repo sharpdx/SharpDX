@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sources", "Sources", "{CC8DB471-0644-430D-9D4B-808A2475BEC0}"
 	ProjectSection(SolutionItems) = preProject
@@ -66,6 +66,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{E462D87D
 		Build\SharpDX.build = Build\SharpDX.build
 		Build\SharpDX.PostSettings.targets = Build\SharpDX.PostSettings.targets
 		Build\SharpDX.PreSettings.targets = Build\SharpDX.PreSettings.targets
+		Build\SharpDX.props = Build\SharpDX.props
+		Build\SharpDX.targets = Build\SharpDX.targets
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDX.Tests", "Source\Tests\SharpDX.Tests\SharpDX.Tests.csproj", "{931FA266-E756-41CA-9736-8B29235DC999}"

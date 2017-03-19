@@ -1,25 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="$(SolutionDir)Build\SharpDX.props" />
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard1.1</TargetFrameworks>
-    <!-- Disable FastUpToDate check in order to let VS to always run BeforeBuild. 
-    Related to this issue http://connect.microsoft.com/VisualStudio/feedback/details/735718/visual-studio-2011-beta-is-incorrectly-building-solution -->
-    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DebugType>full</DebugType>
-    <DefineConstants>$(DefineConstants);DIRECTX11_1;DIRECTX11_2;DirectX12</DefineConstants>
-
+    <TargetFrameworks>net45;netstandard1.1;netcoreapp1.0;uap10.0</TargetFrameworks>
     <PackageId>SharpDX</PackageId>
-    <PackageIconUrl>http://sharpdx.org/logo_100x100.png</PackageIconUrl>
-    <PackageLicenseUrl>http://sharpdx.org/License.txt</PackageLicenseUrl>
-    <PackageProjectUrl>http://sharpdx.org</PackageProjectUrl>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageTags>SharpDX DirectX Direct3D Multimedia MDX 3D</PackageTags>
     <Title>SharpDX</Title>
-    <Authors>Alexandre Mutel</Authors>
-    <Owners>Alexandre Mutel</Owners>
-    <Copyright>Copyright (c) 2010-2014 Alexandre Mutel</Copyright>
     <Description>Core assembly for all SharpDX assemblies.</Description>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' OR  '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <DefineConstants>$(DefineConstants);STORE_APP;WINDOWS_API_SET</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Mapping-core.xml" />
@@ -33,10 +24,12 @@
     </Compile>
   </ItemGroup>
 
-  <Target Name="RunGenerator" BeforeTargets="BeforeBuild">
-    <Exec Command="&quot;$(SolutionDir)Source\Tools\SharpGen\RunGenerator.bat&quot; $(ConfigurationName)" />
-  </Target>
-  <Target Name="PatchAssembly" AfterTargets="AfterBuild">
-    <Exec Command="&quot;$(SolutionDir)\Source\Bin\SharpCLI.exe&quot; &quot;$(TargetPath)&quot;" />
-  </Target>
+  <ItemGroup>
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.0.0" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform " Version="5.2.2" />
+  </ItemGroup>
+  <Import Project="$(SolutionDir)Build\SharpDX.targets" />
+  <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 </Project>
