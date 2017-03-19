@@ -141,7 +141,7 @@ namespace SharpDX
             _size = sizeInBytes;
             _ownsBuffer = makeCopy;
         }
-
+#if DESKTOP_APP
         internal unsafe DataBuffer(Blob buffer)
         {
             System.Diagnostics.Debug.Assert(buffer.GetBufferSize() > 0);
@@ -150,7 +150,7 @@ namespace SharpDX
             _size = buffer.GetBufferSize();
             _blob = buffer;
         }
-
+#endif
 
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources
@@ -160,11 +160,13 @@ namespace SharpDX
         {
             if (disposing)
             {
+#if DESKTOP_APP
                 if (_blob != null)
                 {
                     _blob.Dispose();
                     _blob = null;
                 }
+#endif
             }
 
             if (_gCHandle.IsAllocated)

@@ -2,11 +2,11 @@
   <Import Project="$(SolutionDir)Build\SharpDX.props" />
   <PropertyGroup>
     <TargetFrameworks>net45;netcoreapp1.0;netstandard1.1</TargetFrameworks>
-    <PackageId>SharpDX</PackageId>
-    <Product>SharpDX</Product>
-    <AssemblyTitle>SharpDX</AssemblyTitle>
-    <Title>SharpDX</Title>
-    <Description>Core assembly for all SharpDX assemblies.</Description>
+    <PackageId>SharpDX.Animation</PackageId>
+    <Product>SharpDX.Animation</Product>
+    <AssemblyTitle>SharpDX.Animation</AssemblyTitle>
+    <Title>SharpDX.Animation</Title>
+    <Description>Assembly providing DirectX - Animation managed API.</Description>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' OR  '$(TargetFramework)' == 'netcoreapp1.0' ">
     <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
