@@ -28,6 +28,7 @@ namespace SharpDX
     internal class SharpJit
     {
 
+#if !NETSTANDARD1_1
         private static byte[] clrCallToStdcallX86Prolog = new byte[]
                                                               {
 //  00000	58		 pop	 eax
@@ -50,6 +51,8 @@ namespace SharpDX
     0xff, 0x21		 
                                                               };
 
+#endif
+
         static SharpJit()
         {
             Install(typeof(SharpJit));
@@ -57,12 +60,17 @@ namespace SharpDX
 
         public static void Install(Assembly assembly)
         {
+#if !NETSTANDARD1_1
             foreach (var type in assembly.GetTypes())
                 Install(type);
+#else
+            throw new PlatformNotSupportedException();
+#endif
         }
 
         public static void Install(Type typeToPatch)
         {
+#if !NETSTANDARD1_1
             unsafe
             {
                 void* test;
@@ -85,8 +93,12 @@ namespace SharpDX
                     }
                 }
             }
+#else
+            throw new PlatformNotSupportedException();
+#endif
         }
 
+#if !NETSTANDARD1_1
         private static void EmitTrampoline(MethodInfo method, byte[] asmCode)
         {
             RuntimeHelpers.PrepareMethod(method.MethodHandle);
@@ -99,6 +111,7 @@ namespace SharpDX
                                                                   //00000	ff 21		 jmp ecx
                                                                   0xff, 0xe1,
                                                               };
+#endif
     }
 }
 
