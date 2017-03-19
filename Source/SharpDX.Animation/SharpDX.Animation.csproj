@@ -1,58 +1,30 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(SolutionDir)\Build\SharpDX.PreSettings.targets" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="$(SolutionDir)Build\SharpDX.props" />
   <PropertyGroup>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{874DEC63-9AB9-4A09-B1EA-E8FB1F1B68A1}</ProjectGuid>
-    <RootNamespace>SharpDX.Animation</RootNamespace>
-    <AssemblyName>SharpDX.Animation</AssemblyName>
+    <TargetFrameworks>net45;netcoreapp1.0;netstandard1.1</TargetFrameworks>
+    <PackageId>SharpDX</PackageId>
+    <Product>SharpDX</Product>
+    <AssemblyTitle>SharpDX</AssemblyTitle>
+    <Title>SharpDX</Title>
+    <Description>Core assembly for all SharpDX assemblies.</Description>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' OR  '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
+    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
+    <SharpDXAppType>REFERENCE</SharpDXAppType>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Documentation\CodeComments.xml" />
+    <None Include="Mapping.xml" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AnimationTimer.cs" />
-    <Compile Include="Transition.cs" />
-    <Compile Include="TransitionLibrary.cs" />
-    <Compile Include="KeyFrame.cs" />
-    <Compile Include="PriorityComparisonShadow.cs" />
-    <Compile Include="Generated\Enumerations.cs" />
-    <Compile Include="Generated\Functions.cs" />
-    <Compile Include="Generated\Interfaces.cs" />
-    <Compile Include="Generated\LocalInterop.cs" />
-    <Compile Include="Generated\Structures.cs" />
-    <Compile Include="ManagerEventHandlerShadow.cs" />
-    <Compile Include="Manager.cs" />
-    <Compile Include="ManagerEventHandler.cs" />
-    <Compile Include="PriorityComparison.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RepeatCount.cs" />
-    <Compile Include="Storyboard.cs" />
-    <Compile Include="Timer.cs" />
-    <Compile Include="TransitionFactory.cs" />
-    <Compile Include="Variable.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Documentation\CodeComments.xml" />
-    <None Include="Mapping.xml">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="SharpDX.Animation.nuspec" />
+    <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
-      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
-      <Name>SharpDX</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <Import Project="$(SolutionDir)Build\SharpDX.targets" />
 </Project>
