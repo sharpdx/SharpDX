@@ -5,4 +5,12 @@
   <Target Name="PatchAssembly" AfterTargets="AfterBuild">
     <Exec Command="&quot;$(SolutionDir)\Source\Bin\SharpCLI.exe&quot; &quot;$(TargetPath)&quot;" />
   </Target>
+  <!-- Special packages and imports for UWP support -->
+  <ItemGroup>
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.0.0" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform " Version="5.2.2" />
+  </ItemGroup>
+  <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 </Project>
