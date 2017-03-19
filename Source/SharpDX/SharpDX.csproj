@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFrameworks>net45;netcoreapp1.0;netstandard1.1;uap10.0</TargetFrameworks>
     <PackageId>SharpDX</PackageId>
+    <Product>SharpDX</Product>
+    <AssemblyTitle>SharpDX</AssemblyTitle>
     <Title>SharpDX</Title>
     <Description>Core assembly for all SharpDX assemblies.</Description>
   </PropertyGroup>
