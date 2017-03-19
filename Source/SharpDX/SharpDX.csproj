@@ -25,7 +25,6 @@
     <None Include="Documentation\CodeComments.xml" />
     <None Include="Mapping.xml" />
     <None Include="Multimedia\Mapping.xml" />
-    <None Include="SharpDX.nuspec" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
