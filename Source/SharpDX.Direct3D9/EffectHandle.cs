@@ -178,8 +178,6 @@ namespace SharpDX.Direct3D9
             IntPtr value;
             if (UseCacheStrings)
             {
-                // internalize the string in order to have a faster comparison with the dictionary
-                name = string.Intern(name);
                 lock (AllocatedStrings)
                 {
                     if (!AllocatedStrings.TryGetValue(name, out value))
