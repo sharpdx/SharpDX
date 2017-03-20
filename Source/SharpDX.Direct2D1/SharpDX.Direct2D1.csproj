@@ -1,337 +1,36 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(SolutionDir)\Build\SharpDX.PreSettings.targets" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="$(SolutionDir)Build\SharpDX.props" />
   <PropertyGroup>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{C97878F4-1510-4BBA-8153-BD71DA7D50D8}</ProjectGuid>
-    <RootNamespace>SharpDX.Direct2D1</RootNamespace>
-    <AssemblyName>SharpDX.Direct2D1</AssemblyName>
+    <TargetFrameworks>net45;netcoreapp1.0;netstandard1.1;uap10.0</TargetFrameworks>
+    <PackageId>SharpDX.Direct2D1</PackageId>
+    <Product>SharpDX.Direct2D1</Product>
+    <AssemblyTitle>SharpDX.Direct2D1</AssemblyTitle>
+    <Title>SharpDX.Direct2D1</Title>
+    <Description>Assembly providing DirectX - Direct2D, DirectWrite and WIC managed API.</Description>
+    <PackageTags>$(PackageTags) 3D Direct2D D2D DirectWrite DWrite WIC</PackageTags>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' OR  '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
+    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <DefineConstants>$(DefineConstants);STORE_APP;WINDOWS_API_SET</DefineConstants>
+    <SharpDXAppType>STORE_APP</SharpDXAppType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
+    <SharpDXAppType>REFERENCE</SharpDXAppType>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Documentation\CodeComments.xml" />
+    <None Include="Mapping.xml" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AssemblyDoc.cs" />
-    <Compile Include="Bitmap1.cs" />
-    <Compile Include="BitmapBrush1.cs" />
-    <Compile Include="BitmapProperties1.cs" />
-    <Compile Include="CommandList.cs" />
-    <Compile Include="BlendTransform.cs" />
-    <Compile Include="BorderTransform.cs" />
-    <Compile Include="BoundsAdjustmentTransform.cs" />
-    <Compile Include="ColorContext.cs" />
-    <Compile Include="CommandSink1.cs" />
-    <Compile Include="CommandSink1Native.cs" />
-    <Compile Include="CommandSink1Shadow.cs" />
-    <Compile Include="CommandSink2.cs" />
-    <Compile Include="CommandSink2Native.cs" />
-    <Compile Include="CommandSink3.cs" />
-    <Compile Include="CommandSink3Native.cs" />
-    <Compile Include="ComputeInformation.cs" />
-    <Compile Include="AnalysisTransform.cs" />
-    <Compile Include="CommandSink.cs" />
-    <Compile Include="CommandSinkShadow.cs" />
-    <Compile Include="CommandSinkNative.cs" />
-    <Compile Include="ComputeTransform.cs" />
-    <Compile Include="ComputeTransformNative.cs" />
-    <Compile Include="ComputeTransformShadow.cs" />
-    <Compile Include="D2D1.cs" />
-    <Compile Include="Device1.cs" />
-    <Compile Include="Device3.cs" />
-    <Compile Include="Device2.cs" />
-    <Compile Include="DeviceContext3.cs" />
-    <Compile Include="DeviceContext2.cs" />
-    <Compile Include="DeviceContext1.cs" />
-    <Compile Include="DirectWrite\Factory1.cs" />
-    <Compile Include="DirectWrite\LocalFontFileLoader.cs" />
-    <Compile Include="DirectWrite\TextAnalyzer1.cs" />
-    <Compile Include="DirectWrite\TextAnalysisSource1Shadow.cs" />
-    <Compile Include="DirectWrite\TextAnalysisSource1.cs" />
-    <Compile Include="DirectWrite\TextAnalysisSink1Shadow.cs" />
-    <Compile Include="DirectWrite\TextAnalysisSink1.cs" />
-    <Compile Include="DirectWrite\NamespaceDoc.cs" />
-    <Compile Include="Effects\NamespaceDoc.cs" />
-    <Compile Include="Effects\OpacityMetadata.cs" />
-    <Compile Include="Effects\PerspectiveTransform3D.cs" />
-    <Compile Include="Effects\YCbCr.cs" />
-    <Compile Include="GradientMesh.cs" />
-    <Compile Include="ImageSourceFromWic.cs" />
-    <Compile Include="ImageSource.cs" />
-    <Compile Include="SpriteBatch.cs" />
-    <Compile Include="TransformedImageSource.cs" />
-    <Compile Include="LookupTable3D.cs" />
-    <Compile Include="InkStyle.cs" />
-    <Compile Include="Ink.cs" />
-    <Compile Include="Factory2.cs" />
-    <Compile Include="GeometryRealization.cs" />
-    <Compile Include="NamespaceDoc.cs" />
-    <Compile Include="VertexRange.cs" />
-    <Compile Include="InputDescription.cs" />
-    <Compile Include="SourceTransformShadow.cs" />
-    <Compile Include="SourceTransformNative.cs" />
-    <Compile Include="SourceTransform.cs" />
-    <Compile Include="DrawTransformShadow.cs" />
-    <Compile Include="DrawTransformNative.cs" />
-    <Compile Include="DrawTransform.cs" />
-    <Compile Include="LayerParameters.cs" />
-    <Compile Include="TransformGraph.cs" />
-    <Compile Include="DrawInformation.cs" />
-    <Compile Include="EffectInputDescription.cs" />
-    <Compile Include="InputElement.cs" />
-    <Compile Include="VertexBuffer.cs" />
-    <Compile Include="VertexBufferProperties.cs" />
-    <Compile Include="CustomVertexBufferProperties.cs" />
-    <Compile Include="ResourceTextureProperties.cs" />
-    <Compile Include="ResourceTexture.cs" />
-    <Compile Include="OffsetTransform.cs" />
-    <Compile Include="TransformShadow.cs" />
-    <Compile Include="TransformNative.cs" />
-    <Compile Include="Transform.cs" />
-    <Compile Include="TransformNodeNative.cs" />
-    <Compile Include="TransformNodeShadow.cs" />
-    <Compile Include="TransformNode.cs" />
-    <Compile Include="EffectContext.cs" />
-    <Compile Include="PropertyBindingAttribute.cs" />
-    <Compile Include="CustomEffectInputAttribute.cs" />
-    <Compile Include="CustomEffectAttribute.cs" />
-    <Compile Include="CustomEffectBase.cs" />
-    <Compile Include="CustomEffectFactory.cs" />
-    <Compile Include="CustomEffectNative.cs" />
-    <Compile Include="CustomEffectShadow.cs" />
-    <Compile Include="CustomEffect.cs" />
-    <Compile Include="PropertyBinding.cs" />
-    <Compile Include="DrawingStateBlock1.cs" />
-    <Compile Include="Effect.cs" />
-    <Compile Include="Effects\AffineTransform2D.cs" />
-    <Compile Include="Effects\ArithmeticComposite.cs" />
-    <Compile Include="Effects\Atlas.cs" />
-    <Compile Include="Effects\BitmapSource.cs" />
-    <Compile Include="Effects\Blend.cs" />
-    <Compile Include="Effects\Border.cs" />
-    <Compile Include="Effects\Brightness.cs" />
-    <Compile Include="Effects\ColorManagement.cs" />
-    <Compile Include="Effects\ColorMatrix.cs" />
-    <Compile Include="Effects\Composite.cs" />
-    <Compile Include="Effects\ConvolveMatrix.cs" />
-    <Compile Include="Effects\UnPremultiply.cs" />
-    <Compile Include="Effects\Turbulence.cs" />
-    <Compile Include="Effects\Tile.cs" />
-    <Compile Include="Effects\TableTransfer.cs" />
-    <Compile Include="Effects\SpotSpecular.cs" />
-    <Compile Include="Effects\SpotDiffuse.cs" />
-    <Compile Include="Effects\Shadow.cs" />
-    <Compile Include="Effects\Scale.cs" />
-    <Compile Include="Effects\Saturation.cs" />
-    <Compile Include="Effects\Premultiply.cs" />
-    <Compile Include="Effects\PointDiffuse.cs" />
-    <Compile Include="Effects\PointSpecular.cs" />
-    <Compile Include="Effects\Morphology.cs" />
-    <Compile Include="Effects\LuminanceToAlpha.cs" />
-    <Compile Include="Effects\LinearTransfer.cs" />
-    <Compile Include="Effects\HueRotate.cs" />
-    <Compile Include="Effects\Histogram.cs" />
-    <Compile Include="Effects\GammaTransfer.cs" />
-    <Compile Include="Effects\Flood.cs" />
-    <Compile Include="Effects\DpiCompensation.cs" />
-    <Compile Include="Effects\DistantDiffuse.cs" />
-    <Compile Include="Effects\DistantSpecular.cs" />
-    <Compile Include="Effects\DisplacementMap.cs" />
-    <Compile Include="Effects\DiscreteTransfer.cs" />
-    <Compile Include="Effects\DirectionalBlur.cs" />
-    <Compile Include="Effects\Crop.cs" />
-    <Compile Include="Effects\GaussianBlur.cs" />
-    <Compile Include="Effects\Transform3D.cs" />
-    <Compile Include="Factory1.cs" />
-    <Compile Include="Device.cs" />
-    <Compile Include="DeviceContext.cs" />
-    <Compile Include="Generated\WIC\Enumerations.cs" />
-    <Compile Include="Generated\WIC\Functions.cs" />
-    <Compile Include="Generated\WIC\Interfaces.cs" />
-    <Compile Include="Generated\WIC\Structures.cs" />
-    <Compile Include="GradientStopCollection1.cs" />
-    <Compile Include="ImageBrush.cs" />
-    <Compile Include="LayerParameters1.cs" />
-    <Compile Include="ModuleInit.cs" />
-    <Compile Include="PathGeometry1.cs" />
-    <Compile Include="PrintControl.cs" />
-    <Compile Include="Properties.cs" />
-    <Compile Include="PropertyTypeHelper.cs" />
-    <Compile Include="StrokeStyle1.cs" />
-    <Compile Include="WicRenderTarget.cs" />
-    <Compile Include="DirectWrite\BitmapRenderTarget.cs" />
-    <Compile Include="DirectWrite\EllipsisTrimming.cs" />
-    <Compile Include="DirectWrite\Factory.cs" />
-    <Compile Include="DirectWrite\FontCollection.cs" />
-    <Compile Include="DirectWrite\FontCollectionLoader.cs" />
-    <Compile Include="DirectWrite\FontCollectionLoaderShadow.cs" />
-    <Compile Include="DirectWrite\FontFace.cs" />
-    <Compile Include="DirectWrite\FontFeature.cs" />
-    <Compile Include="DirectWrite\FontFile.cs" />
-    <Compile Include="DirectWrite\FontFileEnumerator.cs" />
-    <Compile Include="DirectWrite\FontFileEnumeratorShadow.cs" />
-    <Compile Include="DirectWrite\FontFileLoader.cs" />
-    <Compile Include="DirectWrite\FontFileLoaderShadow.cs" />
-    <Compile Include="DirectWrite\FontFileLoaderNative.cs" />
-    <Compile Include="DirectWrite\FontFileStream.cs" />
-    <Compile Include="DirectWrite\FontFileStreamShadow.cs" />
-    <Compile Include="DirectWrite\FontFileStreamNative.cs" />
-    <Compile Include="DirectWrite\GdiInterop.cs" />
-    <Compile Include="DirectWrite\GlyphRun.cs" />
-    <Compile Include="DirectWrite\GlyphRunAnalysis.cs" />
-    <Compile Include="DirectWrite\GlyphRunDescription.cs" />
-    <Compile Include="DirectWrite\GlyphRunItem.cs" />
-    <Compile Include="DirectWrite\InlineObject.cs" />
-    <Compile Include="DirectWrite\InlineObjectShadow.cs" />
-    <Compile Include="DirectWrite\InlineObjectNative.cs" />
-    <Compile Include="DirectWrite\LineBreakpoint.cs" />
-    <Compile Include="DirectWrite\LocalizedStrings.cs" />
-    <Compile Include="DirectWrite\NumberSubstitution.cs" />
-    <Compile Include="DirectWrite\PixelSnapping.cs" />
-    <Compile Include="DirectWrite\PixelSnappingShadow.cs" />
-    <Compile Include="DirectWrite\RenderingParams.cs" />
-    <Compile Include="DirectWrite\ScriptJustify.cs" />
-    <Compile Include="DirectWrite\ShapingGlyphProperties.cs" />
-    <Compile Include="DirectWrite\TextAnalysisSink.cs" />
-    <Compile Include="DirectWrite\TextAnalysisSinkShadow.cs" />
-    <Compile Include="DirectWrite\TextAnalysisSource.cs" />
-    <Compile Include="DirectWrite\TextAnalysisSourceShadow.cs" />
-    <Compile Include="DirectWrite\TextAnalyzer.cs" />
-    <Compile Include="DirectWrite\TextFormat.cs" />
-    <Compile Include="DirectWrite\TextLayout.cs" />
-    <Compile Include="DirectWrite\TextRange.cs" />
-    <Compile Include="DirectWrite\TextRenderer.cs" />
-    <Compile Include="Bitmap.cs" />
-    <Compile Include="BitmapBrush.cs" />
-    <Compile Include="BitmapProperties.cs" />
-    <Compile Include="BitmapRenderTarget.cs" />
-    <Compile Include="DirectWrite\TextRendererBase.cs" />
-    <Compile Include="DirectWrite\TextRendererShadow.cs" />
-    <Compile Include="DirectWrite\Typography.cs" />
-    <Compile Include="Ellipse.cs" />
-    <Compile Include="GdiInteropRenderTarget.cs" />
-    <Compile Include="Generated\DirectWrite\Enumerations.cs" />
-    <Compile Include="Generated\DirectWrite\Functions.cs" />
-    <Compile Include="Generated\DirectWrite\Interfaces.cs" />
-    <Compile Include="Generated\DirectWrite\Structures.cs" />
-    <Compile Include="Generated\Enumerations.cs" />
-    <Compile Include="Generated\Functions.cs" />
-    <Compile Include="Generated\Interfaces.cs" />
-    <Compile Include="Generated\LocalInterop.cs" />
-    <Compile Include="Generated\Structures.cs" />
-    <Compile Include="GeometrySinkShadow.cs" />
-    <Compile Include="GeometrySinkNative.cs" />
-    <Compile Include="Layer.cs" />
-    <Compile Include="Mesh.cs" />
-    <Compile Include="RadialGradientBrush.cs" />
-    <Compile Include="Geometry.cs" />
-    <Compile Include="GeometrySink.cs" />
-    <Compile Include="GradientStopCollection.cs" />
-    <Compile Include="LinearGradientBrush.cs" />
-    <Compile Include="SimplifiedGeometrySink.cs" />
-    <Compile Include="SimplifiedGeometrySinkShadow.cs" />
-    <Compile Include="SimplifiedGeometrySinkNative.cs" />
-    <Compile Include="SolidColorBrush.cs" />
-    <Compile Include="DrawingStateBlock.cs" />
-    <Compile Include="GeometryGroup.cs" />
-    <Compile Include="DeviceContextRenderTarget.cs" />
-    <Compile Include="TessellationSinkShadow.cs" />
-    <Compile Include="TessellationSinkNative.cs" />
-    <Compile Include="WIC\Bitmap.cs" />
-    <Compile Include="WIC\BitmapClipper.cs" />
-    <Compile Include="WIC\BitmapCodecInfo.cs" />
-    <Compile Include="WIC\BitmapDecoder.cs" />
-    <Compile Include="WIC\BitmapDecoderInfo.cs" />
-    <Compile Include="WIC\BitmapEncoder.cs" />
-    <Compile Include="WIC\BitmapEncoderOptions.cs" />
-    <Compile Include="WIC\BitmapFlipRotator.cs" />
-    <Compile Include="WIC\BitmapFrameDecode.cs" />
-    <Compile Include="WIC\BitmapFrameEncode.cs" />
-    <Compile Include="WIC\BitmapLock.cs" />
-    <Compile Include="WIC\BitmapScaler.cs" />
-    <Compile Include="WIC\BitmapSource.cs" />
-    <Compile Include="WIC\BitmapSourceTransform.cs" />
-    <Compile Include="WIC\BmpBitmapDecoder.cs" />
-    <Compile Include="WIC\BmpBitmapEncoder.cs" />
-    <Compile Include="WIC\ColorContext.cs" />
-    <Compile Include="WIC\ColorContextsHelper.cs" />
-    <Compile Include="WIC\ColorTransform.cs" />
-    <Compile Include="WIC\ComponentInfo.cs" />
-    <Compile Include="WIC\DdsFrameDecode.cs" />
-    <Compile Include="WIC\ImageEncoder.cs" />
-    <Compile Include="WIC\ImageParameters.cs" />
-    <Compile Include="WIC\ImagingFactory2.cs" />
-    <Compile Include="WIC\FastMetadataEncoder.cs" />
-    <Compile Include="WIC\FormatConverter.cs" />
-    <Compile Include="WIC\FormatConverterInfo.cs" />
-    <Compile Include="WIC\GifBitmapDecoder.cs" />
-    <Compile Include="WIC\GifBitmapEncoder.cs" />
-    <Compile Include="WIC\ImagingFactory.cs" />
-    <Compile Include="WIC\JpegBitmapDecoder.cs" />
-    <Compile Include="WIC\JpegBitmapEncoder.cs" />
-    <Compile Include="WIC\MetadataQueryReader.cs" />
-    <Compile Include="WIC\MetadataQueryWriter.cs" />
-    <Compile Include="WIC\NamespaceDoc.cs" />
-    <Compile Include="WIC\Palette.cs" />
-    <Compile Include="WIC\PixelFormat.cs" />
-    <Compile Include="WIC\PixelFormatInfo.cs" />
-    <Compile Include="WIC\PngBitmapDecoder.cs" />
-    <Compile Include="WIC\PngBitmapEncoder.cs" />
-    <Compile Include="WIC\TiffBitmapDecoder.cs" />
-    <Compile Include="WIC\TiffBitmapEncoder.cs" />
-    <Compile Include="WIC\WICStream.cs" />
-    <Compile Include="WIC\WmpBitmapDecoder.cs" />
-    <Compile Include="WIC\WmpBitmapEncoder.cs" />
-    <Compile Include="WindowRenderTarget.cs" />
-    <Compile Include="PixelFormat.cs" />
-    <Compile Include="RenderTarget.cs" />
-    <Compile Include="RenderTargetProperties.cs" />
-    <Compile Include="StrokeStyle.cs" />
-    <Compile Include="TessellationSink.cs" />
-    <Compile Include="TransformedGeometry.cs" />
-    <Compile Include="Factory.cs" />
-    <Compile Include="RectangleGeometry.cs" />
-    <Compile Include="EllipseGeometry.cs" />
-    <Compile Include="PathGeometry.cs" />
-    <Compile Include="RoundedRectangleGeometry.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Mapping-direct2d1.xml">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="DirectWrite\Mapping.xml">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Mapping.xml" />
-    <None Include="WIC\Mapping.xml">
-      <SubType>Designer</SubType>
-    </None>
+    <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
+    <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="SharpDX.Direct2D1.nuspec" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Documentation\CodeComments.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj">
-      <Project>{3fc6de77-b412-4101-9e64-6b9aa831179b}</Project>
-      <Name>SharpDX.DXGI</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
-      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
-      <Name>SharpDX</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <Import Project="$(SolutionDir)Build\SharpDX.targets" />
 </Project>
