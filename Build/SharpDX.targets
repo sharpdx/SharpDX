@@ -1,7 +1,4 @@
 ﻿<Project>
-  <Target Name="RunGenerator" BeforeTargets="BeforeBuild" Condition=" '$(SharpDXGenerateCode)' == 'true' ">
-    <Exec Command="&quot;$(SolutionDir)Source\Tools\SharpGen\RunGenerator.bat&quot; $(ConfigurationName) $(SharpDXAppType)" />
-  </Target>
   <Target Name="PatchAssembly" AfterTargets="AfterBuild">
     <Exec Command="&quot;$(SolutionDir)\Source\Bin\SharpCLI.exe&quot; &quot;$(TargetPath)&quot;" />
   </Target>
