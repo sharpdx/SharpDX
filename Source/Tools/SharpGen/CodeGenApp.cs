@@ -157,7 +157,7 @@ namespace SharpGen
         public bool Init()
         {
             _thisAssemblyPath = Assembly.GetExecutingAssembly().Location;
-            _assemblyCheckFile = Path.ChangeExtension(_thisAssemblyPath, ".check");
+            _assemblyCheckFile = Path.ChangeExtension(_thisAssemblyPath, ".check-" + AppType);
             _assemblyDatetime = File.GetLastWriteTime(_thisAssemblyPath);
             _isAssemblyNew = (File.GetLastWriteTime(_thisAssemblyPath) != File.GetLastWriteTime(_assemblyCheckFile));
             _generatedPath = Path.GetDirectoryName(_configRootPath);
