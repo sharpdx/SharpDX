@@ -1,87 +1,37 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(SolutionDir)\Build\SharpDX.PreSettings.targets" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="$(SolutionDir)Build\SharpDX.props" />
   <PropertyGroup>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E5BB5D1C-6C07-495B-923B-FB80B79C535E}</ProjectGuid>
-    <RootNamespace>SharpDX.Direct3D12</RootNamespace>
-    <AssemblyName>SharpDX.Direct3D12</AssemblyName>
+    <TargetFrameworks>net45;netcoreapp1.0;netstandard1.1;uap10.0</TargetFrameworks>
+    <PackageId>SharpDX.Direct3D12</PackageId>
+    <Product>SharpDX.Direct3D12</Product>
+    <AssemblyTitle>SharpDX.Direct3D12</AssemblyTitle>
+    <Title>SharpDX.Direct3D12</Title>
+    <Description>Assembly providing DirectX - Direct3D12 managed API.</Description>
+    <PackageTags>$(PackageTags) Direct3D12 D3D12</PackageTags>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' OR  '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
+    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <DefineConstants>$(DefineConstants);STORE_APP;WINDOWS_API_SET</DefineConstants>
+    <SharpDXAppType>STORE_APP</SharpDXAppType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
+    <DefineConstants>$(DefineConstants);REFERENCE</DefineConstants>
+    <SharpDXAppType>REFERENCE</SharpDXAppType>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Documentation\CodeComments.xml" />
+    <None Include="Mapping.xml" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AssemblyDoc.cs" />
-    <Compile Include="BlendStateDescription.cs" />
-    <Compile Include="CommandQueue.cs" />
-    <Compile Include="CommandQueueDescription.cs" />
-    <Compile Include="CommandSignatureDescription.cs" />
-    <Compile Include="CpuDescriptorHandle.cs" />
-    <Compile Include="DebugController.cs" />
-    <Compile Include="DescriptorRange.cs" />
-    <Compile Include="GpuDescriptorHandle.cs" />
-    <Compile Include="GraphicsCommandList.cs" />
-    <Compile Include="ComputePipelineStateDescription.cs" />
-    <Compile Include="DepthStencilStateDescription.cs" />
-    <Compile Include="Device.cs" />
-    <Compile Include="Generated\Enumerations.cs" />
-    <Compile Include="Generated\Functions.cs" />
-    <Compile Include="Generated\Interfaces.cs" />
-    <Compile Include="Generated\LocalInterop.cs" />
-    <Compile Include="Generated\Structures.cs" />
-    <Compile Include="GraphicsPipelineStateDescription.cs" />
-    <Compile Include="HeapProperties.cs" />
-    <Compile Include="InfoQueue.cs" />
-    <Compile Include="InfoQueueFilterDescription.cs" />
-    <Compile Include="InputElement.cs" />
-    <Compile Include="InputLayoutDescription.cs" />
-    <Compile Include="Message.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RasterizerStateDescription.cs" />
-    <Compile Include="ResourceAliasingBarrier.cs" />
-    <Compile Include="ResourceBarrier.cs" />
-    <Compile Include="ResourceDescription.cs" />
-    <Compile Include="ResourceTransitionBarrier.cs" />
-    <Compile Include="RootConstants.cs" />
-    <Compile Include="RootParameter1.cs" />
-    <Compile Include="RootSignatureDescription1.cs" />
-    <Compile Include="RootSignatureDeserializer.cs" />
-    <Compile Include="RootDescriptor.cs" />
-    <Compile Include="RootParameter.cs" />
-    <Compile Include="RootSignatureDescription.cs" />
-    <Compile Include="ShaderBytecode.cs" />
-    <Compile Include="StaticSamplerDescription.cs" />
-    <Compile Include="StreamOutputDescription.cs" />
-    <Compile Include="TextureCopyLocation.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Documentation\CodeComments.xml" />
-    <None Include="Mapping.xml">
-      <SubType>Designer</SubType>
-    </None>
+    <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
+    <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="SharpDX.Direct3D12.nuspec" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj">
-      <Project>{3fc6de77-b412-4101-9e64-6b9aa831179b}</Project>
-      <Name>SharpDX.DXGI</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
-      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
-      <Name>SharpDX</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <Import Project="$(SolutionDir)Build\SharpDX.targets" />
 </Project>

@@ -3,7 +3,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
     <DefineConstants>$(DefineConstants);DIRECTX11_1;DIRECTX11_2;DirectX12</DefineConstants>
-    <SharpDXGenerateCode Condition=" '$(SharpDXGenerateCode)' == '' ">true</SharpDXGenerateCode>
 
     <PackageIconUrl>http://sharpdx.org/logo_100x100.png</PackageIconUrl>
     <PackageLicenseUrl>http://sharpdx.org/License.txt</PackageLicenseUrl>
