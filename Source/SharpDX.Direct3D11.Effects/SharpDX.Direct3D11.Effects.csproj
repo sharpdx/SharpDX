@@ -1,92 +1,60 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(SolutionDir)\Build\SharpDX.PreSettings.targets" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="$(SolutionDir)Build\SharpDX.props" />
   <PropertyGroup>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{BBB50A46-3291-4C62-B884-D1AB64F71EA5}</ProjectGuid>
-    <RootNamespace>SharpDX.Direct3D11.Effects</RootNamespace>
-    <AssemblyName>SharpDX.Direct3D11.Effects</AssemblyName>
+    <TargetFrameworks>net45;netcoreapp1.0;netstandard1.1;uap10.0</TargetFrameworks>
+    <PackageId>SharpDX.Direct3D11.Effects</PackageId>
+    <Product>SharpDX.Direct3D11.Effects</Product>
+    <AssemblyTitle>SharpDX.Direct3D11.Effects</AssemblyTitle>
+    <Title>SharpDX.Direct3D11.Effects</Title>
+    <Description>Assembly providing DirectX - Effects11 managed API for Direct3D11.</Description>
+    <PackageTags>$(PackageTags) 3D Direct3D11 D3D11 Effects11</PackageTags>
+    <RuntimeIdentifiers>win-x86;win-x64;win8-arm</RuntimeIdentifiers>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' OR  '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
+    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <DefineConstants>$(DefineConstants);STORE_APP;WINDOWS_API_SET</DefineConstants>
+    <SharpDXAppType>STORE_APP</SharpDXAppType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
+    <DefineConstants>$(DefineConstants);REFERENCE</DefineConstants>
+    <SharpDXAppType>REFERENCE</SharpDXAppType>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Documentation\CodeComments.xml" />
+    <None Include="Mapping.xml" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AssemblyDoc.cs" />
-    <Compile Include="Effect.cs" />
-    <Compile Include="EffectBlendVariable.cs" />
-    <Compile Include="EffectDepthStencilVariable.cs" />
-    <Compile Include="EffectDepthStencilViewVariable.cs" />
-    <Compile Include="EffectMatrixVariable.cs" />
-    <Compile Include="EffectPass.cs" />
-    <Compile Include="EffectPassDescription.cs" />
-    <Compile Include="EffectPassShaderDescription.cs" />
-    <Compile Include="EffectRasterizerVariable.cs" />
-    <Compile Include="EffectRenderTargetViewVariable.cs" />
-    <Compile Include="EffectSamplerVariable.cs" />
-    <Compile Include="EffectScalarVariable.cs" />
-    <Compile Include="EffectShaderDescription.cs" />
-    <Compile Include="EffectShaderResourceVariable.cs" />
-    <Compile Include="EffectStringVariable.cs" />
-    <Compile Include="EffectUnorderedAccessViewVariable.cs" />
-    <Compile Include="EffectVariable.cs" />
-    <Compile Include="EffectVectorVariable.cs" />
-    <Compile Include="Generated\Enumerations.cs" />
-    <Compile Include="D3DX11Effects.cs" />
-    <Compile Include="Generated\Interfaces.cs" />
-    <Compile Include="Generated\LocalInterop.cs" />
-    <Compile Include="Generated\Structures.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_arm.dll">
+    <None Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_arm.dll">
       <Link>sharpdx_direct3d11_1_effects_arm.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_x64.dll">
+      <Pack>true</Pack>
+      <PackagePath>runtimes/win8-arm/sharpdx_direct3d11_1_effects.dll</PackagePath>
+    </None>
+    <None Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_x64.dll">
       <Link>sharpdx_direct3d11_1_effects_x64.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_x86.dll">
+      <Pack>true</Pack>
+      <PackagePath>runtimes/win-x64/sharpdx_direct3d11_1_effects.dll</PackagePath>
+    </None>
+    <None Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_x86.dll">
       <Link>sharpdx_direct3d11_1_effects_x86.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="Documentation\CodeComments.xml" />
-    <None Include="Mapping.xml">
-      <SubType>Designer</SubType>
+      <Pack>true</Pack>
+      <PackagePath>runtimes/win-x86/sharpdx_direct3d11_1_effects.dll</PackagePath>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SharpDX.Direct3D11.Effects.nuspec" />
+    <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
+    <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj" />
+    <ProjectReference Include="..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj" />
+    <ProjectReference Include="..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj">
-      <Project>{361d3f81-a48a-47f2-80df-ca4f9536cb4e}</Project>
-      <Name>SharpDX.D3DCompiler</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
-      <Project>{736dfb52-1afe-4eff-9710-89046ab5b1f9}</Project>
-      <Name>SharpDX.Direct3D11</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj">
-      <Project>{3fc6de77-b412-4101-9e64-6b9aa831179b}</Project>
-      <Name>SharpDX.DXGI</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
-      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
-      <Name>SharpDX</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <Import Project="$(SolutionDir)Build\SharpDX.targets" />
 </Project>
