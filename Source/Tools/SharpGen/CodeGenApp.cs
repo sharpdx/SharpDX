@@ -92,7 +92,6 @@ namespace SharpGen
         private string _generatedPath;
         private string _allConfigCheck;
         private string _configRootPath;
-        private bool _appConfigChanged;
 
         /// <summary>
         /// Print usages the error.
@@ -171,10 +170,9 @@ namespace SharpGen
             Config = ConfigFile.Load(_configRootPath, Macros.ToArray(), new KeyValue("VC_TOOLS_PATH", VcToolsPath));
             var latestConfigTime = ConfigFile.GetLatestTimestamp(Config.ConfigFilesLoaded);
 
-            _allConfigCheck = Config.Id + "-CodeGen.check";
+            _allConfigCheck = Config.Id + "-" + AppType + "-CodeGen.check";
 
             var isConfigFileChanged = !File.Exists(_allConfigCheck) || latestConfigTime > File.GetLastWriteTime(_allConfigCheck);
-            _appConfigChanged = File.Exists(_allConfigCheck) && File.ReadAllText(_allConfigCheck) != AppType;
 
             if(_isAssemblyNew)
             {
@@ -184,13 +182,9 @@ namespace SharpGen
             {
                 Logger.Message("Config files [{0}] changed", string.Join(",", Config.ConfigFilesLoaded.Select(file => Path.GetFileName(file.AbsoluteFilePath))));
             }
-            else if(_appConfigChanged)
-            {
-                Logger.Message("App type changed to [{0}]. All files will be generated", AppType);
-            }
 
             // Return true if a config file changed or the assembly changed
-            return isConfigFileChanged || _isAssemblyNew || _appConfigChanged;
+            return isConfigFileChanged || _isAssemblyNew;
         }
 
         /// <summary>
@@ -225,7 +219,13 @@ namespace SharpGen
                     Logger.Fatal("C++ compiler failed to parse header files");
 
                 // Run the main mapping process
-                var transformer = new TransformManager { GeneratedPath = _generatedPath, ForceGenerator = _isAssemblyNew || _appConfigChanged };
+                var transformer = new TransformManager
+                {
+                    GeneratedPath = _generatedPath,
+                    ForceGenerator = _isAssemblyNew,
+                    AppType = AppType
+                };
+
                 transformer.Init(group, Config);
 
                 if (Logger.HasErrors)
@@ -251,7 +251,7 @@ namespace SharpGen
                 File.SetLastWriteTime(_assemblyCheckFile, _assemblyDatetime);
 
                 // Update Checkfile for all config files
-                File.WriteAllText(_allConfigCheck, AppType);
+                File.WriteAllText(_allConfigCheck, "");
                 File.SetLastWriteTime(_allConfigCheck, DateTime.Now);
             }
             finally

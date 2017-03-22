@@ -1,5 +1,6 @@
 ﻿<#@ include file="Header.tt" #>
 
+#if <#= Generator.AppType #>
 namespace <#= Namespace.Name #> {
 
 // Disable warning : XML comment is not placed on a valid language element
@@ -14,6 +15,8 @@ foreach (var sharpInterface in Namespace.Interfaces)
 }
 #>
 }
+
+#endif
 <#+
 	public void ProcessInterface(CsInterface sharpInterface) {
 #>
@@ -198,6 +201,7 @@ foreach (var sharpInterface in Namespace.Interfaces)
 	}
 #>
     }
+
 <#+
     } // End of ProcessInterface
 #>

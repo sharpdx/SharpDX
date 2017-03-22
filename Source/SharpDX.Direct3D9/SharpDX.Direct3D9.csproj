@@ -15,6 +15,7 @@
     <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <DefineConstants>$(DefineConstants);REFERENCE</DefineConstants>
     <SharpDXAppType>REFERENCE</SharpDXAppType>
   </PropertyGroup>
   <ItemGroup>

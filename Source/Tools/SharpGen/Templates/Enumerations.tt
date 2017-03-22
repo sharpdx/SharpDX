@@ -1,5 +1,6 @@
 ﻿<#@ include file="Header.tt" #>
 
+#if <#= Generator.AppType #>
 namespace <#= Namespace.Name #> {
 
 #pragma warning disable 419
@@ -48,5 +49,6 @@ foreach (var sharpEnum in Namespace.Enums)
 <#
 }#>
 }
+#endif
 <#+
 #>

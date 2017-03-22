@@ -1,5 +1,6 @@
 ﻿<#@ include file="Header.tt" #>
 
+#if <#= Generator.AppType #>
 namespace <#= Namespace.Name #> {
 
 #pragma warning disable 419
@@ -92,5 +93,7 @@ foreach (var sharpFunctionGroup in Namespace.Classes)
 } // Foreach Namespace.FunctionGroups
 #>
 }
-<#@ include file="Method.tt" #>
 
+#endif
+
+<#@ include file="Method.tt" #>
