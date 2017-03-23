@@ -17,7 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
+#if DESKTOP_APP
 namespace SharpDX.MediaFoundation.DirectX
 {
     /// <summary>	
@@ -51,3 +51,4 @@ namespace SharpDX.MediaFoundation.DirectX
         }
     }
 }
+#endif

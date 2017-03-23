@@ -31,6 +31,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
+#if DESKTOP_APP
 namespace SharpDX.MediaFoundation.DirectX {
 
 // Disable warning : XML comment is not placed on a valid language element
@@ -1525,3 +1526,4 @@ namespace SharpDX.MediaFoundation.DirectX {
         }
     }
 }
+#endif

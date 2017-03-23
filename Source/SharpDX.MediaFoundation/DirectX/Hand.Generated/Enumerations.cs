@@ -31,6 +31,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
+#if DESKTOP_APP
 namespace SharpDX.MediaFoundation.DirectX {
 
 #pragma warning disable 419
@@ -2293,3 +2294,4 @@ namespace SharpDX.MediaFoundation.DirectX {
         Smpte240m = unchecked((int)3),			
     }
 }
+#endif
