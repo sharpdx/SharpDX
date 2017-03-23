@@ -1,90 +1,32 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="$(SolutionDir)Build\SharpDX.props" />
   <PropertyGroup>
-	<SharpDXDesktopOnly>true</SharpDXDesktopOnly>
+    <TargetFrameworks>net45;netcoreapp1.0;netstandard1.3</TargetFrameworks>
+    <PackageId>SharpDX.DirectSound</PackageId>
+    <Product>SharpDX.DirectSound</Product>
+    <AssemblyTitle>SharpDX.DirectSound</AssemblyTitle>
+    <Title>SharpDX.DirectSound</Title>
+    <Description>Assembly providing DirectX - DirectSound managed API.</Description>
+    <PackageTags>$(PackageTags) DirectSound DSound</PackageTags>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)\Build\SharpDX.PreSettings.targets" />
-  <PropertyGroup>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E927F2D5-8E27-462A-8687-CB207EE01164}</ProjectGuid>
-    <RootNamespace>SharpDX.DirectSound</RootNamespace>
-    <AssemblyName>SharpDX.DirectSound</AssemblyName>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' OR  '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
+    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <DefineConstants>$(DefineConstants);REFERENCE</DefineConstants>
+    <SharpDXAppType>REFERENCE</SharpDXAppType>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Documentation\CodeComments.xml" />
+    <None Include="Mapping.xml" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AssemblyDoc.cs" />
-    <Compile Include="Buffer3DSettings.cs" />
-    <Compile Include="Capabilities.cs" />
-    <Compile Include="CaptureBuffer.cs" />
-    <Compile Include="CaptureBufferBase.cs" />
-    <Compile Include="CaptureBufferCapabilities.cs" />
-    <Compile Include="CaptureBufferDescription.cs" />
-    <Compile Include="CaptureCapabilities.cs" />
-    <Compile Include="CaptureEffectDescription.cs" />
-    <Compile Include="Chorus.cs" />
-    <Compile Include="Compressor.cs" />
-    <Compile Include="DeviceInformation.cs" />
-    <Compile Include="DirectSound.cs" />
-    <Compile Include="DirectSoundCapture.cs" />
-    <Compile Include="Distortion.cs" />
-    <Compile Include="Echo.cs" />
-    <Compile Include="NamespaceDoc.cs" />
-    <Compile Include="SoundBuffer3D.cs" />
-    <Compile Include="SoundBufferEffectDescription.cs" />
-    <Compile Include="EnumDelegateCallback.cs" />
-    <Compile Include="Flanger.cs" />
-    <Compile Include="FullDuplex.cs" />
-    <Compile Include="Gargle.cs" />
-    <Compile Include="Generated\Enumerations.cs" />
-    <Compile Include="Generated\Functions.cs" />
-    <Compile Include="Generated\Interfaces.cs" />
-    <Compile Include="Generated\LocalInterop.cs" />
-    <Compile Include="Generated\Structures.cs" />
-    <Compile Include="I3DL2Reverb.cs" />
-    <Compile Include="Listener3DSettings.cs" />
-    <Compile Include="NoiseSuppress.cs" />
-    <Compile Include="NotificationPosition.cs" />
-    <Compile Include="ParametricEqualizer.cs" />
-    <Compile Include="PrimarySoundBuffer.cs" />
-    <Compile Include="SecondarySoundBuffer.cs" />
-    <Compile Include="SoundBuffer.cs" />
-    <Compile Include="SoundBufferCapabilities.cs" />
-    <Compile Include="SoundBufferDescription.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SoundListener3D.cs" />
-    <Compile Include="WavesReverb.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Mapping.xml">
-      <SubType>Designer</SubType>
-    </None>
+    <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="SharpDX.DirectSound.nuspec" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Documentation\CodeComments.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
-      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
-      <Name>SharpDX</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <Import Project="$(SolutionDir)Build\SharpDX.targets" />
 </Project>

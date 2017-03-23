@@ -52,7 +52,11 @@ namespace SharpDX.DirectSound
         internal unsafe void __MarshalTo(ref __Native @ref)
         {
             @ref.Offset = this.Offset;
+#if NET45
             @ref.EventNotifyHandlerPointer = this.WaitHandle.SafeWaitHandle.DangerousGetHandle();
+#else
+            @ref.EventNotifyHandlerPointer = this.WaitHandle.GetSafeWaitHandle().DangerousGetHandle();
+#endif
         }
     }
 }
