@@ -131,7 +131,7 @@ namespace SharpDX.DirectInput
             if (_dataFormat == null)
             {
                 // Build DataFormat from IDataFormatProvider
-                if (typeof (IDataFormatProvider).IsAssignableFrom(typeof (TRaw)))
+                if (typeof (IDataFormatProvider).GetTypeInfo().IsAssignableFrom(typeof (TRaw).GetTypeInfo()))
                 {
                     var provider = (IDataFormatProvider) (new TRaw());
                     _dataFormat = new DataFormat(provider.Flags) {DataSize = Utilities.SizeOf<TRaw>(), ObjectsFormat = provider.ObjectsFormat};
@@ -149,8 +149,16 @@ namespace SharpDX.DirectInput
 
                     var dataObjects = new List<DataObjectFormat>();
 
+                    IEnumerable<FieldInfo> fields;
+#if NET45
+                    fields = typeof(TRaw).GetFields(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance);
+#elif NETCOREAPP1_0
+                    fields = typeof(TRaw).GetTypeInfo().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+#else
+                    fields = typeof(TRaw).GetTypeInfo().DeclaredFields;
+#endif
                     // Iterates on fields
-                    foreach (var field in typeof(TRaw).GetFields(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance))
+                    foreach (var field in fields)
                     {
                         IEnumerable<DataObjectFormatAttribute> dataObjectAttributes = field.GetCustomAttributes<DataObjectFormatAttribute>(false);
                         if (dataObjectAttributes.Count() > 0)
