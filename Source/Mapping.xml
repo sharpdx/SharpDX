@@ -85,6 +85,12 @@
     <file>SharpDX.DirectManipulation\Mapping.xml</file>
     <file>SharpDX.RawInput\Mapping.xml</file>
   </ifdef>
+  <ifdef name="REFERENCE">
+    <file>SharpDX.Animation\Mapping.xml</file>
+    <file>SharpDX.DirectComposition\Mapping.xml</file>
+    <file>SharpDX.DirectManipulation\Mapping.xml</file>
+    <file>SharpDX.RawInput\Mapping.xml</file>
+  </ifdef>
 
   <file>SharpDX.XInput\Mapping.xml</file>
 
