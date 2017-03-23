@@ -80,12 +80,6 @@
     <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(TargetTaskPath)" />
     <Message Importance="high" Text="Copying SharpCli Task from $(TargetPath) to $(TargetTaskPath)" />
   </Target>
-  <!-- Custom target to copy InteropBuilder to another path, used by all subsequent tasks -->
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+  <Target Name="Pack" DependsOnTargets="Build">
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

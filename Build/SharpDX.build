@@ -20,103 +20,13 @@
 // THE SOFTWARE.
 -->
 <!-- Common Settings used by SharpDX projects -->
-<Project DefaultTargets="Package" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <SharpDXRepo>$(MSBuildThisFileDirectory)..</SharpDXRepo>
-    <SharpDXNugetPackageDir>$(MSBuildThisFileDirectory)Packages</SharpDXNugetPackageDir>
-    <ExtensionTasksPath>$(SharpDXRepo)\External\MSBuildExtensionPack\</ExtensionTasksPath>
-    <BuildSignedSharpDX>true</BuildSignedSharpDX>
-    <SharedAssemblyInfoFilePath>$(SharpDXRepo)\Source\SharedAssemblyInfo.cs</SharedAssemblyInfoFilePath>
-    <SharedAssemblyInfo>$([System.IO.File]::ReadAllText($(SharedAssemblyInfoFilePath)))</SharedAssemblyInfo>
-    <SharpDXPackagingDevName Condition="'$(SharpDXPackagingDevName)' == ''">beta</SharpDXPackagingDevName>
-    <SharpDXBuildNumber Condition="'$(SharpDXBuildNumber)' == ''">1</SharpDXBuildNumber>
-    <SharpDXAssemblyPostFixVersion Condition="'$(SharpDXPackagingDev)' == 'true'">-$(SharpDXPackagingDevName)$([System.String]::Format('{0:000}', $([MSBuild]::Add($(SharpDXBuildNumber), 0))))</SharpDXAssemblyPostFixVersion>
-    <SharpDXAssemblyVersion>$([System.Text.RegularExpressions.Regex]::Match($(SharedAssemblyInfo), `AssemblyVersion\("(.*)"`).Groups[1].Value)$(SharpDXAssemblyPostFixVersion)</SharpDXAssemblyVersion>
-    <SharpDXZipName>$(MSBuildThisFileDirectory)\SharpDX-SDK-$(SharpDXAssemblyVersion).exe</SharpDXZipName>
-  </PropertyGroup>
-
-  <Import Project="$(ExtensionTasksPath)MSBuild.ExtensionPack.tasks"/>
-
-  <Target Name="Help">
-    <Message Importance="high" Text="SharedAssemblyInfo $(SharedAssemblyInfo)"/>
-    <Message Importance="high" Text="SharpDXAssemblyVersion $(SharpDXAssemblyVersion)"/>
-    <Message Importance="high" Text="Use parameter /t:Pre-Build;Build to build SharpDX assemblies for non WP8 platforms. And /t:BuildForVS2012 for WP8"/>
-  </Target>
-
-  <Target Name="Package">
-    <Message Importance="High" Text="Building SharpDX $(SharpDXAssemblyVersion)"/>
-    <CallTarget Targets="Build"/>
-    <CallTarget Targets="ZipBuild"/>
-    <CallTarget Condition="'$(SharpDXNugetBuild)' == 'true'" Targets="Nuget"/>
-  </Target>
-
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Target Name="Build">
     <!--Build all targets / platforms-->
-    <Exec Command="RMDIR /Q /S $(SharpDXRepo)\Bin"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXRepo)\SharpDX-Desktop.sln" Properties="Configuration=Release;Platform=Any CPU"/>
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXRepo)\SharpDX-StoreApp.sln" Properties="Configuration=Release;Platform=Any CPU"/>
-  </Target>
-
-  <Target Name="Nuget">
-    <Exec Command="RMDIR /Q /S $(SharpDXNugetPackageDir)"/>
-    <MakeDir Directories="$(SharpDXNugetPackageDir)"/>
-    <ItemGroup>
-      <SharpDXNuspecs Include="$(SharpDXRepo)\Source\**\*.nuspec"/>
-    </ItemGroup>
-    <Exec Command="nuget.exe pack -OutputDirectory $(SharpDXNugetPackageDir) -Properties version=$(SharpDXAssemblyVersion) -Symbols %(SharpDXNuspecs.Identity)"/>
-  </Target>
-
-  <Target Name="ZipBuild">
-    <Delete Files="$(SharpDXZipName)"/>
-    <Exec WorkingDirectory="$(SharpDXRepo)" Command='$(SharpDXRepo)\External\7-Zip\7z.exe a -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.pri -xr!*.exp $(SharpDXZipName) Bin\*\*.* License.txt ReleaseNotes.md Readme.md'/>
-  </Target>
-
-  <!--Custom task for checking certification result (fail or pass), the project is excluded from solution build - needs to be rebuilt manually when needed-->
-  <UsingTask TaskName="Certification.Tasks.VerifyCertificationResultTask" AssemblyFile="$(SharpDXRepo)\Source\CertificationTests\Tasks\Certification.Tasks.dll"/>
-
-  <!--Runs the certification verification-->
-  <Target Name="RunCertificationTests">
-    <PropertyGroup>
-
-      <!--The main folder for all certification tests-->
-      <SharpDXCertificationTestDir>$(SharpDXRepo)\Source\CertificationTests\</SharpDXCertificationTestDir>
-
-      <!--The solution which contains projects that require certification verification-->
-      <SharpDXCertificationTestSolution>$(SharpDXCertificationTestDir)CertificationTests.sln</SharpDXCertificationTestSolution>
-
-      <!--The path to the WACK executable-->
-      <AppCertExe>&quot;C:\Program Files (x86)\Windows Kits\8.1\App Certification Kit\appcert.exe&quot;</AppCertExe>
-
-      <!--The path to store certification results XML-->
-      <AppCertResultsDir>$(SharpDXCertificationTestDir)Results</AppCertResultsDir>
-    </PropertyGroup>
-
-    <!--Clean the result folder, we neeed to remove only its contents and not the folder itself-->
-    <ItemGroup>
-      <FilesToClean Include="$(AppCertResultsDir)\**\*"/>
-      <Directories Include="$([System.IO.Directory]::GetDirectories('$(AppCertResultsDir)', '*', System.IO.SearchOption.AllDirectories))"
-                   Exclude="$(AppCertResultsDir)"/>
-    </ItemGroup>
-    <Delete Files="@(FilesToClean)" ContinueOnError="true"/>
-    <RemoveDir Directories="@(Directories)" />
-
-    <!--Remove the existsing packages (if any)-->
-    <RemoveDir Directories="$(SharpDXCertificationTestDir)Test.WP81\AppPackages" />
-    <RemoveDir Directories="$(SharpDXCertificationTestDir)Test.WinRT\AppPackages" />
-
-    <!--Build the solution - this will build the necessary packages-->
-    <MSBuild Targets="Clean;Build" Projects="$(SharpDXCertificationTestSolution)" />
-
-    <!--Run the certification test for WP81 platform dummy project-->
-    <Exec Command="$(AppCertExe) reset"/>
-    <Exec Command="$(AppCertExe) test -apptype windowsphoneapp -testid [72] -AppxPackagePath &quot;$(SharpDXCertificationTestDir)Test.WP81\AppPackages\Test.WP81_1.0.0.0_AnyCPU_Test\Test.WP81_1.0.0.0_AnyCPU.appx&quot; -reportoutputpath &quot;$(SharpDXCertificationTestDir)Results\Test.WP81.xml&quot;" />
-
-    <!--Run the certification test for WinRT platform dummy project-->
-    <Exec Command="$(AppCertExe) reset"/>
-    <Exec Command="$(AppCertExe) test -apptype windowsstoreapp -testid [38] -AppxPackagePath &quot;$(SharpDXCertificationTestDir)Test.WinRT\AppPackages\Test.WinRT_1.0.0.0_AnyCPU_Test\Test.WinRT_1.0.0.0_AnyCPU.appx&quot; -reportoutputpath &quot;$(SharpDXCertificationTestDir)Results\Test.WinRT.xml&quot;" />
-
-    <!--Verify the certification results-->
-    <VerifyCertificationResultTask File="$(SharpDXRepo)\Source\CertificationTests\Results\Test.WinRT.xml" />
-    <VerifyCertificationResultTask File="$(SharpDXRepo)\Source\CertificationTests\Results\Test.WP81.xml" />
+    <Exec Command="RMDIR /Q /S ..\Bin"/>
+    <MSBuild Targets="Clean;Build" Projects="..\SharpDX-Tools.sln" Properties="Configuration=Release;Platform=Any CPU"/>
+    <MSBuild Targets="Clean" Projects="..\SharpDX-Sources.sln" BuildInParallel="true" Properties="Configuration=Release;Platform=Any CPU;NuGetBuildTasksPackTargets=workaround"/>
+    <MSBuild Targets="Build" Projects="..\SharpDX-Sources.sln" BuildInParallel="true" Properties="Configuration=Release;Platform=Any CPU;NuGetBuildTasksPackTargets=workaround"/>
+    <Exec Command="msbuild ..\SharpDX-Sources.sln /t:Pack /p:NuGetBuildTasksPackTargets=&quot;workaround&quot; /m" />
   </Target>
 </Project>
