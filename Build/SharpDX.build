@@ -25,8 +25,8 @@
     <!--Build all targets / platforms-->
     <Exec Command="RMDIR /Q /S ..\Bin"/>
     <MSBuild Targets="Clean;Build" Projects="..\SharpDX-Tools.sln" Properties="Configuration=Release;Platform=Any CPU"/>
-    <MSBuild Targets="Clean" Projects="..\SharpDX-Sources.sln" BuildInParallel="true" Properties="Configuration=Release;Platform=Any CPU;NuGetBuildTasksPackTargets=workaround"/>
-    <MSBuild Targets="Build" Projects="..\SharpDX-Sources.sln" BuildInParallel="true" Properties="Configuration=Release;Platform=Any CPU;NuGetBuildTasksPackTargets=workaround"/>
+    <MSBuild Targets="Clean" Projects="..\SharpDX-Sources.sln" BuildInParallel="true" Properties="Configuration=Release;Platform=Any CPU"/>
+    <MSBuild Targets="Build" Projects="..\SharpDX-Sources.sln" BuildInParallel="true" Properties="Configuration=Release;Platform=Any CPU"/>
     <Exec Command="msbuild ..\SharpDX-Sources.sln /t:Pack /p:NuGetBuildTasksPackTargets=&quot;workaround&quot; /m" />
   </Target>
 </Project>

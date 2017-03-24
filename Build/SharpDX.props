@@ -19,5 +19,10 @@
     <AssemblyVersion>3.1.2</AssemblyVersion>
     <PackageOutputPath>$(SolutionDir)bin</PackageOutputPath>
   </PropertyGroup>
- 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' And Exists('$(SolutionDir)sharpdx.snk')">
+    <DefineConstants>$(DefineConstants);SHARPDX_SIGNED</DefineConstants>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
 </Project>
