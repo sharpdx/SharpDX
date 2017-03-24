@@ -29,8 +29,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{E462D87D-C180-4114-B8C8-914E6735BF44}"
 	ProjectSection(SolutionItems) = preProject
 		Build\SharpDX.build = Build\SharpDX.build
-		Build\SharpDX.PostSettings.targets = Build\SharpDX.PostSettings.targets
-		Build\SharpDX.PreSettings.targets = Build\SharpDX.PreSettings.targets
 		Build\SharpDX.props = Build\SharpDX.props
 		Build\SharpDX.targets = Build\SharpDX.targets
 	EndProjectSection
