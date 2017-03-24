@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="$(SolutionDir)Build\SharpDX.props" />
+  <Import Project="..\..\Build\SharpDX.props" />
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
     <PackageId>SharpDX.RawInput</PackageId>
@@ -33,5 +33,5 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 
-  <Import Project="$(SolutionDir)Build\SharpDX.targets" />
+  <Import Project="..\..\Build\SharpDX.targets" />
 </Project>

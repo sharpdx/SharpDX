@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="$(SolutionDir)Build\SharpDX.props" />
+  <Import Project="..\..\Build\SharpDX.props" />
   <PropertyGroup>
     <TargetFrameworks>net45;netcoreapp1.0;netstandard1.1</TargetFrameworks>
     <PackageId>SharpDX.DirectManipulation</PackageId>
@@ -28,5 +28,5 @@
     <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
   </ItemGroup>
 
-  <Import Project="$(SolutionDir)Build\SharpDX.targets" />
+  <Import Project="..\..\Build\SharpDX.targets" />
 </Project>
