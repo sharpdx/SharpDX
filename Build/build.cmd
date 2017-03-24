@@ -1,4 +1,4 @@
-msbuild ..\SharpDX-Tools.sln /t:Clean;Build /m /p:Configuration=Release;Platform="Any CPU"
-msbuild ..\SharpDX-Sources.sln /t:Clean /m /p:Configuration=Release;Platform="Any CPU"
-msbuild ..\SharpDX-Sources.sln /t:Build /m /p:Configuration=Release;Platform="Any CPU"
-msbuild ..\SharpDX-Sources.sln /t:Pack /p:NuGetBuildTasksPackTargets="workaround" /m
+msbuild SharpDX-Tools.sln /t:Clean;Build /m /p:Configuration=Release;Platform="Any CPU"
+msbuild SharpDX-Sources.sln /t:Clean /m /p:Configuration=Release;Platform="Any CPU"
+msbuild SharpDX-Sources.sln /t:Build /m /p:Configuration=Release;Platform="Any CPU"
+msbuild SharpDX-Sources.sln /t:Pack /p:NuGetBuildTasksPackTargets="workaround" /m
