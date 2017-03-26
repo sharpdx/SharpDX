@@ -25,7 +25,7 @@ test: off
 artifacts:
 - path: build\SharpDX-SDK-*.exe
   name: SharpDX SDK
-- path: build\*.nupkg
+- path: bin\*.nupkg
   name: SharpDX Nugets
 deploy:
 - provider: NuGet
