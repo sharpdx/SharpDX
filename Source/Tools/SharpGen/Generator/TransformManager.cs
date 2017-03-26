@@ -1160,7 +1160,7 @@ namespace SharpGen.Generator
                                     select assembly).FirstOrDefault();
             if (selectedAssembly == null)
             {
-                selectedAssembly = new CsAssembly(assemblyName);
+                selectedAssembly = new CsAssembly(assemblyName, AppType);
                 selectedAssembly.RootDirectory = Path.Combine(GeneratedPath, selectedAssembly.Name);
                 Assemblies.Add(selectedAssembly);
             }
