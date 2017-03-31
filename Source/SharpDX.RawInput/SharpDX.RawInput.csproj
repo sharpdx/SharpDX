@@ -1,74 +1,37 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\Build\SharpDX.props" />
   <PropertyGroup>
-    <SharpDXDesktopOnly>true</SharpDXDesktopOnly>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <PackageId>SharpDX.RawInput</PackageId>
+    <Product>SharpDX.RawInput</Product>
+    <AssemblyTitle>SharpDX.RawInput</AssemblyTitle>
+    <Title>SharpDX.RawInput</Title>
+    <Description>Assembly providing DirectX - RawInput managed API.</Description>
+    <PackageTags>$(PackageTags) RawInput</PackageTags>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)\Build\SharpDX.PreSettings.targets" />
-  <PropertyGroup>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{05D17A7B-F200-48C0-B8F9-B7211665A17F}</ProjectGuid>
-    <RootNamespace>SharpDX.RawInput</RootNamespace>
-    <AssemblyName>SharpDX.RawInput</AssemblyName>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
+    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Documentation\CodeComments.xml" />
+    <None Include="Mapping.xml" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\SharpDX.Desktop\MessageFilterHook.cs">
-      <Link>MessageFilterHook.cs</Link>
     </Compile>
     <Compile Include="..\SharpDX.Desktop\Win32Native.cs">
       <Link>Win32Native.cs</Link>
     </Compile>
-    <Compile Include="AssemblyDoc.cs" />
-    <Compile Include="Device.cs" />
-    <Compile Include="DeviceInfo.cs" />
-    <Compile Include="Generated\Enumerations.cs" />
-    <Compile Include="Generated\Functions.cs" />
-    <Compile Include="Generated\LocalInterop.cs" />
-    <Compile Include="Generated\Structures.cs" />
-    <Compile Include="HidInfo.cs" />
-    <Compile Include="HidInputEventArgs.cs" />
-    <Compile Include="KeyboardInfo.cs" />
-    <Compile Include="KeyboardInputEventArgs.cs" />
-    <Compile Include="MouseInfo.cs" />
-    <Compile Include="MouseInputEventArgs.cs" />
-    <Compile Include="NamespaceDoc.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RawInputEventArgs.cs" />
-    <Compile Include="RawMouse.cs" />
-    <Compile Include="RegisterDeviceOptions.cs" />
+    <Compile Include="..\SharpDX.Desktop\MessageFilterHook.cs">
+      <Link>MessageFilterHook.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Documentation\CodeComments.xml" />
-    <None Include="Mapping.xml">
-      <SubType>Designer</SubType>
-    </None>
+    <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="SharpDX.RawInput.nuspec" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
-      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
-      <Name>SharpDX</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <Import Project="..\..\Build\SharpDX.targets" />
 </Project>

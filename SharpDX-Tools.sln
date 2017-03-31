@@ -1,0 +1,85 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{F1AF9A3B-7856-46C9-992A-391E5455BF1F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCli", "Source\Tools\SharpCli\SharpCli.csproj", "{4E2D9A17-2195-4A51-AAE3-924517440293}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5E597A82-9DE9-4BA5-AD76-51202190E951} = {5E597A82-9DE9-4BA5-AD76-51202190E951}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpGen", "Source\Tools\SharpGen\SharpGen.csproj", "{31F85A16-CB01-4456-BE3C-76E9FF3A1343}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5E597A82-9DE9-4BA5-AD76-51202190E951} = {5E597A82-9DE9-4BA5-AD76-51202190E951}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpPak", "Source\Tools\SharpPak\SharpPak.csproj", "{5E597A82-9DE9-4BA5-AD76-51202190E951}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documentation", "Documentation\Documentation.csproj", "{9AA405CA-B7FD-44D0-9EBC-21F5D0F44DEB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{57C5C966-ADB2-43F2-BB54-99BCB56C9F10}"
+	ProjectSection(SolutionItems) = preProject
+		ChangeLog.txt = ChangeLog.txt
+		README.markdown = README.markdown
+		ReleaseNotes.html = ReleaseNotes.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{E462D87D-C180-4114-B8C8-914E6735BF44}"
+	ProjectSection(SolutionItems) = preProject
+		Build\SharpDX.build = Build\SharpDX.build
+		Build\SharpDX.props = Build\SharpDX.props
+		Build\SharpDX.targets = Build\SharpDX.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpGitLog", "Source\Tools\SharpGitLog\SharpGitLog.csproj", "{15BA35B5-3E54-4715-8857-36F4F96F51FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDXGen", "Build\SharpDXGen.proj", "{431FA5BD-601B-4E19-9C70-D13AA1A0A926}"
+	ProjectSection(ProjectDependencies) = postProject
+		{31F85A16-CB01-4456-BE3C-76E9FF3A1343} = {31F85A16-CB01-4456-BE3C-76E9FF3A1343}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4E2D9A17-2195-4A51-AAE3-924517440293}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E2D9A17-2195-4A51-AAE3-924517440293}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E2D9A17-2195-4A51-AAE3-924517440293}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E2D9A17-2195-4A51-AAE3-924517440293}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31F85A16-CB01-4456-BE3C-76E9FF3A1343}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31F85A16-CB01-4456-BE3C-76E9FF3A1343}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31F85A16-CB01-4456-BE3C-76E9FF3A1343}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31F85A16-CB01-4456-BE3C-76E9FF3A1343}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E597A82-9DE9-4BA5-AD76-51202190E951}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E597A82-9DE9-4BA5-AD76-51202190E951}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E597A82-9DE9-4BA5-AD76-51202190E951}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E597A82-9DE9-4BA5-AD76-51202190E951}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AA405CA-B7FD-44D0-9EBC-21F5D0F44DEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AA405CA-B7FD-44D0-9EBC-21F5D0F44DEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AA405CA-B7FD-44D0-9EBC-21F5D0F44DEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AA405CA-B7FD-44D0-9EBC-21F5D0F44DEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15BA35B5-3E54-4715-8857-36F4F96F51FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15BA35B5-3E54-4715-8857-36F4F96F51FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15BA35B5-3E54-4715-8857-36F4F96F51FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15BA35B5-3E54-4715-8857-36F4F96F51FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{431FA5BD-601B-4E19-9C70-D13AA1A0A926}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{431FA5BD-601B-4E19-9C70-D13AA1A0A926}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{431FA5BD-601B-4E19-9C70-D13AA1A0A926}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{431FA5BD-601B-4E19-9C70-D13AA1A0A926}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4E2D9A17-2195-4A51-AAE3-924517440293} = {F1AF9A3B-7856-46C9-992A-391E5455BF1F}
+		{31F85A16-CB01-4456-BE3C-76E9FF3A1343} = {F1AF9A3B-7856-46C9-992A-391E5455BF1F}
+		{5E597A82-9DE9-4BA5-AD76-51202190E951} = {F1AF9A3B-7856-46C9-992A-391E5455BF1F}
+		{9AA405CA-B7FD-44D0-9EBC-21F5D0F44DEB} = {57C5C966-ADB2-43F2-BB54-99BCB56C9F10}
+		{15BA35B5-3E54-4715-8857-36F4F96F51FB} = {F1AF9A3B-7856-46C9-992A-391E5455BF1F}
+		{431FA5BD-601B-4E19-9C70-D13AA1A0A926} = {E462D87D-C180-4114-B8C8-914E6735BF44}
+	EndGlobalSection
+EndGlobal

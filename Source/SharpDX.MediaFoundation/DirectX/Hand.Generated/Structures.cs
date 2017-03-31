@@ -31,6 +31,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
+#if DESKTOP_APP
 namespace SharpDX.MediaFoundation.DirectX {
 
 #pragma warning disable 282
@@ -3275,3 +3276,4 @@ namespace SharpDX.MediaFoundation.DirectX {
         public int MaxStreamStates;
     }
 }
+#endif

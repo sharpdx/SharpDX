@@ -40,12 +40,14 @@ namespace SharpGen.Model
         /// Initializes a new instance of the <see cref="CsAssembly"/> class.
         /// </summary>
         /// <param name="assemblyName">Name of the assembly.</param>
-        public CsAssembly(string assemblyName)
+        /// <param name="appType">The application type this assembly is generated for. (Used for the check file)</param>
+        public CsAssembly(string assemblyName, string appType)
         {
             Name = assemblyName;
             Interop = new InteropManager();
             _configFilesLinked = new List<ConfigFile>();
             IsToUpdate = false;
+            _appType = appType;
         }
 
         /// <summary>
@@ -66,6 +68,7 @@ namespace SharpGen.Model
         /// Path to the CodeComments file
         /// </summary>
         public const string CodeCommentsPath = @"Documentation\CodeComments.xml";
+        private string _appType;
 
         /// <summary>
         /// Gets config files linked to this assembly
@@ -92,7 +95,7 @@ namespace SharpGen.Model
         /// <value>The name of the check file.</value>
         public string CheckFileName
         {
-            get { return QualifiedName + ".check"; }
+            get { return QualifiedName + "-" + _appType + ".check"; }
         }
 
         /// <summary>

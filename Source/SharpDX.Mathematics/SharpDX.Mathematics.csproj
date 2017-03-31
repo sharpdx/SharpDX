@@ -1,74 +1,34 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(SolutionDir)\Build\SharpDX.PreSettings.targets" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\Build\SharpDX.props" />
   <PropertyGroup>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{49E4485F-3A2A-4C35-A159-12ECCFC00396}</ProjectGuid>
-    <RootNamespace>SharpDX</RootNamespace>
-    <AssemblyName>SharpDX.Mathematics</AssemblyName>
+    <TargetFrameworks>net45;netcoreapp1.0;netstandard1.1;uap10.0</TargetFrameworks>
+    <PackageId>SharpDX.Mathematics</PackageId>
+    <Product>SharpDX.Mathematics</Product>
+    <AssemblyTitle>SharpDX.Mathematics</AssemblyTitle>
+    <Title>SharpDX.Mathematics</Title>
+    <Description>Assembly providing DirectX - Mathematics managed API.</Description>
+    <PackageTags>$(PackageTags) Mathematics HLSL fx Shaders</PackageTags>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' OR  '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
+    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <DefineConstants>$(DefineConstants);STORE_APP;WINDOWS_API_SET</DefineConstants>
+    <SharpDXAppType>STORE_APP</SharpDXAppType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
+    <DefineConstants>$(DefineConstants);REFERENCE</DefineConstants>
+    <SharpDXAppType>REFERENCE</SharpDXAppType>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AngleSingle.cs" />
-    <Compile Include="AssemblyDoc.cs" />
-    <Compile Include="Bool4.cs" />
-    <Compile Include="BoundingBox.cs" />
-    <Compile Include="BoundingFrustum.cs" />
-    <Compile Include="BoundingSphere.cs" />
-    <Compile Include="Collision.cs" />
-    <Compile Include="Color.cs" />
-    <Compile Include="Color.Palette.cs" />
-    <Compile Include="Color3.cs" />
-    <Compile Include="Color4.cs" />
-    <Compile Include="ColorBGRA.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="FrustumCameraParams.cs" />
-    <Compile Include="Half.cs" />
-    <Compile Include="Half2.cs" />
-    <Compile Include="Half3.cs" />
-    <Compile Include="Half4.cs" />
-    <Compile Include="HalfUtils.cs" />
-    <Compile Include="Int3.cs" />
-    <Compile Include="Int4.cs" />
-    <Compile Include="MathUtil.cs" />
-    <Compile Include="Matrix.cs" />
-    <Compile Include="Matrix3x2.cs" />
-    <Compile Include="Matrix3x3.cs" />
-    <Compile Include="Matrix5x4.cs" />
-    <Compile Include="NamespaceDoc.cs" />
-    <Compile Include="OrientedBoundingBox.cs" />
-    <Compile Include="Plane.cs" />
-    <Compile Include="Point.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Quaternion.cs" />
-    <Compile Include="RandomUtil.cs" />
-    <Compile Include="Ray.cs" />
-    <Compile Include="Rectangle.cs" />
-    <Compile Include="RectangleF.cs" />
-    <Compile Include="Vector2.cs" />
-    <Compile Include="Vector3.cs" />
-    <Compile Include="Vector4.cs" />
-    <Compile Include="Viewport.cs" />
-    <Compile Include="ViewportF.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="SharpDX.Mathematics.nuspec" />
+    <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
-      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
-      <Name>SharpDX</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <Import Project="..\..\Build\SharpDX.targets" />
 </Project>

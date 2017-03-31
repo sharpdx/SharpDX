@@ -1,119 +1,43 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(SolutionDir)\Build\SharpDX.PreSettings.targets" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\Build\SharpDX.props" />
   <PropertyGroup>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{4995127E-0B8E-45B8-80C4-6BAC1BBE3783}</ProjectGuid>
-    <RootNamespace>SharpDX.XAudio2</RootNamespace>
-    <AssemblyName>SharpDX.XAudio2</AssemblyName>
+    <TargetFrameworks>net45;netcoreapp1.0;netstandard1.1;uap10.0</TargetFrameworks>
+    <PackageId>SharpDX.XAudio2</PackageId>
+    <Product>SharpDX.XAudio2</Product>
+    <AssemblyTitle>SharpDX.XAudio2</AssemblyTitle>
+    <Title>SharpDX.XAudio2</Title>
+    <Description>Assembly providing DirectX - XAudio2, X3DAudio and XAPO managed API.</Description>
+    <PackageTags>$(PackageTags) XAudio2 X3DAudio XAPO</PackageTags>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' OR  '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
+    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <DefineConstants>$(DefineConstants);STORE_APP;WINDOWS_API_SET</DefineConstants>
+    <SharpDXAppType>STORE_APP</SharpDXAppType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
+    <DefineConstants>$(DefineConstants);REFERENCE</DefineConstants>
+    <SharpDXAppType>REFERENCE</SharpDXAppType>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Documentation\CodeComments.xml" />
+    <None Include="Mapping.xml" />
+    <None Include="Mapping-xaudio2.xml">
+    </None>
+    <None Include="X3DAudio\Mapping.xml">
+    </None>
+    <None Include="XAPO\Mapping.xml">
+    </None>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AssemblyDoc.cs" />
-    <Compile Include="DeviceDetails.cs" />
-    <Compile Include="EffectDescriptor.cs" />
-    <Compile Include="AudioBuffer.cs" />
-    <Compile Include="EngineCallback.cs" />
-    <Compile Include="EngineShadow.cs" />
-    <Compile Include="ErrorEventArgs.cs" />
-    <Compile Include="Fx\ReverbI3DL2Parameters.cs" />
-    <Compile Include="Fx\ReverbParameters.cs" />
-    <Compile Include="Fx\XAudio2FxContants.cs" />
-    <Compile Include="Generated\Enumerations.cs" />
-    <Compile Include="Generated\Functions.cs" />
-    <Compile Include="Generated\Fx\Functions.cs" />
-    <Compile Include="Generated\Fx\Structures.cs" />
-    <Compile Include="Generated\Interfaces.cs" />
-    <Compile Include="Generated\LocalInterop.cs" />
-    <Compile Include="Generated\Structures.cs" />
-    <Compile Include="Generated\X3DAudio\Enumerations.cs" />
-    <Compile Include="XAPO\Fx\XAPOFx.Interop.cs" />
-    <Compile Include="X3DAudio\X3DAudio17.cs" />
-    <Compile Include="X3DAudio\X3DAudio28.cs" />
-    <Compile Include="X3DAudio\X3DAudio29.cs" />
-    <Compile Include="Generated\X3DAudio\Interfaces.cs" />
-    <Compile Include="Generated\X3DAudio\Structures.cs" />
-    <Compile Include="Generated\XAPO\Enumerations.cs" />
-    <Compile Include="Generated\XAPO\Functions.cs" />
-    <Compile Include="Generated\XAPO\Fx\Enumerations.cs" />
-    <Compile Include="Generated\XAPO\Fx\Functions.cs" />
-    <Compile Include="Generated\XAPO\Fx\Interfaces.cs" />
-    <Compile Include="Generated\XAPO\Fx\Structures.cs" />
-    <Compile Include="Generated\XAPO\Interfaces.cs" />
-    <Compile Include="Generated\XAPO\Structures.cs" />
-    <Compile Include="X3DAudio\X3DAudioVersion.cs" />
-    <Compile Include="XAudio28Functions.cs" />
-    <Compile Include="XAudio29Functions.cs" />
-    <Compile Include="LocalInterop.cs" />
-    <Compile Include="MasteringVoice.cs" />
-    <Compile Include="ModuleInit.cs" />
-    <Compile Include="NamespaceDoc.cs" />
-    <Compile Include="SourceVoice.cs" />
-    <Compile Include="SubmixVoice.cs" />
-    <Compile Include="SubmixVoiceFlags.cs" />
-    <Compile Include="Voice.cs" />
-    <Compile Include="VoiceShadow.cs" />
-    <Compile Include="X3DAudio\DistanceCurve.cs" />
-    <Compile Include="X3DAudio\DspSettings.cs" />
-    <Compile Include="X3DAudio\Emitter.cs" />
-    <Compile Include="X3DAudio\Listener.cs" />
-    <Compile Include="X3DAudio\NamespaceDoc.cs" />
-    <Compile Include="X3DAudio\X3DAudio.cs" />
-    <Compile Include="X3DAudio\X3DAudioHandle.cs" />
-    <Compile Include="XAPO\AudioProcessor.cs" />
-    <Compile Include="XAPO\AudioProcessorBase.cs" />
-    <Compile Include="XAPO\AudioProcessorNative.cs" />
-    <Compile Include="XAPO\AudioProcessorParamNative.cs" />
-    <Compile Include="XAPO\AudioProcessorShadow.cs" />
-    <Compile Include="XAPO\Fx\Echo.cs" />
-    <Compile Include="XAPO\Fx\Equalizer.cs" />
-    <Compile Include="XAPO\Fx\MasteringLimiter.cs" />
-    <Compile Include="XAPO\Fx\Reverb.cs" />
-    <Compile Include="XAPO\Fx\XAPOFx.cs" />
-    <Compile Include="XAPO\LockParameters.cs" />
-    <Compile Include="XAPO\ParameterProvider.cs" />
-    <Compile Include="XAPO\ParameterProviderShadow.cs" />
-    <Compile Include="XAudio2.cs" />
-    <Compile Include="Fx\Reverb.cs" />
-    <Compile Include="Fx\VolumeMeter.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VoiceSendDescriptor.cs" />
-    <Compile Include="VoiceCallback.cs" />
-    <Compile Include="XAudio2Version.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Mapping.xml" />
+    <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="SharpDX.XAudio2.nuspec" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
-      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
-      <Name>SharpDX</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Mapping-xaudio2.xml">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="X3DAudio\Mapping.xml">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="XAPO\Mapping.xml">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <Import Project="..\..\Build\SharpDX.targets" />
 </Project>
+

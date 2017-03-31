@@ -1,79 +1,36 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(SolutionDir)\Build\SharpDX.PreSettings.targets" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\Build\SharpDX.props" />
   <PropertyGroup>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{3FC6DE77-B412-4101-9E64-6B9AA831179B}</ProjectGuid>
-    <RootNamespace>SharpDX.DXGI</RootNamespace>
-    <AssemblyName>SharpDX.DXGI</AssemblyName>
+    <TargetFrameworks>net45;netcoreapp1.0;netstandard1.1;uap10.0</TargetFrameworks>
+    <PackageId>SharpDX.DXGI</PackageId>
+    <Product>SharpDX.DXGI</Product>
+    <AssemblyTitle>SharpDX.DXGI</AssemblyTitle>
+    <Title>SharpDX.DXGI</Title>
+    <Description>Assembly providing DirectX - DXGI managed API.</Description>
+    <PackageTags>$(PackageTags) DXGI</PackageTags>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' OR  '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
+    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <DefineConstants>$(DefineConstants);STORE_APP;WINDOWS_API_SET</DefineConstants>
+    <SharpDXAppType>STORE_APP</SharpDXAppType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
+    <DefineConstants>$(DefineConstants);REFERENCE</DefineConstants>
+    <SharpDXAppType>REFERENCE</SharpDXAppType>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Documentation\CodeComments.xml" />
+    <None Include="Mapping.xml" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Adapter.cs" />
-    <Compile Include="AssemblyDoc.cs" />
-    <Compile Include="Factory4.cs" />
-    <Compile Include="Factory2.cs" />
-    <Compile Include="Output1.cs" />
-    <Compile Include="NamespaceDoc.cs" />
-    <Compile Include="Output2.cs" />
-    <Compile Include="Surface2.cs" />
-    <Compile Include="Resource1.cs" />
-    <Compile Include="IVirtualSurfaceImageSourceNative.cs" />
-    <Compile Include="Device.cs" />
-    <Compile Include="DeviceChild.cs" />
-    <Compile Include="DXGIObject.cs" />
-    <Compile Include="Factory.cs" />
-    <Compile Include="Factory1.cs" />
-    <Compile Include="FormatHelper.cs" />
-    <Compile Include="Generated\Enumerations.cs" />
-    <Compile Include="Generated\Functions.cs" />
-    <Compile Include="Generated\Interfaces.cs" />
-    <Compile Include="Generated\LocalInterop.cs" />
-    <Compile Include="Generated\Structures.cs" />
-    <Compile Include="IVirtualSurfaceUpdatesCallbackNative.cs" />
-    <Compile Include="IVirtualSurfaceUpdatesCallbackNativeNative.cs" />
-    <Compile Include="ModeDescription.cs" />
-    <Compile Include="ModuleInit.cs" />
-    <Compile Include="Output.cs" />
-    <Compile Include="OutputDuplication.cs" />
-    <Compile Include="PresentParameters.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rational.cs" />
-    <Compile Include="SampleDescription.cs" />
-    <Compile Include="Surface.cs" />
-    <Compile Include="Surface1.cs" />
-    <Compile Include="SwapChain.cs" />
-    <Compile Include="SwapChain1.cs" />
-    <Compile Include="SwapChain2.cs" />
-    <Compile Include="VirtualSurfaceUpdatesCallbackNativeShadow.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Mapping.xml">
-      <SubType>Designer</SubType>
-    </None>
+    <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="SharpDX.DXGI.nuspec" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Documentation\CodeComments.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
-      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
-      <Name>SharpDX</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <Import Project="..\..\Build\SharpDX.targets" />
 </Project>

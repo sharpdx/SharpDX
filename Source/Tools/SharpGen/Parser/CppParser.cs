@@ -23,6 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using SharpGen;
 using SharpGen.Logging;
@@ -48,7 +49,7 @@ namespace SharpGen.Parser
     }
 
     /// <summary>
-    /// Full C++ Parser built on top of <see cref="GccXml"/>.
+    /// Full C++ Parser built on top of <see cref="CastXml"/>.
     /// </summary>
     public class CppParser
     {
@@ -60,7 +61,7 @@ namespace SharpGen.Parser
         private Dictionary<string, bool> _includeIsAttached = new Dictionary<string, bool>();
         private Dictionary<string, List<string>> _includeAttachedTypes = new Dictionary<string, List<string>>();
         private readonly Dictionary<string, string> _bindings = new Dictionary<string, string>();
-        private GccXml _gccxml;
+        private CastXml _gccxml;
         private string _configRootHeader;
         private ConfigFile _configRoot;
         private CppInclude _currentCppInclude;
@@ -100,10 +101,10 @@ namespace SharpGen.Parser
         public bool ForceParsing { get; set; }
 
         /// <summary>
-        /// Gets or sets the GCC XML executable path.
+        /// Gets or sets the CastXML executable path.
         /// </summary>
-        /// <value>The GCC XML executable path.</value>
-        public string GccXmlExecutablePath { get; set; }
+        /// <value>The CastXML executable path.</value>
+        public string CastXmlExecutablePath { get; set; }
 
         /// <summary>
         /// Initialize this Parser from a root ConfigFile.
@@ -116,7 +117,7 @@ namespace SharpGen.Parser
 
             // var configRoot = ConfigFile.Load(@"E:\code\sharpdx-v2\Source\Mapping.xml");
             _configRootHeader = _configRoot.Id + ".h";
-            _gccxml = new GccXml {ExecutablePath = GccXmlExecutablePath};
+            _gccxml = new CastXml {ExecutablePath = CastXmlExecutablePath};
 
             // Config is updated if ForceParsing is true
             _isConfigUpdated = ForceParsing;
@@ -607,20 +608,20 @@ namespace SharpGen.Parser
             // Fix all structure names
             foreach (var xTypedef in doc.Elements("GCC_XML").Elements())
             {
-                if (xTypedef.Name.LocalName == GccXml.TagTypedef)
+                if (xTypedef.Name.LocalName == CastXml.TagTypedef)
                 {
                     var xStruct = _mapIdToXElement[xTypedef.AttributeValue("type")];
                     switch (xStruct.Name.LocalName)
                     {
-                        case GccXml.TagStruct:
-                        case GccXml.TagUnion:
-                        case GccXml.TagEnumeration:
+                        case CastXml.TagStruct:
+                        case CastXml.TagUnion:
+                        case CastXml.TagEnumeration:
                             string structName = xStruct.AttributeValue("name");
                             // Rename all structure starting with tagXXXX to XXXX
                             //if (structName.Length > 4 && structName.StartsWith("tag") && Char.IsUpper(structName[3]))
                             //    structName = structName.Substring(3);
 
-                            if (structName.StartsWith("tag") || structName.StartsWith("_"))
+                            if (structName.StartsWith("tag") || structName.StartsWith("_") || string.IsNullOrEmpty(structName))
                             {
                                 var typeName = xTypedef.AttributeValue("name");
                                 xStruct.SetAttributeValue("name", typeName);
@@ -702,7 +703,7 @@ namespace SharpGen.Parser
             if (string.IsNullOrWhiteSpace(attributes))
                 return;
 
-            // Strip whitespaces inside gccxml("...")
+            // Strip whitespaces inside annotate("...")
             var stripSpaces = new StringBuilder();
             int doubleQuoteCount = 0;
             for(int i  = 0; i < attributes.Length; i++)
@@ -736,7 +737,7 @@ namespace SharpGen.Parser
             string guid = null;
 
             // Parse attributes
-            const string gccXmlAttribute = "gccxml(";
+            const string gccXmlAttribute = "annotate(";
             // none == 0
             // pre == 1
             // post == 2
@@ -744,7 +745,9 @@ namespace SharpGen.Parser
             bool isPost = false;
             bool hasWritable = false;
 
-            foreach (var item in attributes.Split(' '))
+            // Clang outputs attributes in reverse order
+            // TODO: Check if applies to all declarations
+            foreach (var item in attributes.Split(' ').Reverse())
             {
                 string newItem = item;
                 if (newItem.StartsWith(gccXmlAttribute))
@@ -774,7 +777,7 @@ namespace SharpGen.Parser
                 {
                     if (newItem.StartsWith("SAL_writableTo"))
                     {
-                        if (isPost) paramAttribute |= ParamAttribute.Out;
+                        if (isPre) paramAttribute |= ParamAttribute.Out;
                         hasWritable = true;
                     }
 
@@ -876,7 +879,9 @@ namespace SharpGen.Parser
 
             // Calculate offset method using inheritance
             int offsetMethod = 0;
-            string[] bases = xElement.AttributeValue("bases").Split(' ');
+
+            var basesValue = xElement.AttributeValue("bases");
+            var bases = basesValue != null ? basesValue.Split(' ') : Enumerable.Empty<string>();
             foreach (var xElementBaseId in bases)
             {
                 if (string.IsNullOrEmpty(xElementBaseId))
@@ -1014,7 +1019,7 @@ namespace SharpGen.Parser
 
             // Create struct
             var cppStruct = new CppStruct { Name = structName };
-            bool isUnion = (xElement.Name.LocalName == GccXml.TagUnion);
+            bool isUnion = (xElement.Name.LocalName == CastXml.TagUnion);
 
             // Get align from structure
             cppStruct.Align = int.Parse(xElement.AttributeValue("align"))/8;
@@ -1034,7 +1039,7 @@ namespace SharpGen.Parser
             int innerStructCount = 0;
             foreach (var field in xElement.Elements())
             {
-                if (field.Name.LocalName != GccXml.TagField)
+                if (field.Name.LocalName != CastXml.TagField)
                     continue;
 
                 // Parse the field
@@ -1107,7 +1112,7 @@ namespace SharpGen.Parser
             var cppEnum = new CppEnum() { Name = xElement.AttributeValue("name") };
 
             // Doh! Anonymous Enum, need to handle them!
-            if (cppEnum.Name.StartsWith("$"))
+            if (cppEnum.Name.StartsWith("$") || string.IsNullOrEmpty(cppEnum.Name))
             {
                 var includeFrom = GetIncludeIdFromFileId(xElement.AttributeValue("file"));
 
@@ -1156,6 +1161,16 @@ namespace SharpGen.Parser
                 return new CppGuid { Name = name, Guid = guid.Value };
             }
 
+            // CastXML outputs initialization expressions. Cast to proper type.
+            var match = Regex.Match(value, @"\((?:\(.+\))?(.+)\)");
+            if (match.Success)
+            {
+                value = $"unchecked(({cppType.TypeName}){match.Groups[1].Value})";
+            }
+
+            // Handle C++ floating point literals
+            value = value.Replace(".F", ".0F");
+
             return new CppConstant() { Name = name, Value = value };
         }
 
@@ -1173,7 +1188,9 @@ namespace SharpGen.Parser
             guidInitText = guidInitText.Replace("{", "");
             guidInitText = guidInitText.TrimEnd('}');
             guidInitText = guidInitText.Replace("u", "");
+            guidInitText = guidInitText.Replace("U", "");
             guidInitText = guidInitText.Replace("l", "");
+            guidInitText = guidInitText.Replace("L", "");
             guidInitText = guidInitText.Replace(" ", "");
 
             string[] guidElements = guidInitText.Split(',');
@@ -1185,8 +1202,11 @@ namespace SharpGen.Parser
             for (int i = 0; i < guidElements.Length; i++)
             {
                 var guidElement = guidElements[i];
-                if (!int.TryParse(guidElement, out values[i]))
+                long value;
+                if (!long.TryParse(guidElement, out value))
                     return null;
+
+                values[i] = unchecked((int)value);
             }
 
             return new Guid(values[0], (short)values[1], (short)values[2], (byte)values[3], (byte)values[4], (byte)values[5], (byte)values[6], (byte)values[7],
@@ -1225,7 +1245,7 @@ namespace SharpGen.Parser
                 {
                     // If the element is not defined from a root namespace
                     // than skip it, as it might be an inner type
-                    if (_mapIdToXElement[xElement.AttributeValue("context")].Name.LocalName != GccXml.TagNamespace)
+                    if (_mapIdToXElement[xElement.AttributeValue("context")].Name.LocalName != CastXml.TagNamespace)
                         continue;
 
                     // If incomplete flag, than element cannot be parsed
@@ -1244,23 +1264,25 @@ namespace SharpGen.Parser
                     CppElement cppElement = null;
                     switch (name)
                     {
-                        case GccXml.TagEnumeration:
+                        case CastXml.TagEnumeration:
                             cppElement = ParseEnum(xElement);
                             break;
-                        case GccXml.TagFunction:
-                            if (xElement.AttributeValue("extern") != null)
+                        case CastXml.TagFunction:
+                            // TODO: Find btter criteria for exclusion. In CastXML extern="1" only indicates an explicit external storage modifier.
+                            // For now, exlude inline functions instead; may not be sensible since by default all functions have external linkage.
+                            if (xElement.AttributeValue("inline") == null)
                                 cppElement = ParseFunction(xElement);
                             break;
-                        case GccXml.TagStruct:
+                        case CastXml.TagStruct:
                             if (xElement.AttributeValue("abstract") != null)
                                 cppElement = ParseInterface(xElement);
                             else
                                 cppElement = ParseStructOrUnion(xElement);
                             break;
-                        case GccXml.TagUnion:
+                        case CastXml.TagUnion:
                             cppElement = ParseStructOrUnion(xElement);
                             break;
-                        case GccXml.TagVariable:
+                        case CastXml.TagVariable:
                             if (xElement.AttributeValue("init") != null)
                                 cppElement = ParseVariable(xElement);
                             break;
@@ -1325,16 +1347,16 @@ namespace SharpGen.Parser
                 string nextType = xType.AttributeValue("type");
                 switch (xType.Name.LocalName)
                 {
-                    case GccXml.TagFundamentalType:
+                    case CastXml.TagFundamentalType:
                         type.TypeName = ConvertFundamentalType(name);
                         isTypeResolved = true;
                         break;
-                    case GccXml.TagEnumeration:
+                    case CastXml.TagEnumeration:
                         type.TypeName = name;
                         isTypeResolved = true;
                         break;
-                    case GccXml.TagStruct:
-                    case GccXml.TagUnion:
+                    case CastXml.TagStruct:
+                    case CastXml.TagUnion:
                         type.TypeName = name;
 
                         // If the structure being processed is an external include
@@ -1344,7 +1366,7 @@ namespace SharpGen.Parser
 
                         isTypeResolved = true;
                         break;
-                    case GccXml.TagTypedef:
+                    case CastXml.TagTypedef:
                         if (_bindings.ContainsKey(name))
                         {
                             type.TypeName = name;
@@ -1352,40 +1374,29 @@ namespace SharpGen.Parser
                         }
                         xType = _mapIdToXElement[nextType];
                         break;
-                    case GccXml.TagPointerType:
+                    case CastXml.TagPointerType:
                         xType = _mapIdToXElement[nextType];
                         type.Pointer = (type.Pointer ?? "") + "*";
                         break;
-                    case GccXml.TagArrayType:
-                        int arrayDim = int.Parse(xType.AttributeValue("size"));
+                    case CastXml.TagArrayType:
                         type.IsArray = true;
-
-                        // If size = "0", then arrayDim = 0, else get dimension
-                        // from max value
-                        if (arrayDim == 0)
-                        {
-                            arrayDim = 0;
-                        } 
-                        else
-                        {
-                            string maxArrayIndex = xType.AttributeValue("max");
-                            arrayDim = int.Parse(maxArrayIndex.TrimEnd('u')) + 1;
-                        }
+                        var maxArrayIndex = xType.AttributeValue("max");
+                        var arrayDim = int.Parse(maxArrayIndex.TrimEnd('u')) + 1;
                         if (type.ArrayDimension == null)
                             type.ArrayDimension = "" + arrayDim;
                         else
                             type.ArrayDimension += "," + arrayDim;
                         xType = _mapIdToXElement[nextType];
                         break;
-                    case GccXml.TagReferenceType:
+                    case CastXml.TagReferenceType:
                         xType = _mapIdToXElement[nextType];
                         type.Pointer = (type.Pointer ?? "") + "&";
                         break;
-                    case GccXml.TagCvQualifiedType:
+                    case CastXml.TagCvQualifiedType:
                         xType = _mapIdToXElement[nextType];
                         type.Const = true;
                         break;
-                    case GccXml.TagFunctionType:
+                    case CastXml.TagFunctionType:
                         // TODO, handle different calling convention
                         type.TypeName = "__function__stdcall";
                         isTypeResolved = true;
@@ -1442,6 +1453,7 @@ namespace SharpGen.Parser
                     case "short":
                         shortCount++;
                         break;
+                    case "bool":
                     case "void":
                     case "char":
                     case "double":

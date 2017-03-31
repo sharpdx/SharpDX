@@ -22,19 +22,17 @@
 -->
 <config id="sharpdx-root" xmlns="urn:SharpGen.Config">
 
-  <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides\shared</include-dir>
-  <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides\um</include-dir>
-  <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc12\overrides</include-dir>
-  <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\Setup\VC\ProductDir;Include</include-dir>
+  <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\LegacyHeaders</include-dir>
+  <include-dir>$(VC_TOOLS_PATH)\include</include-dir>
   <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot10;Include\10.0.14393.0\shared</include-dir>
   <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot10;Include\10.0.14393.0\um</include-dir>
+  <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot10;Include\10.0.14393.0\ucrt</include-dir>
 
   <var name="FILTER_PASTING_ERROR">error: pasting .*a valid preprocessing token</var>
 
   <ifdef name="STORE_APP">
     <include-prolog>
-      // For Win8 we need to force to use include headers for MetroApp only
-      #define WINAPI_FAMILY WINAPI_FAMILY_PC_APP
+      #define WINAPI_FAMILY WINAPI_FAMILY_APP
     </include-prolog>    
   </ifdef>
   
@@ -53,13 +51,16 @@
     // Values for CERT_KEY_CLASSIFICATION_PROP_ID in wincrypt.h
     #define SORTPP_PASS
     
-    // Wrap all declspec with gccxml
-    #define __declspec(x) __attribute__((gccxml(#x)))
+    #define _ALLOW_KEYWORD_MACROS
+    
+    // Wrap all declspec for code-gen
+    #define __declspec(x) __attribute__((annotate(#x)))
     
     // For XAudio2 patch
     #define __unaligned __attribute((__unaligned))
     
-    enum __SAL_YesNo {};
+    #define NTDDI_VERSION NTDDI_WIN10_RS1
+    
   </include-prolog>
 
   <!-- All platforms -->
@@ -79,6 +80,12 @@
   <file>SharpDX.Direct2D1\Mapping.xml</file>
 
   <ifdef name="DESKTOP_APP">
+    <file>SharpDX.Animation\Mapping.xml</file>
+    <file>SharpDX.DirectComposition\Mapping.xml</file>
+    <file>SharpDX.DirectManipulation\Mapping.xml</file>
+    <file>SharpDX.RawInput\Mapping.xml</file>
+  </ifdef>
+  <ifdef name="REFERENCE">
     <file>SharpDX.Animation\Mapping.xml</file>
     <file>SharpDX.DirectComposition\Mapping.xml</file>
     <file>SharpDX.DirectManipulation\Mapping.xml</file>

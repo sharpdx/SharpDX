@@ -22,23 +22,6 @@ using System.Reflection;
 using System.Resources;
 using System.Runtime.InteropServices;
 
-[assembly:AssemblyCompany("Alexandre Mutel")]
-[assembly:AssemblyCopyright("Copyright © 2010-2016 Alexandre Mutel")]
-
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-
-[assembly:AssemblyVersion("3.1.2")]
-[assembly:AssemblyFileVersion("3.1.2")]
-
-[assembly: NeutralResourcesLanguage("en-us")]
-
-#if DEBUG
-[assembly:AssemblyConfiguration("Debug")]
-#else
-[assembly:AssemblyConfiguration("Release")]
-#endif
-
 [assembly:ComVisible(false)]
 
 #if STORE_APP

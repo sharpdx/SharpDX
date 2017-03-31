@@ -49,7 +49,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>SharpGen.ico</ApplicationIcon>
-  </PropertyGroup>  
+  </PropertyGroup>
   <PropertyGroup Condition="'$(SharpDXPlatform)' == 'StoreApp'">
     <DefineConstants>$(DefineConstants);STORE_APP</DefineConstants>
   </PropertyGroup>
@@ -143,7 +143,7 @@
     <Compile Include="Config\ConfigBaseRule.cs" />
     <Compile Include="Generator\TransformBase.cs" />
     <Compile Include="Generator\NamingRulesManager.cs" />
-    <Compile Include="Parser\GccXml.cs" />
+    <Compile Include="Parser\CastXml.cs" />
     <Compile Include="Parser\MacroManager.cs" />
     <Compile Include="Parser\CppParser.cs" />
     <Compile Include="Model\InteropType.cs" />
@@ -335,11 +335,6 @@
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+  <Target Name="Pack" DependsOnTargets="Build">
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

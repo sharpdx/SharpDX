@@ -34,7 +34,21 @@
   <include file="dcommon.h" attach="true"/>
   <include file="d2d1.h" attach="true" />
   <include file="wincodec.h"/>
-  <include file="d2derr.h" attach="true" />
+  <ifdef name="DESKTOP_APP">
+    <include file="d2derr.h" attach="true" />
+  </ifdef>
+  <ifdef name="STORE_APP">
+    <include file="d2derr.h" attach="true">
+      <pre>
+        #undef WINAPI_FAMILY
+        #define WINAPI_FAMILY WINAPI_FAMILY_DESKTOP_APP
+      </pre>
+      <post>
+        #undef WINAPI_FAMILY
+        #define WINAPI_FAMILY WINAPI_FAMILY_APP
+      </post>
+    </include>
+  </ifdef>
   <include file="d2d1effects.h" attach="true" />
   <include file="d2d1_1.h" attach="true" />
   <include file="d2d1effectauthor.h" attach="true" />

@@ -88,8 +88,12 @@ namespace SharpDX.DirectComposition
 		/// </remarks>
 		public static void SetWindowIsLayered(IntPtr hwnd, bool isLayered)
 		{
-			if (Environment.Is64BitProcess)
-			{
+#if NET45
+            if (Environment.Is64BitProcess)
+#else
+            if(IntPtr.Size == 8)
+#endif
+            {
 				IntPtr exStyle = NativeMethods.GetWindowLongPtr(hwnd, NativeMethods.GWL_EXSTYLE);
 				if (exStyle == IntPtr.Zero)
 					throw new Win32Exception();
@@ -115,9 +119,13 @@ namespace SharpDX.DirectComposition
 		/// <returns>True if the window has the layered style applied, false otherwise.</returns>
 		public static bool GetWindowIsLayered(IntPtr hwnd)
 		{
-			if (Environment.Is64BitProcess)
-			{
-				IntPtr exStyle = NativeMethods.GetWindowLongPtr(hwnd, NativeMethods.GWL_EXSTYLE);
+#if NET45
+            if (Environment.Is64BitProcess)
+#else
+            if (IntPtr.Size == 8)
+#endif
+            {
+                IntPtr exStyle = NativeMethods.GetWindowLongPtr(hwnd, NativeMethods.GWL_EXSTYLE);
 				if (exStyle == IntPtr.Zero)
 					throw new Win32Exception();
 				return (int)(exStyle.ToInt64() & NativeMethods.WS_EX_LAYERED) == NativeMethods.WS_EX_LAYERED;

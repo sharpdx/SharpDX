@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Linq;
 
 namespace SharpDX.DirectInput
 {
@@ -130,7 +131,7 @@ namespace SharpDX.DirectInput
             if (_dataFormat == null)
             {
                 // Build DataFormat from IDataFormatProvider
-                if (typeof (IDataFormatProvider).IsAssignableFrom(typeof (TRaw)))
+                if (typeof (IDataFormatProvider).GetTypeInfo().IsAssignableFrom(typeof (TRaw).GetTypeInfo()))
                 {
                     var provider = (IDataFormatProvider) (new TRaw());
                     _dataFormat = new DataFormat(provider.Flags) {DataSize = Utilities.SizeOf<TRaw>(), ObjectsFormat = provider.ObjectsFormat};
@@ -138,21 +139,29 @@ namespace SharpDX.DirectInput
                 else
                 {
                     // Build DataFormat from DataFormat and DataObjectFormat attributes
-                    var dataFormatAttributes = typeof (TRaw).GetCustomAttributes(typeof (DataFormatAttribute), false);
-                    if (dataFormatAttributes.Length != 1)
+                    IEnumerable<DataFormatAttribute> dataFormatAttributes = typeof(TRaw).GetTypeInfo().GetCustomAttributes<DataFormatAttribute>(false);
+                    if (dataFormatAttributes.Count() != 1)
                         throw new InvalidOperationException(
                             string.Format(System.Globalization.CultureInfo.InvariantCulture, "The structure [{0}] must be marked with DataFormatAttribute or provide a IDataFormatProvider",
                                             typeof (TRaw).FullName));
 
-                    _dataFormat = new DataFormat(((DataFormatAttribute) dataFormatAttributes[0]).Flags) {DataSize = Utilities.SizeOf<TRaw>()};
+                    _dataFormat = new DataFormat(((DataFormatAttribute) dataFormatAttributes.First()).Flags) {DataSize = Utilities.SizeOf<TRaw>()};
 
                     var dataObjects = new List<DataObjectFormat>();
 
+                    IEnumerable<FieldInfo> fields;
+#if NET45
+                    fields = typeof(TRaw).GetFields(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance);
+#elif NETCOREAPP1_0
+                    fields = typeof(TRaw).GetTypeInfo().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+#else
+                    fields = typeof(TRaw).GetTypeInfo().DeclaredFields;
+#endif
                     // Iterates on fields
-                    foreach (var field in typeof(TRaw).GetFields(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance))
+                    foreach (var field in fields)
                     {
-                        var dataObjectAttributes = field.GetCustomAttributes(typeof (DataObjectFormatAttribute), false);
-                        if (dataObjectAttributes.Length > 0)
+                        IEnumerable<DataObjectFormatAttribute> dataObjectAttributes = field.GetCustomAttributes<DataObjectFormatAttribute>(false);
+                        if (dataObjectAttributes.Count() > 0)
                         {
                             int fieldOffset = Marshal.OffsetOf(typeof (TRaw), field.Name).ToInt32();
                             int totalSizeOfField = Marshal.SizeOf(field.FieldType);
@@ -161,9 +170,9 @@ namespace SharpDX.DirectInput
 
                             // Count the number of effective sub-field for a field
                             // A field that contains a fixed array should have sub-field
-                            for (int i = 0; i < dataObjectAttributes.Length; i++)
+                            for (int i = 0; i < dataObjectAttributes.Count(); i++)
                             {
-                                var attr = ((DataObjectFormatAttribute) dataObjectAttributes[i]);
+                                var attr = dataObjectAttributes.ElementAt(i);
                                 numberOfDataObjects += attr.ArrayCount == 0 ? 1 : attr.ArrayCount;
                             }
 
@@ -176,10 +185,10 @@ namespace SharpDX.DirectInput
                             int subFieldIndex = 0;
 
                             // Iterates on attributes
-                            for (int i = 0; i < dataObjectAttributes.Length; i++)
+                            for (int i = 0; i < dataObjectAttributes.Count(); i++)
                             {
 
-                                var attr = ((DataObjectFormatAttribute) dataObjectAttributes[i]);
+                                var attr = dataObjectAttributes.ElementAt(i);
                                 numberOfDataObjects = attr.ArrayCount == 0 ? 1 : attr.ArrayCount;
 
                                 // Add DataObjectFormat

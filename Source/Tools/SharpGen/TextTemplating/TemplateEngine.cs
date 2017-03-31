@@ -206,7 +206,6 @@ using System.Text.RegularExpressions;
             string templateSourceCode = string.Format(GenericTemplateCodeText, importNamespaceCode, parametersCode, _doTemplateCode, _doTemplateClassCode);
 
             // Creates the C# compiler, compiling for 3.5
-            //var codeProvider = new Microsoft.CSharp.CSharpCodeProvider(new Dictionary<string, string>() { { "CompilerVersion", "v3.5" } });
             var codeProvider = new Microsoft.CSharp.CSharpCodeProvider(new Dictionary<string, string>() { { "CompilerVersion", "v4.0" } });
             var compilerParameters = new CompilerParameters { GenerateInMemory = true, GenerateExecutable = false };
 
@@ -237,7 +236,6 @@ using System.Text.RegularExpressions;
             if (compilerResults.Errors.Count == 0 && compilerResults.CompiledAssembly != null)
             {
                 templateAssembly = compilerResults.CompiledAssembly;
-                // File.WriteAllText(templateFile + ".txt", src);
             }
             else
             {

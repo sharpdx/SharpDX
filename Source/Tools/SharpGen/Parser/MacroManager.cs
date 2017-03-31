@@ -33,7 +33,7 @@ namespace SharpGen.Parser
     {
         private static readonly Regex MatchIncludeLine = new Regex(@"^\s*#\s+\d+\s+""([^""]+)""", RegexOptions.Compiled);
         private static readonly Regex MatchDefine = new Regex(@"^\s*#define\s+([a-zA-Z_][\w_]*)\s+(.*)", RegexOptions.Compiled);
-        private readonly GccXml _gccxml;
+        private readonly CastXml _gccxml;
         private Dictionary<string, string> _currentMacros = null;
         private readonly Dictionary<string, Dictionary<string, string>> _mapIncludeToMacros = new Dictionary<string, Dictionary<string, string>>();
 
@@ -41,7 +41,7 @@ namespace SharpGen.Parser
         /// Initializes a new instance of the <see cref="MacroManager"/> class.
         /// </summary>
         /// <param name="gccxml">The GccXml parser.</param>
-        public MacroManager(GccXml gccxml)
+        public MacroManager(CastXml gccxml)
         {
             _gccxml = gccxml;
         }

@@ -1,127 +1,35 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\Build\SharpDX.props" />
   <PropertyGroup>
-    <SharpDXDesktopOnly>true</SharpDXDesktopOnly>
+    <TargetFrameworks>net45;netcoreapp1.0;netstandard1.3</TargetFrameworks>
+    <PackageId>SharpDX.Direct3D9</PackageId>
+    <Product>SharpDX.Direct3D9</Product>
+    <AssemblyTitle>SharpDX.Direct3D9</AssemblyTitle>
+    <Title>SharpDX.Direct3D9</Title>
+    <Description>Assembly providing DirectX - Direct3D9 managed API.</Description>
+    <PackageTags>$(PackageTags) Direct3D9 D3D9</PackageTags>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)\Build\SharpDX.PreSettings.targets" />
-  <PropertyGroup>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B4D984DF-85B8-4BBF-8C3B-5CEF905F40D9}</ProjectGuid>
-    <RootNamespace>SharpDX.Direct3D9</RootNamespace>
-    <AssemblyName>SharpDX.Direct3D9</AssemblyName>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' OR  '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
+    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <DefineConstants>$(DefineConstants);REFERENCE</DefineConstants>
+    <SharpDXAppType>REFERENCE</SharpDXAppType>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Documentation\CodeComments.xml" />
+    <None Include="Mapping.xml" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\SharpDX.Desktop\Win32Native.cs">
       <Link>Win32Native.cs</Link>
     </Compile>
-    <Compile Include="AdapterCollection.cs" />
-    <Compile Include="AdapterDetails.cs" />
-    <Compile Include="AdapterInformation.cs" />
-    <Compile Include="AssemblyDoc.cs" />
-    <Compile Include="BaseEffect.cs" />
-    <Compile Include="BaseTexture.cs" />
-    <Compile Include="BoneCombination.cs" />
-    <Compile Include="Capabilities.cs" />
-    <Compile Include="CompilationResult.cs" />
-    <Compile Include="ConstantTable.cs" />
-    <Compile Include="AdapterExCollection.cs" />
-    <Compile Include="AdapterInformationEx.cs" />
-    <Compile Include="DisplayModeEx.cs" />
-    <Compile Include="DisplayMode.cs" />
-    <Compile Include="DisplayModeExCollection.cs" />
-    <Compile Include="CubeTexture.cs" />
-    <Compile Include="CubeTextureRequirements.cs" />
-    <Compile Include="D3DX.cs" />
-    <Compile Include="Device.cs" />
-    <Compile Include="DeviceEx.cs" />
-    <Compile Include="DeviceState.cs" />
-    <Compile Include="Direct3D.cs" />
-    <Compile Include="Direct3DEx.cs" />
-    <Compile Include="DisplayModeCollection.cs" />
-    <Compile Include="DriverLevel.cs" />
-    <Compile Include="Effect.cs" />
-    <Compile Include="EffectCompiler.cs" />
-    <Compile Include="EffectDefault.cs" />
-    <Compile Include="EffectInstance.cs" />
-    <Compile Include="EffectPool.cs" />
-    <Compile Include="Fill3DCallback.cs" />
-    <Compile Include="EffectHandle.cs" />
-    <Compile Include="Font.cs" />
-    <Compile Include="FontCharacterSet.cs" />
-    <Compile Include="FontDrawFlags.cs" />
-    <Compile Include="FontPitchAndFamily.cs" />
-    <Compile Include="FontPrecision.cs" />
-    <Compile Include="FontQuality.cs" />
-    <Compile Include="FontWeight.cs" />
-    <Compile Include="Generated\Enumerations.cs" />
-    <Compile Include="Generated\Functions.cs" />
-    <Compile Include="Generated\Interfaces.cs" />
-    <Compile Include="Generated\LocalInterop.cs" />
-    <Compile Include="Generated\Structures.cs" />
-    <Compile Include="ImageInformation.cs" />
-    <Compile Include="Include.cs" />
-    <Compile Include="IncludeShadow.cs" />
-    <Compile Include="IndexBuffer.cs" />
-    <Compile Include="Line.cs" />
-    <Compile Include="Macro.cs" />
-    <Compile Include="MeshContainer.cs" />
-    <Compile Include="ModuleInit.cs" />
-    <Compile Include="NamespaceDoc.cs" />
-    <Compile Include="PaletteEntry.cs" />
-    <Compile Include="PixelShader.cs" />
-    <Compile Include="PresentParameters.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Query.cs" />
-    <Compile Include="RenderToSurface.cs" />
-    <Compile Include="Resource.cs" />
-    <Compile Include="ShaderBytecode.cs" />
-    <Compile Include="Sprite.cs" />
-    <Compile Include="StateBlock.cs" />
-    <Compile Include="Surface.cs" />
-    <Compile Include="SwapChain.cs" />
-    <Compile Include="Texture.cs" />
-    <Compile Include="TextureRequirements.cs" />
-    <Compile Include="VertexBuffer.cs" />
-    <Compile Include="VertexDeclaration.cs" />
-    <Compile Include="VertexElement.cs" />
-    <Compile Include="VertexFormatHelper.cs" />
-    <Compile Include="VertexShader.cs" />
-    <Compile Include="Volume.cs" />
-    <Compile Include="VolumeTexture.cs" />
-    <Compile Include="VolumeTextureRequirements.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Mapping.xml">
-      <SubType>Designer</SubType>
-    </None>
+    <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="SharpDX.Direct3D9.nuspec" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Documentation\CodeComments.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
-      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
-      <Name>SharpDX</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <Import Project="..\..\Build\SharpDX.targets" />
 </Project>

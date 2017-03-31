@@ -58,10 +58,22 @@ namespace SharpGen
         public string DocProviderAssemblyPath { get; set; }
 
         /// <summary>
-        /// Gets or sets the GCC XML executable path.
+        /// Gets or sets the CastXML executable path.
         /// </summary>
-        /// <value>The GCC XML executable path.</value>
-        public string GccXmlExecutablePath { get; set; }
+        /// <value>The CastXML executable path.</value>
+        public string CastXmlExecutablePath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the path to the Visual C++ toolset
+        /// </summary>
+        /// <value>The Visual C++ toolset path</value>
+        public string VcToolsPath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the app configuration.
+        /// </summary>
+        /// <value>The application configuration</value>
+        public string AppType { get; set; }
 
         /// <summary>
         /// Gets or sets the macros.
@@ -109,9 +121,11 @@ namespace SharpGen
                                   "Usage: SharpGen [options] config_file.xml",
                                   "Code generator from C++ to C# for .Net languages",
                                   "",
-                                  {"g|gccxml=", "Specify the path to gccxml.exe", opt => GccXmlExecutablePath = opt},
+                                  {"c|castxml=", "Specify the path to castxml.exe", opt => CastXmlExecutablePath = opt},
                                   {"d|doc", "Specify to generate the documentation [default: false]", opt => IsGeneratingDoc = true},
                                   {"p|docpath=", "Specify the path to the assembly doc provider [default: null]", opt => DocProviderAssemblyPath = opt},
+                                  {"v|vctools=", "Specify the path to the Visual C++ Toolset", opt => VcToolsPath = opt },
+                                  {"a|apptype=", "Specify what app type to generate code for (i.e. DESKTOP_APP or STORE_APP)", opt => AppType = opt },
                                   "",
                                   {"h|help", "Show this message and exit", opt => showHelp = opt != null},
                                   // default
@@ -143,27 +157,23 @@ namespace SharpGen
         public bool Init()
         {
             _thisAssemblyPath = Assembly.GetExecutingAssembly().Location;
-            _assemblyCheckFile = Path.ChangeExtension(_thisAssemblyPath, ".check");
+            _assemblyCheckFile = Path.ChangeExtension(_thisAssemblyPath, ".check-" + AppType);
             _assemblyDatetime = File.GetLastWriteTime(_thisAssemblyPath);
             _isAssemblyNew = (File.GetLastWriteTime(_thisAssemblyPath) != File.GetLastWriteTime(_assemblyCheckFile));
             _generatedPath = Path.GetDirectoryName(_configRootPath);
 
             Logger.Message("Loading config files...");
 
-#if STORE_APP
             Macros.Add("DIRECTX11_1");
-            Macros.Add("STORE_APP");
-#else
-            Macros.Add("DIRECTX11_1");
-            Macros.Add("DESKTOP_APP");
-#endif
+            Macros.Add(AppType);
 
-            Config = ConfigFile.Load(_configRootPath, Macros.ToArray());
+            Config = ConfigFile.Load(_configRootPath, Macros.ToArray(), new KeyValue("VC_TOOLS_PATH", VcToolsPath));
             var latestConfigTime = ConfigFile.GetLatestTimestamp(Config.ConfigFilesLoaded);
 
-            _allConfigCheck = Config.Id + "-CodeGen.check";
+            _allConfigCheck = Config.Id + "-" + AppType + "-CodeGen.check";
 
             var isConfigFileChanged = !File.Exists(_allConfigCheck) || latestConfigTime > File.GetLastWriteTime(_allConfigCheck);
+
             if(_isAssemblyNew)
             {
                 Logger.Message("Assembly [{0}] changed. All files will be generated", _thisAssemblyPath);
@@ -193,7 +203,7 @@ namespace SharpGen
                                      DocProviderAssembly = DocProviderAssemblyPath,
                                      // @"..\..\..\DocProviderFromMsdn\bin\debug\DocProviderFromMsdn.exe",
                                      ForceParsing = _isAssemblyNew,
-                                     GccXmlExecutablePath = GccXmlExecutablePath
+                                     CastXmlExecutablePath = CastXmlExecutablePath
                                  };
 
                 // Init the parser
@@ -209,7 +219,13 @@ namespace SharpGen
                     Logger.Fatal("C++ compiler failed to parse header files");
 
                 // Run the main mapping process
-                var transformer = new TransformManager { GeneratedPath = _generatedPath, ForceGenerator = _isAssemblyNew };
+                var transformer = new TransformManager
+                {
+                    GeneratedPath = _generatedPath,
+                    ForceGenerator = _isAssemblyNew,
+                    AppType = AppType
+                };
+
                 transformer.Init(group, Config);
 
                 if (Logger.HasErrors)

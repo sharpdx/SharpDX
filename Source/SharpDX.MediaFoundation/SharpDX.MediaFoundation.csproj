@@ -1,138 +1,40 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(SolutionDir)\Build\SharpDX.PreSettings.targets" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\Build\SharpDX.props" />
   <PropertyGroup>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{CA21A201-078B-4EBE-A2AB-C3B1FFEC99F9}</ProjectGuid>
-    <RootNamespace>SharpDX.MediaFoundation</RootNamespace>
-    <AssemblyName>SharpDX.MediaFoundation</AssemblyName>
+    <TargetFrameworks>net45;netcoreapp1.0;netstandard1.1;uap10.0</TargetFrameworks>
+    <PackageId>SharpDX.MediaFoundation</PackageId>
+    <Product>SharpDX.MediaFoundation</Product>
+    <AssemblyTitle>SharpDX.MediaFoundation</AssemblyTitle>
+    <Title>SharpDX.MediaFoundation</Title>
+    <Description>Assembly providing DirectX - MediaFoundation managed API.</Description>
+    <PackageTags>$(PackageTags) MediaFoundation</PackageTags>
   </PropertyGroup>
-  <ItemGroup Condition="'$(SharpDXPlatform)' == 'StoreApp'">
-    <TargetPlatform Include="Windows, Version=8.1" />
-    <TargetPlatform Include="WindowsPhoneApp, Version=8.1" />
-  </ItemGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' OR  '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
+    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <DefineConstants>$(DefineConstants);STORE_APP;WINDOWS_API_SET</DefineConstants>
+    <SharpDXAppType>STORE_APP</SharpDXAppType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
+    <DefineConstants>$(DefineConstants);REFERENCE</DefineConstants>
+    <SharpDXAppType>REFERENCE</SharpDXAppType>
+  </PropertyGroup>
   <ItemGroup>
+    <None Include="Documentation\CodeComments.xml" />
+    <None Include="Mapping.xml" />
+    <None Include="Mapping-core.xml" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Activate.cs" />
-    <Compile Include="AssemblyDoc.cs" />
-    <Compile Include="AsyncCallbackBase.cs" />
-    <Compile Include="AudioDecoder.cs" />
-    <Compile Include="ByteStream.cs" />
-    <Compile Include="AsyncCallbackShadow.cs" />
-    <Compile Include="CaptureEngine.cs" />
-    <Compile Include="CaptureEngineClassFactory.cs" />
-    <Compile Include="CaptureEngineOnEventCallback.cs" />
-    <Compile Include="CaptureEngineOnEventCallbackShadow.cs" />
-    <Compile Include="CaptureEngineOnSampleCallback.cs" />
-    <Compile Include="CaptureEngineOnSampleCallback2.cs" />
-    <Compile Include="CaptureEngineOnSampleCallback2Shadow.cs" />
-    <Compile Include="CaptureEngineOnSampleCallbackShadow.cs" />
-    <Compile Include="CapturePhotoConfirmation.cs" />
-    <Compile Include="CapturePhotoSink.cs" />
-    <Compile Include="CapturePreviewSink.cs" />
-    <Compile Include="CaptureRecordSink.cs" />
-    <Compile Include="CaptureSink.cs" />
-    <Compile Include="ClockStateSink.cs" />
-    <Compile Include="ClockStateSinkShadow.cs" />
-    <Compile Include="MediaTypeHandler.cs" />
-    <Compile Include="PresentationDescriptor.cs" />
-    <Compile Include="SampleGrabberSinkCallbackShadow2.cs" />
-    <Compile Include="SampleGrabberSinkCallback2.cs" />
-    <Compile Include="DXGIDeviceManager.cs" />
-    <Compile Include="AsyncResult.cs" />
-    <Compile Include="IAsyncCallback.cs" />
-    <Compile Include="IByteStream.cs" />
-    <Compile Include="MediaEngineClassFactory.cs" />
-    <Compile Include="MediaEngineEx.cs" />
-    <Compile Include="MediaEngineNotify.cs" />
-    <Compile Include="MediaEngineNotifyShadow.cs" />
-    <Compile Include="Generated\Enumerations.cs" />
-    <Compile Include="Generated\Functions.cs" />
-    <Compile Include="Generated\Interfaces.cs" />
-    <Compile Include="Generated\LocalInterop.cs" />
-    <Compile Include="Generated\Structures.cs" />
-    <Compile Include="MediaAttributeKey.cs" />
-    <Compile Include="MediaAttributes.cs" />
-    <Compile Include="MediaEngine.cs" />
-    <Compile Include="MediaEngineAttributes.cs" />
-    <Compile Include="MediaEventGenerator.cs" />
-    <Compile Include="MediaFactory.cs" />
-    <Compile Include="MediaManager.cs" />
-    <Compile Include="MediaSessionCallback.cs" />
-    <Compile Include="MediaType.cs" />
-    <Compile Include="NamespaceDoc.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResourceCharacteristics.cs" />
-    <Compile Include="SampleGrabberSinkCallback.cs" />
-    <Compile Include="SampleGrabberSinkCallbackShadow.cs" />
-    <Compile Include="ServiceProvider.cs" />
-    <Compile Include="SourceReader.cs" />
-    <Compile Include="SourceResolver.cs" />
-    <Compile Include="Transform.cs" />
-    <Compile Include="VideoFormatGuids.cs" />
-    <Compile Include="VideoPresenter.cs" />
-    <Compile Include="VideoPresenterShadow.cs" />
-    <Compile Include="WorkQueueId.cs" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(SharpDXPlatform)' == 'Desktop'">
-    <Compile Include="DirectX\Direct3DDeviceManager.cs" />
-    <Compile Include="DirectX\Hand.Generated\Enumerations.cs" />
-    <Compile Include="DirectX\Hand.Generated\Functions.cs" />
-    <Compile Include="DirectX\Hand.Generated\Interfaces.cs" />
-    <Compile Include="DirectX\Hand.Generated\LocalInterop.cs" />
-    <Compile Include="DirectX\Hand.Generated\Structures.cs" />
-    <Compile Include="DirectX\HDDevice.cs" />
-    <Compile Include="DirectX\NamespaceDoc.cs" />
-    <Compile Include="DirectX\VideoAccelerationService.cs" />
-    <Compile Include="DirectX\VideoDecoderService.cs" />
-    <Compile Include="DirectX\VideoProcessorService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Documentation\CodeComments.xml" />
-    <None Include="Mapping.xml">
-      <SubType>Designer</SubType>
-    </None>
+    <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
+    <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj" />
+    <ProjectReference Include="..\SharpDX.Direct3D9\SharpDX.Direct3D9.csproj" Condition=" '$(SharpDXAppType)' == 'DESKTOP_APP' " />
+    <ProjectReference Include="..\SharpDX.Mathematics\SharpDX.Mathematics.csproj" Condition=" '$(SharpDXAppType)' == 'DESKTOP_APP' " />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="SharpDX.MediaFoundation.nuspec" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(SharpDXPlatform)' == 'Desktop'">
-    <ProjectReference Include="..\SharpDX.Direct3D9\SharpDX.Direct3D9.csproj">
-      <Project>{b4d984df-85b8-4bbf-8c3b-5cef905f40d9}</Project>
-      <Name>SharpDX.Direct3D9</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpDX.Mathematics\SharpDX.Mathematics.csproj">
-      <Project>{49e4485f-3a2a-4c35-a159-12eccfc00396}</Project>
-      <Name>SharpDX.Mathematics</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj">
-      <Project>{3FC6DE77-B412-4101-9E64-6B9AA831179B}</Project>
-      <Name>SharpDX.DXGI</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
-      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
-      <Name>SharpDX</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Mapping-core.xml">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <Import Project="..\..\Build\SharpDX.targets" />
 </Project>

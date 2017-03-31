@@ -34,6 +34,7 @@ using System.Security;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Collections.Generic;
+#if DESKTOP_APP
 namespace SharpDX.MediaFoundation
 {
 #pragma warning disable 649
@@ -198,3 +199,4 @@ namespace SharpDX.MediaFoundation
         public static unsafe int CalliFuncint(void* arg0, void* arg1, int arg2, void* arg3, void* arg4, void* funcPtr) { throw new NotImplementedException(); }
     }
 }
+#endif

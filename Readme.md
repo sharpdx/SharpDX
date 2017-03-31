@@ -10,11 +10,12 @@ You can find more documentation on the [Wiki](http://sharpdx.org/wiki)
 
 ## Build
 
-In order to compile SharpDX, you need to install **Visual Studio 2015 Update 3** and check the following components:
+In order to compile SharpDX, you need to install **Visual Studio 2017 or newer** with the following workloads and components:
 
-- [x] Programming Languages / Visual C++ / Common Tools for VS 2015
-- [x] Windows and Web Development / Universal Windows App Development Tools (ensure that Windows 10 Anniversary SDK (10.0.14393.0) is selected)
-- [x] Windows 8.1 and Windows Phone 8.0/8.1 Tools
+- [x] Visual C++ Toolset Component
+- [x] Windows 10 Anniversary SDK (10.0.14393.0) Component
+- [x] C# Development Workload
+- [x] .NET Core Cross Platform Development Workload
 
 ## Samples
 

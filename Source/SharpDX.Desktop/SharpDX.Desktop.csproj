@@ -1,62 +1,37 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\Build\SharpDX.props" />
   <PropertyGroup>
-    <SharpDXDesktopOnly>true</SharpDXDesktopOnly>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <PackageId>SharpDX.Desktop</PackageId>
+    <Product>SharpDX.Desktop</Product>
+    <AssemblyTitle>SharpDX.Desktop</AssemblyTitle>
+    <Title>SharpDX.Desktop</Title>
+    <Description>Assembly providing APIs related to Desktop platform.</Description>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)\Build\SharpDX.PreSettings.targets" />
-  <PropertyGroup>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5F8DB9E8-FFAE-475F-AC2E-FE2DC5B15A1B}</ProjectGuid>
-    <RootNamespace>SharpDX.Desktop</RootNamespace>
-    <AssemblyName>SharpDX.Desktop</AssemblyName>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
+    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Documentation\CodeComments.xml" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Diagnostics\VSGraphicsDebugger.cs" />
-    <Compile Include="Direct3D\PixHelper.cs" />
-    <Compile Include="MessageFilterHook.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <DependentUpon>Resources.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="RenderControl.cs">
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="RenderControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="RenderForm.cs">
+    <Compile Update="RenderForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="RenderLoop.cs" />
-    <Compile Include="Win32Native.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="SharpDX.Desktop.nuspec" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Documentation\CodeComments.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
-      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
-      <Name>SharpDX</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />
+
+  <Import Project="..\..\Build\SharpDX.targets" />
 </Project>

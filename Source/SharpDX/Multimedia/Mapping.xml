@@ -41,6 +41,9 @@
       #define HID_USAGE_PAGE_BARCODE 0x8C
       #define HID_USAGE_PAGE_SCALE 0x8D
       #define HID_USAGE_PAGE_MSR 0x8E
+      
+      // The Usage typedef doesn't exist when compiling for STORE_APP so we define it here
+      #define USAGE USHORT
     </post>
   </include>
 

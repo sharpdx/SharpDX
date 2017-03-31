@@ -1,5 +1,6 @@
 ﻿<#@ include file="Header.tt" #>
 
+#if <#= Generator.AppType #>
 namespace <#= Namespace.Name #> {
 
 #pragma warning disable 282
@@ -15,6 +16,7 @@ foreach (var sharpStruct in Namespace.Structs)
 }
 #>
 }
+#endif
 <#+
 	public void ProcessStruct(CsStruct sharpStruct) {
 #>

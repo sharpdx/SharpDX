@@ -1,0 +1,29 @@
+﻿<Project>
+  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <DefineConstants>$(DefineConstants);DIRECTX11_1;DIRECTX11_2;DirectX12</DefineConstants>
+
+    <PackageIconUrl>http://sharpdx.org/logo_100x100.png</PackageIconUrl>
+    <PackageLicenseUrl>http://sharpdx.org/License.txt</PackageLicenseUrl>
+    <PackageProjectUrl>http://sharpdx.org</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>SharpDX DirectX Direct3D Multimedia MDX 3D</PackageTags>
+
+    <Authors>Alexandre Mutel</Authors>
+    <Owners>Alexandre Mutel</Owners>
+    <Company>Alexandre Mutel</Company>
+    <Copyright>Copyright (c) 2010-2016 Alexandre Mutel</Copyright>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <Version>4.0.0</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <Version Condition=" '$(SharpDXPackagingDev)' == 'true' ">$(Version)-ci$(SharpDXBuildNumber)</Version>
+    <PackageOutputPath>$(SolutionDir)bin</PackageOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' And Exists('$(SolutionDir)sharpdx.snk')">
+    <DefineConstants>$(DefineConstants);SHARPDX_SIGNED</DefineConstants>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+</Project>

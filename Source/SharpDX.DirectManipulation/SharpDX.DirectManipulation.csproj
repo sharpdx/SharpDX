@@ -1,61 +1,32 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\Build\SharpDX.props" />
   <PropertyGroup>
-    <SharpDXDesktopOnly>true</SharpDXDesktopOnly>
+    <TargetFrameworks>net45;netcoreapp1.0;netstandard1.1</TargetFrameworks>
+    <PackageId>SharpDX.DirectManipulation</PackageId>
+    <Product>SharpDX.DirectManipulation</Product>
+    <AssemblyTitle>SharpDX.DirectManipulation</AssemblyTitle>
+    <Title>SharpDX.DirectManipulation</Title>
+    <Description>Assembly providing DirectX - DirectManipulation managed API.</Description>
+    <PackageTags>$(PackageTags) DirectManipulation Touch Input</PackageTags>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)\Build\SharpDX.PreSettings.targets" />
-  <PropertyGroup>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F826CCCE-4B72-47F4-9493-DFCB51C106B7}</ProjectGuid>
-    <RootNamespace>SharpDX.DirectManipulation</RootNamespace>
-    <AssemblyName>SharpDX.DirectManipulation</AssemblyName>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' OR  '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
+    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
+    <DefineConstants>$(DefineConstants);REFERENCE</DefineConstants>
+    <SharpDXAppType>REFERENCE</SharpDXAppType>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AutoScrollBehavior.cs" />
-    <Compile Include="Compositor.cs" />
-    <Compile Include="CompositorNative.cs" />
-    <Compile Include="CompositorShadow.cs" />
-    <Compile Include="Content.cs" />
-    <Compile Include="DragDropBehavior.cs" />
-    <Compile Include="Manager.cs" />
-    <Compile Include="Manager2.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Documentation\CodeComments.xml" />
+    <None Include="Mapping.xml" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Generated\Enumerations.cs" />
-    <Compile Include="Generated\Functions.cs" />
-    <Compile Include="Generated\Interfaces.cs" />
-    <Compile Include="Generated\LocalInterop.cs" />
-    <Compile Include="Generated\Structures.cs" />
-    <Compile Include="Viewport.cs" />
-    <Compile Include="Viewport2.cs" />
-    <None Include="Mapping.xml" />
-    <None Include="SharpDX.DirectManipulation.nuspec" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
-      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
-      <Name>SharpDX</Name>
-      <Private>False</Private>
-    </ProjectReference>
+    <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Documentation\CodeComments.xml" />
-  </ItemGroup>
-  <Import Project="$(SolutionDir)\Build\SharpDX.PostSettings.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <Import Project="..\..\Build\SharpDX.targets" />
 </Project>

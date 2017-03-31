@@ -3,6 +3,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Collections.Generic;
+#if <#= Generator.AppType #>
 namespace <#= Assembly.QualifiedName #>
 {
 #pragma warning disable 649
@@ -12,48 +13,6 @@ namespace <#= Assembly.QualifiedName #>
 
     internal partial class LocalInterop
     {
-<#
-/*
-        static LocalInterop() {
-			SharpDX.SharpJit.Install(typeof(LocalInterop));
-		}	
-<#
-foreach (var method in Assembly.Interop.Methods) {
-		if (method.IsFunction) {
-#>
-        [MethodImpl(MethodImplOptions.NoInlining), Obfuscation(Feature = "SharpJit.Function")]
-<# 
-		} else {
-#>
-        [MethodImpl(MethodImplOptions.NoInlining), Obfuscation(Feature = "SharpJit.ComMethod")]
-<# 
-		}#>
-        public static unsafe <#= method.ReturnType.TypeName #> <#= method.Name #>(<#
-		if (method.IsFunction) {
-			#>void* functionPtr,int unused<# 
-		} else {
-			#>void* ptrTemp1, void* methodPtr, void* ptrTemp2<# 
-		}
-		if (method.ParameterTypes.Count>0) {#>,<#}			
-
-		var startCount =  method.ParameterTypes.Count - 1;
-		for(int i = startCount; i >= 0; i--) {
-			if (i < startCount) {#>,<#}
-#><#= method.ParameterTypes[i].TypeName #> arg<#= i #><#
-		}
-		if (!method.IsFunction) {
-			#>,void* thisObject<# 
-		}
-#>) { 
-        var blabla = new List<string>();
-        for (int i = 0; i < 150; i++)
-            blabla.Add("Error " + i);
-        throw new NotImplementedException(blabla.ToString());
-}
-<#			
-}
-*/
-#>
 <#
 foreach (var method in Assembly.Interop.Methods) {
 #>
@@ -78,3 +37,4 @@ foreach (var method in Assembly.Interop.Methods) {
 #>
     }
 }
+#endif

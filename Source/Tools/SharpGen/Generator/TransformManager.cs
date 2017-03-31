@@ -101,6 +101,12 @@ namespace SharpGen.Generator
         public string GeneratedPath { get; set; }
 
         /// <summary>
+        /// Gets or sets the app type for which to generate C# code.
+        /// </summary>
+        /// <value>The app type.</value>
+        public string AppType { get; set; }
+
+        /// <summary>
         /// Gets or sets the enum transformer.
         /// </summary>
         /// <value>The enum transformer.</value>
@@ -553,7 +559,7 @@ namespace SharpGen.Generator
 
                     engine.SetParameter("Assembly", csAssembly);
 
-                    string generatedDirectoryForAssembly = Path.Combine(csAssembly.RootDirectory, "Generated");
+                    string generatedDirectoryForAssembly = Path.Combine(csAssembly.RootDirectory, "Generated", AppType);
 
                     // Remove the generated directory before creating it
                     if (!directoryToCreate.Contains(generatedDirectoryForAssembly))
@@ -1154,7 +1160,7 @@ namespace SharpGen.Generator
                                     select assembly).FirstOrDefault();
             if (selectedAssembly == null)
             {
-                selectedAssembly = new CsAssembly(assemblyName);
+                selectedAssembly = new CsAssembly(assemblyName, AppType);
                 selectedAssembly.RootDirectory = Path.Combine(GeneratedPath, selectedAssembly.Name);
                 Assemblies.Add(selectedAssembly);
             }
