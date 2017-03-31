@@ -366,13 +366,14 @@ namespace SharpDX
         /// <param name="result">The product of the two matrices.</param>
         public static void Multiply(ref Matrix3x2 left, ref Matrix3x2 right, out Matrix3x2 result)
         {
-            result = new Matrix3x2();
-            result.M11 = (left.M11 * right.M11) + (left.M12 * right.M21);
-            result.M12 = (left.M11 * right.M12) + (left.M12 * right.M22);
-            result.M21 = (left.M21 * right.M11) + (left.M22 * right.M21);
-            result.M22 = (left.M21 * right.M12) + (left.M22 * right.M22);
-            result.M31 = (left.M31 * right.M11) + (left.M32 * right.M21) + right.M31;
-            result.M32 = (left.M31 * right.M12) + (left.M32 * right.M22) + right.M32;
+            Matrix3x2 temp = new Matrix3x2();
+            temp.M11 = (left.M11 * right.M11) + (left.M12 * right.M21);
+            temp.M12 = (left.M11 * right.M12) + (left.M12 * right.M22);
+            temp.M21 = (left.M21 * right.M11) + (left.M22 * right.M21);
+            temp.M22 = (left.M21 * right.M12) + (left.M22 * right.M22);
+            temp.M31 = (left.M31 * right.M11) + (left.M32 * right.M21) + right.M31;
+            temp.M32 = (left.M31 * right.M12) + (left.M32 * right.M22) + right.M32;
+            result = temp;
         }
 
         /// <summary>
