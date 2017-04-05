@@ -16,4 +16,6 @@
   <Target Name="Pack" DependsOnTargets="Build">
   </Target>
   <Target Name="Clean"></Target>
+  <Target Name="Rebuild" DependsOnTargets="Clean;Build">
+  </Target>
 </Project>
