@@ -57,6 +57,7 @@
   <include file="d2d1effectauthor_1.h" attach="true" />
   <include file="d2d1_3.h" attach="true" />
   <include file="d2d1effects_2.h" attach="true" />
+  <include file="d2d1svg.h" attach="true" />
 
   <naming />
   
@@ -73,6 +74,7 @@
     <context>d2d1effects_2</context>
     <context>d2d1effectauthor</context>
     <context>d2d1effectauthor_1</context>
+    <context>d2d1svg</context>
     
     <const from-guid="CLSID_D2D1([A-Z].*)" class="SharpDX.Direct2D1.Effect" type="System.Guid" name="$1">new System.Guid("$1")</const>
     <const from-guid="CLSID_D2D12DAffineTransform" class="SharpDX.Direct2D1.Effect" type="System.Guid" name="AffineTransform2D">new System.Guid("$1")</const>
@@ -118,6 +120,7 @@
     <context>d2d1effects_2</context>
     <context>d2d1effectauthor</context>
     <context>d2d1effectauthor_1</context>
+    <context>d2d1svg</context>
 
     <!--
     // *****************************************************************

@@ -31,11 +31,13 @@
   <include id="dxgiformat" file="dxgiformat.h" attach="true" />
   <include id="winerror" file="winerror.h"/>
   <include id="dxgitype" file="dxgitype.h" attach="true"/>
+  <include id="dxgicommon" file="dxgicommon.h" attach="true"/>
   <include id="dxgi1_2" file="dxgi1_2.h" attach="true" />
   <include id="windows.ui.xaml.media.dxinterop" file="windows.ui.xaml.media.dxinterop.h" attach="true" />
   <include id="dxgi1_3" file="dxgi1_3.h" attach="true" />
   <include id="dxgi1_4" file="dxgi1_4.h" attach="true" />
   <include id="dxgi1_5" file="dxgi1_5.h" attach="true" />
+  <include id="dxgi1_6" file="dxgi1_6.h" attach="true" />
 
   <context-set id="dxgi-all">
     <context>sharpdx-dxgi</context>
@@ -43,10 +45,12 @@
     <context>dxgi</context>
     <context>dxgiformat</context>
     <context>dxgitype</context>
+    <context>dxgicommon</context>
     <context>dxgi1_2</context>
     <context>dxgi1_3</context>
     <context>dxgi1_4</context>
     <context>dxgi1_5</context>
+    <context>dxgi1_6</context>
     <context>winerror</context>
     <context>windows.ui.xaml.media.dxinterop</context>
   </context-set>
