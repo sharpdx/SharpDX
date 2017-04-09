@@ -293,6 +293,12 @@
 
     <map param="ID3D11Device4::RegisterDeviceRemovedEvent::pdwCookie" return="true" />
 
+     <map method="ID3D11Device5::OpenSharedFence" visibility="internal" />
+
+     <map method="ID3D11Device5::CreateFence" visibility="internal" />
+     <map param="ID3D11Device5::CreateFence::ppFence" type="ID3D11Fence" attribute="out fast"/>
+     <map param="ID3D11Fence::CreateSharedHandle::pHandle" return="true" />
+
     <!--
     // *****************************************************************
     // D3D11 Functions
