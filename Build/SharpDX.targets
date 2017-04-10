@@ -1,4 +1,25 @@
 ﻿<Project>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net40' ">
+    <DefineConstants>$(DefineConstants);DESKTOP_APP;BEFORE_NET45</DefineConstants>
+    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net45' OR '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
+    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <DefineConstants>$(DefineConstants);STORE_APP;WINDOWS_API_SET</DefineConstants>
+    <SharpDXAppType>STORE_APP</SharpDXAppType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' OR '$(TargetFramework)' == 'netstandard1.3'">
+    <SharpDXAppType>REFERENCE</SharpDXAppType>
+    <DefineConstants>$(DefineConstants);REFERENCE</DefineConstants>
+  </PropertyGroup>
+
   <Target Name="PatchAssembly" AfterTargets="AfterBuild">
     <Exec Command="&quot;$(SolutionDir)\Source\Bin\SharpCLI.exe&quot; &quot;$(TargetPath)&quot;" />
 

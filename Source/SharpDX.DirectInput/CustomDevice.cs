@@ -150,7 +150,7 @@ namespace SharpDX.DirectInput
                     var dataObjects = new List<DataObjectFormat>();
 
                     IEnumerable<FieldInfo> fields;
-#if NET45
+#if NET45 || BEFORE_NET45
                     fields = typeof(TRaw).GetFields(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance);
 #elif NETCOREAPP1_0
                     fields = typeof(TRaw).GetTypeInfo().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);

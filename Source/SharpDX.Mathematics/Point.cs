@@ -64,7 +64,7 @@ namespace SharpDX
         /// <returns>
         ///   <c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public bool Equals(ref Point other)
         {
             return other.X == X && other.Y == Y;
@@ -77,7 +77,7 @@ namespace SharpDX
         /// <returns>
         ///   <c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public bool Equals(Point other)
         {
             return Equals(ref other);
@@ -110,7 +110,7 @@ namespace SharpDX
         /// <returns>
         /// The result of the operator.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public static bool operator ==(Point left, Point right)
         {
             return left.Equals(ref right);
@@ -124,7 +124,7 @@ namespace SharpDX
         /// <returns>
         /// The result of the operator.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public static bool operator !=(Point left, Point right)
         {
             return !left.Equals(ref right);

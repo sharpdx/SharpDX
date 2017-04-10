@@ -774,7 +774,7 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref="Vector4"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public bool Equals(ref OrientedBoundingBox value)
         {
             return Extents == value.Extents && Transformation == value.Transformation;
@@ -787,7 +787,7 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref="Vector4"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public bool Equals(OrientedBoundingBox value)
         {
             return Equals(ref value);
@@ -815,7 +815,7 @@ namespace SharpDX
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public static bool operator ==(OrientedBoundingBox left, OrientedBoundingBox right)
         {
             return left.Equals(ref right);
@@ -827,7 +827,7 @@ namespace SharpDX
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public static bool operator !=(OrientedBoundingBox left, OrientedBoundingBox right)
         {
             return !left.Equals(ref right);

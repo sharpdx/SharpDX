@@ -49,7 +49,11 @@ namespace SharpDX
             {
                 if (!typeToShadowTypes.TryGetValue(type, out slimInterfaces))
                 {
+#if BEFORE_NET45
+                    var interfaces = type.GetTypeInfo().GetInterfaces();
+#else
                     var interfaces = type.GetTypeInfo().ImplementedInterfaces;
+#endif
                     slimInterfaces = new List<Type>();
                     slimInterfaces.AddRange(interfaces);
                     typeToShadowTypes.Add(type, slimInterfaces);
@@ -66,7 +70,11 @@ namespace SharpDX
                         }
 
                         // Keep only final interfaces and not intermediate.
+#if BEFORE_NET45
+                        var inheritList = item.GetTypeInfo().GetInterfaces();
+#else
                         var inheritList = item.GetTypeInfo().ImplementedInterfaces;
+#endif
                         foreach (var inheritInterface in inheritList)
                         {
                             slimInterfaces.Remove(inheritInterface);
@@ -98,7 +106,11 @@ namespace SharpDX
                 guidToShadow.Add(Utilities.GetGuidFromType(item), shadow);
 
                 // Associate also inherited interface to this shadow
+#if BEFORE_NET45
+                var inheritList = item.GetTypeInfo().GetInterfaces();
+#else
                 var inheritList = item.GetTypeInfo().ImplementedInterfaces;
+#endif
                 foreach (var inheritInterface in inheritList)
                 {
                     var inheritShadowAttribute = ShadowAttribute.Get(inheritInterface);

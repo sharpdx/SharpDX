@@ -60,7 +60,7 @@ namespace SharpDX
         /// <summary>
         /// The size of the <see cref="Vector3"/> type, in bytes.
         /// </summary>
-        public static readonly int SizeInBytes = Marshal.SizeOf(typeof(Vector3));
+        public static readonly int SizeInBytes = Utilities.SizeOf<Vector3>();
 
         /// <summary>
         /// A <see cref="Vector3"/> with all of its components set to zero.
@@ -1652,7 +1652,7 @@ namespace SharpDX
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public static bool operator ==(Vector3 left, Vector3 right)
         {
             return left.Equals(ref right);
@@ -1664,7 +1664,7 @@ namespace SharpDX
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public static bool operator !=(Vector3 left, Vector3 right)
         {
             return !left.Equals(ref right);
@@ -1770,7 +1770,7 @@ namespace SharpDX
         /// <returns>
         /// 	<c>true</c> if the specified <see cref="Vector3"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public bool Equals(ref Vector3 other)
         {
             return MathUtil.NearEqual(other.X, X) && MathUtil.NearEqual(other.Y, Y) && MathUtil.NearEqual(other.Z, Z);
@@ -1783,7 +1783,7 @@ namespace SharpDX
         /// <returns>
         /// 	<c>true</c> if the specified <see cref="Vector3"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public bool Equals(Vector3 other)
         {
             return Equals(ref other);

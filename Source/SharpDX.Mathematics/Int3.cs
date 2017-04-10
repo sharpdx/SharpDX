@@ -35,7 +35,7 @@ namespace SharpDX
         /// <summary>
         /// The size of the <see cref = "Int3" /> type, in bytes.
         /// </summary>
-        public static readonly int SizeInBytes = Marshal.SizeOf(typeof (Int3));
+        public static readonly int SizeInBytes = Utilities.SizeOf<Int3>();
 
         /// <summary>
         /// A <see cref = "Int3" /> with all of its components set to zero.
@@ -474,7 +474,7 @@ namespace SharpDX
         /// <param name = "left">The first value to compare.</param>
         /// <param name = "right">The second value to compare.</param>
         /// <returns><c>true</c> if <paramref name = "left" /> has the same value as <paramref name = "right" />; otherwise, <c>false</c>.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public static bool operator ==(Int3 left, Int3 right)
         {
             return left.Equals(ref right);
@@ -486,7 +486,7 @@ namespace SharpDX
         /// <param name = "left">The first value to compare.</param>
         /// <param name = "right">The second value to compare.</param>
         /// <returns><c>true</c> if <paramref name = "left" /> has a different value than <paramref name = "right" />; otherwise, <c>false</c>.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public static bool operator !=(Int3 left, Int3 right)
         {
             return !left.Equals(ref right);
@@ -594,7 +594,7 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref = "Int3" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public bool Equals(ref Int3 other)
         {
             return other.X == X && other.Y == Y && other.Z == Z;
@@ -607,7 +607,7 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref = "Int3" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public bool Equals(Int3 other)
         {
             return Equals(ref other);

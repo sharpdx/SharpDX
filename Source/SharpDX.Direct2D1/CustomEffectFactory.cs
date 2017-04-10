@@ -87,7 +87,11 @@ namespace SharpDX.Direct2D1
         private void InitializeBindings()
         {
             var bindings = new List<PropertyBinding>();
+#if BEFORE_NET45
+            foreach (var propertyInfo in customEffectType.GetTypeInfo().GetProperties(BindingFlags.Public|BindingFlags.Instance))
+#else
             foreach (var propertyInfo in customEffectType.GetTypeInfo().DeclaredProperties)
+#endif
             {
                 var binding = PropertyBinding.Get(customEffectType, propertyInfo);
                 if (binding != null) 

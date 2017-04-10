@@ -1,21 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\Build\SharpDX.props" />
   <PropertyGroup>
-    <TargetFrameworks>net45;netcoreapp1.0;netstandard1.1</TargetFrameworks>
+    <TargetFrameworks>net40;net45;netcoreapp1.0;netstandard1.1</TargetFrameworks>
     <PackageId>SharpDX.DirectManipulation</PackageId>
     <Product>SharpDX.DirectManipulation</Product>
     <AssemblyTitle>SharpDX.DirectManipulation</AssemblyTitle>
     <Title>SharpDX.DirectManipulation</Title>
     <Description>Assembly providing DirectX - DirectManipulation managed API.</Description>
     <PackageTags>$(PackageTags) DirectManipulation Touch Input</PackageTags>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' OR  '$(TargetFramework)' == 'netcoreapp1.0' ">
-    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
-    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
-    <DefineConstants>$(DefineConstants);REFERENCE</DefineConstants>
-    <SharpDXAppType>REFERENCE</SharpDXAppType>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />

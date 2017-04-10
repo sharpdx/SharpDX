@@ -1,20 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\Build\SharpDX.props" />
   <PropertyGroup>
-    <TargetFrameworks>net45;netcoreapp1.0;netstandard1.1</TargetFrameworks>
+    <TargetFrameworks>net40;net45;netcoreapp1.0;netstandard1.1</TargetFrameworks>
     <PackageId>SharpDX.Animation</PackageId>
     <Product>SharpDX.Animation</Product>
     <AssemblyTitle>SharpDX.Animation</AssemblyTitle>
     <Title>SharpDX.Animation</Title>
     <Description>Assembly providing DirectX - Animation managed API.</Description>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' OR  '$(TargetFramework)' == 'netcoreapp1.0' ">
-    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
-    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
-    <DefineConstants>$(DefineConstants);REFERENCE</DefineConstants>
-    <SharpDXAppType>REFERENCE</SharpDXAppType>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />

@@ -156,7 +156,7 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref="ViewportF"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public bool Equals(ViewportF other)
         {
             return Equals(ref other);
@@ -204,7 +204,7 @@ namespace SharpDX
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
         /// <returns>The result of the operator.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public static bool operator ==(ViewportF left, ViewportF right)
         {
             return left.Equals(ref right);
@@ -216,7 +216,7 @@ namespace SharpDX
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
         /// <returns>The result of the operator.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public static bool operator !=(ViewportF left, ViewportF right)
         {
             return !left.Equals(ref right);

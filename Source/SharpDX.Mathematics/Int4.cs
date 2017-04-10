@@ -35,7 +35,7 @@ namespace SharpDX
         /// <summary>
         /// The size of the <see cref = "Int4" /> type, in bytes.
         /// </summary>
-        public static readonly int SizeInBytes = Marshal.SizeOf(typeof (Int4));
+        public static readonly int SizeInBytes = Utilities.SizeOf<Int4>();
 
         /// <summary>
         /// A <see cref = "Int4" /> with all of its components set to zero.
@@ -499,7 +499,7 @@ namespace SharpDX
         /// <param name = "left">The first value to compare.</param>
         /// <param name = "right">The second value to compare.</param>
         /// <returns><c>true</c> if <paramref name = "left" /> has the same value as <paramref name = "right" />; otherwise, <c>false</c>.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public static bool operator ==(Int4 left, Int4 right)
         {
             return left.Equals(ref right);
@@ -511,7 +511,7 @@ namespace SharpDX
         /// <param name = "left">The first value to compare.</param>
         /// <param name = "right">The second value to compare.</param>
         /// <returns><c>true</c> if <paramref name = "left" /> has a different value than <paramref name = "right" />; otherwise, <c>false</c>.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public static bool operator !=(Int4 left, Int4 right)
         {
             return !left.Equals(ref right);
@@ -632,7 +632,7 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref = "Int4" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public bool Equals(ref Int4 other)
         {
             return other.X == X && other.Y == Y && other.Z == Z && other.W == W;
@@ -645,7 +645,7 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref = "Int4" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public bool Equals(Int4 other)
         {
             return Equals(ref other);

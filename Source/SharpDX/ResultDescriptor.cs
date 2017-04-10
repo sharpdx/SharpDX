@@ -248,7 +248,11 @@ namespace SharpDX
 
         private static void AddDescriptorsFromType(Type type)
         {
-            foreach(var field in type.GetTypeInfo().DeclaredFields)
+#if BEFORE_NET45
+            foreach(var field in type.GetTypeInfo().GetFields())
+#else
+            foreach (var field in type.GetTypeInfo().DeclaredFields)
+#endif
             {
                 if (field.FieldType == typeof(ResultDescriptor) && field.IsPublic && field.IsStatic)
                 {
@@ -274,12 +278,12 @@ namespace SharpDX
             return description;
         }
 
-    #if WINDOWS_API_SET
+#if WINDOWS_API_SET
         [DllImport("api-ms-win-core-localization-l1-2-0.dll", EntryPoint = "FormatMessageW")]
         private static extern uint FormatMessageW(int dwFlags, IntPtr lpSource, int dwMessageId, int dwLanguageId, ref IntPtr lpBuffer, int nSize, IntPtr Arguments);
-    #else
+#else
         [DllImport("kernel32.dll", EntryPoint = "FormatMessageW")]
         private static extern uint FormatMessageW(int dwFlags, IntPtr lpSource, int dwMessageId, int dwLanguageId, ref IntPtr lpBuffer, int nSize, IntPtr Arguments);
-    #endif
+#endif
     }
 }

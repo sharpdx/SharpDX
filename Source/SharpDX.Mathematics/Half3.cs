@@ -143,7 +143,7 @@ namespace SharpDX
         /// <param name="right">The second value to compare.</param>
         /// <returns>
         /// <c>true</c> if <paramref name="left" /> has the same value as <paramref name="right" />; otherwise, <c>false</c>.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public static bool operator ==(Half3 left, Half3 right)
         {
             return Equals(ref left, ref right);
@@ -157,7 +157,7 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if <paramref name="left" /> has a different value than <paramref name="right" />; otherwise, <c>false</c>.</returns>
         [return: MarshalAs(UnmanagedType.U1)]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public static bool operator !=(Half3 left, Half3 right)
         {
             return !Equals(ref left, ref right);
@@ -186,7 +186,7 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if <paramref name="value1" /> is the same instance as <paramref name="value2" /> or 
         /// if both are <c>null</c> references or if <c>value1.Equals(value2)</c> returns <c>true</c>; otherwise, <c>false</c>.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public static bool Equals(ref Half3 value1, ref Half3 value2)
         {
             return (((value1.X == value2.X) && (value1.Y == value2.Y)) && (value1.Z == value2.Z));

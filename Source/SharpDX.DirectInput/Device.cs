@@ -254,7 +254,7 @@ namespace SharpDX.DirectInput
         public void SetNotification(WaitHandle eventHandle)
         {
             Microsoft.Win32.SafeHandles.SafeWaitHandle safeHandle;
-#if NET45
+#if NET45 || BEFORE_NET45
             safeHandle = eventHandle?.SafeWaitHandle;
 #else
             safeHandle = eventHandle?.GetSafeWaitHandle();

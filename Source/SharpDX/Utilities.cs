@@ -32,7 +32,6 @@ using System.Threading;
 
 using SharpDX.Direct3D;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Linq;
 using System.Linq.Expressions;
 using SharpDX.Text;
@@ -418,7 +417,11 @@ namespace SharpDX
         public static bool IsAssignableToGenericType(Type givenType, Type genericType)
         {
             // from http://stackoverflow.com/a/1075059/1356325
+#if BEFORE_NET45
+            var interfaceTypes = givenType.GetTypeInfo().GetInterfaces();
+#else
             var interfaceTypes = givenType.GetTypeInfo().ImplementedInterfaces;
+#endif
 
             foreach (var it in interfaceTypes)
             {
@@ -880,7 +883,17 @@ namespace SharpDX
         }
 
         private static MethodInfo GetMethod(Type type, string name, Type[] typeArgs) {
-            foreach( var method in type.GetTypeInfo().GetDeclaredMethods(name)) {
+#if BEFORE_NET45
+            foreach( var method in type.GetTypeInfo().GetMethods(BindingFlags.Public|BindingFlags.Instance))
+            {
+                if(method.Name != name)
+                {
+                    continue;
+                }
+#else
+            foreach( var method in type.GetTypeInfo().GetDeclaredMethods(name))
+            {
+#endif
                 if ( method.GetParameters().Length == typeArgs.Length) {
                     var parameters = method.GetParameters();
                     bool methodFound = true;
@@ -970,14 +983,22 @@ namespace SharpDX
             var tempType = sourceType;
             while (tempType != null)
             {
+#if BEFORE_NET45
+                methods.AddRange(tempType.GetTypeInfo().GetMethods(BindingFlags.Public)); //target methods will be favored in the search
+#else
                 methods.AddRange(tempType.GetTypeInfo().DeclaredMethods); //target methods will be favored in the search
+#endif
                 tempType = tempType.GetTypeInfo().BaseType;
             }
 
             tempType = targetType;
             while (tempType != null)
             {
+#if BEFORE_NET45
+                methods.AddRange(tempType.GetTypeInfo().GetMethods(BindingFlags.Public)); //target methods will be favored in the search
+#else
                 methods.AddRange(tempType.GetTypeInfo().DeclaredMethods); //target methods will be favored in the search
+#endif
                 tempType = tempType.GetTypeInfo().BaseType;
             }
 
