@@ -300,5 +300,10 @@ namespace SharpDX
         /// </summary>
         /// <unmanaged>WAIT_TIMEOUT</unmanaged>
         public static readonly SharpDX.ResultDescriptor WaitTimeout = new SharpDX.ResultDescriptor(unchecked((int)0x00000102L), "General", "WAIT_TIMEOUT", "WaitTimeout");
+        /// <summary>
+        /// The data necessary to complete this operation is not yet available.
+        /// </summary>
+        /// <unmanaged>WAIT_TIMEOUT</unmanaged>
+        public static readonly SharpDX.ResultDescriptor Pending = new SharpDX.ResultDescriptor(unchecked((int)0x8000000AL), "General", "E_PENDING", "Pending");
     }
 }

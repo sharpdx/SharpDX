@@ -394,6 +394,7 @@
     <map interface="ID2D(\d+).*Sink1?" callback="true" callback-dual="true" />
     <map interface="ID2D(\d+).*Sink2?" callback="true" callback-dual="true" />
     <map interface="ID2D(\d+).*Sink3?" callback="true" callback-dual="true" />
+    <map interface="ID2D(\d+).*Sink4?" callback="true" callback-dual="true" />
 
     <!--<map param="ID2D1DeviceContext::CreateColorContextFromWicColorContext::wicColorContext" type="IUnknown"/>
     <map param="ID2D1DeviceContext::CreateColorContextFromWicColorContext::colorContext" type="IUnknown"/>-->

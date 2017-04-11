@@ -214,8 +214,12 @@
 
     <map method="IDWriteBitmapRenderTarget::DrawGlyphRun" visibility="private"/>
     <map param="IDWriteBitmapRenderTarget::DrawGlyphRun::textColor" type="int"/>
+     
+     
+    <map param="IDWriteRemoteFontFileStream::BeginDownload::asyncResult" return="true" />
+    <map method="IDWriteAsyncResult::GetResult" check="false"/>
 
-    <!--
+     <!--
     // *****************************************************************
     // DWrite Functions
     // *****************************************************************

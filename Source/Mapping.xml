@@ -59,7 +59,7 @@
     // For XAudio2 patch
     #define __unaligned __attribute((__unaligned))
     
-    #define NTDDI_VERSION NTDDI_WIN10_RS1
+    #define NTDDI_VERSION NTDDI_WIN10_RS2
     
   </include-prolog>
 
