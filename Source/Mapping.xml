@@ -24,9 +24,9 @@
 
   <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\LegacyHeaders</include-dir>
   <include-dir>$(VC_TOOLS_PATH)\include</include-dir>
-  <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot10;Include\10.0.14393.0\shared</include-dir>
-  <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot10;Include\10.0.14393.0\um</include-dir>
-  <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot10;Include\10.0.14393.0\ucrt</include-dir>
+  <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot10;Include\10.0.15063.0\shared</include-dir>
+  <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot10;Include\10.0.15063.0\um</include-dir>
+  <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot10;Include\10.0.15063.0\ucrt</include-dir>
 
   <var name="FILTER_PASTING_ERROR">error: pasting .*a valid preprocessing token</var>
 
@@ -59,7 +59,7 @@
     // For XAudio2 patch
     #define __unaligned __attribute((__unaligned))
     
-    #define NTDDI_VERSION NTDDI_WIN10_RS1
+    #define NTDDI_VERSION NTDDI_WIN10_RS2
     
   </include-prolog>
 

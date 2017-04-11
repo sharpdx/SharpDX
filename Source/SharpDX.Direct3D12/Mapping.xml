@@ -106,6 +106,7 @@
     <map enum-item="D3D_ROOT_SIGNATURE_VERSION(.*)" name-tmp="Version$1"/>
     <map enum-item="D3D12_SHADER_MIN_PRECISION_SUPPORT_(\d*)_BIT" name-tmp="Bit$1"/>
     <map enum-item="D3D12_DSV_FLAG(.*)" name-tmp="$1"/>
+    <map enum-item="D3D12_PROGRAMMABLE_SAMPLE_POSITIONS_TIER_(.*)" name-tmp="Tier$1"/>
     
     <map enum="D3D12_FORMAT_SUPPORT1" flags="true"/>
     <map enum="D3D12_FORMAT_SUPPORT2" flags="true"/>
@@ -320,6 +321,9 @@
         
     <map method="ID3D12Device::CheckFeatureSupport" check="false" visibility="private"/>
     
+     <map method="ID3D12Device2::CreatePipelineState" visibility="private"/>
+     <map param="ID3D12Device2::CreatePipelineState::ppPipelineState" attribute="out" type="ID3D12PipelineState" return="true"/>
+
     <!--
     // *****************************************************************
     // D3D12 Functions

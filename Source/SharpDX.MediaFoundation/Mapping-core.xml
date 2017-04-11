@@ -1021,8 +1021,11 @@
       <remove function="MFCreateContentDecryptorContext" />
       <remove function="MFCreateContentProtectionDevice" />
       <remove function="MFIsContentProtectionDeviceSupported" />
+	  <remove function="MFCreatePMPMediaSession" />
+	  <remove function="MFCreateTopology" />
+	  <remove function="MFCreateTopologyNode" />
+	  
     </ifdef>
-
     <context-clear />
   </mapping>
 </config>

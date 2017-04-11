@@ -57,6 +57,7 @@
   <include file="d2d1effectauthor_1.h" attach="true" />
   <include file="d2d1_3.h" attach="true" />
   <include file="d2d1effects_2.h" attach="true" />
+  <include file="d2d1svg.h" attach="true" />
 
   <naming />
   
@@ -73,6 +74,7 @@
     <context>d2d1effects_2</context>
     <context>d2d1effectauthor</context>
     <context>d2d1effectauthor_1</context>
+    <context>d2d1svg</context>
     
     <const from-guid="CLSID_D2D1([A-Z].*)" class="SharpDX.Direct2D1.Effect" type="System.Guid" name="$1">new System.Guid("$1")</const>
     <const from-guid="CLSID_D2D12DAffineTransform" class="SharpDX.Direct2D1.Effect" type="System.Guid" name="AffineTransform2D">new System.Guid("$1")</const>
@@ -118,6 +120,7 @@
     <context>d2d1effects_2</context>
     <context>d2d1effectauthor</context>
     <context>d2d1effectauthor_1</context>
+    <context>d2d1svg</context>
 
     <!--
     // *****************************************************************
@@ -300,7 +303,7 @@
     <map method="ID2D1Factory::GetDesktopDpi" visibility="internal" />
     <map method="ID2D(\d+)Factory\d?::Create.*" visibility="internal" />
 
-    <map param="ID2D1Factory[1234]::CreateDevice::d2dDevice[1234]?" attribute="out fast"/>
+    <map param="ID2D1Factory[123456]::CreateDevice::d2dDevice[12345]?" attribute="out fast"/>
     <map param="ID2D1Factory1::CreateStrokeStyle::strokeStyle" attribute="out fast"/>
     <map param="ID2D1Factory1::CreatePathGeometry::pathGeometry" attribute="out fast"/>
     <map param="ID2D1Factory1::CreateDrawingStateBlock::drawingStateBlock" attribute="out fast"/>
@@ -322,8 +325,8 @@
     <map param="ID2D(\d+)Factory::CreateDCRenderTarget::dcRenderTarget" attribute="out fast"/>
     <map param="ID2D(\d+)Factory::CreateWicBitmapRenderTarget::renderTarget" attribute="out fast"/>
 
-    <map method="ID2D\dDevice[123]?::Create.*" visibility="internal"/>
-    <map param="ID2D\dDevice[123]?::CreateDeviceContext::deviceContext[123]?" attribute="out fast"/>
+    <map method="ID2D\dDevice[12345]?::Create.*" visibility="internal"/>
+    <map param="ID2D\dDevice[12345]?::CreateDeviceContext::deviceContext[12345]?" attribute="out fast"/>
     <map param="ID2D\dDevice::CreatePrintControl::printControl" attribute="out fast"/>
 
     <map method="ID2D\dDeviceContext[123]?::Create.*" visibility="internal"/>
@@ -391,6 +394,7 @@
     <map interface="ID2D(\d+).*Sink1?" callback="true" callback-dual="true" />
     <map interface="ID2D(\d+).*Sink2?" callback="true" callback-dual="true" />
     <map interface="ID2D(\d+).*Sink3?" callback="true" callback-dual="true" />
+    <map interface="ID2D(\d+).*Sink4?" callback="true" callback-dual="true" />
 
     <!--<map param="ID2D1DeviceContext::CreateColorContextFromWicColorContext::wicColorContext" type="IUnknown"/>
     <map param="ID2D1DeviceContext::CreateColorContextFromWicColorContext::colorContext" type="IUnknown"/>-->
@@ -486,7 +490,12 @@
     <map interface="ID2D1DrawTransform" callback-visibility="public" callback="true" callback-dual="true" />
     <map interface="ID2D1SourceTransform" callback-visibility="public" callback="true" callback-dual="true" />
 
-    <!--
+    <map param="ID2D\dDeviceContext5::CreateColorContextFromDxgiColorSpace::colorContext" attribute="out fast"/>
+    <map param="ID2D\dDeviceContext5::CreateColorContextFromSimpleColorProfile::colorContext" attribute="out fast"/>
+    <map param="ID2D\dEffectContext2::CreateColorContextFromDxgiColorSpace::colorContext" attribute="out fast"/>
+    <map param="ID2D\dEffectContext2::CreateColorContextFromSimpleColorProfile::colorContext" attribute="out fast"/>
+
+     <!--
     // *****************************************************************
     // D2D1 Functions
     // *****************************************************************
