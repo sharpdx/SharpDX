@@ -88,7 +88,7 @@ namespace SharpDX.Direct2D1
         {
             var bindings = new List<PropertyBinding>();
 #if BEFORE_NET45
-            foreach (var propertyInfo in customEffectType.GetTypeInfo().GetProperties(BindingFlags.Public|BindingFlags.Instance))
+            foreach (var propertyInfo in customEffectType.GetProperties(BindingFlags.Public|BindingFlags.Instance))
 #else
             foreach (var propertyInfo in customEffectType.GetTypeInfo().DeclaredProperties)
 #endif
@@ -125,17 +125,16 @@ namespace SharpDX.Direct2D1
             var effect = new XElement("Effect");
             xml.Add(effect);
 
-            var customEffectTypeInfo = customEffectType.GetTypeInfo();
-
             // Add 
-            var customEffectAttribute = Utilities.GetCustomAttribute<CustomEffectAttribute>(customEffectTypeInfo, true);
-            effect.Add(CreateXmlProperty("DisplayName", "string", customEffectAttribute != null ? customEffectAttribute.DisplayName : customEffectTypeInfo.Name));
+            var customEffectAttribute = Utilities.GetCustomAttribute<CustomEffectAttribute>(customEffectType, true);
+            
+            effect.Add(CreateXmlProperty("DisplayName", "string", customEffectAttribute != null ? customEffectAttribute.DisplayName : customEffectType.Name));
             effect.Add(CreateXmlProperty("Author", "string", customEffectAttribute != null ? customEffectAttribute.Author : string.Empty));
             effect.Add(CreateXmlProperty("Category", "string", customEffectAttribute != null ? customEffectAttribute.Category : string.Empty));
             effect.Add(CreateXmlProperty("Description", "string", customEffectAttribute != null ? customEffectAttribute.Description : string.Empty));
 
             var inputs = new XElement("Inputs");
-            var inputAttributes = Utilities.GetCustomAttributes<CustomEffectInputAttribute>(customEffectTypeInfo, true);
+            var inputAttributes = Utilities.GetCustomAttributes<CustomEffectInputAttribute>(customEffectType, true);
             foreach(var inputAttribute in inputAttributes) {
                 var inputXml = new XElement("Input");
                 inputXml.SetAttributeValue("name", inputAttribute.Input);

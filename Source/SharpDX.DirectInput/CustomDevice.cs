@@ -131,7 +131,7 @@ namespace SharpDX.DirectInput
             if (_dataFormat == null)
             {
                 // Build DataFormat from IDataFormatProvider
-                if (typeof (IDataFormatProvider).GetTypeInfo().IsAssignableFrom(typeof (TRaw).GetTypeInfo()))
+                if (Utilities.IsAssignableFrom(typeof (IDataFormatProvider), typeof (TRaw)))
                 {
                     var provider = (IDataFormatProvider) (new TRaw());
                     _dataFormat = new DataFormat(provider.Flags) {DataSize = Utilities.SizeOf<TRaw>(), ObjectsFormat = provider.ObjectsFormat};
@@ -139,7 +139,7 @@ namespace SharpDX.DirectInput
                 else
                 {
                     // Build DataFormat from DataFormat and DataObjectFormat attributes
-                    IEnumerable<DataFormatAttribute> dataFormatAttributes = typeof(TRaw).GetTypeInfo().GetCustomAttributes<DataFormatAttribute>(false);
+                    IEnumerable<DataFormatAttribute> dataFormatAttributes = Utilities.GetCustomAttributes<DataFormatAttribute>(typeof(TRaw), false);
                     if (dataFormatAttributes.Count() != 1)
                         throw new InvalidOperationException(
                             string.Format(System.Globalization.CultureInfo.InvariantCulture, "The structure [{0}] must be marked with DataFormatAttribute or provide a IDataFormatProvider",
@@ -160,7 +160,7 @@ namespace SharpDX.DirectInput
                     // Iterates on fields
                     foreach (var field in fields)
                     {
-                        IEnumerable<DataObjectFormatAttribute> dataObjectAttributes = field.GetCustomAttributes<DataObjectFormatAttribute>(false);
+                        IEnumerable<DataObjectFormatAttribute> dataObjectAttributes = Utilities.GetCustomAttributes<DataObjectFormatAttribute>(field, false);
                         if (dataObjectAttributes.Count() > 0)
                         {
                             int fieldOffset = Marshal.OffsetOf(typeof (TRaw), field.Name).ToInt32();

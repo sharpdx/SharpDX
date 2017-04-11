@@ -57,7 +57,7 @@ namespace SharpDX
         /// <returns>The associated shadow attribute or null if no shadow attribute were found</returns>
         public static ShadowAttribute Get(Type type)
         {
-            return type.GetTypeInfo().GetCustomAttribute<ShadowAttribute>();
+            return Utilities.GetCustomAttribute<ShadowAttribute>(type);
         }
     }
 }

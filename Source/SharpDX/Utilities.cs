@@ -405,7 +405,11 @@ namespace SharpDX
         /// <returns>The guid associated with this type.</returns>
         public static Guid GetGuidFromType(Type type)
         {
+#if BEFORE_NET45
+            return type.GUID;
+#else
             return type.GetTypeInfo().GUID;
+#endif
         }
 
         /// <summary>
@@ -418,21 +422,33 @@ namespace SharpDX
         {
             // from http://stackoverflow.com/a/1075059/1356325
 #if BEFORE_NET45
-            var interfaceTypes = givenType.GetTypeInfo().GetInterfaces();
+            var interfaceTypes = givenType.GetInterfaces();
 #else
             var interfaceTypes = givenType.GetTypeInfo().ImplementedInterfaces;
 #endif
 
             foreach (var it in interfaceTypes)
             {
+#if BEFORE_NET45
+                if (it.IsGenericType && it.GetGenericTypeDefinition() == genericType)
+#else
                 if (it.GetTypeInfo().IsGenericType && it.GetGenericTypeDefinition() == genericType)
+#endif
                     return true;
             }
 
+#if BEFORE_NET45
+            if (givenType.IsGenericType && givenType.GetGenericTypeDefinition() == genericType)
+#else
             if (givenType.GetTypeInfo().IsGenericType && givenType.GetGenericTypeDefinition() == genericType)
+#endif
                 return true;
 
+#if BEFORE_NET45
+            Type baseType = givenType.BaseType;
+#else
             Type baseType = givenType.GetTypeInfo().BaseType;
+#endif
             if (baseType == null) return false;
 
             return IsAssignableToGenericType(baseType, genericType);
@@ -830,9 +846,28 @@ namespace SharpDX
         /// <returns>The custom attribute or null if not found.</returns>
         public static T GetCustomAttribute<T>(MemberInfo memberInfo, bool inherited = false) where T : Attribute
         {
+#if BEFORE_NET45
+            return memberInfo.GetCustomAttributes(inherited).OfType<T>().FirstOrDefault();
+#else
             return memberInfo.GetCustomAttribute<T>(inherited);
+#endif
         }
 
+        /// <summary>
+        /// Gets the custom attribute.
+        /// </summary>
+        /// <typeparam name="T">Type of the custom attribute.</typeparam>
+        /// <param name="memberInfo">The member info.</param>
+        /// <param name="inherited">if set to <c>true</c> [inherited].</param>
+        /// <returns>The custom attribute or null if not found.</returns>
+        public static T GetCustomAttribute<T>(Type type, bool inherited = false) where T : Attribute
+        {
+#if BEFORE_NET45
+            return type.GetCustomAttributes(inherited).OfType<T>().FirstOrDefault();
+#else
+            return type.GetTypeInfo().GetCustomAttribute<T>(inherited);
+#endif
+        }
         /// <summary>
         /// Gets the custom attributes.
         /// </summary>
@@ -842,9 +877,42 @@ namespace SharpDX
         /// <returns>The custom attribute or null if not found.</returns>
         public static IEnumerable<T> GetCustomAttributes<T>(MemberInfo memberInfo, bool inherited = false) where T : Attribute
         {
+#if BEFORE_NET45
+            return memberInfo.GetCustomAttributes(inherited).OfType<T>();
+#else
             return memberInfo.GetCustomAttributes<T>(inherited);
+#endif
+        }
+        /// <summary>
+        /// Gets the custom attributes.
+        /// </summary>
+        /// <typeparam name="T">Type of the custom attribute.</typeparam>
+        /// <param name="memberInfo">The member info.</param>
+        /// <param name="inherited">if set to <c>true</c> [inherited].</param>
+        /// <returns>The custom attribute or null if not found.</returns>
+        public static IEnumerable<T> GetCustomAttributes<T>(Type type, bool inherited = false) where T : Attribute
+        {
+#if BEFORE_NET45
+            return type.GetCustomAttributes(inherited).OfType<T>();
+#else
+            return type.GetTypeInfo().GetCustomAttributes<T>(inherited);
+#endif
         }
 
+        /// <summary>
+        /// Determines whether the class represented by the current System.Type derives from the class represented by the specified System.Type.
+        /// </summary>
+        /// <param name="c">The type to compare with the current type.</param>
+        /// <param name="inherited">if set to <c>true</c> [inherited].</param>
+        /// <returns>true if the Type represented by the c parameter and the current Type represent classes, and the class represented by the current Type derives from the class represented by c; otherwise, false. This method also returns false if c and the current Type represent the same class.</returns>
+        public static bool IsSubclassOf(Type type, Type c)
+        {
+#if BEFORE_NET45
+            return type.IsSubclassOf(c);
+#else
+            return type.GetTypeInfo().IsSubclassOf(c);
+#endif
+        }
         /// <summary>
         /// Determines whether fromType can be assigned to toType.
         /// </summary>
@@ -855,7 +923,11 @@ namespace SharpDX
         /// </returns>
         public static bool IsAssignableFrom(Type toType, Type fromType)
         {
+#if BEFORE_NET45
+            return toType.IsAssignableFrom(fromType);
+#else
             return toType.GetTypeInfo().IsAssignableFrom(fromType.GetTypeInfo());
+#endif
         }
 
         /// <summary>
@@ -867,7 +939,11 @@ namespace SharpDX
         /// </returns>
         public static bool IsEnum(Type typeToTest)
         {
+#if BEFORE_NET45
+            return typeToTest.IsEnum;
+#else
             return typeToTest.GetTypeInfo().IsEnum;
+#endif
         }
 
         /// <summary>
@@ -879,12 +955,16 @@ namespace SharpDX
         /// </returns>
         public static bool IsValueType(Type typeToTest)
         {
+#if BEFORE_NET45
+            return typeToTest.IsValueType;
+#else
             return typeToTest.GetTypeInfo().IsValueType;
+#endif
         }
 
         private static MethodInfo GetMethod(Type type, string name, Type[] typeArgs) {
 #if BEFORE_NET45
-            foreach( var method in type.GetTypeInfo().GetMethods(BindingFlags.Public|BindingFlags.Instance))
+            foreach( var method in type.GetMethods(BindingFlags.Public|BindingFlags.Instance))
             {
                 if(method.Name != name)
                 {
@@ -984,22 +1064,24 @@ namespace SharpDX
             while (tempType != null)
             {
 #if BEFORE_NET45
-                methods.AddRange(tempType.GetTypeInfo().GetMethods(BindingFlags.Public)); //target methods will be favored in the search
+                methods.AddRange(tempType.GetMethods(BindingFlags.Public)); //target methods will be favored in the search
+                tempType = tempType.BaseType;
 #else
                 methods.AddRange(tempType.GetTypeInfo().DeclaredMethods); //target methods will be favored in the search
-#endif
                 tempType = tempType.GetTypeInfo().BaseType;
+#endif
             }
 
             tempType = targetType;
             while (tempType != null)
             {
 #if BEFORE_NET45
-                methods.AddRange(tempType.GetTypeInfo().GetMethods(BindingFlags.Public)); //target methods will be favored in the search
+                methods.AddRange(tempType.GetMethods(BindingFlags.Public)); //target methods will be favored in the search
+                tempType = tempType.BaseType;
 #else
                 methods.AddRange(tempType.GetTypeInfo().DeclaredMethods); //target methods will be favored in the search
-#endif
                 tempType = tempType.GetTypeInfo().BaseType;
+#endif
             }
 
             foreach (MethodInfo mi in methods)
@@ -1328,7 +1410,11 @@ namespace SharpDX
                 {
                     return true;
                 }
+#if BEFORE_NET45
+                type = type.BaseType;
+#else
                 type = type.GetTypeInfo().BaseType;
+#endif
             }
 
             return false;

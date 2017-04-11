@@ -50,7 +50,7 @@ namespace SharpDX
                 if (!typeToShadowTypes.TryGetValue(type, out slimInterfaces))
                 {
 #if BEFORE_NET45
-                    var interfaces = type.GetTypeInfo().GetInterfaces();
+                    var interfaces = type.GetInterfaces();
 #else
                     var interfaces = type.GetTypeInfo().ImplementedInterfaces;
 #endif
@@ -71,7 +71,7 @@ namespace SharpDX
 
                         // Keep only final interfaces and not intermediate.
 #if BEFORE_NET45
-                        var inheritList = item.GetTypeInfo().GetInterfaces();
+                        var inheritList = item.GetInterfaces();
 #else
                         var inheritList = item.GetTypeInfo().ImplementedInterfaces;
 #endif
@@ -107,7 +107,7 @@ namespace SharpDX
 
                 // Associate also inherited interface to this shadow
 #if BEFORE_NET45
-                var inheritList = item.GetTypeInfo().GetInterfaces();
+                var inheritList = item.GetInterfaces();
 #else
                 var inheritList = item.GetTypeInfo().ImplementedInterfaces;
 #endif
