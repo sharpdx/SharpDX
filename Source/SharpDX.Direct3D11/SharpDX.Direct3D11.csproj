@@ -1,25 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\Build\SharpDX.props" />
   <PropertyGroup>
-    <TargetFrameworks>net45;netcoreapp1.0;netstandard1.1;uap10.0</TargetFrameworks>
+    <TargetFrameworks>net40;net45;netcoreapp1.0;netstandard1.1;uap10.0</TargetFrameworks>
     <PackageId>SharpDX.Direct3D11</PackageId>
     <Product>SharpDX.Direct3D11</Product>
     <AssemblyTitle>SharpDX.Direct3D11</AssemblyTitle>
     <Title>SharpDX.Direct3D11</Title>
     <Description>Assembly providing DirectX - Direct3D11, Direct3D11.1 and Effects11 managed API.</Description>
     <PackageTags>$(PackageTags) 3D Direct3D11 D3D11 Effects11</PackageTags>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' OR  '$(TargetFramework)' == 'netcoreapp1.0' ">
-    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
-    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
-    <DefineConstants>$(DefineConstants);STORE_APP;WINDOWS_API_SET</DefineConstants>
-    <SharpDXAppType>STORE_APP</SharpDXAppType>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
-    <DefineConstants>$(DefineConstants);REFERENCE</DefineConstants>
-    <SharpDXAppType>REFERENCE</SharpDXAppType>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />

@@ -47,8 +47,8 @@ namespace SharpDX.Direct3D9
     /// </summary>
     internal static class FillCallbackHelper
     {
-        private static unsafe Delegate native2DCallback = new Fill2DCallbackDelegate(Fill2DCallbackImpl);
-        private static unsafe Delegate native3DCallback = new Fill3DCallbackDelegate(Fill3DCallbackImpl);
+        private static unsafe Fill2DCallbackDelegate native2DCallback = new Fill2DCallbackDelegate(Fill2DCallbackImpl);
+        private static unsafe Fill3DCallbackDelegate native3DCallback = new Fill3DCallbackDelegate(Fill3DCallbackImpl);
 
         /// <summary>
         /// Pointer to the native callback for 2D function
@@ -60,7 +60,7 @@ namespace SharpDX.Direct3D9
         /// </summary>
         public static IntPtr Native3DCallbackPtr;
 
-        static FillCallbackHelper()
+        static unsafe FillCallbackHelper()
         {
             Native2DCallbackPtr = Marshal.GetFunctionPointerForDelegate(native2DCallback);
             Native3DCallbackPtr = Marshal.GetFunctionPointerForDelegate(native3DCallback);

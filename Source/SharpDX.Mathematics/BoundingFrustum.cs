@@ -137,7 +137,7 @@ namespace SharpDX
         /// <returns>
         ///   <c>true</c> if the specified <see cref="BoundingFrustum"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public bool Equals(ref BoundingFrustum other)
         {
             return this.pMatrix == other.pMatrix;
@@ -150,7 +150,7 @@ namespace SharpDX
         /// <returns>
         ///   <c>true</c> if the specified <see cref="BoundingFrustum"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public bool Equals(BoundingFrustum other)
         {
             return Equals(ref other);
@@ -180,7 +180,7 @@ namespace SharpDX
         /// <returns>
         /// The result of the operator.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public static bool operator ==(BoundingFrustum left, BoundingFrustum right)
         {
             return left.Equals(ref right);
@@ -194,7 +194,7 @@ namespace SharpDX
         /// <returns>
         /// The result of the operator.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public static bool operator !=(BoundingFrustum left, BoundingFrustum right)
         {
             return !left.Equals(ref right);

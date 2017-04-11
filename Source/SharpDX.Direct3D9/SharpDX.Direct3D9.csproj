@@ -1,21 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\Build\SharpDX.props" />
   <PropertyGroup>
-    <TargetFrameworks>net45;netcoreapp1.0;netstandard1.3</TargetFrameworks>
+    <TargetFrameworks>net40;net45;netcoreapp1.0;netstandard1.3</TargetFrameworks>
     <PackageId>SharpDX.Direct3D9</PackageId>
     <Product>SharpDX.Direct3D9</Product>
     <AssemblyTitle>SharpDX.Direct3D9</AssemblyTitle>
     <Title>SharpDX.Direct3D9</Title>
     <Description>Assembly providing DirectX - Direct3D9 managed API.</Description>
     <PackageTags>$(PackageTags) Direct3D9 D3D9</PackageTags>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' OR  '$(TargetFramework)' == 'netcoreapp1.0' ">
-    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
-    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <DefineConstants>$(DefineConstants);REFERENCE</DefineConstants>
-    <SharpDXAppType>REFERENCE</SharpDXAppType>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />

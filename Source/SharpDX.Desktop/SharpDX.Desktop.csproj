@@ -1,16 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\Build\SharpDX.props" />
   <PropertyGroup>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net40;net45</TargetFrameworks>
     <PackageId>SharpDX.Desktop</PackageId>
     <Product>SharpDX.Desktop</Product>
     <AssemblyTitle>SharpDX.Desktop</AssemblyTitle>
     <Title>SharpDX.Desktop</Title>
     <Description>Assembly providing APIs related to Desktop platform.</Description>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
-    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />

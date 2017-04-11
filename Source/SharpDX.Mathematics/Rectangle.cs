@@ -415,7 +415,7 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref="Rectangle"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public bool Equals(ref Rectangle other)
         {
             return other.Left == Left && other.Top == Top && other.Right == Right && other.Bottom == Bottom;
@@ -428,7 +428,7 @@ namespace SharpDX
         /// <returns>
         /// <c>true</c> if the specified <see cref="Rectangle"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public bool Equals(Rectangle other)
         {
             return Equals(ref other);
@@ -457,7 +457,7 @@ namespace SharpDX
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
         /// <returns>The result of the operator.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public static bool operator ==(Rectangle left, Rectangle right)
         {
             return left.Equals(ref right);
@@ -469,7 +469,7 @@ namespace SharpDX
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
         /// <returns>The result of the operator.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)0x100)] // MethodImplOptions.AggressiveInlining
         public static bool operator !=(Rectangle left, Rectangle right)
         {
             return !left.Equals(ref right);

@@ -1,17 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\Build\SharpDX.props" />
   <PropertyGroup>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net40;net45</TargetFrameworks>
     <PackageId>SharpDX.RawInput</PackageId>
     <Product>SharpDX.RawInput</Product>
     <AssemblyTitle>SharpDX.RawInput</AssemblyTitle>
     <Title>SharpDX.RawInput</Title>
     <Description>Assembly providing DirectX - RawInput managed API.</Description>
     <PackageTags>$(PackageTags) RawInput</PackageTags>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
-    <SharpDXAppType>DESKTOP_APP</SharpDXAppType>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />
