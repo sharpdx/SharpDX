@@ -36,11 +36,20 @@ namespace SharpDX
         public bool IsDisposed { get; private set; }
 
         /// <summary>
+        /// Performs final clean-up and disposing of the object, if Dispose was not manually called.
+        /// </summary>
+        ~DisposeBase()
+        {
+            CheckAndDispose(false);
+        }
+
+        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
         {
             CheckAndDispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
