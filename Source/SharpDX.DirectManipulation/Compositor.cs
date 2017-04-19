@@ -19,7 +19,7 @@ namespace SharpDX.DirectManipulation
 		/// <param name="arentVisualRef"><dd> <p>The parent in the composition tree for the content being added.</p> <p><em>parentVisual</em> must also be a parent of <em>childVisual</em> in the composition tree.</p> </dd></param>	
 		/// <param name="childVisual"><dd> <p>The child in the composition tree for the content being added.</p> <p><em>parentVisual</em> must also be a parent of <em>childVisual</em> in the composition tree.</p> </dd></param>	
 		/// <returns>No documentation.</returns>	
-		/// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IDirectManipulationCompositor::AddContent']/*"/>	
+		/// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IDirectManipulationCompositor::AddContent']/*"/>	
 		/// <msdn-id>Hh768898</msdn-id>	
 		/// <unmanaged>HRESULT IDirectManipulationCompositor::AddContent([In] IDirectManipulationContent* content,[In, Optional] IUnknown* device,[In, Optional] IUnknown* parentVisual,[In, Optional] IUnknown* childVisual)</unmanaged>	
 		/// <unmanaged-short>IDirectManipulationCompositor::AddContent</unmanaged-short>	
@@ -31,7 +31,7 @@ namespace SharpDX.DirectManipulation
 		/// </summary>	
 		/// <param name="content"><dd> <p>The content to remove from the composition tree.</p> </dd></param>	
 		/// <returns>No documentation.</returns>	
-		/// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IDirectManipulationCompositor::RemoveContent']/*"/>	
+		/// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IDirectManipulationCompositor::RemoveContent']/*"/>	
 		/// <msdn-id>Hh768899</msdn-id>	
 		/// <unmanaged>HRESULT IDirectManipulationCompositor::RemoveContent([In] IDirectManipulationContent* content)</unmanaged>	
 		/// <unmanaged-short>IDirectManipulationCompositor::RemoveContent</unmanaged-short>	
@@ -43,7 +43,7 @@ namespace SharpDX.DirectManipulation
 		/// </summary>	
 		/// <param name="updateManager">No documentation.</param>	
 		/// <returns>No documentation.</returns>	
-		/// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IDirectManipulationCompositor::SetUpdateManager']/*"/>	
+		/// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IDirectManipulationCompositor::SetUpdateManager']/*"/>	
 		/// <msdn-id>Hh768900</msdn-id>	
 		/// <unmanaged>HRESULT IDirectManipulationCompositor::SetUpdateManager([In] IDirectManipulationUpdateManager* updateManager)</unmanaged>	
 		/// <unmanaged-short>IDirectManipulationCompositor::SetUpdateManager</unmanaged-short>	
@@ -53,7 +53,7 @@ namespace SharpDX.DirectManipulation
 		/// <p>Commits all pending updates in the compositor to the system for rendering.</p>Syntax<pre><see cref="SharpDX.Result"/> Flush();</pre>Parameters<p>This method has no parameters.</p>Return value<p>If the method succeeds, it returns <strong><see cref="SharpDX.Result.Ok"/></strong>. Otherwise, it returns an <strong><see cref="SharpDX.Result"/></strong> error code.</p>Remarks<p>This method enables Direct Manipulation to flush any pending changes to its visuals before a system event, such as a process suspension.</p>Requirements	
 		/// </summary>	
 		/// <returns>No documentation.</returns>	
-		/// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IDirectManipulationCompositor::Flush']/*"/>	
+		/// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IDirectManipulationCompositor::Flush']/*"/>	
 		/// <msdn-id>jj647930</msdn-id>	
 		/// <unmanaged>HRESULT IDirectManipulationCompositor::Flush()</unmanaged>	
 		/// <unmanaged-short>IDirectManipulationCompositor::Flush</unmanaged-short>	
