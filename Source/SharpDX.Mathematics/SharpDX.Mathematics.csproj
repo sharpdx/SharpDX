@@ -4,6 +4,7 @@
     <TargetFrameworks>net40;net45;netcoreapp1.0;netstandard1.1;uap10.0</TargetFrameworks>
     <PackageId>SharpDX.Mathematics</PackageId>
     <Product>SharpDX.Mathematics</Product>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\SharpDX.Mathematics.xml</DocumentationFile>
     <AssemblyTitle>SharpDX.Mathematics</AssemblyTitle>
     <Title>SharpDX.Mathematics</Title>
     <Description>Assembly providing DirectX - Mathematics managed API.</Description>

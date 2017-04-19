@@ -4,6 +4,7 @@
     <TargetFrameworks>net40;net45;netcoreapp1.0;netstandard1.1;uap10.0</TargetFrameworks>
     <PackageId>SharpDX.Direct2D1</PackageId>
     <Product>SharpDX.Direct2D1</Product>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\SharpDX.Direct2D1.xml</DocumentationFile>
     <AssemblyTitle>SharpDX.Direct2D1</AssemblyTitle>
     <Title>SharpDX.Direct2D1</Title>
     <Description>Assembly providing DirectX - Direct2D, DirectWrite and WIC managed API.</Description>

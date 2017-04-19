@@ -4,6 +4,7 @@
     <TargetFrameworks>net40;net45;netcoreapp1.0;netstandard1.3</TargetFrameworks>
     <PackageId>SharpDX.Direct3D9</PackageId>
     <Product>SharpDX.Direct3D9</Product>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\SharpDX.Direct3D9.xml</DocumentationFile>
     <AssemblyTitle>SharpDX.Direct3D9</AssemblyTitle>
     <Title>SharpDX.Direct3D9</Title>
     <Description>Assembly providing DirectX - Direct3D9 managed API.</Description>

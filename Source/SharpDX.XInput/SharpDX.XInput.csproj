@@ -4,6 +4,7 @@
     <TargetFrameworks>net40;net45;netcoreapp1.0;netstandard1.1;uap10.0</TargetFrameworks>
     <PackageId>SharpDX.XInput</PackageId>
     <Product>SharpDX.XInput</Product>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\SharpDX.XInput.xml</DocumentationFile>
     <AssemblyTitle>SharpDX.XInput</AssemblyTitle>
     <Title>SharpDX.XInput</Title>
     <Description>Assembly providing DirectX - XInput managed API.</Description>

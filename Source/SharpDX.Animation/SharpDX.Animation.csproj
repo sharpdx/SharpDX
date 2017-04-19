@@ -4,6 +4,7 @@
     <TargetFrameworks>net40;net45;netcoreapp1.0;netstandard1.1</TargetFrameworks>
     <PackageId>SharpDX.Animation</PackageId>
     <Product>SharpDX.Animation</Product>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\SharpDX.Animation.xml</DocumentationFile>
     <AssemblyTitle>SharpDX.Animation</AssemblyTitle>
     <Title>SharpDX.Animation</Title>
     <Description>Assembly providing DirectX - Animation managed API.</Description>
