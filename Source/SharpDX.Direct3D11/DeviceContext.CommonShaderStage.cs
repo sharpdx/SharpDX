@@ -25,7 +25,6 @@ namespace SharpDX.Direct3D11
     /// Common Shader class. Provides a common set of methods for a Shader Stage.
     /// TODO: check if usage of abstract is not introducing an unacceptable overhead...
     /// </summary>
-    /// <typeparam name = "T">Type of the shader</typeparam>
     public abstract partial class CommonShaderStage : CppObject
     {
         /// <summary>

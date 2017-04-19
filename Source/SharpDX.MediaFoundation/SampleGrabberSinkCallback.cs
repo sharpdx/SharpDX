@@ -32,7 +32,7 @@ namespace SharpDX.MediaFoundation
         /// <remarks>	
         /// This method is called when the sink's Shutdown method is called. The OnShutdown method should return quickly, or it might interfere with playback. Do not block the thread, wait on events, or perform other lengthy operations inside this method.
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFSampleGrabberSinkCallback::OnShutdown']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IMFSampleGrabberSinkCallback::OnShutdown']/*"/>	
         /// <unmanaged>HRESULT IMFSampleGrabberSinkCallback::OnShutdown()</unmanaged>
         void OnShutdown();
 
@@ -43,7 +43,7 @@ namespace SharpDX.MediaFoundation
         /// <remarks>	
         /// This method should return quickly, or it might interfere with playback. Do not block the thread, wait on events, or perform other lengthy operations inside this method.
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFSampleGrabberSinkCallback::OnSetPresentationClock']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IMFSampleGrabberSinkCallback::OnSetPresentationClock']/*"/>	
         /// <unmanaged>HRESULT IMFSampleGrabberSinkCallback::OnSetPresentationClock([In] IMFPresentationClock* pPresentationClock)</unmanaged>
         void OnSetPresentationClock(PresentationClock presentationClockRef);
 
@@ -59,7 +59,7 @@ namespace SharpDX.MediaFoundation
         /// <remarks>	
         /// If you use the sample-grabber sink in a playback topology, this method should return quickly, or it might interfere with playback. Do not block the thread, wait on events, or perform other lengthy operations inside this method.
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFSampleGrabberSinkCallback::OnProcessSample']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IMFSampleGrabberSinkCallback::OnProcessSample']/*"/>	
         /// <unmanaged>HRESULT IMFSampleGrabberSinkCallback::OnProcessSample([In] const GUID& guidMajorMediaType,[In] unsigned int dwSampleFlags,[In] longlong llSampleTime,[In] longlong llSampleDuration,[In, Buffer] const unsigned char* pSampleBuffer,[In] unsigned int dwSampleSize)</unmanaged>
         void OnProcessSample(Guid guidMajorMediaType, int dwSampleFlags, long llSampleTime, long llSampleDuration, IntPtr pSampleBuffer, int dwSampleSize);
     }

@@ -30,7 +30,7 @@ namespace SharpDX.Animation
         /// <param name="newStoryboard">No documentation.</param>	
         /// <param name="priorityEffect">No documentation.</param>	
         /// <returns>No documentation.</returns>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IUIAnimationPriorityComparison::HasPriority']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IUIAnimationPriorityComparison::HasPriority']/*"/>	
         /// <unmanaged>HRESULT IUIAnimationPriorityComparison::HasPriority([In] IUIAnimationStoryboard* scheduledStoryboard,[In] IUIAnimationStoryboard* newStoryboard,[In] UI_ANIMATION_PRIORITY_EFFECT priorityEffect)</unmanaged>	
         bool HasPriority( SharpDX.Animation.Storyboard scheduledStoryboard, SharpDX.Animation.Storyboard newStoryboard, SharpDX.Animation.PriorityEffect priorityEffect);
     }

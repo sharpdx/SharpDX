@@ -24,7 +24,7 @@ namespace SharpDX.XAudio2
     /// <summary>	
     /// No documentation.	
     /// </summary>	
-    /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='XAUDIO2_SUBMIX_VOICE_FLAGS']/*"/>
+    /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='XAUDIO2_SUBMIX_VOICE_FLAGS']/*"/>
     [Flags]
     public enum SubmixVoiceFlags : int
     {
@@ -32,7 +32,7 @@ namespace SharpDX.XAudio2
         /// <summary>	
         /// No documentation.	
         /// </summary>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='XAUDIO2_VOICE_USEFILTER']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='XAUDIO2_VOICE_USEFILTER']/*"/>	
         /// <unmanaged>XAUDIO2_VOICE_USEFILTER</unmanaged>	
         /// <unmanaged-short>XAUDIO2_VOICE_USEFILTER</unmanaged-short>	
         UseFilter = VoiceFlags.UseFilter,
@@ -40,7 +40,7 @@ namespace SharpDX.XAudio2
         /// <summary>	
         /// None.	
         /// </summary>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='']/*"/>	
         /// <unmanaged>None</unmanaged>	
         /// <unmanaged-short>None</unmanaged-short>	
         None = VoiceFlags.None,

@@ -177,7 +177,7 @@ namespace SharpDX.XAudio2
         /// <summary>	
         /// No documentation.	
         /// </summary>	
-        /// <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='IXAudio2::GetDeviceCount']/*" />	
+        /// <!-- No matching elements were found for the following include tag --><include file="Documentation\CodeComments.xml" path="/comments/comment[@id='IXAudio2::GetDeviceCount']/*" />	
         /// <unmanaged>GetDeviceCount</unmanaged>	
         /// <unmanaged-short>GetDeviceCount</unmanaged-short>	
         /// <unmanaged>HRESULT IXAudio2::GetDeviceCount([Out] unsigned int* pCount)</unmanaged>
@@ -197,7 +197,7 @@ namespace SharpDX.XAudio2
         /// </summary>	
         /// <param name="countRef">No documentation.</param>	
         /// <returns>No documentation.</returns>	
-        /// <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='IXAudio2::GetDeviceCount']/*" />	
+        /// <!-- No matching elements were found for the following include tag --><include file="Documentation\CodeComments.xml" path="/comments/comment[@id='IXAudio2::GetDeviceCount']/*" />	
         /// <unmanaged>HRESULT IXAudio2::GetDeviceCount([Out] unsigned int* pCount)</unmanaged>	
         /// <unmanaged-short>IXAudio2::GetDeviceCount</unmanaged-short>	
         private unsafe void GetDeviceCount(out int countRef)

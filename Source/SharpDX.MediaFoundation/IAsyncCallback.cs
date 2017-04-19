@@ -52,7 +52,7 @@ namespace SharpDX.MediaFoundation
         /// <remarks>	
         /// <p>Within your implementation of <strong>Invoke</strong>, call the corresponding <strong>End...</strong> method.</p><p>This interface is available on the following platforms if the Windows Media Format 11 SDK redistributable components are installed:</p><ul> <li>Windows?XP with Service Pack?2 (SP2) and later.</li> <li>Windows?XP Media Center Edition?2005 with KB900325 (Windows?XP Media Center Edition?2005) and KB925766 (October 2006 Update Rollup for Windows?XP Media Center Edition) installed.</li> </ul>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFAsyncCallback::Invoke']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IMFAsyncCallback::Invoke']/*"/>	
         /// <msdn-id>bb970360</msdn-id>	
         /// <unmanaged>HRESULT IMFAsyncCallback::Invoke([In, Optional] IMFAsyncResult* pAsyncResult)</unmanaged>	
         /// <unmanaged-short>IMFAsyncCallback::Invoke</unmanaged-short>	

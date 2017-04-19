@@ -17,7 +17,7 @@ namespace SharpDX.MediaFoundation
         /// <remarks>	
         /// <p>Calling this method overrides any previous call to <strong><see cref="SharpDX.MediaFoundation.CapturePhotoSink.SetOutputFileName"/></strong> or <strong><see cref="SharpDX.MediaFoundation.CapturePhotoSink.SetSampleCallback_"/></strong>.</p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFCapturePhotoSink::SetOutputByteStream']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IMFCapturePhotoSink::SetOutputByteStream']/*"/>	
         /// <msdn-id>hh447862</msdn-id>	
         /// <unmanaged>HRESULT IMFCapturePhotoSink::SetOutputByteStream([In] IMFByteStream* pByteStream)</unmanaged>	
         /// <unmanaged-short>IMFCapturePhotoSink::SetOutputByteStream</unmanaged-short>
@@ -37,7 +37,7 @@ namespace SharpDX.MediaFoundation
         /// <remarks>	
         /// <p>Calling this method overrides any previous call to <strong><see cref="SharpDX.MediaFoundation.CapturePhotoSink.SetOutputByteStream_"/></strong> or  <strong><see cref="SharpDX.MediaFoundation.CapturePhotoSink.SetOutputFileName"/></strong>.</p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFCapturePhotoSink::SetSampleCallback']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IMFCapturePhotoSink::SetSampleCallback']/*"/>	
         /// <msdn-id>hh447864</msdn-id>	
         /// <unmanaged>HRESULT IMFCapturePhotoSink::SetSampleCallback([In] IMFCaptureEngineOnSampleCallback* pCallback)</unmanaged>	
         /// <unmanaged-short>IMFCapturePhotoSink::SetSampleCallback</unmanaged-short>	

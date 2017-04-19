@@ -31,7 +31,7 @@ namespace SharpDX.MediaFoundation
         /// Retrieves the presenter's media type.
         /// </summary>	
         /// <param name="ppMediaType"><para>Receives a pointer to the IMFVideoMediaType interface. The caller must release the interface.</para></param>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFVideoPresenter::GetCurrentMediaType']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IMFVideoPresenter::GetCurrentMediaType']/*"/>	
         /// <unmanaged>HRESULT IMFVideoPresenter::GetCurrentMediaType([out] IMFVideoMediaType **ppMediaType</unmanaged>
         VideoMediaType CurrentMediaType { get; }
 
@@ -40,7 +40,7 @@ namespace SharpDX.MediaFoundation
         /// </summary>	
         /// <param name="eMessage"><para>Specifies the message as a member of the VpMessageType enumeration.</para></param>	
         /// <param name="ulParam"><para>Message parameter. The meaning of this parameter depends on the message type.</para></param>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFVideoPresenter::ProcessMessage']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IMFVideoPresenter::ProcessMessage']/*"/>	
         /// <unmanaged>HRESULT IMFVideoPresenter::ProcessMessage([In] MFVP_MESSAGE_TYPE eMessage,[In] ULONG_PTR ulParam)</unmanaged>
         void ProcessMessage(VpMessageType eMessage, IntPtr ulParam);
     }

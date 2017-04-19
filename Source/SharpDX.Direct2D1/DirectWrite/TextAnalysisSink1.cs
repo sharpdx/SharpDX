@@ -35,7 +35,7 @@ namespace SharpDX.DirectWrite
         /// <param name="isSideways"><dd>  <p>Whether the glyphs are rotated on their side, which is the default case for CJK and the case stacked Latin</p> </dd></param>	
         /// <param name="isRightToLeft"><dd>  <p>Whether the script should be shaped as right-to-left. For Arabic stacked top-to-bottom, even when the adjusted bidi level is coerced to an even level, this will still be true.</p> </dd></param>	
         /// <returns><p>Returns a successful code or an error code to abort analysis.</p></returns>	
-        /// <include file='..\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IDWriteTextAnalysisSink1::SetGlyphOrientation']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IDWriteTextAnalysisSink1::SetGlyphOrientation']/*"/>	
         /// <msdn-id>Hh780425</msdn-id>	
         /// <unmanaged>HRESULT IDWriteTextAnalysisSink1::SetGlyphOrientation([In] unsigned int textPosition,[In] unsigned int textLength,[In] DWRITE_GLYPH_ORIENTATION_ANGLE glyphOrientationAngle,[In] unsigned char adjustedBidiLevel,[In] BOOL isSideways,[In] BOOL isRightToLeft)</unmanaged>	
         /// <unmanaged-short>IDWriteTextAnalysisSink1::SetGlyphOrientation</unmanaged-short>	

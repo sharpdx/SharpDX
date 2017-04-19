@@ -43,7 +43,7 @@ namespace SharpDX.DirectWrite
         /// }	
         /// </pre><p>The <em>baselineOriginX</em>, <em>baslineOriginY</em>, <em>measuringMethod</em>, and <em>glyphRun</em> parameters are provided (as arguments) when the callback method is invoked.  The <em>renderingParams</em>, <em>textColor</em> and <em>blackBoxRect</em> are not.</p><p>Default rendering params can be retrieved by using the <strong><see cref="SharpDX.DirectWrite.Factory.CreateMonitorRenderingParams"/></strong> method.</p><p></p>	
         /// </remarks>	
-        /// <include file='..\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IDWriteBitmapRenderTarget::DrawGlyphRun']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IDWriteBitmapRenderTarget::DrawGlyphRun']/*"/>	
         /// <msdn-id>dd368167</msdn-id>	
         /// <unmanaged>HRESULT IDWriteBitmapRenderTarget::DrawGlyphRun([In] float baselineOriginX,[In] float baselineOriginY,[In] DWRITE_MEASURING_MODE measuringMode,[In] const DWRITE_GLYPH_RUN* glyphRun,[In] IDWriteRenderingParams* renderingParams,[In] int textColor,[Out, Optional] RECT* blackBoxRect)</unmanaged>	
         /// <unmanaged-short>IDWriteBitmapRenderTarget::DrawGlyphRun</unmanaged-short>	

@@ -14,7 +14,7 @@ namespace SharpDX.MediaFoundation
         /// </summary>	
         /// <param name="notificationCallbackRef">No documentation.</param>	
         /// <returns>No documentation.</returns>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFCapturePhotoConfirmation::SetPhotoConfirmationCallback']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IMFCapturePhotoConfirmation::SetPhotoConfirmationCallback']/*"/>	
         /// <unmanaged>HRESULT IMFCapturePhotoConfirmation::SetPhotoConfirmationCallback([In] IMFAsyncCallback* pNotificationCallback)</unmanaged>	
         /// <unmanaged-short>IMFCapturePhotoConfirmation::SetPhotoConfirmationCallback</unmanaged-short>	
         public IAsyncCallback PhotoConfirmationCallback

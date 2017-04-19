@@ -23,7 +23,7 @@ namespace SharpDX.MediaFoundation
         /// <remarks>	
         /// <p>Before calling this method, call the <strong><see cref="SharpDX.MediaFoundation.MediaFactory.Startup"/></strong> function.</p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFCaptureEngineClassFactory::CreateInstance']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IMFCaptureEngineClassFactory::CreateInstance']/*"/>	
         /// <msdn-id>hh447848</msdn-id>	
         /// <unmanaged>HRESULT IMFCaptureEngineClassFactory::CreateInstance([In] const GUID&amp; clsid,[In] const GUID&amp; riid,[Out] void** ppvObject)</unmanaged>	
         /// <unmanaged-short>IMFCaptureEngineClassFactory::CreateInstance</unmanaged-short>	
@@ -47,7 +47,7 @@ namespace SharpDX.MediaFoundation
         /// <remarks>	
         /// <p>You must call this method once before using the capture engine. Calling the method a second time returns <strong><see cref="SharpDX.MediaFoundation.ResultCode.InvalidRequest"/></strong>.</p><p>This method is asynchronous. If the method returns a success code, the caller will receive an <strong>MF_CAPTURE_ENGINE_INITIALIZED</strong> event through the <strong><see cref="SharpDX.MediaFoundation.CaptureEngineOnEventCallback.OnEvent"/></strong> method. The operation can fail asynchronously after the method succeeds. If so, the error code is conveyed through the <strong>OnEvent</strong> method.</p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFCaptureEngine::Initialize']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IMFCaptureEngine::Initialize']/*"/>	
         /// <msdn-id>hh447855</msdn-id>	
         /// <unmanaged>HRESULT IMFCaptureEngine::Initialize([In] IMFCaptureEngineOnEventCallback* pEventCallback,[In, Optional] IMFAttributes* pAttributes,[In, Optional] IUnknown* pAudioSource,[In, Optional] IUnknown* pVideoSource)</unmanaged>	
         /// <unmanaged-short>IMFCaptureEngine::Initialize</unmanaged-short>	

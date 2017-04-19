@@ -35,7 +35,7 @@ namespace SharpDX.DirectWrite
         /// <remarks>	
         /// <p>The text analyzer calls back to this to get the desired glyph orientation and resolved bidi level, which it uses along with the script properties of the text to determine the actual orientation of each character, which it reports back to the client via the sink SetGlyphOrientation method.</p>	
         /// </remarks>	
-        /// <include file='..\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IDWriteTextAnalysisSource1::GetVerticalGlyphOrientation']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IDWriteTextAnalysisSource1::GetVerticalGlyphOrientation']/*"/>	
         /// <msdn-id>Hh780427</msdn-id>	
         /// <unmanaged>HRESULT IDWriteTextAnalysisSource1::GetVerticalGlyphOrientation([In] unsigned int textPosition,[Out] unsigned int* textLength,[Out] DWRITE_VERTICAL_GLYPH_ORIENTATION* glyphOrientation,[Out] unsigned char* bidiLevel)</unmanaged>	
         /// <unmanaged-short>IDWriteTextAnalysisSource1::GetVerticalGlyphOrientation</unmanaged-short>	
