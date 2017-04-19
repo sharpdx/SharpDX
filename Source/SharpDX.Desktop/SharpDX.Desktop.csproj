@@ -4,6 +4,7 @@
     <TargetFrameworks>net40;net45</TargetFrameworks>
     <PackageId>SharpDX.Desktop</PackageId>
     <Product>SharpDX.Desktop</Product>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\SharpDX.Desktop.xml</DocumentationFile>
     <AssemblyTitle>SharpDX.Desktop</AssemblyTitle>
     <Title>SharpDX.Desktop</Title>
     <Description>Assembly providing APIs related to Desktop platform.</Description>

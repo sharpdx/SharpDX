@@ -4,6 +4,7 @@
     <TargetFrameworks>net40;net45;netcoreapp1.0;netstandard1.3</TargetFrameworks>
     <PackageId>SharpDX.DirectComposition</PackageId>
     <Product>SharpDX.DirectComposition</Product>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\SharpDX.DirectComposition.xml</DocumentationFile>
     <AssemblyTitle>SharpDX.DirectComposition</AssemblyTitle>
     <Title>SharpDX.DirectComposition</Title>
     <Description>Assembly providing DirectX - DirectComposition managed API.</Description>

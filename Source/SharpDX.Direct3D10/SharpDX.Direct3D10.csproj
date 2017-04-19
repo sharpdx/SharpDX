@@ -4,6 +4,7 @@
     <TargetFrameworks>net40;net45;netcoreapp1.0;netstandard1.1;uap10.0</TargetFrameworks>
     <PackageId>SharpDX.Direct3D10</PackageId>
     <Product>SharpDX.Direct3D10</Product>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\SharpDX.Direct3D10.xml</DocumentationFile>
     <AssemblyTitle>SharpDX.Direct3D10</AssemblyTitle>
     <Title>SharpDX.Direct3D10</Title>
     <Description>Assembly providing DirectX - Direct3D10 and Direct3D10.1 managed API.</Description>
