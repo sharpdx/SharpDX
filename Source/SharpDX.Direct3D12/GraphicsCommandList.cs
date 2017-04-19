@@ -243,8 +243,7 @@ namespace SharpDX.Direct3D12
         /// <p>Sets a CPU descriptor handle for the vertex buffers.</p>	
         /// </summary>	
         /// <param name="startSlot"><dd>  <p> Index into the device's zero-based array to begin setting vertex buffers. </p> </dd></param>	
-        /// <param name="vertexBufferViews"><dd>  <p> Specifies the vertex buffer views in an array of <strong><see cref="SharpDX.Direct3D12.VertexBufferView"/></strong> structures. </p> </dd></param>	
-        /// <param name="numBuffers"><dd>  <p> The number of views in the <em>pViews</em> array. </p> </dd></param>	
+        /// <param name="vertexBufferViews"><dd>  <p> Specifies the vertex buffer views in an array of <strong><see cref="SharpDX.Direct3D12.VertexBufferView"/></strong> structures. </p> </dd></param>
         /// <msdn-id>dn986883</msdn-id>	
         /// <unmanaged>void ID3D12GraphicsCommandList::IASetVertexBuffers([In] unsigned int StartSlot,[In] unsigned int NumViews,[In] const void* pViews)</unmanaged>	
         /// <unmanaged-short>ID3D12GraphicsCommandList::IASetVertexBuffers</unmanaged-short>	
@@ -335,7 +334,7 @@ namespace SharpDX.Direct3D12
         /// <p> For internal use only. </p>	
         /// </summary>	
         /// <param name="name"><dd>  <p> Internal. </p> </dd></param>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12GraphicsCommandList::BeginEvent']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12GraphicsCommandList::BeginEvent']/*"/>	
         /// <msdn-id>dn986879</msdn-id>	
         /// <unmanaged>void ID3D12GraphicsCommandList::BeginEvent([In] unsigned int Metadata,[In, Buffer, Optional] const void* pData,[In] unsigned int Size)</unmanaged>	
         /// <unmanaged-short>ID3D12GraphicsCommandList::BeginEvent</unmanaged-short>	
@@ -362,7 +361,7 @@ namespace SharpDX.Direct3D12
         /// <p> For internal use only.</p>	
         /// </summary>	
         /// <param name="name"><dd>  <p> Internal. </p> </dd></param>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12GraphicsCommandList::SetMarker']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12GraphicsCommandList::SetMarker']/*"/>	
         /// <msdn-id>dn986885</msdn-id>	
         /// <unmanaged>void ID3D12GraphicsCommandList::SetMarker([In] unsigned int Metadata,[In, Buffer, Optional] const void* pData,[In] unsigned int Size)</unmanaged>	
         /// <unmanaged-short>ID3D12GraphicsCommandList::SetMarker</unmanaged-short>
