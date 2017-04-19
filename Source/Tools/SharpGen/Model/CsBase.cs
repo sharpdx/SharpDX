@@ -394,7 +394,7 @@ namespace SharpGen.Model
             {
                 var subDir = GetParent<CsNamespace>().OutputDirectory;
                 string relativePath = string.IsNullOrEmpty(subDir) ? "." : "..";
-                return "<include file='" + relativePath + "\\..\\" + CsAssembly.CodeCommentsPath + "' path=\"" + CodeCommentsXPath + "/*\"/>";
+                return "<include file='" + relativePath + "\\..\\..\\" + CsAssembly.CodeCommentsPath + "' path=\"" + CodeCommentsXPath + "/*\"/>";
             }
         }
 
