@@ -608,6 +608,7 @@ namespace SharpDX.Direct3D11
         private bool isCheckThreadingSupport;
         private bool supportsCommandLists;
 
+        /// <inheritdoc/>
         protected override unsafe void Dispose(bool disposing)
         {
             if (disposing)

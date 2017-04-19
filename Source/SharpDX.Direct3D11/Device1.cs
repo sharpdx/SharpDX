@@ -270,7 +270,7 @@ namespace SharpDX.Direct3D11
             return FromPointer<T>(temp);
         }
 
-
+        /// <inheritdoc/>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

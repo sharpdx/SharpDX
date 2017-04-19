@@ -63,12 +63,14 @@ namespace SharpDX.Direct3D11
             }
         }
 
+        /// <inheritdoc/>
         protected override void NativePointerUpdated(IntPtr oldNativePointer)
         {
             DisposeDevice();
             base.NativePointerUpdated(oldNativePointer);
         }
 
+        /// <inheritdoc/>
         protected override unsafe void Dispose(bool disposing)
         {
             if (disposing)
