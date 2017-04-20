@@ -257,6 +257,8 @@
 
     <map interface="ID3DDeviceContextState" name="DeviceContextState"/>
     <map interface="ID3DUserDefinedAnnotation" name="UserDefinedAnnotation"/>
+    <map interface="ID3D11On12Device" name="Device11On12"/>
+    
     <map method="ID3DUserDefinedAnnotation::SetMarker" property="false" />
     <map interface="ID3D11On12Device" name="Device11On12"/>
     <map interface="ID3D11Multithread" name="Multithread"/>
