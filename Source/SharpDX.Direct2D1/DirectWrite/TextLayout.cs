@@ -162,6 +162,22 @@ namespace SharpDX.DirectWrite
         }
 
         /// <summary>	
+        /// Sets the application-defined drawing effect. 	
+        /// </summary>	
+        /// <remarks>	
+        /// An <see cref="SharpDX.Direct2D1.Brush"/>, such as a color or gradient brush, can be set as a drawing effect if you are using the <see cref="RenderTarget.DrawTextLayout(System.Drawing.PointF,SharpDX.DirectWrite.TextLayout,SharpDX.Direct2D1.Brush,SharpDX.Direct2D1.DrawTextOptions)"/> to draw text and that brush will be used to draw the specified range of text.  This drawing effect is associated with the specified range and will be passed back to the application by way of the callback when the range is drawn at drawing time.  	
+        /// You should use this method for native elements such as Direct2D brushes, as the other method builds a COM object on top of the c# version, native version is not able to pick that we use such effects as brushes.
+        /// </remarks>	
+        /// <param name="nativePointer">Application-defined drawing effects that apply to the range. This data object will be passed back to the application's drawing callbacks for final rendering. </param>
+        /// <param name="textRange">The text range to which this change applies. </param>
+        /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
+        /// <unmanaged>HRESULT IDWriteTextLayout::SetDrawingEffect([None] IUnknown* drawingEffect,[None] DWRITE_TEXT_RANGE textRange)</unmanaged>
+        public void SetNativeDrawingEffect(IntPtr nativePointer, SharpDX.DirectWrite.TextRange textRange)
+        {
+            SetDrawingEffect_(nativePointer, textRange);
+        }
+
+        /// <summary>	
         /// Gets the application-defined drawing effect at the specified text position. 	
         /// </summary>	
         /// <param name="currentPosition">The position of the text whose drawing effect is to be retrieved. </param>
