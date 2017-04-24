@@ -28,7 +28,7 @@ namespace SharpDX.XInput
     /// <summary>	
     /// Functions	
     /// </summary>	
-    /// <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='SharpDX.XInput.XInput']/*" />	
+    /// <!-- No matching elements were found for the following include tag --><include file="Documentation\CodeComments.xml" path="/comments/comment[@id='SharpDX.XInput.XInput']/*" />	
     internal class XInput13 : IXInput
     {
         public int XInputSetState(int dwUserIndex, Vibration vibrationRef)

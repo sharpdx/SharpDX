@@ -63,7 +63,7 @@ namespace SharpDX.Direct3D12
         /// <remarks>	
         /// <p>Refer to Capability Querying.</p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CheckFeatureSupport']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CheckFeatureSupport']/*"/>	
         /// <msdn-id>dn788653</msdn-id>	
         /// <unmanaged>HRESULT ID3D12Device::CheckFeatureSupport([In] D3D12_FEATURE Feature,[Out, Buffer] void* pFeatureSupportData,[In] unsigned int FeatureSupportDataSize)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CheckFeatureSupport</unmanaged-short>	
@@ -84,7 +84,7 @@ namespace SharpDX.Direct3D12
         /// <remarks>	
         /// <p> The <strong>REFIID</strong>, or <strong><see cref="System.Guid"/></strong>, of the interface to the command queue can be obtained by using the __uuidof() macro. For example, __uuidof(<see cref="SharpDX.Direct3D12.CommandQueue"/>) will get the <strong><see cref="System.Guid"/></strong> of the interface to a command queue. </p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommandQueue']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommandQueue']/*"/>	
         /// <msdn-id>dn788657</msdn-id>	
         /// <unmanaged>HRESULT ID3D12Device::CreateCommandQueue([In] const D3D12_COMMAND_QUEUE_DESC* pDesc,[In] const GUID&amp; riid,[Out] ID3D12CommandQueue** ppCommandQueue)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateCommandQueue</unmanaged-short>	
@@ -102,7 +102,7 @@ namespace SharpDX.Direct3D12
         /// <remarks>	
         /// <p> The device creates command lists from the command allocator. </p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommandAllocator']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommandAllocator']/*"/>	
         /// <msdn-id>dn788655</msdn-id>	
         /// <unmanaged>HRESULT ID3D12Device::CreateCommandAllocator([In] D3D12_COMMAND_LIST_TYPE type,[In] const GUID&amp; riid,[Out] ID3D12CommandAllocator** ppCommandAllocator)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateCommandAllocator</unmanaged-short>	
@@ -129,7 +129,7 @@ namespace SharpDX.Direct3D12
         /// <param name="riid">No documentation.</param>	
         /// <returns>No documentation.</returns>	
         /// <msdn-id>dn788656</msdn-id>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommandList']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommandList']/*"/>	
         /// <unmanaged>HRESULT ID3D12Device::CreateCommandList([In] unsigned int nodeMask,[In] D3D12_COMMAND_LIST_TYPE type,[In] ID3D12CommandAllocator* pCommandAllocator,[In, Optional] ID3D12PipelineState* pInitialState,[In] const GUID&amp; riid,[Out] void** ppCommandList)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateCommandList</unmanaged-short>	
         public GraphicsCommandList CreateCommandList(int nodeMask,
@@ -148,7 +148,7 @@ namespace SharpDX.Direct3D12
         /// <param name="rootSignatureRef"><dd>  <p> Specifies the  <strong><see cref="SharpDX.Direct3D12.RootSignature"/></strong> that the command signature applies to. </p> </dd></param>	
         /// <param name="riid"><dd>  <p> The globally unique identifier (<strong><see cref="System.Guid"/></strong>) for the command signature interface (<strong><see cref="SharpDX.Direct3D12.CommandSignature"/></strong>). The <strong>REFIID</strong>, or <strong><see cref="System.Guid"/></strong>, of the interface to the command signature can be obtained by using the __uuidof() macro. For example, __uuidof(<strong><see cref="SharpDX.Direct3D12.CommandSignature"/></strong>) will get the <strong><see cref="System.Guid"/></strong> of the interface to a command signature. </p> </dd></param>	
         /// <returns><dd>  <p> Specifies a reference, that on successful completion of the method will point to the created command signature (<strong><see cref="SharpDX.Direct3D12.CommandSignature"/></strong>). </p> </dd></returns>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommandSignature']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommandSignature']/*"/>	
         /// <msdn-id>dn903827</msdn-id>	
         /// <unmanaged>HRESULT ID3D12Device::CreateCommandSignature([In] const void* pDesc,[In, Optional] ID3D12RootSignature* pRootSignature,[In] const GUID&amp; riid,[Out] ID3D12CommandSignature** ppvCommandSignature)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateCommandSignature</unmanaged-short>	
@@ -181,7 +181,7 @@ namespace SharpDX.Direct3D12
         /// <remarks>	
         /// <p> This method creates both a resource and a heap, such that the heap is big enough to contain the entire resource and the resource is mapped to the heap. The created heap is known as an implicit heap, because the heap object cannot be obtained by the application. The application must ensure the GPU will no longer read or write to this resource before releasing the final reference on the resource. </p><p> The implicit heap is made resident for GPU access before the method returns to the application. See Residency. </p><p> The resource GPU VA mapping cannot be changed. See <strong><see cref="SharpDX.Direct3D12.CommandQueue.UpdateTileMappings"/></strong> and Volume Tiled Resources. </p><p> This method may be called by multiple threads concurrently. </p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommittedResource']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommittedResource']/*"/>	
         /// <msdn-id>dn899178</msdn-id>	
         /// <unmanaged>HRESULT ID3D12Device::CreateCommittedResource([In] const D3D12_HEAP_PROPERTIES* pHeapProperties,[In] D3D12_HEAP_FLAGS HeapFlags,[In, Value] const D3D12_RESOURCE_DESC* pResourceDesc,[In] D3D12_RESOURCE_STATES InitialResourceState,[In, Optional] const D3D12_CLEAR_VALUE* pOptimizedClearValue,[In] const GUID&amp; riidResource,[Out] ID3D12Resource** ppvResource)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateCommittedResource</unmanaged-short>	
@@ -196,7 +196,7 @@ namespace SharpDX.Direct3D12
         /// <param name="descRef"><dd>  <p> A reference to a <strong><see cref="SharpDX.Direct3D12.ComputePipelineStateDescription"/></strong> structure that describes compute pipeline state. </p> </dd></param>	
         /// <param name="riid"><dd>  <p> The globally unique identifier (<strong><see cref="System.Guid"/></strong>) for the pipeline state interface (<strong><see cref="SharpDX.Direct3D12.PipelineState"/></strong>). The <strong>REFIID</strong>, or <strong><see cref="System.Guid"/></strong>, of the interface to the pipeline state can be obtained by using the __uuidof() macro. For example, __uuidof(<see cref="SharpDX.Direct3D12.PipelineState"/>) will get the <strong><see cref="System.Guid"/></strong> of the interface to a pipeline state. </p> </dd></param>	
         /// <returns><dd>  <p> A reference to a memory block that receives a reference to the <strong><see cref="SharpDX.Direct3D12.PipelineState"/></strong> interface for the pipeline state object. The pipeline state object is an immutable state object.  It contains no methods. </p> </dd></returns>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateComputePipelineState']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateComputePipelineState']/*"/>	
         /// <msdn-id>dn788658</msdn-id>	
         /// <unmanaged>HRESULT ID3D12Device::CreateComputePipelineState([In] const void* pDesc,[In] const GUID&amp; riid,[Out] ID3D12PipelineState** ppPipelineState)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateComputePipelineState</unmanaged-short>	
@@ -220,7 +220,7 @@ namespace SharpDX.Direct3D12
         /// <param name="blobLengthInBytes">No documentation.</param>	
         /// <param name="riid">No documentation.</param>	
         /// <returns>No documentation.</returns>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateRootSignature']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateRootSignature']/*"/>	
         /// <msdn-id>dn788658</msdn-id>	
         /// <unmanaged>HRESULT ID3D12Device::CreateRootSignature([In] unsigned int nodeMask,[In, Buffer] const void* pBlobWithRootSignature,[In] SIZE_T blobLengthInBytes,[In] const GUID&amp; riid,[Out] ID3D12RootSignature** ppvRootSignature)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateRootSignature</unmanaged-short>	
@@ -237,7 +237,7 @@ namespace SharpDX.Direct3D12
         /// <param name="blobLengthInBytes">No documentation.</param>	
         /// <param name="riid">No documentation.</param>	
         /// <returns>No documentation.</returns>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateRootSignature']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateRootSignature']/*"/>	
         /// <msdn-id>dn788658</msdn-id>	
         /// <unmanaged>HRESULT ID3D12Device::CreateRootSignature([In] unsigned int nodeMask,[In, Buffer] const void* pBlobWithRootSignature,[In] SIZE_T blobLengthInBytes,[In] const GUID&amp; riid,[Out] ID3D12RootSignature** ppvRootSignature)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateRootSignature</unmanaged-short>	
@@ -254,7 +254,7 @@ namespace SharpDX.Direct3D12
         /// <param name="blobLengthInBytes">No documentation.</param>	
         /// <param name="riid">No documentation.</param>	
         /// <returns>No documentation.</returns>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateRootSignature']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateRootSignature']/*"/>	
         /// <msdn-id>dn788658</msdn-id>	
         /// <unmanaged>HRESULT ID3D12Device::CreateRootSignature([In] unsigned int nodeMask,[In, Buffer] const void* pBlobWithRootSignature,[In] SIZE_T blobLengthInBytes,[In] const GUID&amp; riid,[Out] ID3D12RootSignature** ppvRootSignature)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateRootSignature</unmanaged-short>	
@@ -289,7 +289,7 @@ namespace SharpDX.Direct3D12
         /// <param name="flags">No documentation.</param>	
         /// <param name="riid">No documentation.</param>	
         /// <returns>No documentation.</returns>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateFence']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateFence']/*"/>	
         /// <msdn-id>dn899179</msdn-id>
         /// <unmanaged>HRESULT ID3D12Device::CreateFence([In] unsigned longlong InitialValue,[In] D3D12_FENCE_FLAGS Flags,[In] const GUID&amp; riid,[Out] ID3D12Fence** ppFence)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateFence</unmanaged-short>	
@@ -304,7 +304,7 @@ namespace SharpDX.Direct3D12
         /// <param name="descRef">No documentation.</param>	
         /// <param name="riid">No documentation.</param>	
         /// <returns>No documentation.</returns>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateGraphicsPipelineState']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateGraphicsPipelineState']/*"/>	
         /// <msdn-id>dn788663</msdn-id>
         /// <unmanaged>HRESULT ID3D12Device::CreateGraphicsPipelineState([In] const void* pDesc,[In] const GUID&amp; riid,[Out] ID3D12PipelineState** ppPipelineState)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateGraphicsPipelineState</unmanaged-short>	
@@ -395,7 +395,7 @@ namespace SharpDX.Direct3D12
         /// <remarks>	
         /// <p><strong>CreateHeap</strong> creates a heap that can be used with placed resources and reserved resources. Before releasing the final reference on the heap, the application must ensure that the GPU will no longer read or write to this heap. Placed resource objects will hold a reference on the heap they are created on, but reserved resources will not hold a reference for each mapping made to a heap. </p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateHeap']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateHeap']/*"/>	
         /// <msdn-id>dn788664</msdn-id>	
         /// <unmanaged>HRESULT ID3D12Device::CreateHeap([In] const D3D12_HEAP_DESC* pDesc,[In] const GUID&amp; riid,[Out] ID3D12Heap** ppvHeap)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateHeap</unmanaged-short>	
@@ -413,7 +413,7 @@ namespace SharpDX.Direct3D12
         /// <remarks>	
         /// <p> Refer to Queries for more information. </p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateQueryHeap']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateQueryHeap']/*"/>	
         /// <msdn-id>dn903828</msdn-id>	
         /// <unmanaged>HRESULT ID3D12Device::CreateQueryHeap([In] const D3D12_QUERY_HEAP_DESC* pDesc,[In] const GUID&amp; riid,[Out] ID3D12QueryHeap** ppvHeap)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateQueryHeap</unmanaged-short>	
@@ -435,7 +435,7 @@ namespace SharpDX.Direct3D12
         /// <remarks>	
         /// <p><strong>CreatePlacedResource</strong> is similar to fully mapping a reserved resource to an offset within a heap; but the virtual address space associated with a heap may be reused as well. </p><p> Placed resources are lighter weight than committed resources to create and destroy, because no heap is created or destroyed during this operation.  However, placed resources enable an even lighter weight technique to reuse memory than resource creation and destruction: reuse through aliasing and aliasing barriers. Multiple placed resources may simultaneously overlap each other on the same heap, but only a single overlapping resource can be used at a time. </p><p> There are two placed resource usage semantics, a simple model and an advanced model. The simple model is recommended, and is the most likely model for tool support, until the advanced model is proven to be required by the app. </p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreatePlacedResource']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreatePlacedResource']/*"/>	
         /// <msdn-id>dn899180</msdn-id>	
         /// <unmanaged>HRESULT ID3D12Device::CreatePlacedResource([In] ID3D12Heap* pHeap,[In] unsigned longlong HeapOffset,[In] const D3D12_RESOURCE_DESC* pDesc,[In] D3D12_RESOURCE_STATES InitialState,[In, Optional] const D3D12_CLEAR_VALUE* pOptimizedClearValue,[In] const GUID&amp; riid,[Out] ID3D12Resource** ppvResource)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreatePlacedResource</unmanaged-short>	
@@ -457,7 +457,7 @@ namespace SharpDX.Direct3D12
         /// <param name="riid">No documentation.</param>	
         /// <returns>No documentation.</returns>	
         /// <msdn-id>dn899181</msdn-id>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateReservedResource']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateReservedResource']/*"/>	
         /// <unmanaged>HRESULT ID3D12Device::CreateReservedResource([In] const D3D12_RESOURCE_DESC* pDesc,[In] D3D12_RESOURCE_STATES InitialState,[In, Optional] const D3D12_CLEAR_VALUE* pOptimizedClearValue,[In] const GUID&amp; riid,[Out] ID3D12Resource** ppvResource)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateReservedResource</unmanaged-short>	
         public SharpDX.Direct3D12.Resource CreateReservedResource(SharpDX.Direct3D12.ResourceDescription descRef,
@@ -477,7 +477,7 @@ namespace SharpDX.Direct3D12
         /// <remarks>	
         /// <p> When using <strong>CreatePlacedResource</strong>, the application must use this method to understand the size and alignment characteristics of texture resources.  The results of this method vary depending on the particular adapter, and must be treated as unique to this adapter and driver version. </p><p> Applications cannot use the output of <strong>GetResourceAllocationInfo</strong> to understand packed mip properties of textures. To understand packed mip properties of textures, applications must use <strong>GetResourceTiling</strong>.  Texture resource sizes significantly differ from the information returned by <strong>GetResourceTiling</strong>, because some adapter architectures allocate extra memory for textures to reduce the effective bandwidth during common rendering scenarios.  This even includes textures that have constraints on their texture layouts or have standardized texture layouts.  That extra memory cannot be sparsely mapped or remapped by an application using <strong>CreateReservedResource</strong> and  <strong>UpdateTileMappings</strong>, so it isn't reported in <strong>GetResourceTiling</strong>. </p><p> Applications can forgo using <strong>GetResourceAllocationInfo</strong> for buffer resources (<strong><see cref="SharpDX.Direct3D12.ResourceDimension"/></strong>_BUFFER).  Buffers have the same size on all adapters, which is merely the smallest multiple of 64KB which is greater or equal to <strong><see cref="SharpDX.Direct3D12.ResourceDescription"/></strong>::<strong>Width</strong>. </p><p> When multiple resource descriptions are passed in, the C++ algorithm for calculating a structure size and alignment are used.  For example, a three-element array with two tiny 64KB-aligned resources and a tiny 4MB-aligned resource reports differing sizes based on the order of the array.  If the 4MB aligned resource is in the middle, the resulting <strong>Size</strong> is 12MB.  Otherwise, the resulting <strong>Size</strong> is 8MB.  The <strong>Alignment</strong> returned would always be 4MB, as it is the superset of all alignments in the resource array. </p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::GetResourceAllocationInfo']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::GetResourceAllocationInfo']/*"/>	
         /// <msdn-id>dn788680</msdn-id>	
         /// <unmanaged>D3D12_RESOURCE_ALLOCATION_INFO ID3D12Device::GetResourceAllocationInfo([In] unsigned int visibleMask,[In] unsigned int numResourceDescs,[In, Buffer] const D3D12_RESOURCE_DESC* pResourceDescs)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::GetResourceAllocationInfo</unmanaged-short>	
@@ -496,7 +496,7 @@ namespace SharpDX.Direct3D12
         /// <remarks>	
         /// <p>Refer to Capability Querying.</p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CheckFeatureSupport']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CheckFeatureSupport']/*"/>	
         /// <msdn-id>dn788653</msdn-id>	
         /// <unmanaged>HRESULT ID3D12Device::CheckFeatureSupport([In] D3D12_FEATURE Feature,[Out, Buffer] void* pFeatureSupportData,[In] unsigned int FeatureSupportDataSize)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CheckFeatureSupport</unmanaged-short>	
@@ -520,7 +520,7 @@ namespace SharpDX.Direct3D12
         /// <remarks>	
         /// <p>Refer to Capability Querying.</p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CheckFeatureSupport']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CheckFeatureSupport']/*"/>	
         /// <msdn-id>dn788653</msdn-id>	
         /// <unmanaged>HRESULT ID3D12Device::CheckFeatureSupport([In] D3D12_FEATURE Feature,[Out, Buffer] void* pFeatureSupportData,[In] unsigned int FeatureSupportDataSize)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CheckFeatureSupport</unmanaged-short>	

@@ -40,7 +40,7 @@ namespace SharpDX.X3DAudio {
         /// <summary>	
         /// Functions	
         /// </summary>	
-        /// <include file='..\..\Documentation\CodeComments.xml' path="/comments/comment[@id='SharpDX.X3DAudio.X3DAudio']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='SharpDX.X3DAudio.X3DAudio']/*"/>	
     internal class X3DAudio28 {   
         
         /// <summary>	
@@ -54,7 +54,7 @@ namespace SharpDX.X3DAudio {
         /// <remarks>	
         /// <p>You typically call <strong><see cref="SharpDX.X3DAudio.X3DAudio.X3DAudioCalculate"/></strong> once for each pair of emitting objects and listeners in the scene. After each call, to apply the 3D effects, the app manually applies the calculation results at <em>pDSPSettings</em> to the XAUDIO2 graph. For more info, see How to: Integrate X3DAudio with XAudio2.</p><p><strong>Important</strong>?? The listener and emitter values must be valid. Floating-point specials (NaN, QNaN, +INF, -INF) can cause the entire audio output to go silent if introduced into a running audio graph.</p>	
         /// </remarks>	
-        /// <include file='..\..\Documentation\CodeComments.xml' path="/comments/comment[@id='X3DAudioCalculate']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='X3DAudioCalculate']/*"/>	
         /// <msdn-id>microsoft.directx_sdk.x3daudio.x3daudiocalculate</msdn-id>	
         /// <unmanaged>void X3DAudioCalculate([In] const X3DAUDIOHANDLE* Instance,[In] const X3DAUDIO_LISTENER* pListener,[In] const X3DAUDIO_EMITTER* pEmitter,[In] X3DAudioCalculateFlags Flags,[In] void* pDSPSettings)</unmanaged>	
         /// <unmanaged-short>X3DAudioCalculate</unmanaged-short>	
@@ -83,7 +83,7 @@ namespace SharpDX.X3DAudio {
         /// <remarks>	
         /// <p><strong>X3DAUDIO_HANDLE</strong> is an opaque data structure. Because the operating system doesn't allocate any additional storage for the 3D audio instance handle, you don't need to free or close it.</p>	
         /// </remarks>	
-        /// <include file='..\..\Documentation\CodeComments.xml' path="/comments/comment[@id='X3DAudioInitialize']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='X3DAudioInitialize']/*"/>	
         /// <msdn-id>microsoft.directx_sdk.x3daudio.x3daudioinitialize</msdn-id>	
         /// <unmanaged>HRESULT X3DAudioInitialize([In] SPEAKER_FLAGS SpeakerChannelMask,[In] float SpeedOfSound,[Out] X3DAUDIOHANDLE* Instance)</unmanaged>	
         /// <unmanaged-short>X3DAudioInitialize</unmanaged-short>	

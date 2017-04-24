@@ -18,7 +18,7 @@ namespace SharpDX.MediaFoundation
         /// <remarks>	
         /// <p>Calling this method overrides any previous call to <strong><see cref="SharpDX.MediaFoundation.CapturePreviewSink.SetRenderHandle"/></strong>.</p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFCapturePreviewSink::SetSampleCallback']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IMFCapturePreviewSink::SetSampleCallback']/*"/>	
         /// <msdn-id>hh447873</msdn-id>	
         /// <unmanaged>HRESULT IMFCapturePreviewSink::SetSampleCallback([In] unsigned int dwStreamSinkIndex,[In] IMFCaptureEngineOnSampleCallback* pCallback)</unmanaged>	
         /// <unmanaged-short>IMFCapturePreviewSink::SetSampleCallback</unmanaged-short>	

@@ -24,8 +24,6 @@ namespace SharpDX.DXGI
         /// <summary>	
         /// <p>[This documentation is preliminary and is subject to change.]</p><p>Gets the source region used for the swap chain.</p><p>Use <strong>GetSourceSize</strong> to get the portion of the swap chain from which the operating system presents. The source rectangle is always defined by the region [0, 0, Width, Height]. Use <strong>SetSourceSize</strong> to set this portion of the swap chain. </p>	
         /// </summary>	
-        /// <param name="widthRef">No documentation.</param>	
-        /// <param name="heightRef">No documentation.</param>	
         /// <returns><p> This method can return error codes that are described in the DXGI_ERROR topic.</p></returns>	
         /// <include file='.\Documentation\CodeComments.xml' path="/comments/comment[@id='IDXGISwapChain2::GetSourceSize']/*"/>	
         /// <msdn-id>dn280408</msdn-id>	

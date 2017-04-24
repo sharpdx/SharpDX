@@ -27,7 +27,7 @@ namespace SharpDX.XAudio2
     /// <summary>	
     /// Device role, only valid for XAudio27.	
     /// </summary>	
-    /// <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='XAUDIO2_DEVICE_ROLE']/*" />	
+    /// <!-- No matching elements were found for the following include tag --><include file="Documentation\CodeComments.xml" path="/comments/comment[@id='XAUDIO2_DEVICE_ROLE']/*" />	
     /// <unmanaged>XAUDIO2_DEVICE_ROLE</unmanaged>	
     /// <unmanaged-short>XAUDIO2_DEVICE_ROLE</unmanaged-short>	
     public enum DeviceRole
@@ -35,49 +35,49 @@ namespace SharpDX.XAudio2
         /// <summary>	
         /// No documentation.	
         /// </summary>	
-        /// <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='NotDefaultDevice']/*" />	
+        /// <!-- No matching elements were found for the following include tag --><include file="Documentation\CodeComments.xml" path="/comments/comment[@id='NotDefaultDevice']/*" />	
         /// <unmanaged>NotDefaultDevice</unmanaged>	
         /// <unmanaged-short>NotDefaultDevice</unmanaged-short>	
         NotDefaultDevice,
         /// <summary>	
         /// No documentation.	
         /// </summary>	
-        /// <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='DefaultConsoleDevice']/*" />	
+        /// <!-- No matching elements were found for the following include tag --><include file="Documentation\CodeComments.xml" path="/comments/comment[@id='DefaultConsoleDevice']/*" />	
         /// <unmanaged>DefaultConsoleDevice</unmanaged>	
         /// <unmanaged-short>DefaultConsoleDevice</unmanaged-short>	
         DefaultConsoleDevice,
         /// <summary>	
         /// No documentation.	
         /// </summary>	
-        /// <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='DefaultMultimediaDevice']/*" />	
+        /// <!-- No matching elements were found for the following include tag --><include file="Documentation\CodeComments.xml" path="/comments/comment[@id='DefaultMultimediaDevice']/*" />	
         /// <unmanaged>DefaultMultimediaDevice</unmanaged>	
         /// <unmanaged-short>DefaultMultimediaDevice</unmanaged-short>	
         DefaultMultimediaDevice,
         /// <summary>	
         /// No documentation.	
         /// </summary>	
-        /// <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='DefaultCommunicationsDevice']/*" />	
+        /// <!-- No matching elements were found for the following include tag --><include file="Documentation\CodeComments.xml" path="/comments/comment[@id='DefaultCommunicationsDevice']/*" />	
         /// <unmanaged>DefaultCommunicationsDevice</unmanaged>	
         /// <unmanaged-short>DefaultCommunicationsDevice</unmanaged-short>	
         DefaultCommunicationsDevice = 4,
         /// <summary>	
         /// No documentation.	
         /// </summary>	
-        /// <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='DefaultGameDevice']/*" />	
+        /// <!-- No matching elements were found for the following include tag --><include file="Documentation\CodeComments.xml" path="/comments/comment[@id='DefaultGameDevice']/*" />	
         /// <unmanaged>DefaultGameDevice</unmanaged>	
         /// <unmanaged-short>DefaultGameDevice</unmanaged-short>	
         DefaultGameDevice = 8,
         /// <summary>	
         /// No documentation.	
         /// </summary>	
-        /// <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='GlobalDefaultDevice']/*" />	
+        /// <!-- No matching elements were found for the following include tag --><include file="Documentation\CodeComments.xml" path="/comments/comment[@id='GlobalDefaultDevice']/*" />	
         /// <unmanaged>GlobalDefaultDevice</unmanaged>	
         /// <unmanaged-short>GlobalDefaultDevice</unmanaged-short>	
         GlobalDefaultDevice = 15,
         /// <summary>	
         /// No documentation.	
         /// </summary>	
-        /// <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='InvalidDeviceRole']/*" />	
+        /// <!-- No matching elements were found for the following include tag --><include file="Documentation\CodeComments.xml" path="/comments/comment[@id='InvalidDeviceRole']/*" />	
         /// <unmanaged>InvalidDeviceRole</unmanaged>	
         /// <unmanaged-short>InvalidDeviceRole</unmanaged-short>	
         InvalidDeviceRole = -16
@@ -86,7 +86,7 @@ namespace SharpDX.XAudio2
     /// <summary>	
     /// Details of the device, only valid for XAudio27.	
     /// </summary>	
-    /// <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='XAUDIO2_DEVICE_DETAILS']/*" />	
+    /// <!-- No matching elements were found for the following include tag --><include file="Documentation\CodeComments.xml" path="/comments/comment[@id='XAUDIO2_DEVICE_DETAILS']/*" />	
     /// <unmanaged>XAUDIO2_DEVICE_DETAILS</unmanaged>	
     /// <unmanaged-short>XAUDIO2_DEVICE_DETAILS</unmanaged-short>	
     public struct DeviceDetails
@@ -616,28 +616,28 @@ namespace SharpDX.XAudio2
         /// <summary>	
         /// No documentation.	
         /// </summary>	
-        /// <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='XAUDIO2_DEVICE_DETAILS::DeviceID']/*" />	
+        /// <!-- No matching elements were found for the following include tag --><include file="Documentation\CodeComments.xml" path="/comments/comment[@id='XAUDIO2_DEVICE_DETAILS::DeviceID']/*" />	
         /// <unmanaged>wchar_t DeviceID[256]</unmanaged>	
         /// <unmanaged-short>wchar_t DeviceID</unmanaged-short>	
         public string DeviceID;
         /// <summary>	
         /// No documentation.	
         /// </summary>	
-        /// <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='XAUDIO2_DEVICE_DETAILS::DisplayName']/*" />	
+        /// <!-- No matching elements were found for the following include tag --><include file="Documentation\CodeComments.xml" path="/comments/comment[@id='XAUDIO2_DEVICE_DETAILS::DisplayName']/*" />	
         /// <unmanaged>wchar_t DisplayName[256]</unmanaged>	
         /// <unmanaged-short>wchar_t DisplayName</unmanaged-short>	
         public string DisplayName;
         /// <summary>	
         /// No documentation.	
         /// </summary>	
-        /// <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='XAUDIO2_DEVICE_DETAILS::Role']/*" />	
+        /// <!-- No matching elements were found for the following include tag --><include file="Documentation\CodeComments.xml" path="/comments/comment[@id='XAUDIO2_DEVICE_DETAILS::Role']/*" />	
         /// <unmanaged>XAUDIO2_DEVICE_ROLE Role</unmanaged>	
         /// <unmanaged-short>XAUDIO2_DEVICE_ROLE Role</unmanaged-short>	
         public DeviceRole Role;
         /// <summary>	
         /// No documentation.	
         /// </summary>	
-        /// <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='XAUDIO2_DEVICE_DETAILS::OutputFormat']/*" />	
+        /// <!-- No matching elements were found for the following include tag --><include file="Documentation\CodeComments.xml" path="/comments/comment[@id='XAUDIO2_DEVICE_DETAILS::OutputFormat']/*" />	
         /// <unmanaged>WAVEFORMATEXTENSIBLE OutputFormat</unmanaged>	
         /// <unmanaged-short>WAVEFORMATEXTENSIBLE OutputFormat</unmanaged-short>	
         public WaveFormatExtensible OutputFormat;

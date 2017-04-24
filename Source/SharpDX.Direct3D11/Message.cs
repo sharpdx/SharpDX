@@ -45,6 +45,7 @@ namespace SharpDX.Direct3D11
             this.DescriptionByteLength = @ref.DescriptionByteLength;
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return string.Format("[{0}] [{1}] [{2}] : {3}", Id, Severity, Category, Description);

@@ -252,7 +252,7 @@ namespace SharpDX.XAudio2
         /// <param name="bufferRef">No documentation.</param>	
         /// <param name="decodedXMWAPacketInfo">No documentation.</param>	
         /// <returns>No documentation.</returns>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IXAudio2SourceVoice::SubmitSourceBuffer']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IXAudio2SourceVoice::SubmitSourceBuffer']/*"/>	
         /// <unmanaged>HRESULT IXAudio2SourceVoice::SubmitSourceBuffer([In] const XAUDIO2_BUFFER* pBuffer,[In, Optional] const XAUDIO2_BUFFER_WMA* pBufferWMA)</unmanaged>	
         public void SubmitSourceBuffer(SharpDX.XAudio2.AudioBuffer bufferRef, uint[] decodedXMWAPacketInfo)
         {

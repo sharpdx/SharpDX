@@ -21,6 +21,7 @@ namespace SharpDX.Direct3D11
 {
     public partial class Device3
     {
+        /// <inheritdoc/>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

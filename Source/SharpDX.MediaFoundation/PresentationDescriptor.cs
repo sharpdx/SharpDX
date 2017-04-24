@@ -18,7 +18,7 @@ namespace SharpDX.MediaFoundation
         /// <remarks>	
         /// <p>This interface is available on the following platforms if the Windows Media Format 11 SDK redistributable components are installed:</p><ul> <li>Windows?XP with Service Pack?2 (SP2) and later.</li> <li>Windows?XP Media Center Edition?2005 with KB900325 (Windows?XP Media Center Edition?2005) and KB925766 (October 2006 Update Rollup for Windows?XP Media Center Edition) installed.</li> </ul>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFPresentationDescriptor::GetStreamDescriptorByIndex']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IMFPresentationDescriptor::GetStreamDescriptorByIndex']/*"/>	
         /// <msdn-id>ms694924</msdn-id>	
         /// <unmanaged>HRESULT IMFPresentationDescriptor::GetStreamDescriptorByIndex([In] unsigned int dwIndex,[Out] BOOL* pfSelected,[Out] IMFStreamDescriptor** ppDescriptor)</unmanaged>	
         /// <unmanaged-short>IMFPresentationDescriptor::GetStreamDescriptorByIndex</unmanaged-short>	

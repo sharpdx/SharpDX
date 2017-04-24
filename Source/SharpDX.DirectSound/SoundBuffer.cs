@@ -128,7 +128,7 @@ namespace SharpDX.DirectSound
         /// <value>
         /// The wave format.
         /// </value>
-        /// <include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='IDirectSoundBuffer::SetFormat']/*"/>
+        /// <include file="Documentation\CodeComments.xml" path="/comments/comment[@id='IDirectSoundBuffer::SetFormat']/*"/>
         /// <unmanaged>HRESULT IDirectSoundBuffer::SetFormat([In] const WAVEFORMATEX* pcfxFormat)</unmanaged>
         public SharpDX.Multimedia.WaveFormat Format
         {

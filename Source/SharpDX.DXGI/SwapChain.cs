@@ -67,7 +67,7 @@ namespace SharpDX.DXGI
         /// <remarks>	
         /// <p>You cannot use <strong>GetFrameStatistics</strong> for swap chains that both use the bit-block transfer (bitblt) presentation model and draw in windowed mode.</p><p>You can only use <strong>GetFrameStatistics</strong> for swap chains that either use the flip presentation model or draw in full-screen mode. You set the <strong><see cref="SharpDX.DXGI.SwapEffect.FlipSequential"/></strong> value in the <strong>SwapEffect</strong> member of the <strong><see cref="SharpDX.DXGI.SwapChainDescription1"/></strong> structure to specify that the swap chain uses the flip presentation model.</p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IDXGISwapChain::GetFrameStatistics']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IDXGISwapChain::GetFrameStatistics']/*"/>	
         /// <msdn-id>bb174573</msdn-id>	
         /// <unmanaged>GetFrameStatistics</unmanaged>	
         /// <unmanaged-short>GetFrameStatistics</unmanaged-short>	
@@ -119,7 +119,7 @@ namespace SharpDX.DXGI
         /// <remarks>	
         /// <p>Starting with Direct3D 11.1, we recommend to instead use <strong><see cref="SharpDX.DXGI.SwapChain1.Present1"/></strong> because you can then use dirty rectangles and the scroll rectangle in the swap chain presentation and as such use less memory bandwidth and as a result less system power. For more info about using dirty rectangles and the scroll rectangle in swap chain presentation, see Using dirty rectangles and the scroll rectangle in swap chain presentation.</p><p>For the best performance when flipping swap-chain buffers in a full-screen application, see Full-Screen Application Performance Hints.</p><p>Because calling <strong>Present</strong> might cause the render thread to wait on the message-pump thread, be careful when calling this method in an application that uses multiple threads. For more details, see Multithreading Considerations.</p><table> <tr><td> <p>Differences between Direct3D 9 and Direct3D 10:</p> <p>Specifying <strong><see cref="SharpDX.DXGI.PresentFlags.Test"/></strong> in the <em>Flags</em> parameter is analogous to <strong>IDirect3DDevice9::TestCooperativeLevel</strong> in Direct3D 9.</p> </td></tr> </table><p>?</p><p>For flip presentation model swap chains that you create with the <strong><see cref="SharpDX.DXGI.SwapEffect.FlipSequential"/></strong> value set, a successful presentation unbinds back buffer 0 from the graphics pipeline, except for when you pass the <strong><see cref="SharpDX.DXGI.PresentFlags.DoNotSequence"/></strong> flag in the <em>Flags</em> parameter.</p><p>For info about how data values change when you present content to the screen, see Converting data for the color space.</p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IDXGISwapChain::Present']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IDXGISwapChain::Present']/*"/>	
         /// <msdn-id>bb174576</msdn-id>	
         /// <unmanaged>HRESULT IDXGISwapChain::Present([In] unsigned int SyncInterval,[In] DXGI_PRESENT_FLAGS Flags)</unmanaged>	
         /// <unmanaged-short>IDXGISwapChain::Present</unmanaged-short>	

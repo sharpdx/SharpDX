@@ -32,7 +32,7 @@ namespace SharpDX.DirectWrite
         /// <param name="textLength"><dd>  <p>Length to analyze.</p> </dd></param>	
         /// <param name="analysisSink"><dd>  <p>Length to analyze.</p> </dd></param>	
         /// <returns><p>If this method succeeds, it returns <strong><see cref="SharpDX.Result.Ok"/></strong>. Otherwise, it returns an <strong><see cref="SharpDX.Result"/></strong> error code.</p></returns>	
-        /// <include file='..\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IDWriteTextAnalyzer1::AnalyzeVerticalGlyphOrientation']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IDWriteTextAnalyzer1::AnalyzeVerticalGlyphOrientation']/*"/>	
         /// <msdn-id>Hh780429</msdn-id>	
         /// <unmanaged>HRESULT IDWriteTextAnalyzer1::AnalyzeVerticalGlyphOrientation([In] IDWriteTextAnalysisSource1* analysisSource,[In] unsigned int textPosition,[In] unsigned int textLength,[In] IDWriteTextAnalysisSink1* analysisSink)</unmanaged>	
         /// <unmanaged-short>IDWriteTextAnalyzer1::AnalyzeVerticalGlyphOrientation</unmanaged-short>	

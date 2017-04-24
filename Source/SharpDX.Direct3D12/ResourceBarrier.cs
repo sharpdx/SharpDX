@@ -24,12 +24,15 @@ namespace SharpDX.Direct3D12
 {
     public partial struct ResourceBarrier
     {
+        /// <summary>
+        /// Specifies the barrier type, see <see cref="ResourceBarrierType"/>
+        /// </summary>
         public SharpDX.Direct3D12.ResourceBarrierType Type;
 
         /// <summary>	
         /// No documentation.	
         /// </summary>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='D3D12_RESOURCE_BARRIER::Flags']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='D3D12_RESOURCE_BARRIER::Flags']/*"/>	
         /// <unmanaged>D3D12_RESOURCE_BARRIER_FLAGS Flags</unmanaged>	
         /// <unmanaged-short>D3D12_RESOURCE_BARRIER_FLAGS Flags</unmanaged-short>	
         public SharpDX.Direct3D12.ResourceBarrierFlags Flags;

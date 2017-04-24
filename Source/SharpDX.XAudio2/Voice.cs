@@ -33,7 +33,7 @@ namespace SharpDX.XAudio2
         /// <summary>	
         /// <p>Returns information about the creation flags, input channels, and sample rate of a voice.</p>	
         /// </summary>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IXAudio2Voice::GetVoiceDetails']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IXAudio2Voice::GetVoiceDetails']/*"/>	
         /// <msdn-id>microsoft.directx_sdk.ixaudio2voice.ixaudio2voice.getvoicedetails</msdn-id>	
         /// <unmanaged>GetVoiceDetails</unmanaged>	
         /// <unmanaged-short>GetVoiceDetails</unmanaged-short>	

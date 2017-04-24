@@ -13,7 +13,7 @@ namespace SharpDX.Direct3D12
     /// <remarks>	
     /// <p> Use this structure with <strong>CopyTextureRegion</strong>. </p>	
     /// </remarks>	
-    /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='D3D12_TEXTURE_COPY_LOCATION']/*"/>	
+    /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='D3D12_TEXTURE_COPY_LOCATION']/*"/>	
     /// <msdn-id>dn903818</msdn-id>	
     /// <unmanaged>D3D12_TEXTURE_COPY_LOCATION</unmanaged>	
     /// <unmanaged-short>D3D12_TEXTURE_COPY_LOCATION</unmanaged-short>	
@@ -22,7 +22,7 @@ namespace SharpDX.Direct3D12
         /// <summary>	
         /// No documentation.	
         /// </summary>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='D3D12_TEXTURE_COPY_LOCATION::pResource']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='D3D12_TEXTURE_COPY_LOCATION::pResource']/*"/>	
         /// <unmanaged>ID3D12Resource* pResource</unmanaged>	
         /// <unmanaged-short>ID3D12Resource pResource</unmanaged-short>	
         private System.IntPtr PResource;
@@ -30,7 +30,7 @@ namespace SharpDX.Direct3D12
         /// <summary>	
         /// No documentation.	
         /// </summary>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='D3D12_TEXTURE_COPY_LOCATION::Type']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='D3D12_TEXTURE_COPY_LOCATION::Type']/*"/>	
         /// <unmanaged>D3D12_TEXTURE_COPY_TYPE Type</unmanaged>	
         /// <unmanaged-short>D3D12_TEXTURE_COPY_TYPE Type</unmanaged-short>	
         public SharpDX.Direct3D12.TextureCopyType Type;
@@ -40,7 +40,7 @@ namespace SharpDX.Direct3D12
         /// <summary>	
         /// No documentation.	
         /// </summary>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='D3D12_TEXTURE_COPY_LOCATION::PlacedFootprint']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='D3D12_TEXTURE_COPY_LOCATION::PlacedFootprint']/*"/>	
         /// <unmanaged>D3D12_PLACED_SUBRESOURCE_FOOTPRINT PlacedFootprint</unmanaged>	
         /// <unmanaged-short>D3D12_PLACED_SUBRESOURCE_FOOTPRINT PlacedFootprint</unmanaged-short>	
         public SharpDX.Direct3D12.PlacedSubResourceFootprint PlacedFootprint
@@ -52,7 +52,7 @@ namespace SharpDX.Direct3D12
         /// <summary>	
         /// No documentation.	
         /// </summary>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='D3D12_TEXTURE_COPY_LOCATION::SubresourceIndex']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='D3D12_TEXTURE_COPY_LOCATION::SubresourceIndex']/*"/>	
         /// <unmanaged>unsigned int SubresourceIndex</unmanaged>	
         /// <unmanaged-short>unsigned int SubresourceIndex</unmanaged-short>	
         public int SubresourceIndex
@@ -61,6 +61,11 @@ namespace SharpDX.Direct3D12
             set { union.SubResourceIndex = value; }
         }
 
+        /// <summary>
+        /// Creates a new resource copy that is represented by a subresource index
+        /// </summary>
+        /// <param name="resource">A valid Direct3D12 Resource</param>
+        /// <param name="subResourceIndex">Sub resource index</param>
         public TextureCopyLocation(SharpDX.Direct3D12.Resource resource, int subResourceIndex) : this()
         {
             Type = TextureCopyType.SubResourceIndex;
@@ -68,6 +73,11 @@ namespace SharpDX.Direct3D12
             SubresourceIndex = subResourceIndex;
         }
 
+        /// <summary>
+        /// Creates a new resource copy that is represented by a resource footprint
+        /// </summary>
+        /// <param name="resource">A valid Direct3D12 Resource</param>
+        /// <param name="placedFootprint">Placement footprint for the resource copy operation</param>
         public TextureCopyLocation(SharpDX.Direct3D12.Resource resource, PlacedSubResourceFootprint placedFootprint) : this()
         {
             Type = TextureCopyType.PlacedFootprint;

@@ -107,6 +107,7 @@ namespace SharpDX
         /// <param name="red">The red component of the color.</param>
         /// <param name="green">The green component of the color.</param>
         /// <param name="blue">The blue component of the color.</param>
+        /// <param name="alpha">The alpha component of the color</param>
         public Color(int red, int green, int blue, int alpha)
         {
             R = ToByte(red);
@@ -368,7 +369,7 @@ namespace SharpDX
         /// <summary>
         /// Gets the brightness.
         /// </summary>
-        /// <returns>The Hue-Saturation-Brightness (HSB) saturation for this <see cref="Color"/></returns>
+        /// <returns>The Hue-Saturation-Brightness (HSB) brightness for this <see cref="Color"/></returns>
         public float GetBrightness()
         {
             float r = (float)R / 255.0f;
@@ -391,7 +392,7 @@ namespace SharpDX
         /// <summary>
         /// Gets the hue.
         /// </summary>
-        /// <returns>The Hue-Saturation-Brightness (HSB) saturation for this <see cref="Color"/></returns>
+        /// <returns>The Hue-Saturation-Brightness (HSB) hue for this <see cref="Color"/></returns>
         public float GetHue()
         {
             if (R == G && G == B)

@@ -18,7 +18,7 @@ namespace SharpDX.MediaFoundation
         /// <remarks>	
         /// <p>Calling this method overrides any previous call to <strong><see cref="SharpDX.MediaFoundation.CaptureRecordSink.SetOutputFileName"/></strong> or <strong><see cref="SharpDX.MediaFoundation.CaptureRecordSink.SetSampleCallback_"/></strong>.</p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFCaptureRecordSink::SetOutputByteStream']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IMFCaptureRecordSink::SetOutputByteStream']/*"/>	
         /// <msdn-id>hh447878</msdn-id>	
         /// <unmanaged>HRESULT IMFCaptureRecordSink::SetOutputByteStream([In] IMFByteStream* pByteStream,[In] const GUID&amp; guidContainerType)</unmanaged>	
         /// <unmanaged-short>IMFCaptureRecordSink::SetOutputByteStream</unmanaged-short>
@@ -36,7 +36,7 @@ namespace SharpDX.MediaFoundation
         /// <remarks>	
         /// <p>Calling this method overrides any previous call to <strong><see cref="SharpDX.MediaFoundation.CaptureRecordSink.SetOutputByteStream_"/></strong> or  <strong><see cref="SharpDX.MediaFoundation.CaptureRecordSink.SetOutputFileName"/></strong>.</p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFCaptureRecordSink::SetSampleCallback']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IMFCaptureRecordSink::SetSampleCallback']/*"/>	
         /// <msdn-id>hh447881</msdn-id>	
         /// <unmanaged>HRESULT IMFCaptureRecordSink::SetSampleCallback([In] unsigned int dwStreamSinkIndex,[In] IMFCaptureEngineOnSampleCallback* pCallback)</unmanaged>	
         /// <unmanaged-short>IMFCaptureRecordSink::SetSampleCallback</unmanaged-short>	

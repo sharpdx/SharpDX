@@ -957,6 +957,10 @@ namespace SharpDX.D3DCompiler
             return macroArray;
         }
 
+        /// <summary>
+        /// Disposes all resource for the allocated object
+        /// </summary>
+        /// <remarks>This is kept for backwards compatibility only, this actually does nothing in that case</remarks>
         public void Dispose()
         {
             // Just to keep backward compatibility
@@ -965,9 +969,7 @@ namespace SharpDX.D3DCompiler
         /// <summary>
         /// Gets the shader type and version string from the provided bytecode.
         /// </summary>
-        /// <param name="shaderBytecode">The shader bytecode data.</param>
         /// <returns>The type and version string of the provided shader bytecode.</returns>
-        /// <exception cref="ArgumentNullException">Is thrown when <paramref name="shaderBytecode"/> is null.</exception>
         /// <exception cref="ArgumentException">Is thrown when bytecode contains invalid data or the version could not be read.</exception>
         /// <exception cref="IndexOutOfRangeException">Is thrown when bytecode contains invalid data.</exception>
         public ShaderProfile GetVersion()

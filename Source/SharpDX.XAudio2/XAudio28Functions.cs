@@ -6,7 +6,7 @@ namespace SharpDX.XAudio2
     /// <summary>	
     /// Functions	
     /// </summary>	
-    /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='SharpDX.XAudio2.XAudio2Functions']/*"/>	
+    /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='SharpDX.XAudio2.XAudio2Functions']/*"/>	
     static  partial class XAudio28Functions {   
         
         /// <summary>	
@@ -19,7 +19,7 @@ namespace SharpDX.XAudio2
         /// <remarks>	
         /// <p>The DirectX SDK versions of XAUDIO2 supported a flag <strong><see cref="SharpDX.XAudio2.XAudio2Flags.DebugEngine"/></strong> to select between the release and 'checked' version. This flag is not supported or defined in the Windows 8 version of XAUDIO2. </p><p><strong>Note</strong>??No versions of the DirectX SDK contain the xaudio2.lib import library. DirectX SDK versions use COM to create a new <strong>XAudio2</strong> object.</p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='XAudio2Create']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='XAudio2Create']/*"/>	
         /// <msdn-id>microsoft.directx_sdk.xaudio2.xaudio2create</msdn-id>	
         /// <unmanaged>HRESULT XAudio2Create([Out, Fast] IXAudio2** ppXAudio2,[In] unsigned int Flags,[In] unsigned int XAudio2Processor)</unmanaged>	
         /// <unmanaged-short>XAudio2Create</unmanaged-short>	
@@ -58,7 +58,7 @@ namespace SharpDX.XAudio2
         /// }	
         /// </code>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='CreateAudioReverb']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='CreateAudioReverb']/*"/>	
         /// <msdn-id>microsoft.directx_sdk.xaudio2.xaudio2createreverb</msdn-id>	
         /// <unmanaged>HRESULT CreateAudioReverb([Out, Fast] IUnknown** ppApo)</unmanaged>	
         /// <unmanaged-short>CreateAudioReverb</unmanaged-short>	
@@ -97,7 +97,7 @@ namespace SharpDX.XAudio2
         /// }	
         /// </code>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='CreateAudioVolumeMeter']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='CreateAudioVolumeMeter']/*"/>	
         /// <msdn-id>microsoft.directx_sdk.xaudio2.xaudio2createvolumemeter</msdn-id>	
         /// <unmanaged>HRESULT CreateAudioVolumeMeter([Out, Fast] IUnknown** ppApo)</unmanaged>	
         /// <unmanaged-short>CreateAudioVolumeMeter</unmanaged-short>	
