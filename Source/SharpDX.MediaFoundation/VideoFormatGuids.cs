@@ -15,7 +15,7 @@ namespace SharpDX.MediaFoundation
         /// <returns>Media foundation unique ID</returns>
         public static Guid FromFourCC(SharpDX.Multimedia.FourCC fourCC)
         {
-            return new Guid(string.Concat(fourCC.ToString(), "-0000-0010-8000-00aa00389b71"));
+            return new Guid(string.Concat(fourCC.ToString("I", null), "-0000-0010-8000-00aa00389b71"));
         }
     }
 }
