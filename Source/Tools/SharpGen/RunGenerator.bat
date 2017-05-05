@@ -7,7 +7,7 @@ xcopy /D /Y "%~dp0MSDNDoc.zip" .
 
 REM Find a VS 2017 installation with the C++ toolset installed.
 set InstallDir=
-for /f "usebackq tokens=*" %%i in (`..\..\..\..\..\External\vswhere\vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 Microsoft.VisualStudio.Component.Windows10SDK.14393 -property installationPath`) do (
+for /f "usebackq tokens=*" %%i in (`..\..\..\..\..\External\vswhere\vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do (
   set InstallDir=%%i
 )
 set ToolsVersion=
