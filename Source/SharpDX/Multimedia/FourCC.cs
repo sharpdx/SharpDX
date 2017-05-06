@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Globalization;
 using System.Runtime.InteropServices;
 
 namespace SharpDX.Multimedia
@@ -26,7 +27,7 @@ namespace SharpDX.Multimedia
     /// A FourCC descriptor.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Size = 4)]
-    public struct FourCC : IEquatable<FourCC>
+    public struct FourCC : IEquatable<FourCC>, IFormattable
     {
         /// <summary>
         /// Empty FourCC.
@@ -173,6 +174,48 @@ namespace SharpDX.Multimedia
         public override int GetHashCode()
         {
             return (int) value;
+        }
+
+        /// <summary>
+        /// Provides a custom string representation of the FourCC descriptor.
+        /// </summary>
+        /// <remarks>
+        /// The general format "G" is equivalent to the parameterless.
+        /// <see cref="FourCC.ToString()"/>. The special format "I" returns a
+        /// string representation which can be used to construct a Media
+        /// Foundation format GUID. It is equivalent to "X08".
+        /// </remarks>
+        /// <param name="format">The format descriptor, which can be "G" (empty
+        /// or <c>null</c> is equivalent to "G"), "I" or any valid standard
+        /// number format.</param>
+        /// <param name="formatProvider">The format provider for formatting
+        /// numbers.</param>
+        /// <returns>The requested string representation.</returns>
+        /// <exception cref="System.FormatException">In case of
+        /// <paramref name="format"/> is not "G", "I" or a valid number
+        /// format.</exception>
+        public string ToString(string format, IFormatProvider formatProvider) 
+        {
+            if (string.IsNullOrEmpty(format))
+            {
+                format = "G";
+            }
+            if (formatProvider == null)
+            {
+                formatProvider = CultureInfo.CurrentCulture;
+            }
+
+            switch (format.ToUpperInvariant())
+            {
+                case "G":
+                    return this.ToString();
+
+                case "I":
+                    return this.value.ToString("X08", formatProvider);
+
+                default:
+                    return this.value.ToString(format, formatProvider);
+            }
         }
 
         public static bool operator ==(FourCC left, FourCC right)
