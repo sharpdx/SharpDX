@@ -866,9 +866,9 @@ namespace SharpGen.Parser
             var cppInterface = xElement.Annotation<CppInterface>();
             if (cppInterface != null)
                 return cppInterface;
-           
+
             // Else, create a new CppInterface
-            cppInterface = new CppInterface() { Name = xElement.AttributeValue("name") };         
+            cppInterface = new CppInterface() { Name = xElement.AttributeValue("name") };
             xElement.AddAnnotation(cppInterface);
 
             // Enter Interface description
@@ -1007,18 +1007,23 @@ namespace SharpGen.Parser
         /// <returns>A C++ struct parsed</returns>
         private CppStruct ParseStructOrUnion(XElement xElement, CppElement cppParent = null, int innerAnonymousIndex = 0)
         {
+            var cppStruct = xElement.Annotation<CppStruct>();
+            if (cppStruct != null)
+                return cppStruct;
+
             // Build struct name directly from the struct name or based on the parent
             var structName = xElement.AttributeValue("name") ?? "";
             if (cppParent != null)
             {
-                if (string.IsNullOrEmpty(structName)) 
+                if (string.IsNullOrEmpty(structName))
                     structName = cppParent.Name + "_INNER_" + innerAnonymousIndex;
                 else
                     structName = cppParent.Name + "_" + structName + "_INNER";
             }
 
             // Create struct
-            var cppStruct = new CppStruct { Name = structName };
+            cppStruct = new CppStruct { Name = structName };
+            xElement.AddAnnotation(cppStruct);
             bool isUnion = (xElement.Name.LocalName == CastXml.TagUnion);
 
             // Get align from structure
@@ -1033,6 +1038,22 @@ namespace SharpGen.Parser
 
             // Enter struct/union description
             Logger.PushContext("{0}:[{1}]", xElement.Name.LocalName, cppStruct.Name);
+
+            var basesValue = xElement.AttributeValue("bases");
+            var bases = basesValue != null ? basesValue.Split(' ') : Enumerable.Empty<string>();
+            foreach (var xElementBaseId in bases)
+            {
+                if (string.IsNullOrEmpty(xElementBaseId))
+                    continue;
+
+                var xElementBase = _mapIdToXElement[xElementBaseId];
+
+                CppStruct cppStructBase = null;
+                Logger.RunInContext("Base", () => { cppStructBase = ParseStructOrUnion(xElementBase); });
+
+                if (string.IsNullOrEmpty(cppStructBase.ParentName))
+                    cppStruct.ParentName = cppStructBase.Name;
+            }
 
             // Parse all fields
             int fieldOffset = 0;
@@ -1077,7 +1098,7 @@ namespace SharpGen.Parser
                         // Get the type name from the inner-struct and set it to the field
                         cppField.TypeName = fieldSubStruct.Name;
                         _currentCppInclude.Add(fieldSubStruct);
-                    }                    
+                    }
                 }
 
                 // Go to next field offset if not in union
@@ -1465,7 +1486,7 @@ namespace SharpGen.Parser
                     default:
                         Logger.Error("Unhandled partial type [{0}] from Fundamental type [{1}]", type, typeName);
                         break;
-                }                    
+                }
             }
 
             if (longCount == 1 && outputType == "double")

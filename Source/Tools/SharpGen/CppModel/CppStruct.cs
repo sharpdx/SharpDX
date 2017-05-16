@@ -36,6 +36,13 @@ namespace SharpGen.CppModel
         public int Align { get; set; }
 
         /// <summary>
+        /// Gets or sets the name of the parent.
+        /// </summary>
+        /// <value>The name of the parent.</value>
+        [XmlAttribute("base")]
+        public string ParentName { get; set; }
+
+        /// <summary>
         /// Gets the fields.
         /// </summary>
         /// <value>The fields.</value>
