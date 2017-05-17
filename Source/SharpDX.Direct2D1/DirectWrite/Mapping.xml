@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 // Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,14 +26,14 @@
 
   <namespace>SharpDX.DirectWrite</namespace>
   <assembly>SharpDX.Direct2D1</assembly>
-  
+
   <include file="dwrite.h" attach="true" output="DirectWrite"/>
   <include file="dwrite_1.h" attach="true" output="DirectWrite"/>
   <include file="dwrite_2.h" attach="true" output="DirectWrite"/>
   <include file="dwrite_3.h" attach="true" output="DirectWrite"/>
 
   <naming />
-  
+
   <extension>
     <create class="DWrite" />
   </extension>
@@ -124,7 +124,7 @@
 
     <map param="IDWriteFont::HasCharacter::exists" return="true" />
     <map param="IDWriteFont::GetInformationalStrings::exists" return="true" />
-    
+
     <map method="IDWriteFontFace::GetFiles" visibility="internal" />
     <map method="IDWriteFontFace::GetDesignGlyphMetrics" visibility="internal" />
     <map method="IDWriteFontFace::GetGdiCompatibleGlyphMetrics" visibility="internal" />
@@ -133,6 +133,9 @@
     <map param="IDWriteFontFace::GetRecommendedRenderingMode::renderingMode" return="true" />
     <map method="IDWriteFontFace::TryGetFontTable" visibility="internal" />
     <map method="IDWriteFontFace::GetType" name="GetFaceType" />
+
+    <map param="IDWriteFontFallback::MapCharacters::mappedLength" attribute="out" />
+
     <map param="IDWriteFontList::GetFont::font" return="true" />
     <map param="IDWriteFontFamily::GetFirstMatchingFont::matchingFont" return="true" />
     <map param="IDWriteFontFamily::GetMatchingFonts::matchingFonts" return="true" />
@@ -141,7 +144,7 @@
     <map param="IDWriteFontCollection::GetFontFromFontFace::font" return="true" />
     <map interface="IDWriteFontCollectionLoader" callback="true" callback-dual="false" />
     <map method="IDWriteFontFile::GetLoader" visibility="internal" property="false" />
-    
+
     <map interface="IDWriteFontFileLoader" callback-visibility="public" callback="true" callback-dual="true" />
 
     <map interface="IDWriteFontFileEnumerator" callback="true" callback-dual="false" />
@@ -152,7 +155,7 @@
     <map param="logFont" type="void" attribute="in" />
     <map param="IDWriteGdiInterop::CreateBitmapRenderTarget::renderTarget" return="true" />
     <map param="IDWriteGdiInterop::CreateFontFaceFromHdc::fontFace" return="true" />
-      
+
     <map method="IDWriteGdiInterop1::.*?LOGFONT" visibility="internal" />
     <map param="logFont" type="void" attribute="in" />
     <map param="IDWriteGdiInterop1::CreateBitmapRenderTarget::renderTarget" return="true" />
@@ -208,14 +211,14 @@
     <map method="IDWriteTextLayout::GetLineMetrics" check="false"/>
     <map method="IDWriteTextLayout::HitTestTextRange" check="false"/>
     <map method="IDWriteTextLayout::GetClusterMetrics" check="false"/>
-    
+
     <map method="IDWriteLocalFontFileLoader::GetFilePath.*" visibility="internal"/>
     <map method="IDWriteLocalFontFileLoader::GetLastWriteTimeFromKey" visibility="internal"/>
 
     <map method="IDWriteBitmapRenderTarget::DrawGlyphRun" visibility="private"/>
     <map param="IDWriteBitmapRenderTarget::DrawGlyphRun::textColor" type="int"/>
-     
-     
+
+
     <map param="IDWriteRemoteFontFileStream::BeginDownload::asyncResult" return="true" />
     <map method="IDWriteAsyncResult::GetResult" check="false"/>
 
