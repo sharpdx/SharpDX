@@ -10,14 +10,16 @@ install:
 - ps: >-
     $env:SharpDXBuildNumber = "$env:APPVEYOR_BUILD_NUMBER"
     
-    $env:SharpDXPackagingDev = 'true'
-    
     if(-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) {
        [IO.File]::WriteAllBytes($env:APPVEYOR_BUILD_FOLDER + "\sharpdx.snk",[Convert]::FromBase64String($env:SharpDXSnkBase64))
        $env:SharpDXSign = 'true'
-       $env:SharpDXNugetBuild = 'true'
        if($env:appveyor_repo_tag_name -match '^v[0-9]') {
+           $env:SharpDXNugetBuild = 'true'
            $env:SharpDXPackagingDev = 'false'
+        }
+       if($env:appveyor_repo_tag_name -eq 'latest') {
+           $env:SharpDXNugetBuild = 'true'
+           $env:SharpDXPackagingDev = 'true'
         }
     }
 build_script: build\build.cmd
