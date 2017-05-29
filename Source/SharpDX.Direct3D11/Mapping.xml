@@ -283,6 +283,9 @@
     
     <map method="ID3D11VideoContext::GetDecoderBuffer" visibility="internal"/>
     <map param="ID3D11VideoContext::GetDecoderBuffer::ppBuffer" attribute="out"/>
+
+    <map method="ID3D11DeviceContext1::ClearView" visibility="public" />
+    <map param="ID3D11DeviceContext1::ClearView::Color" type="SHARPDX_COLOR4" pointer="*" array="0" />
     
     <map param="ID3D11DeviceContext2::.*Tile.*::Flags" type="D3D11_TILE_MAPPING_FLAG" />
     <map param="ID3D11DeviceContext2::UpdateTileMappings::pRangeFlags" type="D3D11_TILE_RANGE_FLAG" />

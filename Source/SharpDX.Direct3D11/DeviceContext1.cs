@@ -31,5 +31,16 @@ namespace SharpDX.Direct3D11
         {
             device.CreateDeferredContext1(0, this);
         }
+
+        /// <summary>
+        /// Partially clears a view using an array of rectangles
+        /// </summary>
+        /// <param name="viewRef">View to clear</param>
+        /// <param name="color">Clear color</param>
+        /// <param name="rectangles">Rectangle areas</param>
+        public void ClearView(SharpDX.Direct3D11.ResourceView viewRef, SharpDX.Mathematics.Interop.RawColor4 color, params SharpDX.Mathematics.Interop.RawRectangle[] rectangles)
+        {
+            ClearView(viewRef, color, rectangles, rectangles.Length);
+        }
     }
 }
