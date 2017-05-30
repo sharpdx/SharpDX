@@ -140,5 +140,19 @@ namespace SharpDX.D3DCompiler
         {
             PassValue(sourceNode, ReturnParameterIndex, destinationNode, destinationParameterIndex);
         }
+
+        /// <summary>
+        /// Generates hlsl code for function linking grpah
+        /// </summary>
+        /// <param name="uFlags">Flags (unused by the runtime for now)</param>
+        /// <returns>Hlsl code as string</returns>
+        public string GenerateHlsl(int uFlags)
+        {
+            SharpDX.Direct3D.Blob blob;
+            GenerateHlsl(0, out blob);
+            string result = SharpDX.Utilities.BlobToString(blob);
+            blob.Dispose();
+            return result;
+        }
     }
 }
