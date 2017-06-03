@@ -29,6 +29,12 @@ namespace SharpDX
     public class ComObject : CppObject, IUnknown
     {
         /// <summary>
+        /// Logs a warning of a possible memory leak when <see cref="Configuration.EnableObjectTracking" /> is enabled.
+        /// Default uses <see cref="System.Diagnostics.Debug"/>.
+        /// </summary>
+        public static Action<string> LogMemoryLeakWarning = (warning) => System.Diagnostics.Debug.WriteLine(warning);
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ComObject"/> class.
         /// </summary>
         /// <param name="pointer">Pointer to Cpp Object</param>
@@ -288,7 +294,7 @@ namespace SharpDX
                     if(!Configuration.EnableReleaseOnFinalizer)
                     {
                         var objectReference = ObjectTracker.Find(this);
-                        System.Diagnostics.Debug.WriteLine(string.Format("Warning: Live ComObject [0x{0:X}], potential memory leak: {1}", NativePointer.ToInt64(), objectReference));
+                        LogMemoryLeakWarning?.Invoke(string.Format("Warning: Live ComObject [0x{0:X}], potential memory leak: {1}", NativePointer.ToInt64(), objectReference));
                     }
                 }
 
