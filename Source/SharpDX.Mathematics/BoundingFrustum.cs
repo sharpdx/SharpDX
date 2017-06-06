@@ -437,16 +437,7 @@ namespace SharpDX
             }
         }
 
-        /// <summary>
-        /// Checks whether a point lay inside, intersects or lay outside the frustum.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <returns>Type of the containment</returns>
-        public ContainmentType Contains(Vector3 point)
-        {
-            return Contains(ref point);
-        }
-
+    
         /// <summary>
         /// Checks whether a group of points lay totally inside the frustum (Contains), or lay partially inside the frustum (Intersects), or lay outside the frustum (Disjoint).
         /// </summary>
@@ -533,15 +524,7 @@ namespace SharpDX
             return result;
         }
 
-        /// <summary>
-        /// Determines the intersection relationship between the frustum and a bounding box.
-        /// </summary>
-        /// <param name="box">The box.</param>
-        /// <returns>Type of the containment</returns>
-        public ContainmentType Contains(BoundingBox box)
-        {
-            return Contains(ref box);
-        }
+ 
 
         /// <summary>
         /// Determines the intersection relationship between the frustum and a bounding box.
@@ -588,15 +571,7 @@ namespace SharpDX
             }
         }
 
-        /// <summary>
-        /// Determines the intersection relationship between the frustum and a bounding sphere.
-        /// </summary>
-        /// <param name="sphere">The sphere.</param>
-        /// <returns>Type of the containment</returns>
-        public ContainmentType Contains(BoundingSphere sphere)
-        {
-            return Contains(ref sphere);
-        }
+    
 
         /// <summary>
         /// Determines the intersection relationship between the frustum and a bounding sphere.
@@ -755,7 +730,7 @@ namespace SharpDX
         /// <returns><c>true</c> if the current BoundingFrustum intersects the specified Ray.</returns>
         public bool Intersects(ref Ray ray, out float? inDistance, out float? outDistance)
         {
-            if (Contains(ray.Position) != ContainmentType.Disjoint)
+            if (Contains(ref ray.Position) != ContainmentType.Disjoint)
             {
                 float nearstPlaneDistance = float.MaxValue;
                 for (int i = 0; i < 6; i++)

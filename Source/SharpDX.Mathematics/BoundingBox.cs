@@ -173,15 +173,7 @@ namespace SharpDX
             return Collision.BoxIntersectsBox(ref this, ref box);
         }
 
-        /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="BoundingBox"/>.
-        /// </summary>
-        /// <param name="box">The box to test.</param>
-        /// <returns>Whether the two objects intersected.</returns>
-        public bool Intersects(BoundingBox box)
-        {
-            return Intersects(ref box);
-        }
+
 
         /// <summary>
         /// Determines if there is an intersection between the current object and a <see cref="BoundingSphere"/>.
@@ -193,15 +185,7 @@ namespace SharpDX
             return Collision.BoxIntersectsSphere(ref this, ref sphere);
         }
 
-        /// <summary>
-        /// Determines if there is an intersection between the current object and a <see cref="BoundingSphere"/>.
-        /// </summary>
-        /// <param name="sphere">The sphere to test.</param>
-        /// <returns>Whether the two objects intersected.</returns>
-        public bool Intersects(BoundingSphere sphere)
-        {
-            return Intersects(ref sphere);
-        }
+    
 
         /// <summary>
         /// Determines whether the current objects contains a point.
@@ -213,15 +197,7 @@ namespace SharpDX
             return Collision.BoxContainsPoint(ref this, ref point);
         }
 
-        /// <summary>
-        /// Determines whether the current objects contains a point.
-        /// </summary>
-        /// <param name="point">The point to test.</param>
-        /// <returns>The type of containment the two objects have.</returns>
-        public ContainmentType Contains(Vector3 point)
-        {
-            return Contains(ref point);
-        }
+    
 
         /* This implementation is wrong
         /// <summary>
@@ -247,15 +223,7 @@ namespace SharpDX
             return Collision.BoxContainsBox(ref this, ref box);
         }
 
-        /// <summary>
-        /// Determines whether the current objects contains a <see cref="BoundingBox"/>.
-        /// </summary>
-        /// <param name="box">The box to test.</param>
-        /// <returns>The type of containment the two objects have.</returns>
-        public ContainmentType Contains(BoundingBox box)
-        {
-            return Contains(ref box);
-        }
+      
 
         /// <summary>
         /// Determines whether the current objects contains a <see cref="BoundingSphere"/>.
@@ -267,15 +235,7 @@ namespace SharpDX
             return Collision.BoxContainsSphere(ref this, ref sphere);
         }
 
-        /// <summary>
-        /// Determines whether the current objects contains a <see cref="BoundingSphere"/>.
-        /// </summary>
-        /// <param name="sphere">The sphere to test.</param>
-        /// <returns>The type of containment the two objects have.</returns>
-        public ContainmentType Contains(BoundingSphere sphere)
-        {
-            return Contains(ref sphere);
-        }
+     
 
         /// <summary>
         /// Constructs a <see cref="BoundingBox"/> that fully contains the given points.
