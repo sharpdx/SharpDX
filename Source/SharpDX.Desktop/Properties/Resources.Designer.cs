@@ -40,7 +40,11 @@ namespace SharpDX.Desktop.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
+#if BEFORE_NET45
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SharpDX.Desktop.Properties.Resources", typeof(Resources).Assembly);
+#else
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SharpDX.Desktop.Properties.Resources", typeof(Resources).GetTypeInfo().Assembly);
+#endif
                     resourceMan = temp;
                 }
                 return resourceMan;

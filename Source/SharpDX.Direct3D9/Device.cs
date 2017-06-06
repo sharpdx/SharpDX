@@ -942,7 +942,7 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT IDirect3DDevice9::SetRenderState([In] D3DRENDERSTATETYPE State,[In] unsigned int Value)</unmanaged>
         public void SetRenderState<T>(RenderState renderState, T value) where T : struct, IConvertible
         {
-            if (!typeof(T).GetTypeInfo().IsEnum)
+            if (!Utilities.IsEnum(typeof(T)))
                 throw new ArgumentException("T must be an enum type", "value");
 
             SetRenderState(renderState, value.ToInt32(CultureInfo.InvariantCulture));

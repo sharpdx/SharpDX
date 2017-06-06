@@ -249,7 +249,7 @@ namespace SharpDX
         private static void AddDescriptorsFromType(Type type)
         {
 #if BEFORE_NET45
-            foreach(var field in type.GetTypeInfo().GetFields())
+            foreach(var field in type.GetFields())
 #else
             foreach (var field in type.GetTypeInfo().DeclaredFields)
 #endif

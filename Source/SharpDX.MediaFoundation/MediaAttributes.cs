@@ -116,7 +116,7 @@ namespace SharpDX.MediaFoundation
                 return (T)Convert.ChangeType(GetInt(guidKey), typeof(T));
             }
 
-            if (typeof(T).GetTypeInfo().IsEnum )
+            if (Utilities.IsEnum(typeof(T)))
             {
                 return (T)Enum.ToObject(typeof(T), GetInt(guidKey));
             }
@@ -158,7 +158,7 @@ namespace SharpDX.MediaFoundation
                 return (T)(object)buffer;
             }
 
-            if (typeof(T).GetTypeInfo().IsValueType)
+            if (Utilities.IsValueType(typeof(T)))
             {
                 int length = GetBlobSize(guidKey);
                 if ( length != SharpDX.Interop.SizeOf<T>())
@@ -177,7 +177,7 @@ namespace SharpDX.MediaFoundation
                 return (T)(object)new ComObject(ptr);
             }
 
-            if (typeof(T).GetTypeInfo().IsSubclassOf(typeof(ComObject)))
+            if (Utilities.IsSubclassOf(typeof(T), typeof(ComObject)))
             {
                 IntPtr ptr;
                 GetUnknown(guidKey, Utilities.GetGuidFromType(typeof(T)), out ptr);
@@ -224,7 +224,7 @@ namespace SharpDX.MediaFoundation
             // Guid
 
             if (typeof(T) == typeof(int) || typeof(T) ==  typeof(bool) || typeof(T) == typeof(byte) || typeof(T) == typeof(uint) || typeof(T) == typeof(short) || typeof(T) == typeof(ushort) || typeof(T) == typeof(byte) || typeof(T) == typeof(sbyte)
-                || typeof(T).GetTypeInfo().IsEnum )
+                || Utilities.IsEnum(typeof(T)))
             {
                 Set(guidKey, Convert.ToInt32(value));
                 return;
@@ -269,13 +269,13 @@ namespace SharpDX.MediaFoundation
             }
 
 
-            if (typeof(T).GetTypeInfo().IsValueType)
+            if (Utilities.IsValueType(typeof(T)))
             {
                 SetBlob(guidKey, (IntPtr)Interop.Fixed(ref value), SharpDX.Interop.SizeOf<T>());
                 return;
             }
 
-            if (typeof(T) == typeof(ComObject) || typeof(T).GetTypeInfo().IsSubclassOf(typeof(ComObject)))
+            if (typeof(T) == typeof(ComObject) || Utilities.IsSubclassOf(typeof(T), typeof(ComObject)))
             {
                 Set(guidKey, ((ComObject)(object)value));
                 return;

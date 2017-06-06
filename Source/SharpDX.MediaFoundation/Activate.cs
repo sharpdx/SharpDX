@@ -79,7 +79,7 @@ namespace SharpDX.MediaFoundation
             unsafe
             {
                 IntPtr objectRef;
-                Guid riid = typeof(T).GetTypeInfo().GUID;
+                Guid riid = Utilities.GetGuidFromType(typeof(T));
                 ActivateObject(riid, out objectRef);
                 return ComObject.FromPointer<T>(objectRef);
             }

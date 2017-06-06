@@ -273,21 +273,25 @@ namespace SharpDX.Win32
                 var type = value.GetType();
 
                 Type = VariantType.Default;
+#if BEFORE_NET45
+                if (type.IsPrimitive)
+#else
                 if (type.GetTypeInfo().IsPrimitive)
+#endif
                 {
-					if (type == typeof(byte))
-					{
-						ElementType = VariantElementType.UByte;
-						variantValue.byteValue = (byte)value;
-						return;
-					}
+                    if (type == typeof(byte))
+                    {
+                       ElementType = VariantElementType.UByte;
+                       variantValue.byteValue = (byte)value;
+                       return;
+                    }
 
-	                if (type == typeof(sbyte))
-	                {
-		                ElementType = VariantElementType.Byte;
-		                variantValue.signedByteValue = (sbyte)value;
-		                return;
-	                }
+                    if (type == typeof(sbyte))
+                    {
+                        ElementType = VariantElementType.Byte;
+                        variantValue.signedByteValue = (sbyte)value;
+                        return;
+                    }
 
                     if (type == typeof(int))
                     {
