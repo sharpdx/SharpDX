@@ -114,7 +114,7 @@ namespace SharpDX
         /// </summary>
         public Vector3 Center
         {
-            get { return this.Minimum + (this.Maximum - this.Minimum) * 0.5f; }
+            get { return (this.Maximum + this.Minimum) * 0.5f; }
         }
 
         /// <summary>
