@@ -363,40 +363,35 @@ namespace SharpDX.D3DCompiler
                 if (!(profile.ToUpperInvariant().StartsWith("FX_") || profile.ToUpperInvariant().StartsWith("LIB_")) && string.IsNullOrWhiteSpace(entryPoint))
                     throw new ArgumentNullException("entryPoint");
 
-                var resultCode = Result.Ok;
-
                 Blob blobForCode = null;
                 Blob blobForErrors = null;
 
-                try
-                {
-                    D3D.Compile2(
-                        (IntPtr)textSource,
-                        textSize,
-                        sourceFileName,
-                        PrepareMacros(defines),
-                        IncludeShadow.ToIntPtr(include),
-                        entryPoint,
-                        profile,
-                        shaderFlags,
-                        effectFlags,
-                        secondaryDataFlags,
-                        secondaryData != null ? secondaryData.DataPointer : IntPtr.Zero,
-                        secondaryData != null ? (int)secondaryData.Length : 0,
-                        out blobForCode,
-                        out blobForErrors);
-                }
-                catch (SharpDXException ex)
+                var resultCode = D3D.Compile2(
+                    (IntPtr)textSource,
+                    textSize,
+                    sourceFileName,
+                    PrepareMacros(defines),
+                    IncludeShadow.ToIntPtr(include),
+                    entryPoint,
+                    profile,
+                    shaderFlags,
+                    effectFlags,
+                    secondaryDataFlags,
+                    secondaryData != null ? secondaryData.DataPointer : IntPtr.Zero,
+                    secondaryData != null ? (int)secondaryData.Length : 0,
+                    out blobForCode,
+                    out blobForErrors);
+
+                if (resultCode.Failure)
                 {
                     if (blobForErrors != null)
                     {
-                        resultCode = ex.ResultCode;
                         if (Configuration.ThrowOnShaderCompileError)
-                            throw new CompilationException(ex.ResultCode, Utilities.BlobToString(blobForErrors));
+                            throw new CompilationException(resultCode, Utilities.BlobToString(blobForErrors));
                     }
                     else
                     {
-                        throw;
+                        throw new SharpDXException(resultCode);
                     }
                 }
 
