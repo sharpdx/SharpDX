@@ -475,7 +475,7 @@ namespace SharpDX.D3DCompiler
             ShaderMacro[] defines = null,
             Include include = null)
         {
-            return Compile(NativeFile.ReadAllText(fileName), entryPoint, profile, shaderFlags, effectFlags, defines, include);
+            return Compile(NativeFile.ReadAllText(fileName), entryPoint, profile, shaderFlags, effectFlags, defines, include, fileName);
         }
 
         // Win 8.1 SDK removed the corresponding functions from the WinRT platform
