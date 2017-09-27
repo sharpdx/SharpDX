@@ -62,8 +62,8 @@ namespace SharpDX.Direct3D9
         {
             unsafe
             {
-                if (Utilities.SizeOf<T>() != sizeof(RawVector3))
-                    throw new ArgumentException("Invalid size for T. Must be 3 floats (12 bytes)");
+                if (Utilities.SizeOf<T>() != sizeof(RawVector2))
+                    throw new ArgumentException("Invalid size for T. Must be 2 floats (8 bytes)");
 
                 Draw((IntPtr)Interop.Fixed(vertices), vertices.Length, color);
             }
