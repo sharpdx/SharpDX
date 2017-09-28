@@ -445,6 +445,29 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Returns per component absolute value of a vector
+        /// </summary>
+        /// <param name="value">Input vector</param>
+        /// <param name="result">When the method completes, contains a vector with each component being the absolute value of the input component</param>
+        public static void Abs(ref Vector2 value, out Vector2 result)
+        {
+            result = new Vector2(value.X > 0.0f ? value.X : -value.X,
+                value.Y > 0.0f ? value.Y : -value.Y);
+        }
+
+        /// <summary>
+        /// Returns per component absolute value of a vector
+        /// </summary>
+        /// <param name="value">Input vector</param>
+        /// <returns>A vector with each component being the absolute value of the input component</returns>
+        public static Vector2 Abs(Vector2 value)
+        {
+            return new Vector2(
+                value.X > 0.0f ? value.X : -value.X,
+                value.Y > 0.0f ? value.Y : -value.Y);
+        }
+
+        /// <summary>
         /// Returns a <see cref="Vector2"/> containing the 2D Cartesian coordinates of a point specified in Barycentric coordinates relative to a 2D triangle.
         /// </summary>
         /// <param name="value1">A <see cref="Vector2"/> containing the 2D Cartesian coordinates of vertex 1 of the triangle.</param>

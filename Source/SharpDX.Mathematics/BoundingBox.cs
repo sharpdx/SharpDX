@@ -78,6 +78,46 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Returns the width of the bounding box
+        /// </summary>
+        public float Width
+        {
+            get { return this.Maximum.X - this.Minimum.X; }
+        }
+
+        /// <summary>
+        /// Returns the height of the bounding box
+        /// </summary>
+        public float Height
+        {
+            get { return this.Maximum.Y - this.Minimum.Y; }
+        }
+
+        /// <summary>
+        /// Returns the height of the bounding box
+        /// </summary>
+        public float Depth
+        {
+            get { return this.Maximum.Z - this.Minimum.Z; }
+        }
+
+        /// <summary>
+        /// Returns the size of the bounding box
+        /// </summary>
+        public Vector3 Size
+        {
+            get { return this.Maximum - this.Minimum; }
+        }
+
+        /// <summary>
+        /// Returns the size of the bounding box
+        /// </summary>
+        public Vector3 Center
+        {
+            get { return (this.Maximum + this.Minimum) * 0.5f; }
+        }
+
+        /// <summary>
         /// Retrieves the eight corners of the bounding box.
         /// </summary>
         /// <returns>An array of points representing the eight corners of the bounding box.</returns>
