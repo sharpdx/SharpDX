@@ -1021,10 +1021,17 @@
       <remove function="MFCreateContentDecryptorContext" />
       <remove function="MFCreateContentProtectionDevice" />
       <remove function="MFIsContentProtectionDeviceSupported" />
-	  <remove function="MFCreatePMPMediaSession" />
-	  <remove function="MFCreateTopology" />
-	  <remove function="MFCreateTopologyNode" />
-	  
+      <remove function="MFCreatePMPMediaSession" />
+      <remove function="MFCreateTopology" />
+      <remove function="MFCreateTopologyNode" />
+      <remove function="MFCreateAudioRendererActivate" />
+      <remove function="MFCreatePresentationClock" />
+      <remove function="MFCreateMuxStreamAttributes" />
+      <remove function="MFCreateMuxStreamMediaType" />
+      <remove function="MFCreateMuxStreamSample" />
+      <remove function="MFCreateSensorGroup" />
+      <remove function="MFCreateSensorStream" />
+
     </ifdef>
     <context-clear />
   </mapping>
