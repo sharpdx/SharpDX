@@ -46,7 +46,7 @@ namespace SharpDX.XAudio2.Fx
         public VolumeMeter(XAudio2 device, bool isUsingDebug)
             : base(device)
         {
-#if !STORE_APP
+#if !WINDOWS_UWP
             if (device.Version == XAudio2Version.Version27)
             {
                 Guid clsid = (isUsingDebug) ? XAudio2FxContants.CLSID_AudioVolumeMeter_Debug : XAudio2FxContants.CLSID_AudioVolumeMeter;
@@ -58,7 +58,7 @@ namespace SharpDX.XAudio2.Fx
             {
                 XAudio28Functions.CreateAudioVolumeMeter(this);
             }
-#if STORE_APP
+#if WINDOWS_UWP
             else if (device.Version == XAudio2Version.Version29)
             {
                 XAudio29Functions.CreateAudioVolumeMeter(this);

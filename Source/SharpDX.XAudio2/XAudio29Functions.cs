@@ -1,4 +1,4 @@
-#if STORE_APP
+#if WINDOWS_UWP
 using System;
 using System.Runtime.InteropServices;
 

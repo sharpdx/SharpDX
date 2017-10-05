@@ -28,7 +28,7 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-#if DESKTOP_APP
+#if !WINDOWS_UWP
 using System;
 using System.Runtime.InteropServices;
 using System.Security;

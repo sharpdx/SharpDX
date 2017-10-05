@@ -85,7 +85,7 @@ namespace SharpDX.XAudio2
             {
                 switch (tryVersion)
                 {
-#if !STORE_APP
+#if !WINDOWS_UWP
                     case XAudio2Version.Version27:
                         Guid clsid = ((int)flags == 1) ? CLSID_XAudio27_Debug : CLSID_XAudio27;
                         if ((requestedVersion == XAudio2Version.Default || requestedVersion == XAudio2Version.Version27) && Utilities.TryCreateComInstance(clsid, Utilities.CLSCTX.ClsctxInprocServer, IID_IXAudio2, this))
@@ -105,7 +105,7 @@ namespace SharpDX.XAudio2
                         }
                         catch (DllNotFoundException) { }
                         break;
-#if STORE_APP
+#if WINDOWS_UWP
                     case XAudio2Version.Version29:
                         try
                         {

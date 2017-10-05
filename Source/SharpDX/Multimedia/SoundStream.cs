@@ -28,7 +28,6 @@ namespace SharpDX.Multimedia
     /// </summary>
     public class SoundStream : Stream
     {
-        private readonly bool isOwnerOfInput;
         private Stream input;
         private long startPositionOfData;
         private long length;

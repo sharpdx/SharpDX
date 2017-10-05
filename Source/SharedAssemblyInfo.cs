@@ -24,7 +24,7 @@ using System.Runtime.InteropServices;
 
 [assembly:ComVisible(false)]
 
-#if STORE_APP
+#if WINDOWS_UWP
 [assembly: Obfuscation(Feature = "Apply to type SharpDX.* when public and interface: renaming", Exclude = false, ApplyToMembers = true)]
 [assembly: Obfuscation(Feature = "Apply to type SharpDX.* when struct: renaming", Exclude = false, ApplyToMembers = true)]
 [assembly: Obfuscation(Feature = "Apply to type SharpDX.*: INotifyPropertyChanged heuristics", Exclude = true)]

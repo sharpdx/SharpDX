@@ -278,7 +278,7 @@ namespace SharpDX
             return description;
         }
 
-#if STORE_APP
+#if WINDOWS_UWP
         [DllImport("api-ms-win-core-localization-l1-2-0.dll", EntryPoint = "FormatMessageW")]
         private static extern uint FormatMessageW(int dwFlags, IntPtr lpSource, int dwMessageId, int dwLanguageId, ref IntPtr lpBuffer, int nSize, IntPtr Arguments);
 #else
