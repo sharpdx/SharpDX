@@ -89,7 +89,7 @@ namespace SharpDX.X3DAudio
             {
                 switch(tryVersion)
                 {
-#if DESKTOP_APP
+#if !WINDOWS_UWP
                     case X3DAudioVersion.Version17:
                         try
                         {
@@ -109,7 +109,7 @@ namespace SharpDX.X3DAudio
                         }
                         catch (DllNotFoundException) { }
                     break;
-#if STORE_APP_10
+#if WINDOWS_UWP
                     case X3DAudioVersion.Version29:
                         try
                         {
@@ -122,7 +122,7 @@ namespace SharpDX.X3DAudio
 #endif
                 }
 
-                if(version != X3DAudioVersion.Default)
+                if (version != X3DAudioVersion.Default)
                 {
                     break;
                 }

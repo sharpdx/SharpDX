@@ -1,4 +1,4 @@
-#if STORE_APP_10
+#if STORE_APP
 using System;
 using System.Runtime.InteropServices;
 

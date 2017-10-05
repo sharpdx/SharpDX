@@ -1131,7 +1131,7 @@ namespace SharpDX
             SpeedOverMemory = 0x8
         }
 
-#if WINDOWS_API_SET
+#if STORE_APP
         [DllImport("api-ms-win-core-handle-l1-1-0.dll", EntryPoint = "CloseHandle", SetLastError = true)]
         internal static extern bool CloseHandle(IntPtr handle);
 #else
@@ -1154,7 +1154,7 @@ namespace SharpDX
             return result;
         }
 
-#if WINDOWS_API_SET
+#if STORE_APP
         [DllImport("api-ms-win-core-libraryloader-l1-1-1.dll", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
         static extern IntPtr GetProcAddress_(IntPtr hModule, string procName);
 #else

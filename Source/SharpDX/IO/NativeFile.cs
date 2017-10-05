@@ -29,7 +29,7 @@ namespace SharpDX.IO
     /// </summary>
     public static class NativeFile 
     {
-#if WINDOWS_API_SET
+#if STORE_APP
         private const string KERNEL_FILE = "api-ms-win-core-file-l1-2-0.dll";
 #else
         private const string KERNEL_FILE = "kernel32.dll";
@@ -114,7 +114,7 @@ namespace SharpDX.IO
                 }
             }
         }
-#if WINDOWS_API_SET
+#if STORE_APP
         internal struct CREATEFILE2_EXTENDED_PARAMETERS
         {
             public uint dwSize;
