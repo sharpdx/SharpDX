@@ -19,21 +19,24 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_x64.dll">
+    <None Include="$(MSBuildThisFileDirectory)..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_x64.dll">
+      <Link>sharpdx_direct3d11_1_effects_x64.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <PackagePath>runtimes/win7-x64/native</PackagePath>
+      <PackagePath>runtimes/win7-x64/native/sharpdx_direct3d11_1_effects.dll</PackagePath>
       <Pack>true</Pack>
-    </Content>
-    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_x86.dll">
+    </None>
+    <None Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_x86.dll">
+      <Link>sharpdx_direct3d11_1_effects_x86.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <PackagePath>runtimes/win7-x86/native</PackagePath>
+      <PackagePath>runtimes/win7-x86/native/sharpdx_direct3d11_1_effects.dll</PackagePath>
       <Pack>true</Pack>
-    </Content>
-    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_arm.dll">
+    </None>
+    <None Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_arm.dll">
+      <Link>sharpdx_direct3d11_1_effects_arm.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <PackagePath>runtimes/uap10.0/native</PackagePath>
+      <PackagePath>runtimes/uap10.0/native/sharpdx_direct3d11_1_effects.dll</PackagePath>
       <Pack>true</Pack>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
