@@ -19,24 +19,21 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_arm.dll">
-      <Link>sharpdx_direct3d11_1_effects_arm.dll</Link>
+    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_x64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <PackagePath>runtimes/win7-x64/native</PackagePath>
       <Pack>true</Pack>
-      <PackagePath>runtimes/win8-arm/sharpdx_direct3d11_1_effects.dll</PackagePath>
-    </None>
-    <None Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_x64.dll">
-      <Link>sharpdx_direct3d11_1_effects_x64.dll</Link>
+    </Content>
+    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_x86.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <PackagePath>runtimes/win7-x86/native</PackagePath>
       <Pack>true</Pack>
-      <PackagePath>runtimes/win-x64/sharpdx_direct3d11_1_effects.dll</PackagePath>
-    </None>
-    <None Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_x86.dll">
-      <Link>sharpdx_direct3d11_1_effects_x86.dll</Link>
+    </Content>
+    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_arm.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <PackagePath>runtimes/uap10.0/native</PackagePath>
       <Pack>true</Pack>
-      <PackagePath>runtimes/win-x86/sharpdx_direct3d11_1_effects.dll</PackagePath>
-    </None>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
