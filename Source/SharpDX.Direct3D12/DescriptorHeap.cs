@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,26 +17,26 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
+using System.Threading;
+
 namespace SharpDX.Direct3D12
 {
-    public partial struct CommandQueueDescription
+    public partial class DescriptorHeap
     {
-        public CommandQueueDescription(CommandListType type, CommandQueueFlags flags = CommandQueueFlags.None)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DescriptorHeap"/> class.
+        /// </summary>
+        /// <param name="device">The device with which to associate the command allocator.</param>
+        /// <param name="description"><see cref="DescriptorHeapDescription"/> structure that describes the heap.</param>
+        public DescriptorHeap(Device device, DescriptorHeapDescription description)
+            : base(IntPtr.Zero)
         {
-            Type = type;
-            Priority = 0;
-            Flags = flags;
-            NodeMask = 0;
-        }
-
-        public CommandQueueDescription(
-            CommandListType type,
-            int nodeMask)
-        {
-            Type = type;
-            Priority = 0;
-            Flags = CommandQueueFlags.None;
-            NodeMask = nodeMask;
+            device.CreateDescriptorHeap(
+                ref description,
+                Utilities.GetGuidFromType(typeof(DescriptorHeap)),
+                this);
         }
     }
 }

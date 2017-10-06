@@ -76,72 +76,6 @@ namespace SharpDX.Direct3D12
         }
 
         /// <summary>	
-        /// <p>Creates a command queue.</p>	
-        /// </summary>	
-        /// <param name="descRef"><dd>  <p> Specifies a <see cref="SharpDX.Direct3D12.CommandQueueDescription"/> that describes the command queue. </p> </dd></param>	
-        /// <param name="riid"><dd>  <p> The globally unique identifier (<see cref="System.Guid"/>) for the command queue interface. See remarks.  An input parameter. </p> </dd></param>	
-        /// <returns><dd>  <p> A reference to a memory block that receives a reference to the <strong><see cref="SharpDX.Direct3D12.CommandQueue"/></strong> interface for the command queue. </p> </dd></returns>	
-        /// <remarks>	
-        /// <p> The <strong>REFIID</strong>, or <strong><see cref="System.Guid"/></strong>, of the interface to the command queue can be obtained by using the __uuidof() macro. For example, __uuidof(<see cref="SharpDX.Direct3D12.CommandQueue"/>) will get the <strong><see cref="System.Guid"/></strong> of the interface to a command queue. </p>	
-        /// </remarks>	
-        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommandQueue']/*"/>	
-        /// <msdn-id>dn788657</msdn-id>	
-        /// <unmanaged>HRESULT ID3D12Device::CreateCommandQueue([In] const D3D12_COMMAND_QUEUE_DESC* pDesc,[In] const GUID&amp; riid,[Out] ID3D12CommandQueue** ppCommandQueue)</unmanaged>	
-        /// <unmanaged-short>ID3D12Device::CreateCommandQueue</unmanaged-short>	
-        public SharpDX.Direct3D12.CommandQueue CreateCommandQueue(SharpDX.Direct3D12.CommandQueueDescription description)
-        {
-            return CreateCommandQueue(description, Utilities.GetGuidFromType(typeof(CommandQueue)));
-        }
-
-        /// <summary>	
-        /// <p>Creates a command allocator object.</p>	
-        /// </summary>	
-        /// <param name="type"><dd>  <p> A <strong><see cref="SharpDX.Direct3D12.CommandListType"/></strong>-typed value that specifies the type of command allocator to create. The type of command allocator can be the type that records either direct command lists or bundles. </p> </dd></param>	
-        /// <param name="riid"><dd>  <p> The globally unique identifier (<strong><see cref="System.Guid"/></strong>) for the command allocator interface (<strong><see cref="SharpDX.Direct3D12.CommandAllocator"/></strong>). The <strong>REFIID</strong>, or <strong><see cref="System.Guid"/></strong>, of the interface to the command allocator can be obtained by using the __uuidof() macro. For example, __uuidof(<see cref="SharpDX.Direct3D12.CommandAllocator"/>) will get the <strong><see cref="System.Guid"/></strong> of the interface to a command allocator. </p> </dd></param>	
-        /// <returns><dd>  <p> A reference to a memory block that receives a reference to the <strong><see cref="SharpDX.Direct3D12.CommandAllocator"/></strong> interface for the command allocator. </p> </dd></returns>	
-        /// <remarks>	
-        /// <p> The device creates command lists from the command allocator. </p>	
-        /// </remarks>	
-        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommandAllocator']/*"/>	
-        /// <msdn-id>dn788655</msdn-id>	
-        /// <unmanaged>HRESULT ID3D12Device::CreateCommandAllocator([In] D3D12_COMMAND_LIST_TYPE type,[In] const GUID&amp; riid,[Out] ID3D12CommandAllocator** ppCommandAllocator)</unmanaged>	
-        /// <unmanaged-short>ID3D12Device::CreateCommandAllocator</unmanaged-short>	
-        public SharpDX.Direct3D12.CommandAllocator CreateCommandAllocator(SharpDX.Direct3D12.CommandListType type)
-        {
-            return CreateCommandAllocator(type, Utilities.GetGuidFromType(typeof(CommandAllocator)));
-        }
-
-        public GraphicsCommandList CreateCommandList(
-    SharpDX.Direct3D12.CommandListType type,
-    SharpDX.Direct3D12.CommandAllocator commandAllocatorRef,
-    SharpDX.Direct3D12.PipelineState initialStateRef)
-        {
-            return CreateCommandList(0, type, commandAllocatorRef, initialStateRef);
-        }
-
-        /// <summary>	
-        /// No documentation for Direct3D12	
-        /// </summary>	
-        /// <param name="nodeMask">No documentation.</param>	
-        /// <param name="type">No documentation.</param>	
-        /// <param name="commandAllocatorRef">No documentation.</param>	
-        /// <param name="initialStateRef">No documentation.</param>	
-        /// <param name="riid">No documentation.</param>	
-        /// <returns>No documentation.</returns>	
-        /// <msdn-id>dn788656</msdn-id>	
-        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommandList']/*"/>	
-        /// <unmanaged>HRESULT ID3D12Device::CreateCommandList([In] unsigned int nodeMask,[In] D3D12_COMMAND_LIST_TYPE type,[In] ID3D12CommandAllocator* pCommandAllocator,[In, Optional] ID3D12PipelineState* pInitialState,[In] const GUID&amp; riid,[Out] void** ppCommandList)</unmanaged>	
-        /// <unmanaged-short>ID3D12Device::CreateCommandList</unmanaged-short>	
-        public GraphicsCommandList CreateCommandList(int nodeMask,
-            SharpDX.Direct3D12.CommandListType type,
-            SharpDX.Direct3D12.CommandAllocator commandAllocatorRef,
-            SharpDX.Direct3D12.PipelineState initialStateRef)
-        {
-            var nativePointer = CreateCommandList(nodeMask, type, commandAllocatorRef, initialStateRef, Utilities.GetGuidFromType(typeof(GraphicsCommandList)));
-            return new GraphicsCommandList(nativePointer);
-        }
-
-        /// <summary>	
         /// <p> This method creates a command signature. </p>	
         /// </summary>	
         /// <param name="descRef"><dd>  <p> Describes the command signature to be created with the <strong><see cref="SharpDX.Direct3D12.CommandSignatureDescription"/></strong> structure. </p> </dd></param>	
@@ -156,9 +90,9 @@ namespace SharpDX.Direct3D12
         {
             var nativeDesc = new CommandSignatureDescription.__Native();
             descRef.__MarshalTo(ref nativeDesc);
-            fixed(void* pIndirectArguments = descRef.IndirectArguments)
+            fixed (void* pIndirectArguments = descRef.IndirectArguments)
             {
-                if(descRef.IndirectArguments != null)
+                if (descRef.IndirectArguments != null)
                 {
                     nativeDesc.ArgumentDescCount = descRef.IndirectArguments.Length;
                     nativeDesc.ArgumentDescsPointer = new IntPtr(pIndirectArguments);
@@ -166,28 +100,6 @@ namespace SharpDX.Direct3D12
 
                 return CreateCommandSignature(new IntPtr(&nativeDesc), rootSignatureRef, Utilities.GetGuidFromType(typeof(CommandSignature)));
             }
-        }
-
-        /// <summary>	
-        /// <p> Creates both a resource and an implicit heap, such that the heap is big enough to contain the entire resource and the resource is mapped to the heap. </p>	
-        /// </summary>	
-        /// <param name="heapPropertiesRef"><dd>  <p> A reference to a <strong><see cref="SharpDX.Direct3D12.HeapProperties"/></strong> structure that provides properties for the resource's heap. </p> </dd></param>	
-        /// <param name="heapFlags"><dd>  <p> Heap options, as a bitwise-OR'd combination of <strong><see cref="SharpDX.Direct3D12.HeapFlags"/></strong> enumeration constants. </p> </dd></param>	
-        /// <param name="resourceDescRef"><dd>  <p> A reference to a <strong><see cref="SharpDX.Direct3D12.ResourceDescription"/></strong> structure that describes the resource. </p> </dd></param>	
-        /// <param name="initialResourceState"><dd>  <p> The initial state of the resource, as a bitwise-OR'd combination of <strong><see cref="SharpDX.Direct3D12.ResourceStates"/></strong> enumeration constants. </p> <p> When a resource is created together with a <strong><see cref="SharpDX.Direct3D12.HeapType"/></strong>_UPLOAD heap, <em>InitialResourceState</em> must be <strong>D3D12_RESOURCE_STATE</strong>_GENERIC_READ. When a resource is created together with a <see cref="SharpDX.Direct3D12.HeapType.Readback"/> heap, <em>InitialResourceState</em> must be <see cref="SharpDX.Direct3D12.ResourceStates.CopyDestination"/>. </p> </dd></param>	
-        /// <param name="optimizedClearValueRef"><dd>  <p> Specifies a <strong><see cref="SharpDX.Direct3D12.ClearValue"/></strong> that describes the default value for a clear color. </p> <p><em>pOptimizedClearValue</em> specifies a value for which clear operations are most optimal. When the created resource is a texture with either the <strong>D3D12_RESOURCE_FLAG</strong>_ALLOW_RENDER_TARGET or <see cref="SharpDX.Direct3D12.ResourceFlags.AllowDepthStencil"/> flags, applications should choose the value that the clear operation will most commonly be called with. Clear operations can be called with other values, but those operations will not be as efficient as when the value matches the one passed into resource creation. <em>pOptimizedClearValue</em> must be <c>null</c> when used with <strong><see cref="SharpDX.Direct3D12.ResourceDimension"/></strong>_BUFFER. </p> </dd></param>	
-        /// <param name="riidResource"><dd>  <p> The globally unique identifier (<strong><see cref="System.Guid"/></strong>) for the resource interface. This is an input parameter. The <strong>REFIID</strong>, or <strong><see cref="System.Guid"/></strong>, of the interface to the resource can be obtained by using the __uuidof() macro. For example, __uuidof(<strong><see cref="SharpDX.Direct3D12.Resource"/></strong>) will get the <strong><see cref="System.Guid"/></strong> of the interface to a resource. </p> <p> While riidResource is, most commonly, the <see cref="System.Guid"/> for <strong><see cref="SharpDX.Direct3D12.Resource"/></strong>, it may be any <see cref="System.Guid"/> for any interface. If the resource object doesn't support the interface for this <see cref="System.Guid"/>, creation will fail with E_NOINTERFACE. </p> </dd></param>	
-        /// <returns><dd>  <p> A reference to memory that receives the requested interface reference to the created resource object. <em>ppvResource</em> can be <c>null</c>, to enable capability testing. When <em>ppvResource</em> is <c>null</c>, no object will be created and S_FALSE will be returned when <em>pResourceDesc</em> is valid. </p> </dd></returns>	
-        /// <remarks>	
-        /// <p> This method creates both a resource and a heap, such that the heap is big enough to contain the entire resource and the resource is mapped to the heap. The created heap is known as an implicit heap, because the heap object cannot be obtained by the application. The application must ensure the GPU will no longer read or write to this resource before releasing the final reference on the resource. </p><p> The implicit heap is made resident for GPU access before the method returns to the application. See Residency. </p><p> The resource GPU VA mapping cannot be changed. See <strong><see cref="SharpDX.Direct3D12.CommandQueue.UpdateTileMappings"/></strong> and Volume Tiled Resources. </p><p> This method may be called by multiple threads concurrently. </p>	
-        /// </remarks>	
-        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommittedResource']/*"/>	
-        /// <msdn-id>dn899178</msdn-id>	
-        /// <unmanaged>HRESULT ID3D12Device::CreateCommittedResource([In] const D3D12_HEAP_PROPERTIES* pHeapProperties,[In] D3D12_HEAP_FLAGS HeapFlags,[In, Value] const D3D12_RESOURCE_DESC* pResourceDesc,[In] D3D12_RESOURCE_STATES InitialResourceState,[In, Optional] const D3D12_CLEAR_VALUE* pOptimizedClearValue,[In] const GUID&amp; riidResource,[Out] ID3D12Resource** ppvResource)</unmanaged>	
-        /// <unmanaged-short>ID3D12Device::CreateCommittedResource</unmanaged-short>	
-        public SharpDX.Direct3D12.Resource CreateCommittedResource(SharpDX.Direct3D12.HeapProperties heapPropertiesRef, SharpDX.Direct3D12.HeapFlags heapFlags, SharpDX.Direct3D12.ResourceDescription resourceDescRef, SharpDX.Direct3D12.ResourceStates initialResourceState, SharpDX.Direct3D12.ClearValue? optimizedClearValueRef = null)
-        {
-            return CreateCommittedResource(ref heapPropertiesRef, heapFlags, ref resourceDescRef, initialResourceState, optimizedClearValueRef, Utilities.GetGuidFromType(typeof(Resource)));
         }
 
         /// <summary>	
@@ -209,7 +121,7 @@ namespace SharpDX.Direct3D12
             {
                 descRef.ComputeShader.UpdateNative(ref nativeDesc.ComputeShader, (IntPtr)pComputeShader);
                 return CreateComputePipelineState(new IntPtr(&nativeDesc), Utilities.GetGuidFromType(typeof(PipelineState)));
-            }       
+            }
         }
 
         /// <summary>	
@@ -270,19 +182,6 @@ namespace SharpDX.Direct3D12
         }
 
         /// <summary>	
-        /// Creates a descriptor heap object.
-        /// </summary>	
-        /// <param name="descriptorHeapDesc">No documentation.</param>	
-        /// <returns>No documentation.</returns>	
-        /// <msdn-id>dn788662</msdn-id>
-        /// <unmanaged>HRESULT ID3D12Device::CreateDescriptorHeap([In] const D3D12_DESCRIPTOR_HEAP_DESC* pDescriptorHeapDesc,[In] const GUID&amp; riid,[Out] ID3D12DescriptorHeap** ppvHeap)</unmanaged>	
-        /// <unmanaged-short>ID3D12Device::CreateDescriptorHeap</unmanaged-short>	
-        public SharpDX.Direct3D12.DescriptorHeap CreateDescriptorHeap(SharpDX.Direct3D12.DescriptorHeapDescription descriptorHeapDesc)
-        {
-            return CreateDescriptorHeap(descriptorHeapDesc, Utilities.GetGuidFromType(typeof(DescriptorHeap)));
-        }
-
-        /// <summary>	
         /// Creates a fence object. 	
         /// </summary>	
         /// <param name="initialValue">No documentation.</param>	
@@ -304,7 +203,7 @@ namespace SharpDX.Direct3D12
         /// <param name="descRef">No documentation.</param>	
         /// <param name="riid">No documentation.</param>	
         /// <returns>No documentation.</returns>	
-        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateGraphicsPipelineState']/*"/>	
+        /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device:phicsPipelineState']/*"/>	
         /// <msdn-id>dn788663</msdn-id>
         /// <unmanaged>HRESULT ID3D12Device::CreateGraphicsPipelineState([In] const void* pDesc,[In] const GUID&amp; riid,[Out] ID3D12PipelineState** ppPipelineState)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateGraphicsPipelineState</unmanaged-short>	
@@ -351,7 +250,7 @@ namespace SharpDX.Direct3D12
                 {
                     var ptr = stackalloc StreamOutputElement.__Native[streamOutElements.Length];
                     nativeStreamOutElements = ptr;
-                    for(int i = 0; i < streamOutElements.Length; i++)
+                    for (int i = 0; i < streamOutElements.Length; i++)
                     {
                         streamOutElements[i].__MarshalTo(ref nativeStreamOutElements[i]);
                     }

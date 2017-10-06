@@ -27,7 +27,7 @@
   <depends>sharpdx-direct3d1x</depends>
   <depends>sharpdx-direct3d11</depends>
 
-  <namespace>SharpDX.Direct3D12</namespace>  
+  <namespace>SharpDX.Direct3D12</namespace>
   <assembly>SharpDX.Direct3D12</assembly>
 
   <include-prolog>
@@ -48,7 +48,7 @@
   </context-set>
 
   <!-- D3D12 extensions -->
-  <extension>     
+  <extension>
     <context id="d3d12-all"/>
 
     <const from-macro="D3D12_SDK_VERSION" class="SharpDX.Direct3D12.D3D12" type="int" name="SdkVersion" />
@@ -59,7 +59,7 @@
 
   <!-- D3D12 bindings -->
   <bindings>
-  
+
   </bindings>
 
   <!-- D3D12 mapping -->
@@ -72,7 +72,7 @@
     -->
 
     <map enum-item="D3D12_RESOURCE_BINDING_TIER_(.*)" name="Tier$1"/>
-    
+
     <map enum-item="D3D12_SHADER_MIN_PRECISION_10_BIT" name="Bit10"/>
     <map enum-item="D3D12_SHADER_MIN_PRECISION_16_BIT" name="Bit16"/>
 
@@ -83,13 +83,13 @@
 
     <map enum-item="D3D12_ROOT_PARAMETER_32BIT_CONSTANTS" name="Constant32Bits"/>
     <map enum-item="D3D12_ROOT_PARAMETER_CBV" name="ConstantBufferView"/>
-    
+
     <map enum-item="D3D12_(.*)_DESCRIPTOR_HEAP$" name-tmp="$1"/>
     <remove enum-item="D3D12_NUM_DESCRIPTOR_HEAP_TYPES"/>
-    <map enum-item="D3D12_CBV_SRV_UAV_DESCRIPTOR_HEAP" name="ConstantBufferShaderResourceUnorderedAccessView"/>    
-    
+    <map enum-item="D3D12_CBV_SRV_UAV_DESCRIPTOR_HEAP" name="ConstantBufferShaderResourceUnorderedAccessView"/>
+
     <map enum="D3D_ROOT_SIGNATURE_VERSION" name="RootSignatureVersion"/>
-    
+
     <map enum-item="D3D12_TEXTURE_LAYOUT_64KB_UNDEFINED_SWIZZLE" name="UndefinedSwizzle64kb"/>
     <map enum-item="D3D12_TEXTURE_LAYOUT_64KB_STANDARD_SWIZZLE" name="StandardSwizzle64kb"/>
 
@@ -107,7 +107,7 @@
     <map enum-item="D3D12_SHADER_MIN_PRECISION_SUPPORT_(\d*)_BIT" name-tmp="Bit$1"/>
     <map enum-item="D3D12_DSV_FLAG(.*)" name-tmp="$1"/>
     <map enum-item="D3D12_PROGRAMMABLE_SAMPLE_POSITIONS_TIER_(.*)" name-tmp="Tier$1"/>
-    
+
     <map enum="D3D12_FORMAT_SUPPORT1" flags="true"/>
     <map enum="D3D12_FORMAT_SUPPORT2" flags="true"/>
     <map enum="D3D12_RESOURCE_STATES" flags="true"/>
@@ -115,17 +115,17 @@
     <map enum="D3D_SHADER_MODEL" name="ShaderModel"/>
     <map enum-item="D3D_SHADER_MODEL_5_1" name="Model51"/>
     <map enum-item="D3D_SHADER_MODEL_6_0" name="Model60"/>
-    
+
     <!--
     // *****************************************************************
     // D3D12 Struct
     // *****************************************************************
     -->
-    
+
     <map field="D3D12_.*::p([A-Z].*)" name="$1Pointer" visibility="public"/>
 
     <map field="D3D12_MESSAGE::pDescription" name="Description" visibility="public"/>
-    
+
     <map struct="D3D12_.*_PIPELINE_STATE_DESC" struct-to-class="true" marshalto="true"/>
     <map struct="D3D12_COMMAND_SIGNATURE_DESC" struct-to-class="true" marshalto="true"/>
     <map field="D3D12_COMMAND_SIGNATURE_DESC::NumArgumentDescs" visibility="internal"/>
@@ -143,10 +143,10 @@
     <map field="D3D12_RESOURCE_DESC::MiscFlags" name="OptionFlags"/>
 
     <map field="D3D12_ROOT_CONSTANTS::Num32BitValues" name="Value32BitCount"/>
-        
+
     <map field="D3D12_STREAM_OUTPUT_VIEW_DESC::pSOCurrentOffset" type="void"/>
 
-    
+
     <map struct="D3D12_BLEND_DESC" marshalto="true"/>
 
     <map field="D3D12_ROOT_SIGNATURE::pParameters" name="ParametersPointer"/>
@@ -159,17 +159,17 @@
 
     <map struct="D3D12_VERSIONED_ROOT_SIGNATURE_DESC" struct-to-class="true" marshal="true"/>
     <remove field="D3D12_VERSIONED_ROOT_SIGNATURE_DESC::.*"/>
-      
+
     <map struct="D3D12_INPUT_LAYOUT_DESC" struct-to-class="true" marshalto="true"/>
     <map field="D3D12_INPUT_LAYOUT_DESC::pInputElementDescs" name="InputElementsPointer" visibility="private"/>
     <map field="D3D12_INPUT_LAYOUT_DESC::NumElements" visibility="private"/>
-    
+
     <map struct="D3D12_INPUT_ELEMENT_DESC" marshalto="true"/>
-    
+
     <map struct="D3D12_STREAM_OUTPUT_DESC" struct-to-class="true" marshalto="true"/>
     <map field="D3D12_STREAM_OUTPUT_DESC::pSODeclaration" name="StreamOutputEntriesPointer" visibility="private" />
     <map field="D3D12_STREAM_OUTPUT_DESC::NumEntries" visibility="private"/>
-    
+
     <map struct="D3D12_SO_DECLARATION_ENTRY" marshalto="true"/>
 
     <map struct="D3D12_SHADER_BYTECODE" native="true" marshalto="true"/>
@@ -177,9 +177,9 @@
     <map field="D3D12_SHADER_BYTECODE::BytecodeLength" name="Size" visibility="private"/>
 
     <map struct="D3D12_COMMAND_SIGNATURE" name="CommandSignatureDescription"/>
-    
+
     <map field="D3D12_CLEAR_VALUE::Color" type="SHARPDX_VECTOR4" array="" />
-    
+
     <!-- Inner argument description structs have no name, so we specify it manually -->
     <map struct="D3D12_INDIRECT_ARGUMENT_DESC_INNER_0_INNER_0" name="VertexBufferArgument"/>
     <map struct="D3D12_INDIRECT_ARGUMENT_DESC_INNER_0_INNER_1" name="ConstantArgument"/>
@@ -187,8 +187,8 @@
     <map struct="D3D12_INDIRECT_ARGUMENT_DESC_INNER_0_INNER_3" name="ShaderResourceViewArgument"/>
     <map struct="D3D12_INDIRECT_ARGUMENT_DESC_INNER_0_INNER_4" name="UnorderedAccessViewArgument"/>
     <move struct="D3D12_INDIRECT_ARGUMENT_DESC_INNER_(.*)" to="D3D12_INDIRECT_ARGUMENT_DESC"/>
-    
-    
+
+
     <!--Remove all fields for D3D12_RESOURCE_BARRIER_DESC as the union with pointers cannot be mapped safely in x86/x64 with C# explicit layout-->
     <remove field="D3D12_RESOURCE_BARRIER::.*"/>
     <remove field="D3D12_ROOT_PARAMETER::.*"/>
@@ -196,7 +196,7 @@
 
     <!--Remove all fields for D3D12_ROOT_PARAMETER1 as the union with pointers cannot be mapped safely in x86/x64 with C# explicit layout-->
     <remove field="D3D12_ROOT_PARAMETER1::.*" />
-    
+
     <map struct="D3D12_CACHED_PIPELINE_STATE::pCachedBlob" name="CachedBlobPointer"/>
 
     <map interface="ID3D12Debug" name="DebugInterface"/>
@@ -230,7 +230,7 @@
     <map param="ID3D12GraphicsCommandList::ResourceBarrier::pBarriers" type="void"/>
     <map method="ID3D12GraphicsCommandList::ResourceBarrier" visibility="private"/>
 
-    
+
     <map method="ID3D12GraphicsCommandList::RSSetViewports" rawptr="true"/>
     <map method="ID3D12GraphicsCommandList::RSSetScissorRects" name="SetScissorRectangles" rawptr="true"/>
     <map method="ID3D12GraphicsCommandList::IASetVertexBuffers" visibility="private" />
@@ -240,8 +240,8 @@
     <map method="ID3D12Device::RegisterBudgetChangeCallback" visibility="internal"/>
 
     <!--Revert changes inherited from D3D11. Leave all Device.CreateXXX method as-is-->
-    <map method="ID3D12Device::CreateCommandAllocator" visibility="public"/>
-    <map param="ID3D12Device::CreateCommandAllocator::ppCommandAllocator" attribute="out" return="true"/>
+    <map method="ID3D12Device::CreateCommandAllocator" visibility="internal"/>
+    <map param="ID3D12Device::CreateCommandAllocator::ppCommandAllocator" attribute="out fast" type="ID3D12CommandAllocator" />
 
     <map method="ID3D12Device::CreateGraphicsPipelineState" visibility="public"/>
     <map param="ID3D12Device::CreateGraphicsPipelineState::ppPipelineState" attribute="out" type="ID3D12PipelineState" return="true"/>
@@ -249,57 +249,58 @@
     <map method="ID3D12Device::CreateComputePipelineState" visibility="private"/>
     <map param="ID3D12Device::CreateComputePipelineState::ppPipelineState" attribute="out" type ="ID3D12PipelineState" return="true"/>
 
-    <map method="ID3D12Device::CreateCommandList" visibility="public"/>
-    <map param="ID3D12Device::CreateCommandList::ppCommandList" attribute="out" return="true"/>
-
     <map method="ID3D12Device::CreateBuffer" visibility="private"/>
     <map param="ID3D12Device::CreateBuffer::ppvBuffer" attribute="out" type="ID3D12Resource" return="true"/>
 
-    <map method="ID3D12Device::CreateDescriptorHeap" visibility="private"/>
-    <map param="ID3D12Device::CreateDescriptorHeap::ppvHeap" attribute="out" type="ID3D12DescriptorHeap" return="true"/>
+    <map method="ID3D12Device::CreateDescriptorHeap" visibility="internal"/>
+    <map param="ID3D12Device::CreateDescriptorHeap::ppvHeap" attribute="out fast" type="ID3D12DescriptorHeap" />
+    <map param="ID3D12Device::CreateDescriptorHeap::pDescriptorHeapDesc" attribute="inout"/>
 
     <map method="ID3D12Device::CreateRootSignature" visibility="private"/>
     <map param="ID3D12Device::CreateRootSignature::ppvRootSignature" attribute="out" type="ID3D12RootSignature" return="true"/>
 
-    <map method="ID3D12Device::CreateCommittedResource" visibility="private"/>
+    <map method="ID3D12Device::CreateCommittedResource" visibility="internal"/>
     <map param="ID3D12Device::CreateCommittedResource::pResourceDesc" attribute="in value"/>
-    <map param="ID3D12Device::CreateCommittedResource::ppvResource" attribute="out" type="ID3D12Resource" return="true"/>
+    <map param="ID3D12Device::CreateCommittedResource::ppvResource" attribute="out fast" type="ID3D12Resource" />
 
     <map method="ID3D12Device::CreateFence" visibility="private"/>
     <map param="ID3D12Device::CreateFence::ppFence" attribute="out" type="ID3D12Fence" return="true"/>
 
-    <map method="ID3D12Device::CreateCommandQueue" visibility="private"/>
-    <map param="ID3D12Device::CreateCommandQueue::ppCommandQueue" attribute="out" type="ID3D12CommandQueue" return="true"/>
-    
-    <map method="ID3D12Device::CreateCommandList" visibility="private"/>
+    <!-- CreateCommandQueue -->
+    <map method="ID3D12Device::CreateCommandQueue" visibility="internal"/>
+    <map param="ID3D12Device::CreateCommandQueue::pDesc" attribute="inout"/>
+    <map param="ID3D12Device::CreateCommandQueue::ppCommandQueue" attribute="out fast" type="ID3D12CommandQueue"/>
 
-    <map method="ID3D12Device::CreateCommandAllocator" visibility="private"/>
-    <map param="ID3D12Device::CreateCommandAllocator::ppCommandAllocator" attribute="out" type="ID3D12CommandAllocator" return="true"/>
+    <map method="ID3D12Device::CreateCommandList" visibility="internal"/>
+    <map param="ID3D12Device::CreateCommandList::ppCommandList" attribute="out fast" type="ID3D12GraphicsCommandList"/>
     
-    <map method="ID3D12Device::CreateCommandSignature" visibility="private"/>
+    <map method="ID3D12Device::CreateCommandAllocator" visibility="internal"/>
+    <map param="ID3D12Device::CreateCommandAllocator::ppCommandAllocator" attribute="out fast" type="ID3D12CommandAllocator" />
+
+    <map method="ID3D12Device::CreateCommandSignature" visibility="internal"/>
     <map param="ID3D12Device::CreateCommandSignature::ppvCommandSignature" attribute="out" type="ID3D12CommandSignature" return="true"/>
     <map param="ID3D12Device::CreateCommandSignature::pDesc" type="void"/>
-    
-    <map method="ID3D12Device::CreateHeap" visibility="private"/>
+
+    <map method="ID3D12Device::CreateHeap" visibility="internal"/>
     <map param="ID3D12Device::CreateHeap::ppvHeap" attribute="out" type="ID3D12Heap" return="true"/>
 
-    <map method="ID3D12Device::CreatePlacedResource" visibility="private"/>
+    <map method="ID3D12Device::CreatePlacedResource" visibility="internal"/>
     <map param="ID3D12Device::CreatePlacedResource::ppvResource" attribute="out" type="ID3D12Resource" return="true"/>
 
-    <map method="ID3D12Device::CreatePlacedResource" visibility="private"/>
+    <map method="ID3D12Device::CreatePlacedResource" visibility="internal"/>
     <map param="ID3D12Device::CreatePlacedResource::ppvResource" attribute="out" type="ID3D12Resource" return="true"/>
 
-    <map method="ID3D12Device::CreateReservedResource" visibility="private"/>
+    <map method="ID3D12Device::CreateReservedResource" visibility="internal"/>
     <map param="ID3D12Device::CreateReservedResource::ppvResource" attribute="out" type="ID3D12Resource" return="true"/>
-    
-    <map method="ID3D12Device::CreateQueryHeap" visibility="private"/>
+
+    <map method="ID3D12Device::CreateQueryHeap" visibility="internal"/>
     <map param="ID3D12Device::CreateQueryHeap::ppvHeap" attribute="out" type="ID3D12QueryHeap" return="true"/>
 
     <map method="ID3D12Device::Create\w+View" visibility="public"/>
 
     <map method="ID3D12Device::CreateSampler" visibility="public"/>
-    
-    <map method="ID3D12Device::CreateLibrary" visibility="private"/>
+
+    <map method="ID3D12Device::CreateLibrary" visibility="internal"/>
     <map param="ID3D12Device::CreateLibrary::ppLibrary" attribute="out" return="true"/>
 
     <map param="ID3D12Device::CreateSampler::pDesc" attribute="in value"/>
@@ -318,34 +319,34 @@
 
     <map method="ID3D12GraphicsCommandList::OMSetRenderTargets" visibility="private"/>
     <map param="ID3D12GraphicsCommandList::OMSetRenderTargets::pRenderTargetDescriptors" type="void"/>
-        
+
     <map method="ID3D12Device::CheckFeatureSupport" check="false" visibility="private"/>
-    
-     <map method="ID3D12Device2::CreatePipelineState" visibility="private"/>
-     <map param="ID3D12Device2::CreatePipelineState::ppPipelineState" attribute="out" type="ID3D12PipelineState" return="true"/>
+
+    <map method="ID3D12Device2::CreatePipelineState" visibility="internal"/>
+    <map param="ID3D12Device2::CreatePipelineState::ppPipelineState" attribute="out fast" type="ID3D12PipelineState" />
 
     <!--
     // *****************************************************************
     // D3D12 Functions
     // *****************************************************************
     -->
-   
+
     <remove function=".*_Stub"/>
     <remove function=".*_Proxy"/>
     <remove function="D3D12SerializeVersionedRootSignature"/>
     <remove method="ID3D12Device1::CreatePipelineLibrary"/>
     <remove interface="ID3D12VersionedRootSignatureDeserializer"/>
-    
+
     <map method="ID3D12RootSignatureDeserializer::GetRootSignatureDesc" type="void" property="false" visibility="private"/>
     <map function="D3D12(.+)" name-tmp="$1" />
     <map function="D3D12.*" dll='"d3d12.dll"' group="SharpDX.Direct3D12.D3D12" />
     <map param="D3D12CreateDevice::ppDevice" type="ID3D12Device" attribute="out fast" />
     <map function="D3D12CreateDevice" check="false"/>
     <map param="D3D12CreateDevice.*?::Flags" type="D3D12_CREATE_DEVICE_FLAG" />
-    
+
     <map param="D3D12SerializeRootSignature::pRootSignature" type="void"/>
     <map function="D3D12SerializeRootSignature" check="false"/>
-    
+
     <map param="D3D12CreateDeviceAndSwapChain::ppSwapChain" type="IDXGISwapChain"/>
     <map param="D3D12CreateDeviceAndSwapChain::ppDevice" type="ID3D12Device"/>
 

@@ -25,6 +25,52 @@ namespace SharpDX.Direct3D12
 {
     public partial class GraphicsCommandList
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GraphicsCommandList"/> class.
+        /// </summary>
+        /// <param name="device">The device with which to associate the command queue.</param>
+        /// <param name="nodeMask">Multi GPU node mask.</param>
+        /// <param name="type"><see cref="CommandListType"/></param>
+        /// <param name="commandAllocator"><see cref="CommandAllocator"/></param>
+        /// <param name="initialState"><see cref="PipelineState"/></param>
+        public GraphicsCommandList(Device device, 
+            int nodeMask,
+            CommandListType type,
+            CommandAllocator commandAllocator,
+            PipelineState initialState = null)
+            : base(IntPtr.Zero)
+        {
+            device.CreateCommandList(
+                nodeMask,
+                type,
+                commandAllocator,
+                initialState,
+                Utilities.GetGuidFromType(typeof(GraphicsCommandList)),
+                this);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GraphicsCommandList"/> class.
+        /// </summary>
+        /// <param name="device">The device with which to associate the command queue.</param>
+        /// <param name="type"><see cref="CommandListType"/></param>
+        /// <param name="commandAllocator"><see cref="CommandAllocator"/></param>
+        /// <param name="initialState"><see cref="PipelineState"/></param>
+        public GraphicsCommandList(Device device,
+            CommandListType type,
+            CommandAllocator commandAllocator,
+            PipelineState initialState = null)
+            : base(IntPtr.Zero)
+        {
+            device.CreateCommandList(
+                0,
+                type,
+                commandAllocator,
+                initialState,
+                Utilities.GetGuidFromType(typeof(GraphicsCommandList)),
+                this);
+        }
+
         /// <summary>	
         /// <p>Clears the depth-stencil resource.</p>	
         /// </summary>	
