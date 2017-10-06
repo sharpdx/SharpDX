@@ -25,7 +25,7 @@
   <depends>sharpdx-core</depends>
   <depends>sharpdx-core-direct3d</depends>
   <depends>sharpdx-core-multimedia</depends>
-l
+
   <file>Mapping-core.xml</file>
   <file>Direct3D\Mapping.xml</file>
   <file>Multimedia\Mapping.xml</file>  
