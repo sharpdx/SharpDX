@@ -21,22 +21,10 @@ namespace SharpDX.Direct3D12
 {
     public partial struct CommandQueueDescription
     {
-        public CommandQueueDescription(CommandListType type, CommandQueueFlags flags = CommandQueueFlags.None)
+        public CommandQueueDescription(CommandListType type, CommandQueueFlags flags = CommandQueueFlags.None) : this()
         {
             Type = type;
-            Priority = 0;
             Flags = flags;
-            NodeMask = 0;
-        }
-
-        public CommandQueueDescription(
-            CommandListType type,
-            int nodeMask)
-        {
-            Type = type;
-            Priority = 0;
-            Flags = CommandQueueFlags.None;
-            NodeMask = nodeMask;
         }
     }
 }

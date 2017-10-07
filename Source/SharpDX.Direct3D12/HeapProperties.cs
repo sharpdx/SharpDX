@@ -27,20 +27,13 @@ namespace SharpDX.Direct3D12
         /// <param name="type">The type.</param>
         /// <param name="cpuPageProperty">The cpu page properties.</param>
         /// <param name="memoryPoolPreference">The memory pool preference.</param>
-        /// <param name="creationNodeMask"></param>
-        /// <param name="visibleNodeMask"></param>
-        public HeapProperties(
-            HeapType type,
-            CpuPageProperty cpuPageProperty,
-            MemoryPool memoryPoolPreference,
-            int creationNodeMask = 1,
-            int visibleNodeMask = 1)
+        public HeapProperties(HeapType type, CpuPageProperty cpuPageProperty, MemoryPool memoryPoolPreference)
         {
             Type = type;
             CPUPageProperty = cpuPageProperty;
             MemoryPoolPreference = memoryPoolPreference;
-            CreationNodeMask = creationNodeMask;
-            VisibleNodeMask = visibleNodeMask;
+            this.CreationNodeMask = 1;
+            this.VisibleNodeMask = 1;
         }
 
         /// <summary>
@@ -48,36 +41,26 @@ namespace SharpDX.Direct3D12
         /// </summary>
         /// <param name="cpuPageProperty">The cpu page properties.</param>
         /// <param name="memoryPoolPreference">The memory pool preference.</param>
-        /// <param name="creationNodeMask"></param>
-        /// <param name="visibleNodeMask"></param>
-        public HeapProperties(
-            CpuPageProperty cpuPageProperty,
-            MemoryPool memoryPoolPreference,
-            int creationNodeMask = 1,
-            int visibleNodeMask = 1)
+        public HeapProperties(CpuPageProperty cpuPageProperty, MemoryPool memoryPoolPreference)
         {
             Type = HeapType.Custom;
             CPUPageProperty = cpuPageProperty;
             MemoryPoolPreference = memoryPoolPreference;
-            CreationNodeMask = creationNodeMask;
-            VisibleNodeMask = visibleNodeMask;
+            this.CreationNodeMask = 1;
+            this.VisibleNodeMask = 1;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HeapProperties"/> struct.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <param name="creationNodeMask"></param>
-        /// <param name="visibleNodeMask"></param>
-        public HeapProperties(HeapType type,
-            int creationNodeMask = 1,
-            int visibleNodeMask = 1)
+        public HeapProperties(HeapType type)
         {
             Type = type;
             CPUPageProperty = CpuPageProperty.Unknown;
             MemoryPoolPreference = MemoryPool.Unknown;
-            CreationNodeMask = creationNodeMask;
-            VisibleNodeMask = visibleNodeMask;
+            this.CreationNodeMask = 1;
+            this.VisibleNodeMask = 1;
         }
 
         /// <summary>
@@ -88,10 +71,9 @@ namespace SharpDX.Direct3D12
         {
             get
             {
-                return
-                    Type == HeapType.Upload ||
-                    Type == HeapType.Readback ||
-                    (Type == HeapType.Custom && (CPUPageProperty == CpuPageProperty.WriteCombine || CPUPageProperty == CpuPageProperty.WriteBack));
+                return Type == HeapType.Upload || (Type == HeapType.Custom &&
+                                                   (CPUPageProperty == CpuPageProperty.WriteCombine
+                                                    || CPUPageProperty == CpuPageProperty.WriteBack));
             }
         }
     }
