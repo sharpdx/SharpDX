@@ -29,7 +29,7 @@ namespace SharpDX.IO
     /// </summary>
     public static class NativeFile 
     {
-#if WINDOWS_API_SET
+#if WINDOWS_UWP
         private const string KERNEL_FILE = "api-ms-win-core-file-l1-2-0.dll";
 #else
         private const string KERNEL_FILE = "kernel32.dll";
@@ -114,7 +114,7 @@ namespace SharpDX.IO
                 }
             }
         }
-#if WINDOWS_API_SET
+#if WINDOWS_UWP
         internal struct CREATEFILE2_EXTENDED_PARAMETERS
         {
             public uint dwSize;
@@ -284,7 +284,7 @@ namespace SharpDX.IO
         [DllImport(KERNEL_FILE, EntryPoint = "GetFileAttributesExW", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern bool GetFileAttributesEx(string name, int fileInfoLevel, out WIN32_FILE_ATTRIBUTE_DATA lpFileInformation);
 
-#if STORE_APP
+#if WINDOWS_UWP
 
         /// <summary>
         /// Creates the file.

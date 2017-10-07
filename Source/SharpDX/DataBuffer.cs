@@ -34,9 +34,11 @@ namespace SharpDX
     {
         private unsafe sbyte* _buffer;
         private GCHandle _gCHandle;
-        private Blob _blob;
         private readonly bool _ownsBuffer;
         private readonly int _size;
+#if !WINDOWS_UWP
+        private Blob _blob;
+#endif
 
         /// <summary>
         /// Creates the specified user buffer.
@@ -141,7 +143,7 @@ namespace SharpDX
             _size = sizeInBytes;
             _ownsBuffer = makeCopy;
         }
-#if DESKTOP_APP
+#if !WINDOWS_UWP
         internal unsafe DataBuffer(Blob buffer)
         {
             System.Diagnostics.Debug.Assert(buffer.GetBufferSize() > 0);
@@ -160,7 +162,7 @@ namespace SharpDX
         {
             if (disposing)
             {
-#if DESKTOP_APP
+#if !WINDOWS_UWP
                 if (_blob != null)
                 {
                     _blob.Dispose();

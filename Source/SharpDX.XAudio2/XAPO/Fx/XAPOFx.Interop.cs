@@ -7,8 +7,8 @@ namespace SharpDX.XAPO.Fx
     /// Functions	
     /// </summary>	
     /// <include file='..\..\Documentation\CodeComments.xml' path="/comments/comment[@id='SharpDX.XAPO.Fx.XAPOFx']/*"/>	
-    static partial class XAPOFx {   
-#if STORE_APP_10
+    static partial class XAPOFx {
+#if WINDOWS_UWP
         /// <summary>	
         /// <p>Creates an instance of the requested XAPOFX effect.</p>	
         /// </summary>	

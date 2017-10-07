@@ -104,7 +104,7 @@ namespace SharpDX.Diagnostics
         /// </summary>
         public static string GetStackTrace()
         {
-#if STORE_APP
+#if WINDOWS_UWP
             var stacktrace = "Stacktrace is not available on this platform";
 
             // This code is a workaround to be able to get a full stacktrace on Windows Store App. 
@@ -121,7 +121,7 @@ namespace SharpDX.Diagnostics
                         // First try to get the stacktrace
                         stacktrace = (string)stackTraceGetMethod.Invoke(null, null);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         // If we have an exception, it means that the access to the method is not possible
                         // so we are going to patch the field RuntimeMethodInfo.m_invocationFlags that should contain
@@ -145,7 +145,7 @@ namespace SharpDX.Diagnostics
                                     // if it succeeds, first Invoke() should run on next call
                                     stacktrace = (string)stackTraceGetMethod.Invoke(null, null);
                                 }
-                                catch (Exception ex2)
+                                catch (Exception)
                                 {
                                     // if it is still failing, we can't do anything
                                 }
@@ -153,7 +153,7 @@ namespace SharpDX.Diagnostics
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // can't do anything
                 }

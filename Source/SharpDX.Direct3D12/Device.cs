@@ -111,33 +111,48 @@ namespace SharpDX.Direct3D12
             return CreateCommandAllocator(type, Utilities.GetGuidFromType(typeof(CommandAllocator)));
         }
 
+        /// <summary>
+        /// <p>Creates a new graphics command list object.</p>	
+        /// </summary>
+        /// <param name="type">A <see cref="SharpDX.Direct3D12.CommandListType"/> value that specifies the type of command list to create.</param>
+        /// <param name="commandAllocator">A <see cref="CommandAllocator"/> object that the device creates command lists from.</param>	
+        /// <param name="initialState">A <see cref="PipelineState"/> object that contains the initial pipeline state for the command list.</param>
+        /// <returns>A new instance of <see cref="GraphicsCommandList"/>.</returns>	
         public GraphicsCommandList CreateCommandList(
-    SharpDX.Direct3D12.CommandListType type,
-    SharpDX.Direct3D12.CommandAllocator commandAllocatorRef,
-    SharpDX.Direct3D12.PipelineState initialStateRef)
+            SharpDX.Direct3D12.CommandListType type,
+            SharpDX.Direct3D12.CommandAllocator commandAllocator,
+            SharpDX.Direct3D12.PipelineState initialState)
         {
-            return CreateCommandList(0, type, commandAllocatorRef, initialStateRef);
+            return CreateCommandList(0, type, commandAllocator, initialState);
         }
 
         /// <summary>	
-        /// No documentation for Direct3D12	
+        /// <p>Creates a new graphics command list object.</p>	
         /// </summary>	
-        /// <param name="nodeMask">No documentation.</param>	
-        /// <param name="type">No documentation.</param>	
-        /// <param name="commandAllocatorRef">No documentation.</param>	
-        /// <param name="initialStateRef">No documentation.</param>	
-        /// <param name="riid">No documentation.</param>	
-        /// <returns>No documentation.</returns>	
+        /// <param name="nodeMask">
+        /// For single GPU operation, set this to zero. 
+        /// If there are multiple GPU nodes, set a bit to identify the node (the device's physical adapter) for which to create the command list.
+        /// Each bit in the mask corresponds to a single node. Only 1 bit must be set.
+        /// </param>	
+        /// <param name="type">A <see cref="SharpDX.Direct3D12.CommandListType"/> value that specifies the type of command list to create.</param>	
+        /// <param name="commandAllocator">A <see cref="CommandAllocator"/> object that the device creates command lists from.</param>	
+        /// <param name="initialState">A <see cref="PipelineState"/> object that contains the initial pipeline state for the command list.</param>
+        /// <returns>A new instance of <see cref="GraphicsCommandList"/>.</returns>	
         /// <msdn-id>dn788656</msdn-id>	
         /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommandList']/*"/>	
         /// <unmanaged>HRESULT ID3D12Device::CreateCommandList([In] unsigned int nodeMask,[In] D3D12_COMMAND_LIST_TYPE type,[In] ID3D12CommandAllocator* pCommandAllocator,[In, Optional] ID3D12PipelineState* pInitialState,[In] const GUID&amp; riid,[Out] void** ppCommandList)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateCommandList</unmanaged-short>	
         public GraphicsCommandList CreateCommandList(int nodeMask,
             SharpDX.Direct3D12.CommandListType type,
-            SharpDX.Direct3D12.CommandAllocator commandAllocatorRef,
-            SharpDX.Direct3D12.PipelineState initialStateRef)
+            SharpDX.Direct3D12.CommandAllocator commandAllocator,
+            SharpDX.Direct3D12.PipelineState initialState)
         {
-            var nativePointer = CreateCommandList(nodeMask, type, commandAllocatorRef, initialStateRef, Utilities.GetGuidFromType(typeof(GraphicsCommandList)));
+            var nativePointer = CreateCommandList(
+                nodeMask, 
+                type, 
+                commandAllocator,
+                initialState, 
+                Utilities.GetGuidFromType(typeof(GraphicsCommandList)));
             return new GraphicsCommandList(nativePointer);
         }
 

@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\Build\SharpDX.props" />
   <PropertyGroup>
-    <TargetFrameworks>net40;net45;netcoreapp1.0;netstandard1.1;uap10.0</TargetFrameworks>
+    <TargetFrameworks>net40;net45;netstandard1.1;uap10.0</TargetFrameworks>
     <PackageId>SharpDX.XAudio2</PackageId>
     <Product>SharpDX.XAudio2</Product>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\SharpDX.XAudio2.xml</DocumentationFile>
+    <DocumentationFile Condition="'$(Configuration)' == 'Release'">bin\$(Configuration)\$(TargetFramework)\SharpDX.XAudio2.xml</DocumentationFile>
     <AssemblyTitle>SharpDX.XAudio2</AssemblyTitle>
     <Title>SharpDX.XAudio2</Title>
     <Description>Assembly providing DirectX - XAudio2, X3DAudio and XAPO managed API.</Description>

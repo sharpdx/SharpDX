@@ -41,7 +41,7 @@ namespace SharpDX.XAudio2.Fx
         public Reverb(XAudio2 device, bool isUsingDebug)
             : base(device)
         {
-#if DESKTOP_APP
+#if !WINDOWS_UWP
             if (device.Version == XAudio2Version.Version27)
             {
                 Guid clsid = (isUsingDebug) ? XAudio2FxContants.CLSID_AudioReverb_Debug : XAudio2FxContants.CLSID_AudioReverb;
@@ -53,7 +53,7 @@ namespace SharpDX.XAudio2.Fx
             {
                 XAudio28Functions.CreateAudioReverb(this);
             }
-#if STORE_APP_10
+#if WINDOWS_UWP
             else if (device.Version == XAudio2Version.Version29)
             {
                 XAudio29Functions.CreateAudioReverb(this);

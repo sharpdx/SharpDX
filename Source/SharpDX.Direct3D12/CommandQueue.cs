@@ -28,20 +28,43 @@ namespace SharpDX.Direct3D12
         /// <summary>	
         /// <p>Submits a command list for execution.</p>	
         /// </summary>	
-        /// <param name="numCommandLists"><dd> <p> The number of command lists to be executed. </p> </dd></param>	
-        /// <param name="commandListsOut"><dd> <p> The array of <strong><see cref="SharpDX.Direct3D12.CommandList"/></strong> command lists to be executed. </p> </dd></param>	
+        /// <param name="commandList"><dd> <p> The <strong><see cref="SharpDX.Direct3D12.CommandList"/></strong> command list to be executed. </p> </dd></param>
         /// <remarks>	
         /// <p> The driver is free to patch the submitted command lists. It is the calling application?s responsibility to ensure that the graphics processing unit (GPU) is not currently reading the any of the submitted command lists from a previous execution. </p><p> Applications are encouraged to batch together command list executions to reduce fixed costs associated with submitted commands to the GPU. </p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12CommandQueue::ExecuteCommandLists']/*"/>	
-        /// <msdn-id>dn788631</msdn-id>	
-        /// <unmanaged>void ID3D12CommandQueue::ExecuteCommandLists([In] unsigned int NumCommandLists,[In, Buffer] const ID3D12CommandList** ppCommandLists)</unmanaged>	
-        /// <unmanaged-short>ID3D12CommandQueue::ExecuteCommandLists</unmanaged-short>	
         public unsafe void ExecuteCommandList(CommandList commandList)
         {
             if(commandList == null) throw new ArgumentNullException("commandList");
             var ptr = commandList.NativePointer;
             this.ExecuteCommandLists(1, new IntPtr(&ptr));
+        }
+
+        /// <summary>	
+        /// Submits an array of command lists for execution.	
+        /// </summary>	
+        /// <param name="commandLists">
+        /// The array of <see cref="SharpDX.Direct3D12.CommandList"/> command lists to be executed.
+        /// </param>	
+        /// <remarks>	
+        /// The driver is free to patch the submitted command lists.
+        /// It is the calling application's responsibility to ensure that the graphics processing unit (GPU) is not currently reading the any of the submitted command lists from a previous execution.
+        /// Applications are encouraged to batch together command list executions to reduce fixed costs associated with submitted commands to the GPU.
+        /// </remarks>	
+        public unsafe void ExecuteCommandLists(params SharpDX.Direct3D12.CommandList[] commandLists)
+        {
+            var commandListsPtr = (IntPtr*)0;
+
+            int count = 0;
+            if (commandLists != null)
+            {
+                count = commandLists.Length;
+                IntPtr* tempPtr = stackalloc IntPtr[count];
+                commandListsPtr = tempPtr;
+                for (int i = 0; i < count; i++)
+                    commandListsPtr[i] = (commandLists[i] == null) ? IntPtr.Zero : commandLists[i].NativePointer;
+            }
+
+            ExecuteCommandLists(count, new IntPtr(commandListsPtr));
         }
     }
 }

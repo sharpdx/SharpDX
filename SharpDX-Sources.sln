@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sources", "Sources", "{CC8DB471-0644-430D-9D4B-808A2475BEC0}"
 	ProjectSection(SolutionItems) = preProject
@@ -49,6 +49,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpDX.Desktop", "Source\SharpDX.Desktop\SharpDX.Desktop.csproj", "{5F8DB9E8-FFAE-475F-AC2E-FE2DC5B15A1B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpDX.Direct3D10", "Source\SharpDX.Direct3D10\SharpDX.Direct3D10.csproj", "{618AFA87-81A8-4B1C-8876-5457D49F2DEF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{C3D5FB70-8EA0-4493-B1C3-8A2C73605C4B}"
+	ProjectSection(SolutionItems) = preProject
+		Build\SharpDX.props = Build\SharpDX.props
+		Build\SharpDX.targets = Build\SharpDX.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -161,5 +167,8 @@ Global
 		{E5BB5D1C-6C07-495B-923B-FB80B79C535E} = {CC8DB471-0644-430D-9D4B-808A2475BEC0}
 		{5F8DB9E8-FFAE-475F-AC2E-FE2DC5B15A1B} = {CC8DB471-0644-430D-9D4B-808A2475BEC0}
 		{618AFA87-81A8-4B1C-8876-5457D49F2DEF} = {CC8DB471-0644-430D-9D4B-808A2475BEC0}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3244F5C4-F587-4A39-B08A-2024351E5C4A}
 	EndGlobalSection
 EndGlobal

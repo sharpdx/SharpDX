@@ -1,4 +1,4 @@
-﻿#if STORE_APP
+﻿#if WINDOWS_UWP
 // Definition of custom attributes for declarative obfuscation.
 // This file is only necessary for .NET Compact Framework, Silverlight, WinRT and Portable Library projects.
 

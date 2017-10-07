@@ -25,7 +25,7 @@
   
   <namespace>SharpDX.RawInput</namespace>
   <assembly>SharpDX.RawInput</assembly>
-
+  
   <include file="winuser.h">
     <attach>RAWINPUTHEADER</attach>
     <!--<attach>RAWMOUSE</attach>-->

@@ -4,7 +4,7 @@
     <TargetFrameworks>net40;net45</TargetFrameworks>
     <PackageId>SharpDX.RawInput</PackageId>
     <Product>SharpDX.RawInput</Product>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\SharpDX.RawInput.xml</DocumentationFile>
+    <DocumentationFile Condition="'$(Configuration)' == 'Release'">bin\$(Configuration)\$(TargetFramework)\SharpDX.RawInput.xml</DocumentationFile>
     <AssemblyTitle>SharpDX.RawInput</AssemblyTitle>
     <Title>SharpDX.RawInput</Title>
     <Description>Assembly providing DirectX - RawInput managed API.</Description>

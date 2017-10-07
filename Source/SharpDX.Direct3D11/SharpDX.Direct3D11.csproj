@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\Build\SharpDX.props" />
   <PropertyGroup>
-    <TargetFrameworks>net40;net45;netcoreapp1.0;netstandard1.1;uap10.0</TargetFrameworks>
+    <TargetFrameworks>net40;net45;netstandard1.1;uap10.0</TargetFrameworks>
     <PackageId>SharpDX.Direct3D11</PackageId>
     <Product>SharpDX.Direct3D11</Product>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\SharpDX.Direct3D11.xml</DocumentationFile>
+    <DocumentationFile Condition="'$(Configuration)' == 'Release'">bin\$(Configuration)\$(TargetFramework)\SharpDX.Direct3D11.xml</DocumentationFile>
     <AssemblyTitle>SharpDX.Direct3D11</AssemblyTitle>
     <Title>SharpDX.Direct3D11</Title>
     <Description>Assembly providing DirectX - Direct3D11, Direct3D11.1 and Effects11 managed API.</Description>

@@ -32,7 +32,7 @@ namespace SharpDX.XAPO.Fx
 
         public static void CreateFX(SharpDX.XAudio2.XAudio2 device, System.Guid clsid, SharpDX.ComObject effectRef)
         {
-#if DESKTOP_APP
+#if !WINDOWS_UWP
             if (device.Version == XAudio2Version.Version27)
             {
                 var clsid15 = clsid;
@@ -66,7 +66,7 @@ namespace SharpDX.XAPO.Fx
             {
                 CreateFX28(clsid, effectRef, IntPtr.Zero, 0);
             }
-#if STORE_APP_10
+#if WINDOWS_UWP
             else if (device.Version == XAudio2Version.Version29)
             {
                 CreateFX29(clsid, effectRef, IntPtr.Zero, 0);
@@ -86,7 +86,7 @@ namespace SharpDX.XAPO.Fx
         /// <summary>Constant None.</summary>
         private static Guid CLSID_FXReverb_15 = new Guid("a90bc001-e897-e897-7439-435500000002");
 
-#if DESKTOP_APP
+#if !WINDOWS_UWP
         [DllImport("XAPOFX1_5.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateFX")]
         private unsafe static extern int CreateFX15(ref Guid guid, out IntPtr arg1);
 #endif

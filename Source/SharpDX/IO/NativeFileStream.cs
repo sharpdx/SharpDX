@@ -44,7 +44,7 @@ namespace SharpDX.IO
         /// <param name="share">The share mode.</param>
         public unsafe NativeFileStream(string fileName, NativeFileMode fileMode, NativeFileAccess access, NativeFileShare share = NativeFileShare.Read)
         {
-#if STORE_APP
+#if WINDOWS_UWP
             //uint newAccess = 0;
             //const int FILE_ATTRIBUTE_NORMAL = 0x00000080;
             //const int FILE_FLAG_RANDOM_ACCESS = 0x10000000;
