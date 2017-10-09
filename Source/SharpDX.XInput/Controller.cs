@@ -163,7 +163,7 @@ namespace SharpDX.XInput
             }
         }
 
-#if DESKTOP_APP
+#if !WINDOWS_UWP
         static Controller()
         {
             if(LoadLibrary("xinput1_4.dll") != IntPtr.Zero)
@@ -176,7 +176,7 @@ namespace SharpDX.XInput
             }
             else if (LoadLibrary("xinput9_1_0.dll") != IntPtr.Zero)
             {
-                xinput = new XInput13();
+                xinput = new XInput910();
             }
         }
 
