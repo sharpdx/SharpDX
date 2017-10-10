@@ -78,12 +78,8 @@ namespace SharpDX.Direct3D12
         /// <summary>	
         /// <p>Creates a command queue.</p>	
         /// </summary>	
-        /// <param name="descRef"><dd>  <p> Specifies a <see cref="SharpDX.Direct3D12.CommandQueueDescription"/> that describes the command queue. </p> </dd></param>	
-        /// <param name="riid"><dd>  <p> The globally unique identifier (<see cref="System.Guid"/>) for the command queue interface. See remarks.  An input parameter. </p> </dd></param>	
+        /// <param name="description"><dd>  <p> Specifies a <see cref="SharpDX.Direct3D12.CommandQueueDescription"/> that describes the command queue. </p> </dd></param>	
         /// <returns><dd>  <p> A reference to a memory block that receives a reference to the <strong><see cref="SharpDX.Direct3D12.CommandQueue"/></strong> interface for the command queue. </p> </dd></returns>	
-        /// <remarks>	
-        /// <p> The <strong>REFIID</strong>, or <strong><see cref="System.Guid"/></strong>, of the interface to the command queue can be obtained by using the __uuidof() macro. For example, __uuidof(<see cref="SharpDX.Direct3D12.CommandQueue"/>) will get the <strong><see cref="System.Guid"/></strong> of the interface to a command queue. </p>	
-        /// </remarks>	
         /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D12Device::CreateCommandQueue']/*"/>	
         /// <msdn-id>dn788657</msdn-id>	
         /// <unmanaged>HRESULT ID3D12Device::CreateCommandQueue([In] const D3D12_COMMAND_QUEUE_DESC* pDesc,[In] const GUID&amp; riid,[Out] ID3D12CommandQueue** ppCommandQueue)</unmanaged>	
@@ -94,10 +90,30 @@ namespace SharpDX.Direct3D12
         }
 
         /// <summary>	
+        /// <p>Creates a command queue.</p>	
+        /// </summary>	
+        /// <param name="type">The <see cref="SharpDX.Direct3D12.CommandListType"/> that describes the command queue.</param>
+        /// <returns><dd>  <p> A reference to a memory block that receives a reference to the <strong><see cref="SharpDX.Direct3D12.CommandQueue"/></strong> interface for the command queue. </p> </dd></returns>	
+        public SharpDX.Direct3D12.CommandQueue CreateCommandQueue(SharpDX.Direct3D12.CommandListType type)
+        {
+            return CreateCommandQueue(new SharpDX.Direct3D12.CommandQueueDescription(type), Utilities.GetGuidFromType(typeof(CommandQueue)));
+        }
+
+        /// <summary>	
+        /// <p>Creates a command queue.</p>	
+        /// </summary>	
+        /// <param name="type">The <see cref="SharpDX.Direct3D12.CommandListType"/> that describes the command queue.</param>
+        /// <param name="nodeMask">Multi GPU node mask.</param>
+        /// <returns><dd>  <p> A reference to a memory block that receives a reference to the <strong><see cref="SharpDX.Direct3D12.CommandQueue"/></strong> interface for the command queue. </p> </dd></returns>	
+        public SharpDX.Direct3D12.CommandQueue CreateCommandQueue(SharpDX.Direct3D12.CommandListType type, int nodeMask)
+        {
+            return CreateCommandQueue(new SharpDX.Direct3D12.CommandQueueDescription(type, nodeMask), Utilities.GetGuidFromType(typeof(CommandQueue)));
+        }
+
+        /// <summary>	
         /// <p>Creates a command allocator object.</p>	
         /// </summary>	
         /// <param name="type"><dd>  <p> A <strong><see cref="SharpDX.Direct3D12.CommandListType"/></strong>-typed value that specifies the type of command allocator to create. The type of command allocator can be the type that records either direct command lists or bundles. </p> </dd></param>	
-        /// <param name="riid"><dd>  <p> The globally unique identifier (<strong><see cref="System.Guid"/></strong>) for the command allocator interface (<strong><see cref="SharpDX.Direct3D12.CommandAllocator"/></strong>). The <strong>REFIID</strong>, or <strong><see cref="System.Guid"/></strong>, of the interface to the command allocator can be obtained by using the __uuidof() macro. For example, __uuidof(<see cref="SharpDX.Direct3D12.CommandAllocator"/>) will get the <strong><see cref="System.Guid"/></strong> of the interface to a command allocator. </p> </dd></param>	
         /// <returns><dd>  <p> A reference to a memory block that receives a reference to the <strong><see cref="SharpDX.Direct3D12.CommandAllocator"/></strong> interface for the command allocator. </p> </dd></returns>	
         /// <remarks>	
         /// <p> The device creates command lists from the command allocator. </p>	
@@ -148,10 +164,10 @@ namespace SharpDX.Direct3D12
             SharpDX.Direct3D12.PipelineState initialState)
         {
             var nativePointer = CreateCommandList(
-                nodeMask, 
-                type, 
+                nodeMask,
+                type,
                 commandAllocator,
-                initialState, 
+                initialState,
                 Utilities.GetGuidFromType(typeof(GraphicsCommandList)));
             return new GraphicsCommandList(nativePointer);
         }
@@ -171,9 +187,9 @@ namespace SharpDX.Direct3D12
         {
             var nativeDesc = new CommandSignatureDescription.__Native();
             descRef.__MarshalTo(ref nativeDesc);
-            fixed(void* pIndirectArguments = descRef.IndirectArguments)
+            fixed (void* pIndirectArguments = descRef.IndirectArguments)
             {
-                if(descRef.IndirectArguments != null)
+                if (descRef.IndirectArguments != null)
                 {
                     nativeDesc.ArgumentDescCount = descRef.IndirectArguments.Length;
                     nativeDesc.ArgumentDescsPointer = new IntPtr(pIndirectArguments);
@@ -224,7 +240,7 @@ namespace SharpDX.Direct3D12
             {
                 descRef.ComputeShader.UpdateNative(ref nativeDesc.ComputeShader, (IntPtr)pComputeShader);
                 return CreateComputePipelineState(new IntPtr(&nativeDesc), Utilities.GetGuidFromType(typeof(PipelineState)));
-            }       
+            }
         }
 
         /// <summary>	
@@ -366,7 +382,7 @@ namespace SharpDX.Direct3D12
                 {
                     var ptr = stackalloc StreamOutputElement.__Native[streamOutElements.Length];
                     nativeStreamOutElements = ptr;
-                    for(int i = 0; i < streamOutElements.Length; i++)
+                    for (int i = 0; i < streamOutElements.Length; i++)
                     {
                         streamOutElements[i].__MarshalTo(ref nativeStreamOutElements[i]);
                     }
