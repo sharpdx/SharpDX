@@ -340,7 +340,9 @@ namespace SharpDX.Direct3D12
         /// <unmanaged-short>ID3D12GraphicsCommandList::BeginEvent</unmanaged-short>	
         public void BeginEvent(string name)
         {
-            if (name == null) throw new ArgumentNullException("name");
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
             IntPtr hMessage = IntPtr.Zero;
             try
             {
@@ -382,6 +384,40 @@ namespace SharpDX.Direct3D12
                     hMessage = IntPtr.Zero;
                 }
             }
+        }
+
+        /// <summary>	
+        /// <p> Apps perform indirect draws/dispatches using the <strong>ExecuteIndirect</strong> method. </p>	
+        /// </summary>	
+        /// <param name="commandSignature"><dd>  <p> Specifies a <strong><see cref="SharpDX.Direct3D12.CommandSignature"/></strong>. The data referenced by <em>pArgumentBuffer</em> will be interpreted depending on the contents of the command signature. Refer to Indirect Drawing for the APIs that are used to create a command signature. </p> </dd></param>	
+        /// <param name="maxCommandCount"><dd>  <p>There are two ways that command counts can be specified:</p> <ul> <li> If <em>pCountBuffer</em> is not <c>null</c>, then <em>MaxCommandCount</em> specifies the maximum number of operations which will be performed.  The actual number of operations to be performed are defined by the minimum of this value, and a 32-bit unsigned integer contained in <em>pCountBuffer</em> (at the byte offset specified by <em>CountBufferOffset</em>). </li> <li> If <em>pCountBuffer</em> is <c>null</c>, the <em>MaxCommandCount</em> specifies the exact number of operations which will be performed. </li> </ul> </dd></param>	
+        /// <param name="argumentBuffer"><dd>  <p> Specifies one or more <strong><see cref="SharpDX.Direct3D12.Resource"/></strong> objects, containing the command arguments. </p> </dd></param>	
+        /// <param name="argumentBufferOffset"><dd>  <p> Specifies an offset into <em>pArgumentBuffer</em> to identify the first command argument. </p> </dd></param>	
+        /// <remarks>	
+        /// <p>The semantics of this API are defined with the following pseudo-code:</p><p>Non-<c>null</c> pCountBuffer:</p><code>// Read draw count out of count buffer	
+        /// UINT CommandCount = pCountBuffer-&gt;ReadUINT32(CountBufferOffset); CommandCount = min(CommandCount, MaxCommandCount) // Get reference to first Commanding argument	
+        /// BYTE* Arguments = pArgumentBuffer-&gt;GetBase() + ArgumentBufferOffset; for(UINT CommandIndex = 0; CommandIndex &lt; CommandCount; CommandIndex++)	
+        /// { // Interpret the data contained in *Arguments // according to the command signature pCommandSignature-&gt;Interpret(Arguments); Arguments += pCommandSignature -&gt;GetByteStride();	
+        /// }	
+        /// </code><p><c>null</c> pCountBuffer:</p><code>// Get reference to first Commanding argument	
+        /// BYTE* Arguments = pArgumentBuffer-&gt;GetBase() + ArgumentBufferOffset; for(UINT CommandIndex = 0; CommandIndex &lt; MaxCommandCount; CommandIndex++)	
+        /// { // Interpret the data contained in *Arguments // according to the command signature pCommandSignature-&gt;Interpret(Arguments); Arguments += pCommandSignature -&gt;GetByteStride();	
+        /// }	
+        /// </code><p>The debug layer will issue an error if either the count buffer or the argument buffer are not in the <see cref="SharpDX.Direct3D12.ResourceStates.IndirectArgument"/> state. The core runtime will validate:</p><ul> <li><em>CountBufferOffset</em> and <em>ArgumentBufferOffset</em> are 4-byte aligned </li> <li><em>pCountBuffer</em> and <em>pArgumentBuffer</em> are buffer resources (any heap type) </li> <li> The offset implied by <em>MaxCommandCount</em>, <em>ArgumentBufferOffset</em>, and the drawing program stride do not exceed the bounds of <em>pArgumentBuffer</em> (similarly for count buffer) </li> <li>The command list is a direct command list or a compute command list (not a copy or JPEG decode command list)</li> <li>The root signature of the command list matches the root signature of the command signature</li> </ul><p> The functionality of two APIs from earlier versions of Direct3D, <code>DrawInstancedIndirect</code> and <code>DrawIndexedInstancedIndirect</code>, are encompassed by  <strong>ExecuteIndirect</strong>. </p>	
+        /// </remarks>	
+        public void ExecuteIndirect(
+            SharpDX.Direct3D12.CommandSignature commandSignature, 
+            int maxCommandCount, 
+            SharpDX.Direct3D12.Resource argumentBuffer, 
+            long argumentBufferOffset)
+        {
+            ExecuteIndirect(
+                commandSignature, 
+                maxCommandCount,
+                argumentBuffer, 
+                argumentBufferOffset, 
+                null, 
+                0);
         }
     }
 }

@@ -238,7 +238,10 @@
     <map method="ID3D12GraphicsCommandList::IASetIndexBuffer" property="false"/>
 
     <map method="ID3D12Device::RegisterBudgetChangeCallback" visibility="internal"/>
-
+    <map method="ID3D12GraphicsCommandList::BeginEvent" visibility="internal" />
+    
+    <map method="ID3D12GraphicsCommandList1::OMSetDepthBounds" name="SetDepthsBounds" />
+    
     <!--Revert changes inherited from D3D11. Leave all Device.CreateXXX method as-is-->
     <map method="ID3D12Device::CreateCommandAllocator" visibility="public"/>
     <map param="ID3D12Device::CreateCommandAllocator::ppCommandAllocator" attribute="out" return="true"/>
