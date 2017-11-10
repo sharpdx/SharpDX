@@ -363,5 +363,18 @@ namespace SharpDX.Direct2D1
                 GetAttributeValue(name, SvgAttributePodType.Length, new IntPtr(ptr), sizeof(SvgLength));
             }
         }
+
+        /// <summary>
+        /// Gets an attribute from a type id
+        /// </summary>
+        /// <typeparam name="T">Attribute type, must inherit from <see cref="SvgAttribute"/></typeparam>
+        /// <param name="name">Attribute name</param>
+        /// <returns>Attribute instance</returns>
+        public T GetAttributeValue<T>(string name) where T : SvgAttribute
+        {
+            IntPtr nativePointer;
+            GetAttributeValue(name, SharpDX.Utilities.GetGuidFromType(typeof(T)), out nativePointer);
+            return ComObject.FromPointer<T>(nativePointer);
+        }
     }
 }
