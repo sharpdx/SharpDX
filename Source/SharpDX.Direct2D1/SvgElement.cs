@@ -105,6 +105,18 @@ namespace SharpDX.Direct2D1
             SetAttributeValue(name, SvgAttributePodType.LineJoin, new IntPtr(&lineJoin), sizeof(SvgLineJoin));
         }
 
+
+        /// <summary>
+        /// Sets line cap attribute
+        /// </summary>
+        /// <param name="name">Attribute name</param>
+        /// <param name="lineCap">New svg line cap</param>
+        public unsafe void SetAttributeValue(string name, SvgLineCap lineCap)
+        {
+            SetAttributeValue(name, SvgAttributePodType.LineCap, new IntPtr(&lineCap), sizeof(SvgLineCap));
+        }
+
+
         /// <summary>
         /// Sets visibility attribute
         /// </summary>
@@ -123,6 +135,47 @@ namespace SharpDX.Direct2D1
         public unsafe void SetAttributeValue(string name, RawMatrix3x2 matrix)
         {
             SetAttributeValue(name, SvgAttributePodType.Visibility, new IntPtr(&matrix), sizeof(RawMatrix3x2));
+        }
+
+        /// <summary>
+        /// Sets unit type attribute
+        /// </summary>
+        /// <param name="name">Attribute name</param>
+        /// <param name="unitType">New unit type</param>
+        public unsafe void SetAttributeValue(string name, SvgUnitType unitType)
+        {
+            SetAttributeValue(name, SvgAttributePodType.UnitType, new IntPtr(&unitType), sizeof(SvgUnitType));
+        }
+
+
+        /// <summary>
+        /// Sets extend mode attribute
+        /// </summary>
+        /// <param name="name">Attribute name</param>
+        /// <param name="extendMode">New extend mode</param>
+        public unsafe void SetAttributeValue(string name, ExtendMode extendMode)
+        {
+            SetAttributeValue(name, SvgAttributePodType.ExtendMode, new IntPtr(&extendMode), sizeof(ExtendMode));
+        }
+
+        /// <summary>
+        /// Sets preserve Aspect Ratio attribute
+        /// </summary>
+        /// <param name="name">Attribute name</param>
+        /// <param name="preserveAspectRatio">preserve Aspect Ratio/param>
+        public unsafe void SetAttributeValue(string name, SvgPreserveAspectRatio preserveAspectRatio)
+        {
+            SetAttributeValue(name, SvgAttributePodType.PreserveAspectRatio, new IntPtr(&preserveAspectRatio), sizeof(SvgPreserveAspectRatio));
+        }
+
+        /// <summary>
+        /// Sets length attribute
+        /// </summary>
+        /// <param name="name">Attribute name</param>
+        /// <param name="length">New length</param>
+        public unsafe void SetAttributeValue(string name, SvgLength length)
+        {
+            SetAttributeValue(name, SvgAttributePodType.Length, new IntPtr(&length), sizeof(SvgLength));
         }
     }
 }
