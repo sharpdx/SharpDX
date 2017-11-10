@@ -72,6 +72,19 @@ namespace SharpDX.Direct2D1
         }
 
         /// <summary>
+        /// Gets a float attribute
+        /// </summary>
+        /// <param name="name">Attribute name</param>
+        /// <param name="value">When this returns , contains the attribute value</param>
+        public unsafe void GetAttributeValue(string name, out float value)
+        {
+            fixed (float* ptr = &value)
+            {
+                GetAttributeValue(name, SvgAttributePodType.Float, new IntPtr(ptr), sizeof(float));
+            }
+        }
+
+        /// <summary>
         /// Sets color attribute
         /// </summary>
         /// <param name="name">Attribute name</param>
@@ -79,6 +92,19 @@ namespace SharpDX.Direct2D1
         public unsafe void SetAttributeValue(string name, RawColor4 color)
         {
             SetAttributeValue(name, SvgAttributePodType.Color, new IntPtr(&color), sizeof(RawColor4));
+        }
+
+        /// <summary>
+        /// Gets a color attribute
+        /// </summary>
+        /// <param name="name">Attribute name</param>
+        /// <param name="color">When this returns , contains the attribute value</param>
+        public unsafe void GetAttributeValue(string name, out RawColor4 color)
+        {
+            fixed (RawColor4* ptr = &color)
+            {
+                GetAttributeValue(name, SvgAttributePodType.Color, new IntPtr(ptr), sizeof(RawColor4));
+            }
         }
 
         /// <summary>
@@ -92,6 +118,19 @@ namespace SharpDX.Direct2D1
         }
 
         /// <summary>
+        /// Gets a fill mode  attribute
+        /// </summary>
+        /// <param name="name">Attribute name</param>
+        /// <param name="fillMode">When this returns , contains the attribute value</param>
+        public unsafe void GetAttributeValue(string name, out FillMode fillMode)
+        {
+            fixed (FillMode* ptr = &fillMode)
+            {
+                GetAttributeValue(name, SvgAttributePodType.FillMode, new IntPtr(ptr), sizeof(FillMode));
+            }
+        }
+
+        /// <summary>
         /// Sets display mode attribute
         /// </summary>
         /// <param name="name">Attribute name</param>
@@ -99,6 +138,19 @@ namespace SharpDX.Direct2D1
         public unsafe void SetAttributeValue(string name, SvgDisplay display)
         {
             SetAttributeValue(name, SvgAttributePodType.Display, new IntPtr(&display), sizeof(SvgDisplay));
+        }
+
+        /// <summary>
+        /// Gets a display attribute
+        /// </summary>
+        /// <param name="name">Attribute name</param>
+        /// <param name="display">When this returns , contains the attribute value</param>
+        public unsafe void GetAttributeValue(string name, out SvgDisplay display)
+        {
+            fixed (SvgDisplay* ptr = &display)
+            {
+                GetAttributeValue(name, SvgAttributePodType.Display, new IntPtr(ptr), sizeof(SvgDisplay));
+            }
         }
 
         /// <summary>
@@ -112,6 +164,19 @@ namespace SharpDX.Direct2D1
         }
 
         /// <summary>
+        /// Gets an overflow attribute
+        /// </summary>
+        /// <param name="name">Attribute name</param>
+        /// <param name="overflow">When this returns , contains the attribute value</param>
+        public unsafe void GetAttributeValue(string name, out SvgOverflow overflow)
+        {
+            fixed (SvgOverflow* ptr = &overflow)
+            {
+                GetAttributeValue(name, SvgAttributePodType.Overflow, new IntPtr(ptr), sizeof(SvgOverflow));
+            }
+        }
+
+        /// <summary>
         /// Sets line join attribute
         /// </summary>
         /// <param name="name">Attribute name</param>
@@ -119,6 +184,19 @@ namespace SharpDX.Direct2D1
         public unsafe void SetAttributeValue(string name, SvgLineJoin lineJoin)
         {
             SetAttributeValue(name, SvgAttributePodType.LineJoin, new IntPtr(&lineJoin), sizeof(SvgLineJoin));
+        }
+
+        /// <summary>
+        /// Gets a line join attribute
+        /// </summary>
+        /// <param name="name">Attribute name</param>
+        /// <param name="lineJoin">When this returns , contains the attribute value</param>
+        public unsafe void GetAttributeValue(string name, out SvgLineJoin lineJoin)
+        {
+            fixed (SvgLineJoin* ptr = &lineJoin)
+            {
+                GetAttributeValue(name, SvgAttributePodType.LineJoin, new IntPtr(ptr), sizeof(SvgLineJoin));
+            }
         }
 
 
@@ -134,6 +212,20 @@ namespace SharpDX.Direct2D1
 
 
         /// <summary>
+        /// Gets a line cap attribute
+        /// </summary>
+        /// <param name="name">Attribute name</param>
+        /// <param name="lineCap">When this returns , contains the attribute value</param>
+        public unsafe void GetAttributeValue(string name, out SvgLineCap lineCap)
+        {
+            fixed (SvgLineCap* ptr = &lineCap)
+            {
+                GetAttributeValue(name, SvgAttributePodType.LineCap, new IntPtr(ptr), sizeof(SvgLineCap));
+            }
+        }
+
+
+        /// <summary>
         /// Sets visibility attribute
         /// </summary>
         /// <param name="name">Attribute name</param>
@@ -144,13 +236,40 @@ namespace SharpDX.Direct2D1
         }
 
         /// <summary>
+        /// Gets a visibility attribute
+        /// </summary>
+        /// <param name="name">Attribute name</param>
+        /// <param name="visibility">When this returns , contains the attribute value</param>
+        public unsafe void GetAttributeValue(string name, out SvgVisibility visibility)
+        {
+            fixed (SvgVisibility* ptr = &visibility)
+            {
+                GetAttributeValue(name, SvgAttributePodType.Visibility, new IntPtr(ptr), sizeof(SvgVisibility));
+            }
+        }
+
+        /// <summary>
         /// Sets transform attribute
         /// </summary>
         /// <param name="name">Attribute name</param>
         /// <param name="matrix">New transform</param>
         public unsafe void SetAttributeValue(string name, RawMatrix3x2 matrix)
         {
-            SetAttributeValue(name, SvgAttributePodType.Visibility, new IntPtr(&matrix), sizeof(RawMatrix3x2));
+            SetAttributeValue(name, SvgAttributePodType.Matrix, new IntPtr(&matrix), sizeof(RawMatrix3x2));
+        }
+
+
+        /// <summary>
+        /// Gets a transform attribute
+        /// </summary>
+        /// <param name="name">Attribute name</param>
+        /// <param name="matrix">When this returns , contains the attribute value</param>
+        public unsafe void GetAttributeValue(string name, out RawMatrix3x2 matrix)
+        {
+            fixed (RawMatrix3x2* ptr = &matrix)
+            {
+                GetAttributeValue(name, SvgAttributePodType.Matrix, new IntPtr(ptr), sizeof(RawMatrix3x2));
+            }
         }
 
         /// <summary>
@@ -163,6 +282,18 @@ namespace SharpDX.Direct2D1
             SetAttributeValue(name, SvgAttributePodType.UnitType, new IntPtr(&unitType), sizeof(SvgUnitType));
         }
 
+        /// <summary>
+        /// Gets a unit type attribute
+        /// </summary>
+        /// <param name="name">Attribute name</param>
+        /// <param name="unitType">When this returns , contains the attribute value</param>
+        public unsafe void GetAttributeValue(string name, out SvgUnitType unitType)
+        {
+            fixed (SvgUnitType* ptr = &unitType)
+            {
+                GetAttributeValue(name, SvgAttributePodType.UnitType, new IntPtr(ptr), sizeof(SvgUnitType));
+            }
+        }
 
         /// <summary>
         /// Sets extend mode attribute
@@ -172,6 +303,19 @@ namespace SharpDX.Direct2D1
         public unsafe void SetAttributeValue(string name, ExtendMode extendMode)
         {
             SetAttributeValue(name, SvgAttributePodType.ExtendMode, new IntPtr(&extendMode), sizeof(ExtendMode));
+        }
+
+        /// <summary>
+        /// Gets an extend mode attribute
+        /// </summary>
+        /// <param name="name">Attribute name</param>
+        /// <param name="extendMode">When this returns , contains the attribute value</param>
+        public unsafe void GetAttributeValue(string name, out ExtendMode extendMode)
+        {
+            fixed (ExtendMode* ptr = &extendMode)
+            {
+                GetAttributeValue(name, SvgAttributePodType.ExtendMode, new IntPtr(ptr), sizeof(ExtendMode));
+            }
         }
 
         /// <summary>
@@ -185,6 +329,19 @@ namespace SharpDX.Direct2D1
         }
 
         /// <summary>
+        /// Gets a preserve aspect ratio attribute
+        /// </summary>
+        /// <param name="name">Attribute name</param>
+        /// <param name="preserveAspectRatio">When this returns , contains the attribute value</param>
+        public unsafe void GetAttributeValue(string name, out SvgPreserveAspectRatio preserveAspectRatio)
+        {
+            fixed (SvgPreserveAspectRatio* ptr = &preserveAspectRatio)
+            {
+                GetAttributeValue(name, SvgAttributePodType.PreserveAspectRatio, new IntPtr(ptr), sizeof(SvgPreserveAspectRatio));
+            }
+        }
+
+        /// <summary>
         /// Sets length attribute
         /// </summary>
         /// <param name="name">Attribute name</param>
@@ -192,6 +349,19 @@ namespace SharpDX.Direct2D1
         public unsafe void SetAttributeValue(string name, SvgLength length)
         {
             SetAttributeValue(name, SvgAttributePodType.Length, new IntPtr(&length), sizeof(SvgLength));
+        }
+
+        /// <summary>
+        /// Gets an svg length attribute
+        /// </summary>
+        /// <param name="name">Attribute name</param>
+        /// <param name="length">When this returns , contains the attribute value</param>
+        public unsafe void GetAttributeValue(string name, out SvgLength length)
+        {
+            fixed (SvgLength* ptr = &length)
+            {
+                GetAttributeValue(name, SvgAttributePodType.Length, new IntPtr(ptr), sizeof(SvgLength));
+            }
         }
     }
 }
