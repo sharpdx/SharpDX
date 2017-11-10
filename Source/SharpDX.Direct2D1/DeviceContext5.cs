@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using SharpDX.Win32;
 using System;
 
 namespace SharpDX.Direct2D1
@@ -37,6 +38,19 @@ namespace SharpDX.Direct2D1
             : base(IntPtr.Zero)
         {
             device.CreateDeviceContext(options, this);
+        }
+
+        /// <summary>
+        /// Creates an Svg document from an xml string
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="viewportSize"></param>
+        /// <returns>Svg document model</returns>
+        public SvgDocument CreateSvgDocument(IStream stream, SharpDX.Size2F viewportSize)
+        {
+            SvgDocument result;
+            CreateSvgDocument_(ComStream.ToIntPtr(stream), viewportSize, out result);
+            return result;
         }
     }
 }
