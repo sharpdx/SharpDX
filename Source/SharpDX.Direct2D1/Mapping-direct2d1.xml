@@ -494,8 +494,12 @@
     <map param="ID2D\dDeviceContext5::CreateColorContextFromSimpleColorProfile::colorContext" attribute="out fast"/>
     <map param="ID2D\dEffectContext2::CreateColorContextFromDxgiColorSpace::colorContext" attribute="out fast"/>
     <map param="ID2D\dEffectContext2::CreateColorContextFromSimpleColorProfile::colorContext" attribute="out fast"/>
+    
+    <!-- Svg documents and elements -->
+    <map method="ID2D1SvgDocument::FindElementById" hresult="true" check="false" visibility="private" name="TryFindElementById_"/>
+    <map method="ID2D1SvgAttribute::Clone" visibility="internal" />
 
-     <!--
+    <!--
     // *****************************************************************
     // D2D1 Functions
     // *****************************************************************
