@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using SharpDX.Mathematics.Interop;
+using System.Runtime.InteropServices;
 
 namespace SharpDX.Direct2D1
 {
@@ -42,6 +43,21 @@ namespace SharpDX.Direct2D1
                 }
 
                 return result;
+            }
+        }
+
+        /// <summary>
+        /// Gets tag name for this element
+        /// </summary>
+        public unsafe string TagName
+        {
+            get
+            {
+                int nameLength = GetTagNameLength();
+                sbyte* name = stackalloc sbyte[nameLength];
+
+                GetTagName(new IntPtr(name), nameLength + 1);
+                return Marshal.PtrToStringUni((IntPtr)name, nameLength);
             }
         }
 
