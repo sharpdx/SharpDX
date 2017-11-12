@@ -23,13 +23,3 @@ using System.Resources;
 using System.Runtime.InteropServices;
 
 [assembly:ComVisible(false)]
-
-#if WINDOWS_UWP
-[assembly: Obfuscation(Feature = "Apply to type SharpDX.* when public and interface: renaming", Exclude = false, ApplyToMembers = true)]
-[assembly: Obfuscation(Feature = "Apply to type SharpDX.* when struct: renaming", Exclude = false, ApplyToMembers = true)]
-[assembly: Obfuscation(Feature = "Apply to type SharpDX.*: INotifyPropertyChanged heuristics", Exclude = true)]
-[assembly: Obfuscation(Feature = "Apply to type SharpDX.* when enum: forced rename", Exclude = false)]
-[assembly: Obfuscation(Feature = "Apply to type SharpDX.* when enum: enum values pruning", Exclude = false)]
-[assembly: Obfuscation(Feature = "legacy xml serialization heuristics", Exclude = true)]
-[assembly: Obfuscation(Feature = "ignore InternalsVisibleToAttribute", Exclude = false)]
-#endif

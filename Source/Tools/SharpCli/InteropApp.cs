@@ -528,10 +528,10 @@ namespace SharpCli
             //gen.Emit(OpCodes.Bne_Un_S, cpblk);
             gen.Emit(OpCodes.Unaligned, (byte)1);       // unaligned to 1
             gen.Append(cpblk);
-            
+
         }
 
-        private List<string>  GetSharpDXAttributes(MethodDefinition method)
+        private List<string> GetSharpDXAttributes(MethodDefinition method)
         {
             var attributes = new List<string>();
             foreach (var customAttribute in method.CustomAttributes)
@@ -550,10 +550,8 @@ namespace SharpCli
         /// Patches the method.
         /// </summary>
         /// <param name="method">The method.</param>
-        bool PatchMethod(MethodDefinition method)
+        void PatchMethod(MethodDefinition method)
         {
-            bool isSharpJit = false;
-
             var attributes = this.GetSharpDXAttributes(method);
             if (attributes.Contains("SharpDX.ModuleInit"))
             {
@@ -605,86 +603,59 @@ namespace SharpCli
                     previousInstruction = instruction;
                     instruction = instructions[i];
 
-                    if (instruction.OpCode == OpCodes.Call && instruction.Operand is MethodReference)
+                    if (instruction.OpCode == OpCodes.Call
+                        && instruction.Operand is MethodReference)
                     {
                         var methodDescription = (MethodReference)instruction.Operand;
 
-                        if (methodDescription is MethodDefinition)
+
+                        if (methodDescription.Name.StartsWith("Calli") && methodDescription.DeclaringType.Name == "LocalInterop")
                         {
-                            foreach (var customAttribute in ((MethodDefinition)methodDescription).CustomAttributes)
+                            var callSite = new CallSite(methodDescription.ReturnType) { CallingConvention = MethodCallingConvention.StdCall };
+                            // Last parameter is the function ptr, so we don't add it as a parameter for calli
+                            // as it is already an implicit parameter for calli
+                            for (int j = 0; j < methodDescription.Parameters.Count - 1; j++)
                             {
-                                if (customAttribute.AttributeType.FullName == typeof(ObfuscationAttribute).FullName)
-                                {
-                                    foreach (var arg in customAttribute.Properties)
-                                    {
-                                        if (arg.Name == "Feature" && arg.Argument.Value != null)
-                                        {
-                                            var customValue = arg.Argument.Value.ToString();
-                                            if (customValue.StartsWith("SharpJit."))
-                                            {
-                                                isSharpJit = true;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                                if (isSharpJit) break;
+                                var parameterDefinition = methodDescription.Parameters[j];
+                                callSite.Parameters.Add(parameterDefinition);
                             }
+
+                            // Create calli Instruction
+                            var callIInstruction = ilProcessor.Create(OpCodes.Calli, callSite);
+
+                            // Replace instruction
+                            ilProcessor.Replace(instruction, callIInstruction);
                         }
-
-                        if (!isSharpJit)
+                        else if (methodDescription.DeclaringType.Name == "Interop")
                         {
-                            if (methodDescription.Name.StartsWith("Calli") && methodDescription.DeclaringType.Name == "LocalInterop")
+                            if (methodDescription.FullName.Contains("Fixed"))
                             {
-                                var callSite = new CallSite(methodDescription.ReturnType) { CallingConvention = MethodCallingConvention.StdCall };
-                                // Last parameter is the function ptr, so we don't add it as a parameter for calli
-                                // as it is already an implicit parameter for calli
-                                for (int j = 0; j < methodDescription.Parameters.Count - 1; j++)
+                                if (methodDescription.Parameters[0].ParameterType.IsArray)
                                 {
-                                    var parameterDefinition = methodDescription.Parameters[j];
-                                    callSite.Parameters.Add(parameterDefinition);
+                                    ReplaceFixedArrayStatement(method, ilProcessor, instruction);
                                 }
-
-                                // Create calli Instruction
-                                var callIInstruction = ilProcessor.Create(OpCodes.Calli, callSite);
-
-                                // Replace instruction
-                                ilProcessor.Replace(instruction, callIInstruction);
-                            } 
-                            else if (methodDescription.DeclaringType.Name == "Interop")
+                                else
+                                {
+                                    ReplaceFixedStatement(method, ilProcessor, instruction);
+                                }
+                            }
+                            else if (methodDescription.Name.StartsWith("ReadInline"))
                             {
-                                if (methodDescription.FullName.Contains("Fixed"))
-                                {
-                                    if (methodDescription.Parameters[0].ParameterType.IsArray)
-                                    {
-                                        ReplaceFixedArrayStatement(method, ilProcessor, instruction);
-                                    }
-                                    else
-                                    {
-                                        ReplaceFixedStatement(method, ilProcessor, instruction);
-                                    }
-                                }
-                                else if (methodDescription.Name.StartsWith("ReadInline"))
-                                {
-                                    this.ReplaceReadInline(method, ilProcessor, instruction);
-                                }
-                                else if (methodDescription.Name.StartsWith("CopyInline") || methodDescription.Name.StartsWith("WriteInline"))
-                                {
-                                    this.ReplaceCopyInline(method, ilProcessor, instruction);
-                                }
-                                else if (methodDescription.Name.StartsWith("SizeOf"))
-                                {
-                                    this.ReplaceSizeOfStructGeneric(method, ilProcessor, instruction);
-                                }
+                                this.ReplaceReadInline(method, ilProcessor, instruction);
+                            }
+                            else if (methodDescription.Name.StartsWith("CopyInline") || methodDescription.Name.StartsWith("WriteInline"))
+                            {
+                                this.ReplaceCopyInline(method, ilProcessor, instruction);
+                            }
+                            else if (methodDescription.Name.StartsWith("SizeOf"))
+                            {
+                                this.ReplaceSizeOfStructGeneric(method, ilProcessor, instruction);
                             }
                         }
                     }
                 }
             }
-            return isSharpJit;
         }
-
-        bool containsSharpJit;
 
         /// <summary>
         /// Patches the type.
@@ -694,11 +665,10 @@ namespace SharpCli
         {
             // Patch methods
             foreach (var method in type.Methods)
-                if (PatchMethod(method))
-                    containsSharpJit = true;
+                PatchMethod(method);
 
             // LocalInterop will be removed after the patch only for non SharpJit code
-            if (!containsSharpJit && type.Name == "LocalInterop")
+            if (type.Name == "LocalInterop")
                 classToRemoveList.Add(type);
 
             // Patch nested types
@@ -776,7 +746,7 @@ namespace SharpCli
             // Query the target framework in order to resolve correct assemblies and type forwarding
             var targetFrameworkAttr = assembly.CustomAttributes.FirstOrDefault(
                 attribute => attribute.Constructor.FullName.Contains("System.Runtime.Versioning.TargetFrameworkAttribute"));
-            if(targetFrameworkAttr != null && targetFrameworkAttr.ConstructorArguments.Count > 0 &&
+            if (targetFrameworkAttr != null && targetFrameworkAttr.ConstructorArguments.Count > 0 &&
                 targetFrameworkAttr.ConstructorArguments[0].Value != null)
             {
                 var targetFramework = new FrameworkName(targetFrameworkAttr.ConstructorArguments[0].Value.ToString());
@@ -785,7 +755,7 @@ namespace SharpCli
                     targetFramework.Identifier,
                     targetFramework.Version);
                 netcoreAssemblyPath = Path.Combine(ProgramFilesx86(), netcoreAssemblyPath);
-                if(Directory.Exists(netcoreAssemblyPath))
+                if (Directory.Exists(netcoreAssemblyPath))
                 {
                     resolver.AddSearchDirectory(netcoreAssemblyPath);
                 }
@@ -794,7 +764,7 @@ namespace SharpCli
             // Import void* and int32 
             voidType = assembly.MainModule.TypeSystem.Void.Resolve();
             voidPointerType = new PointerType(assembly.MainModule.Import(voidType));
-            intType = assembly.MainModule.Import( assembly.MainModule.TypeSystem.Int32.Resolve());
+            intType = assembly.MainModule.Import(assembly.MainModule.TypeSystem.Int32.Resolve());
 
             // Remove CompilationRelaxationsAttribute
             for (int i = 0; i < assembly.CustomAttributes.Count; i++)
@@ -822,7 +792,7 @@ namespace SharpCli
             // Update Check file
             fileTime.UpdateCheckFile(checkFile);
             //fileTimeInteropBuilder.UpdateCheckFile(checkInteropBuilderFile);
-                                
+
             Log("SharpDX patch done for assembly [{0}]", file);
             return true;
         }
@@ -844,7 +814,7 @@ namespace SharpCli
                 string file = args[0];
                 var program = new InteropApp();
                 program.PatchFile(file);
-            } 
+            }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
@@ -896,7 +866,7 @@ namespace SharpCli
             /// <returns>true if the file exist and has the same LastWriteTime </returns>
             public bool CheckFileUpToDate(string checkfile)
             {
-                return File.Exists(checkfile) && File.GetLastWriteTime(checkfile) == LastWriteTime;                
+                return File.Exists(checkfile) && File.GetLastWriteTime(checkfile) == LastWriteTime;
             }
 
             public void UpdateFile(string file)
