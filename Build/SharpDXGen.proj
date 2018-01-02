@@ -9,9 +9,6 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
   </PropertyGroup>
   <Target Name="Build">
-    <Exec Command="&quot;$(SolutionDir)Source\Tools\SharpGen\RunGenerator.bat&quot; $(Configuration) DESKTOP_APP" />
-    <Exec Command="&quot;$(SolutionDir)Source\Tools\SharpGen\RunGenerator.bat&quot; $(Configuration) REFERENCE" />
-    <Exec Command="&quot;$(SolutionDir)Source\Tools\SharpGen\RunGenerator.bat&quot; $(Configuration) STORE_APP" />
   </Target>
   <Target Name="Pack" DependsOnTargets="Build">
   </Target>

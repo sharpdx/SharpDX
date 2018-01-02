@@ -21,8 +21,8 @@
   <ItemGroup>
     <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
     <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj" />
-    <ProjectReference Include="..\SharpDX.Direct3D9\SharpDX.Direct3D9.csproj" Condition=" '$(SharpDXAppType)' == 'DESKTOP_APP' " />
-    <ProjectReference Include="..\SharpDX.Mathematics\SharpDX.Mathematics.csproj" Condition=" '$(SharpDXAppType)' == 'DESKTOP_APP' " />
+    <ProjectReference Include="..\SharpDX.Direct3D9\SharpDX.Direct3D9.csproj" Condition=" '$(AppType)' == 'DESKTOP_APP' " />
+    <ProjectReference Include="..\SharpDX.Mathematics\SharpDX.Mathematics.csproj" Condition=" '$(AppType)' == 'DESKTOP_APP' " />
   </ItemGroup>
 
   <Import Project="..\..\Build\SharpDX.targets" />

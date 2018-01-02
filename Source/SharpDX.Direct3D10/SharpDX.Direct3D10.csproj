@@ -9,6 +9,7 @@
     <Title>SharpDX.Direct3D10</Title>
     <Description>Assembly providing DirectX - Direct3D10 and Direct3D10.1 managed API.</Description>
     <PackageTags>$(PackageTags) Direct3D10 D3D10</PackageTags>
+    <SharpDXLegacy>true</SharpDXLegacy>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />

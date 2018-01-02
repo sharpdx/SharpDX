@@ -18,7 +18,13 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <SharpGenMapping Include="../Mapping.xml" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <PackageReference Include="SharpGenTools.Sdk" Version="[1.0.0-ci161]" />
+  </ItemGroup>
+  
   <Import Project="..\..\Build\SharpDX.targets" />
 </Project>

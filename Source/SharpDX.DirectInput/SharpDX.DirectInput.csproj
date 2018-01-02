@@ -9,6 +9,7 @@
     <Title>SharpDX.DirectInput</Title>
     <Description>Assembly providing DirectX - DirectInput managed API.</Description>
     <PackageTags>$(PackageTags) DirectInput DInput</PackageTags>
+    <SharpDXLegacy>true</SharpDXLegacy>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />

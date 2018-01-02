@@ -9,6 +9,7 @@
     <Title>SharpDX.DirectSound</Title>
     <Description>Assembly providing DirectX - DirectSound managed API.</Description>
     <PackageTags>$(PackageTags) DirectSound DSound</PackageTags>
+    <SharpDXLegacy>true</SharpDXLegacy>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' OR  '$(TargetFramework)' == 'netcoreapp1.0' ">
     <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>

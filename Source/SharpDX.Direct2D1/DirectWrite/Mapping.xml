@@ -27,10 +27,10 @@
   <namespace>SharpDX.DirectWrite</namespace>
   <assembly>SharpDX.Direct2D1</assembly>
 
-  <include file="dwrite.h" attach="true" output="DirectWrite"/>
-  <include file="dwrite_1.h" attach="true" output="DirectWrite"/>
-  <include file="dwrite_2.h" attach="true" output="DirectWrite"/>
-  <include file="dwrite_3.h" attach="true" output="DirectWrite"/>
+  <include file="DWrite.h" attach="true" output="DirectWrite"/>
+  <include file="DWrite_1.h" attach="true" output="DirectWrite"/>
+  <include file="DWrite_2.h" attach="true" output="DirectWrite"/>
+  <include file="DWrite_3.h" attach="true" output="DirectWrite"/>
 
   <naming />
 
@@ -43,10 +43,10 @@
   </bindings>
 
   <mapping>
-    <context>dwrite</context>
-    <context>dwrite_1</context>
-    <context>dwrite_2</context>
-    <context>dwrite_3</context>
+    <context>DWrite_1</context>
+    <context>DWrite</context>
+    <context>DWrite_2</context>
+    <context>DWrite_3</context>
 
     <!--
     // *****************************************************************

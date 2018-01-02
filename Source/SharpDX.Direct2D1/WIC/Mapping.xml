@@ -34,6 +34,7 @@
     <context>sharpdx-wic</context>
     <context>sharpdx-wic-ext</context>
     <context>wincodec</context>
+    <context>winerror</context>
 
     <!-- class SharpDX.DirectInput.DeviceGuid -->
     <create class="PixelFormat" visibility="public sealed"/>
