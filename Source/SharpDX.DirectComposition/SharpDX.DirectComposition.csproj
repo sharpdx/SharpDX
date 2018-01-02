@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\Build\SharpDX.props" />
+  
   <PropertyGroup>
     <TargetFrameworks>net40;net45;netstandard1.3</TargetFrameworks>
     <PackageId>SharpDX.DirectComposition</PackageId>
@@ -23,5 +23,5 @@
     <ProjectReference Include="..\SharpDX.Direct2D1\SharpDX.Direct2D1.csproj" />
   </ItemGroup>
 
-  <Import Project="..\..\Build\SharpDX.targets" />
+  
 </Project>
