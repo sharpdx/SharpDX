@@ -22,5 +22,5 @@
     <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj" />
   </ItemGroup>
 
-  
+  <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 </Project>

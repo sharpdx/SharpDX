@@ -2,20 +2,11 @@
   <Target Name="RemoveNonApplicableFiles"
     Condition="'$(SharpDXLegacy)' == ''"
     BeforeTargets="CoreCompile"
-    AfterTargets="GenerateSharpGenBindings">
+    AfterTargets="AddGeneratedCSharpFilesToCompilation">
     
     <ItemGroup>
       <Compile Remove="Generated/**/*.cs" />
       <Compile Include="Generated/$(AppType)/**/*.cs" />
     </ItemGroup>
   </Target>
-
-  <!-- Special packages and imports for UWP support -->
-  <ItemGroup>
-    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.1.0" PrivateAssets="all" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform " Version="5.4.0" />
-  </ItemGroup>
-  <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 </Project>

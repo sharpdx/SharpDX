@@ -23,8 +23,8 @@
 
 
   <ItemGroup>
-    <PackageReference Include="SharpGenTools.Sdk" Version="[1.0.0-ci161]" />
+    <PackageReference Include="SharpGenTools.Sdk" Version="1.0.0-ci183" PrivateAssets="All" />
   </ItemGroup>
   
-  
+  <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 </Project>

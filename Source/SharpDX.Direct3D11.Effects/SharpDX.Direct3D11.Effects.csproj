@@ -45,5 +45,5 @@
     <ProjectReference Include="..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj" />
   </ItemGroup>
 
-  
+  <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 </Project>

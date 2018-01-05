@@ -25,5 +25,5 @@
     <ProjectReference Include="..\SharpDX.Mathematics\SharpDX.Mathematics.csproj" Condition=" '$(AppType)' == 'DESKTOP_APP' " />
   </ItemGroup>
 
-  
+  <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 </Project>
