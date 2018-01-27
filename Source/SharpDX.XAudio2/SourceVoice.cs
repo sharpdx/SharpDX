@@ -265,12 +265,12 @@ namespace SharpDX.XAudio2
                         SharpDX.XAudio2.BufferWma bufferWmaRef;
                         bufferWmaRef.PacketCount = decodedXMWAPacketInfo.Length;
                         bufferWmaRef.DecodedPacketCumulativeBytesPointer = (IntPtr)pBuffer;
-                        SubmitSourceBuffer(bufferRef, new IntPtr(&bufferWmaRef));
+                        SubmitSourceBuffer(bufferRef, bufferWmaRef);
                     }
                 }
                 else
                 {
-                    SubmitSourceBuffer(bufferRef, IntPtr.Zero);
+                    SubmitSourceBuffer(bufferRef, (SharpDX.XAudio2.BufferWma?)null);
                 }
             }
         }

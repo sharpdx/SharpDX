@@ -80,17 +80,17 @@
 
     <map struct="X3DAUDIO_DISTANCE_CURVE" visibility="internal"/>
     <map struct="X3DAUDIO_DISTANCE_CURVE_POINT" name="CurvePoint"/>
-    <map field="DSPSetting" name="DspSetting"/>
+    <map field="X3DAUDIO_DISTANCE_CURVE_POINT::DSPSetting" name="DspSetting"/>
     
     <map struct="X3DAUDIO_CONE" native="true" struct-to-class="true" marshalto="true"/>
-    <map field="InnerLPF" name="InnerLpf"/>
-    <map field="OuterLPF" name="OuterLpf"/>
+    <map field="X3DAUDIO_CONE::InnerLPF" name="InnerLpf"/>
+    <map field="X3DAUDIO_CONE::OuterLPF" name="OuterLpf"/>
     <map struct="X3DAUDIO_EMITTER" native="true" struct-to-class="true" marshal="true"/>
     <map struct="X3DAUDIO_LISTENER" native="true" struct-to-class="true" marshal="true"/>
 
     <map struct="X3DAUDIO_DSP_SETTINGS" native="true" struct-to-class="true" marshal="true"/>
-    <map field="SrcChannelCount" name="SourceChannelCount" visibility="public readonly"/>
-    <map field="DstChannelCount" name="DestinationChannelCount" visibility="public readonly"/>
+    <map field="X3DAUDIO_DSP_SETTINGS::SrcChannelCount" name="SourceChannelCount" visibility="public readonly"/>
+    <map field="X3DAUDIO_DSP_SETTINGS::DstChannelCount" name="DestinationChannelCount" visibility="public readonly"/>
 
     <map field=".*::LFE(.*)" name="Lfe$1"/>
     <map field=".*::LPF(.*)" name="Lpf$1"/>

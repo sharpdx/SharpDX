@@ -34,13 +34,12 @@ namespace SharpDX.WIC
                 unsafe
                 {
                     int actualCount = 0;
-                    GetPixelFormats(actualCount, IntPtr.Zero, out actualCount);
+                    GetPixelFormats(actualCount, null, out actualCount);
                     if (actualCount == 0)
                         return new Guid[0];
 
                     var temp = new Guid[actualCount];
-                    fixed (void* pTemp = temp)
-                        GetPixelFormats(actualCount, new IntPtr(pTemp), out actualCount);
+                    GetPixelFormats(actualCount, temp, out actualCount);
                     return temp;
                 }
             }

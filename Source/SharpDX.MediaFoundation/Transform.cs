@@ -101,7 +101,7 @@ namespace SharpDX.MediaFoundation
         public bool ProcessOutput(TransformProcessOutputFlags dwFlags, TOutputDataBuffer[] outputSamplesRef, out TransformProcessOutputStatus dwStatusRef)
         {
             bool needMoreInput = false;
-            var result = ProcessOutput(dwFlags, outputSamplesRef.Length, outputSamplesRef[0], out dwStatusRef);
+            var result = ProcessOutput(dwFlags, outputSamplesRef.Length, ref outputSamplesRef[0], out dwStatusRef);
 
             // Check if it needs more input
             if (result== ResultCode.TransformNeedMoreInput)

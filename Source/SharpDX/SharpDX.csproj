@@ -21,10 +21,5 @@
     <SharpGenMapping Include="../Mapping.xml" />
   </ItemGroup>
 
-
-  <ItemGroup>
-    <PackageReference Include="SharpGenTools.Sdk" Version="1.0.0-rc1" PrivateAssets="All" />
-  </ItemGroup>
-  
   <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 </Project>

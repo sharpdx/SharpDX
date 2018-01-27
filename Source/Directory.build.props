@@ -25,9 +25,12 @@
     <DefineConstants>$(DefineConstants);$(AppType)</DefineConstants>
     <DefineConstants Condition="'$(TargetFramework)' == 'net40'">$(DefineConstants);BEFORE_NET45</DefineConstants>
     <SharpGenGlobalNamespace>SharpDX</SharpGenGlobalNamespace>
+    <SharpGenGenerateDoc>true</SharpGenGenerateDoc>
     <SharpGenIncludeAssemblyNameFolder>true</SharpGenIncludeAssemblyNameFolder>
     <SharpGenOutputDirectory>$(MSBuildProjectDirectory)/../</SharpGenOutputDirectory>
     <SharpGenGeneratedCodeFolder>Generated/$(AppType)</SharpGenGeneratedCodeFolder>
+    <SharpGenDocumentationOutputDir>$(MSBuildThisFileDirectory)</SharpGenDocumentationOutputDir>
+    <SharpGenGenerateConsumerBindMapping>false</SharpGenGenerateConsumerBindMapping>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' And Exists('$(SolutionDir)sharpdx.snk')">
     <DefineConstants>$(DefineConstants);SHARPDX_SIGNED</DefineConstants>
@@ -45,6 +48,7 @@
   <!-- Special packages and imports for UWP support -->
   <ItemGroup>
     <PackageReference Include="MSBuild.Sdk.Extras" Version="1.1.0" PrivateAssets="all" />
+    <PackageReference Include="SharpGenTools.Sdk" Version="1.0.0-ci206" PrivateAssets="All" Condition="'$(SharpDXLegacy)' == ''" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform " Version="5.4.0" />

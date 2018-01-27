@@ -446,7 +446,7 @@
     <create-cpp enum="SHARPDX_ERRORCODE" macro="ERROR_(.*)" />
     <context-clear/>
 
-    <define enum="System.IO.SeekOrigin" sizeof="4" />
+    <define enum="System.IO.SeekOrigin" sizeof="4" underlying="System.UInt32"  />
     <define struct="SharpDX.Mathematics.Interop.RawViewport" sizeof="16" />
     <define struct="SharpDX.Mathematics.Interop.RawViewportF" sizeof="16" />
     <define struct="SharpDX.DrawingRectangle" sizeof="16" />

@@ -1,12 +1,12 @@
 <Project>
   <Target Name="RemoveNonApplicableFiles"
     Condition="'$(SharpDXLegacy)' == ''"
-    BeforeTargets="CoreCompile"
-    AfterTargets="AddGeneratedCSharpFilesToCompilation">
+    BeforeTargets="AddGeneratedCSharpFilesToCompilation"
+    AfterTargets="GenerateCSharp">
     
     <ItemGroup>
       <Compile Remove="Generated/**/*.cs" />
-      <Compile Include="Generated/$(AppType)/**/*.cs" />
+      <Compile Include="Generated/$(AppType)/**/*.cs" Condition="'@(SharpGenMapping)' == ''" />
     </ItemGroup>
   </Target>
 </Project>

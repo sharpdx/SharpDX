@@ -205,7 +205,7 @@ namespace SharpDX.XAudio2
 	        Result result;
 	        fixed (void* ptr = &countRef)
 	        {
-		        result = LocalInterop.Calliint(this._nativePointer, ptr, *(*(void***)this._nativePointer + 3));
+		        result = LocalInterop.CalliGetDeviceCount(this._nativePointer, ptr, *(*(void***)this._nativePointer + 3));
 	        }
 	        result.CheckError();
         }
@@ -218,7 +218,7 @@ namespace SharpDX.XAudio2
 	        {
 		        value = effectChainRef.Value;
 	        }
-	        Result result = LocalInterop.Calliint(this._nativePointer, (void*)&zero, inputChannels, inputSampleRate, flags, deviceIndex, effectChainRef.HasValue ? ((void*)(&value)) : ((void*)IntPtr.Zero), *(*(void***)this._nativePointer + 10));
+	        Result result = LocalInterop.CalliCreateMasteringVoice(this._nativePointer, (void*)&zero, inputChannels, inputSampleRate, flags, deviceIndex, effectChainRef.HasValue ? ((void*)(&value)) : ((void*)IntPtr.Zero), *(*(void***)this._nativePointer + 10));
 	        masteringVoiceOut.NativePointer = zero;
 	        result.CheckError();
         }
@@ -241,7 +241,7 @@ namespace SharpDX.XAudio2
         private unsafe void GetDeviceDetails(int index, out DeviceDetails deviceDetailsRef)
         {
 	        DeviceDetails.__Native _Native = default(DeviceDetails.__Native);
-	        Result result = LocalInterop.Calliint(this._nativePointer, index, &_Native, *(*(void***)this._nativePointer + 4));
+	        Result result = LocalInterop.CalliGetDeviceDetails(this._nativePointer, index, &_Native, *(*(void***)this._nativePointer + 4));
 	        deviceDetailsRef = default(DeviceDetails);
 	        deviceDetailsRef.__MarshalFrom(ref _Native);
 	        result.CheckError();
@@ -249,7 +249,7 @@ namespace SharpDX.XAudio2
 
         private unsafe void Initialize(int flags, ProcessorSpecifier xAudio2Processor)
         {
-	        var result = (Result)LocalInterop.Calliint(this._nativePointer, (int)flags, (int)xAudio2Processor, *(*(void***)this._nativePointer + 5));
+	        var result = (Result)LocalInterop.CalliInitialize(this._nativePointer, (int)flags, (int)xAudio2Processor, *(*(void***)this._nativePointer + 5));
             result.CheckError();
         }
 

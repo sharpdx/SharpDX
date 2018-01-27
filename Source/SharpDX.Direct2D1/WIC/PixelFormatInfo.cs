@@ -35,13 +35,12 @@ namespace SharpDX.WIC
             unsafe
             {
                 int actualcount = 0;
-                GetChannelMask(channelIndex, actualcount, IntPtr.Zero, out actualcount);
+                GetChannelMask(channelIndex, actualcount, null, out actualcount);
                 if (actualcount == 0)
                     return new byte[0];
 
                 var temp = new byte[actualcount];
-                fixed(void* pTemp = temp)
-                    GetChannelMask(channelIndex, actualcount, (IntPtr)pTemp, out actualcount);
+                GetChannelMask(channelIndex, actualcount, temp, out actualcount);
                 return temp;
             }
         }

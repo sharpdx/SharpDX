@@ -220,12 +220,12 @@
     <map method="IWICBitmapFrameEncode::Initialize" visibility="internal"/>
     <map method="IWICBitmapFrameEncode::SetColorContexts" visibility="internal"/>
     <map method="IWICBitmapFrameEncode::WritePixels" visibility="internal"/>
-    <map param="pbPixels" type="void"/>
+    <map param="IWICBitmapFrameEncode::WritePixels::pbPixels" type="void"/>
 
     <!--IWICBitmapLock-->
     <map method="IWICBitmapLock::GetSize" visibility="internal"/>
     <map method="IWICBitmapLock::GetDataPointer" visibility="internal"/>
-    <map param="ppbData" attribute="out" type="void" return="true"/>
+    <map param="IWICBitmapLock::GetDataPointer::ppbData" attribute="out" type="void" return="true"/>
 
     <!--IWICBitmapSource -->
     <map method="IWICBitmapSource::GetSize" visibility="internal"/>
@@ -259,9 +259,8 @@
 
     <!--IWICFormatConverterInfo-->
     <map method="IWICFormatConverterInfo::GetPixelFormats" visibility="internal"/>
-    <map param="pPixelFormatGUIDs" type="void" attribute="in"/>
     <map method="IWICFormatConverterInfo::CreateInstance" visibility="internal"/>
-    <map param="ppIConverter" attribute="out fast"/>
+    <map param="IWICFormatConverterInfo::CreateInstance::ppIConverter" attribute="out fast"/>
 
     <!--IWICImagingFactory-->
     <map method="IWICImagingFactory::Create.*" visibility="internal"/>
@@ -274,11 +273,11 @@
     <map param="IWICMetadataQueryReader::GetMetadataByName::pvarValue" type="void" pointer="*" attribute="in"/>
       
     <map method="IWICMetadataQueryReader::GetEnumerator" visibility="internal" property="false"/>
-    <map param="ppIEnumString" type="void" return="true"/>
+    <map param="IWICMetadataQueryReader::GetEnumerator::ppIEnumString" type="void" return="true"/>
 
     <!--IWICMetadataQueryReader-->
     <map method="IWICMetadataQueryWriter::SetMetadataByName" visibility="internal"/>
-    <map param="pvarValue" type="void"/>
+    <map param="IWICMetadataQueryWriter::SetMetadataByName::pvarValue" type="void"/>
 
     <!--IWICPalette-->
     <map method="IWICPalette::Initialize.*" name="Initialize"/>
@@ -289,7 +288,6 @@
 
     <!--IWICPixelFormatInfo-->
     <map method="IWICPixelFormatInfo::GetChannelMask" visibility="internal"/>
-    <map param="pbMaskBuffer" type="void" attribute="in"/>
 
     <!--IWICPixelFormatInfo2-->
     <map method="IWICPixelFormatInfo2::SupportsTransparency" name="IsSupportingTransparency"/>
