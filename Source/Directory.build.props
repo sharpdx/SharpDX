@@ -29,6 +29,7 @@
     <SharpGenIncludeAssemblyNameFolder>true</SharpGenIncludeAssemblyNameFolder>
     <SharpGenOutputDirectory>$(MSBuildProjectDirectory)/../</SharpGenOutputDirectory>
     <SharpGenGeneratedCodeFolder>Generated/$(AppType)</SharpGenGeneratedCodeFolder>
+    <SharpGenGeneratedCodeFolder Condition="'$(TargetFramework)' == 'net40'">Generated/net40_$(AppType)</SharpGenGeneratedCodeFolder>
     <SharpGenDocumentationOutputDir>$(MSBuildThisFileDirectory)</SharpGenDocumentationOutputDir>
     <SharpGenGenerateConsumerBindMapping>false</SharpGenGenerateConsumerBindMapping>
   </PropertyGroup>
@@ -48,9 +49,11 @@
   <!-- Special packages and imports for UWP support -->
   <ItemGroup>
     <PackageReference Include="MSBuild.Sdk.Extras" Version="1.1.0" PrivateAssets="all" />
-    <PackageReference Include="SharpGenTools.Sdk" Version="1.0.0-ci206" PrivateAssets="All" Condition="'$(SharpDXLegacy)' == ''" />
+    <PackageReference Include="SharpGenTools.Sdk" Version="1.0.0-ci208" PrivateAssets="All" Condition="'$(SharpDXLegacy)' != 'true'" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform " Version="5.4.0" />
   </ItemGroup>
+
+  <Target Name="Pack" />
 </Project>
