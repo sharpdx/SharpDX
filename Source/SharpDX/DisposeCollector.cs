@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2018 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -42,22 +42,25 @@ namespace SharpDX
         /// <summary>
         /// Disposes all object collected by this class and clear the list. The collector can still be used for collecting.
         /// </summary>
+        /// <param name="disposeManagedResources">If true, managed resources should be
+        /// disposed of in addition to unmanaged resources.</param>
         /// <remarks>
         /// To completely dispose this instance and avoid further dispose, use <see cref="Dispose"/> method instead.
         /// </remarks>
-        public void DisposeAndClear()
+        public void DisposeAndClear(bool disposeManagedResources = true)
         {
             if (disposables == null)
-            {
                 return;
-            }
 
             for (int i = disposables.Count - 1; i >= 0; i--)
             {
                 var valueToDispose = disposables[i];
-                if (valueToDispose is IDisposable)
+                if (valueToDispose is IDisposable disposable)
                 {
-                    ((IDisposable)valueToDispose).Dispose();
+                    if (disposeManagedResources)
+                    {
+                        disposable.Dispose();
+                    }
                 }
                 else
                 {
@@ -76,7 +79,7 @@ namespace SharpDX
         /// disposed of in addition to unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
         {
-            DisposeAndClear();
+            DisposeAndClear(disposeManagedResources);
             disposables = null;
         }
 
