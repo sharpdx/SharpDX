@@ -18,8 +18,9 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <SharpGenMapping Include="../Mapping.xml" />
   </ItemGroup>
+
+  <Import Project="../MappingFiles.props" />
 
   <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 </Project>

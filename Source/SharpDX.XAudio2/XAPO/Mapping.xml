@@ -27,7 +27,6 @@
   <assembly>SharpDX.XAudio2</assembly>
 
   <include file="xaudio2.h">
-    <filter-error>$(FILTER_PASTING_ERROR)</filter-error>
   </include>
 
   <!-- XAPO includes -->
@@ -36,11 +35,9 @@
     <post>
       #define XAPO_FLAG_DEFAULT (XAPO_FLAG_CHANNELS_MUST_MATCH|XAPO_FLAG_FRAMERATE_MUST_MATCH|XAPO_FLAG_BITSPERSAMPLE_MUST_MATCH|XAPO_FLAG_BUFFERCOUNT_MUST_MATCH|XAPO_FLAG_INPLACE_SUPPORTED)
     </post>
-    <filter-error>$(FILTER_PASTING_ERROR)</filter-error>
   </include>
   
   <include file="xapofx.h" attach="true" namespace="SharpDX.XAPO.Fx" output="XAPO\Fx">
-    <filter-error>$(FILTER_PASTING_ERROR)</filter-error>
   </include>
 
   <!-- XAPO naming -->

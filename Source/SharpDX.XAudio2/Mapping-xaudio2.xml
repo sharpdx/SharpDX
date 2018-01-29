@@ -28,12 +28,8 @@
   <assembly>SharpDX.XAudio2</assembly>
 
   <!-- XAudio2 includes -->
-  <include file="xaudio2.h" attach="true">
-    <filter-error>$(FILTER_PASTING_ERROR)</filter-error>
-  </include>
-  <include file="xaudio2fx.h" attach="true" namespace="SharpDX.XAudio2.Fx" output="Fx" >
-    <filter-error>$(FILTER_PASTING_ERROR)</filter-error>
-  </include>
+  <include file="xaudio2.h" attach="true" />
+  <include file="xaudio2fx.h" attach="true" namespace="SharpDX.XAudio2.Fx" output="Fx" />
   
   <naming />
 

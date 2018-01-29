@@ -1,0 +1,23 @@
+<Project>
+    <ItemGroup>
+        <LegacyMapping Include="SharpDX.Direct3D9" />
+        <LegacyMapping Include="SharpDX.Direct3D10" />
+        <LegacyMapping Include="SharpDX.DirectSound" />
+        <LegacyMapping Include="SharpDX.DirectInput" />
+        <LegacyMapping Include="SharpDX.MediaFoundation/DirectX" />
+        <LegacyMapping Include="SharpDX.MediaFoundation/Dsp" />
+        <LegacyMapping Include="SharpDX.MediaFoundation/OPM" />
+        <NoStoreMapping Include="SharpDX.Animation" />
+        <NoStoreMapping Include="SharpDX.DirectComposition" />
+        <NoStoreMapping Include="SharpDX.DirectManipulation" />
+        <NoStoreMapping Include="SharpDX.RawInput" />
+        <SharpGenMapping Include="$(MSBuildThisFileDirectory)Mapping.xml" />
+        <SharpGenMapping Include="$(MSBuildThisFileDirectory)Mapping.Direct3D1x.xml" />
+        <SharpGenMapping Include="$(MSBuildThisFileDirectory)SharpDX*/**/Mapping*.xml" />
+        <SharpGenMapping Remove="@(LegacyMapping->'$(MSBuildThisFileDirectory)%(Identity)/**/Mapping*.xml')" />
+        <SharpGenExternalDocs Include="$(MSBuildThisFileDirectory)SharpDX*/Documentation/CodeComments.xml" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(AppType)' == 'STORE_APP'">
+        <SharpGenMapping Remove="@(NoStoreMapping->'$(MSBuildThisFileDirectory)%(Identity)/**/Mapping*.xml')" />
+    </ItemGroup>
+</Project>
