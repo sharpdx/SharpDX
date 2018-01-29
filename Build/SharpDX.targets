@@ -22,10 +22,10 @@
   </PropertyGroup>
 
   <Target Name="PatchAssembly" AfterTargets="AfterBuild">
-    <Exec Command="&quot;$(SolutionDir)\Source\Bin\SharpCLI.exe&quot; &quot;$(TargetPath)&quot;" />
+    <Exec Command="&quot;$(ProjectDir)..\..\Source\Bin\SharpCLI.exe&quot; &quot;$(TargetPath)&quot;" />
 
   </Target>
-  <Target Name="Resign" AfterTargets="PatchAssembly" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' And Exists('$(SolutionDir)sharpdx.snk')">
+  <Target Name="Resign" AfterTargets="PatchAssembly" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' And Exists('$(ProjectDir)..\..\sharpdx.snk')">
     <GetFrameworkSdkPath>
       <Output TaskParameter="Path" PropertyName="FrameworkSdkPath" />
     </GetFrameworkSdkPath>
@@ -34,7 +34,7 @@
       <SNExePath>$([System.IO.Directory]::GetFiles("$(FrameworkSdkPath)", "sn.exe", SearchOption.AllDirectories)[0])</SNExePath>
     </PropertyGroup>
 
-    <Exec Command='"$(SNExePath)" -Ra $(TargetPath) $(SolutionDir)sharpdx.snk'/>
+    <Exec Command='"$(SNExePath)" -Ra $(TargetPath) $(ProjectDir)..\..\sharpdx.snk'/>
 
   </Target>
   <!-- Special packages and imports for UWP support -->
