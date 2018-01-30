@@ -11,12 +11,12 @@
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
     <DefineConstants>$(DefineConstants);STORE_APP</DefineConstants>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.14393.0</TargetPlatformVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.16299.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <SharpDXAppType>STORE_APP</SharpDXAppType>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' OR '$(TargetFramework)' == 'netstandard1.3'">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' OR '$(TargetFramework)' == 'netstandard1.3' OR '$(TargetFramework)' == 'netstandard2.0'">
     <SharpDXAppType>REFERENCE</SharpDXAppType>
     <DefineConstants>$(DefineConstants);REFERENCE</DefineConstants>
   </PropertyGroup>
