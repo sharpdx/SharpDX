@@ -33,7 +33,7 @@
     <SharpGenDocumentationOutputDir>$(MSBuildThisFileDirectory)</SharpGenDocumentationOutputDir>
     <SharpGenGenerateConsumerBindMapping>false</SharpGenGenerateConsumerBindMapping>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' And Exists('$(SolutionDir)sharpdx.snk')">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' And Exists('$(MSBuildThisFileDirectory)/../sharpdx.snk')">
     <DefineConstants>$(DefineConstants);SHARPDX_SIGNED</DefineConstants>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)/../sharpdx.snk</AssemblyOriginatorKeyFile>

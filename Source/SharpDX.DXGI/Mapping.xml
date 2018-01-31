@@ -29,6 +29,7 @@
   <!-- DXGI includes -->
   <include id="dxgi" file="dxgi.h" attach="true" />
   <include id="dxgiformat" file="dxgiformat.h" attach="true" />
+  <include id="dxgidebug" file="dxgidebug.h" attach="true" />
   <include id="winerror" file="winerror.h"/>
   <include id="dxgitype" file="dxgitype.h" attach="true"/>
   <include id="dxgicommon" file="dxgicommon.h" attach="true"/>
@@ -44,6 +45,7 @@
     <context>sharpdx-dxgi-ext</context>
     <context>dxgi</context>
     <context>dxgiformat</context>
+    <context>dxgidebug</context>
     <context>dxgitype</context>
     <context>dxgicommon</context>
     <context>dxgi1_2</context>
@@ -158,6 +160,11 @@
     
     <map struct="DXGI_ADAPTER_DESC" pack="4"/>
     <map struct="DXGI_ADAPTER_DESC1" pack="4"/>
+
+    <map struct="DXGI_INFO_QUEUE_FILTER" name="InfoQueueFilter" />
+    <map struct="DXGI_INFO_QUEUE_FILTER_DESC" name="InfoQueueFilterDescription" />
+
+    <map struct="DXGI_DEBUG_ID" name="DebugId" />
 
     <!--
     // *****************************************************************
@@ -283,7 +290,8 @@
 
     <!-- TODO: No documentation - don't know how to map it. -->
     <remove function="DXGIGetDebugInterface1" />
-
+    <remove function="DXGIGetDebugInterface" />
+    
     <context-clear/>
   </mapping>
 </config>

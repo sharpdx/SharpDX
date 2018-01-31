@@ -96,6 +96,7 @@
     <map enum-item="D3D12_MESSAGE_ID_MAP_INVALID_SUBRESOURCE" name="MapInvalidSubResource2"/>
     <map enum-item="D3D12_MESSAGE_ID_UNMAP_INVALID_SUBRESOURCE" name="UnmapInvalidSubResource2"/>
 
+    <map enum-item="D3D12_VIEW_INSTANCING_TIER(.*)" name-tmp="Tier$1"/>
     <map enum-item="D3D12_CONSERVATIVE_RASTERIZATION_TIER(.*)" name-tmp="Tier$1"/>
     <map enum-item="D3D12_CROSS_NODE_SHARING_TIER(.*)" name-tmp="Tier$1"/>
     <map enum-item="D3D12_RESOURCE_HEAP_TIER(.*)" name-tmp="Tier$1"/>
@@ -115,7 +116,7 @@
     <map enum="D3D_SHADER_MODEL" name="ShaderModel"/>
     <map enum-item="D3D_SHADER_MODEL_5_1" name="Model51"/>
     <map enum-item="D3D_SHADER_MODEL_6_0" name="Model60"/>
-    
+    <map enum-item="D3D_SHADER_MODEL_6_1" name="Model61"/>
     <!--
     // *****************************************************************
     // D3D12 Struct
@@ -223,7 +224,7 @@
     <map method="ID3D12GraphicsCommandList::OM(.*)" name="$1"/>
     <map method="ID3D12GraphicsCommandList::RS(.*)" name="$1"/>
     <map method="ID3D12GraphicsCommandList::OMSetStencilRef" name="SetStencilReference"/>
-    <map param="ID3D12GraphicsCommandList::OMSetBlendFactor::BlendFactor" type="SHARPDX_VECTOR4"/>
+    <map param="ID3D12GraphicsCommandList::OMSetBlendFactor::BlendFactor" type="SHARPDX_VECTOR4" attribute="in" />
     <map param="ID3D12GraphicsCommandList::ClearRenderTargetView::ColorRGBA" type="SHARPDX_COLOR4"/>
     <map param="ID3D12GraphicsCommandList::ClearUnorderedAccessViewUint::Values" type="SHARPDX_INT4"/>
     <map param="ID3D12GraphicsCommandList::ClearUnorderedAccessViewFloat::Values" type="SHARPDX_VECTOR4"/>
