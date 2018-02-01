@@ -249,6 +249,8 @@
     <map param="IDXGIOutput4::CheckOverlayColorSpaceSupport::pFlags" return="true"/>
     <map param="IDXGIOutput3::CheckOverlaySupport::pFlags" return="true"/>
 
+    <map method="IDXGIOutputDuplication::AcquireNextFrame" hresult="true" check="false" visibility="public" name="TryAcquireNextFrame" />
+
     <map param="ISurfaceImageSourceNative::BeginDraw::surface" return="true"/>
 
     <map interface="IVirtualSurfaceUpdatesCallbackNative" visibility="internal" callback="true" callback-dual="true" />
