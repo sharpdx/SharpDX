@@ -49,7 +49,7 @@
   <!-- Special packages and imports for UWP support -->
   <ItemGroup>
     <PackageReference Include="MSBuild.Sdk.Extras" Version="1.1.0" PrivateAssets="all" />
-    <PackageReference Include="SharpGenTools.Sdk" Version="1.0.0-ci220" PrivateAssets="All" />
+    <PackageReference Include="SharpGenTools.Sdk" Version="1.0.0-ci222" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform " Version="5.4.0" />
