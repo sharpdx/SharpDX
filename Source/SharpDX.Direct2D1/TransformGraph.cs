@@ -82,7 +82,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT ID2D1TransformGraph::ConnectNode([In] ID2D1TransformNode* fromNode,[In] ID2D1TransformNode* toNode,[In] unsigned int toNodeInputIndex)</unmanaged>	
         public void ConnectNode(TransformNode fromNode, TransformNode toNode, int toNodeInputIndex)
         {
-            ConnectNode__(TransformNodeShadow.ToIntPtr(fromNode), TransformNodeShadow.ToIntPtr(toNode), toNodeInputIndex);
+            ConnectNode_(TransformNodeShadow.ToIntPtr(fromNode), TransformNodeShadow.ToIntPtr(toNode), toNodeInputIndex);
         }
 
         /// <summary>	

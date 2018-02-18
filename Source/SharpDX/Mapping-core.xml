@@ -26,6 +26,10 @@
   <namespace>SharpDX</namespace>
   <assembly>SharpDX</assembly>
 
+  <include file="Unknwnbase.h" namespace="SharpDX">
+    <attach>IUnknown</attach>
+  </include>
+
   <include file="objidlbase.h" namespace="SharpDX.Win32" output="Win32">
     <attach>STATSTG</attach>
     <attach>tagLOCKTYPE</attach>
@@ -154,7 +158,6 @@
     <bind from="EXCEPINFO" to="System.Runtime.InteropServices.ComTypes.EXCEPINFO"/>
 
     <!-- Root IUnknown interface -->
-    <bind from="IUnknown" to="SharpDX.ComObject" />
     <bind from="IDispatch" to="SharpDX.ComDispatch" />
     <bind from="IPersist" to="SharpDX.ComPersistBase" />
     <bind from="IPropertyBag" to="SharpDX.ComPropertyBag" />
@@ -182,6 +185,11 @@
     <context>winerror</context>
     <map enum="SHARPDX_ERRORCODE" assembly="SharpDX" namespace="SharpDX.Win32" name="ErrorCode"/>
     <map enum-item="ERROR_(.*)" name-tmp="$1" naming="noexpand"/>
+    <context-clear/>
+
+    <context>Unknwnbase</context>
+    <map interface="IUnknown" callback="true" callback-dual="true" callback-name="ComObject" callback-visibility="public" />
+    <remove method="IUnknown::.*" />
     <context-clear/>
 
     <!-- Map IStream -->

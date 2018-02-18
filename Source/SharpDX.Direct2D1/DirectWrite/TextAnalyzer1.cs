@@ -38,7 +38,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged-short>IDWriteTextAnalyzer1::AnalyzeVerticalGlyphOrientation</unmanaged-short>	
         public void AnalyzeVerticalGlyphOrientation(TextAnalysisSource1 analysisSource, int textPosition, int textLength, TextAnalysisSink1 analysisSink)
         {
-            AnalyzeVerticalGlyphOrientation__(TextAnalysisSource1Shadow.ToIntPtr(analysisSource), textPosition,
+            AnalyzeVerticalGlyphOrientation_(TextAnalysisSource1Shadow.ToIntPtr(analysisSource), textPosition,
                                               textLength, TextAnalysisSink1Shadow.ToIntPtr(analysisSink));
         }
     }

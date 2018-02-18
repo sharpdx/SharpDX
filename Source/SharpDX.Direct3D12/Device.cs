@@ -567,7 +567,7 @@ namespace SharpDX.Direct3D12
 
         private static void CreateDevice(Adapter adapter, FeatureLevel minFeatureLevel, Device instance)
         {
-            D3D12.CreateDevice(adapter, minFeatureLevel, Utilities.GetGuidFromType(typeof(Device)), instance).CheckError();
+            D3D12.CreateDevice(adapter.NativePointer, minFeatureLevel, Utilities.GetGuidFromType(typeof(Device)), instance).CheckError();
         }
     }
 }

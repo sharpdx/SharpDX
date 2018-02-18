@@ -72,7 +72,7 @@ namespace SharpDX.DXGI
                 updatesNeeded(this, EventArgs.Empty);
         }
 
-        private class VirtualSurfaceUpdatesCallbackNativeCallback : DisposeBase, IVirtualSurfaceUpdatesCallbackNative
+        private class VirtualSurfaceUpdatesCallbackNativeCallback : CallbackBase, IVirtualSurfaceUpdatesCallbackNative
         {
             IVirtualSurfaceImageSourceNative eventCallback;
 
@@ -85,21 +85,6 @@ namespace SharpDX.DXGI
             {
                 eventCallback.OnUpdatesNeeded();
             }
-
-            protected override void Dispose(bool disposing)
-            {
-                if (disposing)
-                {
-                    if (Shadow != null)
-                    {
-                        Shadow.Dispose();
-                        Shadow = null;
-                    }
-                    eventCallback = null;
-                }
-            }
-
-            public IDisposable Shadow { get; set; }
         }
     }
 }

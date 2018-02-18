@@ -18,37 +18,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Runtime.InteropServices;
 
-namespace SharpDX
+namespace SharpDX.Animation
 {
     /// <summary>
-    /// Base class for unmanaged callbackable Com object.
+    /// Internal PriorityComparison Callback
     /// </summary>
-    public class ComObjectCallback : ComObject, ICallbackable
+    internal class PriorityComparisonCallback : SharpDX.CallbackBase, PriorityComparison
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ComObject"/> class.
-        /// </summary>
-        /// <param name="pointer">Pointer to Cpp Object</param>
-        protected ComObjectCallback(IntPtr pointer) : base(pointer)
-        {
-        }
+        public Manager.PriorityComparisonDelegate Delegate;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ComObject"/> class.
-        /// </summary>
-        protected ComObjectCallback()
+        public bool HasPriority(Storyboard scheduledStoryboard, Storyboard newStoryboard, PriorityEffect priorityEffect)
         {
-        }
-
-        /// <summary>
-        /// Implements <see cref="ICallbackable"/> but it cannot not be set. 
-        /// This is only used to support for interop with unmanaged callback.
-        /// </summary>
-        public IDisposable Shadow
-        {
-            get { throw new InvalidOperationException("Invalid access to Callback. This is used internally."); }
-            set { throw new InvalidOperationException("Invalid access to Callback. This is used internally."); }
+            if (Delegate != null)
+                return Delegate.Invoke(scheduledStoryboard, newStoryboard, priorityEffect);
+            return false;
         }
     }
 }

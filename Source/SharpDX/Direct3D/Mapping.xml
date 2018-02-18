@@ -131,10 +131,10 @@
     // Direct3D Common Interfaces
     // *****************************************************************
     -->
-    <map interface="ID3DInclude" name="Include" callback="true" callback-dual="false" />
+    <map interface="ID3DInclude" name="Include" callback="true" />
     <map interface="ID3D10Blob" name="Blob" />
 
-    <map interface="ID3DDestructionNotifier" name="DestructionNotifier" callback="true" callback-dual="false" />
+    <map interface="ID3DDestructionNotifier" name="DestructionNotifier" callback="true" />
 
     <context-clear />
   </mapping>

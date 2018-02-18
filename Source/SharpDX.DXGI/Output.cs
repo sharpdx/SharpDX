@@ -36,7 +36,7 @@ namespace SharpDX.DXGI
         /// <unmanaged>HRESULT IDXGIOutput::FindClosestMatchingMode([In] const DXGI_MODE_DESC* pModeToMatch,[Out] DXGI_MODE_DESC* pClosestMatch,[In, Optional] IUnknown* pConcernedDevice)</unmanaged>
         public void GetClosestMatchingMode(SharpDX.ComObject device, SharpDX.DXGI.ModeDescription modeToMatch, out SharpDX.DXGI.ModeDescription closestMatch)
         {
-            FindClosestMatchingMode(ref modeToMatch, out closestMatch, device);
+            FindClosestMatchingMode_(ref modeToMatch, out closestMatch, device.NativePointer);
         }
 
         /// <summary>	

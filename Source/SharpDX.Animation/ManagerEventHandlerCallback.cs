@@ -20,31 +20,29 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace SharpDX
+namespace SharpDX.Animation
 {
     /// <summary>
-    /// Base interface for Component Object Model (COM).
+    /// Internal ManagerEventHandler Callback
     /// </summary>
-    public partial interface IUnknown
+    internal class ManagerEventHandlerCallback : SharpDX.CallbackBase, SharpDX.ICallbackable, ManagerEventHandler
     {
-        /// <summary>
-        /// Queries the supported COM interface on this instance.
-        /// </summary>
-        /// <param name="guid">The guid of the interface.</param>
-        /// <param name="comObject">The output COM object reference.</param>
-        /// <returns>If successful, <see cref="Result.Ok"/> </returns>
-        Result QueryInterface(ref Guid guid, out IntPtr comObject);
+        public Manager.StatusChangedDelegate Delegates;
 
         /// <summary>
-        /// Increments the reference count for an interface on this instance.
+        /// Return a pointer to the unmanaged version of this callback.
         /// </summary>
-        /// <returns>The method returns the new reference count.</returns>
-        int AddReference();
+        /// <param name="callback">The callback.</param>
+        /// <returns>A pointer to a shadow c++ callback</returns>
+        public static IntPtr ToIntPtr(ManagerEventHandler callback)
+        {
+            return CppObject.ToCallbackPtr<ManagerEventHandler>(callback);
+        }
 
-        /// <summary>
-        /// Decrements the reference count for an interface on this instance.
-        /// </summary>
-        /// <returns>The method returns the new reference count.</returns>
-        int Release();
+        public void OnManagerStatusChanged(ManagerStatus newStatus, ManagerStatus previousStatus)
+        {
+            if (Delegates != null)
+                Delegates(newStatus, previousStatus);
+        }
     }
 }

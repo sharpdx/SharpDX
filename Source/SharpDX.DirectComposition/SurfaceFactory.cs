@@ -9,7 +9,7 @@ namespace SharpDX.DirectComposition
 	{
 		public SurfaceFactory(Device2 device, ComObject renderingDevice) : base(IntPtr.Zero)
 		{
-			device.CreateSurfaceFactory(renderingDevice, this);
+			device.CreateSurfaceFactory_(renderingDevice?.NativePointer ?? IntPtr.Zero, this);
 		}
 	}
 }

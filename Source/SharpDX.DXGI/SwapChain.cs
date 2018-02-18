@@ -40,7 +40,7 @@ namespace SharpDX.DXGI
         public SwapChain(Factory factory, ComObject device, SwapChainDescription description)
             : base(IntPtr.Zero)
         {
-            factory.CreateSwapChain(device, ref description, this);
+            factory.CreateSwapChain_(device.NativePointer, ref description, this);
         }
 
         /// <summary>

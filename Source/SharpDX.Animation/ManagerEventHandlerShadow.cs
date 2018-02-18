@@ -25,7 +25,7 @@ namespace SharpDX.Animation
     /// <summary>
     /// Internal ManagerEventHandler Callback
     /// </summary>
-    internal class ManagerEventHandlerShadow : SharpDX.ComObjectShadow, ManagerEventHandler
+    internal class ManagerEventHandlerShadow : SharpDX.ComObjectShadow
     {
         private static readonly ManagerEventHandlerVtbl Vtbl = new ManagerEventHandlerVtbl();
 

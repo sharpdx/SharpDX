@@ -25,11 +25,9 @@ namespace SharpDX.Animation
     /// <summary>
     /// Internal PriorityComparison Callback
     /// </summary>
-    internal class PriorityComparisonShadow : SharpDX.ComObjectShadow, PriorityComparison
+    internal class PriorityComparisonShadow : SharpDX.ComObjectShadow
     {
         private static readonly PriorityComparisonVtbl Vtbl = new PriorityComparisonVtbl();
-
-        public Manager.PriorityComparisonDelegate Delegate;
 
         /// <summary>
         /// Return a pointer to the unmanaged version of this callback.
@@ -38,7 +36,7 @@ namespace SharpDX.Animation
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(PriorityComparison callback)
         {
-            return ToCallbackPtr<PriorityComparison>(callback);
+            return CppObject.ToCallbackPtr<PriorityComparison>(callback);
         }
 
         public class PriorityComparisonVtbl : ComObjectVtbl
@@ -71,30 +69,6 @@ namespace SharpDX.Animation
         protected override CppObjectVtbl GetVtbl
         {
             get { return Vtbl; }
-        }
-
-        public IDisposable Shadow { get; set; }
-
-        public bool HasPriority(Storyboard scheduledStoryboard, Storyboard newStoryboard, PriorityEffect priorityEffect)
-        {
-            if (Delegate != null)
-                return Delegate.Invoke(scheduledStoryboard, newStoryboard, priorityEffect);
-            return false;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            // Release the shadow
-            if (disposing)
-            {
-                if (Shadow != null)
-                {
-                    Shadow.Dispose();
-                    Shadow = null;
-                }
-            }
-
-            base.Dispose(disposing);
         }
     }
 }

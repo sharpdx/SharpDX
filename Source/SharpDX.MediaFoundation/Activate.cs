@@ -37,7 +37,7 @@ namespace SharpDX.MediaFoundation
         public Activate(string activatableClassId, ComObject propertySet = null)
         {
             IntPtr temp;
-            MediaFactory.CreateMediaExtensionActivate(activatableClassId, propertySet, Utilities.GetGuidFromType(typeof (Activate)), out temp);
+            MediaFactory.CreateMediaExtensionActivate(activatableClassId, propertySet?.NativePointer ?? IntPtr.Zero, Utilities.GetGuidFromType(typeof (Activate)), out temp);
             NativePointer = temp;
         }
 

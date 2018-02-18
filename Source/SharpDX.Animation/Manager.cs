@@ -26,7 +26,7 @@ namespace SharpDX.Animation
     public partial class Manager
     {
         private static readonly Guid ManagerGuid = new Guid("4C1FC63A-695C-47E8-A339-1A194BE3D0B8");
-        private ManagerEventHandlerShadow shadowEventHandler;
+        private ManagerEventHandlerCallback shadowEventHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Manager"/> class.
@@ -62,8 +62,8 @@ namespace SharpDX.Animation
                 // Setup the Manager Event Handler delegates
                 if (shadowEventHandler == null)
                 {
-                    shadowEventHandler = new ManagerEventHandlerShadow();
-                    SetManagerEventHandler_(ManagerEventHandlerShadow.ToIntPtr(shadowEventHandler));
+                    shadowEventHandler = new ManagerEventHandlerCallback();
+                    SetManagerEventHandler_(CppObject.ToCallbackPtr<ManagerEventHandler>(shadowEventHandler));
                 }
                 shadowEventHandler.Delegates += value;
             }
@@ -83,7 +83,7 @@ namespace SharpDX.Animation
             }
         }
 
-        private PriorityComparisonShadow cancelPriorityComparisonShadow;
+        private PriorityComparisonCallback cancelPriorityComparisonShadow;
 
         /// <summary>
         /// Sets the cancel priority comparison.
@@ -99,7 +99,7 @@ namespace SharpDX.Animation
                 {
                     if (cancelPriorityComparisonShadow == null)
                     {
-                        cancelPriorityComparisonShadow = new PriorityComparisonShadow { Delegate = value };
+                        cancelPriorityComparisonShadow = new PriorityComparisonCallback { Delegate = value };
                         SetCancelPriorityComparison_(PriorityComparisonShadow.ToIntPtr(cancelPriorityComparisonShadow));
                     }
                     cancelPriorityComparisonShadow.Delegate = value;
@@ -113,7 +113,7 @@ namespace SharpDX.Animation
             }
         }
 
-        private PriorityComparisonShadow trimPriorityComparisonShadow;
+        private PriorityComparisonCallback trimPriorityComparisonShadow;
 
         /// <summary>
         /// Sets the trim priority comparison.
@@ -129,7 +129,7 @@ namespace SharpDX.Animation
                 {
                     if (trimPriorityComparisonShadow == null)
                     {
-                        trimPriorityComparisonShadow = new PriorityComparisonShadow { Delegate = value };
+                        trimPriorityComparisonShadow = new PriorityComparisonCallback { Delegate = value };
                         SetTrimPriorityComparison_(PriorityComparisonShadow.ToIntPtr(trimPriorityComparisonShadow));
                     }
                     trimPriorityComparisonShadow.Delegate = value;
@@ -143,7 +143,7 @@ namespace SharpDX.Animation
             }
         }
 
-        private PriorityComparisonShadow compressPriorityComparisonShadow;
+        private PriorityComparisonCallback compressPriorityComparisonShadow;
 
         /// <summary>
         /// Sets the compress priority comparison.
@@ -159,7 +159,7 @@ namespace SharpDX.Animation
                 {
                     if (compressPriorityComparisonShadow == null)
                     {
-                        compressPriorityComparisonShadow = new PriorityComparisonShadow { Delegate = value };
+                        compressPriorityComparisonShadow = new PriorityComparisonCallback { Delegate = value };
                         SetCompressPriorityComparison_(PriorityComparisonShadow.ToIntPtr(compressPriorityComparisonShadow));
                     }
                     compressPriorityComparisonShadow.Delegate = value;
@@ -173,7 +173,7 @@ namespace SharpDX.Animation
             }
         }
 
-        private PriorityComparisonShadow concludePriorityComparisonShadow;
+        private PriorityComparisonCallback concludePriorityComparisonShadow;
 
         /// <summary>
         /// Sets the conclude priority comparison.
@@ -189,7 +189,7 @@ namespace SharpDX.Animation
                 {
                     if (trimPriorityComparisonShadow == null)
                     {
-                        trimPriorityComparisonShadow = new PriorityComparisonShadow { Delegate = value };
+                        trimPriorityComparisonShadow = new PriorityComparisonCallback { Delegate = value };
                         SetConcludePriorityComparison_(PriorityComparisonShadow.ToIntPtr(trimPriorityComparisonShadow));
                     }
                     trimPriorityComparisonShadow.Delegate = value;

@@ -95,6 +95,7 @@
     <map interface="IDirectManipulation(.+)" name-tmp="$1" />
 
 		<map interface="IDirectManipulationCompositor" callback-visibility="public" callback="true" callback-dual="true" />
+    <map method="IDirectManipulationCompositor::.*" keep-implement-public="true" />
 
 		<map method="IDirectManipulationContent::GetContentTransform" visibility="internal" />
 		<map method="IDirectManipulationContent::GetOutputTransform" visibility="internal" />

@@ -26,21 +26,13 @@ namespace SharpDX
     /// <summary>
     /// Root IUnknown class to interop with COM object
     /// </summary>
-    public class ComObject : CppObject, IUnknown
+    public partial class ComObject : CppObject, IUnknown
     {
         /// <summary>
         /// Logs a warning of a possible memory leak when <see cref="Configuration.EnableObjectTracking" /> is enabled.
         /// Default uses <see cref="System.Diagnostics.Debug"/>.
         /// </summary>
         public static Action<string> LogMemoryLeakWarning = (warning) => System.Diagnostics.Debug.WriteLine(warning);
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ComObject"/> class.
-        /// </summary>
-        /// <param name="pointer">Pointer to Cpp Object</param>
-        public ComObject(IntPtr pointer) : base(pointer)
-        {
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ComObject"/> class from a IUnknown object.
@@ -233,18 +225,6 @@ namespace SharpDX
         public virtual T QueryInterfaceOrNull<T>() where T : ComObject
         {
             return FromPointer<T>(QueryInterfaceOrNull(Utilities.GetGuidFromType(typeof(T))));
-        }
-
-        /// <summary>
-        /// Performs an explicit conversion from <see cref="System.IntPtr"/> to <see cref="SharpDX.ComObject"/>.
-        /// </summary>
-        /// <param name="nativePointer">The native pointer.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
-        public static explicit operator ComObject(IntPtr nativePointer)
-        {
-            return nativePointer == IntPtr.Zero ? null : new ComObject(nativePointer);
         }
 
         ///<summary>

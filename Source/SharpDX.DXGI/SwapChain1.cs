@@ -37,7 +37,7 @@ namespace SharpDX.DXGI
         public SwapChain1(Factory2 factory, ComObject device, IntPtr hwnd, ref SwapChainDescription1 description, SwapChainFullScreenDescription? fullScreenDescription = null, Output restrictToOutput = null)
             : base(IntPtr.Zero)
         {
-            factory.CreateSwapChainForHwnd(device, hwnd, ref description, fullScreenDescription, restrictToOutput, this);
+            factory.CreateSwapChainForHwnd_(device.NativePointer, hwnd, ref description, fullScreenDescription, restrictToOutput, this);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace SharpDX.DXGI
         public SwapChain1(Factory2 factory, ComObject device, ComObject coreWindow, ref SwapChainDescription1 description, Output restrictToOutput = null)
             : base(IntPtr.Zero)
         {
-            factory.CreateSwapChainForCoreWindow(device, coreWindow, ref description, restrictToOutput, this);
+            factory.CreateSwapChainForCoreWindow_(device.NativePointer, coreWindow.NativePointer, ref description, restrictToOutput, this);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace SharpDX.DXGI
         public SwapChain1(Factory2 factory, ComObject device, ref SwapChainDescription1 description, Output restrictToOutput = null)
             : base(IntPtr.Zero)
         {
-            factory.CreateSwapChainForComposition(device, ref description, restrictToOutput, this);
+            factory.CreateSwapChainForComposition_(device.NativePointer, ref description, restrictToOutput, this);
         }
 
         /// <summary>	

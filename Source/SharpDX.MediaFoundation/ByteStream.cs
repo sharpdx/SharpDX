@@ -52,8 +52,7 @@ namespace SharpDX.MediaFoundation
             this.sourceStream = sourceStream;
 #if STORE_APP
             var randomAccessStream = sourceStream.AsRandomAccessStream();
-            randomAccessStreamCom = new ComObject(Marshal.GetIUnknownForObject(randomAccessStream));
-            MediaFactory.CreateMFByteStreamOnStreamEx(randomAccessStreamCom, this);
+            MediaFactory.CreateMFByteStreamOnStreamEx(Marshal.GetIUnknownForObject(randomAccessStream), this);
 #else
             streamProxy = new ComStreamProxy(sourceStream);
             IByteStream localStream;
@@ -82,8 +81,7 @@ namespace SharpDX.MediaFoundation
         public ByteStream(IRandomAccessStream sourceStream)
         {
             var randomAccessStream = sourceStream;
-            randomAccessStreamCom = new ComObject(Marshal.GetIUnknownForObject(randomAccessStream));
-            MediaFactory.CreateMFByteStreamOnStreamEx(randomAccessStreamCom, this);
+            MediaFactory.CreateMFByteStreamOnStreamEx(Marshal.GetIUnknownForObject(randomAccessStream), this);
         }
 #endif
 

@@ -83,12 +83,11 @@ namespace SharpDX.MediaFoundation
         /// <msdn-id>bb970500</msdn-id>	
         /// <unmanaged>HRESULT IMFAsyncResult::GetObjectW([Out] IUnknown** ppObject)</unmanaged>	
         /// <unmanaged-short>IMFAsyncResult::GetObjectW</unmanaged-short>	
-        public ComObject PrivateObject
+        public IUnknown PrivateObject
         {
             get
             {
-                ComObject privateObject;
-                GetObject(out privateObject);
+                GetObject(out IUnknown privateObject);
                 return privateObject;
             }
         }
