@@ -133,7 +133,7 @@ namespace SharpDX.XAudio2
 
             engineCallbackImpl = new EngineCallbackImpl(this);
             engineShadowPtr = EngineShadow.ToIntPtr(engineCallbackImpl);
-            RegisterForCallbacks_(engineShadowPtr);
+            RegisterForCallbacks(engineCallbackImpl);
         }
 
         /// <summary>
@@ -154,9 +154,9 @@ namespace SharpDX.XAudio2
         /// </summary>
         private void SetupVtblFor27()
         {
-            RegisterForCallbacks___vtbl_index += 3;
-            UnregisterForCallbacks___vtbl_index += 3;
-            CreateSourceVoice___vtbl_index += 3;
+            RegisterForCallbacks__vtbl_index += 3;
+            UnregisterForCallbacks__vtbl_index += 3;
+            CreateSourceVoice__vtbl_index += 3;
             CreateSubmixVoice__vtbl_index += 3;
             CreateMasteringVoice__vtbl_index += 3;
             StartEngine__vtbl_index += 3;
@@ -335,8 +335,8 @@ namespace SharpDX.XAudio2
 
         protected override void Dispose(bool disposing)
         {
-            if (engineShadowPtr != IntPtr.Zero)
-                UnregisterForCallbacks_(engineShadowPtr);
+            if (engineCallbackImpl != null)
+                UnregisterForCallbacks(engineCallbackImpl);
 
             if (disposing)
             {

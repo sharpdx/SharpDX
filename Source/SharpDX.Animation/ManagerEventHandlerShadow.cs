@@ -29,8 +29,6 @@ namespace SharpDX.Animation
     {
         private static readonly ManagerEventHandlerVtbl Vtbl = new ManagerEventHandlerVtbl();
 
-        public Manager.StatusChangedDelegate Delegates;
-
         /// <summary>
         /// Return a pointer to the unmanaged version of this callback.
         /// </summary>
@@ -70,29 +68,6 @@ namespace SharpDX.Animation
         protected override CppObjectVtbl GetVtbl
         {
             get { return Vtbl; }
-        }
-
-        public IDisposable Shadow { get; set; }
-
-        public void OnManagerStatusChanged(ManagerStatus newStatus, ManagerStatus previousStatus)
-        {
-            if (Delegates != null)
-                Delegates(newStatus, previousStatus);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            // Release the shadow
-            if (disposing)
-            {
-                if (Shadow != null)
-                {
-                    Shadow.Dispose();
-                    Shadow = null;
-                }
-            }
-
-            base.Dispose(disposing);
         }
     }
 }

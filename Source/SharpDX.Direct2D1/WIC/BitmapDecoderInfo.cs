@@ -45,16 +45,5 @@ namespace SharpDX.WIC
                 return temp;
             }
         }
-
-        /// <summary>
-        /// Retrieves a value that indicates whether the codec recognizes the pattern within a specified stream.
-        /// </summary>
-        /// <param name="stream">The stream to pattern match within.</param>
-        /// <returns><c>true</c> if the patterns match; otherwise, <c>false</c>.</returns>
-        /// <unmanaged>HRESULT IWICBitmapDecoderInfo::MatchesPattern([In, Optional] IStream* pIStream,[Out] BOOL* pfMatches)</unmanaged>
-        public bool MatchesPattern(IStream stream)
-        {
-            return MatchesPattern_(ComStream.ToIntPtr(stream));
-        }
     }
 }

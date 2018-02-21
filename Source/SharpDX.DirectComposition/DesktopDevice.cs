@@ -17,7 +17,7 @@ namespace SharpDX.DirectComposition
 			: base(IntPtr.Zero)
 		{
 			IntPtr temp;
-			DComp.CreateDevice2(renderingDevice?.NativePointer ?? IntPtr.Zero, Utilities.GetGuidFromType(typeof(DesktopDevice)), out temp);
+			DComp.CreateDevice2(renderingDevice, Utilities.GetGuidFromType(typeof(DesktopDevice)), out temp);
 			NativePointer = temp;
 		}
 

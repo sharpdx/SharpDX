@@ -91,25 +91,6 @@ namespace SharpDX.MediaFoundation
         }
 
         /// <summary>	
-        /// <p><strong>Applies to: </strong>desktop apps only</p><p> </p><p>Creates an activation object for the sample grabber media sink.</p>	
-        /// </summary>	
-        /// <param name="iMFMediaTypeRef"><dd> <p> Pointer to the <strong><see cref="SharpDX.MediaFoundation.MediaType"/></strong> interface, defining the media type for the sample grabber's input stream. </p> </dd></param>	
-        /// <param name="iMFSampleGrabberSinkCallbackRef"><dd> <p> Pointer to the <strong><see cref="SharpDX.MediaFoundation.SampleGrabberSinkCallback"/></strong> interface of a callback object. The caller must implement this interface. </p> </dd></param>	
-        /// <param name="iActivateOut"><dd> <p> Receives a reference to the <strong><see cref="SharpDX.MediaFoundation.Activate"/></strong> interface. Use this interface to complete the creation of the sample grabber. The caller must release the interface. </p> </dd></param>	
-        /// <returns><p>If this function succeeds, it returns <strong><see cref="SharpDX.Result.Ok"/></strong>. Otherwise, it returns an <strong><see cref="SharpDX.Result"/></strong> error code.</p></returns>	
-        /// <remarks>	
-        /// <p>To create the sample grabber sink, call <strong><see cref="SharpDX.MediaFoundation.Activate.ActivateObject"/></strong> on the reference received in the <em>ppIActivate</em> parameter.</p><p>Before calling <strong>ActivateObject</strong>, you can configure the sample grabber by setting any of the following attributes on the <em>ppIActivate</em> reference:</p><ul> <li> <see cref="SharpDX.MediaFoundation.SampleGrabberSinkAttributeKeys.IgnoreClock"/> </li> <li> <strong><see cref="SharpDX.MediaFoundation.SampleGrabberSinkAttributeKeys.SampleTimeOffset"/></strong> </li> </ul>	
-        /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='MFCreateSampleGrabberSinkActivate']/*"/>	
-        /// <msdn-id>ms702068</msdn-id>	
-        /// <unmanaged>HRESULT MFCreateSampleGrabberSinkActivate([In] IMFMediaType* pIMFMediaType,[In] IMFSampleGrabberSinkCallback* pIMFSampleGrabberSinkCallback,[Out] IMFActivate** ppIActivate)</unmanaged>	
-        /// <unmanaged-short>MFCreateSampleGrabberSinkActivate</unmanaged-short>	
-        public static void CreateSampleGrabberSinkActivate(MediaType mediaType, SampleGrabberSinkCallback callback, out Activate activate)
-        {
-            MediaFactory.CreateSampleGrabberSinkActivate(mediaType, SampleGrabberSinkCallbackShadow.ToIntPtr(callback), out activate);
-        }
-
-        /// <summary>	
         /// <p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p> Copies an image or image plane from one buffer to another. </p>	
         /// </summary>	
         /// <param name="destRef"><dd> <p> Pointer to the start of the first row of pixels in the destination buffer. </p> </dd></param>	

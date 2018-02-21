@@ -761,6 +761,7 @@
     <map method="IMFMediaEngineClassFactory::Create.*" visibility="internal"/>
     <map param="IMFMediaEngineClassFactory::Create.*::pp.*" attribute="fast out"/>
     <map method="IMFCaptureEngineClassFactory::Create.*" visibility="internal"/>
+    <map method="IMFCaptureEngine::Initialize" visibility="internal" />
 
     <map param="IMFMediaEngineClassFactory::CreateInstance::dwFlags" type="MF_MEDIA_ENGINE_CREATEFLAGS" name="flags"/>
 
@@ -873,6 +874,7 @@
     <map param="MFCreateAttributes::ppMFAttributes" attribute="out fast"/>
     <map param="MFCreateDXGIDeviceManager::ppDeviceManager" attribute="out fast"/>
     <map param="MFCreateMFByteStreamOnStreamEx::ppByteStream" attribute="out fast"/>
+    <map param="MFCreateMFByteStreamOnStream::ppByteStream" attribute="out fast"/>
 
     <map function="MFCreateSourceResolver" visibility="internal"/>
     <map param="MFCreateSourceResolver::ppISourceResolver" attribute="out fast"/>

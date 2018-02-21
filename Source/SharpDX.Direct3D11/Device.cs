@@ -693,13 +693,7 @@ namespace SharpDX.Direct3D11
             DeviceContext contextOut;
             FeatureLevel featurelevelOut;
 
-            var queuesArray = new IntPtr[commandQueues.Length];
-            for (int i = 0; i < commandQueues.Length; i++)
-            {
-                queuesArray[i] = commandQueues[i].NativePointer;
-            }
-
-            D3D11.On12CreateDevice(d3D12Device.NativePointer, flags, featureLevels, featureLevels == null ? 0 : featureLevels.Length, queuesArray, queuesArray.Length, 0, out devOut, out contextOut, out featurelevelOut);
+            D3D11.On12CreateDevice(d3D12Device, flags, featureLevels, featureLevels == null ? 0 : featureLevels.Length, commandQueues, commandQueues.Length, 0, out devOut, out contextOut, out featurelevelOut);
             contextOut.Dispose();
             return devOut;
         }

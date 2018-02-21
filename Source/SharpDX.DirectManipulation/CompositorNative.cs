@@ -40,7 +40,7 @@ namespace SharpDX.DirectManipulation
 		/// <unmanaged-short>IDirectManipulationCompositor::AddContent</unmanaged-short>	
 		public void AddContent(SharpDX.DirectManipulation.Content content, SharpDX.ComObject device, SharpDX.ComObject arentVisualRef, SharpDX.ComObject childVisual)
 		{
-			AddContent_(content, device.NativePointer, arentVisualRef.NativePointer, childVisual.NativePointer);
+			AddContent(content, (SharpDX.IUnknown)device, (SharpDX.IUnknown)arentVisualRef, (SharpDX.IUnknown)childVisual);
 		}
 	}
 }

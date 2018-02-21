@@ -32,16 +32,5 @@ namespace SharpDX.Direct2D1
         {
             factory.CreatePathGeometry(this);
         }
-
-        /// <summary>	
-        /// Copies the contents of the path geometry to the specified <see cref="SharpDX.Direct2D1.GeometrySink"/>.	
-        /// </summary>	
-        /// <param name="geometrySink">The sink to which the path geometry's contents are copied. Modifying this sink does not change the contents of this path geometry.</param>
-        /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
-        /// <unmanaged>HRESULT Stream([In] ID2D1GeometrySink* geometrySink)</unmanaged>
-        public void Stream(GeometrySink geometrySink)
-        {
-            this.Stream_(GeometrySinkShadow.ToIntPtr(geometrySink));
-        }
     }
 }

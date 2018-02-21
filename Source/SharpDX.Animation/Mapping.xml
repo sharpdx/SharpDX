@@ -108,11 +108,11 @@
 
     <!-- Don't generate properties for event handler setter -->
     <map interface=".*Handler2?" callback="true" visibility="internal"/>
-    <map method=".*::Set.*Handler" property="false"/>
+    <map method=".*::Set.*Handler" property="false" visibility="internal" />
     
     <!-- Callback for Priority Comparison -->
     <map interface="IUIAnimationPriorityComparison" callback="true" visibility="internal"/>
-    <map method="IUIAnimationManager::Set.*Comparison" property="false"/>
+    <map method="IUIAnimationManager::Set.*Comparison" property="false" visibility="internal" />
 
     <!-- IUIAnimationStoryboard -->
     <map param="IUIAnimationStoryboard::AddKeyframeAtOffset::keyframe" return="true"/>
@@ -123,6 +123,9 @@
     <map method="IUIAnimationStoryboard::GetTag" visibility="internal"/>
     <map param="IUIAnimationStoryboard::SetTag::object" type="void"/>
     <map param="IUIAnimationStoryboard::GetTag::object" type="void"/>
+
+    <!-- IUIAnimationStoryboard2 -->
+    <map method="IUIAnimationStoryboard2::RepeatBetweenKeyframes" visibility="internal" />
 
     <!-- IUIAnimationTransitionLibrary -->
     <map method="IUIAnimationTransitionLibrary::Create(.*)Transition" name="$1"/>

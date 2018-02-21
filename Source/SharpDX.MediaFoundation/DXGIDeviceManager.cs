@@ -51,7 +51,7 @@ namespace SharpDX.MediaFoundation
         /// <unmanaged-short>IMFDXGIDeviceManager::ResetDevice</unmanaged-short>	
         public void ResetDevice(ComObject direct3D11Device)
         {
-            this.ResetDevice_(direct3D11Device.NativePointer, ResetToken);
+            this.ResetDevice(direct3D11Device, ResetToken);
         }
 
         /// <summary>	

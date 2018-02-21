@@ -261,7 +261,7 @@ namespace SharpDX.Win32
                     var shadow = ToShadow<ComStreamShadow>(thisPtr);
                     var callback = ((IStream)shadow.Callback);
                     var clone = callback.Clone();
-                    streamPointer = ComStream.ToIntPtr(clone);
+                    streamPointer = ComStreamShadow.ToIntPtr(clone);
                 }
                 catch (SharpDXException exception)
                 {

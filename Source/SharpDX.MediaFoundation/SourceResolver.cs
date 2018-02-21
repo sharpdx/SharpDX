@@ -163,7 +163,7 @@ namespace SharpDX.MediaFoundation
             out SharpDX.MediaFoundation.ObjectType objectType)
         {
             IUnknown result;
-            CreateObjectFromByteStream_(stream.NativePointer,
+            CreateObjectFromByteStream(stream,
                 url,
                 (int)(flags | SourceResolverFlags.MediaSource),
                 propertyStore,

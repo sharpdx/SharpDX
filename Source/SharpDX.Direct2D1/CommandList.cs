@@ -31,23 +31,5 @@ namespace SharpDX.Direct2D1
         {
             deviceContext.CreateCommandList(this);
         }
-
-        /// <summary>
-        /// Streams the contents of the command list to the specified command sink. 
-        /// </summary>
-        /// <param name="sink">The sink into which the command list will be streamed.</param>
-        public void Stream(CommandSink sink)
-        {
-            Stream_(CommandSinkShadow.ToIntPtr(sink));
-        }
-
-        /// <summary>
-        /// Streams the contents of the command list to the specified command sink. 
-        /// </summary>
-        /// <param name="sink">The sink into which the command list will be streamed.</param>
-        public void Stream(CommandSink1 sink)
-        {
-            Stream_(CommandSink1Shadow.ToIntPtr(sink));
-        }
     }
 }

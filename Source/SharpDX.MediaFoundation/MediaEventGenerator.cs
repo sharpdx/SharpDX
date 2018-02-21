@@ -56,7 +56,7 @@ namespace SharpDX.MediaFoundation
         /// <unmanaged-short>IMFMediaEventGenerator::BeginGetEvent</unmanaged-short>	
         public void BeginGetEvent(IAsyncCallback callback, object stateObject)
         {
-            BeginGetEvent_(AsyncCallbackShadow.ToIntPtr(callback), stateObject == null ? IntPtr.Zero : Marshal.GetIUnknownForObject(stateObject));
+            BeginGetEvent(callback, stateObject == null ? IntPtr.Zero : Marshal.GetIUnknownForObject(stateObject));
         }
     }
 }

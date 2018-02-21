@@ -112,7 +112,7 @@ namespace SharpDX.DirectWrite
             var handle = GCHandle.Alloc(clientDrawingContext);
             try
             {
-                this.Draw_(GCHandle.ToIntPtr(handle), TextRendererShadow.ToIntPtr(renderer), originX, originY);
+                this.Draw(GCHandle.ToIntPtr(handle), renderer, originX, originY);
             }
             finally
             {
@@ -414,22 +414,6 @@ namespace SharpDX.DirectWrite
                                  out actualHitTestMetricsCount);
             }
             return hitTestMetrics;
-        }
-
-
-        /// <summary>	
-        /// Sets the inline object. 	
-        /// </summary>	
-        /// <remarks>	
-        /// The application may call this function to specify the set of properties describing an application-defined inline object for specific range.  This inline object applies to the specified range and will be passed back to the application by way of the DrawInlineObject callback when the range is drawn. Any text in that range will be suppressed.  	
-        /// </remarks>	
-        /// <param name="inlineObject">An application-defined inline object.  </param>
-        /// <param name="textRange">Text range to which this change applies. </param>
-        /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
-        /// <unmanaged>HRESULT IDWriteTextLayout::SetInlineObject([None] IDWriteInlineObject* inlineObject,[None] DWRITE_TEXT_RANGE textRange)</unmanaged>
-        public void SetInlineObject(InlineObject inlineObject, SharpDX.DirectWrite.TextRange textRange)
-        {
-            SetInlineObject_(InlineObjectShadow.ToIntPtr(inlineObject), textRange);
         }
     }
 }

@@ -52,12 +52,10 @@ namespace SharpDX.MediaFoundation
             this.sourceStream = sourceStream;
 #if STORE_APP
             var randomAccessStream = sourceStream.AsRandomAccessStream();
-            MediaFactory.CreateMFByteStreamOnStreamEx(Marshal.GetIUnknownForObject(randomAccessStream), this);
+            MediaFactory.CreateMFByteStreamOnStreamEx(new ComObject(Marshal.GetIUnknownForObject(randomAccessStream)), this);
 #else
             streamProxy = new ComStreamProxy(sourceStream);
-            IByteStream localStream;
-            MediaFactory.CreateMFByteStreamOnStream(ComStream.ToIntPtr(streamProxy), out localStream);
-            NativePointer = ((ByteStream) localStream).NativePointer;
+            MediaFactory.CreateMFByteStreamOnStream(streamProxy, this);
 #endif
         }
 
@@ -81,7 +79,7 @@ namespace SharpDX.MediaFoundation
         public ByteStream(IRandomAccessStream sourceStream)
         {
             var randomAccessStream = sourceStream;
-            MediaFactory.CreateMFByteStreamOnStreamEx(Marshal.GetIUnknownForObject(randomAccessStream), this);
+            MediaFactory.CreateMFByteStreamOnStreamEx(new ComObject(Marshal.GetIUnknownForObject(randomAccessStream)), this);
         }
 #endif
 
@@ -95,9 +93,7 @@ namespace SharpDX.MediaFoundation
         public ByteStream(ComStream sourceStream)
         {
             this.comStream = sourceStream;
-            IByteStream localStream;
-            MediaFactory.CreateMFByteStreamOnStream(sourceStream.NativePointer, out localStream);
-            NativePointer = ((ByteStream)localStream).NativePointer;
+            MediaFactory.CreateMFByteStreamOnStream(sourceStream, this);
         }
 #endif
         /// <summary>	
@@ -221,7 +217,7 @@ namespace SharpDX.MediaFoundation
         public unsafe void BeginRead(byte[] bRef, int offset, int count, SharpDX.MediaFoundation.IAsyncCallback callbackRef, object context)
         {
             fixed (void* ptr = &bRef[offset])
-                BeginRead__((System.IntPtr) ptr, count, AsyncCallbackShadow.ToIntPtr(callbackRef), context != null ? Marshal.GetIUnknownForObject(context) : IntPtr.Zero);
+                BeginRead_((System.IntPtr) ptr, count, callbackRef, context != null ? Marshal.GetIUnknownForObject(context) : IntPtr.Zero);
         }
 
         /// <summary>	
@@ -281,7 +277,7 @@ namespace SharpDX.MediaFoundation
         public unsafe void BeginWrite(byte[] bRef, int offset, int count, SharpDX.MediaFoundation.IAsyncCallback callbackRef, object context)
         {
             fixed (void* ptr = &bRef[offset])
-                BeginWrite__((System.IntPtr)ptr, count, AsyncCallbackShadow.ToIntPtr(callbackRef), context != null ? Marshal.GetIUnknownForObject(context) : IntPtr.Zero);
+                BeginWrite_((System.IntPtr)ptr, count, callbackRef, context != null ? Marshal.GetIUnknownForObject(context) : IntPtr.Zero);
         }
 
         /// <summary>	

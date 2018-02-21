@@ -42,7 +42,7 @@ namespace SharpDX.DirectWrite
             IntPtr clientDrawingEffectPtr = Utilities.GetIUnknownForObject(clientDrawingEffect);
             try
             {
-                this.Draw__(GCHandle.ToIntPtr(handle), TextRendererShadow.ToIntPtr(renderer), originX, originY, isSideways, isRightToLeft,
+                this.Draw_(GCHandle.ToIntPtr(handle), renderer, originX, originY, isSideways, isRightToLeft,
                             clientDrawingEffectPtr);
             } finally
             {

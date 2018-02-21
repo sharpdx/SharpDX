@@ -52,7 +52,7 @@ namespace SharpDX.DXGI
                 if (callback == null)
                 {
                     callback = new VirtualSurfaceUpdatesCallbackNativeCallback(this);
-                    RegisterForUpdatesNeeded_(VirtualSurfaceUpdatesCallbackNativeShadow.ToIntPtr(callback));
+                    RegisterForUpdatesNeeded(callback);
                 }
 
                 updatesNeeded = (EventHandler<EventArgs>)Delegate.Combine(updatesNeeded, value);

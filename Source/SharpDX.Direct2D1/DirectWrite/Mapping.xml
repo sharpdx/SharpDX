@@ -110,6 +110,7 @@
     <map param="IDWriteFactory::CreateTextAnalyzer::textAnalyzer" attribute="out fast"/>
     <map param="IDWriteFactory::CreateNumberSubstitution::numberSubstitution" attribute="out fast"/>
     <map param="IDWriteFactory::CreateGlyphRunAnalysis::glyphRunAnalysis" attribute="out fast"/>
+    <map method="IDWriteFactory::((Unr|R)egisterFont(File|Collection)Loader)" visibility="internal" name="$1_" />
 
 
     <map param="IDWriteFactory::GetSystemFontCollection::fontCollection" return="true" />

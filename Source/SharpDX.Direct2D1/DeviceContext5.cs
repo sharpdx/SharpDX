@@ -49,7 +49,7 @@ namespace SharpDX.Direct2D1
         public SvgDocument CreateSvgDocument(IStream stream, SharpDX.Size2F viewportSize)
         {
             SvgDocument result;
-            CreateSvgDocument_(ComStream.ToIntPtr(stream), viewportSize, out result);
+            CreateSvgDocument(stream, viewportSize, out result);
             return result;
         }
     }

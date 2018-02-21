@@ -46,8 +46,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SharpGenTools.Sdk" Version="1.0.0-ci242" PrivateAssets="All" />
-    <PackageReference Include="SharpGen.Doc.Msdn.Tasks" Version="1.0.0-ci242" PrivateAssets="All" />
+    <PackageReference Include="SharpGenTools.Sdk" Version="1.0.0-ci244" PrivateAssets="All" />
+    <PackageReference Include="SharpGen.Doc.Msdn.Tasks" Version="1.0.0-ci244" PrivateAssets="All" />
     <SharpGenGlobalNamespaceOverrides Include="InterfaceArray" Override="ComArray" />
     <SharpGenGlobalNamespaceOverrides Include="MemoryHelpers"  Override="Utilities" />
     <SharpGenGlobalNamespaceOverrides Include="BooleanHelpers" Override="Utilities" />

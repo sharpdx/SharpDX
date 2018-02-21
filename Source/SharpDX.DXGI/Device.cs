@@ -36,12 +36,7 @@ namespace SharpDX.DXGI
         {
             int numResources = comObjects.Length;
             var residencies = new Residency[numResources];
-            var array = new IntPtr[numResources];
-            for (int i = 0; i < numResources; i++)
-            {
-                array[i] = comObjects[i].NativePointer;
-            }
-            QueryResourceResidency_(array, residencies, numResources);
+            QueryResourceResidency(comObjects, residencies, numResources);
             return residencies;
         }
     }

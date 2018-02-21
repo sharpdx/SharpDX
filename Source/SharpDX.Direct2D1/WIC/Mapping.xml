@@ -189,6 +189,7 @@
     <map interface="IWICBitmapCodecProgressNotification" visibility="internal"/>
 
     <!--IWICBitmapDecoder -->
+    <map method="IWICBitmapDecoder::Initialize" visibility="internal" name="Initialize_" />
     <map method="IWICBitmapDecoder::GetColorContexts" visibility="internal" check="false"/>
     <map param="IWICBitmapDecoder::GetColorContexts::ppIColorContexts" attribute="inout buffer optional"/>
 
@@ -208,6 +209,7 @@
     <map param="IWICBitmapDecoderInfo::GetPatterns::pcPatterns" name="patternCount" />
 
     <!--IWICBitmapEncoder -->
+    <map method="IWICBitmapEncoder::Initialize" visibility="internal" />
     <map method="IWICBitmapEncoder::SetColorContexts" visibility="internal"/>
     <map method="IWICBitmapEncoder::CreateNewFrame" visibility="internal"/>
     <map param="IWICBitmapEncoder::CreateNewFrame::.*" attribute="out fast"/>

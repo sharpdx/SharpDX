@@ -229,6 +229,7 @@
     <map method="IXAudio2Voice::SetOutputVoices" visibility="internal" />
     <map method="IXAudio2Voice::GetEffectParameters" visibility="internal" />
     <map method="IXAudio2Voice::SetEffectParameters" visibility="internal" />    
+    <map method="IXAudio2::(Unr|R)egisterForCallbacks" visibility="internal" />
     
     <map method="IXAudio2Voice::GetEffectState" name="IsEffectEnabled"/>
     <map param="pEnabled" return="true" />
