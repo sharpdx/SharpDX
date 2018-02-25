@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\Build\SharpDX.props" />
+  
   <PropertyGroup>
     <TargetFrameworks>net40;net45;netstandard1.1;uap10.0</TargetFrameworks>
     <PackageId>SharpDX.Direct3D10</PackageId>
@@ -9,6 +9,7 @@
     <Title>SharpDX.Direct3D10</Title>
     <Description>Assembly providing DirectX - Direct3D10 and Direct3D10.1 managed API.</Description>
     <PackageTags>$(PackageTags) Direct3D10 D3D10</PackageTags>
+    <SharpDXLegacy>true</SharpDXLegacy>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />
@@ -23,5 +24,5 @@
     <ProjectReference Include="..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj" />
   </ItemGroup>
 
-  <Import Project="..\..\Build\SharpDX.targets" />
+  <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 </Project>

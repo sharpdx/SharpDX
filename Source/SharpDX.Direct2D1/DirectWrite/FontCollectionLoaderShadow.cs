@@ -32,17 +32,16 @@ namespace SharpDX.DirectWrite
 
         private Factory _factory;
 
-        public static IntPtr ToIntPtr(FontCollectionLoader fontFileEnumerator)
+        public static IntPtr ToIntPtr(FontCollectionLoader loader)
         {
-            return ToCallbackPtr<FontCollectionLoader>(fontFileEnumerator);
+            return ToCallbackPtr<FontCollectionLoader>(loader);
         }
-
-        public static IntPtr ToIntPtr(Factory factory, FontCollectionLoader fontFileEnumerator)
+        
+        public static void SetFactory(FontCollectionLoader loader, Factory factory)
         {
-            var shadowPtr = ToIntPtr(fontFileEnumerator);
+            var shadowPtr = ToIntPtr(loader);
             var shadow = ToShadow<FontCollectionLoaderShadow>(shadowPtr);
             shadow._factory = factory;
-            return shadowPtr;
         }
 
         private class FontCollectionLoaderVtbl : ComObjectVtbl

@@ -62,7 +62,7 @@ namespace SharpDX.MediaFoundation
         public SourceReader(byte[] buffer, MediaAttributes attributes = null)
         {
             byteStream = new ByteStream(new MemoryStream(buffer));
-            MediaFactory.CreateSourceReaderFromByteStream(byteStream.NativePointer, attributes, this);
+            MediaFactory.CreateSourceReaderFromByteStream(byteStream, attributes, this);
         }
 
         /// <summary>	
@@ -82,7 +82,7 @@ namespace SharpDX.MediaFoundation
 
             int capabilities = byteStream.Capabilities;
 
-            MediaFactory.CreateSourceReaderFromByteStream(byteStream.NativePointer, attributes, this);
+            MediaFactory.CreateSourceReaderFromByteStream(byteStream, attributes, this);
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace SharpDX.MediaFoundation
         public SourceReader(IRandomAccessStream buffer, MediaAttributes attributes = null)
         {
             byteStream = new ByteStream(buffer);
-            MediaFactory.CreateSourceReaderFromByteStream(byteStream.NativePointer, attributes, this);
+            MediaFactory.CreateSourceReaderFromByteStream(byteStream, attributes, this);
         }
 #endif
 
@@ -134,7 +134,7 @@ namespace SharpDX.MediaFoundation
         public SourceReader(SharpDX.Win32.ComStream comStream, MediaAttributes attributes = null)
         {
             byteStream = new ByteStream(comStream);
-            MediaFactory.CreateSourceReaderFromByteStream(byteStream.NativePointer, attributes, this);
+            MediaFactory.CreateSourceReaderFromByteStream(byteStream, attributes, this);
         }
 #endif
 

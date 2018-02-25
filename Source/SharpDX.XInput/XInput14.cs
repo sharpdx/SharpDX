@@ -27,7 +27,7 @@ namespace SharpDX.XInput
     {
         public int XInputSetState(int dwUserIndex, Vibration vibrationRef)
         {
-            return XInput.XInputSetState(dwUserIndex, vibrationRef);
+            return XInput.XInputSetState(dwUserIndex, ref vibrationRef);
         }
 
         public int XInputGetState(int dwUserIndex, out State stateRef)

@@ -135,19 +135,5 @@ namespace SharpDX.DirectWrite
                 }
             }
         }
-
-        /// <summary>	
-        /// <p> Sets trimming options for text overflowing the layout width. </p>	
-        /// </summary>	
-        /// <param name="trimmingOptions"><dd> <p>Text trimming options.</p> </dd></param>	
-        /// <param name="trimmingSign"><dd> <p>Application-defined omission sign. This parameter may be <strong><c>null</c></strong>. See <strong><see cref="SharpDX.DirectWrite.InlineObject"/></strong> for more information.</p> </dd></param>	
-        /// <returns><p>If this method succeeds, it returns <strong><see cref="SharpDX.Result.Ok"/></strong>. Otherwise, it returns an <strong><see cref="SharpDX.Result"/></strong> error code.</p></returns>	
-        /// <msdn-id>dd316712</msdn-id>	
-        /// <unmanaged>HRESULT IDWriteTextFormat::SetTrimming([In] const DWRITE_TRIMMING* trimmingOptions,[In] IDWriteInlineObject* trimmingSign)</unmanaged>	
-        /// <unmanaged-short>IDWriteTextFormat::SetTrimming</unmanaged-short>	
-        public void SetTrimming(SharpDX.DirectWrite.Trimming trimmingOptions, InlineObject trimmingSign)
-        {
-            SetTrimming_(trimmingOptions, InlineObjectShadow.ToIntPtr(trimmingSign));
-        }
     }
 }

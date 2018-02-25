@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\Build\SharpDX.props" />
+  
   <PropertyGroup>
     <TargetFrameworks>net40;net45;netstandard1.3</TargetFrameworks>
     <PackageId>SharpDX.DirectSound</PackageId>
@@ -9,6 +9,7 @@
     <Title>SharpDX.DirectSound</Title>
     <Description>Assembly providing DirectX - DirectSound managed API.</Description>
     <PackageTags>$(PackageTags) DirectSound DSound</PackageTags>
+    <SharpDXLegacy>true</SharpDXLegacy>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' OR  '$(TargetFramework)' == 'netcoreapp1.0' ">
     <DefineConstants>$(DefineConstants);DESKTOP_APP</DefineConstants>
@@ -29,5 +30,5 @@
     <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
   </ItemGroup>
 
-  <Import Project="..\..\Build\SharpDX.targets" />
+  
 </Project>

@@ -59,7 +59,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::CreateCustomFontFileReference([In, Buffer] const void* fontFileReferenceKey,[None] int fontFileReferenceKeySize,[None] IDWriteFontFileLoader* fontFileLoader,[Out] IDWriteFontFile** fontFile)</unmanaged>
         public FontFile(Factory factory, IntPtr fontFileReferenceKey, int fontFileReferenceKeySize, FontFileLoader fontFileLoader)
         {
-            factory.CreateCustomFontFileReference_(fontFileReferenceKey, fontFileReferenceKeySize, FontFileLoaderShadow.ToIntPtr(fontFileLoader), this);
+            factory.CreateCustomFontFileReference(fontFileReferenceKey, fontFileReferenceKeySize, fontFileLoader, this);
         }
 
         /// <summary>	

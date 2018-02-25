@@ -179,7 +179,7 @@
 
     <map struct="D3D12_COMMAND_SIGNATURE" name="CommandSignatureDescription"/>
     
-    <map field="D3D12_CLEAR_VALUE::Color" type="SHARPDX_VECTOR4" array="" />
+    <map field="D3D12_CLEAR_VALUE::Color" type="SHARPDX_VECTOR4" array="" override-native-type="true" />
     
     <!-- Inner argument description structs have no name, so we specify it manually -->
     <map struct="D3D12_INDIRECT_ARGUMENT_DESC_INNER_0_INNER_0" name="VertexBufferArgument"/>

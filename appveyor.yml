@@ -22,7 +22,7 @@ install:
            $env:SharpDXPackagingDev = 'true'
         }
     }
-build_script: build\build.cmd
+build_script: build.cmd
 test: off
 artifacts:
 - path: build\SharpDX-SDK-*.exe

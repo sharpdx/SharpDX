@@ -38,8 +38,7 @@ namespace SharpDX.MediaFoundation
             var bstrUrl = Utilities.StringToHGlobalUni(url);
             try
             {
-                //var urlBstr = Marshal.StringToBSTR(url);
-                SetSourceFromByteStream_(byteStream.NativePointer, bstrUrl);
+                SetSourceFromByteStream(byteStream, bstrUrl);
             } finally
             {
                 Marshal.FreeHGlobal(bstrUrl);

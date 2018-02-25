@@ -126,7 +126,7 @@ namespace SharpDX.WIC
         {
             if (this.internalWICStream != null)
                 throw new InvalidOperationException("This instance is already initialized with an existing stream");
-            Initialize_(ComStream.ToIntPtr(stream), SharpDX.WIC.BitmapEncoderCacheOption.NoCache);
+            Initialize(stream, SharpDX.WIC.BitmapEncoderCacheOption.NoCache);
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace SharpDX.WIC
             if (this.internalWICStream != null)
                 throw new InvalidOperationException("This instance is already initialized with an existing stream");
             this.internalWICStream = new WICStream(factory, stream);
-            Initialize_(this.internalWICStream.NativePointer, SharpDX.WIC.BitmapEncoderCacheOption.NoCache);
+            Initialize(this.internalWICStream, SharpDX.WIC.BitmapEncoderCacheOption.NoCache);
         }
 
         /// <summary>

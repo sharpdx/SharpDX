@@ -245,7 +245,7 @@
     // *****************************************************************
     -->
     <map struct="D2D1(.*)" name-tmp="$1" />
-    <map field="D2D1_BLEND_DESCRIPTION::blendFactor" type="SHARPDX_COLOR4" array="0"/>
+    <map field="D2D1_BLEND_DESCRIPTION::blendFactor" type="SHARPDX_COLOR4" override-native-type="true" array="0"/>
     <map struct="D2D1_BITMAP_PROPERTIES1" struct-to-class="true"/>
     <map field="D2D1_BITMAP_PROPERTIES1::colorContext" name="ColorContextPointer" visibility="internal"/>
 
@@ -357,7 +357,7 @@
 
     <map method="ID2D1Geometry::CombineWithGeometry" name="Combine" />
     <map method="ID2D1Geometry::CompareWithGeometry" name="Compare" />
-    <map param="relation" return="true" />
+    <map param="ID2D1Geometry::CompareWithGeometry::relation" return="true" />
     <map param="ID2D1Geometry::ComputeArea::area" return="true" />
     <map param="ID2D1Geometry::ComputeLength::length" return="true" />
     <map param="ID2D1Geometry::ComputePointAtLength::point" return="true" />
@@ -411,6 +411,7 @@
     <map method="ID2D1DeviceContext::GetEffectInvalidRectangles" visibility="internal"/>
     <map method="ID2D1DeviceContext::GetEffectRequiredInputRectangles" visibility="internal"/>
 
+    <map method="ID2D1Factory1::RegisterEffectFromStream" visibility="internal" />
     <map method="ID2D1Factory1::RegisterEffectFromString" visibility="internal"/>
     <map method="ID2D1Factory1::UnregisterEffect" visibility="internal"/>
 

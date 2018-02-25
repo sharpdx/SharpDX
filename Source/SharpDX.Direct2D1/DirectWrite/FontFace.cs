@@ -142,27 +142,5 @@ namespace SharpDX.DirectWrite
                 return exists;
             }
         }
-
-        /// <summary>	
-        /// Computes the outline of a run of glyphs by calling back to the outline sink interface. 	
-        /// </summary>	
-        /// <param name="emSize">The logical size of the font in DIP units. A DIP ("device-independent pixel") equals 1/96 inch. </param>
-        /// <param name="glyphIndices">An array of glyph indices. The glyphs are in logical order and the advance direction depends on the isRightToLeft parameter. The array must be allocated and be able to contain the number of elements specified by glyphCount. </param>
-        /// <param name="glyphAdvances">An optional array of glyph advances in DIPs. The advance of a glyph is the amount to advance the position (in the direction of the baseline) after drawing the glyph. glyphAdvances contains the number of elements specified by glyphIndices.Length. </param>
-        /// <param name="glyphOffsets">An optional array of glyph offsets, each of which specifies the offset along the baseline and offset perpendicular to the baseline of a glyph relative to the current pen position.   glyphOffsets contains the number of elements specified by glyphIndices.Length. </param>
-        /// <param name="isSideways">If TRUE, the ascender of the glyph runs alongside the baseline. If FALSE, the glyph ascender runs perpendicular to the baseline. For example, an English alphabet on a vertical baseline would have isSideways set to FALSE. A client can render a vertical run by setting isSideways to TRUE and rotating the resulting geometry 90 degrees to the right using a transform. The isSideways and isRightToLeft parameters cannot both be true. </param>
-        /// <param name="isRightToLeft">The visual order of the glyphs. If this parameter is FALSE, then glyph advances are from left to right. If TRUE, the advance direction is right to left. By default, the advance direction is left to right. </param>
-        /// <param name="geometrySink">A reference to the interface that is called back to perform outline drawing operations. </param>
-        /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
-        /// <unmanaged>HRESULT IDWriteFontFace::GetGlyphRunOutline([None] float emSize,[In, Buffer] const short* glyphIndices,[In, Buffer, Optional] const float* glyphAdvances,[In, Buffer, Optional] const DWRITE_GLYPH_OFFSET* glyphOffsets,[None] int glyphCount,[None] BOOL isSideways,[None] BOOL isRightToLeft,[None] IDWriteGeometrySink* geometrySink)</unmanaged>
-        public void GetGlyphRunOutline(float emSize, short[] glyphIndices, float[] glyphAdvances, GlyphOffset[] glyphOffsets, bool isSideways, bool isRightToLeft, SimplifiedGeometrySink geometrySink)
-        {
-            IntPtr ptr;
-            if ( geometrySink is GeometrySink)
-                ptr = GeometrySinkShadow.ToIntPtr((GeometrySink)geometrySink);
-            else
-                ptr = SimplifiedGeometrySinkShadow.ToIntPtr(geometrySink);
-            GetGlyphRunOutline_(emSize, glyphIndices, glyphAdvances, glyphOffsets, glyphIndices.Length, isSideways, isRightToLeft, ptr);
-        }
     }
 }

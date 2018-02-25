@@ -25,7 +25,7 @@ namespace SharpDX.MediaFoundation
         {
             set
             {
-                SetOutputByteStream_(value.NativePointer);
+                SetOutputByteStream(value);
             }
         }
 
@@ -45,7 +45,7 @@ namespace SharpDX.MediaFoundation
         {
             set
             {
-                SetSampleCallback_(CaptureEngineOnSampleCallbackShadow.ToIntPtr(value));
+                SetSampleCallback(value);
             }
         }
     }

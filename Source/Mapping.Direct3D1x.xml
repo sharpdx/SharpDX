@@ -156,7 +156,7 @@
     <map struct="D3D(\d+)_RASTERIZER_DESC1" name="RasterizerStateDescription1" />
     <map struct="D3D(\d+)_RASTERIZER_DESC2" name="RasterizerStateDescription2" />
     <map struct="D3D(\d+)_SAMPLER_DESC" name="SamplerStateDescription" />
-    <map field="D3D(\d+)_SAMPLER_DESC::BorderColor" type="SHARPDX_COLOR4" array="0" />
+    <map field="D3D(\d+)_SAMPLER_DESC::BorderColor" type="SHARPDX_COLOR4" override-native-type="true" array="0" />
     <map field="D3D(\d+)_SAMPLER_DESC::MaxAnisotropy" name="MaximumAnisotropy" />
     <map field="D3D(\d+)_SAMPLER_DESC::ComparisonFunc" name="ComparisonFunction" />
     <map field="D3D(\d+)_SAMPLER_DESC::MaxLOD" name="MaximumLod" />
@@ -258,7 +258,7 @@
     <map field="D3DX?(\d+)_PASS_DESC::(.*[^g])s" name="$2Count" />
     <map field="D3DX?(\d+)_PASS_DESC::pIAInputSignature" visibility="internal" />
     <map field="D3DX?(\d+)_PASS_DESC::IAInputSignatureSize" visibility="internal" />
-    <map field="D3DX?(\d+)_PASS_DESC::BlendFactor" type="SHARPDX_COLOR4" pointer="" array="0" />
+    <map field="D3DX?(\d+)_PASS_DESC::BlendFactor" type="SHARPDX_COLOR4" pointer="" array="0" override-native-type="true" />
     <map field="D3DX?(\d+)_PASS_DESC::StencilRef" name="StencilReference" />
     <map field="D3DX?(\d+)_PASS_SHADER_DESC::pShaderVariable" visibility="internal" />
     <map field="D3DX?(\d+)_PASS_SHADER_DESC::pShaderVariable" name="VariablePointer" />
@@ -305,11 +305,11 @@
     <remove struct="D3D10_INFO_QUEUE_FILTER" />
     <remove struct="D3D10_INFO_QUEUE_FILTER_DESC" />-->
     <map method="ID3D(\d+)InfoQueue::GetMessageW?" visibility="internal"/>
-    <map param="pMessage" type="void" attribute="in"/>
+    <map param="ID3D(\d+)InfoQueue::GetMessageW?::pMessage" type="void" attribute="in"/>
     <map method="ID3D(\d+)InfoQueue::GetStorageFilter" visibility="internal"/>
-    <map param="pFilter" type="void" attribute="in"/>
+    <map param="ID3D(\d+)InfoQueue::GetStorageFilter::pFilter" type="void" attribute="in"/>
     <map method="ID3D(\d+)InfoQueue::GetRetrievalFilter" visibility="internal"/>
-    <map param="pFilter" type="void" attribute="in"/>
+    <map param="ID3D(\d+)InfoQueue::GetRetrievalFilter::pFilter" type="void" attribute="in"/>
     
     <map method="ID3D(\d+)ClassInstance::GetInstanceName" visibility="internal" />
     <map method="ID3D(\d+)ClassInstance::GetTypeName" visibility="internal" />
@@ -318,7 +318,7 @@
     <map param="ID3D(\d+)Device::CheckFormatSupport::pFormatSupport" type="D3D$1_FORMAT_SUPPORT" return="true"/>
     <map param="ID3D(\d+)Device::CheckMultisampleQualityLevels::pNumQualityLevels" return="true" />
     <map method="ID3D(\d+)Device::CheckCounterInfo" property="false" check="false" name="GetCounterCapabilities" />
-    <map param="pCounterInfo" return="true" />
+    <map param="ID3D(\d+)Device::CheckCounterInfo::pCounterInfo" return="true" />
 
     <map method="ID3D10Device::GetCreationFlags" type="D3D10_CREATE_DEVICE_FLAG"/>
     <map method="ID3D11Device::GetCreationFlags" type="D3D11_CREATE_DEVICE_FLAG"/>
@@ -358,9 +358,9 @@
     
     <!-- Gives access to raw method-->
     <map method="ID3D(\d+)DeviceContext::IASetVertexBuffers"/>
-    <map param="ppVertexBuffers" type="void" pointer="*" array="0" />
-    <map param="pStrides" type="void" pointer="*" array="0" />
-    <map param="pOffsets" type="void" pointer="*" array="0" />
+    <map param="ID3D(\d+)DeviceContext::IASetVertexBuffers::ppVertexBuffers" type="void" pointer="*" array="0" />
+    <map param="ID3D(\d+)DeviceContext::IASetVertexBuffers::pStrides" type="void" pointer="*" array="0" />
+    <map param="ID3D(\d+)DeviceContext::IASetVertexBuffers::pOffsets" type="void" pointer="*" array="0" />
     <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetShader" visibility="internal override" />
     
     <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetShaderResources" visibility="internal override" />
@@ -435,7 +435,7 @@
     <map method="ID3DX?(\d+)EffectDepthStencilViewVariable::Get.*" visibility="internal" property="false" />
     <map method="ID3DX?(\d+)EffectDepthStencilViewVariable::Set.*" visibility="internal" property="false" />
     <map method="ID3DX?(\d+)EffectDepthStencilViewVariable::GetDepthStencil" visibility="public" />
-    <map param="ppResource" return="true" />
+    <map param="ID3DX?(\d+)EffectDepthStencilViewVariable::GetDepthStencil::ppResource" return="true" />
     <map method="ID3DX?(\d+)EffectDepthStencilViewVariable::SetDepthStencil" visibility="public" />
     <map param="ID3DX?(\d+)EffectDepthStencilViewVariable::GetDepthStencilArray::ppResources" attribute="out buffer" />
     <map param="ID3DX?(\d+)EffectDepthStencilViewVariable::SetDepthStencilArray::ppResources" attribute="in buffer" />
@@ -446,7 +446,7 @@
     <map method="ID3DX?(\d+)EffectMatrixVariable::SetMatrix" visibility="public" />
     <map method="ID3DX?(\d+)EffectMatrixVariable::SetMatrixTranspose" visibility="public" />
     <map param="ID3DX?(\d+)EffectMatrixVariable::SetMatrix::pData" type="SHARPDX_MATRIX" attribute="in" />
-    <map param="pData" type="SHARPDX_MATRIX" attribute="in" />
+    <map param="ID3DX?(\d+)EffectMatrixVariable::SetMatrixTranspose::pData" type="SHARPDX_MATRIX" attribute="in" />
     <map param="ID3DX?(\d+)EffectMatrixVariable::SetMatrixArray::pData" type="SHARPDX_MATRIX" attribute="in buffer" />
     <map param="ID3DX?(\d+)EffectMatrixVariable::SetMatrixTransposeArray::pData" type="SHARPDX_MATRIX" attribute="in buffer" />
     <map param="ID3DX?(\d+)EffectMatrixVariable::GetMatrix::pData" type="SHARPDX_MATRIX" attribute="out" />
@@ -475,7 +475,7 @@
     <map method="ID3DX?(\d+)EffectScalarVariable::GetFloat" visibility="public" />
     <map method="ID3DX?(\d+)EffectScalarVariable::GetInt" visibility="public" />
     <map param="ID3DX?(\d+)EffectScalarVariable::GetFloat::pValue" attribute="out" return="true" />
-    <map param="pValue" attribute="out" return="true" />
+    <map param="ID3DX?(\d+)EffectScalarVariable::GetInt::pValue" attribute="out" return="true" />
     <map param="ID3DX?(\d+)EffectScalarVariable::GetBool::pValue" attribute="out" />
     <map param="ID3DX?(\d+)EffectScalarVariable::GetFloatArray::pData" attribute="out buffer" />
     <map param="ID3DX?(\d+)EffectScalarVariable::GetIntArray::pData" attribute="out buffer" />

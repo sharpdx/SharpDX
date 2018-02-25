@@ -45,7 +45,7 @@ namespace SharpDX.MediaFoundation
         /// <msdn-id>ms702279</msdn-id>	
         /// <unmanaged>HRESULT IMFSourceResolver::CreateObjectFromURL([In] const wchar_t* pwszURL,[In] unsigned int dwFlags,[In] IPropertyStore* pProps,[Out] MF_OBJECT_TYPE* pObjectType,[Out] IUnknown** ppObject)</unmanaged>	
         /// <unmanaged-short>IMFSourceResolver::CreateObjectFromURL</unmanaged-short>	
-        public SharpDX.ComObject CreateObjectFromURL(string url,
+        public SharpDX.IUnknown CreateObjectFromURL(string url,
             SourceResolverFlags flags)
         {
             SharpDX.MediaFoundation.ObjectType objectType;
@@ -65,7 +65,7 @@ namespace SharpDX.MediaFoundation
         /// <msdn-id>ms702279</msdn-id>	
         /// <unmanaged>HRESULT IMFSourceResolver::CreateObjectFromURL([In] const wchar_t* pwszURL,[In] unsigned int dwFlags,[In] IPropertyStore* pProps,[Out] MF_OBJECT_TYPE* pObjectType,[Out] IUnknown** ppObject)</unmanaged>	
         /// <unmanaged-short>IMFSourceResolver::CreateObjectFromURL</unmanaged-short>	
-        public SharpDX.ComObject CreateObjectFromURL(string url,
+        public SharpDX.IUnknown CreateObjectFromURL(string url,
             SourceResolverFlags flags,
             out SharpDX.MediaFoundation.ObjectType objectType
             )
@@ -87,13 +87,13 @@ namespace SharpDX.MediaFoundation
         /// <msdn-id>ms702279</msdn-id>	
         /// <unmanaged>HRESULT IMFSourceResolver::CreateObjectFromURL([In] const wchar_t* pwszURL,[In] unsigned int dwFlags,[In] IPropertyStore* pProps,[Out] MF_OBJECT_TYPE* pObjectType,[Out] IUnknown** ppObject)</unmanaged>	
         /// <unmanaged-short>IMFSourceResolver::CreateObjectFromURL</unmanaged-short>	
-        public SharpDX.ComObject CreateObjectFromURL(string url,
+        public SharpDX.IUnknown CreateObjectFromURL(string url,
             SourceResolverFlags flags,
             SharpDX.ComObject propertyStore,
             out SharpDX.MediaFoundation.ObjectType objectType
             )
         {
-            ComObject result;
+            IUnknown result;
             CreateObjectFromURL(url, (int)(flags | SourceResolverFlags.MediaSource), propertyStore, out objectType, out result);
             return result;
         }
@@ -111,7 +111,7 @@ namespace SharpDX.MediaFoundation
         /// <msdn-id>ms704671</msdn-id>	
         /// <unmanaged>HRESULT IMFSourceResolver::CreateObjectFromByteStream([In] IMFByteStream* pByteStream,[In] const wchar_t* pwszURL,[In] unsigned int dwFlags,[In] IPropertyStore* pProps,[Out] MF_OBJECT_TYPE* pObjectType,[Out] IUnknown** ppObject)</unmanaged>	
         /// <unmanaged-short>IMFSourceResolver::CreateObjectFromByteStream</unmanaged-short>	
-        public SharpDX.ComObject CreateObjectFromStream(ByteStream stream,
+        public SharpDX.IUnknown CreateObjectFromStream(ByteStream stream,
             string url,
             SourceResolverFlags flags)
         {
@@ -133,7 +133,7 @@ namespace SharpDX.MediaFoundation
         /// <msdn-id>ms704671</msdn-id>	
         /// <unmanaged>HRESULT IMFSourceResolver::CreateObjectFromByteStream([In] IMFByteStream* pByteStream,[In] const wchar_t* pwszURL,[In] unsigned int dwFlags,[In] IPropertyStore* pProps,[Out] MF_OBJECT_TYPE* pObjectType,[Out] IUnknown** ppObject)</unmanaged>	
         /// <unmanaged-short>IMFSourceResolver::CreateObjectFromByteStream</unmanaged-short>	
-        public SharpDX.ComObject CreateObjectFromStream(ByteStream stream,
+        public SharpDX.IUnknown CreateObjectFromStream(ByteStream stream,
             string url,
             SourceResolverFlags flags,
             out SharpDX.MediaFoundation.ObjectType objectType)
@@ -156,14 +156,14 @@ namespace SharpDX.MediaFoundation
         /// <msdn-id>ms704671</msdn-id>	
         /// <unmanaged>HRESULT IMFSourceResolver::CreateObjectFromByteStream([In] IMFByteStream* pByteStream,[In] const wchar_t* pwszURL,[In] unsigned int dwFlags,[In] IPropertyStore* pProps,[Out] MF_OBJECT_TYPE* pObjectType,[Out] IUnknown** ppObject)</unmanaged>	
         /// <unmanaged-short>IMFSourceResolver::CreateObjectFromByteStream</unmanaged-short>	
-        public SharpDX.ComObject CreateObjectFromStream(ByteStream stream,
+        public SharpDX.IUnknown CreateObjectFromStream(ByteStream stream,
             string url,
             SourceResolverFlags flags,
             ComObject propertyStore,
             out SharpDX.MediaFoundation.ObjectType objectType)
         {
-            ComObject result;
-            CreateObjectFromByteStream_(stream.NativePointer,
+            IUnknown result;
+            CreateObjectFromByteStream(stream,
                 url,
                 (int)(flags | SourceResolverFlags.MediaSource),
                 propertyStore,

@@ -224,9 +224,9 @@
 
     <map method="ID3DX11FFT::AttachBuffersAndPrecompute" visibility="internal" />
     <map method="ID3DX11FFT::ForwardTransform" visibility="internal" />
-    <map param="ppOutputBuffer" type="void" />
+    <map param="ID3DX11FFT::ForwardTransform::ppOutputBuffer" type="void" />
     <map method="ID3DX11FFT::InverseTransform" visibility="internal" />
-    <map param="ppOutputBuffer" type="void" />
+    <map param="ID3DX11FFT::InverseTransform::ppOutputBuffer" type="void" />
 
     <map method="ID3DX11Scan::.*" property="false" />
     <map method="ID3DX11Scan::Scan" name="PerformScan" />
@@ -249,7 +249,7 @@
     <map method="ID3D11DeviceChild::GetDevice" persist="true"/>
 
     <map method="ID3D11DeviceContext::OMSetRenderTargets" visibility="internal"/>
-    <map param="ppRenderTargetViews" type="void" attribute="in"/>
+    <map param="ID3D11DeviceContext::OMSetRenderTargets::ppRenderTargetViews" type="void" attribute="in"/>
     <map method="ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews" visibility="internal"/>
 
     <map param="ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews::ppRenderTargetViews" type="void"/>
@@ -285,13 +285,13 @@
     <map param="ID3D11VideoContext::GetDecoderBuffer::ppBuffer" attribute="out"/>
 
     <map method="ID3D11DeviceContext1::ClearView" visibility="public" />
-    <map param="ID3D11DeviceContext1::ClearView::Color" type="SHARPDX_COLOR4" pointer="*" array="0" />
+    <map param="ID3D11DeviceContext1::ClearView::Color" type="SHARPDX_COLOR4" override-native-type="true" pointer="*" array="0" />
     
     <map param="ID3D11DeviceContext2::.*Tile.*::Flags" type="D3D11_TILE_MAPPING_FLAG" />
     <map param="ID3D11DeviceContext2::UpdateTileMappings::pRangeFlags" type="D3D11_TILE_RANGE_FLAG" />
     
-    <map param="ID3D11On12Device::CreateWrappedResource::InState" type="int" />
-    <map param="ID3D11On12Device::CreateWrappedResource::OutState" type="int" />
+    <map param="ID3D11On12Device::CreateWrappedResource::InState" type="int" override-native-type="true" />
+    <map param="ID3D11On12Device::CreateWrappedResource::OutState" type="int" override-native-type="true" />
     <map param="ID3D11On12Device::CreateWrappedResource::ppResource11" type="ID3D11Resource" />
 
     <map param="ID3D11Device4::RegisterDeviceRemovedEvent::pdwCookie" return="true" />

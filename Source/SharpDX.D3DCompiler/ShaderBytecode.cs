@@ -371,7 +371,7 @@ namespace SharpDX.D3DCompiler
                     textSize,
                     sourceFileName,
                     PrepareMacros(defines),
-                    IncludeShadow.ToIntPtr(include),
+                    include,
                     entryPoint,
                     profile,
                     shaderFlags,
@@ -795,7 +795,7 @@ namespace SharpDX.D3DCompiler
 
                 try
                 {
-                    D3D.Preprocess(shaderSourcePtr, shaderSourceLength, sourceFileName, PrepareMacros(defines), IncludeShadow.ToIntPtr(include),
+                    D3D.Preprocess(shaderSourcePtr, shaderSourceLength, sourceFileName, PrepareMacros(defines),include,
                                     out blobForText, out blobForErrors);
                 }
                 catch (SharpDXException ex)

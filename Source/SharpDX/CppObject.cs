@@ -24,7 +24,7 @@ namespace SharpDX
     /// <summary>
     /// Root class for all Cpp interop object.
     /// </summary>
-    public class CppObject : DisposeBase
+    public class CppObject : DisposeBase, ICallbackable
     {
         /// <summary>
         /// The native pointer
@@ -174,6 +174,17 @@ namespace SharpDX
             }
 
             return shadowContainer.Find(typeof(TCallback));
+        }
+
+        
+        /// <summary>
+        /// Implements <see cref="ICallbackable"/> but it cannot not be set. 
+        /// This is only used to support for interop with unmanaged callback.
+        /// </summary>
+        IDisposable ICallbackable.Shadow
+        {
+            get { throw new InvalidOperationException("Invalid access to Callback. This is used internally."); }
+            set { throw new InvalidOperationException("Invalid access to Callback. This is used internally."); }
         }
     }
 }

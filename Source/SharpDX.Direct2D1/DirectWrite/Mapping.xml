@@ -27,10 +27,10 @@
   <namespace>SharpDX.DirectWrite</namespace>
   <assembly>SharpDX.Direct2D1</assembly>
 
-  <include file="dwrite.h" attach="true" output="DirectWrite"/>
-  <include file="dwrite_1.h" attach="true" output="DirectWrite"/>
-  <include file="dwrite_2.h" attach="true" output="DirectWrite"/>
-  <include file="dwrite_3.h" attach="true" output="DirectWrite"/>
+  <include file="DWrite.h" attach="true" output="DirectWrite"/>
+  <include file="DWrite_1.h" attach="true" output="DirectWrite"/>
+  <include file="DWrite_2.h" attach="true" output="DirectWrite"/>
+  <include file="DWrite_3.h" attach="true" output="DirectWrite"/>
 
   <naming />
 
@@ -43,10 +43,10 @@
   </bindings>
 
   <mapping>
-    <context>dwrite</context>
-    <context>dwrite_1</context>
-    <context>dwrite_2</context>
-    <context>dwrite_3</context>
+    <context>DWrite_1</context>
+    <context>DWrite</context>
+    <context>DWrite_2</context>
+    <context>DWrite_3</context>
 
     <!--
     // *****************************************************************
@@ -110,6 +110,7 @@
     <map param="IDWriteFactory::CreateTextAnalyzer::textAnalyzer" attribute="out fast"/>
     <map param="IDWriteFactory::CreateNumberSubstitution::numberSubstitution" attribute="out fast"/>
     <map param="IDWriteFactory::CreateGlyphRunAnalysis::glyphRunAnalysis" attribute="out fast"/>
+    <map method="IDWriteFactory::((Unr|R)egisterFont(File|Collection)Loader)" visibility="internal" name="$1_" />
 
 
     <map param="IDWriteFactory::GetSystemFontCollection::fontCollection" return="true" />
@@ -152,12 +153,12 @@
     <map interface="IDWriteTextRenderer" callback="true" callback-dual="false" />
     <map interface="IDWriteTextRenderer1" callback="true" callback-dual="false" />
     <map method="IDWriteGdiInterop::.*?LOGFONT" visibility="internal" />
-    <map param="logFont" type="void" attribute="in" />
+    <map param="IDWriteGdiInterop::.*?LOGFONT::logFont" type="void" override-native-type="true" attribute="in" />
     <map param="IDWriteGdiInterop::CreateBitmapRenderTarget::renderTarget" return="true" />
     <map param="IDWriteGdiInterop::CreateFontFaceFromHdc::fontFace" return="true" />
 
     <map method="IDWriteGdiInterop1::.*?LOGFONT" visibility="internal" />
-    <map param="logFont" type="void" attribute="in" />
+    <map param="IDWriteGdiInterop1::.*?LOGFONT::logFont" type="void" override-native-type="true" attribute="in" />
     <map param="IDWriteGdiInterop1::CreateBitmapRenderTarget::renderTarget" return="true" />
     <map param="IDWriteGdiInterop1::CreateFontFaceFromHdc::fontFace" return="true" />
     <map param="IDWriteGdiInterop1::GetFontSignature::fontSignature" return="true" />
@@ -190,10 +191,10 @@
     <map method="IDWriteTextLayout::GetLocaleName" visibility="internal" />
     <map method="IDWriteTextLayout::GetLocaleNameLength" visibility="internal" />
     <map method="IDWriteTextLayout::GetStrikethrough" name="HasStrikethrough" />
-    <map param="hasStrikethrough" return="true" />
+    <map param="IDWriteTextLayout::GetStrikethrough::hasStrikethrough" return="true" />
     <map param="IDWriteTextLayout::GetTypography::typography" return="true" />
     <map method="IDWriteTextLayout::GetUnderline" name="HasUnderline" />
-    <map param="hasUnderline" return="true" />
+    <map param="IDWriteTextLayout::GetUnderline::hasUnderline" return="true" />
     <map method="IDWriteTextLayout::GetDrawingEffect" visibility="internal" name="GetDrawingEffect_" />
     <map param="IDWriteTextLayout::[GS]etDrawingEffect::drawingEffect" type="void" />
     <map method="IDWriteTextFormat::GetFontFamilyName" visibility="internal" />
@@ -206,7 +207,7 @@
     <map param="IDWriteTypography::GetFontFeature::fontFeature" return="true" />
 
     <map method="IDWriteTextAnalyzer::Get.*Glyph.*" visibility="internal"/>
-    <map param="features" type="void" attribute="in optional"/>
+    <map param="IDWriteTextAnalyzer::Get.*Glyph.*::features" type="void" attribute="in optional" override-native-type="true" />
 
     <map method="IDWriteTextLayout::GetLineMetrics" check="false"/>
     <map method="IDWriteTextLayout::HitTestTextRange" check="false"/>

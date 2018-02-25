@@ -1,0 +1,65 @@
+<Project>
+  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>$(DefineConstants);DIRECTX11_1;DIRECTX11_2;DirectX12</DefineConstants>
+
+    <PackageIconUrl>http://sharpdx.org/logo_100x100.png</PackageIconUrl>
+    <PackageLicenseUrl>http://sharpdx.org/License.txt</PackageLicenseUrl>
+    <PackageProjectUrl>http://sharpdx.org</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>SharpDX DirectX Direct3D Multimedia MDX 3D</PackageTags>
+
+    <Authors>Alexandre Mutel</Authors>
+    <Owners>Alexandre Mutel</Owners>
+    <Company>Alexandre Mutel</Company>
+    <Copyright>Copyright (c) 2010-2016 Alexandre Mutel</Copyright>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <Version>4.1.0</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <Version Condition=" '$(SharpDXPackagingDev)' == 'true' ">$(Version)-ci$(SharpDXBuildNumber)</Version>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)/../bin</PackageOutputPath>
+    <AppType Condition="$(TargetFramework.StartsWith('net4'))">DESKTOP_APP</AppType>
+    <AppType Condition="$(TargetFramework.StartsWith('netstandard'))">REFERENCE</AppType>
+    <AppType Condition="$(TargetFramework.StartsWith('uap10'))">STORE_APP</AppType>
+    <SharpGenMacros>$(SharpGenMacros);$(AppType);DIRECTX11_1</SharpGenMacros>
+    <DefineConstants>$(DefineConstants);$(AppType)</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)' == 'net40'">$(DefineConstants);BEFORE_NET45</DefineConstants>
+    <SharpGenGlobalNamespace>SharpDX</SharpGenGlobalNamespace>
+    <SharpGenGenerateDoc>true</SharpGenGenerateDoc>
+    <SharpGenIncludeAssemblyNameFolder>true</SharpGenIncludeAssemblyNameFolder>
+    <SharpGenOutputDirectory>$(MSBuildProjectDirectory)/../</SharpGenOutputDirectory>
+    <SharpGenGeneratedCodeFolder>Generated/$(AppType)</SharpGenGeneratedCodeFolder>
+    <SharpGenGeneratedCodeFolder Condition="'$(TargetFramework)' == 'net40'">Generated/net40_$(AppType)</SharpGenGeneratedCodeFolder>
+    <SharpGenDocumentationOutputDir>$(MSBuildThisFileDirectory)</SharpGenDocumentationOutputDir>
+    <SharpGenGenerateConsumerBindMapping>false</SharpGenGenerateConsumerBindMapping>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' And Exists('$(MSBuildThisFileDirectory)/../sharpdx.snk')">
+    <DefineConstants>$(DefineConstants);SHARPDX_SIGNED</DefineConstants>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)/../sharpdx.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.14393.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpGenTools.Sdk" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="SharpGen.Doc.Msdn.Tasks" Version="1.0.0" PrivateAssets="All" />
+    <SharpGenGlobalNamespaceOverrides Include="InterfaceArray" Override="ComArray" />
+    <SharpGenGlobalNamespaceOverrides Include="MemoryHelpers"  Override="Utilities" />
+    <SharpGenGlobalNamespaceOverrides Include="BooleanHelpers" Override="Utilities" />
+    <SharpGenGlobalNamespaceOverrides Include="StringHelpers"  Override="Utilities" />
+  </ItemGroup>
+
+  
+  <!-- Special packages and imports for UWP support -->
+  <ItemGroup>
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.1.0" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform " Version="5.4.0" />
+  </ItemGroup>
+</Project>

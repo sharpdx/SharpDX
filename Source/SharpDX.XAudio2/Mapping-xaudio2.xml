@@ -28,12 +28,8 @@
   <assembly>SharpDX.XAudio2</assembly>
 
   <!-- XAudio2 includes -->
-  <include file="xaudio2.h" attach="true">
-    <filter-error>$(FILTER_PASTING_ERROR)</filter-error>
-  </include>
-  <include file="xaudio2fx.h" attach="true" namespace="SharpDX.XAudio2.Fx" output="Fx" >
-    <filter-error>$(FILTER_PASTING_ERROR)</filter-error>
-  </include>
+  <include file="xaudio2.h" attach="true" />
+  <include file="xaudio2fx.h" attach="true" namespace="SharpDX.XAudio2.Fx" output="Fx" />
   
   <naming />
 
@@ -233,6 +229,7 @@
     <map method="IXAudio2Voice::SetOutputVoices" visibility="internal" />
     <map method="IXAudio2Voice::GetEffectParameters" visibility="internal" />
     <map method="IXAudio2Voice::SetEffectParameters" visibility="internal" />    
+    <map method="IXAudio2::(Unr|R)egisterForCallbacks" visibility="internal" />
     
     <map method="IXAudio2Voice::GetEffectState" name="IsEffectEnabled"/>
     <map param="pEnabled" return="true" />
@@ -250,7 +247,6 @@
     <map method="IXAudio2SourceVoice::Start" visibility="internal" />
     <map param="IXAudio2SourceVoice::Stop::Flags" type="XAUDIO2_PLAY_FLAGS" />
     <map method="IXAudio2SourceVoice::SubmitSourceBuffer" visibility="internal" />
-    <map param="pBufferWMA" type="void" attribute="in"/>
     
     <map method="IXAudio2Voice::GetVoiceDetails" property="false"/>
     <map method="IXAudio2MasteringVoice::GetChannelMask" property="false"/>

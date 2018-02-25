@@ -68,21 +68,6 @@ namespace SharpDX.Direct2D1
         }
 
         /// <summary>	
-        /// Combines this geometry with the specified geometry and stores the result in an <see cref="SharpDX.Direct2D1.SimplifiedGeometrySink"/>.  	
-        /// </summary>	
-        /// <param name="inputGeometry">The geometry to combine with this instance.</param>
-        /// <param name="combineMode">The type of combine operation to perform.</param>
-        /// <param name="inputGeometryTransform">The transform to apply to inputGeometry before combining, or NULL.</param>
-        /// <param name="flatteningTolerance">The maximum bounds on the distance between points in the polygonal approximation of the geometries. Smaller values produce more accurate results but cause slower execution. </param>
-        /// <param name="geometrySink">The result of the combine operation.</param>
-        /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
-        /// <unmanaged>HRESULT CombineWithGeometry([In] ID2D1Geometry* inputGeometry,[None] D2D1_COMBINE_MODE combineMode,[In, Optional] const D2D1_MATRIX_3X2_F* inputGeometryTransform,[None] FLOAT flatteningTolerance,[In] ID2D1SimplifiedGeometrySink* geometrySink)</unmanaged>
-        public void Combine(SharpDX.Direct2D1.Geometry inputGeometry, SharpDX.Direct2D1.CombineMode combineMode, RawMatrix3x2? inputGeometryTransform, float flatteningTolerance, GeometrySink geometrySink)
-        {
-            this.Combine_(inputGeometry, combineMode, inputGeometryTransform, flatteningTolerance, GeometrySinkShadow.ToIntPtr(geometrySink));
-        }
-
-        /// <summary>	
         /// Describes the intersection between this geometry and the specified geometry. The comparison is performed by using the specified flattening tolerance.	
         /// </summary>	
         /// <remarks>	
@@ -315,22 +300,6 @@ namespace SharpDX.Direct2D1
         }
 
         /// <summary>	
-        /// Computes the outline of the geometry and writes the result to an <see cref="SharpDX.Direct2D1.SimplifiedGeometrySink"/>.	
-        /// </summary>	
-        /// <remarks>	
-        /// The {{Outline}} method allows the caller to produce a geometry with an equivalent fill to the input geometry, with the following additional properties: The output geometry contains no transverse intersections; that is, segments may touch, but they never cross.The outermost figures in the output geometry are all oriented counterclockwise. The output geometry is fill-mode invariant; that is, the fill of the geometry does not depend on the choice of the fill mode. For more information about the fill mode, see <see cref="SharpDX.Direct2D1.FillMode"/>.Additionally, the  {{Outline}} method can be useful in removing redundant portions of said geometries to simplify complex geometries. It can also be useful in combination with <see cref="SharpDX.Direct2D1.GeometryGroup"/> to create unions among several geometries simultaneously.	
-        /// </remarks>	
-        /// <param name="worldTransform">The transform to apply to the geometry outline, or NULL.</param>
-        /// <param name="flatteningTolerance">The maximum bounds on the distance between points in the polygonal approximation of the geometry. Smaller values produce more accurate results but cause slower execution. </param>
-        /// <param name="geometrySink">The <see cref="SharpDX.Direct2D1.SimplifiedGeometrySink"/> to which the geometry's transformed outline is appended. </param>
-        /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
-        /// <unmanaged>HRESULT Outline([In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] FLOAT flatteningTolerance,[In] ID2D1SimplifiedGeometrySink* geometrySink)</unmanaged>
-        public void Outline(RawMatrix3x2? worldTransform, float flatteningTolerance, GeometrySink geometrySink)
-        {
-            this.Outline_(worldTransform, flatteningTolerance, GeometrySinkShadow.ToIntPtr(geometrySink));
-        }
-
-        /// <summary>	
         /// Creates a simplified version of the geometry that contains only lines and (optionally) cubic Bezier curves and writes the result to an <see cref="SharpDX.Direct2D1.SimplifiedGeometrySink"/>.	
         /// </summary>	
         /// <param name="simplificationOption">A value that specifies whether the simplified geometry should contain curves.</param>
@@ -353,20 +322,6 @@ namespace SharpDX.Direct2D1
         public void Simplify(SharpDX.Direct2D1.GeometrySimplificationOption simplificationOption, float flatteningTolerance, SimplifiedGeometrySink geometrySink)
         {
             Simplify(simplificationOption, null, flatteningTolerance, geometrySink);
-        }
-
-        /// <summary>	
-        /// Creates a simplified version of the geometry that contains only lines and (optionally) cubic Bezier curves and writes the result to an <see cref="SharpDX.Direct2D1.SimplifiedGeometrySink"/>.	
-        /// </summary>	
-        /// <param name="simplificationOption">A value that specifies whether the simplified geometry should contain curves.</param>
-        /// <param name="worldTransform">The transform to apply to the simplified geometry, or NULL.</param>
-        /// <param name="flatteningTolerance">The maximum bounds on the distance between points in the polygonal approximation of the geometry. Smaller values produce more accurate results but cause slower execution. </param>
-        /// <param name="geometrySink"> The <see cref="SharpDX.Direct2D1.SimplifiedGeometrySink"/> to which the simplified geometry is appended. </param>
-        /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
-        /// <unmanaged>HRESULT Simplify([None] D2D1_GEOMETRY_SIMPLIFICATION_OPTION simplificationOption,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] FLOAT flatteningTolerance,[In] ID2D1SimplifiedGeometrySink* geometrySink)</unmanaged>
-        public void Simplify(SharpDX.Direct2D1.GeometrySimplificationOption simplificationOption, RawMatrix3x2? worldTransform, float flatteningTolerance, SimplifiedGeometrySink geometrySink)
-        {
-            this.Simplify_(simplificationOption, worldTransform, flatteningTolerance, GeometrySinkShadow.ToIntPtr(geometrySink));
         }
 
         /// <summary>	
@@ -486,19 +441,6 @@ namespace SharpDX.Direct2D1
         }
 
         /// <summary>	
-        /// Creates a set of clockwise-wound triangles that cover the geometry after it has been transformed using the specified matrix and flattened using the specified tolerance	
-        /// </summary>	
-        /// <param name="worldTransform">The transform to apply to this geometry, or NULL.</param>
-        /// <param name="flatteningTolerance">The maximum bounds on the distance between points in the polygonal approximation of the geometry. Smaller values produce more accurate results but cause slower execution. </param>
-        /// <param name="tessellationSink">The <see cref="SharpDX.Direct2D1.TessellationSink"/> to which the tessellated is appended.</param>
-        /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
-        /// <unmanaged>HRESULT Tessellate([In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] FLOAT flatteningTolerance,[In] ID2D1TessellationSink* tessellationSink)</unmanaged>
-        public void Tessellate(RawMatrix3x2? worldTransform, float flatteningTolerance, TessellationSink tessellationSink)
-        {
-            this.Tessellate_(worldTransform, flatteningTolerance, TessellationSinkShadow.ToIntPtr(tessellationSink));
-        }
-
-        /// <summary>	
         /// Widens the geometry by the specified stroke and writes the result to an <see cref="SharpDX.Direct2D1.SimplifiedGeometrySink"/> after it has been transformed by the specified matrix and flattened using the specified tolerance.	
         /// </summary>	
         /// <param name="strokeWidth">The amount by which to widen the geometry.</param>
@@ -535,21 +477,6 @@ namespace SharpDX.Direct2D1
         public void Widen(float strokeWidth, SharpDX.Direct2D1.StrokeStyle strokeStyle, float flatteningTolerance, GeometrySink geometrySink)
         {
             this.Widen(strokeWidth, strokeStyle, null, flatteningTolerance, geometrySink);
-        }
-
-        /// <summary>	
-        /// Widens the geometry by the specified stroke and writes the result to an <see cref="SharpDX.Direct2D1.SimplifiedGeometrySink"/> after it has been transformed by the specified matrix and flattened using the specified tolerance.	
-        /// </summary>	
-        /// <param name="strokeWidth">The amount by which to widen the geometry.</param>
-        /// <param name="strokeStyle">The style of stroke to apply to the geometry, or NULL.</param>
-        /// <param name="worldTransform">The transform to apply to the geometry after widening it, or NULL.</param>
-        /// <param name="flatteningTolerance">The maximum bounds on the distance between points in the polygonal approximation of the geometry. Smaller values produce more accurate results but cause slower execution.</param>
-        /// <param name="geometrySink">The <see cref="SharpDX.Direct2D1.SimplifiedGeometrySink"/> to which the widened geometry is appended.</param>
-        /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
-        /// <unmanaged>HRESULT Widen([None] FLOAT strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] FLOAT flatteningTolerance,[In] ID2D1SimplifiedGeometrySink* geometrySink)</unmanaged>
-        public void Widen(float strokeWidth, SharpDX.Direct2D1.StrokeStyle strokeStyle, RawMatrix3x2? worldTransform, float flatteningTolerance, GeometrySink geometrySink)
-        {
-            this.Widen_(strokeWidth, strokeStyle, worldTransform, flatteningTolerance, GeometrySinkShadow.ToIntPtr(geometrySink));
         }
     }
 }

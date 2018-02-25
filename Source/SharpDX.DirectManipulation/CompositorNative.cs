@@ -40,51 +40,7 @@ namespace SharpDX.DirectManipulation
 		/// <unmanaged-short>IDirectManipulationCompositor::AddContent</unmanaged-short>	
 		public void AddContent(SharpDX.DirectManipulation.Content content, SharpDX.ComObject device, SharpDX.ComObject arentVisualRef, SharpDX.ComObject childVisual)
 		{
-			AddContent_(content, device, arentVisualRef, childVisual);
+			AddContent(content, (SharpDX.IUnknown)device, (SharpDX.IUnknown)arentVisualRef, (SharpDX.IUnknown)childVisual);
 		}
-
-		/// <summary>	
-		/// <p>Removes content from the compositor.</p>Syntax<pre><see cref="SharpDX.Result"/> RemoveContent( [in]??<see cref="SharpDX.DirectManipulation.Content"/> *content	
-		/// );</pre>Parameters<dl> <dt><em>content</em> [in]</dt> <dd> <p>The content to remove from the composition tree.</p> </dd> </dl>Return value<p>If the method succeeds, it returns <strong><see cref="SharpDX.Result.Ok"/></strong>. Otherwise, it returns an <strong><see cref="SharpDX.Result"/></strong> error code.</p>Remarks<p>This method removes content added with <strong>AddContent</strong> and restores the original relationships between parent visuals and child visuals in the composition tree. In other words, <strong>RemoveContent</strong> undoes <strong>AddContent</strong>.</p>Requirements	
-		/// </summary>	
-		/// <param name="content"><dd> <p>The content to remove from the composition tree.</p> </dd></param>	
-		/// <returns>No documentation.</returns>	
-		/// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IDirectManipulationCompositor::RemoveContent']/*"/>	
-		/// <msdn-id>Hh768899</msdn-id>	
-		/// <unmanaged>HRESULT IDirectManipulationCompositor::RemoveContent([In] IDirectManipulationContent* content)</unmanaged>	
-		/// <unmanaged-short>IDirectManipulationCompositor::RemoveContent</unmanaged-short>	
-		public void RemoveContent(SharpDX.DirectManipulation.Content content)
-		{
-			RemoveContent_(content);
-		}
-
-		/// <summary>	
-		/// <p> </p><p> Sets the update manager used to send compositor updates to Direct Manipulation. </p>Syntax<pre><see cref="SharpDX.Result"/> SetUpdateManager( [in]??<see cref="SharpDX.DirectManipulation.UpdateManager"/> *updateManager	
-		/// );</pre>Parameters<dl> <dt><em>updateManager</em> [in]</dt> <dd> <p>The <strong>update manager</strong>.</p> </dd> </dl>Return value<p>If the method succeeds, it returns <strong><see cref="SharpDX.Result.Ok"/></strong>. Otherwise, it returns an <strong><see cref="SharpDX.Result"/></strong> error code.</p>Remarks<p>Retrieve <em>updateManager</em> by calling <strong>GetUpdateManager</strong>.</p><p>Call this method during Direct Manipulation initialization to connect the compositor to the <em>update manager</em>.</p>Requirements	
-		/// </summary>	
-		/// <param name="updateManager">No documentation.</param>	
-		/// <returns>No documentation.</returns>	
-		/// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IDirectManipulationCompositor::SetUpdateManager']/*"/>	
-		/// <msdn-id>Hh768900</msdn-id>	
-		/// <unmanaged>HRESULT IDirectManipulationCompositor::SetUpdateManager([In] IDirectManipulationUpdateManager* updateManager)</unmanaged>	
-		/// <unmanaged-short>IDirectManipulationCompositor::SetUpdateManager</unmanaged-short>	
-		public void SetUpdateManager(SharpDX.DirectManipulation.UpdateManager updateManager)
-		{
-			SetUpdateManager(updateManager);
-		}
-
-		/// <summary>	
-		/// <p>Commits all pending updates in the compositor to the system for rendering.</p>Syntax<pre><see cref="SharpDX.Result"/> Flush();</pre>Parameters<p>This method has no parameters.</p>Return value<p>If the method succeeds, it returns <strong><see cref="SharpDX.Result.Ok"/></strong>. Otherwise, it returns an <strong><see cref="SharpDX.Result"/></strong> error code.</p>Remarks<p>This method enables Direct Manipulation to flush any pending changes to its visuals before a system event, such as a process suspension.</p>Requirements	
-		/// </summary>	
-		/// <returns>No documentation.</returns>	
-		/// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IDirectManipulationCompositor::Flush']/*"/>	
-		/// <msdn-id>jj647930</msdn-id>	
-		/// <unmanaged>HRESULT IDirectManipulationCompositor::Flush()</unmanaged>	
-		/// <unmanaged-short>IDirectManipulationCompositor::Flush</unmanaged-short>	
-		public void Flush()
-		{
-			Flush_();
-		}
-
 	}
 }

@@ -28,15 +28,14 @@ namespace SharpDX
     /// </summary>
     internal abstract class ComObjectShadow : CppObjectShadow
     {
-        private int count = 1;
         public static Guid IID_IUnknown = new Guid("00000000-0000-0000-C000-000000000046");
 
-        protected int QueryInterfaceImpl(IntPtr thisObject, ref Guid guid, out IntPtr output)
+        protected int QueryInterfaceImpl(ref Guid guid, out IntPtr output)
         {
             var shadow = (ComObjectShadow)((ShadowContainer)Callback.Shadow).FindShadow(guid);
             if (shadow != null)
             {
-                shadow.AddRefImpl(thisObject);
+                ((IUnknown)Callback).AddReference();
                 output = shadow.NativePointer;
                 return Result.Ok.Code;
             }
@@ -44,14 +43,14 @@ namespace SharpDX
             return Result.NoInterface.Code;
         }
 
-        protected virtual int AddRefImpl(IntPtr thisObject)
+        protected virtual int AddRefImpl()
         {
-            return Interlocked.Increment(ref count);
+            return ((IUnknown)Callback).AddReference();
         }
 
-        protected virtual int ReleaseImpl(IntPtr thisObject)
+        protected virtual int ReleaseImpl()
         {
-            return Interlocked.Decrement(ref count);
+            return ((IUnknown)Callback).Release();
         }
 
         internal class ComObjectVtbl : CppObjectVtbl
@@ -86,7 +85,7 @@ namespace SharpDX
                 }
                 unsafe
                 {
-                    return shadow.QueryInterfaceImpl(thisObject, ref *((Guid*)guid), out output);
+                    return shadow.QueryInterfaceImpl(ref *((Guid*)guid), out output);
                 }
             }
 
@@ -97,7 +96,7 @@ namespace SharpDX
                 // But we are callbacked by a C++ that want to release it.
                 if (shadow == null)
                     return 0;
-                return shadow.AddRefImpl(thisObject);
+                return shadow.AddRefImpl();
             }
 
             protected static int ReleaseImpl(IntPtr thisObject)
@@ -107,7 +106,7 @@ namespace SharpDX
                 // But we are callbacked by a C++ that want to release it.
                 if (shadow == null)
                     return 0;
-                return shadow.ReleaseImpl(thisObject);
+                return shadow.ReleaseImpl();
             }
         }
     }

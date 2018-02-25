@@ -74,6 +74,7 @@
   <PropertyGroup>
     <PreBuildEvent>REM $(SolutionDir)Source\Tools\SharpDoc\Bin\$(ConfigurationName)\SharpDoc.exe --config config.xml</PreBuildEvent>
   </PropertyGroup>
+  <Target Name="Pack" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

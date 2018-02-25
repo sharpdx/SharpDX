@@ -692,6 +692,7 @@ namespace SharpDX.Direct3D11
             Device devOut;
             DeviceContext contextOut;
             FeatureLevel featurelevelOut;
+
             D3D11.On12CreateDevice(d3D12Device, flags, featureLevels, featureLevels == null ? 0 : featureLevels.Length, commandQueues, commandQueues.Length, 0, out devOut, out contextOut, out featurelevelOut);
             contextOut.Dispose();
             return devOut;

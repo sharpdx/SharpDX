@@ -53,7 +53,7 @@ namespace SharpDX.MediaFoundation
         /// <unmanaged-short>IMFCaptureEngine::Initialize</unmanaged-short>	
         public void Initialize(MediaAttributes attributesRef, ComObject audioSourceRef, ComObject videoSourceRef)
         {
-            Initialize_(CaptureEngineOnEventCallbackShadow.ToIntPtr(captureEngineOnEventImpl), attributesRef, audioSourceRef, videoSourceRef);
+            Initialize(captureEngineOnEventImpl, attributesRef, audioSourceRef, videoSourceRef);
         }
 
         public event CaptureEngineOnEventDelegate CaptureEngineEvent;

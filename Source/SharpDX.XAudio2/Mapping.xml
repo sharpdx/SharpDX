@@ -22,8 +22,4 @@
 -->
 <config id="sharpdx-xaudio2-xapo" xmlns="urn:SharpGen.Config">
   <depends>sharpdx</depends>
-  
-  <file>XAPO\Mapping.xml</file>
-  <file>X3DAudio\Mapping.xml</file>
-  <file>Mapping-xaudio2.xml</file>
 </config>

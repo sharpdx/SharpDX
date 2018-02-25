@@ -43,8 +43,9 @@ namespace SharpDX.XAudio2
 
     internal partial class LocalInterop
     {
-        public static unsafe int Calliint(void* thisObject,int arg0, void* arg1,void* methodPtr) { throw new NotImplementedException(); }
-        // System.Void*,System.Void*,System.Int32,System.Int32,System.Int32,System.Int32,System.Void*
-        public static unsafe int Calliint(void* thisObject, void* arg0, int arg1, int arg2, int arg3, int arg4, void* arg5, void* methodPtr) { throw new NotImplementedException(); }
+        public static unsafe int CalliGetDeviceDetails(void* thisObject,int arg0, void* arg1,void* methodPtr) { throw new NotImplementedException(); }
+        public static unsafe int CalliInitialize(void* thisObject,int arg0, int arg1,void* methodPtr) { throw new NotImplementedException(); }
+        public static unsafe int CalliCreateMasteringVoice(void* thisObject, void* arg0, int arg1, int arg2, int arg3, int arg4, void* arg5, void* methodPtr) { throw new NotImplementedException(); }
+        public static unsafe int CalliGetDeviceCount(void* thisObject, void* arg0, void* methodPtr) {throw new NotImplementedException(); }
     }
 }

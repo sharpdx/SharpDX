@@ -23,6 +23,4 @@
 <config id="sharpdx-mediafoundation-all" xmlns="urn:SharpGen.Config">
   <depends>sharpdx-core</depends>
   <depends>sharpdx-mediafoundation</depends>
-
-  <file>Mapping-core.xml</file>
 </config>

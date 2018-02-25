@@ -71,7 +71,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged-short>ID2D1PrintControl::AddPage</unmanaged-short>	
         public void AddPage(SharpDX.Direct2D1.CommandList commandList, SharpDX.Size2F pageSize, out long tag1, out long tag2)
         {
-            AddPage_(commandList, pageSize, IntPtr.Zero, out tag1, out tag2);
+            AddPage(commandList, pageSize, null, out tag1, out tag2);
         }
     }
 }

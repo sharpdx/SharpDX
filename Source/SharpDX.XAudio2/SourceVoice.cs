@@ -140,7 +140,7 @@ namespace SharpDX.XAudio2
         public SourceVoice(XAudio2 device, SharpDX.Multimedia.WaveFormat sourceFormat, SharpDX.XAudio2.VoiceFlags flags, float maxFrequencyRatio, VoiceCallback callback, EffectDescriptor[] effectDescriptors)
             : base(device)
         {
-            CreateSourceVoice(device, sourceFormat, flags, maxFrequencyRatio, callback == null ? IntPtr.Zero : VoiceShadow.ToIntPtr(callback), effectDescriptors);
+            CreateSourceVoice(device, sourceFormat, flags, maxFrequencyRatio, callback, effectDescriptors);
         }
 
         /// <summary>
@@ -157,10 +157,10 @@ namespace SharpDX.XAudio2
         public SourceVoice(XAudio2 device, SharpDX.Multimedia.WaveFormat sourceFormat, SharpDX.XAudio2.VoiceFlags flags, float maxFrequencyRatio, bool enableCallbackEvents, EffectDescriptor[] effectDescriptors)
             : base(device)
         {
-            CreateSourceVoice(device, sourceFormat, flags, maxFrequencyRatio, enableCallbackEvents ? VoiceShadow.ToIntPtr(voiceCallbackImpl = new VoiceCallbackImpl(this)) : IntPtr.Zero, effectDescriptors);
+            CreateSourceVoice(device, sourceFormat, flags, maxFrequencyRatio, enableCallbackEvents ? (voiceCallbackImpl = new VoiceCallbackImpl(this)) : null, effectDescriptors);
         }
 
-        private void CreateSourceVoice(XAudio2 device, SharpDX.Multimedia.WaveFormat sourceFormat, SharpDX.XAudio2.VoiceFlags flags, float maxFrequencyRatio, IntPtr callback, EffectDescriptor[] effectDescriptors)
+        private void CreateSourceVoice(XAudio2 device, SharpDX.Multimedia.WaveFormat sourceFormat, SharpDX.XAudio2.VoiceFlags flags, float maxFrequencyRatio, VoiceCallback callback, EffectDescriptor[] effectDescriptors)
         {
             var waveformatPtr = WaveFormat.MarshalToPtr(sourceFormat);
             try
@@ -177,13 +177,13 @@ namespace SharpDX.XAudio2
                         fixed (void* pEffectDescriptors = &effectDescriptorNatives[0])
                         {
                             tempSendDescriptor.EffectDescriptorPointer = (IntPtr)pEffectDescriptors;
-                            device.CreateSourceVoice_(this, waveformatPtr, flags, maxFrequencyRatio, callback, null, tempSendDescriptor);
+                            device.CreateSourceVoice(this, waveformatPtr, flags, maxFrequencyRatio, callback, null, tempSendDescriptor);
                         }
                     }
                 }
                 else
                 {
-                    device.CreateSourceVoice_(this, waveformatPtr, flags, maxFrequencyRatio, callback, null, null);
+                    device.CreateSourceVoice(this, waveformatPtr, flags, maxFrequencyRatio, callback, null, null);
                 }
             }
             finally
@@ -265,12 +265,12 @@ namespace SharpDX.XAudio2
                         SharpDX.XAudio2.BufferWma bufferWmaRef;
                         bufferWmaRef.PacketCount = decodedXMWAPacketInfo.Length;
                         bufferWmaRef.DecodedPacketCumulativeBytesPointer = (IntPtr)pBuffer;
-                        SubmitSourceBuffer(bufferRef, new IntPtr(&bufferWmaRef));
+                        SubmitSourceBuffer(bufferRef, bufferWmaRef);
                     }
                 }
                 else
                 {
-                    SubmitSourceBuffer(bufferRef, IntPtr.Zero);
+                    SubmitSourceBuffer(bufferRef, (SharpDX.XAudio2.BufferWma?)null);
                 }
             }
         }

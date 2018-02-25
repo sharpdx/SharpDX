@@ -153,7 +153,6 @@
     <map struct="RAWINPUT(.*)" name-tmp="RAW_INPUT_$1" visibility="internal"/>
 
     <map struct="RAWINPUT_INNER_0" marshalto="true"/>
-    <map struct="RAWHID" marshalto="true" marshal="true"/>
 
     <map field=".*::[a-z]+([A-Z].*)" name="$1"/>
 

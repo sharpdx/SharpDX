@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\Build\SharpDX.props" />
+  
   <PropertyGroup>
     <TargetFrameworks>net40;net45;netstandard1.3</TargetFrameworks>
     <PackageId>SharpDX.Direct3D9</PackageId>
@@ -9,6 +9,7 @@
     <Title>SharpDX.Direct3D9</Title>
     <Description>Assembly providing DirectX - Direct3D9 managed API.</Description>
     <PackageTags>$(PackageTags) Direct3D9 D3D9</PackageTags>
+    <SharpDXLegacy>true</SharpDXLegacy>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />
@@ -24,5 +25,5 @@
     <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
   </ItemGroup>
 
-  <Import Project="..\..\Build\SharpDX.targets" />
+  
 </Project>

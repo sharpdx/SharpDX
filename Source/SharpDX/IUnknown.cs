@@ -25,8 +25,7 @@ namespace SharpDX
     /// <summary>
     /// Base interface for Component Object Model (COM).
     /// </summary>
-    [Guid("00000000-0000-0000-C000-000000000046")]
-    public interface IUnknown
+    public partial interface IUnknown
     {
         /// <summary>
         /// Queries the supported COM interface on this instance.

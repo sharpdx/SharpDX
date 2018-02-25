@@ -95,9 +95,9 @@
     <map method="ID3DX11EffectUnorderedAccessViewVariable::Set.*" name="Set"/>
     <map param="ID3DX11EffectUnorderedAccessViewVariable::GetUnorderedAccessView::ppResource" return="true"/>
     <map method="ID3DX11EffectUnorderedAccessViewVariable::SetUnorderedAccessViewArray" visibility="internal"/>
-    <map param="ppResources" attribute="in buffer"/>
+    <map param="ID3DX11EffectUnorderedAccessViewVariable::SetUnorderedAccessViewArray::ppResources" attribute="in buffer"/>
     <map method="ID3DX11EffectUnorderedAccessViewVariable::GetUnorderedAccessViewArray" visibility="internal"/>
-    <map param="ppResources" attribute="out buffer"/>
+    <map param="ID3DX11EffectUnorderedAccessViewVariable::GetUnorderedAccessViewArray::ppResources" attribute="out buffer"/>
 
     <!--
     // *****************************************************************

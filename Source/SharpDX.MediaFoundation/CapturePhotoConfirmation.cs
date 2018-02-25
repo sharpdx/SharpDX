@@ -21,7 +21,7 @@ namespace SharpDX.MediaFoundation
         {
             set
             {
-                SetPhotoConfirmationCallback_(AsyncCallbackShadow.ToIntPtr(value));
+                SetPhotoConfirmationCallback(value);
             }
         }
     }

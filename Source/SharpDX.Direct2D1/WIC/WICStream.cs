@@ -58,8 +58,7 @@ namespace SharpDX.WIC
         {
             factory.CreateStream(this);
             streamProxy = new ComStreamProxy(stream);
-            var istreamPtr = ComStreamShadow.ToIntPtr(streamProxy);
-            InitializeFromIStream_(istreamPtr);
+            InitializeFromIStream(streamProxy);
         }
 
         /// <summary>
