@@ -281,6 +281,7 @@
     
     <map param="ID3D11Device2::GetResourceTiling::pNumSubresourceTilings" attribute="inout" />
     
+
     <map method="ID3D11VideoContext::GetDecoderBuffer" visibility="internal"/>
     <map param="ID3D11VideoContext::GetDecoderBuffer::ppBuffer" attribute="out"/>
 
@@ -293,6 +294,8 @@
     <map param="ID3D11On12Device::CreateWrappedResource::InState" type="int" override-native-type="true" />
     <map param="ID3D11On12Device::CreateWrappedResource::OutState" type="int" override-native-type="true" />
     <map param="ID3D11On12Device::CreateWrappedResource::ppResource11" type="ID3D11Resource" />
+    
+    <map param="ID3D11Device3::ReadFromSubresource::pDstData" attribute="in value" />
 
     <map param="ID3D11Device4::RegisterDeviceRemovedEvent::pdwCookie" return="true" />
 
