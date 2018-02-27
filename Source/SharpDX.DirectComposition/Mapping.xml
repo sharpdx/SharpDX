@@ -101,8 +101,23 @@
 		<map param="IDCompositionDevice2?::CreateTranslateTransform3D::translateTransform3D" attribute="out fast" />
 		<map param="IDCompositionDevice2?::CreateVirtualSurface::(virtualS|s)urface" attribute="out fast" />
 		<map param="IDCompositionDevice2?::CreateVisual::visual" attribute="out fast" />
-		
-		<map method="IDCompositionDesktopDevice::CreateTargetForHwnd" visibility="internal" />
+
+    <map method="IDCompositionDevice3?::Create.*" visibility="internal" />
+    <map param="IDCompositionDevice3::CreateGaussianBlurEffect::gaussianBlurEffect" attribute="out fast" />
+    <map param="IDCompositionDevice3::CreateBrightnessEffect::brightnessEffect" attribute="out fast" />
+    <map param="IDCompositionDevice3::CreateColorMatrixEffect::colorMatrixEffect" attribute="out fast" />
+    <map param="IDCompositionDevice3::CreateShadowEffect::shadowEffect" attribute="out fast" />
+    <map param="IDCompositionDevice3::CreateHueRotationEffect::hueRotationEffect" attribute="out fast" />
+    <map param="IDCompositionDevice3::CreateSaturationEffect::saturationEffect" attribute="out fast" />
+    <map param="IDCompositionDevice3::CreateTurbulenceEffect::turbulenceEffect" attribute="out fast" />
+    <map param="IDCompositionDevice3::CreateLinearTransferEffect::linearTransferEffect" attribute="out fast" />
+    <map param="IDCompositionDevice3::CreateTableTransferEffect::tableTransferEffect" attribute="out fast" />
+    <map param="IDCompositionDevice3::CreateCompositeEffect::compositeEffect" attribute="out fast" />
+    <map param="IDCompositionDevice3::CreateBlendEffect::blendEffect" attribute="out fast" />
+    <map param="IDCompositionDevice3::CreateArithmeticCompositeEffect::arithmeticCompositeEffect" attribute="out fast" />
+    <map param="IDCompositionDevice3::CreateAffineTransform2DEffect::affineTransform2dEffect" attribute="out fast" />
+
+    <map method="IDCompositionDesktopDevice::CreateTargetForHwnd" visibility="internal" />
 		<map param="IDCompositionDesktopDevice::CreateTargetForHwnd::target" return="true" />
 		<map param="IDCompositionDesktopDevice::CreateSurfaceFromHandle::surface" return="true" />
 		<map param="IDCompositionDesktopDevice::CreateSurfaceFromHwnd::surface" return="true" />
