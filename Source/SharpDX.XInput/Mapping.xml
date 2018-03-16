@@ -94,7 +94,7 @@
     <map enum="XINPUT_CAPS_FLAGS" name="CapabilityFlags" type="short"/>
     <map enum-item="XINPUT_CAPS_(.*)" name-tmp="$1"/>
 
-    <map enum="XINPUT_GAMEPAD_BUTTON_FLAGS" name="GamepadButtonFlags" flags="true" none="true" type="int"/>
+    <map enum="XINPUT_GAMEPAD_BUTTON_FLAGS" name="GamepadButtonFlags" flags="true" none="true" type="short"/>
     <map enum-item="XINPUT_GAMEPAD_(.*)" name-tmp="$1"/>
     <map enum-item="XINPUT_GAMEPAD_DPAD_(.*)" name-tmp="D_PAD_$1"/>
 
