@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SharpDX.DirectComposition
 {
-	partial class Device
+	public partial class Device
 	{
 		/// <summary>	
 		/// Creates a new device object that can be used to create other Microsoft DirectComposition objects.
