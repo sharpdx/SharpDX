@@ -203,6 +203,11 @@ namespace SharpDX
             _canWrite = canWrite;
             _ownsBuffer = makeCopy;
         }
+        
+        ~DataStream()
+        {
+            Dispose(false);
+        }
 
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources
