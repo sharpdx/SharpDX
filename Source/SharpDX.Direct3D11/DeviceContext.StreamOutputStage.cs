@@ -64,12 +64,7 @@ namespace SharpDX.Direct3D11
         /// <unmanaged-short>ID3D11DeviceContext::SOSetTargets</unmanaged-short>
         public unsafe void SetTarget(Buffer buffer, int offsets)
         {
-            if (buffer == null)
-            {
-                throw new ArgumentNullException("buffer");
-            }
-
-            var ptr = buffer.NativePointer;
+            var ptr = buffer != null ? buffer.NativePointer : IntPtr.Zero;
 
             SetTargets(1, new IntPtr(&ptr), new IntPtr(&offsets));
         }
