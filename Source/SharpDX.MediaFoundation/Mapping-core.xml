@@ -900,6 +900,7 @@
     <map param="MFCreateMediaType::ppMFType" attribute="out fast"/>
 
     <map param="MFCreateSample::ppIMFSample" return="true"/>
+    <map param="MFCreateVideoSampleFromSurface::ppSample" return="true"/>
     <map param="MFCreateMemoryBuffer::ppBuffer" return="true"/>
     <map param="MFCreateSinkWriterFromURL::ppSinkWriter" return="true"/>
     <map param="IMFCollection::GetElement::ppUnkElement" return="true"/>
@@ -1001,6 +1002,8 @@
     <map function="AppendPropVariant" dll='"mf.dll"'/>
       
     <map function="MFPCreateMediaPlayer" dll='"mfplay.dll"'/>
+    
+    <map function="MFCreateVideoSampleFromSurface" dll='"EVR.dll"'/>
 
     <map function="MFTEnumEx" visibility="internal"/>
     <map param="MFTEnumEx::pppMFTActivate" type="void" attribute="out"/>
