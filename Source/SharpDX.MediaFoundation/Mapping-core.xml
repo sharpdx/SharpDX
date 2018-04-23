@@ -788,6 +788,9 @@
     <map interface="IMFAsyncCallbackLogging" name="IAsyncCallbackLogging" callback="true"/>
 
     <map param="IMFByteStream::*.*::pb" type="void" attribute="in"/>
+    
+    <map method="IMFSinkWriter::GetStatistics" name="GetStatistics_" check="false" visibility="internal"/>
+    <map param="IMFSinkWriter::GetStatistics::pStats"  type="void" attribute="in"/>
 
     <map param="IMFByteStream::Begin[RW].*::punkState" type="void"/>
 
