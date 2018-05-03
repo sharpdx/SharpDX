@@ -21,18 +21,18 @@ using System;
 
 namespace SharpDX.DXGI
 {
-    public partial class Debug 
+    public partial class DXGIDebug1
     {
         /// <summary>
-        /// If the DXGI debug layer is installed (e.g. on developer machines), creates the DXGI Debug object.
+        /// If the DXGI debug layer is installed (e.g. on developer machines), creates the DXGI Debug1 object.
         /// Otherwise, returns null.
         /// </summary>
         /// <remarks>
         /// Currently doesn't work for Windows Store (aka UWP) apps 
         /// </remarks>
-        public static Debug TryCreate()
+        public new static DXGIDebug1 TryCreate()
         {
-            return DebugInterface.TryCreateComPtr<Debug>(out IntPtr comPtr) ? new Debug(comPtr) : null;
+            return DebugInterface.TryCreateComPtr<DXGIDebug1>(out IntPtr comPtr) ? new DXGIDebug1(comPtr) : null;
         }
     }
 }
