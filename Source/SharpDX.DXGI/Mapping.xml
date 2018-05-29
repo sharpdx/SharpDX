@@ -133,9 +133,9 @@
     <map struct="DXGI(.+)" name-tmp="$1" />
     <remove struct="DXGI_DISPLAY_COLOR_SPACE" />
 
-    <map field="DXGI_ADAPTER_DESC[12]?::AdapterLuid" name="Luid" />
-    <map field="DXGI_ADAPTER_DESC[12]?::SubSysId" name="SubsystemId" />
-    <map field="DXGI_ADAPTER_DESC[12]::Flags" type="DXGI_ADAPTER_FLAG" />
+    <map field="DXGI_ADAPTER_DESC[123]?::AdapterLuid" name="Luid" />
+    <map field="DXGI_ADAPTER_DESC[123]?::SubSysId" name="SubsystemId" />
+    <map field="DXGI_ADAPTER_DESC[123]::Flags" type="DXGI_ADAPTER_FLAG" />
 
     <map field="DXGI_GAMMA_CONTROL_CAPABILITIES::MaxConvertedValue" name="MaximumConvertedValue" />
     <map field="DXGI_GAMMA_CONTROL_CAPABILITIES::MinConvertedValue" name="MinimumConvertedValue" />
@@ -160,6 +160,8 @@
     
     <map struct="DXGI_ADAPTER_DESC" pack="4"/>
     <map struct="DXGI_ADAPTER_DESC1" pack="4"/>
+    <map struct="DXGI_ADAPTER_DESC2" pack="4"/>
+    <map struct="DXGI_ADAPTER_DESC3" pack="4"/>
 
     <map struct="DXGI_INFO_QUEUE_FILTER" name="InfoQueueFilter" />
     <map struct="DXGI_INFO_QUEUE_FILTER_DESC" name="InfoQueueFilterDescription" />
