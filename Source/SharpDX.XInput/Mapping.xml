@@ -44,6 +44,8 @@
     <context>sharpdx-xinput-ext</context>
     <context>xinput</context>
 
+    <define enum="SharpDX.XInput.GamepadButtonFlags" sizeof="2" underlying="System.UInt16" />
+
     <create-cpp enum="BATTERY_DEVTYPE" macro="BATTERY_DEVTYPE_.*"/>
     <create-cpp enum="BATTERY_TYPE" macro="BATTERY_TYPE_.*"/>
     <create-cpp enum="BATTERY_LEVEL" macro="BATTERY_LEVEL_.*"/>
@@ -65,6 +67,7 @@
   </extension>
 
   <bindings>
+    <bind from="XINPUT_GAMEPAD_BUTTON_FLAGS" to="SharpDX.XInput.GamepadButtonFlags" />
   </bindings>
 
   <mapping>
@@ -93,10 +96,6 @@
 
     <map enum="XINPUT_CAPS_FLAGS" name="CapabilityFlags" type="short"/>
     <map enum-item="XINPUT_CAPS_(.*)" name-tmp="$1"/>
-
-    <map enum="XINPUT_GAMEPAD_BUTTON_FLAGS" name="GamepadButtonFlags" flags="true" none="true" type="short"/>
-    <map enum-item="XINPUT_GAMEPAD_(.*)" name-tmp="$1"/>
-    <map enum-item="XINPUT_GAMEPAD_DPAD_(.*)" name-tmp="D_PAD_$1"/>
 
     <map enum="XINPUT_GAMEPAD_KEY_CODE" name="GamepadKeyCode" flags="true" none="true" type="short"/>
     <map enum-item="VK_PAD_(.*)" name-tmp="$1"/>
