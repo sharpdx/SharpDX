@@ -565,6 +565,26 @@ namespace SharpDX.Direct3D12
             }
         }
 
+        public unsafe FeatureDataGpuVirtualAddressSupport GpuVirtualAddressSupport
+        {
+            get
+            {
+                FeatureDataGpuVirtualAddressSupport options = new FeatureDataGpuVirtualAddressSupport();
+                this.CheckFeatureSupport(Feature.GpuVirtualAddressSupport, new IntPtr(&options), Utilities.SizeOf<FeatureDataGpuVirtualAddressSupport>());
+                return options;
+            }
+        }
+
+        public unsafe FeatureDataShaderModel ShaderModel
+        {
+            get
+            {
+                FeatureDataShaderModel options = new FeatureDataShaderModel();
+                this.CheckFeatureSupport(Feature.ShaderModel, new IntPtr(&options), Utilities.SizeOf<FeatureDataShaderModel>());
+                return options;
+            }
+        }
+
         private static void CreateDevice(Adapter adapter, FeatureLevel minFeatureLevel, Device instance)
         {
             D3D12.CreateDevice(adapter, minFeatureLevel, Utilities.GetGuidFromType(typeof(Device)), instance).CheckError();
