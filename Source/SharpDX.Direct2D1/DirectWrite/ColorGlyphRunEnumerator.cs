@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +11,7 @@ namespace SharpDX.DirectWrite
         {
             GetCurrentRun(out IntPtr ptr);
             var run = new ColorGlyphRun();
-            run.__MarshalFrom(ref *((ColorGlpyhRun.__Native*)ptr));
+            run.__MarshalFrom(ref *((ColorGlyphRun.__Native*)ptr));
             return run;
         }
     }
