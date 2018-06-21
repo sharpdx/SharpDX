@@ -99,7 +99,7 @@
     <bind from="UINT_PTR" to="System.IntPtr" />
     <bind from="LONG_PTR" to="System.IntPtr" />
     <bind from="ULONG_PTR" to="System.IntPtr" />
-    <bind from="HANDLE_PTR" to="System.IntPtr" />    
+    <bind from="HANDLE_PTR" to="System.IntPtr" /> 
 
     <bind from="LPGLYPHMETRICSFLOAT" to="System.IntPtr" />
     <bind from="WAVEFORMATEX" to="SharpDX.Multimedia.WaveFormat" />
@@ -129,6 +129,8 @@
     <bind from="SIZE_T" to="SharpDX.PointerSize" marshal="System.IntPtr"/>
     <bind from="SSIZE_T" to="SharpDX.PointerSize" marshal="System.IntPtr"/>
 		<bind from="MSG" to="SharpDX.Win32.NativeMessage" />
+    <bind from="ULONG" to="System.Int32" />
+    <bind from="LONG" to="System.Int32" />
 
     <bind from="SECURITY_ATTRIBUTES" to="SharpDX.Win32.SecurityAttributes"/>
     
