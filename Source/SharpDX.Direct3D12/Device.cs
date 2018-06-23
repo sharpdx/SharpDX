@@ -402,7 +402,7 @@ namespace SharpDX.Direct3D12
                     {
                         for (int i = 0; i < elements.Length; i++)
                         {
-                            nativeElements[i].__MarshalFree();
+                            elements[i].__MarshalFree(ref nativeElements[i]);
                         }
                     }
 
@@ -410,7 +410,7 @@ namespace SharpDX.Direct3D12
                     {
                         for (int i = 0; i < streamOutElements.Length; i++)
                         {
-                            nativeStreamOutElements[i].__MarshalFree();
+                            streamOutElements[i].__MarshalFree(ref nativeStreamOutElements[i]);
                         }
                     }
                 }

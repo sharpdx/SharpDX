@@ -39,25 +39,7 @@ namespace SharpDX.XAudio2
         public VoiceSendDescriptor(VoiceSendFlags flags, Voice outputVoice)
         {
             Flags = flags;
-            OutputVoicePointer = IntPtr.Zero;
             OutputVoice = outputVoice;
-        }
-
-
-        /// <summary>
-        /// Gets or sets the output voice. This parameter cannot be null.
-        /// </summary>
-        /// <value>The output voice.</value>
-        public Voice OutputVoice
-        {
-            get
-            {
-                return OutputVoicePointer==IntPtr.Zero?null:new Voice(OutputVoicePointer);
-            }
-            set
-            {
-                OutputVoicePointer = value.NativePointer;                
-            }
         }
     }
 }

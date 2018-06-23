@@ -77,24 +77,5 @@ namespace SharpDX.Direct2D1
             BitmapOptions = bitmapOptions;
             ColorContext = colorContext;
         }
-
-        /// <summary>
-        /// Gets or sets the color context.
-        /// </summary>
-        /// <value>
-        /// The color context.
-        /// </value>
-        public ColorContext ColorContext
-        {
-            get
-            {
-                return colorContext;
-            }
-            set
-            {
-                colorContext = value;
-                ColorContextPointer = colorContext == null ? IntPtr.Zero : colorContext.NativePointer;
-            }
-        }
     }
 }

@@ -44,18 +44,18 @@ namespace SharpDX.MediaFoundation
 
     internal partial class LocalInterop
     {
-        //    public static unsafe int Calliint(void* thisObject, void* arg0, void* arg1, void* methodPtr) { throw new NotImplementedException(); }
-        //  public static unsafe int Calliint(void* thisObject, void* arg0, void* methodPtr) { throw new NotImplementedException(); }
-        //public static unsafe int Calliint(void* thisObject, int arg0, void* arg1, void* methodPtr) { throw new NotImplementedException(); }
+        public static unsafe int Calliint(void* thisObject, void* arg0, void* arg1, void* methodPtr) { throw new NotImplementedException(); }
+        public static unsafe int Calliint(void* thisObject, void* arg0, void* methodPtr) { throw new NotImplementedException(); }
+        public static unsafe int Calliint(void* thisObject, int arg0, void* arg1, void* methodPtr) { throw new NotImplementedException(); }
         // public static unsafe int Calliint3(void* thisObject, SharpDX.Color4 arg0, void* methodPtr) { throw new NotImplementedException(); }
         // public static unsafe int Calliint(void* thisObject, void* methodPtr) { throw new NotImplementedException(); }
         //public static unsafe int Calliint5(void* thisObject, SharpDX.Mathematics.Interop.RawBool arg0, void* methodPtr) { throw new NotImplementedException(); }
-        //public static unsafe int Calliint(void* thisObject, int arg0, void* methodPtr) { throw new NotImplementedException(); }
+        public static unsafe int Calliint(void* thisObject, int arg0, void* methodPtr) { throw new NotImplementedException(); }
         //public static unsafe int Calliint(void* thisObject, int arg0, int arg1, void* methodPtr) { throw new NotImplementedException(); }
         //  public static unsafe int Calliint(void* thisObject, long arg0, long arg1, void* methodPtr) { throw new NotImplementedException(); }
         //  public static unsafe int Calliint(void* thisObject, long arg0, void* methodPtr) { throw new NotImplementedException(); }
         //  public static unsafe int Calliint(void* thisObject, long arg0, float arg1, void* methodPtr) { throw new NotImplementedException(); }
-        //   public static unsafe int Calliint(void* thisObject, void* arg0, void* arg1, void* arg2, void* arg3, void* methodPtr) { throw new NotImplementedException(); }
+        public static unsafe int Calliint(void* thisObject, void* arg0, void* arg1, void* arg2, void* arg3, void* methodPtr) { throw new NotImplementedException(); }
         //   public static unsafe void Callivoid(void* thisObject, long arg0, long arg1, void* methodPtr) { throw new NotImplementedException(); }
         //   public static unsafe void Callivoid(void* thisObject, void* methodPtr) { throw new NotImplementedException(); }
         //     public static unsafe int Calliint(void* thisObject, float arg0, float arg1, int arg2, int arg3, void* arg4, void* arg5, void* methodPtr) { throw new NotImplementedException(); }
@@ -63,7 +63,7 @@ namespace SharpDX.MediaFoundation
         public static unsafe int Calliint16(void* thisObject, void* arg0, SharpDX.Mathematics.Interop.RawBool arg1, void* methodPtr) { throw new NotImplementedException(); }
         //  public static unsafe void Callivoid(void* thisObject, void* arg0, void* methodPtr) { throw new NotImplementedException(); }
         public static unsafe int Calliint18(void* thisObject, int arg0, SharpDX.Mathematics.Interop.RawBool arg1, void* methodPtr) { throw new NotImplementedException(); }
-        //    public static unsafe int Calliint(void* thisObject, int arg0, void* arg1, void* arg2, void* methodPtr) { throw new NotImplementedException(); }
+        public static unsafe int Calliint(void* thisObject, int arg0, void* arg1, void* arg2, void* methodPtr) { throw new NotImplementedException(); }
         //    public static unsafe int Calliint(void* thisObject, float arg0, void* methodPtr) { throw new NotImplementedException(); }
         public static unsafe int Calliint21(void* thisObject, SharpDX.Mathematics.Interop.RawBool arg0, void* arg1, void* arg2, void* methodPtr) { throw new NotImplementedException(); }
         public static unsafe int Calliint22(void* thisObject, void* arg0, SharpDX.Mathematics.Interop.RawBool arg1, void* arg2, void* arg3, void* methodPtr) { throw new NotImplementedException(); }
@@ -73,22 +73,23 @@ namespace SharpDX.MediaFoundation
         //public static unsafe int Calliint(void* thisObject, short arg0, void* arg1, long arg2, void* methodPtr) { throw new NotImplementedException(); }
         //public static unsafe int Calliint(void* thisObject, short arg0, void* arg1, void* methodPtr) { throw new NotImplementedException(); }
         //public static unsafe int Calliint(void* thisObject, void* arg0, long arg1, void* methodPtr) { throw new NotImplementedException(); }
-        //public static unsafe int Calliint(void* thisObject, void* arg0, int arg1, void* methodPtr) { throw new NotImplementedException(); }
+        public static unsafe int Calliint(void* thisObject, void* arg0, int arg1, void* methodPtr) { throw new NotImplementedException(); }
         public static unsafe int Calliint30(void* thisObject, void* arg0, int arg1, SharpDX.Mathematics.Interop.RawBool arg2, void* methodPtr) { throw new NotImplementedException(); }
-        //public static unsafe int Calliint(void* thisObject, void* arg0, void* arg1, void* arg2, void* arg3, void* arg4, void* methodPtr) { throw new NotImplementedException(); }
-        //public static unsafe int Calliint(void* thisObject, int arg0, int arg1, void* arg2, void* methodPtr) { throw new NotImplementedException(); }
+        public static unsafe int Calliint(void* thisObject, void* arg0, void* arg1, void* arg2, void* arg3, void* arg4, void* methodPtr) { throw new NotImplementedException(); }
+        public static unsafe int Calliint(void* thisObject, int arg0, int arg1, void* arg2, void* methodPtr) { throw new NotImplementedException(); }
         //public static unsafe int Calliint(void* thisObject, int arg0, int arg1, short arg2, void* methodPtr) { throw new NotImplementedException(); }
         //public static unsafe int Calliint(void* thisObject, int arg0, void* arg1, void* arg2, void* arg3, void* methodPtr) { throw new NotImplementedException(); }
         //public static unsafe int Calliint(void* thisObject, void* arg0, short arg1, void* methodPtr) { throw new NotImplementedException(); }
         //public static unsafe int Calliint(void* thisObject, void* arg0, int arg1, int arg2, void* methodPtr) { throw new NotImplementedException(); }
-        //public static unsafe int Calliint(void* thisObject, void* arg0, void* arg1, void* arg2, void* methodPtr) { throw new NotImplementedException(); }
-        //public static unsafe int Calliint(void* thisObject, void* arg0, int arg1, void* arg2, void* methodPtr) { throw new NotImplementedException(); }
-        //public static unsafe int Calliint(void* thisObject, void* arg0, void* arg1, int arg2, void* arg3, void* methodPtr) { throw new NotImplementedException(); }
+        public static unsafe int Calliint(void* thisObject, void* arg0, void* arg1, void* arg2, void* methodPtr) { throw new NotImplementedException(); }
+        public static unsafe int Calliint(void* thisObject, void* arg0, int arg1, void* arg2, void* methodPtr) { throw new NotImplementedException(); }
+        public static unsafe int Calliint(void* thisObject, void* arg0, void* arg1, int arg2, void* arg3, void* methodPtr) { throw new NotImplementedException(); }
         //public static unsafe int Calliint(void* thisObject, void* arg0, double arg1, void* methodPtr) { throw new NotImplementedException(); }
         //public static unsafe int Calliint(void* thisObject, void* arg0, void* arg1, int arg2, void* methodPtr) { throw new NotImplementedException(); }
         //public static unsafe int Calliint(void* thisObject, short arg0, void* methodPtr) { throw new NotImplementedException(); }
         //public static unsafe short Callishort(void* thisObject, void* methodPtr) { throw new NotImplementedException(); }
         //public static unsafe int Calliint(void* thisObject, short arg0, void* arg1, void* arg2, void* arg3, void* arg4, void* methodPtr) { throw new NotImplementedException(); }
+        //public static unsafe int Calliint(void* thisObject, System.Guid arg0, short arg1, void* arg2, int arg3, void* methodPtr) { throw new NotImplementedException(); }
         //public static unsafe int Calliint(void* thisObject, System.Guid arg0, short arg1, void* arg2, int arg3, void* methodPtr) { throw new NotImplementedException(); }
         public static unsafe int Calliint46(void* thisObject, SharpDX.Result arg0, void* methodPtr) { throw new NotImplementedException(); }
         //public static unsafe System.IntPtr CalliSystemIntPtr(void* thisObject, void* methodPtr) { throw new NotImplementedException(); }
@@ -111,8 +112,8 @@ namespace SharpDX.MediaFoundation
         //public static unsafe int Calliint(void* thisObject, void* arg0, int arg1, long arg2, long arg3, void* arg4, int arg5, void* arg6, void* methodPtr) { throw new NotImplementedException(); }
         //public static unsafe int Calliint(void* thisObject, int arg0, int arg1, void* arg2, int arg3, void* arg4, void* arg5, void* methodPtr) { throw new NotImplementedException(); }
         //public static unsafe int Calliint(void* thisObject, int arg0, int arg1, void* arg2, int arg3, void* methodPtr) { throw new NotImplementedException(); }
-        //public static unsafe int Calliint(void* thisObject, void* arg0, void* arg1, int arg2, void* arg3, void* arg4, void* methodPtr) { throw new NotImplementedException(); }
-        //public static unsafe int Calliint(void* thisObject, void* arg0, int arg1, int arg2, void* arg3, void* methodPtr) { throw new NotImplementedException(); }
+        public static unsafe int Calliint(void* thisObject, void* arg0, void* arg1, int arg2, void* arg3, void* arg4, void* methodPtr) { throw new NotImplementedException(); }
+        public static unsafe int Calliint(void* thisObject, void* arg0, int arg1, int arg2, void* arg3, void* methodPtr) { throw new NotImplementedException(); }
         //public static unsafe int Calliint(void* thisObject, long arg0, int arg1, void* arg2, void* methodPtr) { throw new NotImplementedException(); }
         public static unsafe int Calliint70(void* thisObject, SharpDX.Mathematics.Interop.RawBool arg0, float arg1, void* methodPtr) { throw new NotImplementedException(); }
         //public static unsafe int Calliint(void* thisObject, void* arg0, int arg1, void* arg2, void* arg3, void* methodPtr) { throw new NotImplementedException(); }

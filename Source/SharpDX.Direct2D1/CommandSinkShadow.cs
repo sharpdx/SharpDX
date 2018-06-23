@@ -537,7 +537,9 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.PushLayer(ref *(LayerParameters1*)layerParameters1, layer == IntPtr.Zero ? null : new Layer(layer));
+                    var layerParameters = new LayerParameters1();
+                    layerParameters.__MarshalFrom(ref *(LayerParameters1.__Native*)layerParameters1);
+                    callback.PushLayer(ref layerParameters, layer == IntPtr.Zero ? null : new Layer(layer));
                 }
                 catch (Exception exception)
                 {

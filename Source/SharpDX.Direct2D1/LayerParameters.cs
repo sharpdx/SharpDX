@@ -23,34 +23,5 @@ namespace SharpDX.Direct2D1
 {
     public partial struct LayerParameters
     {
-        /// <summary>
-        /// Sets the geometric mask.
-        /// </summary>
-        /// <value>
-        /// The geometric mask.
-        /// </value>
-        /// <unmanaged>ID2D1Geometry* geometricMask</unmanaged>
-        public Geometry GeometricMask
-        {
-            set
-            {
-                GeometricMaskPointer = value == null ? IntPtr.Zero : value.NativePointer;
-            }
-        }
-
-        /// <summary>
-        /// Sets the opacity brush.
-        /// </summary>
-        /// <value>
-        /// The opacity brush.
-        /// </value>
-        /// <unmanaged>ID2D1Brush* opacityBrush</unmanaged>	
-        public Brush OpacityBrush
-        {
-            set
-            {
-                OpacityBrushPointer = value == null ? IntPtr.Zero : value.NativePointer;
-            }
-        }
     }
 }
