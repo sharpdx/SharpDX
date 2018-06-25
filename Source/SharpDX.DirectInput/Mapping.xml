@@ -877,7 +877,7 @@
 
     <map struct="DIDEVCAPS" native="true" struct-to-class="true" marshal="false" new="true" />
     <map field="DIDEVCAPS::dwSize" visibility="internal"/>
-    <map field="DIDEVCAPS::dwAxes" name="AxeCount"/>
+    <map field="DIDEVCAPS::dwAxes" name="AxisCount"/>
     <map field="DIDEVCAPS::dwButtons" name="ButtonCount"/>
     <map field="DIDEVCAPS::dwFFDriverVersion" name="DriverVersion"/>
     <map field="DIDEVCAPS::dwFFMinTimeResolution" name="ForceFeedbackMinimumTimeResolution"/>
@@ -900,7 +900,7 @@
     <map field="DIDEVICEIMAGEINFOHEADERW::dwSizeImageInfo" visibility="internal"/>
     <map field="DIDEVICEIMAGEINFOHEADERW::dwcViews" name="ViewCount"/>
     <map field="DIDEVICEIMAGEINFOHEADERW::dwcButtons" name="ButtonCount"/>
-    <map field="DIDEVICEIMAGEINFOHEADERW::dwcAxes" name="AxeCount"/>
+    <map field="DIDEVICEIMAGEINFOHEADERW::dwcAxes" name="AxisCount"/>
     <map field="DIDEVICEIMAGEINFOHEADERW::dwcPOVs" name="PovCount"/>
     <map field="DIDEVICEIMAGEINFOHEADERW::dwBufferSize" visibility="internal"/>
     <map field="DIDEVICEIMAGEINFOHEADERW::dwBufferUsed" visibility="internal"/>
@@ -936,8 +936,8 @@
     <map struct="DIEFFECT" native="true" struct-to-class="true" marshal="true" new="true" />
     <map field="DIEFFECT::dwSize" visibility="internal"/>
     <map field="DIEFFECT::dwFlags" type="DIEFF"/>
-    <map field="DIEFFECT::cAxes" name="AxeCount" visibility="internal"/>
-    <map field="DIEFFECT::rgdwAxes" name="AxePointer" visibility="internal"/>
+    <map field="DIEFFECT::cAxes" name="AxisCount" visibility="internal"/>
+    <map field="DIEFFECT::rgdwAxes" name="AxisPointer" visibility="internal"/>
     <map field="DIEFFECT::rglDirection" name="DirectionPointer" visibility="internal"/>
     <map field="DIEFFECT::lpEnvelope" name="EnvelopePointer" visibility="internal"/>
     <map field="DIEFFECT::cbTypeSpecificParams" name="TypeSpecificParamCount" visibility="internal"/>
