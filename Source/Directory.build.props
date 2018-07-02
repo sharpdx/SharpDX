@@ -14,7 +14,7 @@
     <Company>Alexandre Mutel</Company>
     <Copyright>Copyright (c) 2010-2016 Alexandre Mutel</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Version>4.1.0</Version>
+    <Version>4.2.0</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <Version Condition=" '$(SharpDXPackagingDev)' == 'true' ">$(Version)-ci$(SharpDXBuildNumber)</Version>
     <PackageOutputPath>$(MSBuildThisFileDirectory)/../bin</PackageOutputPath>
