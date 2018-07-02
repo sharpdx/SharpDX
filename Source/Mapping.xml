@@ -508,10 +508,12 @@
   </extension>
 
   <bindings>
-      <!-- Primitive bindings -->
+    <!-- Primitive bindings -->
     <bind from="void" to="System.Void" />
     <bind from="int" to="System.Int32" />
     <bind from="unsigned int" to="System.Int32" />
+    <bind from="long" to="System.Int32" />
+    <bind from="unsigned long" to="System.Int32" />
     <bind from="short" to="System.Int16" />
     <bind from="unsigned short" to="System.Int16" />
     <bind from="unsigned char" to="System.Byte" />

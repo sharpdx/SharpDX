@@ -589,8 +589,10 @@ namespace SharpDX.Direct3D11
             {
                 try
                 {
-                    var switchToRef = QueryInterface<SwitchToRef>();
-                    return switchToRef.UseRef;
+                    using(var switchToRef = QueryInterface<SwitchToRef>())
+                    {
+                        return switchToRef.GetUseRef();
+                    }
                 }
                 catch (SharpDXException)
                 {

@@ -261,7 +261,7 @@
     <map field="D3DX?(\d+)_PASS_DESC::BlendFactor" type="SHARPDX_COLOR4" pointer="" array="0" override-native-type="true" />
     <map field="D3DX?(\d+)_PASS_DESC::StencilRef" name="StencilReference" />
     <map field="D3DX?(\d+)_PASS_SHADER_DESC::pShaderVariable" visibility="internal" />
-    <map field="D3DX?(\d+)_PASS_SHADER_DESC::pShaderVariable" name="VariablePointer" />
+    <map field="D3DX?(\d+)_PASS_SHADER_DESC::pShaderVariable" name="VariablePointer" type="void" />
     <map field="D3DX?(\d+)_PASS_SHADER_DESC::ShaderIndex" name="Index" />
     <map field="D3DX?(\d+)_EFFECT_SHADER_DESC::pInputSignature" visibility="internal" name="InputSignaturePointer" />
     <map field="D3DX?(\d+)_EFFECT_SHADER_DESC::pBytecode" visibility="internal" name="BytecodePointer" />
@@ -338,8 +338,8 @@
     <map method="ID3D(\d+)DeviceContext::SetVertexBuffers" visibility="internal" />
     <map method="ID3D(\d+)DeviceContext::SetTargets" visibility="internal" />
     <map method="ID3D(\d+)DeviceContext::SetRenderTargetsAndUnorderedAccessViews" visibility="internal" />
-    <map param="ID3D(\d+)DeviceContext::ClearRenderTargetView::ColorRGBA" type="SHARPDX_COLOR4" pointer="*" array="0" />
-    <map param="ID3D(\d+)DeviceContext1::ClearView::Color" type="SHARPDX_COLOR4" pointer="*" array="0"/>
+    <map param="ID3D(\d+)DeviceContext::ClearRenderTargetView::ColorRGBA" type="SHARPDX_COLOR4" override-native-type="true" pointer="*" array="0" />
+    <map param="ID3D(\d+)DeviceContext1::ClearView::Color" type="SHARPDX_COLOR4" override-native-type="true" pointer="*" array="0"/>
     <map method="ID3D\d+DeviceContext::IA(.*)" name="$1" />
     <map method="ID3D\d+DeviceContext::VS(.*)" name="$1" />
     <map method="ID3D\d+DeviceContext::PS(.*)" name="$1" />
@@ -390,8 +390,8 @@
     <map param="ID3D(\d+)DeviceContext::RSGetViewports::pViewports" type="void" />
     <map method="ID3D(\d+)DeviceContext::RSSetViewports" visibility="internal" />
     <map param="ID3D(\d+)DeviceContext::RSSetViewports::pViewports" type="void" />
-    <map param="ID3D(\d+)DeviceContext::OMGetBlendState::BlendFactor" type="SHARPDX_COLOR4" pointer="*" array="0" />
-    <map param="ID3D(\d+)DeviceContext::OMSetBlendState::BlendFactor" type="SHARPDX_COLOR4" pointer="*" array="0" default="null"/>
+    <map param="ID3D(\d+)DeviceContext::OMGetBlendState::BlendFactor" type="SHARPDX_COLOR4" override-native-type="true" pointer="*" array="0" />
+    <map param="ID3D(\d+)DeviceContext::OMSetBlendState::BlendFactor" type="SHARPDX_COLOR4" override-native-type="true" pointer="*" array="0" default="null"/>
     <map param="ID3D(\d+)DeviceContext::OMSetBlendState::SampleMask" default="-1"/>
     <map param="ID3D(\d+)DeviceContext::OMSetDepthStencilState::StencilRef" default="0"/>
     <map param="ID3D(\d+)DeviceContext::[A-Z][A-Z]GetShader::pNumClassInstances" attribute="inout" />
@@ -407,8 +407,8 @@
     <map method="ID3D(\d+)DeviceContext::ClearUnorderedAccessViewFloat" name="ClearUnorderedAccessView" />
     <map method="ID3D(\d+)DeviceContext::ClearUnorderedAccessViewUint" name="ClearUnorderedAccessView" />
 
-    <map param="ID3D(\d+)DeviceContext::ClearUnorderedAccessViewFloat::Values" type="SHARPDX_VECTOR4" />
-    <map param="ID3D(\d+)DeviceContext::ClearUnorderedAccessViewUint::Values" type="SHARPDX_INT4" />
+    <map param="ID3D(\d+)DeviceContext::ClearUnorderedAccessViewFloat::Values" type="SHARPDX_VECTOR4"  override-native-type="true" pointer="*" array="0" />
+    <map param="ID3D(\d+)DeviceContext::ClearUnorderedAccessViewUint::Values" type="SHARPDX_INT4"  override-native-type="true" pointer="*" array="0" />
 
     <map param="ID3D(\d+)DeviceContext::ClearDepthStencilView::ClearFlags" type="D3D11_CLEAR_FLAG" />
     <remove interface="ID3DX(\d+)ThreadPump" />
@@ -445,14 +445,14 @@
     <map method="ID3DX?(\d+)EffectMatrixVariable::GetMatrixTranspose" visibility="internal" />
     <map method="ID3DX?(\d+)EffectMatrixVariable::SetMatrix" visibility="public" />
     <map method="ID3DX?(\d+)EffectMatrixVariable::SetMatrixTranspose" visibility="public" />
-    <map param="ID3DX?(\d+)EffectMatrixVariable::SetMatrix::pData" type="SHARPDX_MATRIX" attribute="in" />
-    <map param="ID3DX?(\d+)EffectMatrixVariable::SetMatrixTranspose::pData" type="SHARPDX_MATRIX" attribute="in" />
-    <map param="ID3DX?(\d+)EffectMatrixVariable::SetMatrixArray::pData" type="SHARPDX_MATRIX" attribute="in buffer" />
-    <map param="ID3DX?(\d+)EffectMatrixVariable::SetMatrixTransposeArray::pData" type="SHARPDX_MATRIX" attribute="in buffer" />
-    <map param="ID3DX?(\d+)EffectMatrixVariable::GetMatrix::pData" type="SHARPDX_MATRIX" attribute="out" />
-    <map param="ID3DX?(\d+)EffectMatrixVariable::GetMatrixArray::pData" type="SHARPDX_MATRIX" attribute="out buffer" />
-    <map param="ID3DX?(\d+)EffectMatrixVariable::GetMatrixTranspose::pData" type="SHARPDX_MATRIX" attribute="out"/>
-    <map param="ID3DX?(\d+)EffectMatrixVariable::GetMatrixTransposeArray::pData" type="SHARPDX_MATRIX" attribute="out buffer" />
+    <map param="ID3DX?(\d+)EffectMatrixVariable::SetMatrix::pData" type="SHARPDX_MATRIX" override-native-type="true" attribute="in" />
+    <map param="ID3DX?(\d+)EffectMatrixVariable::SetMatrixTranspose::pData" type="SHARPDX_MATRIX" override-native-type="true" attribute="in" />
+    <map param="ID3DX?(\d+)EffectMatrixVariable::SetMatrixArray::pData" type="SHARPDX_MATRIX" override-native-type="true" attribute="in buffer" />
+    <map param="ID3DX?(\d+)EffectMatrixVariable::SetMatrixTransposeArray::pData" type="SHARPDX_MATRIX" override-native-type="true" attribute="in buffer" />
+    <map param="ID3DX?(\d+)EffectMatrixVariable::GetMatrix::pData" type="SHARPDX_MATRIX" override-native-type="true" attribute="out" />
+    <map param="ID3DX?(\d+)EffectMatrixVariable::GetMatrixArray::pData" type="SHARPDX_MATRIX" override-native-type="true" attribute="out buffer" />
+    <map param="ID3DX?(\d+)EffectMatrixVariable::GetMatrixTranspose::pData" type="SHARPDX_MATRIX" override-native-type="true" attribute="out"/>
+    <map param="ID3DX?(\d+)EffectMatrixVariable::GetMatrixTransposeArray::pData" type="SHARPDX_MATRIX" override-native-type="true" attribute="out buffer" />
     
     <map param="ID3DX?(\d+)EffectPass::GetDesc::pDesc" attribute="out" />
     <map param="ID3DX?(\d+)EffectPass::GetVertexShaderDesc::pDesc" attribute="out" />
@@ -504,18 +504,18 @@
     <map method="ID3DX?(\d+)EffectVectorVariable::SetIntVector" visibility="public" />
     <map method="ID3DX?(\d+)EffectVectorVariable::SetFloatVector" visibility="public" />
     <map method="ID3DX?(\d+)EffectVectorVariable::SetBoolVector" visibility="public" />
-    <map param="ID3DX?(\d+)EffectVectorVariable::GetIntVector::pData" type="SHARPDX_INT4" attribute="out" />
-    <map param="ID3DX?(\d+)EffectVectorVariable::GetFloatVector::pData" type="SHARPDX_VECTOR4" attribute="out" />
-    <map param="ID3DX?(\d+)EffectVectorVariable::GetIntVectorArray::pData" type="SHARPDX_INT4" attribute="out buffer" />
-    <map param="ID3DX?(\d+)EffectVectorVariable::GetFloatVectorArray::pData" type="SHARPDX_VECTOR4" attribute="out buffer" />
-    <map param="ID3DX?(\d+)EffectVectorVariable::SetIntVectorArray::pData" type="SHARPDX_INT4" attribute="in buffer" />
-    <map param="ID3DX?(\d+)EffectVectorVariable::SetFloatVectorArray::pData" type="SHARPDX_VECTOR4" attribute="in buffer" />
-    <map param="ID3DX?(\d+)EffectVectorVariable::SetIntVector::pData" type="SHARPDX_INT4" attribute="in" />
+    <map param="ID3DX?(\d+)EffectVectorVariable::GetIntVector::pData" type="SHARPDX_INT4" override-native-type="true" attribute="out" />
+    <map param="ID3DX?(\d+)EffectVectorVariable::GetFloatVector::pData" type="SHARPDX_VECTOR4" override-native-type="true" attribute="out" />
+    <map param="ID3DX?(\d+)EffectVectorVariable::GetIntVectorArray::pData" type="SHARPDX_INT4" override-native-type="true" attribute="out buffer" />
+    <map param="ID3DX?(\d+)EffectVectorVariable::GetFloatVectorArray::pData" type="SHARPDX_VECTOR4" override-native-type="true" attribute="out buffer" />
+    <map param="ID3DX?(\d+)EffectVectorVariable::SetIntVectorArray::pData" type="SHARPDX_INT4" override-native-type="true" attribute="in buffer" />
+    <map param="ID3DX?(\d+)EffectVectorVariable::SetFloatVectorArray::pData" type="SHARPDX_VECTOR4" override-native-type="true" attribute="in buffer" />
+    <map param="ID3DX?(\d+)EffectVectorVariable::SetIntVector::pData" type="SHARPDX_INT4" override-native-type="true" attribute="in" />
     <map method="ID3DX?(\d+)EffectVectorVariable::Set.*" name="Set" />
-    <map param="ID3DX?(\d+)EffectVectorVariable::GetBoolVector::pData" type="SHARPDX_BOOL4" attribute="out" />
-    <map param="ID3DX?(\d+)EffectVectorVariable::GetBoolVectorArray::pData" type="SHARPDX_BOOL4" attribute="out buffer" />
-    <map param="ID3DX?(\d+)EffectVectorVariable::SetBoolVector::pData" type="SHARPDX_BOOL4" attribute="in" />
-    <map param="ID3DX?(\d+)EffectVectorVariable::SetBoolVectorArray::pData" type="SHARPDX_BOOL4" attribute="in buffer" />
+    <map param="ID3DX?(\d+)EffectVectorVariable::GetBoolVector::pData" type="SHARPDX_BOOL4" override-native-type="true" attribute="out" />
+    <map param="ID3DX?(\d+)EffectVectorVariable::GetBoolVectorArray::pData" type="SHARPDX_BOOL4" override-native-type="true" attribute="out buffer" />
+    <map param="ID3DX?(\d+)EffectVectorVariable::SetBoolVector::pData" type="SHARPDX_BOOL4" override-native-type="true" attribute="in" />
+    <map param="ID3DX?(\d+)EffectVectorVariable::SetBoolVectorArray::pData" type="SHARPDX_BOOL4" override-native-type="true" attribute="in buffer" />
     
     <map param="ID3DX?(\d+)EffectTechnique::GetDesc::pDesc" attribute="out" />
     <map param="ID3DX?(\d+)Effect::GetDevice::ppDevice" attribute="out" />

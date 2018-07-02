@@ -192,8 +192,7 @@
     <map field="XAUDIO2_BUFFER::pAudioData" name="AudioDataPointer" />
     <map struct="XAUDIO2_SEND_DESCRIPTOR" name="VoiceSendDescriptor" />
     <map field="XAUDIO2_SEND_DESCRIPTOR::Flags" type="XAUDIO2_VOICE_SEND_FLAGS" />
-    <map field="XAUDIO2_SEND_DESCRIPTOR::pOutputVoice" name="OutputVoicePointer" />
-    <map field="XAUDIO2_SEND_DESCRIPTOR::pOutputVoice" visibility="internal" />
+    <map field="XAUDIO2_SEND_DESCRIPTOR::pOutputVoice" name="OutputVoice" />
     <map field="XAUDIO2_VOICE_DETAILS::CreationFlags" type="XAUDIO2_VOICE_FLAGS" />
     <map struct="XAUDIO2_VOICE_SENDS" visibility="internal" />
     <map struct="XAUDIO2_VOICE_SENDS" name="VoiceSendDescriptors" />

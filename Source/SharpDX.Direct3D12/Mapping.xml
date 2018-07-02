@@ -134,14 +134,15 @@
     <map field="D3D12_COMMAND_SIGNATURE_DESC::NumArgumentDescs" visibility="internal"/>
     <map field="D3D12_COMMAND_SIGNATURE_DESC::pArgumentDescs" visibility="internal"/>
 
-    <map field="D3D12_.*_PIPELINE_STATE_DESC::p([A-Z].*)" name="$1Pointer" visibility="private"/>
     <map field="D3D12_GRAPHICS_PIPELINE_STATE_DESC::RTVFormats" name="RenderTargetFormats"/>
     <map field="D3D12_GRAPHICS_PIPELINE_STATE_DESC::DSVFormat" name="DepthStencilFormat"/>
 
-    <map field="D3D12_RESOURCE_TRANSITION_BARRIER::pResource" name="ResourcePointer" visibility="private"/>
-    <map field="D3D12_RESOURCE_ALIASING_BARRIER::pResourceBefore" name="ResourceBeforePointer" visibility="private"/>
-    <map field="D3D12_RESOURCE_ALIASING_BARRIER::pResourceAfter" name="ResourceAfterPointer" visibility="private"/>
-
+    <map field="D3D12_RESOURCE_TRANSITION_BARRIER::pResource" name="ResourcePointer" type="void" visibility="private"/>
+    <map field="D3D12_RESOURCE_ALIASING_BARRIER::pResourceBefore" name="ResourceBeforePointer" type="void" visibility="private"/>
+    <map field="D3D12_RESOURCE_ALIASING_BARRIER::pResourceAfter" name="ResourceAfterPointer" type="void" visibility="private"/>
+    <map field="D3D12_RESOURCE_TRANSITION_BARRIER::pResource" name="ResourcePointer" type="void" visibility="private"/>
+    <map field="D3D12_RESOURCE_UAV_BARRIER::pResource" name="ResourcePointer" type="void" />
+    
     <map field="D3D12_RESOURCE_DESC::CPUAccessFlags" name="CpuAccessFlags" />
     <map field="D3D12_RESOURCE_DESC::MiscFlags" name="OptionFlags"/>
 
@@ -226,10 +227,10 @@
     <map method="ID3D12GraphicsCommandList::OM(.*)" name="$1"/>
     <map method="ID3D12GraphicsCommandList::RS(.*)" name="$1"/>
     <map method="ID3D12GraphicsCommandList::OMSetStencilRef" name="SetStencilReference"/>
-    <map param="ID3D12GraphicsCommandList::OMSetBlendFactor::BlendFactor" type="SHARPDX_VECTOR4" attribute="in" />
-    <map param="ID3D12GraphicsCommandList::ClearRenderTargetView::ColorRGBA" type="SHARPDX_COLOR4"/>
-    <map param="ID3D12GraphicsCommandList::ClearUnorderedAccessViewUint::Values" type="SHARPDX_INT4"/>
-    <map param="ID3D12GraphicsCommandList::ClearUnorderedAccessViewFloat::Values" type="SHARPDX_VECTOR4"/>
+    <map param="ID3D12GraphicsCommandList::OMSetBlendFactor::BlendFactor" type="SHARPDX_VECTOR4" override-native-type="true" attribute="in" />
+    <map param="ID3D12GraphicsCommandList::ClearRenderTargetView::ColorRGBA" type="SHARPDX_COLOR4" override-native-type="true"/>
+    <map param="ID3D12GraphicsCommandList::ClearUnorderedAccessViewUint::Values" type="SHARPDX_INT4" override-native-type="true"/>
+    <map param="ID3D12GraphicsCommandList::ClearUnorderedAccessViewFloat::Values" type="SHARPDX_VECTOR4" override-native-type="true"/>
     <map param="ID3D12GraphicsCommandList::ResourceBarrier::pBarriers" type="void"/>
     <map method="ID3D12GraphicsCommandList::ResourceBarrier" visibility="private"/>
 

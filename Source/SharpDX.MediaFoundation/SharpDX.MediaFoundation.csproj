@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="MSBuild.Sdk.Extras">
   
   <PropertyGroup>
     <TargetFrameworks>net40;net45;netstandard1.1;uap10.0</TargetFrameworks>
@@ -24,6 +24,4 @@
     <ProjectReference Include="..\SharpDX.Direct3D9\SharpDX.Direct3D9.csproj" Condition=" '$(AppType)' == 'DESKTOP_APP' " />
     <ProjectReference Include="..\SharpDX.Mathematics\SharpDX.Mathematics.csproj" Condition=" '$(AppType)' == 'DESKTOP_APP' " />
   </ItemGroup>
-
-  <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 </Project>

@@ -39,7 +39,7 @@ namespace SharpDX.Animation
         /// <unmanaged>HRESULT IUIAnimationStoryboard::RepeatBetweenKeyframes([In] __MIDL___MIDL_itf_UIAnimation_0000_0002_0003* startKeyframe,[In] __MIDL___MIDL_itf_UIAnimation_0000_0002_0003* endKeyframe,[In] int repetitionCount)</unmanaged>	
         public void RepeatBetweenKeyframes(SharpDX.Animation.KeyFrame startKeyframe, SharpDX.Animation.KeyFrame endKeyframe, RepeatCount repetitionCount)
         {
-            RepeatBetweenKeyframes(ref startKeyframe, ref endKeyframe, (int)repetitionCount);
+            RepeatBetweenKeyframes(startKeyframe, endKeyframe, (int)repetitionCount);
         }
 
         /// <summary>

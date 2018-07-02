@@ -99,7 +99,7 @@
     <bind from="UINT_PTR" to="System.IntPtr" />
     <bind from="LONG_PTR" to="System.IntPtr" />
     <bind from="ULONG_PTR" to="System.IntPtr" />
-    <bind from="HANDLE_PTR" to="System.IntPtr" />    
+    <bind from="HANDLE_PTR" to="System.IntPtr" /> 
 
     <bind from="LPGLYPHMETRICSFLOAT" to="System.IntPtr" />
     <bind from="WAVEFORMATEX" to="SharpDX.Multimedia.WaveFormat" />
@@ -126,9 +126,12 @@
     <bind from="COLORREF" to="System.Int32" />
     <bind from="__function__stdcall" to="SharpDX.FunctionCallback" />
     <bind from="SIZE" to="SharpDX.Size2" />
-    <bind from="SIZE_T" to="SharpDX.PointerSize" marshal="System.IntPtr"/>
-    <bind from="SSIZE_T" to="SharpDX.PointerSize" marshal="System.IntPtr"/>
+    <bind from="SIZE_T" to="SharpDX.PointerSize" />
+    <bind from="SSIZE_T" to="SharpDX.PointerSize" />
 		<bind from="MSG" to="SharpDX.Win32.NativeMessage" />
+    <bind from="ULONG" to="System.Int32" />
+    <bind from="LONG" to="System.Int32" />
+    <bind from="DWORD" to="System.Int32" />
 
     <bind from="SECURITY_ATTRIBUTES" to="SharpDX.Win32.SecurityAttributes"/>
     
@@ -227,7 +230,7 @@
     <map param="IStream::Stat::pstatstg" attribute="out" return="true"/>
     <map param="IStream::Stat::grfStatFlag" type="STATFLAG"/>
     <map param="IStream::Clone::ppstm" return="true"/>
-    <map method="IStream::.*" keep-implement-public="true"/>
+    <map method="IStream::.*" keep-implement-public="true" property="false" />
     
     <context-clear/>
   </mapping>

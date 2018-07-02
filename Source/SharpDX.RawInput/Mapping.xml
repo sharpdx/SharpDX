@@ -38,6 +38,7 @@
     <attach>RID_DEVICE_INFO_KEYBOARD</attach>
     <attach>RID_DEVICE_INFO_HID</attach>
     <attach>RID_DEVICE_INFO</attach>
+    <attach>RID_DEVICE_INFO_INNER_0</attach>
     <attach>RAWINPUT_INNER_0</attach>
 
     <attach>GetRawInputData</attach>

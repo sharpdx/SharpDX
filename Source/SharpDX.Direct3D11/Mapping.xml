@@ -88,6 +88,7 @@
     <const from-macro="D3D11_PS_CS_UAV_REGISTER_COUNT" class="SharpDX.Direct3D11.ComputeShaderStage" type="int" name="UnorderedAccessViewSlotCount" />
     <const from-macro="D3D11_CS_([^0-9].*)" class="SharpDX.Direct3D11.ComputeShaderStage" type="int" name="$1" />
 
+    <const from-macro="D3D11_PS_(PIXEL_CENTER_FRACTIONAL_COMPONENT)" class="SharpDX.Direct3D11.PixelShaderStage" type="float" name="$1" />
     <const from-macro="D3D11_PS_([^C][^S].*)" class="SharpDX.Direct3D11.PixelShaderStage" type="int" name="$1" />
 
     <const from-macro="D3D11_(SIMULTANEOUS_RENDER_TARGET_COUNT)" class="SharpDX.Direct3D11.OutputMergerStage" type="int" name="$1" />

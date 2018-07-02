@@ -40,26 +40,12 @@
     <DelaySign>true</DelaySign>
   </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.14393.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
-  </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="SharpGenTools.Sdk" Version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="SharpGen.Doc.Msdn.Tasks" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="SharpGenTools.Sdk" Version="1.1.0" PrivateAssets="All" />
+    <PackageReference Include="SharpGen.Doc.Msdn.Tasks" Version="1.1.0" PrivateAssets="All" />
     <SharpGenGlobalNamespaceOverrides Include="InterfaceArray" Override="ComArray" />
     <SharpGenGlobalNamespaceOverrides Include="MemoryHelpers"  Override="Utilities" />
     <SharpGenGlobalNamespaceOverrides Include="BooleanHelpers" Override="Utilities" />
     <SharpGenGlobalNamespaceOverrides Include="StringHelpers"  Override="Utilities" />
-  </ItemGroup>
-
-  
-  <!-- Special packages and imports for UWP support -->
-  <ItemGroup>
-    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.1.0" PrivateAssets="all" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform " Version="5.4.0" />
   </ItemGroup>
 </Project>

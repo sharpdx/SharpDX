@@ -172,9 +172,7 @@ namespace SharpDX.MediaFoundation
         {
             get
             {
-                RawBool result;
-                IsEndOfStream_(out result);
-                return result;
+                return IsEndOfStream_;
             }
         }
 

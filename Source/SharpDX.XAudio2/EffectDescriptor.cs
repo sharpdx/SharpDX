@@ -41,7 +41,7 @@ namespace SharpDX.XAudio2
         /// <param name="outputChannelCount">The output channel count.</param>
         public EffectDescriptor(AudioProcessor effect, int outputChannelCount)
         {
-            EffectPointer = IntPtr.Zero;
+            EffectPointer = null;
             Effect = effect;
             InitialState = true;
             OutputChannelCount = outputChannelCount;
@@ -66,7 +66,7 @@ namespace SharpDX.XAudio2
                     throw new ArgumentException("Cannot set Effect twice on the same EffectDescriptor");
 
                 _effect = value;
-                EffectPointer = AudioProcessorShadow.ToIntPtr(_effect);
+                EffectPointer = _effect;
             }
         }        
     }

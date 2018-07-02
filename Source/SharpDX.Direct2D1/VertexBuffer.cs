@@ -60,7 +60,7 @@ namespace SharpDX.Direct2D1
                 finally
                 {
                     for (int i = 0; i < inputElementsNative.Length; i++)
-                        inputElementsNative[i].__MarshalFree();
+                        customVertexBufferProperties.InputElements[i].__MarshalFree(ref inputElementsNative[i]);
                 }
             }
         }
