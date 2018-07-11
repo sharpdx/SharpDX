@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sources", "Sources", "{CC8D
 	ProjectSection(SolutionItems) = preProject
 		Source\Mapping.Direct3D1x.xml = Source\Mapping.Direct3D1x.xml
 		Source\Mapping.xml = Source\Mapping.xml
+		Source\MappingFiles.props = Source\MappingFiles.props
 		Source\SharedAssemblyInfo.cs = Source\SharedAssemblyInfo.cs
 	EndProjectSection
 EndProject
@@ -68,6 +69,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpDX.Desktop", "Source\SharpDX.Desktop\SharpDX.Desktop.csproj", "{5F8DB9E8-FFAE-475F-AC2E-FE2DC5B15A1B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpDX.Direct3D10", "Source\SharpDX.Direct3D10\SharpDX.Direct3D10.csproj", "{618AFA87-81A8-4B1C-8876-5457D49F2DEF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{3EF31A42-4EEF-44AC-8D18-D036D080A955}"
+	ProjectSection(SolutionItems) = preProject
+		Source\Directory.build.props = Source\Directory.build.props
+		Source\Directory.build.targets = Source\Directory.build.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
