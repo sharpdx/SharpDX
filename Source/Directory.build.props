@@ -37,6 +37,10 @@
     <UseCommonOutputDirectory>true</UseCommonOutputDirectory>
     <OutputPath>$(MSBuildThisFileDirectory)..\Bin\$(Configuration)\</OutputPath>
     <DocumentationFile Condition="'$(Configuration)' == 'Release'">$(MSBuildThisFileDirectory)..\Bin\$(Configuration)\$(TargetFramework)\$(PackageId).xml</DocumentationFile>
+
+    <!-- Enable sourcelink support -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' And Exists('$(MSBuildThisFileDirectory)/../sharpdx.snk')">
     <DefineConstants>$(DefineConstants);SHARPDX_SIGNED</DefineConstants>
@@ -48,6 +52,7 @@
   <ItemGroup>
     <PackageReference Include="SharpGenTools.Sdk" Version="1.1.0" PrivateAssets="All" />
     <PackageReference Include="SharpGen.Doc.Msdn.Tasks" Version="1.1.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-*" PrivateAssets="All"/>
     <SharpGenGlobalNamespaceOverrides Include="InterfaceArray" Override="ComArray" />
     <SharpGenGlobalNamespaceOverrides Include="MemoryHelpers"  Override="Utilities" />
     <SharpGenGlobalNamespaceOverrides Include="BooleanHelpers" Override="Utilities" />
