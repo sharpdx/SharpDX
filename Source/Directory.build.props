@@ -50,7 +50,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SharpGenTools.Sdk" Version="1.1.1-ci446" PrivateAssets="All" />
+    <PackageReference Include="SharpGenTools.Sdk" Version="1.1.1-ci458" PrivateAssets="All" />
     <PackageReference Include="SharpGen.Doc.Msdn.Tasks" Version="1.1.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-*" PrivateAssets="All"/>
     <SharpGenGlobalNamespaceOverrides Include="InterfaceArray" Override="ComArray" />
