@@ -86,6 +86,8 @@
 
     <create class="D2D1" />
     <context-clear />
+
+    <define struct="SharpDX.DirectWrite.GdiInterop.FontSignature" sizeof="24" />
   </extension>
   
   <bindings>
