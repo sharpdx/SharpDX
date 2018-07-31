@@ -73,9 +73,13 @@
     <const from-macro="D3D11_REQ_TEXTURECUBE_DIMENSION" class="SharpDX.Direct3D11.Resource" type="int" name="MaximumTextureCubeSize" />
 
     <create class="ResultCode" visibility="public static" />
+    <context>winerror</context>
     <const from-macro="D3D11_ERROR_(.*)" type="SharpDX.ResultDescriptor" cpp-type="int" name="$1" class="SharpDX.Direct3D11.ResultCode" visibility="public static readonly">new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
     <const from-macro="D3DX11_ERR_(.*)" type="SharpDX.ResultDescriptor" cpp-type="int" name="$1" class="SharpDX.Direct3D11.ResultCode" visibility="public static readonly">new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
-
+    <context-clear />
+    
+    <context id="d3d11-all"/>
+    
     <create class="CommonShaderStage" visibility="public abstract partial" />
     <const from-macro="D3D11_COMMONSHADER_(.*)" class="SharpDX.Direct3D11.CommonShaderStage" type="int" name="$1" />
     <const from-macro="D3D11_IA_(.*)" class="SharpDX.Direct3D11.InputAssemblerStage" type="int" name="$1" />
