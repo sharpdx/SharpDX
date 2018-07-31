@@ -73,7 +73,7 @@ namespace SharpDX.Direct3D12
             native.Pointer = pinBuffer;
             if (managedData != null)
             {
-                native.Size = managedData.Length;
+                native.Size = (IntPtr)managedData.Length;
             }
         }
     }
