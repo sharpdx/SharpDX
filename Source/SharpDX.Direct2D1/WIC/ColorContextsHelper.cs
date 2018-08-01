@@ -59,7 +59,7 @@ namespace SharpDX.WIC
             ColorContext[] colorContexts;
             Result result = TryGetColorContexts(getColorContexts, imagingFactory, out colorContexts);
 
-            if (ResultCode.Unsupportedoperation != result)
+            if (ResultCode.UnsupportedOperation != result)
                 result.CheckError();
 
             return colorContexts;

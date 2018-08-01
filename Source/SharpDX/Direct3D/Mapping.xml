@@ -65,7 +65,7 @@
     // *****************************************************************
     -->
     <map enum="D3D(.*)" name-tmp="$1" />
-    <map enum-item="D3D(.*)" name-tmp="$1" />
+    <map enum-item="D3D(?!_PF_)(.*)" name-tmp="$1" />
     <map enum-item="D3D_INTERPOLATION(.*)" name-tmp="$1" />
     <remove enum-item="D3D(\d+)_CBF_USERPACKED.*"/>
     <remove enum-item="D3D(\d+)_PRIMITIVE_TOPOLOGY_.*" />
