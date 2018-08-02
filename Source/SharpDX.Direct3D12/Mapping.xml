@@ -136,6 +136,7 @@
 
     <map field="D3D12_GRAPHICS_PIPELINE_STATE_DESC::RTVFormats" name="RenderTargetFormats"/>
     <map field="D3D12_GRAPHICS_PIPELINE_STATE_DESC::DSVFormat" name="DepthStencilFormat"/>
+    <map field="D3D12_GRAPHICS_PIPELINE_STATE_DESC::pRootSignature" name="RootSignature"/>
 
     <map field="D3D12_RESOURCE_TRANSITION_BARRIER::pResource" name="ResourcePointer" type="void" visibility="private"/>
     <map field="D3D12_RESOURCE_ALIASING_BARRIER::pResourceBefore" name="ResourceBeforePointer" type="void" visibility="private"/>
