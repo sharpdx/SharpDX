@@ -275,7 +275,7 @@ namespace SharpDX.MediaFoundation
                 return;
             }
 
-            if (typeof(T) == typeof(ComObject) || typeof(T).GetTypeInfo().IsSubclassOf(typeof(IUnknown)))
+            if (typeof(T) == typeof(ComObject) || typeof(IUnknown).GetTypeInfo().IsAssignableFrom(typeof(T).GetTypeInfo()))
             {
                 Set(guidKey, ((IUnknown)(object)value));
                 return;
