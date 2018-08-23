@@ -5,15 +5,15 @@ using System.Text;
 
 namespace SharpDX.DirectWrite
 {
-    public partial class ColorGlyphRunEnumerator
+    public partial class ColorGlyphRunEnumerator1
     {
-        public unsafe ColorGlyphRun CurrentRun
+        public new unsafe ColorGlyphRun1 CurrentRun
         {
             get
             {
                 GetCurrentRun(out IntPtr ptr);
-                var run = new ColorGlyphRun();
-                run.__MarshalFrom(ref *((ColorGlyphRun.__Native*)ptr));
+                var run = new ColorGlyphRun1();
+                run.__MarshalFrom(ref *((ColorGlyphRun1.__Native*)ptr));
                 return run;
             }
         }
