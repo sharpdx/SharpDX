@@ -223,7 +223,8 @@
     <map param="IDWriteRemoteFontFileStream::BeginDownload::asyncResult" return="true" />
     <map method="IDWriteAsyncResult::GetResult" check="false"/>
     
-    <map param="IDWriteColorGlyphRunEnumerator::GetCurrentRun::colorGlyphRun" type="void" override-native-type="true" visibility="internal" />
+    <map param="IDWriteColorGlyphRunEnumerator(\d*)::GetCurrentRun::colorGlyphRun" type="void" override-native-type="true" />
+    <map method="IDWriteColorGlyphRunEnumerator(\d*)::GetCurrentRun" visibility="internal" property="false" />
     
     <!-- Factory 2 -->
     <map method="IDWriteFactory2::TranslateColorGlyphRun" hresult="true" check="false" visibility="public" name="TryTranslateColorGlyphRun" />
