@@ -39,6 +39,7 @@
   </extension>
 
   <bindings>
+    <bind from="__MIDL___MIDL_itf_UIAnimation_0000_0002_0003" to="System.IntPtr" />
   </bindings>
 
   <mapping>
@@ -74,10 +75,8 @@
     // Animation Structures
     // *****************************************************************
     -->
-    <map struct="UI_ANIMATION_(.*)" name-tmp="$1"/>
 
-    <map struct="__MIDL___MIDL_itf_UIAnimation_0000_0002_0003" name="KeyFrame"/>
-    <map field="__MIDL___MIDL_itf_UIAnimation_0000_0002_0003::_" name="Id" type="void" pointer="*"/>
+    <map struct="UI_ANIMATION_(.*)" name-tmp="$1"/>
 
     <!--
     // *****************************************************************
