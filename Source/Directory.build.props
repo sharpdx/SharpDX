@@ -30,7 +30,7 @@
     <SharpGenOutputDirectory>$(MSBuildProjectDirectory)/../</SharpGenOutputDirectory>
     <SharpGenGeneratedCodeFolder>Generated/$(AppType)</SharpGenGeneratedCodeFolder>
     <SharpGenGeneratedCodeFolder Condition="'$(TargetFramework)' == 'net40'">Generated/net40_$(AppType)</SharpGenGeneratedCodeFolder>
-    <SharpGenDocumentationOutputDir>$(MSBuildThisFileDirectory)</SharpGenDocumentationOutputDir>
+    <SharpGenDocumentationOutputDir>$(MSBuildThisFileDirectory)/DocumentationCache/$(TargetFramework)</SharpGenDocumentationOutputDir>
     <SharpGenGenerateConsumerBindMapping>false</SharpGenGenerateConsumerBindMapping>
 
     <!--Output all assemblies into the same folder for the samples and to avoid copying assembly references all around for each project-->
