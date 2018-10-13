@@ -23,7 +23,7 @@
 <config id="sharpdx-root" xmlns="urn:SharpGen.Config">
 
   <sdk name="StdLib" />
-  <sdk name="WindowsSdk" version="10.0.16299.0" />
+  <sdk name="WindowsSdk" version="10.0.17763.0" />
 
   <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\LegacyHeaders</include-dir>
 
