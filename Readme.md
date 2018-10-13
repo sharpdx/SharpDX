@@ -18,7 +18,7 @@ In order to compile SharpDX, you need to install **Visual Studio 2017 or newer**
 
 - [x] Visual C++ Toolset Component
 - [x] Windows 10 SDK (10.0.14393.0) Component
-- [x] Windows 10 Fall Creators Update SDK (10.0.17763.0) Component
+- [x] Windows 10 April 2018 Update SDK (10.0.17134.0) Component
 - [x] C# Development Workload
 - [x] .NET Core Cross Platform Development Workload
 
