@@ -171,7 +171,8 @@
 
     <map enum-item="D3D11_(MESSAGE_ID.*)" name-tmp="$1" />
     <map enum-item="D3D12_(MESSAGE_ID.*)" name-tmp="$1" />
-
+    <map enum-item="D3D11_SHARED_RESOURCE_TIER_(.*)" name="Tier$1"/>
+    
     <!--
     // *****************************************************************
     // D3D11 Struct

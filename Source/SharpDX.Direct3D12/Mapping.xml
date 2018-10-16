@@ -117,7 +117,13 @@
     <map enum-item="D3D_SHADER_MODEL_5_1" name="Model51"/>
     <map enum-item="D3D_SHADER_MODEL_6_0" name="Model60"/>
     <map enum-item="D3D_SHADER_MODEL_6_1" name="Model61"/>
+    <map enum-item="D3D_SHADER_MODEL_6_2" name="Model62"/>
+    <map enum-item="D3D_SHADER_MODEL_6_3" name="Model63"/>
+    <map enum-item="D3D_SHADER_MODEL_6_4" name="Model64"/>
     <map enum="D3D12_RLDO_FLAGS" name="ReportingLevel" />
+    <map enum-item="D3D12_HEAP_SERIALIZATION_TIER_(.*)" name="Tier$1"/>
+    <map enum-item="D3D12_SHARED_RESOURCE_COMPATIBILITY_TIER_(.*)" name="Tier$1"/>
+    <map enum-item="D3D12_RENDER_PASS_TIER_(.*)" name="Tier$1"/>
 
     <!--
     // *****************************************************************
