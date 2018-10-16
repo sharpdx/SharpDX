@@ -297,6 +297,7 @@
     <!-- TODO: No documentation - don't know how to map it. -->
     <remove function="DXGIGetDebugInterface1" />
     <remove function="DXGIGetDebugInterface" />
+    <remove function="DXGIDeclareAdapterRemovalSupport" />
     
     <context-clear/>
   </mapping>
