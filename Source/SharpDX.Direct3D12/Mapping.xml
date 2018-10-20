@@ -300,6 +300,9 @@
     <map method="ID3D12Device::CreateHeap" visibility="private"/>
     <map param="ID3D12Device::CreateHeap::ppvHeap" attribute="out" type="ID3D12Heap" return="true"/>
 
+    <map method="ID3D12Device4::CreateHeap1" visibility="private"/>
+    <map param="ID3D12Device4::CreateHeap1::ppvHeap" attribute="out" type="ID3D12Heap1" return="true"/>
+
     <map method="ID3D12Device::CreatePlacedResource" visibility="private"/>
     <map param="ID3D12Device::CreatePlacedResource::ppvResource" attribute="out" type="ID3D12Resource" return="true"/>
 

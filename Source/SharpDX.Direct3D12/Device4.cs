@@ -53,5 +53,10 @@ namespace SharpDX.Direct3D12
             var nativePointer = CreateCommandList(nodeMask, type, flags, Utilities.GetGuidFromType(typeof(GraphicsCommandList1)));
             return new GraphicsCommandList1(nativePointer);
         }
+
+        public Heap1 CreateHeap(HeapDescription desc, ProtectedResourceSession protectedSession)
+        {
+            return CreateHeap(ref desc, protectedSession, Utilities.GetGuidFromType(typeof(Heap1)));
+        }
     }
 }
