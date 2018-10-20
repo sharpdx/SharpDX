@@ -50,8 +50,13 @@ namespace SharpDX.Direct3D12
         /// <returns>A new instance of <see cref="GraphicsCommandList1"/>.</returns>	
         public GraphicsCommandList1 CreateCommandList1(int nodeMask, SharpDX.Direct3D12.CommandListType type, SharpDX.Direct3D12.CommandListFlags flags)
         {
-            var nativePointer = CreateCommandList(nodeMask, type, flags, Utilities.GetGuidFromType(typeof(GraphicsCommandList1)));
+            var nativePointer = CreateCommandList1(nodeMask, type, flags, Utilities.GetGuidFromType(typeof(GraphicsCommandList1)));
             return new GraphicsCommandList1(nativePointer);
+        }
+
+        public ProtectedResourceSession CreateProtectedResourceSession(ProtectedResourceSessionDescription desc)
+        {
+            return CreateProtectedResourceSession(ref desc, Utilities.GetGuidFromType(typeof(ProtectedResourceSession)));
         }
 
         public Heap1 CreateHeap(HeapDescription desc, ProtectedResourceSession protectedSession)
