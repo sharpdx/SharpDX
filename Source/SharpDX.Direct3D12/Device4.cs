@@ -56,12 +56,12 @@ namespace SharpDX.Direct3D12
 
         public ProtectedResourceSession CreateProtectedResourceSession(ProtectedResourceSessionDescription desc)
         {
-            return CreateProtectedResourceSession(ref desc, Utilities.GetGuidFromType(typeof(ProtectedResourceSession)));
+            return CreateProtectedResourceSession(desc, Utilities.GetGuidFromType(typeof(ProtectedResourceSession)));
         }
 
-        public Heap1 CreateHeap(HeapDescription desc, ProtectedResourceSession protectedSession)
+        public Heap1 CreateHeap1(HeapDescription desc, ProtectedResourceSession protectedSession)
         {
-            return CreateHeap(ref desc, protectedSession, Utilities.GetGuidFromType(typeof(Heap1)));
+            return CreateHeap1(ref desc, protectedSession, Utilities.GetGuidFromType(typeof(Heap1)));
         }
     }
 }
