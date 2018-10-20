@@ -266,6 +266,9 @@
     <map method="ID3D12Device::CreateCommandList" visibility="public"/>
     <map param="ID3D12Device::CreateCommandList::ppCommandList" attribute="out" return="true"/>
 
+    <map method="ID3D12Device4::CreateCommandList1" visibility="public"/>
+    <map param="ID3D12Device4::CreateCommandList1::ppCommandList" attribute="out" return="true"/>
+
     <map method="ID3D12Device::CreateBuffer" visibility="private"/>
     <map param="ID3D12Device::CreateBuffer::ppvBuffer" attribute="out" type="ID3D12Resource" return="true"/>
 
