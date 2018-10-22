@@ -164,7 +164,7 @@ namespace SharpDX.XAudio2
             SetDebugConfiguration__vtbl_index += 3;
         }
 
-        private void CheckVersion27()
+        internal void CheckVersion27()
         {
             if (Version != XAudio2Version.Version27)
             {
