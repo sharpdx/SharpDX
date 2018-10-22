@@ -105,7 +105,6 @@ namespace SharpDX.XAudio2
                         }
                         catch (DllNotFoundException) { }
                         break;
-#if WINDOWS_UWP
                     case XAudio2Version.Version29:
                         try
                         {
@@ -114,7 +113,6 @@ namespace SharpDX.XAudio2
                         }
                         catch (DllNotFoundException) { }
                         break;
-#endif
                 }
 
                 // Early exit if we found a requestedVersion
