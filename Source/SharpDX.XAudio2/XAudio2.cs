@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Runtime.InteropServices;
 
 namespace SharpDX.XAudio2
 {
@@ -49,6 +50,23 @@ namespace SharpDX.XAudio2
         /// Called if a critical system error occurs that requires XAudio2 to be closed down and restarted.
         /// </summary>
         public event EventHandler<ErrorEventArgs> CriticalError;
+
+#if !WINDOWS_UWP
+        private const uint RPC_E_CHANGED_MODE = 0x80010106;
+        private const uint COINIT_MULTITHREADED = 0x0;
+        private const uint COINIT_APARTMENTTHREADED = 0x2;
+        
+        static XAudio2()
+        {
+            if (CoInitializeEx(IntPtr.Zero, COINIT_APARTMENTTHREADED) == RPC_E_CHANGED_MODE)
+            {
+                CoInitializeEx(IntPtr.Zero, COINIT_MULTITHREADED);
+            }
+        }
+
+        [DllImport("ole32.dll", SetLastError = true, CallingConvention = CallingConvention.StdCall)]
+        private static extern uint CoInitializeEx([In, Optional] IntPtr pvReserved, [In]uint dwCoInit);
+#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XAudio2"/> class.
