@@ -1,4 +1,3 @@
-#if WINDOWS_UWP
 using System;
 using System.Runtime.InteropServices;
 
@@ -116,4 +115,3 @@ namespace SharpDX.XAudio2
         private unsafe static extern int CreateAudioVolumeMeter_(void* arg0);
     }
 }
-#endif
