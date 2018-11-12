@@ -343,10 +343,10 @@
     <map param="ID3D12Device4::CreateCommandList1::ppCommandList" attribute="out" return="true"/>
 
     <map method="ID3D12Device4::CreateProtectedResourceSession" visibility="private"/>
-    <map param="ID3D12Device4::CreateProtectedResourceSession::ppSession" attribute="out" type="ID3D12Heap1" return="true"/>
+    <map param="ID3D12Device4::CreateProtectedResourceSession::ppSession" attribute="out" type="ID3D12ProtectedResourceSession" return="true"/>
 
     <map method="ID3D12Device4::CreateHeap1" visibility="private"/>
-    <map param="ID3D12Device4::CreateHeap1::ppvHeap" attribute="out" type="ID3D12ProtectedResourceSession" return="true"/>
+    <map param="ID3D12Device4::CreateHeap1::ppvHeap" attribute="out" type="ID3D12Heap1" return="true"/>
 
     <!--
     // *****************************************************************
