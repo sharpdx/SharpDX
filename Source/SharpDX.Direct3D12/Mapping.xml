@@ -335,8 +335,18 @@
         
     <map method="ID3D12Device::CheckFeatureSupport" check="false" visibility="private"/>
     
-     <map method="ID3D12Device2::CreatePipelineState" visibility="private"/>
-     <map param="ID3D12Device2::CreatePipelineState::ppPipelineState" attribute="out" type="ID3D12PipelineState" return="true"/>
+    <map method="ID3D12Device2::CreatePipelineState" visibility="private"/>
+    <map param="ID3D12Device2::CreatePipelineState::ppPipelineState" attribute="out" type="ID3D12PipelineState" return="true"/>
+
+    <!-- ID3D12Device4 -->
+    <map method="ID3D12Device4::CreateCommandList1" visibility="public"/>
+    <map param="ID3D12Device4::CreateCommandList1::ppCommandList" attribute="out" return="true"/>
+
+    <map method="ID3D12Device4::CreateProtectedResourceSession" visibility="private"/>
+    <map param="ID3D12Device4::CreateProtectedResourceSession::ppSession" attribute="out" type="ID3D12ProtectedResourceSession" return="true"/>
+
+    <map method="ID3D12Device4::CreateHeap1" visibility="private"/>
+    <map param="ID3D12Device4::CreateHeap1::ppvHeap" attribute="out" type="ID3D12Heap1" return="true"/>
 
     <!--
     // *****************************************************************
