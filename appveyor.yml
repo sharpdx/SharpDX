@@ -13,7 +13,6 @@ install:
        $env:SharpDXSign = 'true'
        if($env:appveyor_repo_tag_name -match '^v[0-9]') {
            $env:SharpDXNugetBuild = 'true'
-           $env:SharpDXPackagingDev = 'false'
         }
        if($env:appveyor_repo_tag_name -eq 'latest') {
            $env:SharpDXNugetBuild = 'true'
