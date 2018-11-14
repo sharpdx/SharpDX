@@ -575,13 +575,28 @@ namespace SharpDX.Direct3D12
             }
         }
 
-        public unsafe FeatureDataShaderModel ShaderModel
+        public unsafe FeatureDataShaderModel CheckShaderModel(ShaderModel highestShaderModel)
         {
-            get
+            var options = new FeatureDataShaderModel
             {
-                FeatureDataShaderModel options = new FeatureDataShaderModel();
-                this.CheckFeatureSupport(Feature.ShaderModel, new IntPtr(&options), Utilities.SizeOf<FeatureDataShaderModel>());
-                return options;
+                HighestShaderModel = highestShaderModel
+            };
+            this.CheckFeatureSupport(Feature.ShaderModel, new IntPtr(&options), Utilities.SizeOf<FeatureDataShaderModel>());
+            return options;
+        }
+
+        public unsafe FeatureLevel CheckMaxSupportedFeatureLevel(params FeatureLevel[] levels)
+        {
+            fixed (FeatureLevel* levelsPtr = &levels[0])
+            {
+                var featureLevels = new FeatureDataFeatureLevels
+                {
+                    FeatureLevelCount = levels.Length,
+                    FeatureLevelsRequestedPointer = new IntPtr(levelsPtr)
+                };
+
+                this.CheckFeatureSupport(Feature.FeatureLevels, new IntPtr(&featureLevels), Utilities.SizeOf<FeatureDataFeatureLevels>());
+                return featureLevels.MaxSupportedFeatureLevel;
             }
         }
 
