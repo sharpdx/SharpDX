@@ -339,7 +339,7 @@
     <map param="ID3D12Device2::CreatePipelineState::ppPipelineState" attribute="out" type="ID3D12PipelineState" return="true"/>
 
     <!-- ID3D12Device4 -->
-    <map method="ID3D12Device4::CreateCommandList1" visibility="public"/>
+    <map method="ID3D12Device4::CreateCommandList1" visibility="private"/>
     <map param="ID3D12Device4::CreateCommandList1::ppCommandList" attribute="out" return="true"/>
 
     <map method="ID3D12Device4::CreateProtectedResourceSession" visibility="private"/>
