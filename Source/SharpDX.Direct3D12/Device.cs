@@ -541,6 +541,46 @@ namespace SharpDX.Direct3D12
             }
         }
 
+        public unsafe FeatureDataD3D12Options1 D3D12Options1
+        {
+            get
+            {
+                FeatureDataD3D12Options1 options = new FeatureDataD3D12Options1();
+                this.CheckFeatureSupport(Feature.D3D12Options1, new IntPtr(&options), Utilities.SizeOf<FeatureDataD3D12Options1>());
+                return options;
+            }
+        }
+
+        public unsafe FeatureDataD3D12Options2 D3D12Options2
+        {
+            get
+            {
+                FeatureDataD3D12Options2 options = new FeatureDataD3D12Options2();
+                this.CheckFeatureSupport(Feature.D3D12Options2, new IntPtr(&options), Utilities.SizeOf<FeatureDataD3D12Options2>());
+                return options;
+            }
+        }
+
+        public unsafe FeatureDataD3D12Options3 D3D12Options3
+        {
+            get
+            {
+                FeatureDataD3D12Options3 options = new FeatureDataD3D12Options3();
+                this.CheckFeatureSupport(Feature.D3D12Options3, new IntPtr(&options), Utilities.SizeOf<FeatureDataD3D12Options3>());
+                return options;
+            }
+        }
+
+        public unsafe FeatureDataD3D12Options4 D3D12Options4
+        {
+            get
+            {
+                FeatureDataD3D12Options4 options = new FeatureDataD3D12Options4();
+                this.CheckFeatureSupport(Feature.D3D12Options4, new IntPtr(&options), Utilities.SizeOf<FeatureDataD3D12Options4>());
+                return options;
+            }
+        }
+
         /// <summary>	
         /// <p> Gets information about the features that are supported by the current graphics driver.</p>	
         /// </summary>	
