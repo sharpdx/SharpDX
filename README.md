@@ -22,6 +22,7 @@ Nightly packages can be download by adding the NuGet feed "https://ci.appveyor.c
      <!-- ... -->
    </packageSources>
 </configuration>     
+```
 
 ## Wiki Documentation
 
