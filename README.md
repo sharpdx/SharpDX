@@ -12,7 +12,16 @@ SharpDX is an open-source project delivering the **full DirectX API for .Net on 
 
 All SharpDX packages are available as NuGet packages: [![NuGet](https://img.shields.io/nuget/v/SharpDX.svg)](https://www.nuget.org/packages?q=Tags%3A%22SharpDX%22)
 
-Nightly packages can be download by adding "https://ci.appveyor.com/nuget/sharpdx" to your `NuGet.config` file or by using this repository `NuGet.config` file.
+Nightly packages can be download by adding the NuGet feed "https://ci.appveyor.com/nuget/sharpdx" to your `NuGet.config` file:
+
+```xml
+ <configuration>
+   <packageSources>
+     <!-- ... -->
+     <add key="appveyor sharpdx" value="https://ci.appveyor.com/nuget/sharpdx" />
+     <!-- ... -->
+   </packageSources>
+</configuration>     
 
 ## Wiki Documentation
 
