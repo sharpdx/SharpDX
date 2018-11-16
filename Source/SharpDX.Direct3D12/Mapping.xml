@@ -212,6 +212,9 @@
 
     <map interface="ID3D12Debug" name="DebugInterface"/>
     <remove struct="D3D12_MEMCPY_DEST"/>
+    
+    <!--Remove all fields for D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS as the union with pointers cannot be mapped safely in x86/x64 with C# explicit layout-->
+    <remove field="D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS::.*" />
 
     <!--
     // *****************************************************************
