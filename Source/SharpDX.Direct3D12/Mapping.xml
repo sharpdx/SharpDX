@@ -96,6 +96,13 @@
     <map enum-item="D3D12_MESSAGE_ID_MAP_INVALID_SUBRESOURCE" name="MapInvalidSubResource2"/>
     <map enum-item="D3D12_MESSAGE_ID_UNMAP_INVALID_SUBRESOURCE" name="UnmapInvalidSubResource2"/>
 
+    <map enum-item="D3D12_MESSAGE_ID_CLEARRENDERTARGETVIEW_DENORMFLUSH" name="ClearRenderTargetViewDenormFlush"/>
+    <map enum-item="D3D12_MESSAGE_ID_CLEARDEPTHSTENCILVIEW_DENORMFLUSH" name="ClearDepthStencilViewDenormFlush"/>
+    <map enum-item="D3D12_MESSAGE_ID_CLEARUNORDEREDACCESSVIEW_DENORMFLUSH" name="ClearUnorderedAccessViewDenormFlush"/>
+    <map enum-item="D3D12_MESSAGE_ID_CLEARDEPTHSTENCILVIEW_INVALID" name="ClearDepthStencilViewInvalid"/>
+    <map enum-item="D3D12_MESSAGE_ID_CLEARRENDERTARGETVIEW_MISMATCHINGCLEARVALUE" name="ClearRenderTargetViewMismatchingClearValue"/>
+    <map enum-item="D3D12_MESSAGE_ID_CLEARDEPTHSTENCILVIEW_MISMATCHINGCLEARVALUE" name="ClearDepthStencilViewMismatchingClearValue"/>
+
     <map enum-item="D3D12_VIEW_INSTANCING_TIER(.*)" name-tmp="Tier$1"/>
     <map enum-item="D3D12_CONSERVATIVE_RASTERIZATION_TIER(.*)" name-tmp="Tier$1"/>
     <map enum-item="D3D12_CROSS_NODE_SHARING_TIER(.*)" name-tmp="Tier$1"/>
@@ -354,6 +361,9 @@
 
     <map method="ID3D12Device4::CreateHeap1" visibility="private"/>
     <map param="ID3D12Device4::CreateHeap1::ppvHeap" attribute="out" type="ID3D12Heap1" return="true"/>
+
+    <map method="ID3D12Device5::CreateStateObject" visibility="private"/>
+    <map param="ID3D12Device5::CreateStateObject::ppStateObject" attribute="out" type="ID3D12StateObject" return="true"/>
 
     <!--
     // *****************************************************************

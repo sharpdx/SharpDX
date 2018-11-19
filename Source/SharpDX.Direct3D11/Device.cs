@@ -417,6 +417,22 @@ namespace SharpDX.Direct3D11
         }
 
         /// <summary>
+        /// Retrieves additional information about Direct3D11.4 feature options in the current graphics driver
+        /// </summary>
+        /// <msdn-id>dn933226</msdn-id>
+        /// <returns>Returns a structure <see cref="FeatureDataD3D11Options5"/> </returns>	
+        public FeatureDataD3D11Options5 CheckD3D113Feature5()
+        {
+            unsafe
+            {
+                var support = default(FeatureDataD3D11Options5);
+                if (CheckFeatureSupport(Feature.D3D11Options5, new IntPtr(&support), Utilities.SizeOf<FeatureDataD3D11Options5>()).Failure)
+                    return default(FeatureDataD3D11Options5);
+                return support;
+            }
+        }
+
+        /// <summary>
         /// Check if this device is supporting a feature.
         /// </summary>
         /// <param name="feature">The feature to check.</param>
