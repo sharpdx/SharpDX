@@ -28,8 +28,7 @@ namespace SharpDX.Direct3D12
     {
         public StateObject CreateStateObject(StateObjectDescription description)
         {
-            var nativePointer = CreateStateObject(description, Utilities.GetGuidFromType(typeof(StateObject)));
-            return new StateObject(nativePointer);
+            return CreateStateObject(description, Utilities.GetGuidFromType(typeof(StateObject)));
         }
     }
 }
