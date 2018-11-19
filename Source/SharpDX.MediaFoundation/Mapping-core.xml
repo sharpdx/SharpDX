@@ -687,6 +687,7 @@
     <map struct="MFVideoSurfaceInfo" marshalto="true"/>
 
     <map enum-item="MFVideoRotationFormat_(.*)" name="Angle$1"/>
+    <map enum-item="MFCameraIntrinsic_DistortionModelType_6KT" name="SixKT"/>
 
     <!--
     // *****************************************************************

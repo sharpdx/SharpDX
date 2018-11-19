@@ -124,6 +124,8 @@
     <map enum-item="D3D12_HEAP_SERIALIZATION_TIER_(.*)" name="Tier$1"/>
     <map enum-item="D3D12_SHARED_RESOURCE_COMPATIBILITY_TIER_(.*)" name="Tier$1"/>
     <map enum-item="D3D12_RENDER_PASS_TIER_(.*)" name="Tier$1"/>
+    <map enum-item="D3D12_DRED_VERSION_1_0" name="Version10"/>
+    <map enum-item="D3D12_RAYTRACING_TIER_(.*)" name="Tier$1"/>
 
     <!--
     // *****************************************************************
@@ -212,6 +214,11 @@
 
     <map interface="ID3D12Debug" name="DebugInterface"/>
     <remove struct="D3D12_MEMCPY_DEST"/>
+    
+    <!--Remove all fields for D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS as the union with pointers cannot be mapped safely in x86/x64 with C# explicit layout-->
+    <remove field="D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS::.*" />
+
+    <map field="D3D12_NODE_MASK::NodeMask" name="Mask" />
 
     <!--
     // *****************************************************************
