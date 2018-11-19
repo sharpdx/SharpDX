@@ -304,13 +304,36 @@ namespace SharpDX.Direct3D12
         /// Creates a descriptor heap object.
         /// </summary>	
         /// <param name="descriptorHeapDesc">No documentation.</param>	
-        /// <returns>No documentation.</returns>	
+        /// <returns>New instance of <see cref="SharpDX.Direct3D12.DescriptorHeap"/>.</returns>	
         /// <msdn-id>dn788662</msdn-id>
         /// <unmanaged>HRESULT ID3D12Device::CreateDescriptorHeap([In] const D3D12_DESCRIPTOR_HEAP_DESC* pDescriptorHeapDesc,[In] const GUID&amp; riid,[Out] ID3D12DescriptorHeap** ppvHeap)</unmanaged>	
         /// <unmanaged-short>ID3D12Device::CreateDescriptorHeap</unmanaged-short>	
         public SharpDX.Direct3D12.DescriptorHeap CreateDescriptorHeap(SharpDX.Direct3D12.DescriptorHeapDescription descriptorHeapDesc)
         {
             return CreateDescriptorHeap(descriptorHeapDesc, Utilities.GetGuidFromType(typeof(DescriptorHeap)));
+        }
+
+        /// <summary>	
+        /// Creates a descriptor heap object.
+        /// </summary>	
+        /// <param name="type">The heap type.</param>	
+        /// <param name="descriptorCount">The descriptor count.</param>	
+        /// <param name="flags">The optional heap flags.</param>	
+        /// <param name="nodeMask">Multi GPU node mask.</param>	
+        /// <returns>New instance of <see cref="SharpDX.Direct3D12.DescriptorHeap"/>.</returns>	
+        /// <msdn-id>dn788662</msdn-id>
+        /// <unmanaged>HRESULT ID3D12Device::CreateDescriptorHeap([In] const D3D12_DESCRIPTOR_HEAP_DESC* pDescriptorHeapDesc,[In] const GUID&amp; riid,[Out] ID3D12DescriptorHeap** ppvHeap)</unmanaged>	
+        /// <unmanaged-short>ID3D12Device::CreateDescriptorHeap</unmanaged-short>	
+        public SharpDX.Direct3D12.DescriptorHeap CreateDescriptorHeap(DescriptorHeapType type, int descriptorCount, DescriptorHeapFlags flags = DescriptorHeapFlags.None, int nodeMask = 0)
+        {
+            DescriptorHeapDescription description = new DescriptorHeapDescription
+            {
+                Type = type,
+                DescriptorCount = descriptorCount,
+                Flags = flags,
+                NodeMask = nodeMask,
+            };
+            return CreateDescriptorHeap(description, Utilities.GetGuidFromType(typeof(DescriptorHeap)));
         }
 
         /// <summary>	
