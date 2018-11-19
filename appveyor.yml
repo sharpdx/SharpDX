@@ -8,27 +8,23 @@ environment:
     secure: w2g0R7PPaadVw7Vk0jrM/ctEqDqDCz6x1FsKTOlu8nQqPsS+bRCE7DTmxTqSmuECM8H0HSwqWlZUbeuxVQEGver2vaxhZQJ47oUn7kXsfJ/jOqUGiEkwEh7K7OsOmML8jer1KpuVeGQEHDPubm24L/x1LDzohhHsYGeWh0BkRNbS6L7W+hdNAN12q5zATrNkzLUr/LwwD9eM6iAfdF8m+sv45Lt9AhTC+zndFKYRRJ6by8iSz3otPV0baAamKw9vl3sL41Sm6GvMEDKQpD0vW0QzhaidBKWaTkKix7/g3SbWg3Yd5ml6UsnrqNSlCFU+xuAzUhyUM4wtIbeW9vX7JG6jmRdHw1YDNGjzV8CaeiMJDR6dCm1HXq0YuFOTZ4yoL3B4r7vdWIEBTH7il3FhmlcmU2cB16AT1JlPJH6itlrHyk1gIic6j71ChSASyazZqukhv7c8DnR+in0oyty4tuNl2KUcXIopyl78akgG0CNFR/CVwtEr5Q7SCZ4OtSb1IA/vS9pu/8x1Hy8Lg5uWaJr8fUMbItW5l6vLtay5YcU2ZIrJAJ+CgZgdGX/myFFJtQ195Fu4Cf4BLjHilwoITwZQpQTH3MGZSvdudoDpZ2xhkAyDZvHEku1HPFdCd+YXUi1ybGifaR0f5U4ZDRsgv2wwDS6O5fGS7dbwnVV2Pqftz7AJ0p/mLijNhkPwuSor9FqfD0moolwhvNC/4ympErV84iySENxp9DJX/i8WHBmu2BMG8afl12nN6f2C7RkNkV9fjr/fmOXmE2/B1+CVVwQdVVi/lRKG4fyiSPopl4wlTyqd959rUUGmXDF32ci+cy+csMF6mXBgIBSvDJm2IMnMLAm5ENssdmpbYnNSX+1TfWszT1PMD3jYETJOHqeq3gSE5d6RHF64+MnpmAIU7B34BuETARZMMAOSZ0STf9cp+DWWWB7pzNFpV3XkCTe5pcFLUwiag8N700IEK7s/EQm//45Nx9WQFhzVWcKiJ4V9DRf/8WlvJoISavFnFEdhxZVT0f5xEPocDD1U9WmoDb5PruElX01LgIq1gx0+m8Q=
 install:
 - ps: >-
-    $env:SharpDXBuildNumber = "$env:APPVEYOR_BUILD_NUMBER"
-    
     if(-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) {
        [IO.File]::WriteAllBytes($env:APPVEYOR_BUILD_FOLDER + "\sharpdx.snk",[Convert]::FromBase64String($env:SharpDXSnkBase64))
        $env:SharpDXSign = 'true'
        if($env:appveyor_repo_tag_name -match '^v[0-9]') {
            $env:SharpDXNugetBuild = 'true'
-           $env:SharpDXPackagingDev = 'false'
         }
        if($env:appveyor_repo_tag_name -eq 'latest') {
            $env:SharpDXNugetBuild = 'true'
-           $env:SharpDXPackagingDev = 'true'
         }
     }
 build_script: build.cmd
 test: off
 artifacts:
-- path: build\SharpDX-SDK-*.exe
-  name: SharpDX SDK
 - path: bin\*.nupkg
   name: SharpDX Nugets
+nuget:
+  project_feed: true  
 deploy:
 - provider: NuGet
   api_key:

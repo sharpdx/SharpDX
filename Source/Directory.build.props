@@ -14,9 +14,6 @@
     <Company>Alexandre Mutel</Company>
     <Copyright>Copyright (c) 2010-2016 Alexandre Mutel</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Version>4.2.0</Version>
-    <AssemblyVersion>$(Version)</AssemblyVersion>
-    <Version Condition=" '$(SharpDXPackagingDev)' == 'true' ">$(Version)-ci$(SharpDXBuildNumber)</Version>
     <PackageOutputPath>$(MSBuildThisFileDirectory)/../bin</PackageOutputPath>
     <AppType Condition="$(TargetFramework.StartsWith('net4'))">DESKTOP_APP</AppType>
     <AppType Condition="$(TargetFramework.StartsWith('netstandard'))">REFERENCE</AppType>
@@ -50,6 +47,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="2.2.33" PrivateAssets="All" />
     <PackageReference Include="SharpGenTools.Sdk" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="SharpGen.Doc.Msdn.Tasks" Version="1.1.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-*" PrivateAssets="All"/>

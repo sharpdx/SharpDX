@@ -58,8 +58,6 @@ namespace SharpDX.X3DAudio
             {
                 // FreeHGlobal is crashing? Does X3DAudio perform deallocation?
 
-                if (ConePointer != IntPtr.Zero)
-                    Marshal.FreeHGlobal(ConePointer);
                 if (ChannelAzimuthsPointer != IntPtr.Zero)
                     Marshal.FreeHGlobal(ChannelAzimuthsPointer);
                 if (VolumeCurvePointer != IntPtr.Zero)

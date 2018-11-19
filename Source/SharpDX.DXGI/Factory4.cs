@@ -34,6 +34,17 @@ namespace SharpDX.DXGI
         }
 
         /// <summary>
+        /// Initializes a new instance of <see cref="Factory4"/> class.
+        /// </summary>
+        /// <param name="debug">True - to set the DXGI_CREATE_FACTORY_DEBUG flag.</param>
+        public Factory4(bool debug = false) : this(IntPtr.Zero)
+        {
+            IntPtr factoryPtr;
+            DXGI.CreateDXGIFactory2(debug ? DXGI.CreateFactoryDebug : 0x00, Utilities.GetGuidFromType(typeof(Factory4)), out factoryPtr);
+            NativePointer = factoryPtr;
+        }
+
+        /// <summary>
         /// Gets the default warp adapter.
         /// </summary>
         /// <returns>The warp adapter.</returns>
@@ -43,6 +54,7 @@ namespace SharpDX.DXGI
             EnumWarpAdapter(Utilities.GetGuidFromType(typeof(Adapter)), out adapterPtr);
             return new Adapter(adapterPtr);
         }
+
         /// <summary>
         /// Gets the adapter for the specified LUID.
         /// </summary>

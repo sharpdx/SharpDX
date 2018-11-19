@@ -31,6 +31,22 @@ namespace SharpDX.XAudio2
         }
 
         /// <summary>	
+        /// <p>Gets or Sets the overall volume level for the voice.</p>	
+        /// </summary>	
+        public float Volume
+        {
+            get
+            {
+                GetVolume(out var value);
+                return value;
+            }
+            set
+            {
+                SetVolume(value);
+            }
+        }
+
+        /// <summary>	
         /// <p>Returns information about the creation flags, input channels, and sample rate of a voice.</p>	
         /// </summary>	
         /// <include file='Documentation\CodeComments.xml' path="/comments/comment[@id='IXAudio2Voice::GetVoiceDetails']/*"/>	

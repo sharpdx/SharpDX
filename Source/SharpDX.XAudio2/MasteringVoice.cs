@@ -57,6 +57,10 @@ namespace SharpDX.XAudio2
         public MasteringVoice(XAudio2 device, int inputChannels, int inputSampleRate, string deviceId)
             : base(device)
         {
+            if (device.Version == XAudio2Version.Version27)
+            {
+                throw new InvalidOperationException("This method is only valid on XAudio 2.8 or XAudio 2.9 version");
+            }
 
             device.CreateMasteringVoice(this, inputChannels, inputSampleRate, 0, deviceId, null, AudioStreamCategory.GameEffects);
         }
@@ -72,6 +76,7 @@ namespace SharpDX.XAudio2
         public MasteringVoice(XAudio2 device, int inputChannels, int inputSampleRate, int deviceIndex)
             : base(device)
         {
+            device.CheckVersion27();
             device.CreateMasteringVoice27(this, inputChannels, inputSampleRate, 0, deviceIndex, null);
         }
 

@@ -541,6 +541,46 @@ namespace SharpDX.Direct3D12
             }
         }
 
+        public unsafe FeatureDataD3D12Options1 D3D12Options1
+        {
+            get
+            {
+                FeatureDataD3D12Options1 options = new FeatureDataD3D12Options1();
+                this.CheckFeatureSupport(Feature.D3D12Options1, new IntPtr(&options), Utilities.SizeOf<FeatureDataD3D12Options1>());
+                return options;
+            }
+        }
+
+        public unsafe FeatureDataD3D12Options2 D3D12Options2
+        {
+            get
+            {
+                FeatureDataD3D12Options2 options = new FeatureDataD3D12Options2();
+                this.CheckFeatureSupport(Feature.D3D12Options2, new IntPtr(&options), Utilities.SizeOf<FeatureDataD3D12Options2>());
+                return options;
+            }
+        }
+
+        public unsafe FeatureDataD3D12Options3 D3D12Options3
+        {
+            get
+            {
+                FeatureDataD3D12Options3 options = new FeatureDataD3D12Options3();
+                this.CheckFeatureSupport(Feature.D3D12Options3, new IntPtr(&options), Utilities.SizeOf<FeatureDataD3D12Options3>());
+                return options;
+            }
+        }
+
+        public unsafe FeatureDataD3D12Options4 D3D12Options4
+        {
+            get
+            {
+                FeatureDataD3D12Options4 options = new FeatureDataD3D12Options4();
+                this.CheckFeatureSupport(Feature.D3D12Options4, new IntPtr(&options), Utilities.SizeOf<FeatureDataD3D12Options4>());
+                return options;
+            }
+        }
+
         /// <summary>	
         /// <p> Gets information about the features that are supported by the current graphics driver.</p>	
         /// </summary>	
@@ -575,13 +615,28 @@ namespace SharpDX.Direct3D12
             }
         }
 
-        public unsafe FeatureDataShaderModel ShaderModel
+        public unsafe FeatureDataShaderModel CheckShaderModel(ShaderModel highestShaderModel)
         {
-            get
+            var options = new FeatureDataShaderModel
             {
-                FeatureDataShaderModel options = new FeatureDataShaderModel();
-                this.CheckFeatureSupport(Feature.ShaderModel, new IntPtr(&options), Utilities.SizeOf<FeatureDataShaderModel>());
-                return options;
+                HighestShaderModel = highestShaderModel
+            };
+            this.CheckFeatureSupport(Feature.ShaderModel, new IntPtr(&options), Utilities.SizeOf<FeatureDataShaderModel>());
+            return options;
+        }
+
+        public unsafe FeatureLevel CheckMaxSupportedFeatureLevel(params FeatureLevel[] levels)
+        {
+            fixed (FeatureLevel* levelsPtr = &levels[0])
+            {
+                var featureLevels = new FeatureDataFeatureLevels
+                {
+                    FeatureLevelCount = levels.Length,
+                    FeatureLevelsRequestedPointer = new IntPtr(levelsPtr)
+                };
+
+                this.CheckFeatureSupport(Feature.FeatureLevels, new IntPtr(&featureLevels), Utilities.SizeOf<FeatureDataFeatureLevels>());
+                return featureLevels.MaxSupportedFeatureLevel;
             }
         }
 
