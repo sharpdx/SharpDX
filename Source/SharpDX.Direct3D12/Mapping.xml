@@ -348,6 +348,9 @@
     <map method="ID3D12Device4::CreateHeap1" visibility="private"/>
     <map param="ID3D12Device4::CreateHeap1::ppvHeap" attribute="out" type="ID3D12Heap1" return="true"/>
 
+    <map method="ID3D12Device5::CreateStateObject" visibility="private"/>
+    <map param="ID3D12Device5::CreateStateObject::ppStateObject" attribute="out" type="ID3D12StateObject" return="true"/>
+
     <!--
     // *****************************************************************
     // D3D12 Functions
