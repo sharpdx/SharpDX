@@ -1039,7 +1039,10 @@
       <remove function="MFCreateMuxStreamMediaType" />
       <remove function="MFCreateMuxStreamSample" />
       <remove function="MFCreateSensorGroup" />
-      <remove function="MFCreateSensorStream" />
+      <remove function="MFCreateSensorStream" />	  
+	  <remove function="GetModuleHandleA" />
+	  <remove function="LoadLibraryExA" />
+	  <remove function="MFCreateSensorActivityMonitor" />
 
     </ifdef>
     <context-clear />
