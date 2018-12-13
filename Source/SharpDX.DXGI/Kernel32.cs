@@ -1,3 +1,4 @@
+#if DESKTOP_APP
 using System;
 using System.Runtime.InteropServices;
 
@@ -30,3 +31,4 @@ namespace SharpDX.DXGI {
         public static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
     }
 }
+#endif
