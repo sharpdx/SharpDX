@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 // Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -184,7 +184,7 @@
 
     <create visibility="public static" class="AudioFormatGuids" />
     <const from-guid="MFAudioFormat_(.*)" class="SharpDX.MediaFoundation.AudioFormatGuids" type="System.Guid" name="$1">new System.Guid("$1")</const>
-	
+
     <create visibility="public static" class="VideoFormatGuids" />
     <const from-guid="MFVideoFormat_([A-Z].*)" class="SharpDX.MediaFoundation.VideoFormatGuids" type="System.Guid" name="$1">new System.Guid("$1")</const>
     <const from-guid="MFVideoFormat_420O" class="SharpDX.MediaFoundation.VideoFormatGuids" type="System.Guid" name="Y420O">new System.Guid("$1")</const>
@@ -195,7 +195,7 @@
     <create visibility="public static" class="TranscodeContainerTypeGuids" />
     <const from-guid="MFTranscodeContainerType_([A-Z].*)" class="SharpDX.MediaFoundation.TranscodeContainerTypeGuids" type="System.Guid" name="$1">new System.Guid("$1")</const>
     <const from-guid="MFTranscodeContainerType_3GP" class="SharpDX.MediaFoundation.TranscodeContainerTypeGuids" type="System.Guid" name="Mobile3gp">new System.Guid("$1")</const>
-	
+
     <const from-guid="EVRConfig_AllowBatching" class="SharpDX.MediaFoundation.EVRConfigAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="AllowBatching">new MediaAttributeKey&lt;int&gt;("$1", "AllowBatching")</const>
     <const from-guid="EVRConfig_AllowDropToBob" class="SharpDX.MediaFoundation.EVRConfigAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="AllowDropToBob">new MediaAttributeKey&lt;int&gt;("$1", "AllowDropToBob")</const>
     <const from-guid="EVRConfig_AllowDropToHalfInterlace" class="SharpDX.MediaFoundation.EVRConfigAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="AllowDropToHalfInterlace">new MediaAttributeKey&lt;int&gt;("$1", "AllowDropToHalfInterlace")</const>
@@ -671,9 +671,9 @@
     <map enum-item="MFT_ENUM_FLAG_(.*)" name-tmp="$1"/>
     <map enum="_MFT_PROCESS_OUTPUT_FLAGS" name="TransformProcessOutputFlags"/>
     <map enum="_MFT_PROCESS_OUTPUT_STATUS" name="TransformProcessOutputStatus"/>
-    
+
     <map enum="MF_MEDIAKEY_STATUS" name="MediaKeyStatusState"/>
-    
+
     <map enum="#MF_CAPTURE_ENGINE_MEDIASOURCE" name="PreferredMediaStream" />
     <map enum-item="MF_CAPTURE_ENGINE_PREFERRED_SOURCE_STREAM_FOR_(.*)" name="$1" />
 
@@ -767,7 +767,7 @@
     <map param="IMFMediaEngineClassFactory::CreateInstance::dwFlags" type="MF_MEDIA_ENGINE_CREATEFLAGS" name="flags"/>
 
     <map interface="IMFMediaEngineNotify" callback="true" visibility="internal"/>
-    
+
     <map interface="IMFCaptureEngineOnEventCallback" callback="true" visibility="internal" />
     <map interface="IMFClockStateSink" callback="true"/>
     <map interface="IMFSampleGrabberSinkCallback" callback="true"/>
@@ -789,7 +789,7 @@
     <map interface="IMFAsyncCallbackLogging" name="IAsyncCallbackLogging" callback="true"/>
 
     <map param="IMFByteStream::*.*::pb" type="void" attribute="in"/>
-    
+
     <map method="IMFSinkWriter::GetStatistics" name="GetStatistics_" check="false" visibility="internal"/>
     <map param="IMFSinkWriter::GetStatistics::pStats"  type="void" attribute="in"/>
 
@@ -840,11 +840,11 @@
     <map param="IMFMediaEvent::GetType::pmet" type="MEDIA_EVENT_TYPES"/>
 
     <map method="IMFSourceResolver::CreateObjectFromURL" visibility="internal"/>
-    
+
     <map method="IMFHDCPStatus::Set" property="false"/>
-    
+
     <map method="IMFTimedTextTrack::GetExtendedErrorCode" check="false"/>
-    
+
     <!-- temp: use void* type for VARIANT* -->
     <map param="IMFASFIndexer::GetSeekPositionForValue::pvarValue" type="void"/>
 
@@ -1004,9 +1004,9 @@
     <map function="CopyPropertyStore" dll='"mf.dll"'/>
     <map function="ConvertPropVariant" dll='"mf.dll"'/>
     <map function="AppendPropVariant" dll='"mf.dll"'/>
-      
+
     <map function="MFPCreateMediaPlayer" dll='"mfplay.dll"'/>
-    
+
     <map function="MFCreateVideoSampleFromSurface" dll='"EVR.dll"'/>
 
     <map function="MFTEnumEx" visibility="internal"/>
@@ -1040,6 +1040,7 @@
       <remove function="MFCreateMuxStreamSample" />
       <remove function="MFCreateSensorGroup" />
       <remove function="MFCreateSensorStream" />
+      <remove function="MFCreateSensorActivityMonitor" />
 
     </ifdef>
     <context-clear />
