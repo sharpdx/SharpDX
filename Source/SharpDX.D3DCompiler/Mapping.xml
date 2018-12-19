@@ -33,6 +33,7 @@
     </pre>
   </include>
   <include file="d3d11shader.h" attach="true" />
+  <include file="d3d12shader.h" attach="true" />
   <include file="d3dcommon.h">
     <attach>D3D_PRIMITIVE</attach>
     <attach>D3D_CBUFFER_TYPE</attach>
@@ -59,6 +60,7 @@
     <context>sharpdx-d3dcompiler-ext</context>
     <context>d3dcompiler</context>
     <context>d3d11shader</context>
+    <context>d3d12shader</context>
   </context-set>
 
   <!-- D3DCompiler global naming -->
@@ -159,9 +161,11 @@
     -->
     <map interface="ID3D(.*)" name-tmp="$1" />
     <map interface="ID3D11(.*)" name-tmp="$1" />
+    <map interface="ID3D12(.*)" name-tmp="$1" />
     <map interface="ID3D11ShaderReflectionConstantBuffer" name="ConstantBuffer" />
     <map param="ID3D(\d+)ShaderReflectionConstantBuffer::GetDesc::pDesc" attribute="out" />
     <map method="ID3D11ShaderReflectionConstantBuffer::GetVariable.*" name="GetVariable" />
+    <map method="ID3D11ShaderReflection::GetConstantBuffer.*" name="GetConstantBuffer" />
     <map method="ID3D11ShaderReflection::GetConstantBuffer.*" name="GetConstantBuffer" />
     <map method="ID3D11ShaderReflection::GetVariableBy.*" name="GetVariable" />
     <map method="ID3D11ShaderReflection::GetResourceBindingDesc.*" name="GetResourceBindingDescription" />
@@ -178,10 +182,35 @@
     <map method="ID3D11ShaderReflectionType::ImplementsInterface" visibility="internal" name="ImplementsInterface_" return="true" check="false"/>
 
     <map method="ID3D11ShaderReflection::GetRequiresFlags" type="D3DCOMPILE_SHADER_REQUIRES_FLAGS" />
-    
     <map method="ID3D11ShaderReflectionType::IsEqual" visibility="internal" name="IsEqual_"  return="true" check="false"/>
     <map method="ID3D11ShaderReflectionType::IsOfType" visibility="internal" name="IsOfType_" return="true" check="false"/>
     <map method="ID3D11ShaderReflectionVariable::GetType" property="false" name="GetVariableType"/>
+    <map method="ID3D11ShaderReflection::GetRequiresFlags" type="D3DCOMPILE_SHADER_REQUIRES_FLAGS" />
+    <map method="ID3D11ShaderReflectionType::IsEqual" visibility="internal" name="IsEqual_"  return="true" check="false"/>
+    <map method="ID3D11ShaderReflectionType::IsOfType" visibility="internal" name="IsOfType_" return="true" check="false"/>
+    <map method="ID3D11ShaderReflectionVariable::GetType" property="false" name="GetVariableType"/>
+
+    <!-- D3D12 -->
+    <map interface="ID3D12ShaderReflectionConstantBuffer" name="ConstantBuffer12" />
+    <map method="ID3D12ShaderReflectionConstantBuffer::GetVariable.*" name="GetVariable" />
+    <map method="ID3D12ShaderReflection::GetConstantBuffer.*" name="GetConstantBuffer" />
+    <map method="ID3D12ShaderReflection::GetConstantBuffer.*" name="GetConstantBuffer" />
+    <map method="ID3D12ShaderReflection::GetVariableBy.*" name="GetVariable" />
+    <map method="ID3D12ShaderReflection::GetResourceBindingDesc.*" name="GetResourceBindingDescription" />
+    <map param="ID3D12ShaderReflection::GetResourceBindingDesc.*::pDesc" return="true" />
+    <map param="ID3D12ShaderReflection::GetInputParameterDesc::pDesc" return="true" />
+    <map param="ID3D12ShaderReflection::GetOutputParameterDesc::pDesc" return="true" />
+    <map param="ID3D12ShaderReflection::GetPatchConstantParameterDesc.*::pDesc" return="true" />
+    <map method="ID3D12ShaderReflection::GetGSInputPrimitive" name="GetGeometryShaderSInputPrimitive" />
+    <map method="ID3D12ShaderReflection::GetMovcInstructionCount" name="GetConditionalMoveInstructionCount" />
+    <map method="ID3D12ShaderReflection::GetMovInstructionCount" name="GetMoveInstructionCount" />
+    <map method="ID3D12ShaderReflection::GetNumInterfaceSlots" name="GetInterfaceSlotCount" />
+    <map method="ID3D12ShaderReflection::GetInterfaceByIndex" name="GetInterface" />
+    <map method="ID3D12ShaderReflection::GetMemberTypeBy.*" name="GetMemberType" />
+    <map method="ID3D12ShaderReflection::ImplementsInterface" visibility="internal" name="ImplementsInterface_" return="true" check="false"/>
+    <map method="ID3D12ShaderReflection::IsEqual" visibility="internal" name="IsEqual_"  return="true" check="false"/>
+    <map method="ID3D12ShaderReflection::IsOfType" visibility="internal" name="IsOfType_" return="true" check="false"/>
+    <map method="ID3D12ShaderReflection::GetType" property="false" name="GetVariableType"/>
 
     <map method="ID3D11Module::CreateInstance" visibility="internal" />
     <map param="ID3D11Module::CreateInstance::ppModuleInstance" attribute="out fast" />
