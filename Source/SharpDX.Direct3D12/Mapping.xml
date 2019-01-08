@@ -144,6 +144,8 @@
 
     <map field="D3D12_MESSAGE::pDescription" name="Description" visibility="public"/>
     
+    <map struct="D3D12_INFO_QUEUE_FILTER" name="InfoQueueFilter" />
+    <map struct="D3D12_INFO_QUEUE_FILTER_DESC" name="InfoQueueFilterDescription" />
     <map struct="D3D12_.*_PIPELINE_STATE_DESC" struct-to-class="true" marshalto="true"/>
     <map struct="D3D12_COMMAND_SIGNATURE_DESC" struct-to-class="true" marshalto="true"/>
     <map field="D3D12_COMMAND_SIGNATURE_DESC::NumArgumentDescs" visibility="internal"/>
@@ -223,6 +225,7 @@
     <remove struct="D3D12_MEMCPY_DEST"/>
     
     <!--Remove all fields for D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS as the union with pointers cannot be mapped safely in x86/x64 with C# explicit layout-->
+    <map struct="D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS" struct-to-class="true" marshal="true"/>
     <remove field="D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS::.*" />
 
     <map field="D3D12_NODE_MASK::NodeMask" name="Mask" />
@@ -364,6 +367,7 @@
 
     <map method="ID3D12Device5::CreateStateObject" visibility="private"/>
     <map param="ID3D12Device5::CreateStateObject::ppStateObject" attribute="out" type="ID3D12StateObject" return="true"/>
+    <map param="ID3D12Device5::GetRaytracingAccelerationStructurePrebuildInfo::pInfo" attribute="out" return="true"/>
 
     <!--
     // *****************************************************************
