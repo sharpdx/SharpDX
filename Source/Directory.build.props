@@ -58,7 +58,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" "$(NerdbankGitVersioningVersion)" PrivateAssets="All" />
+    <PackageReference Include="Nerdbank.GitVersioning" Version="$(NerdbankGitVersioningVersion)" PrivateAssets="All" />
     <PackageReference Include="SharpGenTools.Sdk" Version="1.1.3-ci499" PrivateAssets="All" />
     <PackageReference Include="SharpGen.Doc.Msdn.Tasks" Version="1.1.0" PrivateAssets="All" />
     <SharpGenGlobalNamespaceOverrides Include="InterfaceArray" Override="ComArray" />
