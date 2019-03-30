@@ -2286,17 +2286,26 @@ namespace SharpDX
         /// </summary>
         /// <param name="fov">Field of view in the y direction, in radians.</param>
         /// <param name="aspect">Aspect ratio, defined as view space width divided by height.</param>
+        /// <param name="aspectWidthCondition">Aspect width condition. Changes the view direction and locks the view width if the aspect ratio is lower than the conditional ratio.</param>
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void PerspectiveFovLH(float fov, float aspect, float znear, float zfar, out Matrix result)
+        public static void PerspectiveFovLH(float fov, float aspect, float aspectWidthCondition, float znear, float zfar, out Matrix result)
         {
             float yScale = (float)(1.0f / Math.Tan(fov * 0.5f));
             float q = zfar / (zfar - znear);
 
             result = new Matrix();
-            result.M11 = yScale / aspect;
-            result.M22 = yScale;
+            if (aspect >= aspectWidthCondition)
+            {
+                result.M11 = yScale / aspect;
+                result.M22 = yScale;
+            }
+            else
+            {
+                result.M11 = yScale / aspectWidthCondition;
+                result.M22 = yScale * (aspect / aspectWidthCondition);
+            }
             result.M33 = q;
             result.M34 = 1.0f;
             result.M43 = -q * znear;
@@ -2307,13 +2316,14 @@ namespace SharpDX
         /// </summary>
         /// <param name="fov">Field of view in the y direction, in radians.</param>
         /// <param name="aspect">Aspect ratio, defined as view space width divided by height.</param>
+        /// <param name="aspectWidthCondition">Aspect width condition. Changes the view direction and locks the view width if the aspect ratio is lower than the conditional ratio.</param>
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <returns>The created projection matrix.</returns>
-        public static Matrix PerspectiveFovLH(float fov, float aspect, float znear, float zfar)
+        public static Matrix PerspectiveFovLH(float fov, float aspect, float aspectWidthCondition, float znear, float zfar)
         {
             Matrix result;
-            PerspectiveFovLH(fov, aspect, znear, zfar, out result);
+            PerspectiveFovLH(fov, aspect, aspectWidthCondition, znear, zfar, out result);
             return result;
         }
 
@@ -2322,17 +2332,26 @@ namespace SharpDX
         /// </summary>
         /// <param name="fov">Field of view in the y direction, in radians.</param>
         /// <param name="aspect">Aspect ratio, defined as view space width divided by height.</param>
+        /// <param name="aspectWidthCondition">Aspect width condition. Changes the view direction and locks the view width if the aspect ratio is lower than the conditional ratio.</param>
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void PerspectiveFovRH(float fov, float aspect, float znear, float zfar, out Matrix result)
+        public static void PerspectiveFovRH(float fov, float aspect, float aspectWidthCondition, float znear, float zfar, out Matrix result)
         {
             float yScale = (float)(1.0f / Math.Tan(fov * 0.5f));
             float q = zfar / (znear - zfar);
 
             result = new Matrix();
-            result.M11 = yScale / aspect;
-            result.M22 = yScale;
+            if (aspect >= aspectWidthCondition)
+            {
+                result.M11 = yScale / aspect;
+                result.M22 = yScale;
+            }
+            else
+            {
+                result.M11 = yScale / aspectWidthCondition;
+                result.M22 = yScale * (aspect / aspectWidthCondition);
+            }
             result.M33 = q;
             result.M34 = -1.0f;
             result.M43 = q * znear;
@@ -2343,13 +2362,14 @@ namespace SharpDX
         /// </summary>
         /// <param name="fov">Field of view in the y direction, in radians.</param>
         /// <param name="aspect">Aspect ratio, defined as view space width divided by height.</param>
+        /// <param name="aspectWidthCondition">Aspect width condition. Changes the view direction and locks the view width if the aspect ratio is lower than the conditional ratio.</param>
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <returns>The created projection matrix.</returns>
-        public static Matrix PerspectiveFovRH(float fov, float aspect, float znear, float zfar)
+        public static Matrix PerspectiveFovRH(float fov, float aspect, float aspectWidthCondition, float znear, float zfar)
         {
             Matrix result;
-            PerspectiveFovRH(fov, aspect, znear, zfar, out result);
+            PerspectiveFovRH(fov, aspect, aspectWidthCondition, znear, zfar, out result);
             return result;
         }
 
