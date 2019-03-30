@@ -29,6 +29,9 @@
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="SharpGenTools.Sdk" Version="1.1.3-ci499" />
+  </ItemGroup>
 
   
 </Project>

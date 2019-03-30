@@ -21,5 +21,9 @@
     </Compile>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="SharpGenTools.Sdk" Version="1.1.3-ci499" />
+  </ItemGroup>
+
   <Import Project="../MappingFiles.props" />
 </Project>

@@ -44,4 +44,7 @@
     <ProjectReference Include="..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj" />
     <ProjectReference Include="..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="SharpGenTools.Sdk" Version="1.1.3-ci499" />
+  </ItemGroup>
 </Project>
