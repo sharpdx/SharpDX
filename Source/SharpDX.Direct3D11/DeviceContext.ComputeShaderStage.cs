@@ -105,5 +105,16 @@ namespace SharpDX.Direct3D11
             fixed (void* puav = uavInitialCounts)
                 SetUnorderedAccessViews(startSlot, unorderedAccessViews != null ? unorderedAccessViews.Length : 0, (IntPtr)unorderedAccessViewsOut_, (IntPtr)puav);
         }
+
+        /// <summary>	
+        /// Sets an array of views for an unordered resource.	
+        /// </summary>	
+        /// <param name="startSlot">Index of the first element in the zero-based array to begin setting. </param>
+        /// <param name="unorderedAccessViews">A reference to an array of <see cref="SharpDX.Direct3D11.UnorderedAccessView"/> references to be set by the method. </param>
+        public unsafe void SetUnorderedAccessViews(int startSlot, ComArray<SharpDX.Direct3D11.UnorderedAccessView> unorderedAccessViews, int[] uavInitialCounts)
+        {
+            fixed (void* puav = uavInitialCounts)
+                SetUnorderedAccessViews(startSlot, unorderedAccessViews == null ? 0 : unorderedAccessViews.Length, unorderedAccessViews.NativePointer, (IntPtr)puav);
+        }
     }
 }
