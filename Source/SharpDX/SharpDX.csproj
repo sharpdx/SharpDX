@@ -8,6 +8,7 @@
     <AssemblyTitle>SharpDX</AssemblyTitle>
     <Title>SharpDX</Title>
     <Description>Core assembly for all SharpDX assemblies.</Description>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

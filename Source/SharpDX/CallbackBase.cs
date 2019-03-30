@@ -40,7 +40,10 @@ namespace SharpDX
                 Release();
             }
         }
-        
+
+        /// <summary>
+        /// TBC
+        /// </summary>
         public int AddReference()
         {
             var old = refCount;
@@ -59,6 +62,9 @@ namespace SharpDX
             }
         }
 
+        /// <summary>
+        /// TBC
+        /// </summary>
         public int Release()
         {
             var old = refCount;
@@ -72,8 +78,12 @@ namespace SharpDX
                     {
                         // Dispose native resources
                         var callback = ((ICallbackable)this);
-                        callback.Shadow.Dispose();
-                        callback.Shadow = null;
+
+                        if (callback != null)
+                        {
+                            callback.Shadow?.Dispose();
+                            callback.Shadow = null;
+                        }
                     }
                     return old - 1;
                 }
@@ -81,6 +91,9 @@ namespace SharpDX
             }
         }
 
+        /// <summary>
+        /// TBC
+        /// </summary>
         public Result QueryInterface(ref Guid guid, out IntPtr comObject)
         {
             var container = (ShadowContainer)((ICallbackable)this).Shadow;
