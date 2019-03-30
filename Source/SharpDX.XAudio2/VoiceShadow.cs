@@ -64,35 +64,57 @@ namespace SharpDX.XAudio2
             static private void OnVoiceProcessingPassStartImpl(IntPtr thisObject, int bytes)
             {
                 var shadow = ToShadow<VoiceShadow>(thisObject);
+                if (shadow == null)
+                    return;
                 var callback = (VoiceCallback)shadow.Callback;
+                if (callback == null)
+                    return;
                 callback.OnVoiceProcessingPassStart(bytes);
+              
             }
 
             static private void OnVoiceProcessingPassEndImpl(IntPtr thisObject)
             {
                 var shadow = ToShadow<VoiceShadow>(thisObject);
+                if (shadow == null)
+                    return;
                 var callback = (VoiceCallback)shadow.Callback;
+                if (callback == null)
+                    return;
                 callback.OnVoiceProcessingPassEnd();
+
             }
 
             static private void OnStreamEndImpl(IntPtr thisObject)
             {
                 var shadow = ToShadow<VoiceShadow>(thisObject);
+                if (shadow == null)
+                    return;
                 var callback = (VoiceCallback)shadow.Callback;
+                if (callback == null)
+                    return;
                 callback.OnStreamEnd();
             }
 
             static private void OnBufferStartImpl(IntPtr thisObject, IntPtr address)
             {
                 var shadow = ToShadow<VoiceShadow>(thisObject);
+                if (shadow == null)
+                    return;
                 var callback = (VoiceCallback)shadow.Callback;
+                if (callback == null)
+                    return;
                 callback.OnBufferStart(address);
             }
 
             static private void OnBufferEndImpl(IntPtr thisObject, IntPtr address)
             {
                 var shadow = ToShadow<VoiceShadow>(thisObject);
+                if (shadow == null)
+                    return;
                 var callback = (VoiceCallback)shadow.Callback;
+                if (callback == null)
+                    return;
                 callback.OnBufferEnd(address);
             }
 
@@ -100,14 +122,22 @@ namespace SharpDX.XAudio2
             static private void OnLoopEndImpl(IntPtr thisObject, IntPtr address)
             {
                 var shadow = ToShadow<VoiceShadow>(thisObject);
+                if (shadow == null)
+                    return;
                 var callback = (VoiceCallback)shadow.Callback;
+                if (callback == null)
+                    return;
                 callback.OnLoopEnd(address);
             }
 
             static private void OnVoiceErrorImpl(IntPtr thisObject, IntPtr bufferContextRef, int error)
             {
                 var shadow = ToShadow<VoiceShadow>(thisObject);
+                if (shadow == null)
+                    return;
                 var callback = (VoiceCallback)shadow.Callback;
+                if (callback == null)
+                    return;
                 callback.OnVoiceError(bufferContextRef, new Result(error));
             }
         }
