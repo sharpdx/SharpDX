@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
   
   <PropertyGroup>
-    <TargetFrameworks>net40;net45;netstandard1.1;uap10.0</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard1.1</TargetFrameworks>
     <PackageId>SharpDX.Mathematics</PackageId>
     <Product>SharpDX.Mathematics</Product>
     <DocumentationFile Condition="'$(Configuration)' == 'Release'">bin\$(Configuration)\$(TargetFramework)\SharpDX.Mathematics.xml</DocumentationFile>
@@ -19,6 +19,6 @@
     <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="SharpGenTools.Sdk" Version="1.1.3-ci499" />
+    <PackageReference Update="SharpGenTools.Sdk" Version="1.2.1" />
   </ItemGroup>
 </Project>
