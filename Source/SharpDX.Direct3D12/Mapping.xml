@@ -239,7 +239,7 @@
     <map param="ID3D12Device::CreateDefaultResource::ppvResource" attribute="out"/>
     <map param="ID3D12Device::CreateBuffer::ppvBuffer" attribute="out"/>
     <map method="ID3D12Device::GetDefaultCommandQueue" property="false" visibility="private"/>
-    <map method="ID3D12Resource::GetDesc11" name="Description1"/>
+    <map method="ID3D12Resource::GetDesc1" name="Description1"/>
 
     <map method="ID3D12GraphicsCommandList::SetComputeRootSignature" property="false"/>
     <map method="ID3D12GraphicsCommandList::SetGraphicsRootSignature" property="false"/>

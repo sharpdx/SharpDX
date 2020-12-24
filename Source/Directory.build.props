@@ -16,8 +16,8 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageOutputPath>$(MSBuildThisFileDirectory)/../bin</PackageOutputPath>
     <AppType Condition="$(TargetFramework.StartsWith('net4'))">DESKTOP_APP</AppType>
+    <AppType Condition="$(TargetFramework.StartsWith('net5'))">REFERENCE</AppType>
     <AppType Condition="$(TargetFramework.StartsWith('netstandard'))">REFERENCE</AppType>
-    <AppType Condition="$(TargetFramework.StartsWith('uap10'))">STORE_APP</AppType>
     <SharpGenMacros>$(SharpGenMacros);$(AppType);DIRECTX11_1</SharpGenMacros>
     <DefineConstants>$(DefineConstants);$(AppType)</DefineConstants>
     <DefineConstants Condition="'$(TargetFramework)' == 'net40'">$(DefineConstants);BEFORE_NET45</DefineConstants>
