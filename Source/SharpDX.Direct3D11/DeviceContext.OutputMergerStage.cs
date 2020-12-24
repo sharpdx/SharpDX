@@ -122,7 +122,8 @@ namespace SharpDX.Direct3D11
             var temp = new UnorderedAccessView[count];
             DepthStencilView depthStencilView;
             GetRenderTargetsAndUnorderedAccessViews(0, new RenderTargetView[0], out depthStencilView, startSlot, count, temp);
-            depthStencilView.Dispose();
+            if (depthStencilView != null)
+                depthStencilView.Dispose();
             return temp;
         }
 
