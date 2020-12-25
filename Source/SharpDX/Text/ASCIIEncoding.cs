@@ -19,9 +19,12 @@
 // THE SOFTWARE.
 namespace SharpDX.Text
 {
+#if NETSTANDARD1_1
     /// <summary>
     /// Overrides <see cref="System.Text.ASCIIEncoding"/> in order to provide <see cref="ASCIIEncoding"/> for Win8 Modern App.
     /// </summary>
+    /// 
+#endif
     public abstract class Encoding : System.Text.Encoding
     {
 #if NETSTANDARD1_1

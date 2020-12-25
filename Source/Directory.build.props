@@ -16,8 +16,8 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageOutputPath>$(MSBuildThisFileDirectory)/../bin</PackageOutputPath>
     <AppType Condition="$(TargetFramework.StartsWith('net4'))">DESKTOP_APP</AppType>
+    <AppType Condition="$(TargetFramework.StartsWith('net5'))">REFERENCE</AppType>
     <AppType Condition="$(TargetFramework.StartsWith('netstandard'))">REFERENCE</AppType>
-    <AppType Condition="$(TargetFramework.StartsWith('uap10'))">STORE_APP</AppType>
     <SharpGenMacros>$(SharpGenMacros);$(AppType);DIRECTX11_1</SharpGenMacros>
     <DefineConstants>$(DefineConstants);$(AppType)</DefineConstants>
     <DefineConstants Condition="'$(TargetFramework)' == 'net40'">$(DefineConstants);BEFORE_NET45</DefineConstants>
@@ -47,10 +47,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.38" PrivateAssets="All" />
-    <PackageReference Include="SharpGenTools.Sdk" Version="1.1.3-ci489" PrivateAssets="All" />
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.3.37" PrivateAssets="All" />
+    <PackageReference Include="SharpGenTools.Sdk" Version="1.2.1" PrivateAssets="All" />
     <PackageReference Include="SharpGen.Doc.Msdn.Tasks" Version="1.1.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
     <SharpGenGlobalNamespaceOverrides Include="InterfaceArray" Override="ComArray" />
     <SharpGenGlobalNamespaceOverrides Include="MemoryHelpers"  Override="Utilities" />
     <SharpGenGlobalNamespaceOverrides Include="BooleanHelpers" Override="Utilities" />

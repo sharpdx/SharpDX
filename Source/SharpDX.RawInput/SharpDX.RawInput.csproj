@@ -1,7 +1,7 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   
   <PropertyGroup>
-    <TargetFrameworks>net40;net45</TargetFrameworks>
+    <TargetFrameworks>net45</TargetFrameworks>
     <PackageId>SharpDX.RawInput</PackageId>
     <Product>SharpDX.RawInput</Product>
     <DocumentationFile Condition="'$(Configuration)' == 'Release'">bin\$(Configuration)\$(TargetFramework)\SharpDX.RawInput.xml</DocumentationFile>
@@ -28,6 +28,9 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="SharpGenTools.Sdk" Version="1.2.1" />
   </ItemGroup>
 
   

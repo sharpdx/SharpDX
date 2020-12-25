@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
   
   <PropertyGroup>
-    <TargetFrameworks>net40;net45;netstandard1.1</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard1.1</TargetFrameworks>
     <PackageId>SharpDX.Animation</PackageId>
     <Product>SharpDX.Animation</Product>
     <DocumentationFile Condition="'$(Configuration)' == 'Release'">bin\$(Configuration)\$(TargetFramework)\SharpDX.Animation.xml</DocumentationFile>
@@ -18,6 +18,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpDX\SharpDX.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="SharpGenTools.Sdk" Version="1.2.1" />
   </ItemGroup>
 
   

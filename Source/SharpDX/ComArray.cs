@@ -29,7 +29,13 @@ namespace SharpDX
     /// </summary>
     public class ComArray : DisposeBase, IEnumerable
     {
+        /// <summary>
+        /// TBC
+        /// </summary>
         protected ComObject[] values;
+        /// <summary>
+        /// TBC
+        /// </summary>
         private IntPtr nativeBuffer;
 
         /// <summary>
@@ -169,6 +175,9 @@ namespace SharpDX
             }
         }
 
+        /// <summary>
+        /// Gets Enumarator Interface for <see cref="T"/>.
+        /// </summary>
         public new IEnumerator<T> GetEnumerator()
         {
             return new ArrayEnumerator<T>(values.GetEnumerator());

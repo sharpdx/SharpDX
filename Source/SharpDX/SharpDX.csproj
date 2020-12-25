@@ -1,13 +1,14 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
-  
   <PropertyGroup>
-    <TargetFrameworks>net40;net45;netstandard1.1;uap10.0</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard1.1</TargetFrameworks>
     <PackageId>SharpDX</PackageId>
     <Product>SharpDX</Product>
     <DocumentationFile Condition="'$(Configuration)' == 'Release'">bin\$(Configuration)\$(TargetFramework)\SharpDX.xml</DocumentationFile>
     <AssemblyTitle>SharpDX</AssemblyTitle>
     <Title>SharpDX</Title>
     <Description>Core assembly for all SharpDX assemblies.</Description>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +20,10 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="SharpGenTools.Sdk" Version="1.2.1" />
   </ItemGroup>
 
   <Import Project="../MappingFiles.props" />

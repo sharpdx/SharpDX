@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
   
   <PropertyGroup>
-    <TargetFrameworks>net40;net45;netstandard1.1;uap10.0</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard1.1</TargetFrameworks>
     <PackageId>SharpDX.MediaFoundation</PackageId>
     <Product>SharpDX.MediaFoundation</Product>
     <DocumentationFile Condition="'$(Configuration)' == 'Release'">bin\$(Configuration)\$(TargetFramework)\SharpDX.MediaFoundation.xml</DocumentationFile>
@@ -23,5 +23,8 @@
     <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj" />
     <ProjectReference Include="..\SharpDX.Direct3D9\SharpDX.Direct3D9.csproj" Condition=" '$(AppType)' == 'DESKTOP_APP' " />
     <ProjectReference Include="..\SharpDX.Mathematics\SharpDX.Mathematics.csproj" Condition=" '$(AppType)' == 'DESKTOP_APP' " />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="SharpGenTools.Sdk" Version="1.2.1" />
   </ItemGroup>
 </Project>

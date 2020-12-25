@@ -439,13 +439,17 @@ namespace SharpDX
             //Lines are parallel.
             if (MathUtil.IsZero(denominator))
             {
+                point = Vector3.Zero;
                 //Lines are parallel and on top of each other.
                 if (MathUtil.NearEqual(ray2.Position.X, ray1.Position.X) &&
                     MathUtil.NearEqual(ray2.Position.Y, ray1.Position.Y) &&
                     MathUtil.NearEqual(ray2.Position.Z, ray1.Position.Z))
                 {
-                    point = Vector3.Zero;
                     return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
 
@@ -488,6 +492,12 @@ namespace SharpDX
             //t values of the point of intersection.
             float s = dets / denominator;
             float t = dett / denominator;
+
+            if (s < 0 || t < 0)
+            {
+                point = Vector3.Zero;
+                return false;
+            }
 
             //The points of intersection.
             Vector3 point1 = ray1.Position + (s * ray1.Direction);
